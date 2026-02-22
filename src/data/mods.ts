@@ -1,0 +1,21538 @@
+import { Mod } from "@/lib/types";
+
+export const allMods: Mod[] = [
+  {
+    "id": "heavy_caliber",
+    "name": "Heavy Caliber",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "damage": 15,
+      "accuracy": -5
+    },
+    "description": "+15% Damage, -5% Accuracy per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "vigilante_armaments",
+    "name": "Vigilante Armaments",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "multishot": 10
+    },
+    "description": "+10% Multishot per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "vigilante_offensive",
+    "name": "Vigilante Offensive",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "multishot": 10
+    },
+    "description": "+10% Multishot per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "argon_scope",
+    "name": "Argon Scope",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 22.5
+    },
+    "description": "+22.5% Critical Chance on headshot per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_scope",
+    "name": "Galvanized Scope",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 10.9091
+    },
+    "description": "+8% Critical Chance on headshot per stack",
+    "rarity": "rare"
+  },
+  {
+    "id": "hammer_shot",
+    "name": "Hammer Shot",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 15,
+      "statusChance": 20
+    },
+    "description": "+10% Critical Damage & Status per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_cryo_rounds",
+    "name": "Primed Cryo Rounds",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+15% Cold per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "shred",
+    "name": "Shred",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 5,
+      "punchThrough": 0.2
+    },
+    "description": "+5% Fire Rate, +0.2m Punch Through per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "vile_acceleration",
+    "name": "Vile Acceleration",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15,
+      "damage": -2.5
+    },
+    "description": "+15% Fire Rate, -2.5% Damage per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "piercing_caliber",
+    "name": "Piercing Caliber",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.4
+    },
+    "description": "+0.4m Punch Through per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "bladed_rounds",
+    "name": "Bladed Rounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplierOnKill": 10
+    },
+    "description": "+10% Critical Damage on kill per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mutalist_quake",
+    "name": "Mutalist Quanta",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 5
+    },
+    "description": "+5% Ammo Maximum per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vigilante_fervor",
+    "name": "Vigilante Fervor",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 7.5
+    },
+    "description": "+7.5% Fire Rate per rank (Set)",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vigilante_supplies",
+    "name": "Vigilante Supplies",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "ammoPickup": 15
+    },
+    "description": "+15% Ammo Pickup per rank (Set)",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_chamber",
+    "name": "Galvanized Chamber",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "multishot": 2.7273,
+      "multishotOnKill": 3.6
+    },
+    "description": "+8% Multishot, +3.6% on kill per stack",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_aptitude",
+    "name": "Galvanized Aptitude",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 7.2727,
+      "damagePerStatus": 3.6
+    },
+    "description": "+10% Status Chance, +3.6% damage per status type on kill",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_savvy",
+    "name": "Galvanized Savvy",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 7.2727,
+      "damagePerStatus": 3.6
+    },
+    "description": "+10% Status, +3.6% damage per status type",
+    "rarity": "rare"
+  },
+  {
+    "id": "critical_delay",
+    "name": "Critical Delay",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 33.3333,
+      "fireRate": -3.3333
+    },
+    "description": "+8% Crit Chance, -6% Fire Rate per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "frail_momentum",
+    "name": "Frail Momentum",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15,
+      "damage": -2.5
+    },
+    "description": "+15% Fire Rate, -2.5% Damage per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "wildfire",
+    "name": "Wildfire",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "heat": 15,
+      "magazine": 5
+    },
+    "description": "+15% Heat, +5% Magazine per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "ice_storm",
+    "name": "Ice Storm",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "cold": 10,
+      "magazine": 10
+    },
+    "description": "+15% Cold, +5% Magazine per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "thermite_rounds_nightmare",
+    "name": "Thermite Rounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "heat": 15,
+      "statusChance": 15
+    },
+    "description": "+15% Heat, +10% Status Chance per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "critical_deceleration",
+    "name": "Critical Deceleration",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 33.3333,
+      "fireRate": -3.3333
+    },
+    "description": "+8% Crit Chance, -6% Fire Rate per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_serration",
+    "name": "Amalgam Serration",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "damage": 14.0909,
+      "slideSpeed": 5
+    },
+    "description": "+11% Damage, +5% Slide Speed per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "seeking_fury",
+    "name": "Seeking Fury",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 2.5,
+      "punchThrough": 0.2
+    },
+    "description": "+5% Reload, +0.2m Punch Through per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnum_force",
+    "name": "Magnum Force",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "damage": 15,
+      "accuracy": -3
+    },
+    "description": "+6% Damage, -3% Accuracy per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "lethal_torment",
+    "name": "Lethal Torment",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "multishot": 10
+    },
+    "description": "+10% Multishot per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "primed_pistol_gambit",
+    "name": "Primed Pistol Gambit",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 17
+    },
+    "description": "+22% Critical Chance per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "hydraulic_crosshairs",
+    "name": "Hydraulic Crosshairs",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 22.5
+    },
+    "description": "+22.5% Critical Chance on headshot per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "galvanized_crosshairs",
+    "name": "Galvanized Crosshairs",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 10.9091
+    },
+    "description": "+8% Critical Chance on headshot per stack",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_target_cracker",
+    "name": "Primed Target Cracker",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+15% Critical Damage per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "pistol_aptitude",
+    "name": "Pistol Aptitude",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+15% Status Chance per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "embedded_catalyzer",
+    "name": "Embedded Catalyzer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+10% Status Chance on ability cast per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "galvanized_shot",
+    "name": "Galvanized Shot",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 7.2727,
+      "damagePerStatus": 3.6
+    },
+    "description": "+10% Status, +3.6% damage per status type",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_heated_charge",
+    "name": "Primed Heated Charge",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "heat": 15
+    },
+    "description": "+15% Heat per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_convulsion",
+    "name": "Primed Convulsion",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+15% Electricity per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "lethal_torrent",
+    "name": "Lethal Torrent",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 10,
+      "multishot": 10
+    },
+    "description": "+10% Fire Rate, +10% Multishot per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "anemic_agility",
+    "name": "Anemic Agility",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15,
+      "damage": -2.5
+    },
+    "description": "+15% Fire Rate, -2.5% Damage per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "bowling_buzzkill",
+    "name": "Bowling Buzzkill",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.1
+    },
+    "description": "+0.1m Punch Through per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pistol_ammo_mutation",
+    "name": "Pistol Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "ammoConversion": 20
+    },
+    "description": "Converts unused ammo to Pistol ammo",
+    "rarity": "rare"
+  },
+  {
+    "id": "creeping_bullseye",
+    "name": "Creeping Bullseye",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 33.3333,
+      "fireRate": -3.3333
+    },
+    "description": "+8% Crit Chance, -6% Fire Rate per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_point_blank",
+    "name": "Primed Point Blank",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+15% Damage per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "vicious_spread",
+    "name": "Vicious Spread",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "damage": 15,
+      "spread": 10
+    },
+    "description": "+10% Damage, +10% Spread per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "hells_chamber",
+    "name": "Hell's Chamber",
+    "polarity": "madurai",
+    "drain": 7,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "multishot": 20
+    },
+    "description": "+20% Multishot per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_ravage",
+    "name": "Primed Ravage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+20% Critical Damage per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "shotgun_aptitude",
+    "name": "Shotgun Aptitude",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+15% Status Chance per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "primed_charged_shell",
+    "name": "Primed Charged Shell",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+15% Electricity per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_chilling_grasp",
+    "name": "Primed Chilling Grasp",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+15% Cold per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "shotgun_spazz",
+    "name": "Shotgun Spazz",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15
+    },
+    "description": "+15% Fire Rate per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "galvanized_hell",
+    "name": "Galvanized Hell",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "multishot": 2.7273,
+      "multishotOnKill": 3.6
+    },
+    "description": "+8% Multishot, +3.6% on kill per stack",
+    "rarity": "rare"
+  },
+  {
+    "id": "ammo_mutation",
+    "name": "Shotgun Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "ammoConversion": 20
+    },
+    "description": "Converts unused ammo to Shotgun ammo",
+    "rarity": "rare"
+  },
+  {
+    "id": "blaze",
+    "name": "Blaze",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "heat": 15,
+      "damage": 15
+    },
+    "description": "+15% Heat, +15% Damage per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "burdened_magazine",
+    "name": "Burdened Magazine",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "shotgun",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10,
+      "reloadSpeed": -3
+    },
+    "description": "+10% Magazine, -5% Reload per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_pressure_point",
+    "name": "Primed Pressure Point",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+20% Damage per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "blood_rush",
+    "name": "Blood Rush",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalChancePerCombo": 3.6364
+    },
+    "description": "+6.5% Critical Chance per Combo Multiplier per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sacrificial_steel",
+    "name": "Sacrificial Steel",
+    "polarity": "umbra",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 20,
+      "sentientDamage": 3
+    },
+    "description": "+8% Crit Chance, +3% vs Sentients per rank",
+    "rarity": "legendary"
+  },
+  {
+    "id": "melee_aptitude",
+    "name": "Melee Aptitude",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+15% Status Chance per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "condition_overload",
+    "name": "Condition Overload",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damagePerStatus": 13.3333
+    },
+    "description": "+40% Damage per status type on enemy per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_fever_strike",
+    "name": "Primed Fever Strike",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15
+    },
+    "description": "+15% Toxin per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_fury",
+    "name": "Primed Fury",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 5
+    },
+    "description": "+7.5% Attack Speed per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "berserker",
+    "name": "Berserker",
+    "polarity": "madurai",
+    "drain": 9,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeedOnCrit": 7.5
+    },
+    "description": "+7.5% Attack Speed on Crit per stack per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "gladiator_vice",
+    "name": "Gladiator Vice",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 5
+    },
+    "description": "+7.5% Attack Speed per rank (Set)",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_reach",
+    "name": "Primed Reach",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "range": 17
+    },
+    "description": "+17% Range per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "spring_loaded_blade",
+    "name": "Spring-Loaded Blade",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "range": 15
+    },
+    "description": "+15% Range per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "body_count",
+    "name": "Body Count",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 2
+    },
+    "description": "+2s Combo Duration per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "gladiator_rush",
+    "name": "Gladiator Rush",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 1.5
+    },
+    "description": "+1.5s Combo Duration per rank (Set)",
+    "rarity": "common"
+  },
+  {
+    "id": "killing_blow",
+    "name": "Killing Blow",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "heavyAttackDamage": 20
+    },
+    "description": "+20% Heavy Attack Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "corrupt_charge",
+    "name": "Corrupt Charge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboCount": 15,
+      "attackSpeed": -10
+    },
+    "description": "Start with +15 Combo, -10% Attack Speed per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_organ_shatter",
+    "name": "Amalgam Organ Shatter",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 14.1667,
+      "heavyWindUp": 10
+    },
+    "description": "+13% Crit Damage, +10% Heavy Wind Up per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "life_strike",
+    "name": "Life Strike",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "lifeSteal": 5
+    },
+    "description": "Heavy Attacks have +5% Life Steal per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "healing_return",
+    "name": "Healing Return",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "healthOnStatus": 1
+    },
+    "description": "+1 Health per status type per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "gladiator_ailment",
+    "name": "Gladiator Ailment",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 15
+    },
+    "description": "+15% Status Duration per rank (Set)",
+    "rarity": "common"
+  },
+  {
+    "id": "aerial_assault",
+    "name": "Aerial Assault",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "aerialDamage": 25
+    },
+    "description": "+25% Aerial Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_bonus_crimson",
+    "name": "Crimson Orbit",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "Stance bonus: +10% Damage per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "covert_lethality",
+    "name": "Covert Lethality",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "lethalDamage": 100
+    },
+    "description": "Lethal Damage on Finisher per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "riven_rifle",
+    "name": "Riven Mod (Rifle)",
+    "polarity": "zenurik",
+    "drain": 18,
+    "maxRank": 8,
+    "category": "rifle",
+    "subCategory": "riven",
+    "stats": {},
+    "description": "Riven mod with random stats. Configure stats after equipping.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "riven_shotgun",
+    "name": "Riven Mod (Shotgun)",
+    "polarity": "zenurik",
+    "drain": 18,
+    "maxRank": 8,
+    "category": "shotgun",
+    "subCategory": "riven",
+    "stats": {},
+    "description": "Riven mod with random stats. Configure stats after equipping.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "riven_pistol",
+    "name": "Riven Mod (Pistol)",
+    "polarity": "zenurik",
+    "drain": 18,
+    "maxRank": 8,
+    "category": "pistol",
+    "subCategory": "riven",
+    "stats": {},
+    "description": "Riven mod with random stats. Configure stats after equipping.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "riven_melee",
+    "name": "Riven Mod (Melee)",
+    "polarity": "zenurik",
+    "drain": 18,
+    "maxRank": 8,
+    "category": "melee",
+    "subCategory": "riven",
+    "stats": {},
+    "description": "Riven mod with random stats. Configure stats after equipping.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "aura_cunning_drift",
+    "name": "Cunning Drift",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 2.5
+    },
+    "description": "+15% Ability Range",
+    "rarity": "rare"
+  },
+  {
+    "id": "aura_speed_holster",
+    "name": "Speed Holster",
+    "polarity": "naramon",
+    "drain": -7,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "holsterSpeed": 20
+    },
+    "description": "+20% Holster Speed per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_toxin_resistance",
+    "name": "Toxin Resistance",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "toxinResistance": 15
+    },
+    "description": "+15% Toxin Resistance per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_physique",
+    "name": "Physique",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 3.3333
+    },
+    "description": "+5% Health per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_energy_siphon",
+    "name": "Energy Siphon",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energyRegen": 0.3
+    },
+    "description": "+0.3 Energy Regen per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_rejuvenation",
+    "name": "Rejuvenation",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "healthRegen": 1
+    },
+    "description": "+1 Health Regen per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_corrosive_projection",
+    "name": "Corrosive Projection",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 6
+    },
+    "description": "-6% Enemy Armor per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_shield_disruption",
+    "name": "Shield Disruption",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shieldReduction": 6
+    },
+    "description": "-6% Enemy Shield per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_infested_impedance",
+    "name": "Infested Impedance",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "infestedSpeedReduction": 5
+    },
+    "description": "-5% Infested Speed per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_rifle_amplification",
+    "name": "Rifle Amp",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "rifleDamage": 4
+    },
+    "description": "+4% Rifle Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_shotgun_amplification",
+    "name": "Shotgun Amp",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shotgunDamage": 5
+    },
+    "description": "+5% Shotgun Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_pistol_amplification",
+    "name": "Pistol Amp",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "pistolDamage": 6
+    },
+    "description": "+6% Pistol Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_steel_charge",
+    "name": "Steel Charge",
+    "polarity": "madurai",
+    "drain": -4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "meleeDamage": 10
+    },
+    "description": "+10% Melee Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_sprint_boost",
+    "name": "Sprint Boost",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 2.5
+    },
+    "description": "+2% Sprint Speed per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_sprint_speed",
+    "name": "Sprint Speed",
+    "polarity": "naramon",
+    "drain": -7,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 2
+    },
+    "description": "+2% Sprint Speed per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_looters",
+    "name": "Looters",
+    "polarity": "vazarin",
+    "drain": -7,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "lootRadar": 10
+    },
+    "description": "+10m Loot Radar per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "aura_enemy_radar",
+    "name": "Enemy Radar",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "enemyRadar": 10
+    },
+    "description": "+10m Enemy Radar per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aura_emp_auras",
+    "name": "Empowered Auras",
+    "polarity": "umbra",
+    "drain": -7,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "auraEffectiveness": 10
+    },
+    "description": "+10% Aura Effectiveness per rank",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_redirection",
+    "name": "Primed Redirection",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 16.3636
+    },
+    "description": "+55% Shield Capacity per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "fortitude",
+    "name": "Fortitude",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shieldRecharge": 15,
+      "knockdownResistance": 50
+    },
+    "description": "+15% Shield Recharge, +50% Knockdown Resistance per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "armored_agility",
+    "name": "Armored Agility",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 6.6667,
+      "sprintSpeed": 2.5
+    },
+    "description": "+7.5% Armor, +2.5% Sprint Speed per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "gladiator_aegis",
+    "name": "Gladiator Aegis",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 6.6667
+    },
+    "description": "+7.5% Armor per rank (Set)",
+    "rarity": "common"
+  },
+  {
+    "id": "primed_flow",
+    "name": "Primed Flow",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energy": 16.8182
+    },
+    "description": "+25% Energy Capacity per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_continuity",
+    "name": "Primed Continuity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 5
+    },
+    "description": "+5% Ability Duration per rank (Primed)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "narrow_minded",
+    "name": "Narrow Minded",
+    "polarity": "vazarin",
+    "drain": -6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 9,
+      "abilityRange": -6
+    },
+    "description": "+9% Duration, -6% Range per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "blind_rage",
+    "name": "Blind Rage",
+    "polarity": "madurai",
+    "drain": -6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 9,
+      "abilityEfficiency": -5
+    },
+    "description": "+9% Strength, -5% Efficiency per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "transient_fortitude",
+    "name": "Transient Fortitude",
+    "polarity": "madurai",
+    "drain": -4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5,
+      "abilityDuration": -2.5
+    },
+    "description": "+5% Strength, -2.5% Duration per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "umbra_intensify",
+    "name": "Umbral Intensify",
+    "polarity": "umbra",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 4,
+      "tauResistance": 1
+    },
+    "description": "+4% Strength, +1% Tau Resistance per rank",
+    "rarity": "legendary"
+  },
+  {
+    "id": "speed_drift",
+    "name": "Speed Drift",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "coactionBonus": 2.5,
+      "sprintSpeed": 2
+    },
+    "description": "+2.5% Coaction, +1% Sprint per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "patagium",
+    "name": "Patagium",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "aimGlide": 2.5,
+      "wallLatch": 2.5
+    },
+    "description": "+2.5s Aim Glide and Wall Latch per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "aerodynamic",
+    "name": "Aerodynamic",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "airborneDamageReduction": 5
+    },
+    "description": "+5% Airborne Damage Reduction per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "thiefs_wit",
+    "name": "Thief's Wit",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "lootRadar": 7
+    },
+    "description": "+7.5m Loot Radar per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "vigilante_pursuit",
+    "name": "Vigilante Pursuit",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "enemyRadar": 5
+    },
+    "description": "+5m Enemy Radar per rank (Set)",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "umbra_fiber",
+    "name": "Umbral Fiber",
+    "polarity": "umbra",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 9.0909,
+      "tauResistance": 1
+    },
+    "description": "+11% Armor, +1% Tau Resistance per rank",
+    "rarity": "legendary"
+  },
+  {
+    "id": "umbra_vitality",
+    "name": "Umbral Vitality",
+    "polarity": "umbra",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 9.0909,
+      "tauResistance": 1
+    },
+    "description": "+44% Health, +1% Tau Resistance per rank",
+    "rarity": "legendary"
+  },
+  {
+    "id": "animal_instinct",
+    "name": "Animal Instinct",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "lootRadar": 30,
+      "enemyRadar": 30
+    },
+    "description": "Loot and enemy radar",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_animal_instinct",
+    "name": "Primed Animal Instinct",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "lootRadar": 55,
+      "enemyRadar": 55
+    },
+    "description": "Loot and enemy radar (Legendary)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "calculated_redirection",
+    "name": "Calculated Redirection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "shield": 22.7273
+    },
+    "description": "+275% Shields",
+    "rarity": "common"
+  },
+  {
+    "id": "enhanced_vitality",
+    "name": "Enhanced Vitality",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "health": 22.7273
+    },
+    "description": "+275% Health",
+    "rarity": "common"
+  },
+  {
+    "id": "link_fiber",
+    "name": "Link Fiber",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "armorLink": 110
+    },
+    "description": "+110% Armor linked to Warframe",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "link_redirection",
+    "name": "Link Redirection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "shieldLink": 275
+    },
+    "description": "+275% Shields linked to Warframe",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "link_vitality",
+    "name": "Link Vitality",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healthLink": 275
+    },
+    "description": "+275% Health linked to Warframe",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "loyal_companion",
+    "name": "Loyal Companion",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "damageReduction": 60
+    },
+    "description": "+60% Damage Reduction when near owner",
+    "rarity": "common"
+  },
+  {
+    "id": "medi_pet_kit",
+    "name": "Medi-Pet Kit",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healthRegen": 12,
+      "recoveryTime": 90
+    },
+    "description": "+12 Health/s regen, +90% Recovery Time",
+    "rarity": "rare"
+  },
+  {
+    "id": "metal_fiber",
+    "name": "Metal Fiber",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "armor": 22.7273
+    },
+    "description": "+275% Armor",
+    "rarity": "common"
+  },
+  {
+    "id": "pack_leader",
+    "name": "Pack Leader",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healOnMelee": 36
+    },
+    "description": "Melee kills heal companion for 36% of max Health",
+    "rarity": "common"
+  },
+  {
+    "id": "primed_pack_leader",
+    "name": "Primed Pack Leader",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healOnMelee": 66
+    },
+    "description": "Melee kills heal companion for 66% of max Health (Legendary)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "synth_deconstruct",
+    "name": "Synth Deconstruct",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healthOrbChance": 25
+    },
+    "description": "25% chance to create Health Orbs on enemy death",
+    "rarity": "rare"
+  },
+  {
+    "id": "synth_fiber",
+    "name": "Synth Fiber",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healthPickupBonus": 100
+    },
+    "description": "+100% Health from Health Orbs, Auto-collect Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "aerial_bond",
+    "name": "Aerial Bond",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "airborneCrit": 150,
+      "airborneDamage": 60
+    },
+    "description": "+150% Crit Chance, +60% Damage when airborne",
+    "rarity": "rare"
+  },
+  {
+    "id": "astral_bond",
+    "name": "Astral Bond",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "energyOnAbility": 10
+    },
+    "description": "Companion grants 10 Energy when owner uses Ability",
+    "rarity": "rare"
+  },
+  {
+    "id": "contagious_bond",
+    "name": "Contagious Bond",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "statusSpread": 100
+    },
+    "description": "Status effects spread to nearby enemies",
+    "rarity": "rare"
+  },
+  {
+    "id": "covert_bond",
+    "name": "Covert Bond",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "stealthDamage": 120
+    },
+    "description": "+120% damage when attacking from stealth",
+    "rarity": "rare"
+  },
+  {
+    "id": "duplex_bond",
+    "name": "Duplex Bond",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "companionDamage": 60,
+      "extraAttack": 30
+    },
+    "description": "+60% Companion Damage, 30% chance for double attack",
+    "rarity": "rare"
+  },
+  {
+    "id": "momentous_bond",
+    "name": "Momentous Bond",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "heavyAttackDamage": 110,
+      "heavyAttackSpeed": 30
+    },
+    "description": "+110% Heavy Attack Damage, +30% Heavy Attack Wind Up Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "mystic_bond",
+    "name": "Mystic Bond",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "energyLeech": 15
+    },
+    "description": "Companion attacks have 15% chance to drop Energy Orb",
+    "rarity": "rare"
+  },
+  {
+    "id": "reinforced_bond",
+    "name": "Reinforced Bond",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "overguard": 1200,
+      "reviveOverguard": 2400
+    },
+    "description": "Grant 1200 Overguard on spawn, 2400 on revive",
+    "rarity": "rare"
+  },
+  {
+    "id": "restorative_bond",
+    "name": "Restorative Bond",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "healthOnKill": 60,
+      "restoreNearby": 30
+    },
+    "description": "Heal 60 Health on kill, 30% also heals nearby allies",
+    "rarity": "rare"
+  },
+  {
+    "id": "seismic_bond",
+    "name": "Seismic Bond",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "knockdownDuration": 90
+    },
+    "description": "Ground Finishers deal +90% Damage, Heal 60% on finisher",
+    "rarity": "rare"
+  },
+  {
+    "id": "tenacious_bond",
+    "name": "Tenacious Bond",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "headshotCritDamage": 150,
+      "mercyCritDamage": 150
+    },
+    "description": "+150% Headshot Crit Damage, +150% Mercy Crit Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "vicious_bond",
+    "name": "Vicious Bond",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "meleeAttackSpeed": 30,
+      "meleeDamage": 60
+    },
+    "description": "+30% Melee Attack Speed, +60% Melee Damage for Companion",
+    "rarity": "rare"
+  },
+  {
+    "id": "manifold_bond",
+    "name": "Manifold Bond",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "universal",
+    "stats": {
+      "abilityDamage": 30,
+      "abilityDuration": 30
+    },
+    "description": "+30% Ability Damage, +30% Ability Duration on companion ability",
+    "rarity": "rare"
+  },
+  {
+    "id": "accelerated_deflection",
+    "name": "Accelerated Deflection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "shieldRecharge": 90
+    },
+    "description": "+90% Shield Recharge",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "anti_grav_array",
+    "name": "Anti-Grav Array",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "gravityReduction": 80
+    },
+    "description": "-80% Gravity",
+    "rarity": "rare"
+  },
+  {
+    "id": "coolant_leak",
+    "name": "Coolant Leak",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "coldDamage": 60,
+      "slow": 30
+    },
+    "description": "Deals Cold damage and slows enemies by 30% within 3m",
+    "rarity": "rare"
+  },
+  {
+    "id": "guardian",
+    "name": "Guardian",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "shieldRestore": 100,
+      "cooldown": 30
+    },
+    "description": "Restores 100% Shields when depleted, 30s cooldown",
+    "rarity": "common"
+  },
+  {
+    "id": "medi_ray",
+    "name": "Medi-Ray",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "healthRestore": 12,
+      "range": 15
+    },
+    "description": "Heals 12% Health per second to allies within 15m",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "odomedic",
+    "name": "Odomedic",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "healthRestoreMove": 9
+    },
+    "description": "Heals 9% Health per second when owner is moving",
+    "rarity": "rare"
+  },
+  {
+    "id": "sanctuary",
+    "name": "Sanctuary",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "bubbleHealth": 600,
+      "rechargeDelay": 15
+    },
+    "description": "Creates 600 HP bubble while reloading, 15s recharge",
+    "rarity": "rare"
+  },
+  {
+    "id": "shield_charger",
+    "name": "Shield Charger",
+    "polarity": "penjaga",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "overshields": 200,
+      "range": 15
+    },
+    "description": "Grants 200 Overshields to allies within 15m",
+    "rarity": "rare"
+  },
+  {
+    "id": "spare_parts",
+    "name": "Spare Parts",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "lootChance": 45
+    },
+    "description": "45% chance to drop rare loot on death",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vacuum",
+    "name": "Vacuum",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "pickupRange": 13.5
+    },
+    "description": "Pulls in items within 13.5m",
+    "rarity": "common"
+  },
+  {
+    "id": "regen",
+    "name": "Regen",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "regenCharges": 3,
+      "healthPercent": 100
+    },
+    "description": "3 Regen charges, restores 100% Health per charge",
+    "rarity": "common"
+  },
+  {
+    "id": "primed_regen",
+    "name": "Primed Regen",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "regenCharges": 6,
+      "healthPercent": 100
+    },
+    "description": "6 Regen charges, restores 100% Health per charge (Legendary)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "repair_kit",
+    "name": "Repair Kit",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "healthRegen": 6
+    },
+    "description": "+6 Health/s regeneration",
+    "rarity": "common"
+  },
+  {
+    "id": "sacrifice",
+    "name": "Sacrifice",
+    "polarity": "penjaga",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "revive": 100
+    },
+    "description": "Sentinel sacrifices itself to revive owner once per mission",
+    "rarity": "rare"
+  },
+  {
+    "id": "self_destruct",
+    "name": "Self Destruct",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "blastDamage": 600,
+      "radius": 6
+    },
+    "description": "Deals 600 Blast damage in 6m radius on death",
+    "rarity": "rare"
+  },
+  {
+    "id": "targeting_receptor",
+    "name": "Targeting Receptor",
+    "polarity": "penjaga",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "targetRange": 30
+    },
+    "description": "+30m targeting range for companion weapon",
+    "rarity": "common"
+  },
+  {
+    "id": "reawaken",
+    "name": "Reawaken",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "autoRevive": 90
+    },
+    "description": "Djinn auto-revives with 90s cooldown",
+    "rarity": "rare"
+  },
+  {
+    "id": "negate",
+    "name": "Negate",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "robotic",
+    "stats": {
+      "statusImmunity": 5
+    },
+    "description": "Negates status effects, 5s cooldown",
+    "rarity": "rare"
+  },
+  {
+    "id": "bite",
+    "name": "Bite",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "critChance": 30,
+      "critDamage": 60
+    },
+    "description": "+30% Crit Chance, +60% Crit Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "maul",
+    "name": "Maul",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "meleeDamage": 110
+    },
+    "description": "+110% Melee Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ferocity",
+    "name": "Ferocity",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "attackSpeed": 30
+    },
+    "description": "+30% Attack Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "hunt",
+    "name": "Hunt",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "finisherChance": 35
+    },
+    "description": "35% chance to perform Finisher attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "howl",
+    "name": "Howl",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "fearDuration": 9
+    },
+    "description": "9s Fear effect on nearby enemies",
+    "rarity": "rare"
+  },
+  {
+    "id": "protect",
+    "name": "Protect",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "shieldRestore": 100,
+      "cooldown": 30
+    },
+    "description": "Restores owner Shields when depleted, 30s cooldown",
+    "rarity": "rare"
+  },
+  {
+    "id": "retrieve",
+    "name": "Retrieve",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "lootFetch": 27.5
+    },
+    "description": "27.5% chance to fetch additional loot from enemies",
+    "rarity": "common"
+  },
+  {
+    "id": "savagery",
+    "name": "Savagery",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "finisherDamage": 110
+    },
+    "description": "+110% Finisher Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "scavenge",
+    "name": "Scavenge",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "ammoChance": 45
+    },
+    "description": "45% chance to find ammo on enemy death",
+    "rarity": "common"
+  },
+  {
+    "id": "stalk",
+    "name": "Stalk",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "stealthDuration": 9,
+      "cooldown": 18
+    },
+    "description": "9s Stealth, 18s cooldown",
+    "rarity": "rare"
+  },
+  {
+    "id": "unleashed",
+    "name": "Unleashed",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "vipCapture": 100
+    },
+    "description": "Allows Kubrow to capture VIP targets",
+    "rarity": "rare"
+  },
+  {
+    "id": "dig",
+    "name": "Dig",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "digCooldown": 40
+    },
+    "description": "Digs up items every 40s",
+    "rarity": "rare"
+  },
+  {
+    "id": "neutralize",
+    "name": "Neutralize",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "disarmChance": 30
+    },
+    "description": "30% chance to disarm enemy",
+    "rarity": "rare"
+  },
+  {
+    "id": "reflect",
+    "name": "Reflect",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "damageReflection": 60
+    },
+    "description": "Reflects 60% damage taken",
+    "rarity": "rare"
+  },
+  {
+    "id": "cats_eye",
+    "name": "Cat's Eye",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "critBuff": 60,
+      "duration": 9
+    },
+    "description": "+60% Crit Chance buff, 9s duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "charm",
+    "name": "Charm",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "buffChance": 27
+    },
+    "description": "27% chance for random buff including double resources",
+    "rarity": "rare"
+  },
+  {
+    "id": "draining_bite",
+    "name": "Draining Bite",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "lifeSteal": 20
+    },
+    "description": "20% Life Steal on attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "transfusion",
+    "name": "Transfusion",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "reviveChance": 90,
+      "cooldown": 120
+    },
+    "description": "90% chance to revive owner, 120s cooldown",
+    "rarity": "rare"
+  },
+  {
+    "id": "claw_bite",
+    "name": "Bite (Claws)",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "criticalChance": 30,
+      "criticalDamage": 60
+    },
+    "description": "+30% Critical Chance, +60% Critical Damage for claws",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_maul",
+    "name": "Maul (Claws)",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "damage": 110
+    },
+    "description": "+110% Claw Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "claw_shred",
+    "name": "Shred (Claws)",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "attackSpeed": 30,
+      "punchThrough": 1.2
+    },
+    "description": "+30% Attack Speed, +1.2 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "claw_swipe",
+    "name": "Swipe (Claws)",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "range": 2
+    },
+    "description": "+2m Range for claw attacks",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_heat",
+    "name": "Flame Claws",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "heat": 90
+    },
+    "description": "+90% Heat Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_cold",
+    "name": "Frost Claws",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "cold": 90
+    },
+    "description": "+90% Cold Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_toxin",
+    "name": "Venom Claws",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "toxin": 90
+    },
+    "description": "+90% Toxin Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_electricity",
+    "name": "Shock Claws",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "electricity": 90
+    },
+    "description": "+90% Electricity Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "claw_fury",
+    "name": "Fury (Claws)",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "attackSpeed": 30
+    },
+    "description": "+30% Attack Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "claw_magnetic",
+    "name": "Magnetic Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "magnetic": 90
+    },
+    "description": "+90% Magnetic Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "claw_viral",
+    "name": "Viral Claws",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "viral": 90
+    },
+    "description": "+90% Viral Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "hunters_syndrome",
+    "name": "Hunter's Syndrome",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "damagePerStatus": 30
+    },
+    "description": "+30% Damage per Status type affecting the target",
+    "rarity": "rare"
+  },
+  {
+    "id": "augment_excalibur_radiant_finish",
+    "name": "Radiant Finish",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "finisherDamageBonus": 50
+    },
+    "description": "+50% Finisher Damage per rank to blinded enemies",
+    "rarity": "rare",
+    "warframeId": "excalibur"
+  },
+  {
+    "id": "augment_excalibur_furious_javelin",
+    "name": "Furious Javelin",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "meleeDamagePerEnemy": 10
+    },
+    "description": "+10% Melee Damage per enemy hit per rank",
+    "rarity": "rare",
+    "warframeId": "excalibur"
+  },
+  {
+    "id": "augment_excalibur_chromatic_blade",
+    "name": "Chromatic Blade",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 50
+    },
+    "description": "+50% Status Chance per rank, damage type matches emissive color",
+    "rarity": "rare",
+    "warframeId": "excalibur"
+  },
+  {
+    "id": "augment_excalibur_surging_dash",
+    "name": "Surging Dash",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "comboPerHit": 2
+    },
+    "description": "+2 Combo Count per enemy hit per rank",
+    "rarity": "rare",
+    "warframeId": "excalibur"
+  },
+  {
+    "id": "augment_mag_fracturing_crush",
+    "name": "Fracturing Crush",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 25
+    },
+    "description": "Crush strips -25% Armor per rank permanently",
+    "rarity": "rare",
+    "warframeId": "mag"
+  },
+  {
+    "id": "augment_mag_counter_pulse",
+    "name": "Counter Pulse",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "disarmDuration": 3
+    },
+    "description": "Polarize disarms for +3s per rank",
+    "rarity": "rare",
+    "warframeId": "mag"
+  },
+  {
+    "id": "augment_mag_magnetized_discharge",
+    "name": "Magnetized Discharge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "explosionDamage": 50
+    },
+    "description": "Press to detonate bubble for +50% damage per rank",
+    "rarity": "rare",
+    "warframeId": "mag"
+  },
+  {
+    "id": "augment_mag_sgreedy_pull",
+    "name": "Greedy Pull",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "lootPull": 100
+    },
+    "description": "Pull attracts pickups and gives Mag energy per rank",
+    "rarity": "rare",
+    "warframeId": "mag"
+  },
+  {
+    "id": "augment_volt_shocking_speed",
+    "name": "Shocking Speed",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "dischargeDamage": 25
+    },
+    "description": "Move through enemies to discharge +25% damage per rank",
+    "rarity": "rare",
+    "warframeId": "volt"
+  },
+  {
+    "id": "augment_volt_shock_trooper",
+    "name": "Shock Trooper",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyShockDamage": 100
+    },
+    "description": "Hold to cast Shock on ally weapon for +100% Shock Damage per rank",
+    "rarity": "rare",
+    "warframeId": "volt"
+  },
+  {
+    "id": "augment_volt_reactive_storm",
+    "name": "ReactivStorm",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageIncrease": 50
+    },
+    "description": "Shots through Electric Shield deal +50% damage per rank",
+    "rarity": "rare",
+    "warframeId": "volt"
+  },
+  {
+    "id": "augment_volt_transistor_shield",
+    "name": "Transistor Shield",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "critChancePerShield": 10
+    },
+    "description": "+10% Crit Chance per rank for allies shooting through shield",
+    "rarity": "rare",
+    "warframeId": "volt"
+  },
+  {
+    "id": "augment_volt_capacitance",
+    "name": "Capacitance",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "shieldPerTarget": 25
+    },
+    "description": "Discharge grants +25 shields per target per rank",
+    "rarity": "rare",
+    "warframeId": "volt"
+  },
+  {
+    "id": "augment_saryn_revealing_spores",
+    "name": "Revealing Spores",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "enemyRadar": 30
+    },
+    "description": "Spores reveal enemies for +30m per rank",
+    "rarity": "rare",
+    "warframeId": "saryn"
+  },
+  {
+    "id": "augment_saryn_regenerative_molt",
+    "name": "Regenerative Molt",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthRegen": 50
+    },
+    "description": "Molt heals +50 HP/s per rank",
+    "rarity": "rare",
+    "warframeId": "saryn"
+  },
+  {
+    "id": "augment_saryn_contagion_cloud",
+    "name": "Contagion Cloud",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "cloudDuration": 6
+    },
+    "description": "Melee kills leave toxin clouds for +6s per rank",
+    "rarity": "rare",
+    "warframeId": "saryn"
+  },
+  {
+    "id": "augment_saryn_miasmic_siphon",
+    "name": "Miasmic Siphon",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "energyOnKill": 5
+    },
+    "description": "Miasma kills grant +5 energy per rank",
+    "rarity": "rare",
+    "warframeId": "saryn"
+  },
+  {
+    "id": "augment_saryn_venom_dose",
+    "name": "Venom Dose",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyCorrosiveDamage": 100
+    },
+    "description": "Hold to cast Spores on ally weapon for +100% Corrosive Damage per rank",
+    "rarity": "rare",
+    "warframeId": "saryn"
+  },
+  {
+    "id": "augment_rhino_ironclad_charge",
+    "name": "Ironclad Charge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "ironSkinPerHit": 10
+    },
+    "description": "Charge grants +10% Iron Skin per enemy hit per rank",
+    "rarity": "rare",
+    "warframeId": "rhino"
+  },
+  {
+    "id": "augment_rhino_iron_shrapnel",
+    "name": "Iron Shrapnel",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "recastExplosion": 100
+    },
+    "description": "Press 2 to detonate Iron Skin for damage per rank",
+    "rarity": "rare",
+    "warframeId": "rhino"
+  },
+  {
+    "id": "augment_rhino_piercing_roar",
+    "name": "Piercing Roar",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 25
+    },
+    "description": "Roar strips -25% Armor per rank",
+    "rarity": "rare",
+    "warframeId": "rhino"
+  },
+  {
+    "id": "augment_rhino_reinforcing_stomp",
+    "name": "Reinforcing Stomp",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorPerEnemy": 5
+    },
+    "description": "+5 Armor per enemy hit per rank for team",
+    "rarity": "rare",
+    "warframeId": "rhino"
+  },
+  {
+    "id": "augment_nova_neutron_star",
+    "name": "Neutron Star",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "starExplosion": 100
+    },
+    "description": "Press 1 to detonate stars for damage per rank",
+    "rarity": "rare",
+    "warframeId": "nova"
+  },
+  {
+    "id": "augment_nova_antimatter_absorb",
+    "name": "Antimatter Absorb",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "absorbRadius": 2
+    },
+    "description": "Antimatter Drop absorbs +2m radius per rank",
+    "rarity": "rare",
+    "warframeId": "nova"
+  },
+  {
+    "id": "augment_nova_escape_velocity",
+    "name": "Escape Velocity",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "speedOnTeleport": 15
+    },
+    "description": "+15% Speed for 4s after teleport per rank",
+    "rarity": "rare",
+    "warframeId": "nova"
+  },
+  {
+    "id": "augment_nova_molecular_fission",
+    "name": "Molecular Fission",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "slowWithoutSpeed": 15
+    },
+    "description": "Slow enemies without speed boost per rank",
+    "rarity": "rare",
+    "warframeId": "nova"
+  },
+  {
+    "id": "augment_trinity_vampire_leech",
+    "name": "Vampire Leech",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "overshieldConversion": 100
+    },
+    "description": "Extra energy becomes Overshields per rank",
+    "rarity": "rare",
+    "warframeId": "trinity"
+  },
+  {
+    "id": "augment_trinity_abating_link",
+    "name": "Abating Link",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 15
+    },
+    "description": "Linked enemies lose -15% Armor per rank",
+    "rarity": "rare",
+    "warframeId": "trinity"
+  },
+  {
+    "id": "augment_trinity_blessing_share",
+    "name": "Blessing Share",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageReduction": 25
+    },
+    "description": "Blessing damage reduction +25% per rank",
+    "rarity": "rare",
+    "warframeId": "trinity"
+  },
+  {
+    "id": "augment_trinity_pool_of_life",
+    "name": "Pool of Life",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthOrbChance": 25
+    },
+    "description": "Marked enemies drop health orbs on death per rank",
+    "rarity": "rare",
+    "warframeId": "trinity"
+  },
+  {
+    "id": "augment_mesa_ballistic_bullseye",
+    "name": "Ballistic Bullseye",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "critChance": 25
+    },
+    "description": "Marked enemies have +25% Crit Chance per rank",
+    "rarity": "rare",
+    "warframeId": "mesa"
+  },
+  {
+    "id": "augment_mesa_muzzle_flash",
+    "name": "Muzzle Flash",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "blindDuration": 3
+    },
+    "description": "Shooting Gallery blinds for +3s per rank",
+    "rarity": "rare",
+    "warframeId": "mesa"
+  },
+  {
+    "id": "augment_mesa_staggering_shield",
+    "name": "Staggering Shield",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "reflectStagger": 100
+    },
+    "description": "Reflected bullets stagger enemies per rank",
+    "rarity": "rare",
+    "warframeId": "mesa"
+  },
+  {
+    "id": "augment_mesa_mess_waltz",
+    "name": "Mesa's Waltz",
+    "polarity": "exilus",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "moveSpeed": 50
+    },
+    "description": "Can move during Peacemaker at +50% speed per rank",
+    "rarity": "rare",
+    "warframeId": "mesa"
+  },
+  {
+    "id": "augment_wisp_fused_reservoir",
+    "name": "Fused Reservoir",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "combinedMote": 100
+    },
+    "description": "Hold to deploy fused motes with combined effects per rank",
+    "rarity": "rare",
+    "warframeId": "wisp"
+  },
+  {
+    "id": "augment_khora_accumulating_whipclaw",
+    "name": "Accumulating Whipclaw",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "comboOnHit": 1
+    },
+    "description": "Hits add to combo counter per rank",
+    "rarity": "rare",
+    "warframeId": "khora"
+  },
+  {
+    "id": "augment_khora_pilfering_strangledome",
+    "name": "Pilfering Strangledome",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "lootChance": 35
+    },
+    "description": "+35% chance for extra loot per rank",
+    "rarity": "rare",
+    "warframeId": "khora"
+  },
+  {
+    "id": "augment_khora_venari_bodyguard",
+    "name": "Venari Bodyguard",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "deathPrevention": 100
+    },
+    "description": "Venari dies in place of Khora per rank",
+    "rarity": "rare",
+    "warframeId": "khora"
+  },
+  {
+    "id": "augment_ash_safeguard_switch",
+    "name": "Safeguard Switch",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "invulnerabilityDuration": 2
+    },
+    "description": "Teleport grants +2s invulnerability per rank",
+    "rarity": "rare",
+    "warframeId": "ash"
+  },
+  {
+    "id": "augment_ash_rising_storm",
+    "name": "Rising Storm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 4
+    },
+    "description": "Blade Storm extends combo by +4s per rank",
+    "rarity": "rare",
+    "warframeId": "ash"
+  },
+  {
+    "id": "augment_ash_seeking_shuriken",
+    "name": "Seeking Shuriken",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 25
+    },
+    "description": "Shurikens seek enemies and expose weak points per rank",
+    "rarity": "rare",
+    "warframeId": "ash"
+  },
+  {
+    "id": "augment_ash_smoke_shadow",
+    "name": "Smoke Shadow",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyStealth": 100
+    },
+    "description": "Smoke Screen conceals allies per rank",
+    "rarity": "rare",
+    "warframeId": "ash"
+  },
+  {
+    "id": "augment_ivar_piercing_navigator",
+    "name": "Piercing Navigator",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "punchThroughPerHit": 1
+    },
+    "description": "+1 Punch Through per hit per rank",
+    "rarity": "rare",
+    "warframeId": "ivara"
+  },
+  {
+    "id": "augment_ivar_infiltrate",
+    "name": "Infiltrate",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "hackSpeed": 25
+    },
+    "description": "+25% Hack Speed and bypass lasers per rank",
+    "rarity": "rare",
+    "warframeId": "ivara"
+  },
+  {
+    "id": "augment_ivar_concentrated_arrow",
+    "name": "Concentrated Arrow",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "headshotExplosion": 100
+    },
+    "description": "Headshots cause explosions per rank",
+    "rarity": "rare",
+    "warframeId": "ivara"
+  },
+  {
+    "id": "augment_ivar_empowered_quiver",
+    "name": "Empowered Quiver",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "critDamage": 100
+    },
+    "description": "Dashwire grants +100% Crit Damage per rank",
+    "rarity": "rare",
+    "warframeId": "ivara"
+  },
+  {
+    "id": "augment_octavia_partition_mallet",
+    "name": "Partitioned Mallet",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "maxMallets": 1
+    },
+    "description": "Can deploy +1 additional Mallet per rank",
+    "rarity": "rare",
+    "warframeId": "octavia"
+  },
+  {
+    "id": "augment_octavia_conductor",
+    "name": "Conductor",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "spectraFollow": 100
+    },
+    "description": "Nocturne follows Octavia per rank",
+    "rarity": "rare",
+    "warframeId": "octavia"
+  },
+  {
+    "id": "augment_ember_fireball_frenzy",
+    "name": "Fireball Frenzy",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyCast": 100
+    },
+    "description": "Hold to cast Fireball on ally weapon per rank",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "augment_ember_flash_accelerant",
+    "name": "Flash Accelerant",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "castSpeedBonus": 25
+    },
+    "description": "Immolation grants +25% Cast Speed per rank",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "augment_ember_fire_fright",
+    "name": "Fire Fright",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "panicChance": 25
+    },
+    "description": "+25% chance to panic enemies per rank",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "augment_ember_healing_flame",
+    "name": "Healing Flame",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthOnImmolation": 25
+    },
+    "description": "Immolation heals +25 HP per rank when toggled",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "augment_ember_exothermic",
+    "name": "Exothermic",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "energyOrbChance": 15
+    },
+    "description": "Enemies killed under Inferno drop energy orbs per rank",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "augment_frost_freeze_force",
+    "name": "Freeze Force",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyColdDamage": 50
+    },
+    "description": "Ally attacks gain +50% Cold Damage per rank",
+    "rarity": "rare",
+    "warframeId": "frost"
+  },
+  {
+    "id": "augment_frost_ice_wave_impedance",
+    "name": "Ice Wave Impedance",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "slowDuration": 4
+    },
+    "description": "Ice Wave slows for +4s per rank",
+    "rarity": "rare",
+    "warframeId": "frost"
+  },
+  {
+    "id": "augment_frost_chilling_globe",
+    "name": "Chilling Globe",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "freezeChance": 25
+    },
+    "description": "+25% chance to freeze enemies entering globe per rank",
+    "rarity": "rare",
+    "warframeId": "frost"
+  },
+  {
+    "id": "augment_frost_icy_avalanche",
+    "name": "Icy Avalanche",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyOverguard": 50
+    },
+    "description": "Grants allies Overguard per rank",
+    "rarity": "rare",
+    "warframeId": "frost"
+  },
+  {
+    "id": "augment_loki_savior_decoy",
+    "name": "Savior Decoy",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "deathPrevention": 100
+    },
+    "description": "Decoy saves from lethal damage per rank",
+    "rarity": "rare",
+    "warframeId": "loki"
+  },
+  {
+    "id": "augment_loki_hushed_invisibility",
+    "name": "Hushed Invisibility",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "silenceMelee": 100
+    },
+    "description": "Silences all weapons per rank",
+    "rarity": "rare",
+    "warframeId": "loki"
+  },
+  {
+    "id": "augment_loki_safe_switch",
+    "name": "Safe Switch",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageReduction": 75
+    },
+    "description": "+75% Damage Reduction after teleport per rank",
+    "rarity": "rare",
+    "warframeId": "loki"
+  },
+  {
+    "id": "augment_loki_irradiating_disarm",
+    "name": "Irradiating Disarm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "radiationChance": 75
+    },
+    "description": "Disarmed enemies become irradiated per rank",
+    "rarity": "rare",
+    "warframeId": "loki"
+  },
+  {
+    "id": "augment_nyx_mind_freak",
+    "name": "Mind Freak",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "controlledDamage": 100
+    },
+    "description": "Controlled enemy deals +100% Damage per rank",
+    "rarity": "rare",
+    "warframeId": "nyx"
+  },
+  {
+    "id": "augment_nyx_chaos_sphere",
+    "name": "Chaos Sphere",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "sphereDuration": 6
+    },
+    "description": "Chaos creates lasting sphere for +6s per rank",
+    "rarity": "rare",
+    "warframeId": "nyx"
+  },
+  {
+    "id": "augment_nyx_assimilate",
+    "name": "Assimilate",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "moveSpeed": 50
+    },
+    "description": "Can move during Absorb at +50% speed per rank",
+    "rarity": "rare",
+    "warframeId": "nyx"
+  },
+  {
+    "id": "augment_nyx_pacifying_bolts",
+    "name": "Pacifying Bolts",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "stunDuration": 3
+    },
+    "description": "Psychic Bolts stun enemies for +3s per rank",
+    "rarity": "rare",
+    "warframeId": "nyx"
+  },
+  {
+    "id": "augment_banshee_sonic_fracture",
+    "name": "Sonic Fracture",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 15
+    },
+    "description": "Sonic Boom strips -15% Armor per rank",
+    "rarity": "rare",
+    "warframeId": "banshee"
+  },
+  {
+    "id": "augment_banshee_resonance",
+    "name": "Resonance",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "markDuration": 5
+    },
+    "description": "Sonar weakpoints last +5s per rank",
+    "rarity": "rare",
+    "warframeId": "banshee"
+  },
+  {
+    "id": "augment_banshee_silence_savage",
+    "name": "Savage Silence",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "finisherDamage": 25
+    },
+    "description": "+25% Finisher Damage per rank",
+    "rarity": "rare",
+    "warframeId": "banshee"
+  },
+  {
+    "id": "augment_banshee_resonating_quake",
+    "name": "Resonating Quake",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "quakeDamage": 75
+    },
+    "description": "+75% Sound Quake damage per rank",
+    "rarity": "rare",
+    "warframeId": "banshee"
+  },
+  {
+    "id": "augment_vauban_tesla_link",
+    "name": "Tesla Link",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "linkDamageReduction": 15
+    },
+    "description": "Tesla chains grant +15% Damage Reduction per rank",
+    "rarity": "rare",
+    "warframeId": "vauban"
+  },
+  {
+    "id": "augment_vauban_photon_repeater",
+    "name": "Photon Repeater",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "extraCast": 2
+    },
+    "description": "Photon Strike casts twice per rank",
+    "rarity": "rare",
+    "warframeId": "vauban"
+  },
+  {
+    "id": "augment_vauban_repelling_bastille",
+    "name": "Repelling Bastille",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "repelChance": 25
+    },
+    "description": "+25% chance to repel enemies per rank",
+    "rarity": "rare",
+    "warframeId": "vauban"
+  },
+  {
+    "id": "augment_nekros_creeping_terrify",
+    "name": "Creeping Terrify",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "slowAfterFlee": 20
+    },
+    "description": "Fleeing enemies are slowed +20% per rank",
+    "rarity": "rare",
+    "warframeId": "nekros"
+  },
+  {
+    "id": "augment_nekros_despoil",
+    "name": "Despoil",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthCost": 10
+    },
+    "description": "Desecrate costs -10 Health instead of Energy per rank",
+    "rarity": "rare",
+    "warframeId": "nekros"
+  },
+  {
+    "id": "augment_nekros_soul_survivor",
+    "name": "Soul Survivor",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyRevive": 15
+    },
+    "description": "Can revive ally for -15% Health per rank",
+    "rarity": "rare",
+    "warframeId": "nekros"
+  },
+  {
+    "id": "augment_nekros_shield_of_shadows",
+    "name": "Shield of Shadows",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageReductionPerShadow": 6
+    },
+    "description": "+6% Damage Reduction per Shadow per rank",
+    "rarity": "rare",
+    "warframeId": "nekros"
+  },
+  {
+    "id": "augment_hydroid_tempest_rush",
+    "name": "Tempest Rush",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "castSpeed": 25
+    },
+    "description": "+25% Cast Speed during Barrage per rank",
+    "rarity": "rare",
+    "warframeId": "hydroid"
+  },
+  {
+    "id": "augment_hydroid_tidal_impunity",
+    "name": "Tidal Impunity",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "statusCure": 100
+    },
+    "description": "Cures status effects per rank",
+    "rarity": "rare",
+    "warframeId": "hydroid"
+  },
+  {
+    "id": "augment_hydroid_curative_undertow",
+    "name": "Curative Undertow",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healOnDrown": 25
+    },
+    "description": "Heals +25 HP per drowned enemy per rank",
+    "rarity": "rare",
+    "warframeId": "hydroid"
+  },
+  {
+    "id": "augment_hydroid_pilfering_swarm",
+    "name": "Pilfering Swarm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "lootChance": 35
+    },
+    "description": "+35% chance for extra loot per rank",
+    "rarity": "rare",
+    "warframeId": "hydroid"
+  },
+  {
+    "id": "augment_mirage_explosive_legerdemain",
+    "name": "Explosive Legerdemain",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "explosionDamage": 100
+    },
+    "description": "Pickup explosions deal +100% damage per rank",
+    "rarity": "rare",
+    "warframeId": "mirage"
+  },
+  {
+    "id": "augment_mirage_total_eclipse",
+    "name": "Total Eclipse",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyShare": 50
+    },
+    "description": "Share Eclipse buff with allies +50% per rank",
+    "rarity": "rare",
+    "warframeId": "mirage"
+  },
+  {
+    "id": "augment_mirage_hall_of_malevolence",
+    "name": "Hall of Malevolence",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damagePerKill": 5
+    },
+    "description": "+5% Damage per kill per rank",
+    "rarity": "rare",
+    "warframeId": "mirage"
+  },
+  {
+    "id": "augment_chroma_afterburn",
+    "name": "Afterburn",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "leaveTrail": 100
+    },
+    "description": "Spectral Scream leaves fire trail per rank",
+    "rarity": "rare",
+    "warframeId": "chroma"
+  },
+  {
+    "id": "augment_chroma_everlasting_ward",
+    "name": "Everlasting Ward",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyDuration": 100
+    },
+    "description": "Allies keep ward for +100% duration per rank",
+    "rarity": "rare",
+    "warframeId": "chroma"
+  },
+  {
+    "id": "augment_chroma_vexing_retaliation",
+    "name": "Vexing Retaliation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "retaliationChance": 25
+    },
+    "description": "+25% chance to reflect status per rank",
+    "rarity": "rare",
+    "warframeId": "chroma"
+  },
+  {
+    "id": "augment_chroma_guided_effigy",
+    "name": "Guided Effigy",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "moveEffigy": 100
+    },
+    "description": "Can move Effigy per rank",
+    "rarity": "rare",
+    "warframeId": "chroma"
+  },
+  {
+    "id": "augment_limbo_rift_haven",
+    "name": "Rift Haven",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healInRift": 15
+    },
+    "description": "Allies heal +15 HP/s in Rift per rank",
+    "rarity": "rare",
+    "warframeId": "limbo"
+  },
+  {
+    "id": "augment_limbo_rift_torrent",
+    "name": "Rift Torrent",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damagePerEnemy": 10
+    },
+    "description": "+10% Damage per enemy in Rift per rank",
+    "rarity": "rare",
+    "warframeId": "limbo"
+  },
+  {
+    "id": "augment_limbo_cataclysmic_continuum",
+    "name": "Cataclysmic Continuum",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "durationPerKill": 1
+    },
+    "description": "+1s Duration per kill per rank",
+    "rarity": "rare",
+    "warframeId": "limbo"
+  },
+  {
+    "id": "augment_equinox_duality",
+    "name": "Duality",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "specterDuration": 5
+    },
+    "description": "Specter lasts +5s per rank",
+    "rarity": "rare",
+    "warframeId": "equinox"
+  },
+  {
+    "id": "augment_equinox_calm_frenzy",
+    "name": "Calm & Frenzy",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "castSpeed": 25
+    },
+    "description": "+25% Cast Speed per rank",
+    "rarity": "rare",
+    "warframeId": "equinox"
+  },
+  {
+    "id": "augment_equinox_pacifying_bolts",
+    "name": "Pacifying Bolts",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageReductionCap": 10
+    },
+    "description": "+10% Damage Reduction cap per rank",
+    "rarity": "rare",
+    "warframeId": "equinox"
+  },
+  {
+    "id": "augment_equinox_energy_transfer",
+    "name": "Energy Transfer",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "energyOnBurst": 50
+    },
+    "description": "Releases +50% stored Energy per rank",
+    "rarity": "rare",
+    "warframeId": "equinox"
+  },
+  {
+    "id": "augment_atlas_tectonic_fracture",
+    "name": "Tectonic Fracture",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "extraWalls": 1
+    },
+    "description": "+1 Extra Wall per rank",
+    "rarity": "rare",
+    "warframeId": "atlas"
+  },
+  {
+    "id": "augment_atlas_ore_gaze",
+    "name": "Ore Gaze",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "oreChance": 25
+    },
+    "description": "+25% chance for ore from petrified per rank",
+    "rarity": "rare",
+    "warframeId": "atlas"
+  },
+  {
+    "id": "augment_atlas_rumbled",
+    "name": "Rumbled",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "rumbleDuration": 5
+    },
+    "description": "Become Rumbler for +5s per rank",
+    "rarity": "rare",
+    "warframeId": "atlas"
+  },
+  {
+    "id": "augment_atlas_path_of_statues",
+    "name": "Path of Statues",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "petrifyTrail": 100
+    },
+    "description": "Landslide leaves trail that petrifies enemies per rank",
+    "rarity": "rare",
+    "warframeId": "atlas"
+  },
+  {
+    "id": "augment_wukong_celestial_stomp",
+    "name": "Celestial Stomp",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "stompRange": 5
+    },
+    "description": "Clone slams for +5m range per rank",
+    "rarity": "rare",
+    "warframeId": "wukong"
+  },
+  {
+    "id": "augment_wukong_enveloping_cloud",
+    "name": "Enveloping Cloud",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyInvisibility": 100
+    },
+    "description": "Allies become invisible per rank",
+    "rarity": "rare",
+    "warframeId": "wukong"
+  },
+  {
+    "id": "augment_wukong_primal_rage",
+    "name": "Primal Rage",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "critBonusPerKill": 5
+    },
+    "description": "+5% Crit Chance per kill per rank",
+    "rarity": "rare",
+    "warframeId": "wukong"
+  },
+  {
+    "id": "augment_titania_spellbound_harvest",
+    "name": "Spellbound Harvest",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "tributeEfficiency": 25
+    },
+    "description": "+25% Tribute efficiency per rank",
+    "rarity": "rare",
+    "warframeId": "titania"
+  },
+  {
+    "id": "augment_titania_razorwing_blitz",
+    "name": "Razorwing Blitz",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "speedPerCast": 10
+    },
+    "description": "+10% Speed per ability cast per rank",
+    "rarity": "rare",
+    "warframeId": "titania"
+  },
+  {
+    "id": "augment_titania_beguiling_lantern",
+    "name": "Beguiling Lantern",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "attractionRange": 5
+    },
+    "description": "+5m Lantern attraction range per rank",
+    "rarity": "rare",
+    "warframeId": "titania"
+  },
+  {
+    "id": "augment_nezha_pyroclastic_flow",
+    "name": "Pyroclastic Flow",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "fireballExplosion": 100
+    },
+    "description": "Trail leaves fireball per rank",
+    "rarity": "rare",
+    "warframeId": "nezha"
+  },
+  {
+    "id": "augment_nezha_reaping_chakram",
+    "name": "Reaping Chakram",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthOrbChance": 25
+    },
+    "description": "+25% Health Orb chance per rank",
+    "rarity": "rare",
+    "warframeId": "nezha"
+  },
+  {
+    "id": "augment_nezha_safeguard",
+    "name": "Safeguard",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "allyWard": 100
+    },
+    "description": "Can cast Warding Halo on ally per rank",
+    "rarity": "rare",
+    "warframeId": "nezha"
+  },
+  {
+    "id": "augment_nezha_warding_halo",
+    "name": "Warding Halo Augment",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "recast": 100
+    },
+    "description": "Can recast while active per rank",
+    "rarity": "rare",
+    "warframeId": "nezha"
+  },
+  {
+    "id": "augment_inaros_elemental_sandstorm",
+    "name": "Elemental Sandstorm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "elementalChance": 25
+    },
+    "description": "+25% chance for status per rank",
+    "rarity": "rare",
+    "warframeId": "inaros"
+  },
+  {
+    "id": "augment_inaros_negation_swarm",
+    "name": "Negation Swarm",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "statusProtection": 100
+    },
+    "description": "Scarab protects from status per rank",
+    "rarity": "rare",
+    "warframeId": "inaros"
+  },
+  {
+    "id": "augment_inaros_desiccation_curse",
+    "name": "Desiccation's Curse",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "sandShadowChance": 25
+    },
+    "description": "Killed blinded enemies become Sand Shadows per rank",
+    "rarity": "rare",
+    "warframeId": "inaros"
+  },
+  {
+    "id": "augment_gara_mending_splinters",
+    "name": "Mending Splinters",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthRegen": 5
+    },
+    "description": "Allies heal +5 HP/s per rank",
+    "rarity": "rare",
+    "warframeId": "gara"
+  },
+  {
+    "id": "augment_gara_spectrosiphon",
+    "name": "Spectrosiphon",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "energyOnKill": 2
+    },
+    "description": "+2 Energy on Spectrorage kill per rank",
+    "rarity": "rare",
+    "warframeId": "gara"
+  },
+  {
+    "id": "augment_baruuk_endless_lull",
+    "name": "Endless Lull",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "lullDuration": 3
+    },
+    "description": "+3s Lull duration per rank",
+    "rarity": "rare",
+    "warframeId": "baruuk"
+  },
+  {
+    "id": "augment_baruuk_elusive_retribution",
+    "name": "Elusive Retribution",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "evasionToDamage": 10
+    },
+    "description": "+10% Damage from evasion per rank",
+    "rarity": "rare",
+    "warframeId": "baruuk"
+  },
+  {
+    "id": "augment_baruuk_reactive_storm",
+    "name": "Reactive Storm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 62.5
+    },
+    "description": "Desert Wind matches enemy weakness per rank",
+    "rarity": "rare",
+    "warframeId": "baruuk"
+  },
+  {
+    "id": "augment_hildryn_balefire_surge",
+    "name": "Balefire Surge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "explosionOnHit": 50
+    },
+    "description": "+50% Explosion damage per rank",
+    "rarity": "rare",
+    "warframeId": "hildryn"
+  },
+  {
+    "id": "augment_hildryn_pillage_aug",
+    "name": "Blazing Pillage",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "heatDamage": 200
+    },
+    "description": "Pillage deals Heat damage per rank",
+    "rarity": "rare",
+    "warframeId": "hildryn"
+  },
+  {
+    "id": "augment_hildryn_blazing_pillage",
+    "name": "Blazing Pillage",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "heatDamage": 200
+    },
+    "description": "Pillage deals Heat damage per rank",
+    "rarity": "rare",
+    "warframeId": "hildryn"
+  },
+  {
+    "id": "augment_revenant_thrall_toll",
+    "name": "Thrall Toll",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "energyOnKill": 2
+    },
+    "description": "+2 Energy per thrall death per rank",
+    "rarity": "rare",
+    "warframeId": "revenant"
+  },
+  {
+    "id": "augment_revenant_mesmer_skin_aug",
+    "name": "Mesmer Skin Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "chargesToAlly": 1
+    },
+    "description": "Can transfer +1 charge to ally per rank",
+    "rarity": "rare",
+    "warframeId": "revenant"
+  },
+  {
+    "id": "augment_garuda_blood_forge",
+    "name": "Blood Forge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 50
+    },
+    "description": "+50% Reload Speed during Bloodletting per rank",
+    "rarity": "rare",
+    "warframeId": "garuda"
+  },
+  {
+    "id": "augment_garuda_blood_siphon",
+    "name": "Blood Siphon",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "healthFromAllies": 25
+    },
+    "description": "Allies give +25% Health per rank",
+    "rarity": "rare",
+    "warframeId": "garuda"
+  },
+  {
+    "id": "augment_garuda_dread_ward",
+    "name": "Dread Ward",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "invulnerability": 2
+    },
+    "description": "+2s Invulnerability on Dread Mirror kill per rank",
+    "rarity": "rare",
+    "warframeId": "garuda"
+  },
+  {
+    "id": "augment_garuda_blending_talons",
+    "name": "Blending Talons",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "comboPerHit": 1
+    },
+    "description": "Seeking Talons adds to combo counter per rank",
+    "rarity": "rare",
+    "warframeId": "garuda"
+  },
+  {
+    "id": "augment_gauss_mach_crash",
+    "name": "Mach Crash",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "shockwaveOnStop": 100
+    },
+    "description": "Stops create shockwave per rank",
+    "rarity": "rare",
+    "warframeId": "gauss"
+  },
+  {
+    "id": "augment_gauss_thermal_transfer",
+    "name": "Thermal Transfer",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "coldToAlly": 50
+    },
+    "description": "Share +50% Cold buff with ally per rank",
+    "rarity": "rare",
+    "warframeId": "gauss"
+  },
+  {
+    "id": "augment_grendel_hearty_nourishment",
+    "name": "Hearty Nourishment",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "immunityDuration": 3
+    },
+    "description": "+3s Status immunity per rank",
+    "rarity": "rare",
+    "warframeId": "grendel"
+  },
+  {
+    "id": "augment_grendel_catapult",
+    "name": "Catapult",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "launchSpeed": 100
+    },
+    "description": "+100% Launch Speed per rank",
+    "rarity": "rare",
+    "warframeId": "grendel"
+  },
+  {
+    "id": "augment_grendel_gourmand",
+    "name": "Gourmand",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorPerHit": 10
+    },
+    "description": "Feast grants Armor per rank",
+    "rarity": "rare",
+    "warframeId": "grendel"
+  },
+  {
+    "id": "augment_sevagoth_gloom_aug",
+    "name": "Gloom Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "rangePerShadow": 2
+    },
+    "description": "+2m Range per Shadow per rank",
+    "rarity": "rare",
+    "warframeId": "sevagoth"
+  },
+  {
+    "id": "augment_yareli_merulina_guardian",
+    "name": "Merulina Guardian",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageAbsorption": 25
+    },
+    "description": "+25% Damage absorbed per rank",
+    "rarity": "rare",
+    "warframeId": "yareli"
+  },
+  {
+    "id": "augment_yareli_surging_blades",
+    "name": "Surging Blades",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "bladeDamage": 10
+    },
+    "description": "Aquablades gain +10% Damage per hit per rank",
+    "rarity": "rare",
+    "warframeId": "yareli"
+  },
+  {
+    "id": "augment_caliban_lethal_progeny_aug",
+    "name": "Lethal Progeny Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "sentientDuration": 5
+    },
+    "description": "+5s Sentient duration per rank",
+    "rarity": "rare",
+    "warframeId": "caliban"
+  },
+  {
+    "id": "augment_styanax_axios_javelin_aug",
+    "name": "Axios Javelin Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "spearReturn": 100
+    },
+    "description": "Spears return after throw per rank",
+    "rarity": "rare",
+    "warframeId": "styanax"
+  },
+  {
+    "id": "augment_styanax_intrepid_stand",
+    "name": "Intrepid Stand",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "overguardOnHit": 10
+    },
+    "description": "Final Stand hits grant Overguard per rank",
+    "rarity": "rare",
+    "warframeId": "styanax"
+  },
+  {
+    "id": "augment_kullervo_wrathful_clarity",
+    "name": "Wrathful Clarity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "markDuration": 3
+    },
+    "description": "+3s Mark duration per rank",
+    "rarity": "rare",
+    "warframeId": "kullervo"
+  },
+  {
+    "id": "augment_qorvex_chyrinka_pillar_aug",
+    "name": "Chyrinka Pillar Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "pillarDuration": 3
+    },
+    "description": "+3s Pillar duration per rank",
+    "rarity": "rare",
+    "warframeId": "qorvex"
+  },
+  {
+    "id": "augment_jade_prismatic_shield_aug",
+    "name": "Prismatic Shield Augment",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "reflectionDamage": 25
+    },
+    "description": "+25% Reflection damage per rank",
+    "rarity": "rare",
+    "warframeId": "jade"
+  },
+  {
+    "id": "augment_wisp_critical_surge",
+    "name": "Critical Surge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "breachCritChance": 25
+    },
+    "description": "Breach Surge grants +25% Crit Chance per rank",
+    "rarity": "rare",
+    "warframeId": "wisp"
+  },
+  {
+    "id": "augment_protea_dispensary_aug",
+    "name": "Dispensary Augment",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "extraPickup": 25
+    },
+    "description": "+25% chance for extra pickup per rank",
+    "rarity": "rare",
+    "warframeId": "protea"
+  },
+  {
+    "id": "augment_dagath_grave_keeper",
+    "name": "Grave Keeper",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "damageReductionPerKill": 2
+    },
+    "description": "+2% DR per kill per rank",
+    "rarity": "rare",
+    "warframeId": "dagath"
+  },
+  {
+    "id": "augment_universal_health_conversion",
+    "name": "Health Conversion",
+    "polarity": "unairu",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorOnOrb": 15
+    },
+    "description": "Health orbs grant +15 Armor per stack per rank",
+    "rarity": "rare",
+    "warframeId": "universal"
+  },
+  {
+    "id": "augment_universal_energy_conversion",
+    "name": "Energy Conversion",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "strengthOnOrb": 9
+    },
+    "description": "Energy orbs grant +9% Ability Strength per rank",
+    "rarity": "rare",
+    "warframeId": "universal"
+  },
+  {
+    "id": "augment_universal_shattering_impact",
+    "name": "Shattering Impact",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {
+      "armorReduction": 5
+    },
+    "description": "-5 Armor per hit per rank",
+    "rarity": "common",
+    "warframeId": "universal"
+  },
+  {
+    "id": "augur_message",
+    "name": "Augur Message",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 4
+    },
+    "description": "+6% Ability Duration per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "augur_seeker",
+    "name": "Augur Seeker",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "enemyRadar": 9
+    },
+    "description": "+9m Enemy Radar per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "augur_reach",
+    "name": "Augur Reach",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 5
+    },
+    "description": "+6% Ability Range per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "augur_accord",
+    "name": "Augur Accord",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 11.6667
+    },
+    "description": "+25% Shield Capacity per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "augur_secrets",
+    "name": "Augur Secrets",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 4
+    },
+    "description": "+6% Ability Strength per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "augur_breach",
+    "name": "Augur Pact",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "pistol",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+15% Damage per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "gladiator_might",
+    "name": "Gladiator Might",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+7.5% Critical Damage per rank (Set)",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hunter_adrenaline",
+    "name": "Hunter Adrenaline",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energyOnHealthDamage": 7.5
+    },
+    "description": "Convert +7.5% Health Damage to Energy per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "hunter_munitions",
+    "name": "Hunter Munitions",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "subCategory": "",
+    "stats": {
+      "slashOnCrit": 7.5
+    },
+    "description": "+7.5% chance for Slash proc on Crit per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hunter_track",
+    "name": "Hunter Track",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "radarOnBleed": 10
+    },
+    "description": "+10m Enemy Radar vs bleeding per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "hunter_recovery",
+    "name": "Hunter Recovery",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "lifestealToOwner": 7.5
+    },
+    "description": "Companion attacks heal owner +7.5% per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "hunter_command",
+    "name": "Hunter Command",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "commandOnStatus": 100
+    },
+    "description": "Companion attacks status enemies per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "hunter_synergy",
+    "name": "Hunter Synergy",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "critLink": 7.5
+    },
+    "description": "Companion shares +7.5% of owner crit chance per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mecha_empowered",
+    "name": "Mecha Empowered",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "armorOnMarkKill": 30
+    },
+    "description": "+30% Armor when Kubrow kills marked enemy per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "mecha_recharge",
+    "name": "Mecha Recharge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "shieldRechargeLink": 15
+    },
+    "description": "+15% Shield Recharge when Kubrow attacks per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "vigorous_preparation",
+    "name": "Vigorous Preparation",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "startingHealth": 15
+    },
+    "description": "+15% Starting Health per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "melee_prowess_sentinel",
+    "name": "Assault Mode",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "attackRange": 3
+    },
+    "description": "+3m Attack Range per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "energy_generator",
+    "name": "Energy Generator",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "energyOnAssist": 5
+    },
+    "description": "Assists generate +5 energy per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "ocular_sentry",
+    "name": "Ocular Sentry",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "markDuration": 3
+    },
+    "description": "Marks enemies for +3s per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "target_acquisition",
+    "name": "Target Acquisition",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "weakpointChance": 10
+    },
+    "description": "+10% chance to mark weakpoints per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "link_armor",
+    "name": "Link Armor",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "linkArmor": 10
+    },
+    "description": "+10% Link Armor per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "link_shields",
+    "name": "Link Shields",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "linkShields": 10
+    },
+    "description": "+10% Link Shields per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "meditation",
+    "name": "Meditation",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "healthRegen": 3
+    },
+    "description": "+3 HP/s Health Regen per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "tease",
+    "name": "Tease",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "drawAggro": 15
+    },
+    "description": "Draws +15% enemy aggression per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "scan_organic",
+    "name": "Scan Organic Lifeforms",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "scanChance": 10
+    },
+    "description": "+10% Scan Chance per rank",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hard_engag",
+    "name": "Hard Engage",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "spinDamage": 20
+    },
+    "description": "+20% Spin Damage per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "security_override",
+    "name": "Security Override",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "hackSpeed": 15
+    },
+    "description": "+15% Hack Speed per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "stasis_field",
+    "name": "Stasis Field",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "fieldDuration": 3
+    },
+    "description": "+3s Field Duration per rank",
+    "rarity": "common"
+  },
+  {
+    "id": "set_bonus_augur",
+    "name": "Augur Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 6,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "energyToShields": 40
+    },
+    "description": "6-piece: Spent Energy becomes Shields (40%)",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_gladiator",
+    "name": "Gladiator Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 6,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "critPerCombo": 15
+    },
+    "description": "6-piece: +15% Crit Chance per Combo Multiplier",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_hunter",
+    "name": "Hunter Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 6,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "companionDamageToStatus": 150
+    },
+    "description": "6-piece: Companion deals +150% damage to status enemies",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_mecha",
+    "name": "Mecha Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 4,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "markExplosion": 150
+    },
+    "description": "4-piece: Marked enemies explode for 150% damage",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_synth",
+    "name": "Synth Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 4,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "pistolReloadSpeed": 15
+    },
+    "description": "4-piece: +15% Pistol Reload Speed, Companion reloads 5%/s",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_tek",
+    "name": "Tek Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 4,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "markDuration": 10
+    },
+    "description": "4-piece: Kavat marks for 10s, +60% damage to marked",
+    "rarity": "legendary"
+  },
+  {
+    "id": "set_bonus_vigilante",
+    "name": "Vigilante Set Bonus",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 6,
+    "category": "set",
+    "subCategory": "",
+    "stats": {
+      "critEnhanceChance": 30
+    },
+    "description": "6-piece: 30% chance to enhance primary crit hits",
+    "rarity": "legendary"
+  },
+  {
+    "id": "stance_iron_phoenix",
+    "name": "Iron Phoenix",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Sword stance: Balanced combo",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_crimson_dervish",
+    "name": "Crimson Dervish",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Sword stance: High damage, slow",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_vengeful_revenant",
+    "name": "Vengeful Revenant",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Sword stance: High damage, sweeping",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_swooping_falcon",
+    "name": "Swooping Falcon",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Sword stance: Fast aerial attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_crossing_snakes",
+    "name": "Crossing Snakes",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Dual sword stance: Crossing strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_swirling_tiger",
+    "name": "Swirling Tiger",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Dual sword stance: Fluid combos",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_carving_mantis",
+    "name": "Carving Mantis",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Dual sword stance: Heavy damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_cleaving_whirlwind",
+    "name": "Cleaving Whirlwind",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Heavy blade stance: Spinning attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_temporal_royale",
+    "name": "Tempo Royale",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Heavy blade stance: Fluid combos",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_rumbling_vault",
+    "name": "Rumbling Vault",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Heavy blade stance: Ground slams",
+    "rarity": "common"
+  },
+  {
+    "id": "stance_shimmering_blight",
+    "name": "Shimmering Blight",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Polearm stance: Wide sweeps",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_bleeding_willow",
+    "name": "Bleeding Willow",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Polearm stance: High damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_twirling_spire",
+    "name": "Twirling Spire",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Polearm stance: Complex combos",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_burning_wasp",
+    "name": "Burning Wasp",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Whip stance: Fast strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_coiling_viper",
+    "name": "Coiling Viper",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Whip stance: Heavy whipping",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_frictional_strike",
+    "name": "Frictional Strike",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Fist stance: Basic combos",
+    "rarity": "common"
+  },
+  {
+    "id": "stance_seismic_palm",
+    "name": "Seismic Palm",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Fist stance: Ground slams",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_vermillion_storm",
+    "name": "Vermillion Storm",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Claw stance: Rending attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_buzzing_sting",
+    "name": "Buzzing Sting",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Claw stance: Piercing strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_decisive_judgement",
+    "name": "Decisive Judgement",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Katana stance: Precise cuts",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_transcending_recut",
+    "name": "Transcending Retribution",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Katana stance: Heavy strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_vulpine_mask",
+    "name": "Vulpine Mask",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Rapier stance: Cunning strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_fencing_stance",
+    "name": "Fencing Stance",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Rapier stance: Basic thrusts",
+    "rarity": "common"
+  },
+  {
+    "id": "stance_high_noon",
+    "name": "High Noon",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Gunblade stance: Shooting combos",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_bullet_dance",
+    "name": "Bullet Dance",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Gunblade stance: Balanced mix",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_aurora_rush",
+    "name": "Astral Twilight",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Glaive stance: Throwing combos",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_gleaming_talent",
+    "name": "Gleaming Blight",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Glaive stance: Basic throws",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_pointed_wind",
+    "name": "Pointed Wind",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Dagger stance: Precision strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_stinging_thorn",
+    "name": "Stinging Thorn",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Dagger stance: Lethal jabs",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_homing_fang",
+    "name": "Homing Fang",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Dagger stance: Seeking strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_sundering_weave",
+    "name": "Sundering Weave",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Machete stance: Hacking strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_reaping_spiral",
+    "name": "Reaping Spiral",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Scythe stance: Sweeping arcs",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_stalking_fan",
+    "name": "Stalking Fan",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Scythe stance: Complex spins",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_clashing_forest",
+    "name": "Clashing Forest",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Staff stance: Basic strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_flailing_branch",
+    "name": "Flailing Branch",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Staff stance: Spinning combos",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_gnashing_payara",
+    "name": "Gnashing Payara",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Tonfa stance: Rapid strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_sinking_talon",
+    "name": "Sinking Talon",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 10
+    },
+    "description": "Tonfa stance: Balanced strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_grim_fury_sparring",
+    "name": "Grim Fury",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Sparring stance: Brutal combos",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_war_fan",
+    "name": "Sarafans Weave",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Warfan stance: Elegant strikes",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_wise_razor",
+    "name": "Wise Razor",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Two-handed nikana stance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stance_spinning_needle",
+    "name": "Spinning Needle",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 15
+    },
+    "description": "Dual dagger stance: Spinning strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "stance_defiled_snapdragon",
+    "name": "Defiled Snapdragon",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "stance",
+    "subCategory": "",
+    "stats": {
+      "damageBonus": 20
+    },
+    "description": "Blade whip stance: Snake-like strikes",
+    "rarity": "rare"
+  },
+  {
+    "id": "evolution_incarnon_rifle",
+    "name": "Incarnon Rifle Evolution",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "evolution",
+    "subCategory": "",
+    "stats": {
+      "evolutionBonus": 25
+    },
+    "description": "Incarnon weapon evolution bonuses",
+    "rarity": "legendary"
+  },
+  {
+    "id": "evolution_incarnon_pistol",
+    "name": "Incarnon Pistol Evolution",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "evolution",
+    "subCategory": "",
+    "stats": {
+      "evolutionBonus": 25
+    },
+    "description": "Incarnon weapon evolution bonuses",
+    "rarity": "legendary"
+  },
+  {
+    "id": "evolution_incarnon_melee",
+    "name": "Incarnon Melee Evolution",
+    "polarity": "zenurik",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "evolution",
+    "subCategory": "",
+    "stats": {
+      "evolutionBonus": 25
+    },
+    "description": "Incarnon weapon evolution bonuses",
+    "rarity": "legendary"
+  },
+  {
+    "id": "adhesive_blast",
+    "name": "Adhesive Blast",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Grenades have 100% chance to stick to surfaces.",
+    "rarity": "rare"
+  },
+  {
+    "id": "aerial_ace",
+    "name": "Aerial Ace",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Kill:\\nRefresh Double Jump up to 6x while Airborne.",
+    "rarity": "rare"
+  },
+  {
+    "id": "aero_agility",
+    "name": "Aero Agility",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% Reload Speed while Aim Gliding",
+    "rarity": "rare"
+  },
+  {
+    "id": "aero_periphery",
+    "name": "Aero Periphery",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "zoom": -12.5
+    },
+    "description": "-50% Zoom while Aim Gliding",
+    "rarity": "common"
+  },
+  {
+    "id": "agile_aim",
+    "name": "Agile Aim",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 5
+    },
+    "description": "+20% Movement Speed when Aiming",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "amalgam_argonak_metal_auger",
+    "name": "Amalgam Argonak Metal Auger",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.5
+    },
+    "description": "+3 Punch Through, Damage from Daggers reduces Armor by 6.\\n<LINE_SEPARATOR>\\nEnemies are revealed by Punch Through.",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_daikyu_target_acquired",
+    "name": "Amalgam Daikyu Target Acquired",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "lifeSteal": 0.5
+    },
+    "description": "+75% to Headshot Multiplier, +3% Life Steal on Nikanas, <LINE_SEPARATOR>\\n60% chance to pickup used arrows.",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_javlok_magazine_warp",
+    "name": "Amalgam Javlok Magazine Warp",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 7.5
+    },
+    "description": "+45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield",
+    "rarity": "rare"
+  },
+  {
+    "id": "ambush_optics",
+    "name": "Ambush Optics",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "zoom": -12.5
+    },
+    "description": "-50% Zoom",
+    "rarity": "rare"
+  },
+  {
+    "id": "ammo_drum",
+    "name": "Ammo Drum",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 15
+    },
+    "description": "+90% Ammo Maximum",
+    "rarity": "common"
+  },
+  {
+    "id": "apex_predator",
+    "name": "Apex Predator",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reveals target on Minimap for +6s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "arrow_mutation",
+    "name": "Arrow Mutation",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
+    "rarity": "rare"
+  },
+  {
+    "id": "bane_of_corpus",
+    "name": "Bane Of Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.3 Damage to Corpus",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bane_of_grineer",
+    "name": "Bane Of Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.3 Damage to Grineer",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bane_of_infested",
+    "name": "Bane Of Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.3 Damage to Infested",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bane_of_orokin",
+    "name": "Bane Of Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.3 Damage to Orokin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bane_of_the_murmur",
+    "name": "Bane Of The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.3 Damage to Murmur",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bhisaj_bal",
+    "name": "Bhisaj-Bal",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "Restore 300 Health for every 3 Status effects., +90% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "biotic_rounds",
+    "name": "Biotic Rounds",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "viral": 25
+    },
+    "description": "On Weak Point Kill:\\n+150% <DT_VIRAL_COLOR>Viral and <DT_MAGNETIC_COLOR>Magnetic Damage and Status Chance for 15s",
+    "rarity": "rare"
+  },
+  {
+    "id": "brain_storm",
+    "name": "Brain Storm",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "ammoEfficiency": 25
+    },
+    "description": "On Headshot:\\n+100% Ammo Efficiency for 0.5s",
+    "rarity": "rare"
+  },
+  {
+    "id": "bursting_mass",
+    "name": "Bursting Mass",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "The infested mass accumulates 200% of the damage that goes through it and deals it in 15m radius when it expires. Secondary fire will manually detonate an existing mass.",
+    "rarity": "rare"
+  },
+  {
+    "id": "catalyzer_link",
+    "name": "Catalyzer Link",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 10
+    },
+    "description": "On Ability Cast:\\n+60% Status Chance when Aiming for 9s",
+    "rarity": "common"
+  },
+  {
+    "id": "cautious_shot",
+    "name": "Cautious Shot",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% chance to reduce the Stagger effect from self-imposed Radial Attacks",
+    "rarity": "rare"
+  },
+  {
+    "id": "charged_chamber",
+    "name": "Charged Chamber",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+40% Damage on first shot in Magazine",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "clip_delegation",
+    "name": "Clip Delegation",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Reload: Next Magazine has Status Chance and Multishot increased by 15% per shot landed with current Magazine. Max 15 stacks.",
+    "rarity": "rare"
+  },
+  {
+    "id": "combat_reload",
+    "name": "Combat Reload",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "If 5 pellets are headshots, increase reload speed by +120% for 3s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "combustion_beam",
+    "name": "Combustion Beam",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies killed explode, dealing 600 Damage shortly after death.",
+    "rarity": "rare"
+  },
+  {
+    "id": "comet_rounds",
+    "name": "Comet Rounds",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_IMPACT_COLOR>Impact",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "continuous_misery",
+    "name": "Continuous Misery",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 25
+    },
+    "description": "+100% Status Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "crash_course",
+    "name": "Crash Course",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "impact": 20
+    },
+    "description": "+120% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "critical_precision",
+    "name": "Critical Precision",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Burst Fire Only: Headshots increase Critical Chance by 10% up to 500%. Missing with all shots in a burst removes up to 100% of this bonus Critical Chance.",
+    "rarity": "rare"
+  },
+  {
+    "id": "deadly_sequence",
+    "name": "Deadly Sequence",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 50
+    },
+    "description": "+200% Critical Chance, +1 'Sequence'",
+    "rarity": "rare"
+  },
+  {
+    "id": "deft_tempo",
+    "name": "Deft Tempo",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Headshot:\\n+10% Mobility for 4s",
+    "rarity": "rare"
+  },
+  {
+    "id": "depleted_reload",
+    "name": "Depleted Reload",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": -10,
+      "reloadSpeed": 8
+    },
+    "description": "-60% Magazine Capacity, +48% Reload Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "directed_convergence",
+    "name": "Directed Convergence",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 25
+    },
+    "description": "+100% Accuracy when Aiming",
+    "rarity": "rare"
+  },
+  {
+    "id": "disarming_purity",
+    "name": "Disarming Purity",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'",
+    "rarity": "rare"
+  },
+  {
+    "id": "double_tap",
+    "name": "Double Tap",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "ON HIT:\\n20% Bonus Damage on next Shot for 2s.\\nStacks up to 20x outside of Conclave.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dreadful_killshot",
+    "name": "Dreadful Killshot",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increased Damage and Status Chance by +20% for every 75 Warframe Health. Capped at 360%",
+    "rarity": "rare"
+  },
+  {
+    "id": "eagle_eye",
+    "name": "Eagle Eye",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "zoom": 10
+    },
+    "description": "+40% Zoom",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "emergent_aftermath",
+    "name": "Emergent Aftermath",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 12.5
+    },
+    "description": "On Kill:\\n+50% Reload Speed for 3s",
+    "rarity": "rare"
+  },
+  {
+    "id": "entropy_burst",
+    "name": "Entropy Burst",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 5
+    },
+    "description": "+20 Final Status Chance, +1 'Entropy'",
+    "rarity": "rare"
+  },
+  {
+    "id": "eximus_advantage",
+    "name": "Eximus Advantage",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Headshots on Eximus enemies increase Secondary Damage by +600% for 10 secs.",
+    "rarity": "rare"
+  },
+  {
+    "id": "exposing_harpoon",
+    "name": "Exposing Harpoon",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 50
+    },
+    "description": "Pulling an enemy will give +300% Critical Chance for 15s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fanged_fusillade",
+    "name": "Fanged Fusillade",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "slash": 20
+    },
+    "description": "+120% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "feathered_arrows",
+    "name": "Feathered Arrows",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 15,
+      "damage": -5
+    },
+    "description": "+60% Projectile Speed, -20% Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "final_tap",
+    "name": "Final Tap",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 25
+    },
+    "description": "On 4 Hits within 0.05s:\\n+100% Damage for 0.2s",
+    "rarity": "rare"
+  },
+  {
+    "id": "firestorm",
+    "name": "Firestorm",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "blastRange": 6
+    },
+    "description": "+24% Blast Range",
+    "rarity": "rare"
+  },
+  {
+    "id": "flux_overdrive",
+    "name": "Flux Overdrive",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Status Chance fluctuates between +150% and +250% over 5s while the beam is fired.",
+    "rarity": "rare"
+  },
+  {
+    "id": "focused_acceleration",
+    "name": "Focused Acceleration",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 20
+    },
+    "description": "+80% Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "gilded_truth",
+    "name": "Gilded Truth",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 20
+    },
+    "description": "+80% Fire Rate, +1 'Truth'",
+    "rarity": "rare"
+  },
+  {
+    "id": "gorgon_frenzy",
+    "name": "Gorgon Frenzy",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 7.5
+    },
+    "description": "On Kill:\\n+30% Fire Rate for 3s",
+    "rarity": "rare"
+  },
+  {
+    "id": "grinloked",
+    "name": "Grinloked",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 15
+    },
+    "description": "+60% Accuracy when Aiming",
+    "rarity": "rare"
+  },
+  {
+    "id": "guided_ordnance",
+    "name": "Guided Ordnance",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "On Hit:\\n+30% Accuracy when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "gun_glide",
+    "name": "Gun Glide",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "-20% Weapon Recoil, and +20% Accuracy when Sliding",
+    "rarity": "rare"
+  },
+  {
+    "id": "harkonar_scope",
+    "name": "Harkonar Scope",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 2
+    },
+    "description": "+12s Combo Duration",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hata_satya",
+    "name": "Hata-Satya",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Each hit increases Critical Chance by 1.2%. Resets upon reloading or holstering.",
+    "rarity": "rare"
+  },
+  {
+    "id": "higasa_serration",
+    "name": "Higasa Serration",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 75
+    },
+    "description": "+450% Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "hydraulic_gauge",
+    "name": "Hydraulic Gauge",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": -2.5
+    },
+    "description": "-60% Weapon Recoil, -10% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "internal_bleeding",
+    "name": "Internal Bleeding",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": " <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COLOR>Slash Status Effect (x2 when Fire Rate is below 2.5)",
+    "rarity": "rare"
+  },
+  {
+    "id": "kinetic_ricochet",
+    "name": "Kinetic Ricochet",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shots now bounce up to 6x and travel 30% further.",
+    "rarity": "rare"
+  },
+  {
+    "id": "lasting_purity",
+    "name": "Lasting Purity",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+60% Damage when Aiming, +1 'Purity'",
+    "rarity": "rare"
+  },
+  {
+    "id": "lie_in_wait",
+    "name": "Lie In Wait",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 5
+    },
+    "description": "+20% Fire Rate when Crouching, +100% Weapon Recoil",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "loose_hatch",
+    "name": "Loose Hatch",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 5
+    },
+    "description": "+30% Reload Speed, +50% Weapon Recoil",
+    "rarity": "common"
+  },
+  {
+    "id": "lucky_shot",
+    "name": "Lucky Shot",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 10,
+      "accuracy": -0.5
+    },
+    "description": "+40% Projectile Speed, -2% Accuracy",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "magnetic_capacity",
+    "name": "Magnetic Capacity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "magazine": 10
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +40% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "maximum_capacity",
+    "name": "Maximum Capacity",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5,
+      "reloadSpeed": -2.5
+    },
+    "description": "+30% Magazine Capacity, -15% Reload Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "measured_burst",
+    "name": "Measured Burst",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": -15,
+      "damage": 7.5
+    },
+    "description": "-60% Fire Rate, +30% Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "mending_shot",
+    "name": "Mending Shot",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shoot Health Orbs to obtain them with +110% extra effect.",
+    "rarity": "rare"
+  },
+  {
+    "id": "metamorphic_magazine",
+    "name": "Metamorphic Magazine",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 15,
+      "ammoMaximum": 15
+    },
+    "description": "+90% Magazine Capacity, +90% Ammo Maximum, Inflicting 20 cumulative attacks on an enemy will petrify them for 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "meticulous_aim",
+    "name": "Meticulous Aim",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "headshotDamage": 17.5,
+      "damage": -7.5
+    },
+    "description": "+105% Headshot Damage, -45% Bodyshot Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "motus_setup",
+    "name": "Motus Setup",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% Critical and Status Chance for 4s after landing from a Double or Bullet Jump.",
+    "rarity": "rare"
+  },
+  {
+    "id": "napalm_grenades",
+    "name": "Napalm Grenades",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 5
+    },
+    "description": "+30 Final Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "necrophagic_vigor",
+    "name": "Necrophagic Vigor",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reloading drains up to half your Health based on ammo created, increasing Critical Chance and Critical Damage by +20% for every 20 Health drained. Capped at 360%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "neutralizing_justice",
+    "name": "Neutralizing Justice",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1 'Justice'",
+    "rarity": "rare"
+  },
+  {
+    "id": "nightwatch_napalm",
+    "name": "Nightwatch Napalm",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rockets disperse napalm, inflicting 30% damage over 6s across 90% of the explosion area.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "overview",
+    "name": "Overview",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "zoom": -10
+    },
+    "description": "-60% Zoom while Aim Gliding",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "photon_overcharge",
+    "name": "Photon Overcharge",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 15
+    },
+    "description": "+90% Critical Damage, On Kill or Assist: Slain enemies have a 2% chance to drop an Energy Orb per <DT_FREEZE_COLOR>Cold Status affecting them.",
+    "rarity": "rare"
+  },
+  {
+    "id": "piercing_hit",
+    "name": "Piercing Hit",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "common"
+  },
+  {
+    "id": "plan_b",
+    "name": "Plan B",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Hit:\\n+20% Secondary Weapon Fire Rate for 3s",
+    "rarity": "rare"
+  },
+  {
+    "id": "precision_munition",
+    "name": "Precision Munition",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 0,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 100,
+      "projectileSpeed": 50
+    },
+    "description": "+100% Accuracy, +50% Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "precision_strike",
+    "name": "Precision Strike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Hitting an enemy directly with the grenade increases Reload Speed by 150% for 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "primary_acuity",
+    "name": "Primary Acuity",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be modified.",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_bane_of_corpus",
+    "name": "Primed Bane Of Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.55 Damage to Corpus",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_bane_of_grineer",
+    "name": "Primed Bane Of Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.55 Damage to Grineer",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_bane_of_infested",
+    "name": "Primed Bane Of Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.55 Damage to Infested",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_bane_of_orokin",
+    "name": "Primed Bane Of Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.55 Damage to Orokin",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_bane_of_the_murmur",
+    "name": "Primed Bane Of The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.55 Damage to Murmur",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_chamber",
+    "name": "Primed Chamber",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 25
+    },
+    "description": "+100% Damage on first shot in Magazine",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_charged_chamber",
+    "name": "Primed Charged Chamber",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+110% Damage on first shot in Magazine",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_firestorm",
+    "name": "Primed Firestorm",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "blastRange": 4
+    },
+    "description": "+44% Blast Range",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_magazine_warp",
+    "name": "Primed Magazine Warp",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+55% Magazine Capacity",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_rifle_ammo_mutation",
+    "name": "Primed Rifle Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_shred",
+    "name": "Primed Shred",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.2,
+      "fireRate": 5
+    },
+    "description": "+55% Fire Rate (x2 for Bows), +2.2 Punch Through",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_sniper_ammo_mutation",
+    "name": "Primed Sniper Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_stabilizer",
+    "name": "Primed Stabilizer",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "recoil": -7.7273
+    },
+    "description": "-85% Weapon Recoil",
+    "rarity": "legendary"
+  },
+  {
+    "id": "proton_jet",
+    "name": "Proton Jet",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 30
+    },
+    "description": "During a Wall Latch gain +120% Status Chance and Critical Chance.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "radiated_reload",
+    "name": "Radiated Reload",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 10
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +40% Reload Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "range_advantage",
+    "name": "Range Advantage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 50
+    },
+    "description": "+300% damage if no enemies are within 10m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "recover",
+    "name": "Recover",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Kill:\\n+15 Heal Rate for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "rifle_ammo_mutation",
+    "name": "Rifle Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rifle_elementalist",
+    "name": "Rifle Elementalist",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.1
+    },
+    "description": "+90% Status Damage, +0.6 Punch Through",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ripper_rounds",
+    "name": "Ripper Rounds",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rupture",
+    "name": "Rupture",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "common"
+  },
+  {
+    "id": "sawtooth_clip",
+    "name": "Sawtooth Clip",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "common"
+  },
+  {
+    "id": "scattered_justice",
+    "name": "Scattered Justice",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 50
+    },
+    "description": "+200% Multishot, +1 'Justice'",
+    "rarity": "rare"
+  },
+  {
+    "id": "semi_rifle_cannonade",
+    "name": "Semi-Rifle Cannonade",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.25,
+      "damage": 40
+    },
+    "description": "+240% Damage, +1.5 Punch Through",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sentient_barrage",
+    "name": "Sentient Barrage",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Discharge from Alt-Fire now has infinite Body Punch Through but no longer explodes on contact. Each enemy hit will refill one charge, and reaching a full charge will increase the Critical Chance and Critical Damage of the next discharge by 300%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "serrated_rounds",
+    "name": "Serrated Rounds",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_SLASH_COLOR>Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sharpshooter",
+    "name": "Sharpshooter",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Headshot Kill:\\n+15 Energy",
+    "rarity": "rare"
+  },
+  {
+    "id": "shattering_justice",
+    "name": "Shattering Justice",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 22.5
+    },
+    "description": "+90% Status Chance, +1 'Justice'",
+    "rarity": "rare"
+  },
+  {
+    "id": "shivering_contagion",
+    "name": "Shivering Contagion",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On <DT_FREEZE_COLOR>Cold Status Effect: 100% chance to spread that status to other enemies within 6m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sinister_reach",
+    "name": "Sinister Reach",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+12m Beam Range",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sniper_ammo_mutation",
+    "name": "Sniper Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
+    "rarity": "rare"
+  },
+  {
+    "id": "soaring_strike",
+    "name": "Soaring Strike",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 12.5
+    },
+    "description": "+50% Fire Rate when Airborne",
+    "rarity": "rare"
+  },
+  {
+    "id": "spectral_serration",
+    "name": "Spectral Serration",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 30
+    },
+    "description": "+330% Damage while Invisible",
+    "rarity": "rare"
+  },
+  {
+    "id": "split_flights",
+    "name": "Split Flights",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": -30
+    },
+    "description": "On Hit:\\n+100% Multishot\\n-180% Accuracy for 2s. Stacks up to 4x.\\n(Non-AOE Bows)",
+    "rarity": "rare"
+  },
+  {
+    "id": "spontaneous_singularity",
+    "name": "Spontaneous Singularity",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Orbs that strike targets will explode immediately with 90% Bonus Damage and a 18% chance of Singularity that pulls in more targets. Orbs do not bounce or combine. ",
+    "rarity": "rare"
+  },
+  {
+    "id": "spring_loaded_broadhead",
+    "name": "Spring-Loaded Broadhead",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase damage by +40%, if the target is over 15m away.",
+    "rarity": "rare"
+  },
+  {
+    "id": "spring_loaded_chamber",
+    "name": "Spring-Loaded Chamber",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 12.5
+    },
+    "description": "On Reload:\\n+75% Fire Rate when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stabilizer",
+    "name": "Stabilizer",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "recoil": -15
+    },
+    "description": "-60% Weapon Recoil",
+    "rarity": "rare"
+  },
+  {
+    "id": "sudden_justice",
+    "name": "Sudden Justice",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 7.5
+    },
+    "description": "On 2 Hits within 0.2s:\\n+30% Fire Rate for 2s",
+    "rarity": "rare"
+  },
+  {
+    "id": "tainted_mag",
+    "name": "Tainted Mag",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 6,
+      "reloadSpeed": -3
+    },
+    "description": "+66% Magazine Capacity, -33% Reload Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "target_acquired",
+    "name": "Target Acquired",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% to Headshot Multiplier",
+    "rarity": "rare"
+  },
+  {
+    "id": "terminal_velocity",
+    "name": "Terminal Velocity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 15
+    },
+    "description": "+60% Projectile Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tether_grenades",
+    "name": "Tether Grenades",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Grenades tether up to 5 enemies from 9m away.",
+    "rarity": "rare"
+  },
+  {
+    "id": "thermagnetic_shells",
+    "name": "Thermagnetic Shells",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies explode on death, dealing 80 <DT_MAGNETIC_COLOR>Magnetic Damage (+40% Enemy Max Health) in a 6m radius.",
+    "rarity": "rare"
+  },
+  {
+    "id": "thunderbolt",
+    "name": "Thunderbolt",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+45% Chance to Explode (Use with Caution)",
+    "rarity": "rare"
+  },
+  {
+    "id": "thundermiter",
+    "name": "Thundermiter",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": -15
+    },
+    "description": "+100% chance charged Projectiles explode, -60% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "triple_tap",
+    "name": "Triple Tap",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "On 2 Hits within 0.02s:\\n+40% Damage for 0.2s",
+    "rarity": "rare"
+  },
+  {
+    "id": "twitch",
+    "name": "Twitch",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 10
+    },
+    "description": "On Equip: \\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "unseen_dread",
+    "name": "Unseen Dread",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Become invisible for 5 seconds when you strike 3 or more enemies with a single projectile. Deal 175% more Critical Damage with Dread while invisible.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vanquished_prey",
+    "name": "Vanquished Prey",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "shield": -25
+    },
+    "description": "On Kill:\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "vile_discharge",
+    "name": "Vile Discharge",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac dealing and resetting the accumulated damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vile_precision",
+    "name": "Vile Precision",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": -6
+    },
+    "description": "-90% Weapon Recoil, -36% Fire Rate (x2 for Bows)",
+    "rarity": "rare"
+  },
+  {
+    "id": "volatile_variant",
+    "name": "Volatile Variant",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.5,
+      "statusChance": 8.3333
+    },
+    "description": "Shots have +3 Punch Through and barbs explode instantly. Barbs that strike enemies directly have +4m radius and +50% Status Chance.",
+    "rarity": "rare"
+  },
+  {
+    "id": "voltage_sequence",
+    "name": "Voltage Sequence",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Killing a flying enemy creates a lightning trap from their remains, lasting 8s, +1 'Sequence'",
+    "rarity": "rare"
+  },
+  {
+    "id": "wild_frenzy",
+    "name": "Wild Frenzy",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 66.6667
+    },
+    "description": "Secondary Fire will shoot with +400% Fire Rate until the magazine is empty. Killing 2 or more enemies will refund 100% of the ammo.",
+    "rarity": "rare"
+  },
+  {
+    "id": "cryo_rounds_r3",
+    "name": "Cryo Rounds",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+90% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fast_hands_r3",
+    "name": "Fast Hands",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 5
+    },
+    "description": "+30% Reload Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "hellfire_r3",
+    "name": "Hellfire",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "heat": 15
+    },
+    "description": "+90% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "high_voltage_r3",
+    "name": "High Voltage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "hush_r3",
+    "name": "Hush",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduces the chance an enemy will hear gunfire by 100%.",
+    "rarity": "common"
+  },
+  {
+    "id": "infected_clip_r3",
+    "name": "Infected Clip",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15
+    },
+    "description": "+90% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "magazine_warp_r3",
+    "name": "Magazine Warp",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+30% Magazine Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "malignant_force_r3",
+    "name": "Malignant Force",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "metal_auger_r3",
+    "name": "Metal Auger",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.35
+    },
+    "description": "+2.1 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "point_strike_r3",
+    "name": "Point Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 25
+    },
+    "description": "+150% Critical Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "rifle_aptitude_r3",
+    "name": "Rifle Aptitude",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+90% Status Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rime_rounds_r3",
+    "name": "Rime Rounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "serration_r3",
+    "name": "Serration",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+165% Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "speed_trigger_r3",
+    "name": "Speed Trigger",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 10
+    },
+    "description": "+60% Fire Rate (x2 for Bows)",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "split_chamber_r3",
+    "name": "Split Chamber",
+    "polarity": "madurai",
+    "drain": 7,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 15
+    },
+    "description": "+90% Multishot",
+    "rarity": "rare"
+  },
+  {
+    "id": "stormbringer_r3",
+    "name": "Stormbringer",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+90% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tactical_reload_r3",
+    "name": "Tactical Reload",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+20% Magazine Reloaded/s when Holstered",
+    "rarity": "rare"
+  },
+  {
+    "id": "vital_sense_r3",
+    "name": "Vital Sense",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "primary",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 20
+    },
+    "description": "+120% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "accelerated_isotope",
+    "name": "Accelerated Isotope",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 10
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +40% Fire Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "air_recon",
+    "name": "Air Recon",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "zoom": -10
+    },
+    "description": "-60% Zoom while Aim Gliding",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "amalgam_barrel_diffusion",
+    "name": "Amalgam Barrel Diffusion",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 18.3333
+    },
+    "description": "+110% Multishot, +60% Dodge Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "blind_shot",
+    "name": "Blind Shot",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 10,
+      "accuracy": -1
+    },
+    "description": "+40% Projectile Speed, -4% Accuracy",
+    "rarity": "rare"
+  },
+  {
+    "id": "bore",
+    "name": "Bore",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "puncture": 20
+    },
+    "description": "+120% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "calculated_victory",
+    "name": "Calculated Victory",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "shield": -25
+    },
+    "description": "On Kill:\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "cannonade",
+    "name": "Cannonade",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Chance to Explode (Use with Caution)",
+    "rarity": "rare"
+  },
+  {
+    "id": "carnis_stinger",
+    "name": "Carnis Stinger",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "slash": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "concealed_explosives",
+    "name": "Concealed Explosives",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+80% Chance to Explode (Use with Caution)",
+    "rarity": "rare"
+  },
+  {
+    "id": "concussion_rounds",
+    "name": "Concussion Rounds",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "critical_mutation",
+    "name": "Critical Mutation",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduce by 30% when fewer than 3 enemies are struck by the grenade explosion.",
+    "rarity": "rare"
+  },
+  {
+    "id": "damzav_vati",
+    "name": "Damzav-Vati",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "viral": 40
+    },
+    "description": "+240% <DT_VIRAL_COLOR>Viral",
+    "rarity": "rare"
+  },
+  {
+    "id": "deadly_maneuvers",
+    "name": "Deadly Maneuvers",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Dodge, gain 400% Headshot Critical Chance for your next 2 shots.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dizzying_rounds",
+    "name": "Dizzying Rounds",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 50
+    },
+    "description": "Shots from less than 8m stun enemies and open them to finishers.\\n+200% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "draining_gloom",
+    "name": "Draining Gloom",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": -15,
+      "ammoMaximum": -15
+    },
+    "description": "+100% chance of Energy Drain explosion, -60% Magazine Capacity, -60% Ammo Maximum",
+    "rarity": "rare"
+  },
+  {
+    "id": "eject_magazine",
+    "name": "Eject Magazine",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+20% Magazine Reloaded/s when Holstered",
+    "rarity": "rare"
+  },
+  {
+    "id": "energizing_shot",
+    "name": "Energizing Shot",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shoot Energy Orbs to obtain them with +110% extra effect.",
+    "rarity": "rare"
+  },
+  {
+    "id": "entropy_spike",
+    "name": "Entropy Spike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20% Chance to Explode (Use with Caution), +1 'Entropy'",
+    "rarity": "rare"
+  },
+  {
+    "id": "eroding_blight",
+    "name": "Eroding Blight",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 50
+    },
+    "description": "+200% Magazine Capacity, +1 'Blight'",
+    "rarity": "rare"
+  },
+  {
+    "id": "expel_orokin",
+    "name": "Expel Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.3 Damage to Orokin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "expel_the_murmur",
+    "name": "Expel The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.3 Damage to Murmur",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fass_canticle",
+    "name": "Fass Canticle",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "shield": -7
+    },
+    "description": "Killing enemies grants Allies in Affinity Range 40% Shield Recharge Rate and <LOWER_IS_BETTER>-28% Shield Recharge Delay for 15s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "full_capacity",
+    "name": "Full Capacity",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5,
+      "reloadSpeed": -2.5
+    },
+    "description": "+30% Magazine Capacity, -15% Reload Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "fulmination",
+    "name": "Fulmination",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "blastRange": 6
+    },
+    "description": "+24% Blast Range",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_diffusion",
+    "name": "Galvanized Diffusion",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 2.7273,
+      "multishotOnKill": 3.6
+    },
+    "description": "+110% Multishot, On Kill:\\n+30% Multishot for 20s. Stacks up to 4x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hawk_eye",
+    "name": "Hawk Eye",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "zoom": 20
+    },
+    "description": "+80% Zoom",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "heavy_warhead",
+    "name": "Heavy Warhead",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "blastRange": 25,
+      "projectileSpeed": -12.5
+    },
+    "description": "+100% Blast Radius, -50% Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "hemorrhage",
+    "name": "Hemorrhage",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": " <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COLOR>Slash Status Effect (x2 when Fire Rate is below 2.5)",
+    "rarity": "rare"
+  },
+  {
+    "id": "hollow_point",
+    "name": "Hollow Point",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10,
+      "damage": -2.5
+    },
+    "description": "+60% Critical Damage, -15% Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "hydraulic_barrel",
+    "name": "Hydraulic Barrel",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": -5
+    },
+    "description": "-40% Weapon Recoil, -20% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "impaler_munitions",
+    "name": "Impaler Munitions",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "jahu_canticle",
+    "name": "Jahu Canticle",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Killing enemies reduces the Armor and Shields of other enemies within Affinity Range by 5%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "jugulus_spines",
+    "name": "Jugulus Spines",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "khra_canticle",
+    "name": "Khra Canticle",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies have a 12% chance to drop a Universal Orb on death.",
+    "rarity": "rare"
+  },
+  {
+    "id": "leaded_gas",
+    "name": "Leaded Gas",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "gas": 50
+    },
+    "description": "On Weak Point Hit:\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s",
+    "rarity": "rare"
+  },
+  {
+    "id": "lethal_momentum",
+    "name": "Lethal Momentum",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 10
+    },
+    "description": "+40% Projectile Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "lohk_canticle",
+    "name": "Lohk Canticle",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 7.5
+    },
+    "description": "Killing enemies grants Allies within Affinity Range +30% Fire Rate for 15s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "loose_magazine",
+    "name": "Loose Magazine",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 8.3333
+    },
+    "description": "+50% Reload Speed, +50% Weapon Recoil",
+    "rarity": "common"
+  },
+  {
+    "id": "magnetic_might",
+    "name": "Magnetic Might",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "criticalMultiplier": 10
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +40% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "maim",
+    "name": "Maim",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "slash": 20
+    },
+    "description": "+120% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "merciless_gunfight",
+    "name": "Merciless Gunfight",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.2,
+      "criticalMultiplier": 7.5
+    },
+    "description": "+45% Critical Damage, +1.2 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "meteor_munitions",
+    "name": "Meteor Munitions",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_IMPACT_COLOR>Impact",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "netra_invocation",
+    "name": "Netra Invocation",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Alternate Fire increases Ability Efficiency by 4% for 20s for each enemy hit. Stacks up to 15 times.",
+    "rarity": "rare"
+  },
+  {
+    "id": "night_stalker",
+    "name": "Night Stalker",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reveals target on Minimap for +6s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "no_return",
+    "name": "No Return",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pain_points",
+    "name": "Pain Points",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Weak Point hits with Primary Fire:\\n+60% Weak Point Damage for 5s. Stacks up to 10x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "perpetual_agony",
+    "name": "Perpetual Agony",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 15
+    },
+    "description": "+90% Status Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "pistol_acuity",
+    "name": "Pistol Acuity",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be modified.",
+    "rarity": "rare"
+  },
+  {
+    "id": "pistol_elementalist",
+    "name": "Pistol Elementalist",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 10
+    },
+    "description": "+90% Status Damage, +60% Reload Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pressurized_magazine",
+    "name": "Pressurized Magazine",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15
+    },
+    "description": "On Reload:\\n+90% Fire Rate when Aiming for 9s",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_expel_corpus",
+    "name": "Primed Expel Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.55 Damage to Corpus",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_expel_grineer",
+    "name": "Primed Expel Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.55 Damage to Grineer",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_expel_infested",
+    "name": "Primed Expel Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.55 Damage to Infested",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_expel_orokin",
+    "name": "Primed Expel Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.55 Damage to Orokin",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_expel_the_murmur",
+    "name": "Primed Expel The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.55 Damage to Murmur",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_fulmination",
+    "name": "Primed Fulmination",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "blastRange": 4
+    },
+    "description": "+44% Blast Range",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_pistol_ammo_mutation",
+    "name": "Primed Pistol Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Primary ammo pickups to 92% of Ammo Pick Up.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_slip_magazine",
+    "name": "Primed Slip Magazine",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+55% Magazine Capacity",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_steady_hands",
+    "name": "Primed Steady Hands",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "recoil": -7.7273
+    },
+    "description": "-85% Weapon Recoil",
+    "rarity": "legendary"
+  },
+  {
+    "id": "pummel",
+    "name": "Pummel",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "impact": 20
+    },
+    "description": "+120% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "razor_munitions",
+    "name": "Razor Munitions",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_SLASH_COLOR>Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "razor_shot",
+    "name": "Razor Shot",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "recuperate",
+    "name": "Recuperate",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Kill:\\n+15 Heal Rate for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "reflex_draw",
+    "name": "Reflex Draw",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 10
+    },
+    "description": "On Equip: \\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ris_invocation",
+    "name": "Ris Invocation",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Alternate Fire increases Ability Duration by 4% for 20s for each enemy hit. Stacks up to 15 times.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ruinous_extension",
+    "name": "Ruinous Extension",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+8m Beam Range",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "saxum_spittle",
+    "name": "Saxum Spittle",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "impact": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "secondary_wind",
+    "name": "Secondary Wind",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 12.5
+    },
+    "description": "On Kill:\\n+50% Reload Speed for 4s",
+    "rarity": "rare"
+  },
+  {
+    "id": "semi_pistol_cannonade",
+    "name": "Semi-Pistol Cannonade",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.25,
+      "damage": 50
+    },
+    "description": "+300% Damage, +1.5 Punch Through",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sentient_surge",
+    "name": "Sentient Surge",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Each target eliminated refills 20% of Ocucor's magazine. Status Chance and Critical Chance are increased by 60% for each Tendril active.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sequence_burn",
+    "name": "Sequence Burn",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20m Beam Range, +1 'Sequence'",
+    "rarity": "rare"
+  },
+  {
+    "id": "sharpened_bullets",
+    "name": "Sharpened Bullets",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 12.5
+    },
+    "description": "On Kill:\\n+75% Critical Damage when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shrapnel_rounds",
+    "name": "Shrapnel Rounds",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 0,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 200,
+      "damage": -66
+    },
+    "description": "+200% Multishot, -66% Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "skull_shots",
+    "name": "Skull Shots",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "ammoEfficiency": 25
+    },
+    "description": "On Headshot:\\n+100% Ammo Efficiency for 2s",
+    "rarity": "rare"
+  },
+  {
+    "id": "soaring_truth",
+    "name": "Soaring Truth",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 50
+    },
+    "description": "+200% Critical Chance, +1 'Purity'",
+    "rarity": "rare"
+  },
+  {
+    "id": "spry_sights",
+    "name": "Spry Sights",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 5
+    },
+    "description": "+20% Movement Speed when Aiming",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "static_alacrity",
+    "name": "Static Alacrity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 12.5,
+      "blastRange": -12.5
+    },
+    "description": "+50% Projectile Speed, -50% Blast Radius",
+    "rarity": "rare"
+  },
+  {
+    "id": "steady_hands",
+    "name": "Steady Hands",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "recoil": -15
+    },
+    "description": "-60% Weapon Recoil",
+    "rarity": "rare"
+  },
+  {
+    "id": "stinging_truth",
+    "name": "Stinging Truth",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+40 Magazine Capacity, +1 'Truth'",
+    "rarity": "rare"
+  },
+  {
+    "id": "stockpiled_blight",
+    "name": "Stockpiled Blight",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 50
+    },
+    "description": "+200% Magazine Capacity, +1 'Blight'",
+    "rarity": "rare"
+  },
+  {
+    "id": "strafing_slide",
+    "name": "Strafing Slide",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "-20% Weapon Recoil, and +20% Accuracy when Sliding",
+    "rarity": "rare"
+  },
+  {
+    "id": "stunning_speed",
+    "name": "Stunning Speed",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 10,
+      "statusChance": 7.5
+    },
+    "description": "+40% Reload Speed, +30% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "sure_shot",
+    "name": "Sure Shot",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+90% Status Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tainted_clip",
+    "name": "Tainted Clip",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10,
+      "reloadSpeed": -5
+    },
+    "description": "+60% Magazine Capacity, -30% Reload Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "targeting_subsystem",
+    "name": "Targeting Subsystem",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "On Hit:\\n+30% Accuracy when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "toxic_sequence",
+    "name": "Toxic Sequence",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 50
+    },
+    "description": "+200% Status Duration, +1 'Sequence'",
+    "rarity": "rare"
+  },
+  {
+    "id": "vome_invocation",
+    "name": "Vome Invocation",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stacks up to 15 times.",
+    "rarity": "rare"
+  },
+  {
+    "id": "winds_of_purity",
+    "name": "Winds Of Purity",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "lifeSteal": 5
+    },
+    "description": "+20% Life Steal, +1 'Purity'",
+    "rarity": "rare"
+  },
+  {
+    "id": "xata_invocation",
+    "name": "Xata Invocation",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Alternate Fire grants 1 Energy Regen/s for 20s for each enemy hit. Stacks up to 10 times.",
+    "rarity": "rare"
+  },
+  {
+    "id": "zazvat_kar",
+    "name": "Zazvat-Kar",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "ammoEfficiency": 12.5
+    },
+    "description": "+75% Ammo Efficiency while Airborne",
+    "rarity": "rare"
+  },
+  {
+    "id": "barrel_diffusion_r3",
+    "name": "Barrel Diffusion",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "multishot": 20
+    },
+    "description": "+120% Multishot",
+    "rarity": "rare"
+  },
+  {
+    "id": "convulsion_r3",
+    "name": "Convulsion",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+90% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "deep_freeze_r3",
+    "name": "Deep Freeze",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+90% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "expel_corpus_r3",
+    "name": "Expel Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.3 Damage to Corpus",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "expel_grineer_r3",
+    "name": "Expel Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.3 Damage to Grineer",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "expel_infested_r3",
+    "name": "Expel Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.3 Damage to Infested",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "frostbite_r3",
+    "name": "Frostbite",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "gunslinger_r3",
+    "name": "Gunslinger",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 12
+    },
+    "description": "+72% Fire Rate",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "heated_charge_r3",
+    "name": "Heated Charge",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "heat": 15
+    },
+    "description": "+90% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hornet_strike_r3",
+    "name": "Hornet Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "damage": 20
+    },
+    "description": "+220% Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "jolt_r3",
+    "name": "Jolt",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "pathogen_rounds_r3",
+    "name": "Pathogen Rounds",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15
+    },
+    "description": "+90% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pistol_gambit_r3",
+    "name": "Pistol Gambit",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 20
+    },
+    "description": "+120% Critical Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "pistol_pestilence_r3",
+    "name": "Pistol Pestilence",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "quickdraw_r3",
+    "name": "Quickdraw",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 8
+    },
+    "description": "+48% Reload Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "scorch_r3",
+    "name": "Scorch",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "seeker_r3",
+    "name": "Seeker",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.35
+    },
+    "description": "+2.1 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "slip_magazine_r3",
+    "name": "Slip Magazine",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+30% Magazine Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "suppress_r3",
+    "name": "Suppress",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduces the chance an enemy will hear gunfire by 100%.",
+    "rarity": "common"
+  },
+  {
+    "id": "synth_charge_r3",
+    "name": "Synth Charge",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {},
+    "description": "+200% Bonus Damage on final shot. Requires Magazine 6 or higher.",
+    "rarity": "rare"
+  },
+  {
+    "id": "target_cracker_r3",
+    "name": "Target Cracker",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+60% Critical Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "trick_mag_r3",
+    "name": "Trick Mag",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "secondary",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 15
+    },
+    "description": "+90% Ammo Maximum",
+    "rarity": "common"
+  },
+  {
+    "id": "air_martial",
+    "name": "Air Martial",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "channelingDamage": -25
+    },
+    "description": "With Melee equipped, lock onto targets within +5m while Airborne, -100% Channeling Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_furax_body_count",
+    "name": "Amalgam Furax Body Count",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 2.5,
+      "fireRate": 7.5
+    },
+    "description": "+15s Combo Duration\\n+45% Fire Rate for Secondary Weapons\\n<LINE_SEPARATOR>\\nMelee kills <DT_EXPLOSION_COLOR>Blast and stagger enemies in 15m",
+    "rarity": "rare"
+  },
+  {
+    "id": "amalgam_ripkas_true_steel",
+    "name": "Amalgam Ripkas True Steel",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 31.1667,
+      "reloadSpeed": 3.3333
+    },
+    "description": "+187% Critical Chance (x2 for Heavy Attacks), +20% Reload Speed on Shotguns, <LINE_SEPARATOR>\\n+100% Gore Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "amanata_pressure",
+    "name": "Amanata Pressure",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 55
+    },
+    "description": "+330% Melee Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "amars_contempt",
+    "name": "Amar's Contempt",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "auger_strike",
+    "name": "Auger Strike",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "puncture": 20
+    },
+    "description": "+120% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "avenging_truth",
+    "name": "Avenging Truth",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blocking absorbs 50% of incoming damage, stored as Extra Damage for the next charge attack., +1 'Truth'",
+    "rarity": "rare"
+  },
+  {
+    "id": "berserker_fury",
+    "name": "Berserker Fury",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 5.8333
+    },
+    "description": "On Melee Kill:\\n+35% Attack Speed for 10s. Stacks up to 2x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "blade_of_truth",
+    "name": "Blade Of Truth",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 25
+    },
+    "description": "+100% Melee Damage, +1 'Truth'",
+    "rarity": "rare"
+  },
+  {
+    "id": "boreals_contempt",
+    "name": "Boreal's Contempt",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "bright_purity",
+    "name": "Bright Purity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 25
+    },
+    "description": "+100% Melee Damage, +1 'Purity'",
+    "rarity": "rare"
+  },
+  {
+    "id": "burning_hate",
+    "name": "Burning Hate",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "When Hate damages enemies inflicted with <DT_FIRE_COLOR>Heat Status, they become vulnerable to 120% more Status Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "buzz_kill",
+    "name": "Buzz Kill",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "slash": 20
+    },
+    "description": "+120% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "carnis_mandible",
+    "name": "Carnis Mandible",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "slash": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash, +60% Status Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "collision_force",
+    "name": "Collision Force",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "impact": 20
+    },
+    "description": "+120% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "combo_fury",
+    "name": "Combo Fury",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "magazine": 16.6667
+    },
+    "description": "On Melee Kill:\\n+100% Reload Speed\\n+100% Magazine Capacity for 12s on Secondary Weapon",
+    "rarity": "rare"
+  },
+  {
+    "id": "combo_killer",
+    "name": "Combo Killer",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 0.83
+    },
+    "description": "+5s Combo Duration, On Kill with Secondary Weapon:\\nReset Melee Combo Timer",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "conditions_perfection",
+    "name": "Condition's Perfection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "counterweight",
+    "name": "Counterweight",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_IMPACT_COLOR>Impact",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "disciplines_merit",
+    "name": "Discipline's Merit",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "dispatch_overdrive",
+    "name": "Dispatch Overdrive",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 10
+    },
+    "description": "On Heavy Attack Hit:\\n+60% Movement Speed for 15s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "dreamers_wrath",
+    "name": "Dreamer's Wrath",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "electromagnetic_shielding",
+    "name": "Electromagnetic Shielding",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "While blocking, redirect 50% of damage taken by allies within 12m to yourself.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "enduring_affliction",
+    "name": "Enduring Affliction",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 16.6667
+    },
+    "description": "+100% Status Chance on Lifted enemies",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "enduring_strike",
+    "name": "Enduring Strike",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20% Additional Combo Count Chance on Lifted enemies",
+    "rarity": "common"
+  },
+  {
+    "id": "entropy_detonation",
+    "name": "Entropy Detonation",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max Health) <DT_EXPLOSION_COLOR>Blast Damage, in a +10m radius., +1 'Entropy'",
+    "rarity": "rare"
+  },
+  {
+    "id": "entropy_flight",
+    "name": "Entropy Flight",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 35
+    },
+    "description": "+140% Projectile Speed, +1 'Entropy'",
+    "rarity": "rare"
+  },
+  {
+    "id": "explosive_demise",
+    "name": "Explosive Demise",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies killed explode, dealing 300 Damage shortly after death.",
+    "rarity": "rare"
+  },
+  {
+    "id": "focus_radon",
+    "name": "Focus Radon",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "radiation": 15
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +40% Heavy Attack Efficiency",
+    "rarity": "rare"
+  },
+  {
+    "id": "focused_defense",
+    "name": "Focused Defense",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20 Parry Angle",
+    "rarity": "common"
+  },
+  {
+    "id": "galvanized_elementalist",
+    "name": "Galvanized Elementalist",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 2.7273
+    },
+    "description": "On Melee Kill:\\n+30% Status Chance for 20s. Stacks up to 4x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_reflex",
+    "name": "Galvanized Reflex",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Melee Kill:\\n+20 Initial Combo for 20s. Stacks up to 4x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "galvanized_steel",
+    "name": "Galvanized Steel",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 2.7273
+    },
+    "description": "On Melee Kill:\\n+30% Critical Damage for 20s. Stacks up to 4x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "guardian_derision",
+    "name": "Guardian Derision",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboCountChance": 5
+    },
+    "description": "Blocking taunts enemies within 15 meters to target you instead of allies., +30% Combo Count Chance while Blocking",
+    "rarity": "rare"
+  },
+  {
+    "id": "harrowed_hook",
+    "name": "Harrowed Hook",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "With Melee Weapon equipped, unchanneled hits slow target and disable jump for +2s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "heartseeker",
+    "name": "Heartseeker",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": -12.5
+    },
+    "description": "Lock onto targets within 1m, but reduces blocking effectiveness., -50% Damage Block",
+    "rarity": "rare"
+  },
+  {
+    "id": "heavy_trauma",
+    "name": "Heavy Trauma",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "hunters_bonesaw",
+    "name": "Hunter's Bonesaw",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "impenetrable_offense",
+    "name": "Impenetrable Offense",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": -2.5
+    },
+    "description": "+30% Damage Block, -10% Melee Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "jagged_edge",
+    "name": "Jagged Edge",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "jugulus_barbs",
+    "name": "Jugulus Barbs",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "justice_blades",
+    "name": "Justice Blades",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 25
+    },
+    "description": "+100% Melee Damage, +1 'Justice'",
+    "rarity": "rare"
+  },
+  {
+    "id": "lasting_sting",
+    "name": "Lasting Sting",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 10
+    },
+    "description": "+110% Status Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "magnetic_rush",
+    "name": "Magnetic Rush",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "attackSpeed": 5
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +20% Attack Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "maiming_strike",
+    "name": "Maiming Strike",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 25
+    },
+    "description": "+150% Critical Chance for Slide Attack",
+    "rarity": "rare"
+  },
+  {
+    "id": "mark_of_the_beast",
+    "name": "Mark Of The Beast",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 20
+    },
+    "description": "On 6 Melee Kills within 6s:\\n\\n+120% Status and Critical Chance for Secondary Weapon for 24s",
+    "rarity": "rare"
+  },
+  {
+    "id": "martial_fury",
+    "name": "Martial Fury",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 5,
+      "energy": -12.5
+    },
+    "description": "+20% Attack Speed, -50% Energy Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "masters_edge",
+    "name": "Master's Edge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "melee_elementalist",
+    "name": "Melee Elementalist",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "heavyAttackSpeed": 10
+    },
+    "description": "+90% Status Damage, +60% Heavy Attack Wind Up Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "melee_prowess",
+    "name": "Melee Prowess",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+90% Status Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "mentors_legacy",
+    "name": "Mentor's Legacy",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 0,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mortal_conduct",
+    "name": "Mortal Conduct",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "At Less than 50 Health:\\n+60% Damage taken is reflected when Blocking attacks while Channeling for 8s",
+    "rarity": "rare"
+  },
+  {
+    "id": "motus_impact",
+    "name": "Motus Impact",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase range of aerial melee attacks by +2m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "niras_contempt",
+    "name": "Nira's Contempt",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "opportunitys_reach",
+    "name": "Opportunity's Reach",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "power_throw",
+    "name": "Power Throw",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.3333
+    },
+    "description": "+2 Punch Through, On Consecutive throw (Max stacks 3):\\n+100% Throw Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_heavy_trauma",
+    "name": "Primed Heavy Trauma",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+165% <DT_IMPACT_COLOR>Impact",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_smite_corpus",
+    "name": "Primed Smite Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.55 Damage to Corpus",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_smite_grineer",
+    "name": "Primed Smite Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.55 Damage to Grineer",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_smite_infested",
+    "name": "Primed Smite Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.55 Damage to Infested",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_smite_orokin",
+    "name": "Primed Smite Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.55 Damage to Orokin",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_smite_the_murmur",
+    "name": "Primed Smite The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.55 Damage to Murmur",
+    "rarity": "legendary"
+  },
+  {
+    "id": "proton_snap",
+    "name": "Proton Snap",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 12.5
+    },
+    "description": "Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% Status Chance for 20s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_return",
+    "name": "Quick Return",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "-4 Bounce",
+    "rarity": "common"
+  },
+  {
+    "id": "rebound",
+    "name": "Rebound",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+4 Bounce",
+    "rarity": "common"
+  },
+  {
+    "id": "relentless_assault",
+    "name": "Relentless Assault",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Kill:\\n+2 Energy Rate for 4s",
+    "rarity": "rare"
+  },
+  {
+    "id": "rending_strike",
+    "name": "Rending Strike",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "slash": 15,
+      "puncture": 20
+    },
+    "description": "+60% <DT_SLASH_COLOR>Slash, +80% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "rift_strike",
+    "name": "Rift Strike",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Heavy attacks now step through the rift to attack enemies up to 25m away",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sacrificial_pressure",
+    "name": "Sacrificial Pressure",
+    "polarity": "umbra",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 10,
+      "sentientDamage": 3
+    },
+    "description": "+110% Melee Damage, x1.33 Damage to Sentients",
+    "rarity": "legendary"
+  },
+  {
+    "id": "saxum_thorax",
+    "name": "Saxum Thorax",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "impact": 15,
+      "statusChance": 10
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact, +60% Status Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "seismic_wave",
+    "name": "Seismic Wave",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+200% Slam Attack Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "serrated_edges",
+    "name": "Serrated Edges",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sharpened_blade",
+    "name": "Sharpened Blade",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_SLASH_COLOR>Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "smite_orokin",
+    "name": "Smite Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.3 Damage to Orokin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "smite_the_murmur",
+    "name": "Smite The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.3 Damage to Murmur",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stand_ground",
+    "name": "Stand Ground",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blocking reduces damage taken from enemy abilities by 60%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "static_discharge",
+    "name": "Static Discharge",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Heavy Attacks electrify nearby enemies for <DT_ELECTRICITY_COLOR>Electricity Damage equal to 80% of weapon damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "strain_infection",
+    "name": "Strain Infection",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 5
+    },
+    "description": "Melee Attacks gain +20% Critical Damage per Cyst.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sundering_strike",
+    "name": "Sundering Strike",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "sword_alone",
+    "name": "Sword Alone",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 7.5
+    },
+    "description": "+10% Mobility, +30% Sprint Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "toxic_blight",
+    "name": "Toxic Blight",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "toxin": 25
+    },
+    "description": "+100% <DT_POISON_COLOR>Toxin, +1 'Blight'",
+    "rarity": "rare"
+  },
+  {
+    "id": "true_punishment",
+    "name": "True Punishment",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": -12.5
+    },
+    "description": "+100% Additional Combo Count Chance, -50% Combo Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "vicious_frost",
+    "name": "Vicious Frost",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "virulent_scourge",
+    "name": "Virulent Scourge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "volatile_quick_return",
+    "name": "Volatile Quick Return",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "-4 Bounce, +3 Blast Radius, +100% Chance to explode on Bounce (Disables Punch Through)",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "volatile_rebound",
+    "name": "Volatile Rebound",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% Chance to explode on Bounce (Disables Punch Through)",
+    "rarity": "rare"
+  },
+  {
+    "id": "volcanic_edge",
+    "name": "Volcanic Edge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "voltaic_strike",
+    "name": "Voltaic Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "vulcan_blitz",
+    "name": "Vulcan Blitz",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies explode on death, dealing 300 <DT_EXPLOSION_COLOR>Blast Damage (+60% Enemy Max Health) in a 6m radius.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "whirlwind",
+    "name": "Whirlwind",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 30
+    },
+    "description": "+180% Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "drifting_contact_r3",
+    "name": "Drifting Contact",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "comboDuration": 2.5,
+      "statusChance": 10
+    },
+    "description": "+10s Combo Duration, +40% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "energy_channel_r10",
+    "name": "Energy Channel",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts 200% of Energy used to up to 200 Bonus Damage on next Melee Attack.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fever_strike_r3",
+    "name": "Fever Strike",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15
+    },
+    "description": "+90% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "finishing_touch_r10",
+    "name": "Finishing Touch",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Finisher Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "focus_energy_r3",
+    "name": "Focus Energy",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+40% Heavy Attack Efficiency, +60% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "rare"
+  },
+  {
+    "id": "fury_r3",
+    "name": "Fury",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 5
+    },
+    "description": "+30% Attack Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "molten_impact_r3",
+    "name": "Molten Impact",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "heat": 15
+    },
+    "description": "+90% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "north_wind_r3",
+    "name": "North Wind",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+90% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "organ_shatter_r3",
+    "name": "Organ Shatter",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 15
+    },
+    "description": "+90% Critical Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "pressure_point_r3",
+    "name": "Pressure Point",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "damage": 18.1818
+    },
+    "description": "+200% Melee Damage, +120% COMBO COUNT CHANCE",
+    "rarity": "common"
+  },
+  {
+    "id": "quickening_r3",
+    "name": "Quickening",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 10
+    },
+    "description": "+40% Attack Speed, +20% Combo Count Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "reach_r3",
+    "name": "Reach",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+1.5 Range",
+    "rarity": "common"
+  },
+  {
+    "id": "reflex_coil_r3",
+    "name": "Reflex Coil",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Heavy Attack Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "relentless_combination_r3",
+    "name": "Relentless Combination",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% chance to increase Melee Combo Counter when <DT_SLASH_COLOR>Slash Status deals damage.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shocking_touch_r3",
+    "name": "Shocking Touch",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+90% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "smite_corpus_r3",
+    "name": "Smite Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.3 Damage to Corpus",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "smite_grineer_r3",
+    "name": "Smite Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.3 Damage to Grineer",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "smite_infested_r3",
+    "name": "Smite Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.3 Damage to Infested",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "spoiled_strike_r3",
+    "name": "Spoiled Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": -5
+    },
+    "description": "+100% Melee Damage, -20% Attack Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "tek_gravity_r3",
+    "name": "Tek Gravity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {},
+    "description": "Slam Attacks in the Marked Zone pull all enemies within 20m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "true_steel_r3",
+    "name": "True Steel",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 20
+    },
+    "description": "+120% Critical Chance (x2 for Heavy Attacks)",
+    "rarity": "common"
+  },
+  {
+    "id": "weeping_wounds_r5",
+    "name": "Weeping Wounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 6.6667
+    },
+    "description": "+40% Status Chance per Combo Multiplier",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "abundant_mutation",
+    "name": "Abundant Mutation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Passive Augment: Nidus gains an additional 200 max stacks of Mutation. Undying has a 30s cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "adaptation",
+    "name": "Adaptation",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "When Damaged:\\n+10% Resistance to that Damage Type for 20s. Stacks up to 90%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "adept_surge",
+    "name": "Adept Surge",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+10% Mobility, -25 Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "adrenaline_boost",
+    "name": "Adrenaline Boost",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energy": 12.5,
+      "health": -5
+    },
+    "description": "+50% Energy, -20% Health",
+    "rarity": "rare"
+  },
+  {
+    "id": "aegis_gale",
+    "name": "Aegis Gale",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Aegis Storm Augment: Balefire has an Alternate Fire during Aegis Storm. The blast deals 15% of Hildryn's Max Shield as additional damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "aero_vantage",
+    "name": "Aero Vantage",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "-100% Gravity while Aim Gliding",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "agility_drift",
+    "name": "Agility Drift",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduced damage by 12% while airborne, <LOWER_IS_BETTER>-6% Enemy Accuracy when targeting Warframe",
+    "rarity": "rare"
+  },
+  {
+    "id": "air_thrusters",
+    "name": "Air Thrusters",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% Slide Boost when Airborne, -20% Mobility",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "airburst_rounds",
+    "name": "Airburst Rounds",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Airburst Augment: Each enemy hit by Airburst increases secondary damage by 40% for 14s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ambush",
+    "name": "Ambush",
+    "polarity": "penjaga",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "When Ghost invisibility is broken, Shade's owner is granted +240% Weapon Damage for 3s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "anchored_glide",
+    "name": "Anchored Glide",
+    "polarity": "zenurik",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "anti_flak_plating",
+    "name": "Anti-Flak Plating",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20 <DT_EXPLOSION_COLOR>Blast Resistance, -10% Mobility",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "anticipation",
+    "name": "Anticipation",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Immune to Knockdown for an additional +4s after being knocked down., Immune to Stagger for an additional +4s after being Staggered.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "antimatter_mine",
+    "name": "Antimatter Mine",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Antimatter Drop Augment: Creates a fully charged stationary orb that explodes after 6s or within enemy proximity.",
+    "rarity": "rare"
+  },
+  {
+    "id": "antitoxin",
+    "name": "Antitoxin",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "toxin": 7.5
+    },
+    "description": "+82.5% <DT_POISON_COLOR>Toxin Resistance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "archon_continuity",
+    "name": "Archon Continuity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 5
+    },
+    "description": "+55% Ability Duration, Abilities that inflict a <DT_POISON_COLOR>Toxin status effect will also apply a <DT_CORROSIVE_COLOR>Corrosive status effect.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "archon_flow",
+    "name": "Archon Flow",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energy": 16.8182
+    },
+    "description": "+185% Energy Max, Enemies killed by <DT_FREEZE_COLOR>Cold Abilities have 10% chance to drop an Energy Orb. Cooldown: 10s",
+    "rarity": "legendary"
+  },
+  {
+    "id": "archon_intensify",
+    "name": "Archon Intensify",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5
+    },
+    "description": "Restoring health with abilities grants +30% Ability Strength for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "archon_stretch",
+    "name": "Archon Stretch",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Abilities that deal <DT_ELECTRICITY_COLOR>Electricity Damage restore +2 Energy/s over 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "archon_vitality",
+    "name": "Archon Vitality",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 9.0909
+    },
+    "description": "+100% Health, Status Effects from abilities that deal <DT_FIRE_COLOR>Heat Damage will be applied twice.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "armored_acrobatics",
+    "name": "Armored Acrobatics",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 5,
+      "sprintSpeed": -2.5
+    },
+    "description": "+20% Damage Resistance during Bullet Jump, -10% Mobility",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "armored_evade",
+    "name": "Armored Evade",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 10,
+      "sprintSpeed": -2.5
+    },
+    "description": "+40% Damage Resistance while Dodging, -10% Mobility",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "armored_recovery",
+    "name": "Armored Recovery",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 12.5,
+      "sprintSpeed": -5
+    },
+    "description": "+50% Damage Resistance when knocked down, -20% Slide",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "augmented_sonar",
+    "name": "Augmented Sonar",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Sonar Augment: Affected enemies also become visible through walls for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "aviator",
+    "name": "Aviator",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduced damage by 60% while airborne",
+    "rarity": "common"
+  },
+  {
+    "id": "axios_javelineers",
+    "name": "Axios Javelineers",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Axios Javelin Augment: A pair of Styanax Specters spawn to throw javelins, creating vortexes on impact. Impale an enemy to increase vortex duration by 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "battering_maneuver",
+    "name": "Battering Maneuver",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "impact": 10
+    },
+    "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_IMPACT_COLOR>Impact on Bullet Jump",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "beguiling_lantern",
+    "name": "Beguiling Lantern",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Lantern Augment: Attracted enemies take 100% more Weapon Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "biting_frost",
+    "name": "Biting Frost",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Frost gains +|CHANCE|% Critical Chance and +|DAMAGE|% Critical Damage against frozen enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "blazing_pillage",
+    "name": "Blazing Pillage",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Pillage Augment: Enemies affected by Haven will be set ablaze for 200 <DT_FIRE_COLOR>Heat Damage and restore 50 additional <SHIELD>Shields to Hildryn.",
+    "rarity": "rare"
+  },
+  {
+    "id": "blending_talons",
+    "name": "Blending Talons",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons gain 100% additional Combo Count Chance when hitting targets affected by <DT_SLASH_COLOR>Slash Status.",
+    "rarity": "rare"
+  },
+  {
+    "id": "blinding_reave",
+    "name": "Blinding Reave",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "range": 10
+    },
+    "description": "Reave Augment: Reave gains +40% range and enemies are blinded by its fog for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "brief_respite",
+    "name": "Brief Respite",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad converts 150% of Energy spent to Shields while Overshields are inactive",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "calculated_spring",
+    "name": "Calculated Spring",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 6.25,
+      "sprintSpeed": -2.5
+    },
+    "description": "-10% Mobility, +25% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "carnis_carapace",
+    "name": "Carnis Carapace",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 9.1667,
+      "health": 3.3333
+    },
+    "description": "+55% Armor, +20% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cataclysmic_gate",
+    "name": "Cataclysmic Gate",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Sol Gate Augment : Wisp and 2 spectral images cast a single blast of Sol Gate, leaving an area with 500 <DT_FIRE_COLOR>Heat Damage / Second with guaranteed Heat and Radiation Status Effects for 10s. ",
+    "rarity": "rare"
+  },
+  {
+    "id": "catalyzing_shields",
+    "name": "Catalyzing Shields",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "x0.20 Max Shield Capacity, 1.33s Full Shield Gate immunity duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "cathode_current",
+    "name": "Cathode Current",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Cathode Grace Augment: Eliminating an enemy while Cathode Grace is active will release an additional discharge from Rotorswell with 200% Damage and extend its duration by the same amount.",
+    "rarity": "rare"
+  },
+  {
+    "id": "champions_blessing",
+    "name": "Champion's Blessing",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "coaction_drift",
+    "name": "Coaction Drift",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad benefits +15% more from Auras, You benefit an additional +15% from Auras",
+    "rarity": "rare"
+  },
+  {
+    "id": "coil_recharge",
+    "name": "Coil Recharge",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Coil Horizon Augment: Gyratory Sphere can be recalled. Enemies in its radius suffer 500 <DT_ELECTRICITY_COLOR> Electricity Damage and chain other enemies. Enemies pulled into detonation suffer additional discharges.",
+    "rarity": "rare"
+  },
+  {
+    "id": "combat_discipline",
+    "name": "Combat Discipline",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "You lose <LOWER_IS_BETTER>10 Health on kill\\nSquadmates gain 20 Health on kill",
+    "rarity": "rare"
+  },
+  {
+    "id": "conductive_sphere",
+    "name": "Conductive Sphere",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "electricity": 18.75
+    },
+    "description": "Arcsphere Augment: Projectiles that pass through Arcsphere have guaranteed <DT_ELECTRICITY_COLOR>Electricity Status Effect and +75% <DT_ELECTRICITY_COLOR>Electricity Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "constitution",
+    "name": "Constitution",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 7
+    },
+    "description": "+40% Faster Knockdown Recovery, +28% Ability Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "controlled_slide",
+    "name": "Controlled Slide",
+    "polarity": "zenurik",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Disable Nezha's passive ability. Increase Ability Strength by 15%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "damage_decoy",
+    "name": "Damage Decoy",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Decoy Augment: Decoy can be cast on enemies. Enemies who attack that decoy receive 5 random Status Effects, and the reflected damage is increased by 350%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dark_propagation",
+    "name": "Dark Propagation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Sow Augment: Enemies killed while inflicted with Sow spread its effect in a 15m radius. Shadow's Death Harvest also inflicts Sow.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dead_eye",
+    "name": "Dead Eye",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +52.5% Sniper Rifle Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "deceptive_bond",
+    "name": "Deceptive Bond",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Decoy Augment: 50% of damage Loki takes is transferred to Decoy, and vice versa.",
+    "rarity": "rare"
+  },
+  {
+    "id": "defiled_reckoning",
+    "name": "Defiled Reckoning",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reckoning Augment: Health Orbs become unusable by enemies for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "desiccations_curse",
+    "name": "Desiccation's Curse",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "diamond_skin",
+    "name": "Diamond Skin",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "radiation": 7.5
+    },
+    "description": "+82.5% <DT_RADIATION_COLOR>Radiation Resistance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "discharge_strike",
+    "name": "Discharge Strike",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Soul Punch Augment: Depletes up to 25 Energy from the target.",
+    "rarity": "rare"
+  },
+  {
+    "id": "divine_retribution",
+    "name": "Divine Retribution",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Divine Spears Augment: Status Effects spread to all speared enemies. Spear explosions scale by 1.5x of remaining <DT_SLASH_COLOR>Slash, <DT_POISON_COLOR>Toxin and <DT_FIRE_COLOR>Heat Status Effects. Base Radius is 14m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dread_ward",
+    "name": "Dread Ward",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Dread Mirror Augment: Become unkillable for 8s when Dread Mirror kills a target by ripping its life force.",
+    "rarity": "rare"
+  },
+  {
+    "id": "emp_aura",
+    "name": "Emp Aura",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemy Corpus lose -15% Accuracy",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "empowered_blades",
+    "name": "Empowered Blades",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +60% Status Chance and Status Damage on Heavy Attacks, but lose <LOWER_IS_BETTER>90 Shields per hit.",
+    "rarity": "rare"
+  },
+  {
+    "id": "empowered_quiver",
+    "name": "Empowered Quiver",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Quiver Augment: Dashwire grants allies 100% Critical Damage. Cloak arrow has a 100% chance to prevent Status Effects.",
+    "rarity": "rare"
+  },
+  {
+    "id": "endless_lullaby",
+    "name": "Endless Lullaby",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Lull Augment: Performing a finisher on or killing a sleeping enemy will retrigger Lull for 100% of the remaining duration.\\nPassive: +50% Lull Duration.",
+    "rarity": "rare"
+  },
+  {
+    "id": "endurance_drift",
+    "name": "Endurance Drift",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "parkourVelocity": 2
+    },
+    "description": "+10% Energy Max, +12% Parkour Velocity",
+    "rarity": "rare"
+  },
+  {
+    "id": "energy_nexus",
+    "name": "Energy Nexus",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Warframe receives +3 Energy Regen/s",
+    "rarity": "rare"
+  },
+  {
+    "id": "enraged",
+    "name": "Enraged",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Hysteria Augment: Damage increased by 350%, Critical Chance increased by 350%. Hysteria lasts for 15s, and receives a matching cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "equilibrium",
+    "name": "Equilibrium",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energy": 8,
+      "health": 8
+    },
+    "description": "Health pickups give +32% Energy. Energy pickups give +32% Health.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "eternal_war",
+    "name": "Eternal War",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Warcry Augment: While active, Warcry's duration is increased by 2s for each Melee Kill.",
+    "rarity": "rare"
+  },
+  {
+    "id": "exothermic",
+    "name": "Exothermic",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Inferno Augment: Enemies killed while under the effect of Inferno have a 15% chance to drop an energy orb.",
+    "rarity": "rare"
+  },
+  {
+    "id": "final_act",
+    "name": "Final Act",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 7.5
+    },
+    "description": "On Low Health:\\n+30% Ability Strength\\n+30% Casting Speed for 8s",
+    "rarity": "rare"
+  },
+  {
+    "id": "firewalker",
+    "name": "Firewalker",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "heat": 25
+    },
+    "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FIRE_COLOR>Heat on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "follow_through",
+    "name": "Follow Through",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+10 Energy",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "funnel_clouds",
+    "name": "Funnel Clouds",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fused_crucible",
+    "name": "Fused Crucible",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Crucible Blast Augment: Becomes a channeled ability consuming <LOWER_IS_BETTER>20 <ENERGY> Energy/s that ramps up. While active Chyrinka Pillars trigger chain reactions and their duration is frozen. Mobility is greatly reduced.",
+    "rarity": "rare"
+  },
+  {
+    "id": "gale_kick",
+    "name": "Gale Kick",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% of Melee Damage converted to <DT_IMPACT_COLOR>Impact Damage on Jump Kick, knocking down nearby enemies on kill.",
+    "rarity": "rare"
+  },
+  {
+    "id": "gastro",
+    "name": "Gastro",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clouds that last 8s and inflict nearby enemies with <DT_GAS_COLOR> Gas Status Effect.",
+    "rarity": "rare"
+  },
+  {
+    "id": "gladiator_finesse",
+    "name": "Gladiator Finesse",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Drains Energy to stop Lethal Damage with 60% Efficiency.",
+    "rarity": "rare"
+  },
+  {
+    "id": "gourmand",
+    "name": "Gourmand",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Feast Augment: Instead of Energy, consumes <LOWER_IS_BETTER>200 Health on cast. Glutton grants an additional 150 Armor per enemy.",
+    "rarity": "rare"
+  },
+  {
+    "id": "growing_power",
+    "name": "Growing Power",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Status Effect with Weapon: Squad increases personal Ability Strength by 25% for 6s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "guardian_armor",
+    "name": "Guardian Armor",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHARE>Affinity Range take by 75%. Squad kills restore 5% of his Health over 3s and increases Vex Armor duration by 1s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hall_of_malevolence",
+    "name": "Hall Of Malevolence",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Hall of Mirrors Augment: The damage of your doppelgangers is increased by 5% every time you kill an enemy.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hallowed_eruption",
+    "name": "Hallowed Eruption",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Hallowed Ground Augment: Reactivate to deal all Remaining Damage and <DT_RADIATION_COLOR>Radiation Status.\\nPassive: +200% Hallowed Ground Duration.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hallowed_reckoning",
+    "name": "Hallowed Reckoning",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "range": 10
+    },
+    "description": "Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected enemy grants bonus armor to allies and deals 300 damage per second to enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hastened_steps",
+    "name": "Hastened Steps",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 5,
+      "shield": -5
+    },
+    "description": "+20% Sprint Speed, -20% Shield Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "heavy_impact",
+    "name": "Heavy Impact",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Create 11m seismic shockwaves from heavy landings, dealing 550 Damage and knocking foes off their feet.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "heightened_reflexes",
+    "name": "Heightened Reflexes",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": -5
+    },
+    "description": "+20% Casting Speed, -20% Ability Efficiency",
+    "rarity": "rare"
+  },
+  {
+    "id": "holster_amp",
+    "name": "Holster Amp",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Equip:\\nSquad gains 60% Weapon Damage for 3s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hysterical_assault",
+    "name": "Hysterical Assault",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "parkourVelocity": 12.5,
+      "sprintSpeed": 12.5
+    },
+    "description": "Hysteria Augment: Attack with Valkyr’s Talons to leap onto targeted enemies up to 50m away. Gain +50% Parkour Velocity and +50% Sprint Speed for 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hysterical_fixation",
+    "name": "Hysterical Fixation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Hysteria Augment: While Hysteria is active, each kill restores 20% Maximum Shields.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ice_spring",
+    "name": "Ice Spring",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "cold": 25
+    },
+    "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FREEZE_COLOR>Cold on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "immolated_radiance",
+    "name": "Immolated Radiance",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Immolation Augment: Allies within Affinity range will receive 50% of Immolation's Damage Reduction.",
+    "rarity": "rare"
+  },
+  {
+    "id": "insatiable",
+    "name": "Insatiable",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ravenous Augment: Nidus has a chance for additional Mutation stacks while in the infestation. The base 60% chance increases with power strength, and multiple stacks are possible above 100%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "intrepid_stand",
+    "name": "Intrepid Stand",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Final Stand Augment: Each javelin that damages an enemy grants 60 Overguard to Styanax and 30 Overguard to his allies within Affinity Range.",
+    "rarity": "rare"
+  },
+  {
+    "id": "intruder",
+    "name": "Intruder",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+2s to Hacking",
+    "rarity": "common"
+  },
+  {
+    "id": "ironclad_flight",
+    "name": "Ironclad Flight",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne.",
+    "rarity": "rare"
+  },
+  {
+    "id": "jades_judgment",
+    "name": "Jade's Judgment",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "jet_stream",
+    "name": "Jet Stream",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "jugulus_carapace",
+    "name": "Jugulus Carapace",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 9.1667,
+      "health": 3.3333
+    },
+    "description": "+55% Armor, +20% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "kavats_grace",
+    "name": "Kavat's Grace",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "kinetic_collision",
+    "name": "Kinetic Collision",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Speed Augment: Running into an opponent increases the duration of Speed by 4s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "larva_burst",
+    "name": "Larva Burst",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Larva Augment: Reactivate Larva to detonate and deal 600 <DT_POISON_COLOR>Toxin Damage in a 8m radius. This damage stacks for every enemy grabbed by the Larva.",
+    "rarity": "rare"
+  },
+  {
+    "id": "lasting_covenant",
+    "name": "Lasting Covenant",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Covenant Augment: Headshot kills increase Critical Chance bonus duration by 3s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "lightning_dash",
+    "name": "Lightning Dash",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "electricity": 25
+    },
+    "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_ELECTRICITY_COLOR>Electricity on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "lingering_transmutation",
+    "name": "Lingering Transmutation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Transmutation Probe Augment: Probe returns to Lavos after reaching max range, and remains nearby for 15s. Recall Probe by recasting. Recast again to end.",
+    "rarity": "rare"
+  },
+  {
+    "id": "loot_detector",
+    "name": "Loot Detector",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +30m Loot Radar",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "loyal_merulina",
+    "name": "Loyal Merulina",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Merulina Augment: Yareli no longer rides Merulina. Instead, Merulina follows her and casts Sea Snare on nearby enemies. 2s cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "maglev",
+    "name": "Maglev",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20% Slide, -20% Friction",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "master_thief",
+    "name": "Master Thief",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% chance to unlock locked lockers.",
+    "rarity": "rare"
+  },
+  {
+    "id": "melee_guidance",
+    "name": "Melee Guidance",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "You lose <LOWER_IS_BETTER>6s Melee Combo Duration\\nSquadmates gain 12s Melee Combo Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "mesas_waltz",
+    "name": "Mesa's Waltz",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "mesmer_shield",
+    "name": "Mesmer Shield",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Mesmer Skin Augment: Revenant receives +50% Mesmer Skin Strength and allies within Affinity Range are granted a maximum of 5 charges.",
+    "rarity": "rare"
+  },
+  {
+    "id": "motus_signal",
+    "name": "Motus Signal",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Double Jump strength by +200%.",
+    "rarity": "common"
+  },
+  {
+    "id": "natural_talent",
+    "name": "Natural Talent",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+50% Casting Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "negation_armor",
+    "name": "Negation Armor",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Scarab Shell Augment: When Inaros takes fatal damage, he consumes Scarab Shell to heal with a brief invulnerability that ends with a deadly <DT_SLASH_COLOR>Slash Status Effect. Cooldown <LOWER_IS_BETTER>30s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "no_current_leap",
+    "name": "No Current Leap",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+10% Mobility, 0 Energy Rate",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "omikujis_fortune",
+    "name": "Omikuji's Fortune",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "overcharge_detectors",
+    "name": "Overcharge Detectors",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Exposes enemies at maximum Energy Capacity within 30m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "overcharged",
+    "name": "Overcharged",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts up to 50 Energy to Overshields at a rate of 100%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "pain_threshold",
+    "name": "Pain Threshold",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+160% Faster Stagger Recovery",
+    "rarity": "rare"
+  },
+  {
+    "id": "parasitic_vitality",
+    "name": "Parasitic Vitality",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Parasitic Link Augment: Nidus and any ally he's bound to gain 4% Max Health per Mutation during Parasitic Link.",
+    "rarity": "rare"
+  },
+  {
+    "id": "path_of_statues",
+    "name": "Path Of Statues",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Landslide Augment: Leave a trail for 12s that petrifies enemies for 6s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "peaceful_provocation",
+    "name": "Peaceful Provocation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Pacify & Provoke Augment: Pacify converts damage done to allies into an aura that slows enemies by 40%. Provoke converts damage done to enemies into 15% extra Ability Strength.",
+    "rarity": "rare"
+  },
+  {
+    "id": "phoenix_renewal",
+    "name": "Phoenix Renewal",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Renewal Augment: Taking fatal damage while under the effects of Renewal will instead Heal you or allies to 50% Health. This effect triggers only once for each ally every 60s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "photon_repeater",
+    "name": "Photon Repeater",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Photon Strike Augment: If Photon Strike hits at least <LOWER_IS_BETTER>5 enemies, the next cast will cost no Energy and fire a second strike.",
+    "rarity": "rare"
+  },
+  {
+    "id": "piercing_step",
+    "name": "Piercing Step",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "puncture": 10
+    },
+    "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_PUNCTURE_COLOR>Puncture on Bullet Jump",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pistol_scavenger",
+    "name": "Pistol Scavenger",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +150% Pistol Ammo Recovery",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pool_of_life",
+    "name": "Pool Of Life",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Well of Life Augment: On death, marked enemies will drop 4 Health Orbs with a 100% chance of dropping an Energy Orb.",
+    "rarity": "rare"
+  },
+  {
+    "id": "power_drift",
+    "name": "Power Drift",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 2.5
+    },
+    "description": "+15% Ability Strength, +30% Chance to Resist Knockdown",
+    "rarity": "rare"
+  },
+  {
+    "id": "power_of_three",
+    "name": "Power Of Three",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more Energy.",
+    "rarity": "rare"
+  },
+  {
+    "id": "precision_intensify",
+    "name": "Precision Intensify",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 15
+    },
+    "description": "+90% Ability Strength for your 4th Ability",
+    "rarity": "rare"
+  },
+  {
+    "id": "prey_of_dynar",
+    "name": "Prey Of Dynar",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shroud of Dynar Augment: Increase an enemy’s Damage Vulnerability by 50%. Using Fang of Raksh on that enemy increases its spread radius by 150%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_streamline",
+    "name": "Primed Streamline",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": 5
+    },
+    "description": "+55% Ability Efficiency",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_vigor",
+    "name": "Primed Vigor",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 6.8182
+    },
+    "description": "+75% Shield Capacity, +75% Health",
+    "rarity": "legendary"
+  },
+  {
+    "id": "prism_guard",
+    "name": "Prism Guard",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Prism Augment: Prism follows above Mirage. Duration changed to 4s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "prismatic_companion",
+    "name": "Prismatic Companion",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Prismatic Gem Augment: The gem now attaches to your free-moving companion. \\nPassive : +50% Prismatic Gem Duration.",
+    "rarity": "rare"
+  },
+  {
+    "id": "prolonged_paralysis",
+    "name": "Prolonged Paralysis",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Paralysis Augment: Affected enemies are pulled towards Valkyr and the stun duration is increased by 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "proton_pulse",
+    "name": "Proton Pulse",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Wall Dashing grants +100% Bullet Jump Speed.",
+    "rarity": "common"
+  },
+  {
+    "id": "provoked",
+    "name": "Provoked",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+60% Damage during Bleedout",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "purging_slash",
+    "name": "Purging Slash",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Slash Dash Augment: Allies in the path of Slash Dash have 4 debuffs removed and 70% Shields restored.",
+    "rarity": "rare"
+  },
+  {
+    "id": "purifying_flames",
+    "name": "Purifying Flames",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fire Blast Augment: Allies hit by the expanding ring of fire are cured of Status Effects and granted 4s of Status Immunity.",
+    "rarity": "rare"
+  },
+  {
+    "id": "push_&_pull",
+    "name": "Push & Pull",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Metamorphosis Augment: Switching to Day-form staggers enemies within 6m and knocks them down when switching to Night-form.",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_charge",
+    "name": "Quick Charge",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": -5
+    },
+    "description": "-20% Shield Recharge Delay, -20 Shield Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_thinking",
+    "name": "Quick Thinking",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Drains Energy to stop Lethal Damage with 80% Efficiency.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rage",
+    "name": "Rage",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Convert +60% of Damage on Health to Energy. Without Shields, ally Overguard imitates Health.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rapid_resilience",
+    "name": "Rapid Resilience",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": -12.5
+    },
+    "description": "-75% Status Duration on Self",
+    "rarity": "rare"
+  },
+  {
+    "id": "razor_mortar",
+    "name": "Razor Mortar",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "electricity": 17.5
+    },
+    "description": "Razor Gyre Augment: Groups enemies together, while Lethal Progeny's Ortholysts focus fire on those enemies with +70% <DT_ELECTRICITY_COLOR>Electricity Damage and Fire Rate for 6s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "reactive_storm",
+    "name": "Reactive Storm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 62.5
+    },
+    "description": "Serene Storm Augment: Desert Wind is granted +250% Status Chance and changes its damage type to match enemy weaknesses.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ready_steel",
+    "name": "Ready Steel",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad begins the mission with +24 Initial Combo",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "recharge_barrier",
+    "name": "Recharge Barrier",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Electric Shield Augment: Allies that pass through have 35% Shields restored.",
+    "rarity": "rare"
+  },
+  {
+    "id": "recrystalize",
+    "name": "Recrystalize",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Crystallize Augment: Enemies killed by crystalline growths stagger and spread the crystals to enemies within 16m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "reflection",
+    "name": "Reflection",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+73.3% chance to Stagger on Block, +18.3% chance to Stun on Block",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rending_turn",
+    "name": "Rending Turn",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "slash": 10
+    },
+    "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_SLASH_COLOR>Slash on Bullet Jump",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "repair_dispensary",
+    "name": "Repair Dispensary",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Dispensary Augment: Dispensary also creates pick ups that heal companions for 20% of their maximum health and reduce their incapacitation timer by 12 sec.",
+    "rarity": "rare"
+  },
+  {
+    "id": "resilient_focus",
+    "name": "Resilient Focus",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "damage": 5
+    },
+    "description": "+20% Damage Resistance on Stun",
+    "rarity": "rare"
+  },
+  {
+    "id": "retribution",
+    "name": "Retribution",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+90% Chance to deal Electrical Damage when shield struck by melee enemies., +120 <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "rare"
+  },
+  {
+    "id": "reverse_rotorswell",
+    "name": "Reverse Rotorswell",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rotorswell Augment: 35% of damage received is redirected toward the instigator as <DT_ELECTRICITY_COLOR> Electricity Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rifle_scavenger",
+    "name": "Rifle Scavenger",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +150% Rifle Ammo Recovery",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rime_vault",
+    "name": "Rime Vault",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ice FX on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "rising_skill",
+    "name": "Rising Skill",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+10% Mobility, -30 Shield Capacity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rolling_guard",
+    "name": "Rolling Guard",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Dodge:\\nBecome invulnerable for 3s and remove all Status Effects. <LOWER_IS_BETTER>7s cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rousing_plunder",
+    "name": "Rousing Plunder",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Plunder Augment: Plunder gains 50% max <DT_CORROSIVE_COLOR>Corrosive Damage and Armor, and heals allies within Affinity range for 50 Health.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rubble_heap",
+    "name": "Rubble Heap",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Passive Augment: When above 1400 Rubble, Landslide costs no Energy, deals 2x Damage, and travels 2x faster.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sapping_reach",
+    "name": "Sapping Reach",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Pull Augment: Steals up to 25 Energy from the target.",
+    "rarity": "rare"
+  },
+  {
+    "id": "saxum_carapace",
+    "name": "Saxum Carapace",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 9.1667,
+      "health": 3.3333
+    },
+    "description": "+55% Armor, +20% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "searing_leap",
+    "name": "Searing Leap",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fire FX on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "seeking_shuriken",
+    "name": "Seeking Shuriken",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shuriken Augment: Hits expose weaknesses on enemies, reducing their Armor by 70% for 8s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shadow_haze",
+    "name": "Shadow Haze",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reap Augment: Increase Critical Chance by 50% on enemies inflicted with Death Harvest. A new Shadow emerges from those enemies when they perish. Limit of 3 Shadows.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shattered_storm",
+    "name": "Shattered Storm",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shepherd",
+    "name": "Shepherd",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad's Companions receive +300 Health and +180 Armor",
+    "rarity": "rare"
+  },
+  {
+    "id": "shield_of_shadows",
+    "name": "Shield Of Shadows",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shadows of the Dead Augment: Each Shadow within 50m take 6% of the Damage done to Nekros in his stead.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shield_overload",
+    "name": "Shield Overload",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Polarize Augment: Increases the time for the target's Shields to regenerate by 9s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shock_absorbers",
+    "name": "Shock Absorbers",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Physical Damage Resistance",
+    "rarity": "rare"
+  },
+  {
+    "id": "shock_trooper",
+    "name": "Shock Trooper",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shock Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_ELECTRICITY_COLOR>Electricity Damage to their attacks for 40s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shotgun_scavenger",
+    "name": "Shotgun Scavenger",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +150% Shotgun Ammo Recovery",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "signal_flare",
+    "name": "Signal Flare",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Radial Blind Augment: Blinded enemies are marked on the Minimap for 12s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "singularity",
+    "name": "Singularity",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Absorb Augment: Create a ring every 3s that drags in enemies at 15m/s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "smite_infusion",
+    "name": "Smite Infusion",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Smite Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_RADIATION_COLOR>Radiation Damage to their attacks for 40s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "smoke_shadow",
+    "name": "Smoke Shadow",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Smoke Screen Augment: Conceals allies within 15m and grants 150% Critical Chance while invisible.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sniper_scavenger",
+    "name": "Sniper Scavenger",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +150% Sniper Rifle Ammo Recovery",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "spectral_spirit",
+    "name": "Spectral Spirit",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Grave Spirit Augment: Immediately assume Spectral Form. 100% chance for weapons and abilities to apply Doom. Kills outside of Spectral Form decrease its cooldown by 1s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "stand_united",
+    "name": "Stand United",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +25% Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "stealth_drift",
+    "name": "Stealth Drift",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+18m Enemy Radar, +12% Aim Glide/Wall Latch Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "strain_consume",
+    "name": "Strain Consume",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Dead Maggots within 10m are consumed, increasing Max Health by 4% and increasing Health Regen by 2/sec for 45sec.",
+    "rarity": "rare"
+  },
+  {
+    "id": "streamlined_form",
+    "name": "Streamlined Form",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Slide, -30% Friction",
+    "rarity": "rare"
+  },
+  {
+    "id": "summoners_wrath",
+    "name": "Summoner's Wrath",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "surging_blades",
+    "name": "Surging Blades",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Aquablades Augment: Activate Aquablades when the ability is in use or cooldown to throw one blade. Blades gain 10% damage when any Aquablade hits an enemy. No cost to throw with Merulina.",
+    "rarity": "rare"
+  },
+  {
+    "id": "surplus_diverters",
+    "name": "Surplus Diverters",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain +6 energy, upon replenishing shields completely after they have been deactivated.",
+    "rarity": "rare"
+  },
+  {
+    "id": "swift_momentum",
+    "name": "Swift Momentum",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +30% Heavy Attack Wind Up Speed and +6s Melee Combo Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "swing_line",
+    "name": "Swing Line",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "parkourVelocity": 5
+    },
+    "description": "Rip Line Augment: Rip Lines has no Energy cost while Airborne., +20% Parkour Velocity",
+    "rarity": "rare"
+  },
+  {
+    "id": "tactical_retreat",
+    "name": "Tactical Retreat",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Low Health:\\n+10% Mobility for 4s",
+    "rarity": "rare"
+  },
+  {
+    "id": "target_fixation",
+    "name": "Target Fixation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tail Wind Augment: Casting Tail Wind resets Zephyr’s bullet jump. Each enemy hit increases Tail Wind Damage by 100%. Damage resets upon being on the ground for 2s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tear_gas",
+    "name": "Tear Gas",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Smoke Screen Augment: Blinds enemies within 4m for 3s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "teeming_virulence",
+    "name": "Teeming Virulence",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 120% Primary Weapon Critical Chance for 15s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "teleport_rush",
+    "name": "Teleport Rush",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Teleport Augment: Using Teleport increases Parkour Velocity by 30% for 12s. Executing a target with Teleport extends Smoke Screen's duration by 5s. Teleport Mercy Kills fully refresh the duration.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tempered_bound",
+    "name": "Tempered Bound",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "-10% Mobility, +30 Shield Capacity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "temporal_artillery",
+    "name": "Temporal Artillery",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blaze Artillery Augment : When Temporal Anchor is activated, one existing Artillery unit will attach to Protea, halting its duration countdown. Max combo count is 20x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "temporal_erosion",
+    "name": "Temporal Erosion",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Temporal Anchor Augment: While Temporal Anchor is active, each strike of Grenade Fan and Blaze Artillery strips 10% Armor from enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tesla_bank",
+    "name": "Tesla Bank",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tesla Nervos Augment: While a target has a Nervos attached, any damage dealt to it will be absorbed by the Nervos and channeled into a 8m burst of <DT_ELECTRICITY_COLOR>Electricity on death.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tharros_lethality",
+    "name": "Tharros Lethality",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tharros Strike Augment: Increases Critical Damage by 100% on enemies you hit. Critical Damage bonus is doubled for Spearguns.",
+    "rarity": "rare"
+  },
+  {
+    "id": "the_relentless_lost",
+    "name": "The Relentless Lost",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "The Lost Augment: The Lost gains 35% Ability Strength and 15% Ability Efficiency when cast. The effect stacks up to 3x. Casting the same ability back-to-back resets the effect.",
+    "rarity": "rare"
+  },
+  {
+    "id": "thrall_pact",
+    "name": "Thrall Pact",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enthrall Augment: Gain +25% Primary Weapon Damage for each active Thrall.",
+    "rarity": "rare"
+  },
+  {
+    "id": "titanic_rumbler",
+    "name": "Titanic Rumbler",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rumblers Augment: Create a single rumbler with 300% Health and 400% Damage.\\nReactivating will cause him to slam the floor and knockdown enemies in 15m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "toxic_flight",
+    "name": "Toxic Flight",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "toxin": 25
+    },
+    "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_POISON_COLOR>Toxin on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "tribunal",
+    "name": "Tribunal",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Condemn Augment: Other players will trigger 100% of the effects of Penance and Thurible when attacking chained enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ulfruns_endurance",
+    "name": "Ulfrun's Endurance",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "undying_will",
+    "name": "Undying Will",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+42% Bleedout Reduction",
+    "rarity": "rare"
+  },
+  {
+    "id": "untime_rift",
+    "name": "Untime Rift",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "The Vast Untime Augment: Creates a Rift that connects to enemies suffering from <DT_RADIANT_COLOR> Void Status Effect within 15m, doubling debuffs applied by The Vast Untime and maintaining <DT_RADIANT_COLOR> Void Status.",
+    "rarity": "rare"
+  },
+  {
+    "id": "valence_formation",
+    "name": "Valence Formation",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Passive Augment: Casting an Ability imbued with extra Elemental Damage applies that Element as a 200% bonus to your weapons with guaranteed Status for 20s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vampiric_grasp",
+    "name": "Vampiric Grasp",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Grasp of Lohk Augment: When a stolen weapon deals damage to an enemy affected by The Lost: Gaze or The Vast Untime, Xaku heals by 25.",
+    "rarity": "rare"
+  },
+  {
+    "id": "venari_bodyguard",
+    "name": "Venari Bodyguard",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Venari Augment: Venari dies in Khora's place. Recovery timer increased to 150s. Killing enemies decreases the timer by 4s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "venom_dose",
+    "name": "Venom Dose",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Spores Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_CORROSIVE_COLOR>Corrosive Damage to their attacks for 40s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "venomous_rise",
+    "name": "Venomous Rise",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Toxin FX on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "vigorous_swap",
+    "name": "Vigorous Swap",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "On Equip:\\n+165% Damage for 3s",
+    "rarity": "rare"
+  },
+  {
+    "id": "viral_tempest",
+    "name": "Viral Tempest",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tempest Barrage Augment: Each projectile has a 100% chance of inflicting a <DT_VIRAL_COLOR>Viral Status Effect.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vital_systems_bypass",
+    "name": "Vital Systems Bypass",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 12.5
+    },
+    "description": "+1 Health Regen/s, +50% Shield Recharge Delay",
+    "rarity": "rare"
+  },
+  {
+    "id": "volatile_recompense",
+    "name": "Volatile Recompense",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Recompense Augment: Daggers whirl in a ring around Kullervo for 25s, slashing nearby foes and dealing <DT_EXPLOSION_COLOR>Blast Damage and Status Effect before returning to the ring.",
+    "rarity": "rare"
+  },
+  {
+    "id": "voltaic_lance",
+    "name": "Voltaic Lance",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Electrical FX on Bullet Jump",
+    "rarity": "rare"
+  },
+  {
+    "id": "ward_recovery",
+    "name": "Ward Recovery",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Warding Halo Augment: 50% of the casting cost returned based on how much protection is left.",
+    "rarity": "rare"
+  },
+  {
+    "id": "warding_thurible",
+    "name": "Warding Thurible",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Thurible Augment: Allies in range take 50% less Damage while channeling Thurible and grant 1.0 additional Energy charge whenever damaged.",
+    "rarity": "rare"
+  },
+  {
+    "id": "warm_coat",
+    "name": "Warm Coat",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 3
+    },
+    "description": "+18% Shield Resistance to Environmental Ice Hazards",
+    "rarity": "common"
+  },
+  {
+    "id": "warriors_rest",
+    "name": "Warrior's Rest",
+    "polarity": "zenurik",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "worthy_comradery",
+    "name": "Worthy Comradery",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Squad receives +75% Weak Point Critical Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "wrath_of_ukko",
+    "name": "Wrath Of Ukko",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Storm of Ukko Augment: Wrathful Advance moves the storm of daggers to the teleportation location and increases its duration by 6s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "wrecking_wall",
+    "name": "Wrecking Wall",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Containment Wall Augment: Strip 50% of armor and shields from struck enemies. Hitting 5 or more enemies will restart the duration of any Chyrinka Pillars and empower them.",
+    "rarity": "rare"
+  },
+  {
+    "id": "continuity_r3",
+    "name": "Continuity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 3
+    },
+    "description": "+30% Ability Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "enemy_sense_r3",
+    "name": "Enemy Sense",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+55m Enemy Radar",
+    "rarity": "rare"
+  },
+  {
+    "id": "fast_deflection_r3",
+    "name": "Fast Deflection",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 10
+    },
+    "description": "+40% Shield Recharge",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "flame_repellent_r3",
+    "name": "Flame Repellent",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "heat": 9.0909
+    },
+    "description": "+100% <DT_FIRE_COLOR>Heat Resistance",
+    "rarity": "common"
+  },
+  {
+    "id": "fleeting_expertise_r5",
+    "name": "Fleeting Expertise",
+    "polarity": "naramon",
+    "drain": -6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": 10,
+      "abilityDuration": -10
+    },
+    "description": "+60% Ability Efficiency, -60% Ability Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "flow_r3",
+    "name": "Flow",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "energy": 12.5
+    },
+    "description": "+50% Energy Max",
+    "rarity": "rare"
+  },
+  {
+    "id": "handspring_r10",
+    "name": "Handspring",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+240% Faster Knockdown Recovery",
+    "rarity": "rare"
+  },
+  {
+    "id": "insulation_r3",
+    "name": "Insulation",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "cold": 9.0909
+    },
+    "description": "+100% <DT_FREEZE_COLOR>Cold Resistance",
+    "rarity": "common"
+  },
+  {
+    "id": "intensify_r3",
+    "name": "Intensify",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5
+    },
+    "description": "+55% Ability Strength",
+    "rarity": "rare"
+  },
+  {
+    "id": "lightning_rod_r3",
+    "name": "Lightning Rod",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "electricity": 9.0909
+    },
+    "description": "+100% <DT_ELECTRICITY_COLOR>Electricity Resistance",
+    "rarity": "common"
+  },
+  {
+    "id": "mecha_pulse_r3",
+    "name": "Mecha Pulse",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 15
+    },
+    "description": "Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "mobilize_r3",
+    "name": "Mobilize",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20% to Parkour Velocity, +20% Aim Glide/Wall Latch Duration",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "overextended_r5",
+    "name": "Overextended",
+    "polarity": "vazarin",
+    "drain": -6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 15,
+      "abilityStrength": -10
+    },
+    "description": "+90% Ability Range, -60% Ability Strength",
+    "rarity": "rare"
+  },
+  {
+    "id": "parry_r3",
+    "name": "Parry",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+96% chance to open enemies to Finisher Attacks after Warframe blocks Melee",
+    "rarity": "common"
+  },
+  {
+    "id": "power_donation_r5",
+    "name": "Power Donation",
+    "polarity": "madurai",
+    "drain": -4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "You lose <LOWER_IS_BETTER>30% Ability Strength\\nSquadmates gain 30% Ability Strength",
+    "rarity": "rare"
+  },
+  {
+    "id": "preparation_r10",
+    "name": "Preparation",
+    "polarity": "zenurik",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% Maximum Energy is filled on Spawn",
+    "rarity": "rare"
+  },
+  {
+    "id": "redirection_r3",
+    "name": "Redirection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "shield": 9.1667
+    },
+    "description": "+55% Shield Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "reflex_guard_r10",
+    "name": "Reflex Guard",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "comboCountChance": 9.0909
+    },
+    "description": "+100% Combo Count Chance while Blocking",
+    "rarity": "rare"
+  },
+  {
+    "id": "rush_r3",
+    "name": "Rush",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 5
+    },
+    "description": "+55% Sprint Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "steel_fiber_r3",
+    "name": "Steel Fiber",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "armor": 9.1667
+    },
+    "description": "+55% Armor",
+    "rarity": "common"
+  },
+  {
+    "id": "streamline_r3",
+    "name": "Streamline",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": 3
+    },
+    "description": "+12% Ability Efficiency",
+    "rarity": "rare"
+  },
+  {
+    "id": "stretch_r3",
+    "name": "Stretch",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 7.5
+    },
+    "description": "+45% Ability Range",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sure_footed_r5",
+    "name": "Sure Footed",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "+90% Chance to Resist Knockdown",
+    "rarity": "rare"
+  },
+  {
+    "id": "swift_bite_r3",
+    "name": "Swift Bite",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ophidian Bite Augment: Reduce Ability Cooldowns by 4s when at least 4 enemies are hit. Ophidian Bite is granted 30% additional Ability Range.",
+    "rarity": "rare"
+  },
+  {
+    "id": "synth_reflex_r3",
+    "name": "Synth Reflex",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Equip:\\n+40% Bullet Jump for 2s",
+    "rarity": "rare"
+  },
+  {
+    "id": "tek_collateral_r3",
+    "name": "Tek Collateral",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 25
+    },
+    "description": "+100% Critical Damage when inside the Marked Zone.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vigor_r5",
+    "name": "Vigor",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 8.3333
+    },
+    "description": "+50% Shield Capacity, +50% Health",
+    "rarity": "rare"
+  },
+  {
+    "id": "vitality_r3",
+    "name": "Vitality",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "health": 9.1667
+    },
+    "description": "+55% Health",
+    "rarity": "common"
+  },
+  {
+    "id": "acidic_spittle",
+    "name": "Acidic Spittle",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Every <LOWER_IS_BETTER>5s spit acidic tar at an enemy within 30m, blinding them for 12s and dealing 120 <DT_CORROSIVE_COLOR>Corrosive Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "aerial_prospectus",
+    "name": "Aerial Prospectus",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Launches a beacon at an enemy within 27m that calls down an Orbital Strike dealing 1200 <DT_EXPLOSION_COLOR>Blast Damage in a 7m radius.",
+    "rarity": "rare"
+  },
+  {
+    "id": "anabolic_pollination",
+    "name": "Anabolic Pollination",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Release a cloud of spores that persists for 10s increasing <DT_POISON_COLOR>Toxin Damage by +100% for 15s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "anti_grav_grenade",
+    "name": "Anti-Grav Grenade",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "A grenade that levitates enemies in a 6m. After 6s afflicted enemies come crashing down, causing  <DT_IMPACT_COLOR>Impact Damage equal to 80% of the damage taken while floating.",
+    "rarity": "common"
+  },
+  {
+    "id": "arc_coil",
+    "name": "Arc Coil",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Sentinel will zap up to 7 enemies within 10m, dealing 100 <DT_ELECTRICITY_COLOR>Electricity Damage with a 10% Status Chance.",
+    "rarity": "common"
+  },
+  {
+    "id": "auto_omni",
+    "name": "Auto Omni",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Nautilus has 100% chance to repair nearby Railjack hull damages and extinguishes fires on Railjack. Cooldown: 20s.",
+    "rarity": "common"
+  },
+  {
+    "id": "bell_ringer",
+    "name": "Bell Ringer",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Melee attacks knock down enemies and apply +4 <DT_IMPACT_COLOR>Impact Status Effects",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "blast_shield",
+    "name": "Blast Shield",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Overshields increased by +3000. Leap at an enemy within 10m dealing 30 <DT_IMPACT_COLOR>Impact Damage and knocking down other enemies within 5m and resets Overshields.",
+    "rarity": "common"
+  },
+  {
+    "id": "bloodthirst",
+    "name": "Bloodthirst",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "100 health stolen each hit per stack of <DT_SLASH_COLOR>Slash.",
+    "rarity": "common"
+  },
+  {
+    "id": "botanist",
+    "name": "Botanist",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Oxylus Sentinel will automatically pick any plants within 50m over <LOWER_IS_BETTER>2.0s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "brute_conditioning",
+    "name": "Brute Conditioning",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 35
+    },
+    "description": "+385% Melee Damage, Convert all base Physical Damage to <DT_IMPACT_COLOR>Impact Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "burning_claws",
+    "name": "Burning Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 30
+    },
+    "description": "+330% <DT_FIRE_COLOR>Heat, +330% Status Chance, Converts all elemental damage from these claws to <DT_FIRE_COLOR>Heat damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "calculated_shot",
+    "name": "Calculated Shot",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Sentinel charges a powerful shot and fires at the first enemy within 70m.",
+    "rarity": "common"
+  },
+  {
+    "id": "chilling_claws",
+    "name": "Chilling Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "cold": 30,
+      "statusChance": 30
+    },
+    "description": "+330% <DT_FREEZE_COLOR>Cold, +330% Status Chance, Converts all elemental damage from these claws to <DT_FREEZE_COLOR>Cold damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "cordon",
+    "name": "Cordon",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Nautilus forces enemies within 30m of the target into clusters for easier targeting. Cooldown: 15s.",
+    "rarity": "common"
+  },
+  {
+    "id": "crescent_charge",
+    "name": "Crescent Charge",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Charges an enemy within 25m dealing <DT_PUNCTURE_COLOR>Puncture Damage and lifting them. While lifted, enemy is flung at nearby foes dealing an additional 20% of the thrown enemy's health and adding 5 <DT_PUNCTURE_COLOR>Puncture Status to enemies within 5m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "crescent_devolution",
+    "name": "Crescent Devolution",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Devolves into its larval form when downed and charges at enemies, dealing 100 <DT_PUNCTURE_COLOR>Puncture Damage. Regains true form after 30s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "crowd_dispersion",
+    "name": "Crowd Dispersion",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.0 Damage.",
+    "rarity": "common"
+  },
+  {
+    "id": "cull_the_weak",
+    "name": "Cull The Weak",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 40
+    },
+    "description": "+60% Melee Damage per Status Type affecting the target, Non-Critical hits deal +240% damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "detect_vulnerability",
+    "name": "Detect Vulnerability",
+    "polarity": "penjaga",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Upon completing research on an enemy, subsequent scans will reveal their weak points.",
+    "rarity": "rare"
+  },
+  {
+    "id": "disabling_conditioning",
+    "name": "Disabling Conditioning",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 35
+    },
+    "description": "+385% Melee Damage, Convert all base Physical Damage to <DT_PUNCTURE_COLOR>Puncture Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "diversified_denial",
+    "name": "Diversified Denial",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fabricate 3 Specters that fight for 30s. Each deals 85% of the Hound's damage and cannot use Abilities.",
+    "rarity": "rare"
+  },
+  {
+    "id": "electro_pulse",
+    "name": "Electro Pulse",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Every 5s, Sentinel will continually zap an enemy within 15m, trapping them in a stunned state.",
+    "rarity": "common"
+  },
+  {
+    "id": "endoparasitic_vector",
+    "name": "Endoparasitic Vector",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Transmit an endoparasite to an enemy within 30m. Tentacles spawn from it, clinging to enemies within 10m slowing them as they move further from the parasite, and dealing 20 <DT_VIRAL_COLOR>Viral Damage/sec over 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "equilibrium_audit",
+    "name": "Equilibrium Audit",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Unleashes a series of shockwaves that knockdown enemies within 15m and deal 300 damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "evasive_denial",
+    "name": "Evasive Denial",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Teleports a safe distance away and engages a displacement field gaining 75% chance to dodge enemy fire for 8s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fatal_attraction",
+    "name": "Fatal Attraction",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies within 20m are drawn to you. Once they are within 6m, they detonate for 250 Damage. Kill them before detonation to increase lure time and reduce cooldown.",
+    "rarity": "common"
+  },
+  {
+    "id": "fear_sense",
+    "name": "Fear Sense",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 50
+    },
+    "description": "The Kavat senses the weaknesses of enemies within 25m. For 25s, its attacks deal +200% damage and stagger with a 30% chance of knockdown.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fired_up",
+    "name": "Fired Up",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "5% <DT_FIRE_COLOR>Heat Damage on weapon per hit. Stacks up to 100%. Resets after 5s with no hits.",
+    "rarity": "rare"
+  },
+  {
+    "id": "flame_gland",
+    "name": "Flame Gland",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "focused_prospectus",
+    "name": "Focused Prospectus",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fires a beam of energy that deals 900 <DT_FIRE_COLOR>Heat Damage over 4.5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "frost_jaw",
+    "name": "Frost Jaw",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "ghost",
+    "name": "Ghost",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Cloaks owner when enemies are within 24m. The cloak is disrupted if owner attacks.",
+    "rarity": "common"
+  },
+  {
+    "id": "hastened_deflection",
+    "name": "Hastened Deflection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "shield": 15
+    },
+    "description": "+90% Shield Recharge, -45% Shield Recharge Delay",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "helminth_ferocity",
+    "name": "Helminth Ferocity",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "+120% Finisher Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "iatric_mycelium",
+    "name": "Iatric Mycelium",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Release a trail of spores every <LOWER_IS_BETTER>8s that heal the companion and its allies for 300 health over 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "immunity_resistance",
+    "name": "Immunity Resistance",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "+50% Status Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "infectious_bite",
+    "name": "Infectious Bite",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "An attack that deals +200% Finisher Damage and infects the target with a Virus that grows 4 volatile pustules that react to damage and explode.",
+    "rarity": "rare"
+  },
+  {
+    "id": "investigator",
+    "name": "Investigator",
+    "polarity": "penjaga",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Helios Sentinel will scan objects and enemies within 50m over 2.0s. This consumes Codex Scanner charges.",
+    "rarity": "common"
+  },
+  {
+    "id": "looter",
+    "name": "Looter",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Emits a pulse wave to break open Loot Crates within 22m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "loyal_retriever",
+    "name": "Loyal Retriever",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "13% chance to double Credit and Resource pickups",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "magnetic_strike",
+    "name": "Magnetic Strike",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% Chance to apply a <DT_MAGNETIC_COLOR>Magnetic status effect when inflicting an <DT_IMPACT_COLOR>Impact status effect",
+    "rarity": "common"
+  },
+  {
+    "id": "martyr_symbiosis",
+    "name": "Martyr Symbiosis",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Drains and stores 20 health from corpses within 25m up to 40% of your health. If your health falls below 10%, Companion downs itself to heal you.",
+    "rarity": "rare"
+  },
+  {
+    "id": "mecha_overdrive",
+    "name": "Mecha Overdrive",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 15
+    },
+    "description": "+60% Primary Weapon Status Chance added to Companion, +90% Status Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "mischief",
+    "name": "Mischief",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Smeeta Kavat becomes invisible for 9s every <LOWER_IS_BETTER>7s while a decoy kavat draws fire. Decoy has a 15% chance to evade damage and blinds nearby enemies on death.",
+    "rarity": "rare"
+  },
+  {
+    "id": "molecular_conversion",
+    "name": "Molecular Conversion",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blast enemies within 10m, converting 200 Damage into Shields for the Warframe.",
+    "rarity": "common"
+  },
+  {
+    "id": "null_audit",
+    "name": "Null Audit",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "The Hound utilizes the same Aura and Abilities as an Eximus enemy for 60s, while stripping its Overguard by 50%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "panzer_devolution",
+    "name": "Panzer Devolution",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Devolves into its larval form when downed and attacks enemies with quills, dealing 60 <DT_VIRAL_COLOR>Viral Damage each. Regains true form after 30s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "paralytic_spores",
+    "name": "Paralytic Spores",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Charges at an enemy within 30m dealing 160 damage. This releases spores that affect enemies within 15m, opening them up to Melee Finishers, and slowing them by 50% for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "pounce",
+    "name": "Pounce",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "The Kavat pounces at an enemy, dealing 90% Damage and stunning them for a short duration.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "precision_conditioning",
+    "name": "Precision Conditioning",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 35
+    },
+    "description": "+385% Melee Damage, Convert all base Physical Damage to <DT_SLASH_COLOR>Slash Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "proboscis",
+    "name": "Proboscis",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Helminth Charger whips a proboscis out at an enemy within 30m, pulling them back and dealing 100 damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "prosperous_retriever",
+    "name": "Prosperous Retriever",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "18% chance to double Credit pickups",
+    "rarity": "rare"
+  },
+  {
+    "id": "radon_claws",
+    "name": "Radon Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 20
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +80% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "reflex_denial",
+    "name": "Reflex Denial",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Generates a shield that reflects 90% Damage taken in pulses over 10s as <DT_MAGNETIC_COLOR>Magnetic Damage in a 12m radius.",
+    "rarity": "rare"
+  },
+  {
+    "id": "repo_audit",
+    "name": "Repo Audit",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Emits a magnetic pulse that disarms enemies within 30m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "resourceful_retriever",
+    "name": "Resourceful Retriever",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "18% chance to double Resource pickups",
+    "rarity": "rare"
+  },
+  {
+    "id": "scan_matter",
+    "name": "Scan Matter",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reveals resource containers and mineral deposits within 60m. Automatically breaks containers and collects resources every 3s.",
+    "rarity": "common"
+  },
+  {
+    "id": "sepsis_claws",
+    "name": "Sepsis Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "toxin": 30,
+      "statusChance": 30
+    },
+    "description": "+330% <DT_POISON_COLOR>Toxin, +330% Status Chance, Converts all elemental damage from these claws to <DT_POISON_COLOR>Toxin damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "sharpened_claws",
+    "name": "Sharpened Claws",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "A vicious attack dealing 300% damage that sunders armor by 120% and rends flesh.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shelter",
+    "name": "Shelter",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Creates a shield with 1800 Health around the player when they are reviving fallen allies.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shock_collar",
+    "name": "Shock Collar",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "shocking_claws",
+    "name": "Shocking Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "electricity": 30,
+      "statusChance": 30
+    },
+    "description": "+330% <DT_ELECTRICITY_COLOR>Electricity, +330% Status Chance, Converts all elemental damage from these claws to <DT_ELECTRICITY_COLOR>Electricity damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "sly_devolution",
+    "name": "Sly Devolution",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Devolves into its larval form when downed and regains its true form after 30s. Your kills reduce enemy accuracy against Warframes by 20% for 8s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "strain_eruption",
+    "name": "Strain Eruption",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Maggots explode on death, dealing 4% of an enemy's current Health as <DT_CORROSIVE_COLOR>Corrosive Damage to any enemy within 8m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "strain_fever",
+    "name": "Strain Fever",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "Helminth Charger gains +40% Damage per Cyst.",
+    "rarity": "rare"
+  },
+  {
+    "id": "survival_instinct",
+    "name": "Survival Instinct",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Bullet Jump:\\nEnemies lose sight of you for 1.5s. <LOWER_IS_BETTER>5s cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "swipe",
+    "name": "Swipe",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Strikes 4 additional enemies and increases Attack Range by 2m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "synergized_prospectus",
+    "name": "Synergized Prospectus",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fires a spark that seeks out the nearest enemy in 30m, dealing 300 <DT_ELECTRICITY_COLOR>Electricity Damage in a 10m radius. The spark ricochets up to 7x, seeking out the nearest enemy in 30m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tandem_bond",
+    "name": "Tandem Bond",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Companion melee hits increase your Combo by 6. Heavy Attacks increase Companion melee damage by 30% multiplied by your combo multiplier for 30s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "thumper",
+    "name": "Thumper",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Djinn will attack the first visible enemy within 60m.",
+    "rarity": "common"
+  },
+  {
+    "id": "tractor_beam",
+    "name": "Tractor Beam",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% Aim Glide Duration\\n<LOWER_IS_BETTER>-50% Gravity",
+    "rarity": "common"
+  },
+  {
+    "id": "vaporize",
+    "name": "Vaporize",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Every 10s the sentinel will stun and inflict 600 damage to an enemy within 30m. Damage dealt affected by Sentinel Weapon Mods.",
+    "rarity": "common"
+  },
+  {
+    "id": "venom_teeth",
+    "name": "Venom Teeth",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "viral_quills",
+    "name": "Viral Quills",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Launches 6 quills at enemies within 20m, each dealing 60 <DT_VIRAL_COLOR>Viral Damage with 40% Status Chance. If the target is affected by a Viral Status, a Spore is added. <LOWER_IS_BETTER>4s cooldown.",
+    "rarity": "rare"
+  },
+  {
+    "id": "volatile_parasite",
+    "name": "Volatile Parasite",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "Every <LOWER_IS_BETTER>15s spits out a maggot that latches onto the nearest enemy, drawing fire from those within 40m. On death, the maggot bursts, dealing 100% of accumulated damage <DT_VIRAL_COLOR>Viral Damage (+40% damage if the enemy dies while latched) to those within 10m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "ammo_case",
+    "name": "Ammo Case",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Ammo Capacity by 25% and converts Ammo Pickups into ammo for equipped weapons after 2s.",
+    "rarity": "common"
+  },
+  {
+    "id": "trample",
+    "name": "Trample",
+    "polarity": "penjaga",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {
+      "damage": 1.6667
+    },
+    "description": "The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It gains +10% Melee Damage, Max Health and Armor for every enemy hit for 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "shockwave_actuators_r3",
+    "name": "Shockwave Actuators",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blasts a shockwave knocking down those within 12m. The shockwave recharges every 10s.",
+    "rarity": "common"
+  },
+  {
+    "id": "tek_assault_r3",
+    "name": "Tek Assault",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Kavat has 60% chance to ignore Lethal Damage and be immune for 4s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "territorial_aggression_r3",
+    "name": "Territorial Aggression",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "The Kavat stakes their territory in a radius of 6m for 15s. Each second, enemies within this area have a 30% chance of being attacked by a shadow Kavat.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "whiplash_mine_r3",
+    "name": "Whiplash Mine",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "companion",
+    "subCategory": "",
+    "stats": {},
+    "description": "Deploys a tether mine snaring all enemies in a 20m. After 3s, all enemies still in range get pulled to the mine.",
+    "rarity": "common"
+  },
+  {
+    "id": "afterburner",
+    "name": "Afterburner",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {},
+    "description": "Core Vent Augment: <DT_EXPLOSION_COLOR>Blast Damage ignites exhaust fumes for 12s. Enemies passing through the flames take 500 <DT_FIRE_COLOR>Heat Damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "argon_plating",
+    "name": "Argon Plating",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "armor": 16.6667
+    },
+    "description": "+100% Armor",
+    "rarity": "common"
+  },
+  {
+    "id": "auxiliary_power",
+    "name": "Auxiliary Power",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "energy": 16.6667
+    },
+    "description": "+100% Energy Max",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cold_snap",
+    "name": "Cold Snap",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {},
+    "description": "Cosmic Crush Augment: The black hole saps the area of heat, freezing enemies in range. Enemies near the black hole are completely frozen for 5s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "efficient_transferral",
+    "name": "Efficient Transferral",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 7.5
+    },
+    "description": "+30% Ability Duration",
+    "rarity": "rare"
+  },
+  {
+    "id": "energy_amplifier",
+    "name": "Energy Amplifier",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 10
+    },
+    "description": "+60% Ability Range",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "energy_field",
+    "name": "Energy Field",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {},
+    "description": "Energy Shell Augment: Energy Shell applies to allies within 140m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "energy_inversion",
+    "name": "Energy Inversion",
+    "polarity": "vazarin",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "shield": 25
+    },
+    "description": "+100% Shield Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "enhanced_durability",
+    "name": "Enhanced Durability",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "health": 16.6667
+    },
+    "description": "+100% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hyperion_thrusters",
+    "name": "Hyperion Thrusters",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 10,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {},
+    "description": "+27.5% Flight Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "kinetic_diversion",
+    "name": "Kinetic Diversion",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {},
+    "description": "Convert +40% of Damage on Health to Energy. Without Shields, ally Overguard imitates Health.",
+    "rarity": "rare"
+  },
+  {
+    "id": "morphic_transformer",
+    "name": "Morphic Transformer",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5
+    },
+    "description": "+20% Ability Strength",
+    "rarity": "rare"
+  },
+  {
+    "id": "primed_morphic_transformer",
+    "name": "Primed Morphic Transformer",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5
+    },
+    "description": "+55% Ability Strength",
+    "rarity": "legendary"
+  },
+  {
+    "id": "superior_defenses",
+    "name": "Superior Defenses",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "shield": 25
+    },
+    "description": "+100% Shield Recharge, -50% Shield Recharge Delay",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "system_reroute",
+    "name": "System Reroute",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "archwing",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": 5
+    },
+    "description": "+55% Ability Efficiency",
+    "rarity": "rare"
+  },
+  {
+    "id": "acid_shells",
+    "name": "Acid Shells",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies explode on death, dealing 450 <DT_CORROSIVE_COLOR>Corrosive Damage (+45% Enemy Max Health) in a 15m radius.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "affinity_spike",
+    "name": "Affinity Spike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Kills from Melee Attacks grant 45% more Melee Affinity.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "air_time",
+    "name": "Air Time",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "-20% Gravity while Falling Down",
+    "rarity": "common"
+  },
+  {
+    "id": "amalgam_shotgun_barrage",
+    "name": "Amalgam Shotgun Barrage",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 14.1667
+    },
+    "description": "+85% Fire Rate, +45% Revive Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "amarsetmod",
+    "name": "Amarsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "ammo_chain",
+    "name": "Ammo Chain",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 16.6667
+    },
+    "description": "+100% Ammo Maximum",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "amp_spike",
+    "name": "Amp Spike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Transfer to Operator with 8x Combo Multiplier to increase AMP damage by 100% for 40s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "anti_v",
+    "name": "Anti-V",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Digital extremists stand no chance when you have Anti-V on your side",
+    "rarity": "rare"
+  },
+  {
+    "id": "archgun_ace",
+    "name": "Archgun Ace",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 16.6667
+    },
+    "description": "On Headshot Kill:\\n+50% Fire/Charge Rate\\n+100% Reload Speed for 9s",
+    "rarity": "rare"
+  },
+  {
+    "id": "archgun_riven_mod",
+    "name": "Archgun Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "argent_scourge",
+    "name": "Argent Scourge",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "artillery_cheap_shot",
+    "name": "Artillery Cheap Shot",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Forward Artillery has a +90% chance to not consume Dome Charges",
+    "rarity": "rare"
+  },
+  {
+    "id": "ashensetmod",
+    "name": "Ashensetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "assassin_posture",
+    "name": "Assassin Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion will prioritize Eximus and other high-ranking enemies. +300% Overguard Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "astral_autopsy",
+    "name": "Astral Autopsy",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fatal strikes against an enemy also perform a Codex Scan. Scans require an equipped Codex Scanner and an available charge.",
+    "rarity": "rare"
+  },
+  {
+    "id": "astral_cut",
+    "name": "Astral Cut",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tauron Strike slash size is increased by 80%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "astral_slash",
+    "name": "Astral Slash",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "atlantis_vulcan",
+    "name": "Atlantis Vulcan",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rapid strikes, deceptive movements.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "atomic_fallout",
+    "name": "Atomic Fallout",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +40% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "augursetmod",
+    "name": "Augursetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "auto_breach",
+    "name": "Auto Breach",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% chance to auto complete Hacking",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "automatic_trigger",
+    "name": "Automatic Trigger",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 10
+    },
+    "description": "+60% Fire Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "balanced_posture",
+    "name": "Balanced Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion acts freely as they see fit. Staggers enemies within 2m while moving.",
+    "rarity": "common"
+  },
+  {
+    "id": "ballista_measure",
+    "name": "Ballista Measure",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "range": 5
+    },
+    "description": "+20% Range",
+    "rarity": "rare"
+  },
+  {
+    "id": "basilisk_gaze",
+    "name": "Basilisk Gaze",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Void Blast radius by 60%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "basilisk_scales",
+    "name": "Basilisk Scales",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Operator Armor by 200%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "battle_forge",
+    "name": "Battle Forge",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduce Forge Cooldown by 120s\\nCooldown: 480s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "battle_stations",
+    "name": "Battle Stations",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Boost Turret Damage by 75% for 30s\\nCooldown: 240s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "biting_piranha",
+    "name": "Biting Piranha",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "blackout_pulse",
+    "name": "Blackout Pulse",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Electro-Magnetic Pulse that damages enemies and disables them temporarily.",
+    "rarity": "rare"
+  },
+  {
+    "id": "blazing_dash",
+    "name": "Blazing Dash",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling leaves a trail of fire that deals 1000 Damage/s over 14s. Void Sling will now stun enemies instead of displacing them.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "blazing_steel",
+    "name": "Blazing Steel",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "heat": 20
+    },
+    "description": "+120% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bleeding_edge",
+    "name": "Bleeding Edge",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+110% Critical Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "blind_justice",
+    "name": "Blind Justice",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reverse grip style emphasizing slashing and impaling strikes.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "blood_for_ammo",
+    "name": "Blood For Ammo",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Mercy Kill refills Primary and Secondary Magazine by 100%",
+    "rarity": "common"
+  },
+  {
+    "id": "blood_for_energy",
+    "name": "Blood For Energy",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "50% chance to drop an Energy Orb on Mercy",
+    "rarity": "rare"
+  },
+  {
+    "id": "blood_for_life",
+    "name": "Blood For Life",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% chance to drop a Health Orb on Mercy",
+    "rarity": "common"
+  },
+  {
+    "id": "bomb_the_landin",
+    "name": "Bomb The Landin'",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "bonebladesetmod",
+    "name": "Bonebladesetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "borealsetmod",
+    "name": "Borealsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "boundless_energy",
+    "name": "Boundless Energy",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ability strength, duration, and cast speed granted by spectral pages increased by 40%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "bounty_hunter",
+    "name": "Bounty Hunter",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reveals target on Minimap for +6s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "breach_loader",
+    "name": "Breach Loader",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "puncture": 20
+    },
+    "description": "+120% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "breach_quanta",
+    "name": "Breach Quanta",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Temporarily stall Hull Breach for 55s\\nCooldown: 300s",
+    "rarity": "common"
+  },
+  {
+    "id": "brilliant_insight",
+    "name": "Brilliant Insight",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Spectral pages also fire off beams that blind enemies within 16m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "broad_eye",
+    "name": "Broad Eye",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "zoom": -10
+    },
+    "description": "-60% Zoom while Aim Gliding",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "brutal_tide",
+    "name": "Brutal Tide",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Round-house attacks and leaping fists.",
+    "rarity": "rare"
+  },
+  {
+    "id": "butchers_revelry",
+    "name": "Butcher's Revelry",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "byteryte",
+    "name": "Byteryte",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Keeps your bytes tight and your bits fit",
+    "rarity": "rare"
+  },
+  {
+    "id": "caustic_strike",
+    "name": "Caustic Strike",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Second Ability launches an energy bomb that explodes with a 8m radius, stripping 100% of enemy armor. Tap <ACTIVATE_ABILITY_1> again to detonate in-flight.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "celestial_nightfall",
+    "name": "Celestial Nightfall",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "chained_sling",
+    "name": "Chained Sling",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "50% Energy Efficiency on Consecutive Void Slings.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "charged_bullets",
+    "name": "Charged Bullets",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "chilling_reload",
+    "name": "Chilling Reload",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "reloadSpeed": 10
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +40% Reload Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "cleanse_orokin",
+    "name": "Cleanse Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.3 Damage to Orokin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cleanse_the_murmur",
+    "name": "Cleanse The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.3 Damage to Murmur",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cogron_tauron_strike",
+    "name": "Cogron Tauron Strike",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon forth Cogron from the Void and brandish the mighty hammer, slamming it into the ground to create a cataclysmic shockwave that ripples 4 times.",
+    "rarity": "rare"
+  },
+  {
+    "id": "cold_arrival",
+    "name": "Cold Arrival",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Dismounting deals 400 <DT_FREEZE_COLOR>Cold Damage to enemies within 4m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "combustion_rounds",
+    "name": "Combustion Rounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "heat": 20
+    },
+    "description": "+120% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "comet_blast",
+    "name": "Comet Blast",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "companion_weapon_riven_mod",
+    "name": "Companion Weapon Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "computer_cop",
+    "name": "Computer Cop",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Stopping cyber-crime in its tracks",
+    "rarity": "rare"
+  },
+  {
+    "id": "conductive_blade",
+    "name": "Conductive Blade",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "electricity": 20
+    },
+    "description": "+120% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "conic_nozzle",
+    "name": "Conic Nozzle",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+38.3% Railjack Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "containment_breach",
+    "name": "Containment Breach",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "multishot": 7.5
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +30% Multishot",
+    "rarity": "rare"
+  },
+  {
+    "id": "contamination_casing",
+    "name": "Contamination Casing",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "contamination_wave",
+    "name": "Contamination Wave",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Second Ability emits a Void wave lasting 2s that drenches enemies with Void Contamination making them 50% more vulnerable to Operator Damage for 20s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "counterbalance",
+    "name": "Counterbalance",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "recoil": -15
+    },
+    "description": "-60% Weapon Recoil",
+    "rarity": "rare"
+  },
+  {
+    "id": "countermeasures",
+    "name": "Countermeasures",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Flares that distract enemy guided projectiles.",
+    "rarity": "common"
+  },
+  {
+    "id": "crash_shot",
+    "name": "Crash Shot",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_IMPACT_COLOR>Impact",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "crashing_havoc",
+    "name": "Crashing Havoc",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "crashing_timber",
+    "name": "Crashing Timber",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "crimson_fugue",
+    "name": "Crimson Fugue",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+35% Turret Damage per enemy destroyed, for 8s (Maximum 5 stacks)",
+    "rarity": "rare"
+  },
+  {
+    "id": "crippling_dash",
+    "name": "Crippling Dash",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Using Void Sling through an enemy will reduce their Damage by 50%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "critical_focus",
+    "name": "Critical Focus",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 10
+    },
+    "description": "+60% Critical Chance and Damage when Aiming",
+    "rarity": "rare"
+  },
+  {
+    "id": "critical_meltdown",
+    "name": "Critical Meltdown",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 15
+    },
+    "description": "+60% <DT_RADIATION_COLOR>Radiation, +60% Critical Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "cruising_speed",
+    "name": "Cruising Speed",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+110% Railjack Speed when no enemies within 3000m",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "crushing_ruin",
+    "name": "Crushing Ruin",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Aerial attacks with Crowd Control combos.",
+    "rarity": "rare"
+  },
+  {
+    "id": "cryo_coating",
+    "name": "Cryo Coating",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "cunning_aspect",
+    "name": "Cunning Aspect",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cutting_edge",
+    "name": "Cutting Edge",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+110% Melee Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cyclone_kraken",
+    "name": "Cyclone Kraken",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Brutal strikes with deft movement.",
+    "rarity": "rare"
+  },
+  {
+    "id": "da_ren",
+    "name": "Da-Ren",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+300 Operator Shields, +30 bonus for each <UNAIRU_CLEAN>Unairu School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "deadly_efficiency",
+    "name": "Deadly Efficiency",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "damage": 20
+    },
+    "description": "On Reload From Empty:\\n+120% Damage for 9s",
+    "rarity": "rare"
+  },
+  {
+    "id": "death_blossom",
+    "name": "Death Blossom",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Turret Cooldowns removed for 30s\\nCooldown: 300s",
+    "rarity": "rare"
+  },
+  {
+    "id": "deathless_currents",
+    "name": "Deathless Currents",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Vortex heals allies for 250 health/s. Downed players inside the vortex will be instantly revived, and dead players will be resummoned.",
+    "rarity": "rare"
+  },
+  {
+    "id": "defensive_fire",
+    "name": "Defensive Fire",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+13.5% Maximum Shields per enemy killed for 10s (Maximum 10 stacks)",
+    "rarity": "rare"
+  },
+  {
+    "id": "disarming_blast",
+    "name": "Disarming Blast",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies hit by Void Blast have a 50% chance to be disarmed.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "disarming_sling",
+    "name": "Disarming Sling",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Slinging through enemies has a 50% chance to disarm them.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "disorienting_blast",
+    "name": "Disorienting Blast",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Blast has a 50% chance of confusing enemies for 16s, causing them to be unable to distinguish friend from foe.",
+    "rarity": "common"
+  },
+  {
+    "id": "disruptor",
+    "name": "Disruptor",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "common"
+  },
+  {
+    "id": "distilled_contamination",
+    "name": "Distilled Contamination",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Killing an enemy affected by Contamination Wave makes all affected enemies 50% more vulnerable, while also making the effect last 10s longer. Maximum 2 stacks.",
+    "rarity": "rare"
+  },
+  {
+    "id": "dividing_blades",
+    "name": "Dividing Blades",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "double_barrel_drift",
+    "name": "Double-Barrel Drift",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "-20% Weapon Recoil, and +20% Accuracy when Sliding",
+    "rarity": "rare"
+  },
+  {
+    "id": "downpour",
+    "name": "Downpour",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rain of Arrows will also target 4 additional enemies within 10m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "drive_duster",
+    "name": "Drive-Duster",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Your digital virus buster",
+    "rarity": "rare"
+  },
+  {
+    "id": "dual_rounds",
+    "name": "Dual Rounds",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "multishot": 10
+    },
+    "description": "+60% Multishot",
+    "rarity": "rare"
+  },
+  {
+    "id": "efficient_beams",
+    "name": "Efficient Beams",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 25
+    },
+    "description": "+150% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "electrified_barrel",
+    "name": "Electrified Barrel",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "electricity": 20
+    },
+    "description": "+120% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "eleventh_storm",
+    "name": "Eleventh Storm",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Rapid attacks using sword and shield.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "elusive_posture",
+    "name": "Elusive Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion will avoid attacking. +50% Evasion",
+    "rarity": "common"
+  },
+  {
+    "id": "empazu_shol",
+    "name": "Empazu-Shol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+12% Tauron Strike Initial Charge., +2% bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "enduring_tides",
+    "name": "Enduring Tides",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Operator Health and Armor by 200%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "energy_pulse",
+    "name": "Energy Pulse",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Energy pickups grant 50% additional Energy over 5s.",
+    "rarity": "common"
+  },
+  {
+    "id": "eroding_rapids",
+    "name": "Eroding Rapids",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Vortex applies 100% status vulnerability to all enemies within it.",
+    "rarity": "rare"
+  },
+  {
+    "id": "esti_vel_ikha",
+    "name": "Esti Vel-Ikha",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases maximum Void Sling distance by +30%., +10% Void Sling radius for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "eternal_gaze",
+    "name": "Eternal Gaze",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Energy Regeneration Rate for Amps and Void Beam by 60%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "evir_ti",
+    "name": "Evir-Ti",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Operator Jump Height",
+    "rarity": "common"
+  },
+  {
+    "id": "executing_dash",
+    "name": "Executing Dash",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling no longer displaces enemies, instead it will open them up to Finishers and increase Finisher Damage taken by 35%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "extend",
+    "name": "Extend",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100 Attraction Range (In Space), +3 Melee Range",
+    "rarity": "common"
+  },
+  {
+    "id": "extreme_velocity",
+    "name": "Extreme Velocity",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% K-Drive Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "failsafe",
+    "name": "Failsafe",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+50% to retry on Hacking failure",
+    "rarity": "rare"
+  },
+  {
+    "id": "far_sling",
+    "name": "Far Sling",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases maximum Void Sling distance by 30%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fass",
+    "name": "Fass",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Roiling, moaning, this realm of ours  In madness lost shall die",
+    "rarity": "rare"
+  },
+  {
+    "id": "fatal_acceleration",
+    "name": "Fatal Acceleration",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 10
+    },
+    "description": "+40% Projectile Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fateful_truth",
+    "name": "Fateful Truth",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "femursetmod",
+    "name": "Femursetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "final_harbinger",
+    "name": "Final Harbinger",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Powerful slashes and shield attacks.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fire_suppression",
+    "name": "Fire Suppression",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Extinguish 1 fire\\nCooldown: <LOWER_IS_BETTER>200s",
+    "rarity": "common"
+  },
+  {
+    "id": "firewall",
+    "name": "Firewall",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduces damage by 75% while hacking",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fizzbang_flourish",
+    "name": "Fizzbang Flourish",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fireworks trigger when completing a trick over 200 points.",
+    "rarity": "common"
+  },
+  {
+    "id": "flak_shot",
+    "name": "Flak Shot",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_SLASH_COLOR>Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "flame_blast",
+    "name": "Flame Blast",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Blast releases a ball of fire that deals 250% of the Void Blast damage and explodes after 0.6000000238418579s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "flechette",
+    "name": "Flechette",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "common"
+  },
+  {
+    "id": "flow_burn",
+    "name": "Flow Burn",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+38% Speed and Boost Speed for 13s\\nCooldown: 240s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "flowing_strikes",
+    "name": "Flowing Strikes",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase the range of spectral melee attacks to 26m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fomorian_accelerant",
+    "name": "Fomorian Accelerant",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Flak now bounces up to 4x and travels 60% faster.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "form_up",
+    "name": "Form Up",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Recall all Crew Members to the Railjack and Heal them for 100%\\nCooldown: 240s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "fortifying_fire",
+    "name": "Fortifying Fire",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "ON CRITICAL HIT:\\nReplenish 4.5% of Shields",
+    "rarity": "rare"
+  },
+  {
+    "id": "forward_artillery",
+    "name": "Forward Artillery",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+127.3% Forward Artillery Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "four_riders",
+    "name": "Four Riders",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fast strikes, powerful slams.",
+    "rarity": "rare"
+  },
+  {
+    "id": "fracturing_wind",
+    "name": "Fracturing Wind",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fast, multi-hit strikes with powerful finishers.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "frenzied_posture",
+    "name": "Frenzied Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion prefers to change its target after each attack. +80% Status Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "full_contact",
+    "name": "Full Contact",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "impact": 20
+    },
+    "description": "+120% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "furor",
+    "name": "Furor",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 2.5
+    },
+    "description": "+10% Attack Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "gaias_tragedy",
+    "name": "Gaia's Tragedy",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "galeforce_dawn",
+    "name": "Galeforce Dawn",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Wide slashes and heavy strikes.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "galvanized_acceleration",
+    "name": "Galvanized Acceleration",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "projectileSpeed": 2.7273
+    },
+    "description": "+30% Projectile Speed and +30% Beam Range, On Kill:\\n+30% Projectile Speed and +30% Beam Range for 10s. Stacks up to 2x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "gemini_cross",
+    "name": "Gemini Cross",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "A style exhibiting sweeping slash attacks and swift jabs.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "glacial_edge",
+    "name": "Glacial Edge",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 20
+    },
+    "description": "+120% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "gladiatorsetmod",
+    "name": "Gladiatorsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "gleaming_talon",
+    "name": "Gleaming Talon",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fast arcing strikes.",
+    "rarity": "rare"
+  },
+  {
+    "id": "granums_nemesis",
+    "name": "Granum's Nemesis",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "great_quake",
+    "name": "Great Quake",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase shockwave radius by +40%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "guardian_blast",
+    "name": "Guardian Blast",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Blast consumes 25 Energy for each ally hit within 8m and grants them 160 Shields.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "guardian_break",
+    "name": "Guardian Break",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "When the Guardian Shell breaks, Warframe Shield Regeneration rate is increased by 150% and Regeneration Delay is reduced by 80%, for 12s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "guardian_shell",
+    "name": "Guardian Shell",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Use your first Ability to manifest a barrier on the Operator and allies in Affinity Range. It is invulnerable for 4s when first created and damage inflicted while it's invulnerable will be added to its base health of 500.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hard_reset",
+    "name": "Hard Reset",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Mercy Kills reduce Companion Recovery by 15s",
+    "rarity": "rare"
+  },
+  {
+    "id": "hardened_wellspring",
+    "name": "Hardened Wellspring",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Use your first Ability inside a Wellspring to increase its size, boost its duration by 20s, and grant 20% Ability Strength to those inside.",
+    "rarity": "rare"
+  },
+  {
+    "id": "harrowing_spire",
+    "name": "Harrowing Spire",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Relentless jabs and powerful sweeping lunges.",
+    "rarity": "rare"
+  },
+  {
+    "id": "hawksetmod",
+    "name": "Hawksetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "hayan_dabor",
+    "name": "Hayan-Dabor",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Amp Multishot",
+    "rarity": "common"
+  },
+  {
+    "id": "hit_and_run",
+    "name": "Hit And Run",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Parkour Speed after a Mercy for 15s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "hok_kaal",
+    "name": "Hok-Kaal",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)",
+    "rarity": "common"
+  },
+  {
+    "id": "hollowed_bullets",
+    "name": "Hollowed Bullets",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 20
+    },
+    "description": "+80% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "hungering_blades",
+    "name": "Hungering Blades",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Spectral weapons have a 100% chance to attack the same enemy a second time.",
+    "rarity": "rare"
+  },
+  {
+    "id": "huntersetmod",
+    "name": "Huntersetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "hydraulic_chamber",
+    "name": "Hydraulic Chamber",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": -2.5
+    },
+    "description": "-60% Weapon Recoil, -10% Magazine Capacity",
+    "rarity": "rare"
+  },
+  {
+    "id": "hyperstrike",
+    "name": "Hyperstrike",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+112.5% Turret Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "hypothermic_shell",
+    "name": "Hypothermic Shell",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "immuno_shield",
+    "name": "Immuno Shield",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain 15% Disinfection and gain 5000 Affinity",
+    "rarity": "common"
+  },
+  {
+    "id": "indomitable_matrix",
+    "name": "Indomitable Matrix",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "<LOWER_IS_BETTER>-18% Breach Chance\\n+22% Shield Recharge during Breach\\n+30% Armor when below 53% Hull",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "inertia_dampeners",
+    "name": "Inertia Dampeners",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+4 Point Multiplier to Trick Score",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "infectious_injection",
+    "name": "Infectious Injection",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "inner_gaze",
+    "name": "Inner Gaze",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Energy for Amps and Void Beam by 40%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "inner_might",
+    "name": "Inner Might",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Allows Abilities to be cast without using Energy or Shields but requires 60s to recharge.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "instant_secure",
+    "name": "Instant Secure",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain 15% Disinfection and gain 10,000 Höllars",
+    "rarity": "common"
+  },
+  {
+    "id": "intruder_stasis",
+    "name": "Intruder Stasis",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Freeze all Enemy Boarding Parties for 45s\\nCooldown: 300s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ion_burn",
+    "name": "Ion Burn",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+67.5% Railjack Boost Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "ion_infusion",
+    "name": "Ion Infusion",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "ironclad_matrix",
+    "name": "Ironclad Matrix",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+33.75% Hull and Armor, +38.25% Max Shields and Shield Recharge",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "jahu",
+    "name": "Jahu",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Corporeal laws are unwrit  As suns and love retreat",
+    "rarity": "rare"
+  },
+  {
+    "id": "juice",
+    "name": "Juice",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Executing tricks charges Energy: 55 Energy per 100 Trick Points.",
+    "rarity": "common"
+  },
+  {
+    "id": "kaal_zidi",
+    "name": "Kaal-Zidi",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 0.8333
+    },
+    "description": "+30% Void Mode efficiency, +5% Movement Speed in Void Mode for each <NARAMON_CLEAN>Naramon School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "keep_clean",
+    "name": "Keep-Clean",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "There's no Clean like Keep-Clean",
+    "rarity": "rare"
+  },
+  {
+    "id": "khra",
+    "name": "Khra",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "To cosmic forms from tangent planes  We end as we began",
+    "rarity": "rare"
+  },
+  {
+    "id": "kill_switch",
+    "name": "Kill Switch",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 12.5
+    },
+    "description": "On Kill:\\n+50% Reload Speed for 3s",
+    "rarity": "rare"
+  },
+  {
+    "id": "killers_rush",
+    "name": "Killer's Rush",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "kinetic_friction",
+    "name": "Kinetic Friction",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Grinding builds up a charge that is released when landing the trick, dealing 400 <DT_ELECTRICITY_COLOR>Electricity Damage to enemies within 4m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "kitgun_riven_mod",
+    "name": "Kitgun Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "laser_sight",
+    "name": "Laser Sight",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 20
+    },
+    "description": "On Headshot:\\n+120% Critical Chance when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "lashing_coil",
+    "name": "Lashing Coil",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "lashta_vak",
+    "name": "Lashta-Vak",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling emits a pulse that breaks Containers within 12 m, +2m bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "last_gasp",
+    "name": "Last Gasp",
+    "polarity": "unairu",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Revive your Warframe by transferring to Operator and killing 3 enemies before 15s elapse and the Revive Meter begins to drain.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "last_herald",
+    "name": "Last Herald",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "lethal_levitation",
+    "name": "Lethal Levitation",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Additional 50% Weapon Damage per Lifted enemy attacked by Operator. Lasts for 60s, stacks up to 4x.",
+    "rarity": "rare"
+  },
+  {
+    "id": "lingering_torment",
+    "name": "Lingering Torment",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusDuration": 15
+    },
+    "description": "+90% Status Duration",
+    "rarity": "common"
+  },
+  {
+    "id": "live_wire",
+    "name": "Live Wire",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shock enemies within 20m while Hacking",
+    "rarity": "common"
+  },
+  {
+    "id": "loaded_capacity",
+    "name": "Loaded Capacity",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5,
+      "reloadSpeed": -2.5
+    },
+    "description": "+30% Magazine Capacity, -15% Reload Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "lock_and_load",
+    "name": "Lock And Load",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 5
+    },
+    "description": "+20% Magazine Reloaded/s when Holstered",
+    "rarity": "rare"
+  },
+  {
+    "id": "lohk",
+    "name": "Lohk",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "From brooding gulfs are we beheld  By that which bears no name",
+    "rarity": "rare"
+  },
+  {
+    "id": "loose_chamber",
+    "name": "Loose Chamber",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 5
+    },
+    "description": "+30% Reload Speed, +50% Weapon Recoil",
+    "rarity": "common"
+  },
+  {
+    "id": "lorak_tauron_strike",
+    "name": "Lorak Tauron Strike",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon forth Lorak from the Void and conjure its ruinous spells, calling forth a beam of energy from within. Enemies pierced by the beam have a 100% chance to drop Energy Orbs if killed within 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "lorun_tash",
+    "name": "Lorun-Tash",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+400 Operator Armor",
+    "rarity": "common"
+  },
+  {
+    "id": "mad_stack",
+    "name": "Mad Stack",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+120% Velocity when falling",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "madurai_transmute_core",
+    "name": "Madurai Transmute Core",
+    "polarity": "madurai",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ensures transmuted mod is of Madurai polarity and eliminates credit cost.",
+    "rarity": "rare"
+  },
+  {
+    "id": "mafic_rain",
+    "name": "Mafic Rain",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mag_locks",
+    "name": "Mag Locks",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% K-Drive Grind Magnetism",
+    "rarity": "common"
+  },
+  {
+    "id": "magazine_extension",
+    "name": "Magazine Extension",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10
+    },
+    "description": "+60% Magazine Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "magma_chamber",
+    "name": "Magma Chamber",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetic_blast",
+    "name": "Magnetic Blast",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies hit by Void Blast are affected by Magnetize for 10s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetic_boost",
+    "name": "Magnetic Boost",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling out of a Magnetic Flare to refresh its duration and increase its radius by 100%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetic_flare",
+    "name": "Magnetic Flare",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Use your first Ability to create a 8m radius field that lasts for 30s and disables the shields of any enemy that enters it.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "magnetic_strafe",
+    "name": "Magnetic Strafe",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "fireRate": 10
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +40% Fire Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetic_welt",
+    "name": "Magnetic Welt",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": " <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_MAGNETIC_COLOR>Magnetic Status Effect (x2 when Fire Rate is below 2.5)",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetized_core",
+    "name": "Magnetized Core",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "criticalMultiplier": 10
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +40% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "magnetized_cycle",
+    "name": "Magnetized Cycle",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magnetic": 15,
+      "fireRate": 7.5
+    },
+    "description": "+60% <DT_MAGNETIC_COLOR>Magnetic, +30% Fire Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "malicious_code",
+    "name": "Malicious Code",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "50% chance on Mercy Kill for enemies within 15m to cower in fear for 8s",
+    "rarity": "rare"
+  },
+  {
+    "id": "malicious_raptor",
+    "name": "Malicious Raptor",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Puncturing strikes and quick slashes.",
+    "rarity": "rare"
+  },
+  {
+    "id": "marked_target",
+    "name": "Marked Target",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 20
+    },
+    "description": "+120% Status Chance when Aiming",
+    "rarity": "rare"
+  },
+  {
+    "id": "master_key",
+    "name": "Master Key",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Unlock 5 lockers within 20m after Hacking",
+    "rarity": "common"
+  },
+  {
+    "id": "mechasetmod",
+    "name": "Mechasetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "melee_riven_mod",
+    "name": "Melee Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "mending_soul",
+    "name": "Mending Soul",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The first 4 revives are instantaneous. Additional revives are 100% faster.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mending_unity",
+    "name": "Mending Unity",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Affinity Radius by 25m.",
+    "rarity": "common"
+  },
+  {
+    "id": "metem_erun",
+    "name": "Metem-Erun",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Operator Sprint Speed by +30%, +5% bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "metem_hakh",
+    "name": "Metem-Hakh",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Operator Health & Shields, +15% bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "meteor_crash",
+    "name": "Meteor Crash",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "impact": 15
+    },
+    "description": "+90% <DT_IMPACT_COLOR>Impact",
+    "rarity": "rare"
+  },
+  {
+    "id": "meteoric_dash",
+    "name": "Meteoric Dash",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling deals 400 Extra Damage to enemies.",
+    "rarity": "rare"
+  },
+  {
+    "id": "mind_sprint",
+    "name": "Mind Sprint",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Void Sling Speed by 120%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "mind_step",
+    "name": "Mind Step",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Operator Movement Speed by 30%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "modified_munitions",
+    "name": "Modified Munitions",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 10
+    },
+    "description": "+60% Status Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "momentary_pause",
+    "name": "Momentary Pause",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "On Kill:\\n+15 Heal Rate for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "mountains_edge",
+    "name": "Mountain's Edge",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "munitions_vortex",
+    "name": "Munitions Vortex",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Vortex that absorbs incoming fire and detonates, releasing damage.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "nano_applicator",
+    "name": "Nano-Applicator",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "On Ability Cast:\\n+90% Status Chance when Aiming for 9s",
+    "rarity": "rare"
+  },
+  {
+    "id": "naramon_transmute_core",
+    "name": "Naramon Transmute Core",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ensures transmuted mod is of Naramon polarity and eliminates credit cost.",
+    "rarity": "rare"
+  },
+  {
+    "id": "narrow_barrel",
+    "name": "Narrow Barrel",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 5
+    },
+    "description": "On Hit:\\n+30% Accuracy when Aiming for 9s",
+    "rarity": "rare"
+  },
+  {
+    "id": "nebula_bore",
+    "name": "Nebula Bore",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_augur",
+    "name": "Necramech Augur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "240% Energy spent on abilities is converted to Shields.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_aviator",
+    "name": "Necramech Aviator",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduced damage by 40% while airborne",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_blitz",
+    "name": "Necramech Blitz",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+80% Slide Attack Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_continuity",
+    "name": "Necramech Continuity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "abilityDuration": 5
+    },
+    "description": "+30% Ability Duration",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_deflection",
+    "name": "Necramech Deflection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "shield": 15
+    },
+    "description": "+90% Shield Recharge, -45% Shield Recharge Delay",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_drift",
+    "name": "Necramech Drift",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Hover Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_efficiency",
+    "name": "Necramech Efficiency",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Engine Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_enemy_sense",
+    "name": "Necramech Enemy Sense",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30m Enemy Radar",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_flow",
+    "name": "Necramech Flow",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "energy": 16.6667
+    },
+    "description": "+100% Energy Max",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_friction",
+    "name": "Necramech Friction",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Slide Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_fury",
+    "name": "Necramech Fury",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "attackSpeed": 10
+    },
+    "description": "+40% Melee Attack Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_hydraulics",
+    "name": "Necramech Hydraulics",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+120% Jump Height",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_intensify",
+    "name": "Necramech Intensify",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 5
+    },
+    "description": "+30% Ability Strength",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_pressure_point",
+    "name": "Necramech Pressure Point",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+60% Melee Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_rage",
+    "name": "Necramech Rage",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "Convert +15% of Damage on Health to Energy. Without Shields, ally Overguard imitates Health.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_reach",
+    "name": "Necramech Reach",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+1 Melee Range",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_rebuke",
+    "name": "Necramech Rebuke",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "Electrifies enemies within 20m for 3s and dealing 300 <DT_ELECTRICITY_COLOR>Electricity Damage when shields are depleted.\\n10s cooldown.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_redirection",
+    "name": "Necramech Redirection",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "shield": 9.0909
+    },
+    "description": "+100% Shield Capacity",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_refuel",
+    "name": "Necramech Refuel",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+20% Engine Replenish",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_repair",
+    "name": "Necramech Repair",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "Restore 10% Health/s over 3s when Health drops below 20%. 15s Cooldown.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_seismic_wave",
+    "name": "Necramech Seismic Wave",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+45% Slam Attack Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_slipstream",
+    "name": "Necramech Slipstream",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Slide",
+    "rarity": "common"
+  },
+  {
+    "id": "necramech_stamina",
+    "name": "Necramech Stamina",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "-60% Sprint Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_steel_fiber",
+    "name": "Necramech Steel Fiber",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "armor": 16.6667
+    },
+    "description": "+100% Armor",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_streamline",
+    "name": "Necramech Streamline",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "abilityEfficiency": 5
+    },
+    "description": "+30% Ability Efficiency",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_stretch",
+    "name": "Necramech Stretch",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "abilityRange": 7.5
+    },
+    "description": "+45% Ability Range",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "necramech_thrusters",
+    "name": "Necramech Thrusters",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {},
+    "description": "+100% Engine Max",
+    "rarity": "rare"
+  },
+  {
+    "id": "necramech_vitality",
+    "name": "Necramech Vitality",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "necramech",
+    "subCategory": "",
+    "stats": {
+      "health": 16.6667
+    },
+    "description": "+100% Health",
+    "rarity": "common"
+  },
+  {
+    "id": "netra",
+    "name": "Netra",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Carrion hordes trill their profane  Accord with eldritch plans",
+    "rarity": "rare"
+  },
+  {
+    "id": "nidri_tauron_strike",
+    "name": "Nidri Tauron Strike",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon forth Nidri from the Void and plant the noble staff into the ground, creating a titanic splash of water that becomes a lingering vortex for 20s. 50% of damage dealt to enemies caught in the vortex is also inflicted upon all other enemies within it.",
+    "rarity": "rare"
+  },
+  {
+    "id": "nirasetmod",
+    "name": "Nirasetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "nitro_boost",
+    "name": "Nitro Boost",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% K-Drive Boost Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "no_quarter",
+    "name": "No Quarter",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Killing a disarmed enemy increases Operator energy regen rate by 10% for 10s. 4 Max Stacks.",
+    "rarity": "rare"
+  },
+  {
+    "id": "noble_cadence",
+    "name": "Noble Cadence",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "omn_evi",
+    "name": "Omn-Evi",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Amp Critical Chance, +10% Amp Critical Damage for each <ZENURIK_CLEAN>Zenurik School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "onslaught_matrix",
+    "name": "Onslaught Matrix",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+22% Turret Damage while 100% Hull\\n20% chance to Reflect 38% Damage while over 80% Shields\\n+9% Battle Mod Efficiency",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "opening_slam",
+    "name": "Opening Slam",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Performing a Slam as Operator switches to Warframe and grants double Combo gain for 20s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ordnance_cheap_shot",
+    "name": "Ordnance Cheap Shot",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ordnance weapons have a +90% chance to not consume Munitions",
+    "rarity": "rare"
+  },
+  {
+    "id": "ordnance_velocity",
+    "name": "Ordnance Velocity",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+90% Ordnance Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "orgone_tuning_matrix",
+    "name": "Orgone Tuning Matrix",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+33.75% Forge Capacity, <LOWER_IS_BETTER>-22.5% Forge Cooldown, +22.5% Elemental Resistance, +27% Turret Heat Capacity ",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "oull",
+    "name": "Oull",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Through endless faces, countless forms, a multitude unfolds.  (Mimics any Requiem Mod)",
+    "rarity": "rare"
+  },
+  {
+    "id": "out_of_sight",
+    "name": "Out Of Sight",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Blinds enemies within 18m on Mercy Kill",
+    "rarity": "rare"
+  },
+  {
+    "id": "overloader",
+    "name": "Overloader",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+87% Maximum Ordnance Munitions",
+    "rarity": "common"
+  },
+  {
+    "id": "overwhelming_power",
+    "name": "Overwhelming Power",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 1.25
+    },
+    "description": "Gain +5% Ability Strength for each enemy hit by the initial Tauron Strike for 30s. Max +50%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "parallax_scope",
+    "name": "Parallax Scope",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 25
+    },
+    "description": "+100% Critical Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "particle_ram",
+    "name": "Particle Ram",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Railjack Ram that deals damage to anything it touches when moving forward.",
+    "rarity": "rare"
+  },
+  {
+    "id": "peculiar_audience",
+    "name": "Peculiar Audience",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Killing an enemy has a 60% chance to amuse a certain Void entity. Cooldown: 20s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "peculiar_bloom",
+    "name": "Peculiar Bloom",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Critical hits cause flowers to grow from the wounds.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "peculiar_end",
+    "name": "Peculiar End",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Finisher kills have a 100% chance to dissolve enemies in dread.",
+    "rarity": "common"
+  },
+  {
+    "id": "peculiar_growth",
+    "name": "Peculiar Growth",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Damaging an enemy will inflate the body part hit for 6s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "perfect_balance",
+    "name": "Perfect Balance",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+66% Chance to Resist Falls",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "persistent_posture",
+    "name": "Persistent Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion will pick a target and then attack it relentlessly. +40% Impact Damage",
+    "rarity": "common"
+  },
+  {
+    "id": "phoenix_blaze",
+    "name": "Phoenix Blaze",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Wreathes the Railjack in fire, increasing Turret Damage and Speed.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "phoenix_spirit",
+    "name": "Phoenix Spirit",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Elemental Damage increased by |PERCENT|%.",
+    "rarity": "common"
+  },
+  {
+    "id": "phoenix_talons",
+    "name": "Phoenix Talons",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Physical Damage and Operator Damage increased by 30%.",
+    "rarity": "common"
+  },
+  {
+    "id": "piercing_fury",
+    "name": "Piercing Fury",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pistol_riven_mod",
+    "name": "Pistol Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "poise",
+    "name": "Poise",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain immunity to slow, stagger, and knockdown effects for 40s after transferring between Operator or Warframe.",
+    "rarity": "common"
+  },
+  {
+    "id": "poisonous_sting",
+    "name": "Poisonous Sting",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "toxin": 20
+    },
+    "description": "+120% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "polar_magazine",
+    "name": "Polar Magazine",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 20
+    },
+    "description": "+120% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "pop_top",
+    "name": "Pop Top",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "-60% Jump Charge Time",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "poppin_vert",
+    "name": "Poppin' Vert",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "power_drain",
+    "name": "Power Drain",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "abilityStrength": 50
+    },
+    "description": "Next ability cast after Mercy Kill gains +50% Ability Strength",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "power_spike",
+    "name": "Power Spike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Melee Combo Counter now decays while out of combat by 5 every few seconds, instead of depleting completely.",
+    "rarity": "common"
+  },
+  {
+    "id": "power_transfer",
+    "name": "Power Transfer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% Amp Critical Damage for 20s on switching to Operator. 50% Casting Speed on switching to Warframe.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "predator",
+    "name": "Predator",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+75% Turret Critical Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "primed_ammo_chain",
+    "name": "Primed Ammo Chain",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 15
+    },
+    "description": "+165% Ammo Maximum",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_ammo_stock",
+    "name": "Primed Ammo Stock",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10
+    },
+    "description": "+110% Magazine Capacity",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_blunderbuss",
+    "name": "Primed Blunderbuss",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 15
+    },
+    "description": "+165% Critical Chance",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_cleanse_corpus",
+    "name": "Primed Cleanse Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.55 Damage to Corpus",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_cleanse_grineer",
+    "name": "Primed Cleanse Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.55 Damage to Grineer",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_cleanse_infested",
+    "name": "Primed Cleanse Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.55 Damage to Infested",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_cleanse_orokin",
+    "name": "Primed Cleanse Orokin",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionOrokin": 5
+    },
+    "description": "x1.55 Damage to Orokin",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_cleanse_the_murmur",
+    "name": "Primed Cleanse The Murmur",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionMurmur": 5
+    },
+    "description": "x1.55 Damage to Murmur",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_combustion_rounds",
+    "name": "Primed Combustion Rounds",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "heat": 17
+    },
+    "description": "+187% <DT_FIRE_COLOR>Heat",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_counterbalance",
+    "name": "Primed Counterbalance",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "recoil": -7.7273
+    },
+    "description": "-85% Weapon Recoil",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_deadly_efficiency",
+    "name": "Primed Deadly Efficiency",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "damage": 20
+    },
+    "description": "On Reload From Empty:\\n+220% Damage for 17s",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_dual_rounds",
+    "name": "Primed Dual Rounds",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "multishot": 10
+    },
+    "description": "+110% Multishot",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_rubedo_lined_barrel",
+    "name": "Primed Rubedo-Lined Barrel",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "damage": 17
+    },
+    "description": "+187% Damage",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_shotgun_ammo_mutation",
+    "name": "Primed Shotgun Ammo Mutation",
+    "polarity": "naramon",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primed_venomous_clip",
+    "name": "Primed Venomous Clip",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "toxin": 17
+    },
+    "description": "+187% <DT_POISON_COLOR>Toxin",
+    "rarity": "legendary"
+  },
+  {
+    "id": "primo_flair",
+    "name": "Primo Flair",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Maximum Trick Combo to 6000",
+    "rarity": "rare"
+  },
+  {
+    "id": "prismatic_beam",
+    "name": "Prismatic Beam",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enemies struck by the Tauron Strike fire off smaller beams at other enemies within 20m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "prize_kill",
+    "name": "Prize Kill",
+    "polarity": "vazarin",
+    "drain": 10,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "shield": -25
+    },
+    "description": "On Kill:\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs",
+    "rarity": "rare"
+  },
+  {
+    "id": "protective_shots",
+    "name": "Protective Shots",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Turret Damage when Shields are above 75%",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "protective_sling",
+    "name": "Protective Sling",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Allies touched by Void Sling are granted immunity from damage for 5s and healed 60% over 5s for 10 energy cost.",
+    "rarity": "rare"
+  },
+  {
+    "id": "protector_posture",
+    "name": "Protector Posture",
+    "polarity": "penjaga",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "The companion will prioritize attacking enemies within 15m of the Warframe. Attacks inflict +4 <DT_PUNCTURE_COLOR> Puncture Status Effects",
+    "rarity": "common"
+  },
+  {
+    "id": "quaking_hand",
+    "name": "Quaking Hand",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "quasar_drill",
+    "name": "Quasar Drill",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "puncture": 15
+    },
+    "description": "+90% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_correct",
+    "name": "Quick Correct",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain 10% Disinfection and 10% chance to drop a Live Heartcell ",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_escape",
+    "name": "Quick Escape",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain invulnerability for 5s mounting a K-drive, but will expire early upon dismounting. ",
+    "rarity": "rare"
+  },
+  {
+    "id": "quick_reload",
+    "name": "Quick Reload",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 25
+    },
+    "description": "+100% Reload Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "quicklock",
+    "name": "Quicklock",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "-112.5% Ordnance Lock-On Time",
+    "rarity": "common"
+  },
+  {
+    "id": "raider_matrix",
+    "name": "Raider Matrix",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+22% Archwing Speed and Damage\\n+36% Archwing Shield and Armor\\n+67% Captured Crewship Speed and Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rail_guards",
+    "name": "Rail Guards",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% K-Drive Grind Speed",
+    "rarity": "common"
+  },
+  {
+    "id": "rain_of_arrows",
+    "name": "Rain Of Arrows",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "On dealing damage, fire an arrow at an enemy with 0.35s cooldown between arrows. 30s duration.",
+    "rarity": "rare"
+  },
+  {
+    "id": "raptorsetmod",
+    "name": "Raptorsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "reinforced_return",
+    "name": "Reinforced Return",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Warframe is invulnerable for 4s after Operator is downed. Tap <USE> as Operator falls to bring the Warframe to the Operator’s location.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rejuvenating_tides",
+    "name": "Rejuvenating Tides",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Operator Health Regeneration is increased by 6/s, and is doubled while controlling the Warframe.",
+    "rarity": "rare"
+  },
+  {
+    "id": "rending_crane",
+    "name": "Rending Crane",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Downward cuts with an impact combo.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rending_wind",
+    "name": "Rending Wind",
+    "polarity": "zenurik",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "repeater_clip",
+    "name": "Repeater Clip",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 17.5
+    },
+    "description": "On Reload:\\n+105% Fire Rate when Aiming for 9s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "resolute_focus",
+    "name": "Resolute Focus",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 8.3333
+    },
+    "description": "+100% Chance to Resist Staggers/Knockdowns when Aiming, +50% Accuracy when Aiming",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "revo_reducer",
+    "name": "Revo Reducer",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "-60.8% Omni Revolite Consumption",
+    "rarity": "rare"
+  },
+  {
+    "id": "rifle_riven_mod",
+    "name": "Rifle Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "rift_waters",
+    "name": "Rift Waters",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Vortex strips enemy Overguard 25% per second.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ripload",
+    "name": "Ripload",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "-63% Ordnance Reload Time",
+    "rarity": "common"
+  },
+  {
+    "id": "ris",
+    "name": "Ris",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "In luminous space blackened stars  They gaze, accuse, deny",
+    "rarity": "rare"
+  },
+  {
+    "id": "rising_blast",
+    "name": "Rising Blast",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Void Blast Damage by 200% and it can now be charged to deal additional damage.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rising_steel",
+    "name": "Rising Steel",
+    "polarity": "unairu",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "rubedo_lined_barrel",
+    "name": "Rubedo-Lined Barrel",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "damage": 16.6667
+    },
+    "description": "+100% Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "runtime",
+    "name": "Runtime",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 75
+    },
+    "description": "+75% Sprint Speed for 15s after Hacking",
+    "rarity": "rare"
+  },
+  {
+    "id": "sabot_rounds",
+    "name": "Sabot Rounds",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.5,
+      "damage": 10
+    },
+    "description": "+60% Damage, +3 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "sacrificesetmod",
+    "name": "Sacrificesetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "sampleantiqueupgrade",
+    "name": "Sampleantiqueupgrade",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30,000 HEAL RATE",
+    "rarity": "common"
+  },
+  {
+    "id": "scarlet_hurricane",
+    "name": "Scarlet Hurricane",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "scourging_warheads",
+    "name": "Scourging Warheads",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+76.5% chance for Ordnance to ignore enemy Shields",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "searing_steel",
+    "name": "Searing Steel",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "section_density",
+    "name": "Section Density",
+    "polarity": "madurai",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+75% Turret Critical Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "seeker_volley",
+    "name": "Seeker Volley",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fires a volley of homing missiles.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "seismic_impact",
+    "name": "Seismic Impact",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Cogron Tauron Strikes enable their shockwave effect for the next 4 aerial Melee slam attacks.",
+    "rarity": "rare"
+  },
+  {
+    "id": "semi_shotgun_cannonade",
+    "name": "Semi-Shotgun Cannonade",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.25,
+      "damage": 40
+    },
+    "description": "+240% Damage, +1.5 Punch Through",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sentient_scalpel",
+    "name": "Sentient Scalpel",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "x1.41 Turret Damage vs Sentients",
+    "rarity": "rare"
+  },
+  {
+    "id": "sey_taph",
+    "name": "Sey-Taph",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Void Sling Efficiency",
+    "rarity": "common"
+  },
+  {
+    "id": "shadow_harvest",
+    "name": "Shadow Harvest",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shatter_burst",
+    "name": "Shatter Burst",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Delivers a barrage of explosions across a large area.",
+    "rarity": "common"
+  },
+  {
+    "id": "shattering_storm",
+    "name": "Shattering Storm",
+    "polarity": "vazarin",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Methodical strikes and high impact combos.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shell_compression",
+    "name": "Shell Compression",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "ammoMaximum": 15
+    },
+    "description": "+90% Ammo Maximum",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shell_rush",
+    "name": "Shell Rush",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+50% Charge Rate",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shotgun_barrage",
+    "name": "Shotgun Barrage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15
+    },
+    "description": "+90% Fire Rate",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shotgun_elementalist",
+    "name": "Shotgun Elementalist",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10
+    },
+    "description": "+90% Status Damage, +60% Magazine Capacity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shotgun_riven_mod",
+    "name": "Shotgun Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "shotgun_savvy",
+    "name": "Shotgun Savvy",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+90% Status Chance",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shrapnel_shot",
+    "name": "Shrapnel Shot",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 16.5
+    },
+    "description": "On Kill:\\n+99% Critical Damage when Aiming for 9s",
+    "rarity": "common"
+  },
+  {
+    "id": "shred_shot",
+    "name": "Shred Shot",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "shredder",
+    "name": "Shredder",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "common"
+  },
+  {
+    "id": "sil_tabol",
+    "name": "Sil-Tabol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+60% Amp Status Chance, +15% Status Damage for each <VAZARIN_CLEAN>Vazarin School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "silent_battery",
+    "name": "Silent Battery",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Reduces the chance an enemy will hear gunfire by 100%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "slay_board",
+    "name": "Slay Board",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Board is launched, dealing 400 Damage while slicing enemies.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "slicing_feathers",
+    "name": "Slicing Feathers",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Twirling, acrobatic slashes with a refined touch.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sling_strength",
+    "name": "Sling Strength",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Switching to Warframe after a Chained Sling adds 40% Ability Strength for 20s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sling_stun",
+    "name": "Sling Stun",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Second Ability increases the width of the next Void Sling by 200% and enemies hit are vulnerable to Finishers, taking 30% more finisher damage.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "snap_shot",
+    "name": "Snap Shot",
+    "polarity": "madurai",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "sprintSpeed": 5
+    },
+    "description": "+20% Movement Speed when Aiming",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "soft_hands",
+    "name": "Soft Hands",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 10
+    },
+    "description": "On Equip: \\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "soft_safe",
+    "name": "Soft Safe",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Keeping software safe by ALWAYS WATCHING",
+    "rarity": "rare"
+  },
+  {
+    "id": "sonic_boost",
+    "name": "Sonic Boost",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Every <LOWER_IS_BETTER>10s, boosting will release a shockwave, stunning enemies in 4m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sonic_dash",
+    "name": "Sonic Dash",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Sling no longer displaces enemies, instead it emits a shockwave 14m wide and travels 8m stunning any enemy it hits.",
+    "rarity": "rare"
+  },
+  {
+    "id": "sovereign_outcast",
+    "name": "Sovereign Outcast",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "An outlandish style with sweeping attacks.",
+    "rarity": "rare"
+  },
+  {
+    "id": "spectral_blades",
+    "name": "Spectral Blades",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon 4 spectral swords that are copies of equipped melee weapon. Melee attacks will simultaneously trigger spectral attacks on any enemies within 10m for 30s. Spectral sword hits increase Combo Count and grant extra Tauron Strike Charge. Spectral swords are granted to all players in Affinity Range.",
+    "rarity": "rare"
+  },
+  {
+    "id": "spectral_pages",
+    "name": "Spectral Pages",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Create 4 spectral pages granting an additional 10% Cast Speed, Ability Strength, Duration, and 100 bonus Energy per page.",
+    "rarity": "rare"
+  },
+  {
+    "id": "spidersetmod",
+    "name": "Spidersetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "squad_regen",
+    "name": "Squad Regen",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "When Void Regen reaches its maximum, it is applied to squad members within Affinity Range for 60s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "squad_renew",
+    "name": "Squad Renew",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Heal all Railjack squad members by 100%.\\nCooldown: 300s",
+    "rarity": "rare"
+  },
+  {
+    "id": "star_divide",
+    "name": "Star Divide",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "static_purge",
+    "name": "Static Purge",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% chance to clear Transference Static on kill while Reinforced Return is active.",
+    "rarity": "rare"
+  },
+  {
+    "id": "stone_skin",
+    "name": "Stone Skin",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Armor for Warframe and Operator by 200.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "strainsetmod",
+    "name": "Strainsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "sudden_impact",
+    "name": "Sudden Impact",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 10
+    },
+    "description": "+60% Status Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "sundered_bounty",
+    "name": "Sundered Bounty",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shockwaves generate 5 pickups, in the form of Universal Orbs or Ammo.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sundering_dash",
+    "name": "Sundering Dash",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Using Void Sling through an enemy will reduce their Armor by 75%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "surging_storm",
+    "name": "Surging Storm",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase Rain of Arrows radius to 5m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sweeping_serration",
+    "name": "Sweeping Serration",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "slash": 20
+    },
+    "description": "+120% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "swelling_deluge",
+    "name": "Swelling Deluge",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increase vortex duration to 40s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "swift_mercy",
+    "name": "Swift Mercy",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Speed of Mercy Kills increased by 50%",
+    "rarity": "common"
+  },
+  {
+    "id": "synthsetmod",
+    "name": "Synthsetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "tainted_hydra",
+    "name": "Tainted Hydra",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "talsek_an",
+    "name": "Talsek-An",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain knockdown immunity. When knockdown is blocked, enter Void Mode for 3s (cooldown 7.5s)",
+    "rarity": "common"
+  },
+  {
+    "id": "teksetmod",
+    "name": "Teksetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "tempered_benison",
+    "name": "Tempered Benison",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shockwaves create 5 Armor Motes that grant +450 temporary Armor. Max 5.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tempered_blade",
+    "name": "Tempered Blade",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 25
+    },
+    "description": "+150% Critical Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "temporal_drag",
+    "name": "Temporal Drag",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Second Ability emits a radial burst slowing any enemy it touches by 80% for 10s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "temporal_shot",
+    "name": "Temporal Shot",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Precision head shot damage increased by 100% on enemies afflicted with Temporal Drag.",
+    "rarity": "rare"
+  },
+  {
+    "id": "tether",
+    "name": "Tether",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ensnares enemies, increasing vulnerability to Railjack weaponry.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "thara_tauron_strike",
+    "name": "Thara Tauron Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon forth Thara from the Void and fire the great bow into the air, blanketing the area with a rain of explosive arrows for 7s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "thrash_landing",
+    "name": "Thrash Landing",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Landing a trick releases an explosion dealing 40% Trick Score <DT_EXPLOSION_COLOR>Blast Damage to enemies within 4m.",
+    "rarity": "rare"
+  },
+  {
+    "id": "threat_blocker",
+    "name": "Threat Blocker",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain 10% Disinfection and 25% chance to drop a Potency mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "trail_blazer",
+    "name": "Trail Blazer",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Tricks leave a trail inflicting 40 <DT_FIRE_COLOR>Heat Damage to enemies.",
+    "rarity": "common"
+  },
+  {
+    "id": "tranquil_cleave",
+    "name": "Tranquil Cleave",
+    "polarity": "madurai",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Powerful arcs with frenzied combo.",
+    "rarity": "rare"
+  },
+  {
+    "id": "transmute_core",
+    "name": "Transmute Core",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Removes credits cost and guarantees the resultant mod polarity.",
+    "rarity": "rare"
+  },
+  {
+    "id": "trojan_tracker",
+    "name": "Trojan Tracker",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Eliminating sneaky viruses since 1989",
+    "rarity": "rare"
+  },
+  {
+    "id": "turbo_protect",
+    "name": "Turbo Protect",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Gain 10% Disinfection and 25% chance to drop an Antivirus mod",
+    "rarity": "rare"
+  },
+  {
+    "id": "turret_velocity",
+    "name": "Turret Velocity",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+32.2% Turret Range, +70% Turret Projectile Speed",
+    "rarity": "rare"
+  },
+  {
+    "id": "ubri_kaneph",
+    "name": "Ubri-Kaneph",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "damage": 10
+    },
+    "description": "+60% Damage to Amps, +10% bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "ulashta_shol",
+    "name": "Ulashta-Shol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "-60% Transference Static duration",
+    "rarity": "common"
+  },
+  {
+    "id": "umbrasetmod",
+    "name": "Umbrasetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "unairu_wisp",
+    "name": "Unairu Wisp",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% chance to summon an Unairu Wisp per enemy hit by Caustic Strike. The Wisp will seek out the nearest ally within Affinity Range, increasing Operator damage by 100% for 20s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "unfused_artifact",
+    "name": "Unfused Artifact",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "untraceable",
+    "name": "Untraceable",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Invisible for 15s after Hacking",
+    "rarity": "rare"
+  },
+  {
+    "id": "vapor_trail",
+    "name": "Vapor Trail",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Add 11 Boost Speed. Consumes 10 Energy/s",
+    "rarity": "common"
+  },
+  {
+    "id": "vazarin_transmute_core",
+    "name": "Vazarin Transmute Core",
+    "polarity": "vazarin",
+    "drain": 0,
+    "maxRank": 0,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Ensures transmuted mod is of Vazarin polarity and eliminates credit cost.",
+    "rarity": "rare"
+  },
+  {
+    "id": "venerdo_hoverdrive",
+    "name": "Venerdo Hoverdrive",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% K-Drive Jump Height",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vengeance",
+    "name": "Vengeance",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "During Last Gasp, Operator Damage is increased by 100% plus an additional 25% per second.",
+    "rarity": "rare"
+  },
+  {
+    "id": "venomous_clip",
+    "name": "Venomous Clip",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "toxin": 20
+    },
+    "description": "+120% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vexoric_tauron_strike",
+    "name": "Vexoric Tauron Strike",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Summon forth Vexoric from the Void and swing the colossal sword, unleashing a wave of devastating energy. Gain +8 Melee Combo from each enemy hit.",
+    "rarity": "rare"
+  },
+  {
+    "id": "vicious_approach",
+    "name": "Vicious Approach",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fighting form devised for Conclave.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vigilantesetmod",
+    "name": "Vigilantesetmod",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "common"
+  },
+  {
+    "id": "vik_anam",
+    "name": "Vik-Anam",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Maximum Amp Energy, +5% Amp Energy Regen Rate for each <MADURAI_CLEAN>Madurai School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vikla_safor",
+    "name": "Vikla-Safor",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+30% Amp Fire Rate, +30% Amp Ammo Efficiency",
+    "rarity": "common"
+  },
+  {
+    "id": "void_aegis",
+    "name": "Void Aegis",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode creates a shield that grows up to 12m over 5s. This ability costs an additional 2 Energy/s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_chrysalis",
+    "name": "Void Chrysalis",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode reduces damage taken by invisible allies within 25m by 80%. This ability costs an additional 4 Energy/s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_cloak",
+    "name": "Void Cloak",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Cloak from Enemies for 50s\\nEngine Speed reduced to 50%\\nCooldown: 120s",
+    "rarity": "common"
+  },
+  {
+    "id": "void_flow",
+    "name": "Void Flow",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Operator Energy by 90%.",
+    "rarity": "rare"
+  },
+  {
+    "id": "void_fuel",
+    "name": "Void Fuel",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "40% Weapon Efficiency for Operator and Warframe while Void Strike is active.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_hole",
+    "name": "Void Hole",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "A black hole that draws in enemies, dealing damage.",
+    "rarity": "rare"
+  },
+  {
+    "id": "void_hunter",
+    "name": "Void Hunter",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode reveals enemies within 25m through walls. This range gradually decreases over 5s when the Operator leaves Void Mode. This ability costs an additional 1 Energy/s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_levitation",
+    "name": "Void Levitation",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "First Ability creates a 6m wide shockwave lasting 4s, that inflicts Lift Status on all enemies it touches.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_radiance",
+    "name": "Void Radiance",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Consumes 50 Energy on leaving Void Mode to blind enemies within 10m for 5s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_regen",
+    "name": "Void Regen",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode starts healing at +10 Health per second, increasing by 10 per second up to a maximum of 50.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_shadow",
+    "name": "Void Shadow",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode now renders allies within 40m invisible. This ability costs an additional 4 Energy/s per ally cloaked.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_singularity",
+    "name": "Void Singularity",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode pulls enemies within 20m towards the Operator, and costs an additional 2 Energy/s.",
+    "rarity": "rare"
+  },
+  {
+    "id": "void_siphon",
+    "name": "Void Siphon",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Increases Operator Energy Regeneration by 90%.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_snare",
+    "name": "Void Snare",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Second Ability Launches a projectile that spins up a vortex trap on impact, or tap <ACTIVATE_ABILITY_1> again to detonate in-flight. Trap lasts 8s. Void Sling through trapped enemies to grant allies within Affinity Range 100 Health.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_spines",
+    "name": "Void Spines",
+    "polarity": "unairu",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "100% Damage taken is returned to the attacker.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_stalker",
+    "name": "Void Stalker",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode increases Critical Chance of melee attacks by up to 50% over 5s. This chance gradually decreases over 20s when the Operator leaves Void Mode. This ability costs an additional 4 Energy/s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_static",
+    "name": "Void Static",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Mode emits a pulse that deals 500 Damage/s over 15m, and costs an additional 1 Energy/s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "void_strike",
+    "name": "Void Strike",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "First Ability consumes all energy to increase damage for 8s. Deal 10% additional damage for every percentage of energy consumed. 40s cooldown.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "voltaic_blast",
+    "name": "Voltaic Blast",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Void Blast creates a surge of electricity, zapping enemies within 10m for 200% Damage.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vome",
+    "name": "Vome",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "To cosmic madness laws submit  Though stalwart minds entreat",
+    "rarity": "rare"
+  },
+  {
+    "id": "votive_onslaught",
+    "name": "Votive Onslaught",
+    "polarity": "naramon",
+    "drain": -2,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Precise, focused arcs and cuts not hampered by pity.",
+    "rarity": "rare"
+  },
+  {
+    "id": "warhead",
+    "name": "Warhead",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+127.3% Ordnance Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "waveband_disruptor",
+    "name": "Waveband Disruptor",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "+76.5% chance for Turret Critical Hits to ignore enemy Shields",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "wellspring",
+    "name": "Wellspring",
+    "polarity": "zenurik",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "First Ability creates a well of energy for 8s. Allies passing through the well gain 5 Energy/s for 30s.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "worm_away",
+    "name": "Worm Away",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Get rid of malware, spyware, wetware and worms",
+    "rarity": "rare"
+  },
+  {
+    "id": "worms_torment",
+    "name": "Worm's Torment",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "xata",
+    "name": "Xata",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "Its heralds are the stars it fells  The sky and Earth aflame",
+    "rarity": "rare"
+  },
+  {
+    "id": "yar_dal",
+    "name": "Yar Dal",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "+300 Operator Health",
+    "rarity": "common"
+  },
+  {
+    "id": "zaw_riven_mod",
+    "name": "Zaw Riven Mod",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {},
+    "description": "",
+    "rarity": "rare"
+  },
+  {
+    "id": "zodiac_shred",
+    "name": "Zodiac Shred",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "archgun",
+    "subCategory": "",
+    "stats": {
+      "slash": 15
+    },
+    "description": "+90% <DT_SLASH_COLOR>Slash",
+    "rarity": "rare"
+  },
+  {
+    "id": "accelerated_blast_r3",
+    "name": "Accelerated Blast",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "fireRate": 15,
+      "puncture": 15
+    },
+    "description": "+60% Fire Rate, +60% <DT_PUNCTURE_COLOR>Puncture",
+    "rarity": "rare"
+  },
+  {
+    "id": "ammo_stock_r3",
+    "name": "Ammo Stock",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "magazine": 10
+    },
+    "description": "+60% Magazine Capacity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "blunderbuss_r3",
+    "name": "Blunderbuss",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalChance": 15
+    },
+    "description": "+90% Critical Chance",
+    "rarity": "common"
+  },
+  {
+    "id": "charged_shell_r3",
+    "name": "Charged Shell",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15
+    },
+    "description": "+90% <DT_ELECTRICITY_COLOR>Electricity",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "chilling_grasp_r3",
+    "name": "Chilling Grasp",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 15
+    },
+    "description": "+90% <DT_FREEZE_COLOR>Cold",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cleanse_corpus_r3",
+    "name": "Cleanse Corpus",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionCorpus": 5
+    },
+    "description": "x1.3 Damage to Corpus",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cleanse_grineer_r3",
+    "name": "Cleanse Grineer",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionGrineer": 5
+    },
+    "description": "x1.3 Damage to Grineer",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "cleanse_infested_r3",
+    "name": "Cleanse Infested",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "factionInfested": 5
+    },
+    "description": "x1.3 Damage to Infested",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "contagious_spread_r3",
+    "name": "Contagious Spread",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15
+    },
+    "description": "+90% <DT_POISON_COLOR>Toxin",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "frigid_blast_r3",
+    "name": "Frigid Blast",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "cold": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FREEZE_COLOR>Cold, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "incendiary_coat_r3",
+    "name": "Incendiary Coat",
+    "polarity": "naramon",
+    "drain": 6,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "heat": 15
+    },
+    "description": "+90% <DT_FIRE_COLOR>Heat",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "point_blank_r3",
+    "name": "Point Blank",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "damage": 15
+    },
+    "description": "+90% Damage",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "ravage_r3",
+    "name": "Ravage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "criticalMultiplier": 10
+    },
+    "description": "+60% Critical Damage",
+    "rarity": "rare"
+  },
+  {
+    "id": "scattering_inferno_r3",
+    "name": "Scattering Inferno",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "statusChance": 15
+    },
+    "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "seeking_force_r3",
+    "name": "Seeking Force",
+    "polarity": "naramon",
+    "drain": 10,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "punchThrough": 0.35
+    },
+    "description": "+2.1 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "shell_shock_r3",
+    "name": "Shell Shock",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "electricity": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "surging_dash_r5",
+    "name": "Surging Dash",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "operator",
+    "subCategory": "",
+    "stats": {},
+    "description": "Creates a wave while dashing, increasing the Damage by 30% and the area of effect around the Operator by 12m.",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tactical_pump_r3",
+    "name": "Tactical Pump",
+    "polarity": "naramon",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "reloadSpeed": 10
+    },
+    "description": "+60% Reload Speed",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tainted_shell_r10",
+    "name": "Tainted Shell",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "accuracy": 7,
+      "fireRate": -5
+    },
+    "description": "+77% Accuracy, -55% Fire Rate",
+    "rarity": "rare"
+  },
+  {
+    "id": "toxic_barrage_r3",
+    "name": "Toxic Barrage",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "general",
+    "subCategory": "",
+    "stats": {
+      "toxin": 15,
+      "statusChance": 15
+    },
+    "description": "+60% <DT_POISON_COLOR>Toxin, +60% Status Chance",
+    "rarity": "rare"
+  },
+  {
+    "id": "gladiator_resolve",
+    "name": "Gladiator Resolve",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "stats": {
+      "health": 6.6667
+    },
+    "description": "+40% Health",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vigilante_offense",
+    "name": "Vigilante Offense",
+    "polarity": "naramon",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "rifle",
+    "stats": {
+      "punchThrough": 0.25
+    },
+    "description": "+1.5 Punch Through",
+    "rarity": "rare"
+  },
+  {
+    "id": "vigilante_vigor",
+    "name": "Vigilante Vigor",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "warframe",
+    "stats": {
+      "shieldRecharge": 10,
+      "shieldRechargeDelay": -5
+    },
+    "description": "+60% Shield Recharge, -30% Shield Recharge Delay",
+    "rarity": "common"
+  },
+  { "id": "da_ren", "name": "Da-Ren", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorShields": 50 }, "description": "+300 Operator Shields. +30 bonus for each Unairu School Mod", "rarity": "uncommon" },
+  { "id": "empazu_shol", "name": "Empazu-Shol", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "tauronCharge": 2 }, "description": "+12% Tauron Strike Initial Charge. +2% bonus for each Mod from a unique School", "rarity": "rare" },
+  { "id": "esti_vel_ikha", "name": "Esti Vel-Ikha", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingDistance": 5 }, "description": "+30% Void Sling distance. +10% Void Sling radius per unique School", "rarity": "rare" },
+  { "id": "evir_ti", "name": "Evir-Ti", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "operatorJumpHeight": 15 }, "description": "+60% Operator Jump Height", "rarity": "common" },
+  { "id": "hayan_dabor", "name": "Hayan-Dabor", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampMultishot": 10 }, "description": "+60% Amp Multishot", "rarity": "common" },
+  { "id": "hok_kaal", "name": "Hok-Kaal", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampBonusDamage": 0.5 }, "description": "After Void Mode, next Amp attack deals x3.0 bonus damage (cooldown 5s)", "rarity": "common" },
+  { "id": "kaal_zidi", "name": "Kaal-Zidi", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidModeEfficiency": 5 }, "description": "+30% Void Mode efficiency. +5% Movement Speed in Void Mode per Naramon Mod", "rarity": "uncommon" },
+  { "id": "lashta_vak", "name": "Lashta-Vak", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingPulse": 2 }, "description": "Void Sling breaks Containers within 12m. +2m per unique School Mod", "rarity": "rare" },
+  { "id": "lorun_tash", "name": "Lorun-Tash", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "operatorArmor": 100 }, "description": "+400 Operator Armor", "rarity": "common" },
+  { "id": "metem_erun", "name": "Metem-Erun", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorSprintSpeed": 5 }, "description": "+30% Operator Sprint Speed. +5% per unique School Mod", "rarity": "rare" },
+  { "id": "metem_hakh", "name": "Metem-Hakh", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorHealthShields": 5 }, "description": "+30% Operator Health & Shields. +15% per unique School Mod", "rarity": "rare" },
+  { "id": "omn_evi", "name": "Omn-Evi", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampCriticalChance": 10 }, "description": "+60% Amp Critical Chance. +10% Amp Crit Damage per Zenurik Mod", "rarity": "uncommon" },
+  { "id": "sey_taph", "name": "Sey-Taph", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingEfficiency": 5 }, "description": "+30% Void Sling Efficiency", "rarity": "common" },
+  { "id": "sil_tabol", "name": "Sil-Tabol", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampStatusChance": 10 }, "description": "+60% Amp Status Chance. +15% Status Damage per Vazarin Mod", "rarity": "uncommon" },
+  { "id": "talsek_an", "name": "Talsek-An", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": {}, "description": "Knockdown immunity. When blocked, enter Void Mode for 3s (cooldown 7.5s)", "rarity": "common" },
+  { "id": "ubri_kaneph", "name": "Ubri-Kaneph", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampDamage": 10 }, "description": "+60% Damage to Amps. +10% per unique School Mod", "rarity": "rare" },
+  { "id": "ulashta_shol", "name": "Ulashta-Shol", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "transferenceStaticDuration": -15 }, "description": "-60% Transference Static duration", "rarity": "common" },
+  { "id": "vik_anam", "name": "Vik-Anam", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampEnergy": 5 }, "description": "+30% Max Amp Energy. +5% Amp Energy Regen per Madurai Mod", "rarity": "uncommon" },
+  { "id": "vikla_safor", "name": "Vikla-Safor", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampFireRate": 5, "ampAmmoEfficiency": 5 }, "description": "+30% Amp Fire Rate. +30% Amp Ammo Efficiency", "rarity": "common" },
+  { "id": "yar_dal", "name": "Yar Dal", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorHealth": 50 }, "description": "+300 Operator Health", "rarity": "common" }
+
+];
+
+export const modsMap = new Map<string, Mod>(allMods.map(m => [m.id, m]));

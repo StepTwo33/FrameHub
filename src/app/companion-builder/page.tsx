@@ -1,0 +1,826 @@
+"use client";
+
+import { useState, useMemo, useCallback } from "react";
+import { Header } from "@/components/header";
+import { ModSlotCard } from "@/components/mod-slot";
+import { ModPicker } from "@/components/mod-picker";
+import { allMods, modsMap } from "@/data/mods";
+import { useCompanions, useWeapons } from "@/lib/use-data";
+import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2, Plus, X, ChevronRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData } from "@/lib/build-storage";
+import { cn } from "@/lib/utils";
+import { getCompanionImage } from "@/lib/images";
+
+const companionTypeLabels: Record<string, string> = {
+  all: "All",
+  sentinel: "Sentinels",
+  kubrow: "Kubrows",
+  kavat: "Kavats",
+  moa: "MOAs",
+  predasite: "Predasites",
+  vulpaphyla: "Vulpaphylas",
+  hound: "Hounds",
+};
+
+function getCompanionIcon(type: string) {
+  switch (type) {
+    case "sentinel": return <Bot className="h-4 w-4" />;
+    case "kubrow": case "kavat": case "predasite": case "vulpaphyla": return <Dog className="h-4 w-4" />;
+    case "hound": return <Bug className="h-4 w-4" />;
+    default: return <Bot className="h-4 w-4" />;
+  }
+}
+
+function getCompanionModSubCategory(companionType: string): string[] {
+  switch (companionType) {
+    case "sentinel": case "moa": case "hound":
+      return ["universal", "robotic"];
+    case "kubrow": case "kavat": case "predasite": case "vulpaphyla":
+      return ["universal", "beast"];
+    default:
+      return ["universal"];
+  }
+}
+
+// Map companion names to their specific claw weapon IDs
+// Source: https://wiki.warframe.com/w/Module:Companions/data
+const COMPANION_CLAW_MAP: Record<string, string> = {
+  // Kubrows
+  "Chesa Kubrow": "chesa_claws",
+  "Huras Kubrow": "huras_claws",
+  "Raksa Kubrow": "raksa_claws",
+  "Sahasa Kubrow": "sahasa_claws",
+  "Sunika Kubrow": "sunika_claws",
+  "Helminth Charger": "helminth_claws",
+  // Kavats
+  "Adarza Kavat": "adarza_claws",
+  "Smeeta Kavat": "smeeta_claws",
+  "Vasca Kavat": "vasca_claws",
+  "Venari": "venari_claws",
+  "Venari Prime": "venari_prime_claws",
+  // Predasites
+  "Vizier Predasite": "vizier_claws",
+  "Pharaoh Predasite": "pharaoh_claws",
+  "Medjay Predasite": "medjay_claws",
+  // Vulpaphylas
+  "Sly Vulpaphyla": "sly_claws",
+  "Crescent Vulpaphyla": "crescent_claws",
+  "Panzer Vulpaphyla": "panzer_claws",
+};
+
+function getCompanionWeapons(companion: Companion, weaponList: Weapon[]): Weapon[] {
+  const type = companion.type;
+  if (type === "sentinel") {
+    return weaponList.filter((w) => w.category === "sentinel_weapon");
+  }
+  // Beast companions: show their specific claws first, then all claws of same type
+  if (type === "kubrow" || type === "predasite" || type === "kavat" || type === "vulpaphyla") {
+    const specificClawId = COMPANION_CLAW_MAP[companion.name];
+    const allClaws = weaponList.filter((w) => w.category === "beast_claw");
+    if (specificClawId) {
+      // Put specific claw first, then others of the same companion type
+      const specific = allClaws.filter((w) => w.id === specificClawId);
+      const others = allClaws.filter((w) => w.id !== specificClawId && w.companionType === type);
+      return [...specific, ...others];
+    }
+    return allClaws.filter((w) => w.companionType === type || w.companionType === "kubrow");
+  }
+  if (type === "moa") {
+    return weaponList.filter((w) =>
+      w.category === "sentinel_weapon" &&
+      !w.name.toLowerCase().includes("deconstructor")
+    );
+  }
+  if (type === "hound") {
+    return weaponList.filter((w) => w.category === "hound_weapon" || w.companionType === "hound");
+  }
+  return [];
+}
+
+function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: Record<string, number> | null) {
+  let dmgMult = 1;
+  let critChance = weapon.criticalChance;
+  let critMult = weapon.criticalMultiplier;
+  let statusChance = weapon.statusChance;
+  let fireRate = weapon.fireRate;
+  let multishot = weapon.multishot ?? 1;
+  let magazineBonus = 0;
+  let reloadBonus = 0;
+
+  for (const em of mods) {
+    const mod = modsMap.get(em.modId);
+    if (!mod) continue;
+    const rank = Math.min(em.rank, mod.maxRank);
+    const mult = rank + 1;
+    for (const [stat, val] of Object.entries(mod.stats)) {
+      const v = (val * mult) / 100;
+      switch (stat) {
+        case "damage": dmgMult += v; break;
+        case "criticalChance": critChance += weapon.criticalChance * v; break;
+        case "criticalMultiplier": critMult += weapon.criticalMultiplier * v; break;
+        case "statusChance": statusChance += weapon.statusChance * v; break;
+        case "fireRate": case "attackSpeed": fireRate += weapon.fireRate * v; break;
+        case "multishot": multishot += v; break;
+        case "magazine": case "magazineSize": magazineBonus += v; break;
+        case "reload": case "reloadSpeed": reloadBonus += v; break;
+      }
+    }
+  }
+
+  // Apply riven stats
+  if (rivenStats && Object.keys(rivenStats).length > 0) {
+    for (const [stat, val] of Object.entries(rivenStats)) {
+      switch (stat) {
+        case "damage": dmgMult += val; break;
+        case "criticalChance": critChance += weapon.criticalChance * val; break;
+        case "criticalMultiplier": critMult += weapon.criticalMultiplier * val; break;
+        case "statusChance": statusChance += weapon.statusChance * val; break;
+        case "fireRate": fireRate += weapon.fireRate * val; break;
+        case "multishot": multishot += val; break;
+        case "magazine": magazineBonus += val; break;
+        case "reloadSpeed": reloadBonus += val; break;
+      }
+    }
+  }
+
+  const totalDmg = weapon.damage * dmgMult;
+  const avgHit = totalDmg * multishot;
+  const avgCritMult = 1 + critChance * (critMult - 1);
+  const dps = avgHit * avgCritMult * fireRate;
+  const magazine = Math.round(weapon.magazine * (1 + magazineBonus));
+  const reload = Math.max(0.1, weapon.reloadTime * (1 - reloadBonus));
+
+  return {
+    totalDamage: totalDmg,
+    avgHit,
+    critChance: Math.min(critChance, 1),
+    critMultiplier: critMult,
+    statusChance: Math.min(statusChance, 1),
+    fireRate,
+    multishot,
+    dps,
+    magazine,
+    reloadTime: reload,
+  };
+}
+
+function calculateCompanionStats(
+  companion: Companion,
+  equippedMods: EquippedMod[],
+): CompanionCalculatedStats {
+  const stats: CompanionCalculatedStats = {
+    baseHealth: companion.health,
+    baseShield: companion.shield,
+    baseArmor: companion.armor,
+    totalHealth: companion.health,
+    totalShield: companion.shield,
+    totalArmor: companion.armor,
+    healthBonus: 0,
+    shieldBonus: 0,
+    armorBonus: 0,
+    meleeDamageBonus: 0,
+    attackSpeedBonus: 0,
+    critChanceBonus: 0,
+    critDamageBonus: 0,
+    effectiveHealth: 0,
+    damageReduction: 0,
+  };
+
+  for (const em of equippedMods) {
+    const mod = modsMap.get(em.modId);
+    if (!mod) continue;
+    const rank = Math.min(em.rank, mod.maxRank);
+    const multiplier = (rank + 1);
+
+    for (const [statName, value] of Object.entries(mod.stats)) {
+      const modValue = (value * multiplier) / 100;
+      switch (statName) {
+        case "health": stats.healthBonus += modValue; break;
+        case "shield": stats.shieldBonus += modValue; break;
+        case "armor": stats.armorBonus += modValue; break;
+        case "meleeDamage": stats.meleeDamageBonus += modValue; break;
+        case "attackSpeed": stats.attackSpeedBonus += modValue; break;
+        case "critChance": stats.critChanceBonus += modValue; break;
+        case "critDamage": stats.critDamageBonus += modValue; break;
+      }
+    }
+  }
+
+  stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus);
+  stats.totalShield = stats.baseShield * (1 + stats.shieldBonus);
+  stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus);
+  const armorDR = stats.totalArmor / (stats.totalArmor + 300);
+  stats.damageReduction = armorDR * 100;
+  stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
+
+  return stats;
+}
+
+function StatRow({ label, value, highlighted }: { label: string; value: string; highlighted?: boolean }) {
+  return (
+    <div className="flex justify-between items-center py-1">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className={highlighted ? "text-sm font-bold text-cyan-400" : "text-sm font-mono"}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+export default function CompanionBuilderPage() {
+  const allCompanions = useCompanions();
+  const allWeapons = useWeapons();
+  const [selectedCompanion, setSelectedCompanion] = useState<Companion | null>(null);
+  const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
+  const [modPickerOpen, setModPickerOpen] = useState(false);
+  const [activeSlotIndex, setActiveSlotIndex] = useState(0);
+  const [companionSearch, setCompanionSearch] = useState("");
+  const [companionType, setCompanionType] = useState("all");
+  const [showCompanionList, setShowCompanionList] = useState(true);
+  const [hasReactor, setHasReactor] = useState(false);
+  const [isMR30, setIsMR30] = useState(false);
+  const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
+  const [buildName, setBuildName] = useState("");
+  // Weapon state
+  const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
+  const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
+  const [weaponModPickerOpen, setWeaponModPickerOpen] = useState(false);
+  const [activeWeaponSlotIndex, setActiveWeaponSlotIndex] = useState(0);
+  const [hasCatalyst, setHasCatalyst] = useState(false);
+  const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
+  const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
+
+  useState(() => { setSavedBuilds(getSavedBuilds("companion")); });
+
+  const handleSaveBuild = useCallback(() => {
+    if (!selectedCompanion) return;
+    const data: CompanionBuildData = {
+      companionId: selectedCompanion.id,
+      mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      weaponMods: weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      arcaneIds: [],
+      hasReactor,
+      isMR30,
+      slotPolarities,
+    };
+    const build: SavedBuild = {
+      id: currentBuildId || generateBuildId(),
+      name: buildName || `${selectedCompanion.name} Build`,
+      type: "companion",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      data,
+    };
+    saveBuild(build);
+    setCurrentBuildId(build.id);
+    setSavedBuilds(getSavedBuilds("companion"));
+  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, buildName, currentBuildId]);
+
+  const handleLoadBuild = useCallback((build: SavedBuild) => {
+    const d = build.data as CompanionBuildData;
+    const comp = allCompanions.find((c) => c.id === d.companionId);
+    if (!comp) return;
+    setSelectedCompanion(comp);
+    setEquippedMods(d.mods.map((m) => {
+      const mod = modsMap.get(m.modId);
+      return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
+    }));
+    setWeaponMods((d.weaponMods || []).map((m) => {
+      const mod = modsMap.get(m.modId);
+      return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
+    }));
+    setHasReactor(d.hasReactor);
+    setIsMR30(d.isMR30);
+    setSlotPolarities(d.slotPolarities || {});
+    setCurrentBuildId(build.id);
+    setBuildName(build.name);
+    setShowSavedBuilds(false);
+    setShowCompanionList(false);
+  }, [allCompanions]);
+
+  const handleDeleteBuild = useCallback((id: string) => {
+    deleteBuild(id);
+    setSavedBuilds(getSavedBuilds("companion"));
+    if (currentBuildId === id) setCurrentBuildId(null);
+  }, [currentBuildId]);
+
+  const filteredCompanions = useMemo(() => {
+    let comps = [...allCompanions];
+    if (companionType !== "all") {
+      comps = comps.filter((c) => c.type === companionType);
+    }
+    if (companionSearch.trim()) {
+      const q = companionSearch.toLowerCase();
+      comps = comps.filter((c) => c.name.toLowerCase().includes(q));
+    }
+    return comps.sort((a, b) => a.name.localeCompare(b.name));
+  }, [companionType, companionSearch]);
+
+  const calculatedStats = useMemo<CompanionCalculatedStats | null>(() => {
+    if (!selectedCompanion) return null;
+    return calculateCompanionStats(selectedCompanion, equippedMods);
+  }, [selectedCompanion, equippedMods]);
+
+  const baseCapacity = (hasReactor ? 60 : 30) + (isMR30 ? 10 : 0);
+  const capacityUsed = useMemo(() => {
+    return equippedMods.reduce((sum, m) => {
+      const mod = modsMap.get(m.modId);
+      if (!mod) return sum;
+      const baseDrain = mod.drain + m.rank;
+      const slotPol = slotPolarities[m.slotIndex];
+      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
+      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
+      return sum + baseDrain;
+    }, 0);
+  }, [equippedMods, slotPolarities]);
+
+  // Filter mods by companion type subcategory
+  const companionMods = useMemo(() => {
+    if (!selectedCompanion) return allMods.filter((m) => m.category === "companion");
+    const subCats = getCompanionModSubCategory(selectedCompanion.type);
+    return allMods.filter((m) =>
+      m.category === "companion" && (
+        !m.subCategory || subCats.includes(m.subCategory)
+      )
+    );
+  }, [selectedCompanion]);
+
+  const availableWeapons = useMemo(() => {
+    if (!selectedCompanion) return [];
+    return getCompanionWeapons(selectedCompanion, allWeapons);
+  }, [selectedCompanion, allWeapons]);
+
+  const weaponStats = useMemo(() => {
+    if (!selectedWeapon) return null;
+    // Gather riven stats from any weapon slot that has a riven
+    let rivenStats: Record<string, number> | null = null;
+    if (weaponRivenStatsMap) {
+      for (const [slotStr, stats] of Object.entries(weaponRivenStatsMap)) {
+        const slotIdx = Number(slotStr);
+        const equipped = weaponMods.find((m) => m.slotIndex === slotIdx);
+        if (equipped && equipped.modId.startsWith("riven_")) {
+          rivenStats = rivenStats || {};
+          for (const [k, v] of Object.entries(stats)) rivenStats[k] = (rivenStats[k] ?? 0) + v;
+        }
+      }
+    }
+    return calculateWeaponStats(selectedWeapon, weaponMods, rivenStats);
+  }, [selectedWeapon, weaponMods, weaponRivenStatsMap]);
+
+  const weaponCapacity = hasCatalyst ? 60 : 30;
+  const weaponCapacityUsed = useMemo(() => {
+    return weaponMods.reduce((sum, m) => {
+      const mod = modsMap.get(m.modId);
+      if (!mod) return sum;
+      return sum + mod.drain + m.rank;
+    }, 0);
+  }, [weaponMods]);
+
+  const weaponModPool = useMemo(() => {
+    if (!selectedWeapon) return [];
+    const cat = selectedWeapon.category;
+    if (cat === "sentinel_weapon") {
+      // Sentinel weapons use robotic weapon mods only
+      return allMods.filter((m) =>
+        m.category === "companion_weapon" ||
+        (m.category === "companion" && (m.subCategory === "robotic" || m.subCategory === "universal"))
+      );
+    }
+    if (cat === "beast_claw") {
+      // Beast claws use companion weapon mods only (Bite, Maul, etc.) — NOT regular melee mods like Blood Rush
+      return allMods.filter((m) =>
+        m.category === "companion_weapon" ||
+        (m.category === "companion" && (m.subCategory === "beast" || m.subCategory === "universal"))
+      );
+    }
+    if (cat === "hound_weapon") {
+      // Hound weapons use robotic weapon mods
+      return allMods.filter((m) =>
+        m.category === "companion_weapon" ||
+        (m.category === "companion" && (m.subCategory === "robotic" || m.subCategory === "universal"))
+      );
+    }
+    return allMods.filter((m) => m.category === "companion_weapon");
+  }, [selectedWeapon]);
+
+  const handleSelectCompanion = useCallback((companion: Companion) => {
+    setSelectedCompanion(companion);
+    setEquippedMods([]);
+    setHasReactor(false);
+    setSelectedWeapon(null);
+    setWeaponMods([]);
+    setHasCatalyst(false);
+    setWeaponRivenStatsMap(undefined);
+    setShowCompanionList(false);
+  }, []);
+
+  const handleOpenModPicker = useCallback((slotIndex: number) => {
+    setActiveSlotIndex(slotIndex);
+    setModPickerTarget("companion");
+    setModPickerOpen(true);
+  }, []);
+
+  const handleOpenWeaponModPicker = useCallback((slotIndex: number) => {
+    setActiveWeaponSlotIndex(slotIndex);
+    setModPickerTarget("weapon");
+    setModPickerOpen(true);
+  }, []);
+
+  const handleSelectMod = useCallback((mod: Mod, rank: number) => {
+    if (modPickerTarget === "weapon") {
+      setWeaponMods((prev) => {
+        const filtered = prev.filter((m) => m.slotIndex !== activeWeaponSlotIndex);
+        return [
+          ...filtered,
+          { modId: mod.id, modName: mod.name, rank, slotIndex: activeWeaponSlotIndex, polarity: mod.polarity, drain: mod.drain },
+        ];
+      });
+    } else {
+      setEquippedMods((prev) => {
+        const filtered = prev.filter((m) => m.slotIndex !== activeSlotIndex);
+        return [
+          ...filtered,
+          { modId: mod.id, modName: mod.name, rank, slotIndex: activeSlotIndex, polarity: mod.polarity, drain: mod.drain },
+        ];
+      });
+    }
+  }, [activeSlotIndex, activeWeaponSlotIndex, modPickerTarget]);
+
+  const handleRemoveMod = useCallback((slotIndex: number) => {
+    setEquippedMods((prev) => prev.filter((m) => m.slotIndex !== slotIndex));
+  }, []);
+
+  const handleRemoveWeaponMod = useCallback((slotIndex: number) => {
+    setWeaponMods((prev) => prev.filter((m) => m.slotIndex !== slotIndex));
+    setWeaponRivenStatsMap((prev) => { if (!prev) return prev; const n = { ...prev }; delete n[slotIndex]; return n; });
+  }, []);
+
+  const handleSelectWeaponRiven = useCallback((mod: Mod, stats: Record<string, number>) => {
+    setWeaponMods((prev) => {
+      const filtered = prev.filter((m) => m.slotIndex !== activeWeaponSlotIndex);
+      return [
+        ...filtered,
+        { modId: mod.id, modName: mod.name, rank: 0, slotIndex: activeWeaponSlotIndex, polarity: mod.polarity, drain: mod.drain },
+      ];
+    });
+    setWeaponRivenStatsMap((prev) => ({ ...(prev || {}), [activeWeaponSlotIndex]: stats }));
+  }, [activeWeaponSlotIndex]);
+
+  const equippedModIds = modPickerTarget === "weapon"
+    ? weaponMods.map((m) => m.modId)
+    : equippedMods.map((m) => m.modId);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+
+      <main className="flex-1 container mx-auto px-4 py-6">
+        {showCompanionList || !selectedCompanion ? (
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-2xl font-bold mb-6">Select a Companion</h1>
+
+            <div className="flex gap-2 mb-4 flex-wrap">
+              {Object.entries(companionTypeLabels).map(([key, label]) => (
+                <button
+                  key={key}
+                  onClick={() => setCompanionType(key)}
+                  className={cn(
+                    "px-3 py-1.5 text-sm rounded-lg border transition-colors",
+                    companionType === key
+                      ? "bg-cyan-600 border-cyan-600 text-white"
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search companions..."
+                value={companionSearch}
+                onChange={(e) => setCompanionSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+
+            <p className="text-xs text-muted-foreground mb-3">{filteredCompanions.length} companions</p>
+
+            <ScrollArea className="h-[60vh]">
+              <div className="space-y-1 pr-4">
+                {filteredCompanions.map((comp) => (
+                  <button
+                    key={comp.id}
+                    onClick={() => handleSelectCompanion(comp)}
+                    className="w-full text-left p-3 rounded-lg border border-border hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img src={getCompanionImage(comp.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
+                      <span className="font-medium text-sm">{comp.name}</span>
+                      <span className="text-xs text-muted-foreground capitalize ml-auto">{comp.type}</span>
+                    </div>
+                    <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
+                      <span>HP {comp.health}</span>
+                      <span>SH {comp.shield}</span>
+                      <span>AR {comp.armor}</span>
+                    </div>
+                    {comp.description && (
+                      <p className="text-xs text-muted-foreground/70 mt-1 truncate">{comp.description}</p>
+                    )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        ) : (
+          <div>
+            <div className="mb-6 space-y-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <button
+                  onClick={() => setShowCompanionList(true)}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  ← Change
+                </button>
+                <img src={getCompanionImage(selectedCompanion.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedCompanion.name}</h1>
+                <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">{selectedCompanion.type}</span>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
+                  <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
+                </button>
+                <button onClick={() => { setSavedBuilds(getSavedBuilds("companion")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
+                  <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
+                </button>
+                <button
+                  onClick={() => setIsMR30(!isMR30)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                    isMR30
+                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Star className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">MR 30+</span>
+                </button>
+                <button
+                  onClick={() => setHasReactor(!hasReactor)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                    hasReactor
+                      ? "bg-yellow-500/10 border-yellow-500/50 text-yellow-400"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Reactor</span>
+                </button>
+                <a
+                  href={`/report-issue?type=companion&name=${encodeURIComponent(selectedCompanion.name)}&id=${encodeURIComponent(selectedCompanion.id)}`}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                >
+                  <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
+                </a>
+              </div>
+            </div>
+
+            {selectedCompanion.precept && (
+              <div className="mb-4 p-3 border border-cyan-500/20 rounded-lg bg-cyan-500/5">
+                <span className="text-[10px] font-semibold text-cyan-400 tracking-wider">PRECEPT</span>
+                <p className="text-sm text-muted-foreground mt-1">{selectedCompanion.precept}</p>
+              </div>
+            )}
+
+            <div className="grid lg:grid-cols-[1fr_320px] gap-6">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">
+                    MOD CONFIGURATION
+                  </h2>
+                  <span className={cn(
+                    "text-xs font-mono",
+                    capacityUsed > baseCapacity ? "text-red-400" : "text-muted-foreground"
+                  )}>
+                    {capacityUsed} / {baseCapacity}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const equipped = equippedMods.find((m) => m.slotIndex === i);
+                    const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                    return (
+                      <ModSlotCard
+                        key={i}
+                        mod={mod}
+                        rank={equipped?.rank ?? 0}
+                        slotIndex={i}
+                        slotPolarity={slotPolarities[i]}
+                        onAdd={() => handleOpenModPicker(i)}
+                        onRemove={() => handleRemoveMod(i)}
+                        onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div className="border border-border rounded-xl p-6 bg-card">
+                  <h3 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">COMPANION STATS</h3>
+                  {calculatedStats ? (
+                    <div className="space-y-0.5">
+                      <StatRow label="Health" value={calculatedStats.totalHealth.toFixed(0)} />
+                      <StatRow label="Shield" value={calculatedStats.totalShield.toFixed(0)} />
+                      <StatRow label="Armor" value={calculatedStats.totalArmor.toFixed(0)} />
+                      <div className="border-t border-border my-2" />
+                      <StatRow label="Melee Dmg" value={`+${(calculatedStats.meleeDamageBonus * 100).toFixed(0)}%`} />
+                      <StatRow label="Atk Speed" value={`+${(calculatedStats.attackSpeedBonus * 100).toFixed(0)}%`} />
+                      <StatRow label="Crit Chance" value={`+${(calculatedStats.critChanceBonus * 100).toFixed(0)}%`} />
+                      <StatRow label="Crit Dmg" value={`+${(calculatedStats.critDamageBonus * 100).toFixed(0)}%`} />
+                      <div className="border-t border-border my-2" />
+                      <StatRow label="Effective HP" value={calculatedStats.effectiveHealth.toFixed(0)} highlighted />
+                      <StatRow label="Dmg Reduction" value={`${calculatedStats.damageReduction.toFixed(1)}%`} highlighted />
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">Select a companion to see stats</p>
+                  )}
+                </div>
+              </div>
+
+              {/* COMPANION WEAPON SECTION */}
+              <div className="mt-8 border-t border-border pt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Swords className="h-5 w-5 text-orange-400" />
+                  <h2 className="text-lg font-bold">Companion Weapon</h2>
+                  {selectedWeapon && (
+                    <button
+                      onClick={() => setHasCatalyst(!hasCatalyst)}
+                      className={cn(
+                        "ml-auto flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                        hasCatalyst
+                          ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
+                          : "border-border text-muted-foreground"
+                      )}
+                    >
+                      <Zap className="h-3.5 w-3.5" />
+                      {hasCatalyst ? "Catalyst Installed" : "Orokin Catalyst"}
+                    </button>
+                  )}
+                </div>
+
+                {/* Weapon Selector */}
+                {!selectedWeapon ? (
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {availableWeapons.length === 0 ? (
+                      <p className="text-sm text-muted-foreground py-4 text-center">No weapons available for this companion type</p>
+                    ) : (
+                      availableWeapons.map((w) => (
+                        <button
+                          key={w.id}
+                          onClick={() => { setSelectedWeapon(w); setWeaponMods([]); setHasCatalyst(false); }}
+                          className="w-full text-left p-2.5 rounded-lg border border-border hover:border-orange-500/50 hover:bg-orange-500/5 transition-all"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-sm">{w.name}</span>
+                            <span className="text-[10px] text-muted-foreground capitalize">{w.category.replace('_', ' ')}</span>
+                          </div>
+                          <div className="flex gap-3 text-[10px] text-muted-foreground mt-0.5">
+                            <span>DMG {w.damage}</span>
+                            <span>CC {(w.criticalChance * 100).toFixed(0)}%</span>
+                            <span>CD {w.criticalMultiplier.toFixed(1)}x</span>
+                            <span>SC {(w.statusChance * 100).toFixed(0)}%</span>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-3 mb-4 p-3 border border-orange-500/30 bg-orange-500/5 rounded-lg">
+                      <Crosshair className="h-4 w-4 text-orange-400" />
+                      <span className="font-medium text-sm">{selectedWeapon.name}</span>
+                      <span className="text-[10px] text-muted-foreground capitalize">{selectedWeapon.category.replace('_', ' ')}</span>
+                      <button onClick={() => { setSelectedWeapon(null); setWeaponMods([]); }} className="ml-auto text-xs text-muted-foreground hover:text-foreground">Change</button>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-semibold tracking-wider text-muted-foreground">WEAPON MODS</h3>
+                          <span className={cn(
+                            "text-xs font-mono",
+                            weaponCapacityUsed > weaponCapacity ? "text-red-400" : "text-muted-foreground"
+                          )}>
+                            {weaponCapacityUsed} / {weaponCapacity}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                          {Array.from({ length: 8 }, (_, i) => {
+                            const equipped = weaponMods.find((m) => m.slotIndex === i);
+                            const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                            return (
+                              <ModSlotCard
+                                key={`w${i}`}
+                                mod={mod}
+                                rank={equipped?.rank ?? 0}
+                                slotIndex={i}
+                                onAdd={() => handleOpenWeaponModPicker(i)}
+                                onRemove={() => handleRemoveWeaponMod(i)}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="border border-border rounded-xl p-6 bg-card">
+                        <h3 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">WEAPON STATS</h3>
+                        {weaponStats ? (
+                          <div className="space-y-0.5">
+                            <StatRow label="Total Damage" value={weaponStats.totalDamage.toFixed(1)} />
+                            <StatRow label="Avg Hit" value={weaponStats.avgHit.toFixed(1)} />
+                            <StatRow label="Crit Chance" value={`${(weaponStats.critChance * 100).toFixed(1)}%`} />
+                            <StatRow label="Crit Multi" value={`${weaponStats.critMultiplier.toFixed(1)}x`} />
+                            <StatRow label="Status" value={`${(weaponStats.statusChance * 100).toFixed(1)}%`} />
+                            <StatRow label="Fire Rate" value={weaponStats.fireRate.toFixed(2)} />
+                            <StatRow label="Multishot" value={weaponStats.multishot.toFixed(1)} />
+                            <StatRow label="Magazine" value={`${weaponStats.magazine}`} />
+                            <StatRow label="Reload" value={`${weaponStats.reloadTime.toFixed(2)}s`} />
+                            <div className="border-t border-border my-2" />
+                            <StatRow label="DPS" value={weaponStats.dps.toFixed(0)} highlighted />
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">Select a weapon to see stats</p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      <ModPicker
+        open={modPickerOpen}
+        onClose={() => setModPickerOpen(false)}
+        mods={modPickerTarget === "weapon" ? weaponModPool : companionMods}
+        category="_prefiltered"
+        equippedModIds={equippedModIds}
+        onSelect={handleSelectMod}
+        onSelectRiven={modPickerTarget === "weapon" ? handleSelectWeaponRiven : undefined}
+        weaponCategory={selectedWeapon?.category}
+      />
+
+      {/* Saved Builds Dialog */}
+      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
+        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
+          <DialogHeader className="p-6 pb-3">
+            <DialogTitle>Saved Companion Builds</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
+            {savedBuilds.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {savedBuilds.map((build) => {
+                  const d = build.data as CompanionBuildData;
+                  const comp = allCompanions.find((c) => c.id === d.companionId);
+                  return (
+                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-green-500/30 transition-all">
+                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
+                        <span className="text-sm font-medium">{build.name}</span>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">
+                          {comp?.name ?? d.companionId} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
+                        </div>
+                      </button>
+                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

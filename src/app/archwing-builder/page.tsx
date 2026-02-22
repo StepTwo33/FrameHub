@@ -1,0 +1,512 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { Header } from "@/components/header";
+import { ModSlotCard } from "@/components/mod-slot";
+import { ModPicker } from "@/components/mod-picker";
+import { allMods, modsMap } from "@/data/mods";
+import { allWeapons as allWeaponsData } from "@/data/weapons";
+import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
+import { calculateWeaponBuild } from "@/lib/calculator";
+import { WeaponStatsPanel } from "@/components/stats-panel";
+import { Weapon, Mod, EquippedMod, CalculatedStats } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { Star, Zap, ChevronRight, Save, FolderOpen, Trash2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData } from "@/lib/build-storage";
+
+type BuilderMode = "archwing" | "necramech";
+
+export default function ArchwingBuilderPage() {
+  const [mode, setMode] = useState<BuilderMode>("archwing");
+
+  // Archwing state
+  const [selectedArchwing, setSelectedArchwing] = useState<Archwing | null>(null);
+  const [archwingMods, setArchwingMods] = useState<EquippedMod[]>([]);
+  const [archwingModPickerOpen, setArchwingModPickerOpen] = useState(false);
+  const [archwingActiveSlot, setArchwingActiveSlot] = useState(0);
+  const [archwingPolarities, setArchwingPolarities] = useState<Record<number, string>>({});
+
+  // Necramech state
+  const [selectedNecramech, setSelectedNecramech] = useState<Necramech | null>(null);
+  const [necramechMods, setNecramechMods] = useState<EquippedMod[]>([]);
+  const [necramechModPickerOpen, setNecramechModPickerOpen] = useState(false);
+  const [necramechActiveSlot, setNecramechActiveSlot] = useState(0);
+  const [necramechPolarities, setNecramechPolarities] = useState<Record<number, string>>({});
+
+  // Weapon state (archgun/archmelee)
+  const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
+  const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
+  const [weaponModPickerOpen, setWeaponModPickerOpen] = useState(false);
+  const [weaponActiveSlot, setWeaponActiveSlot] = useState(0);
+  const [weaponPolarities, setWeaponPolarities] = useState<Record<number, string>>({});
+
+  // Shared
+  const [hasReactor, setHasReactor] = useState(false);
+  const [hasCatalyst, setHasCatalyst] = useState(false);
+  const [isMR30, setIsMR30] = useState(false);
+  const [modPickerTarget, setModPickerTarget] = useState<"frame" | "weapon">("frame");
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
+  const [buildName, setBuildName] = useState("");
+
+  useState(() => { setSavedBuilds(getSavedBuilds("archwing")); });
+
+  const handleSaveBuild = () => {
+    const data: ArchwingBuildData = {
+      mode,
+      frameId: mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name,
+      frameMods: (mode === "archwing" ? archwingMods : necramechMods).map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      weaponId: selectedWeapon?.id,
+      weaponMods: weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      hasReactor,
+      hasCatalyst,
+      isMR30,
+      framePolarities: mode === "archwing" ? archwingPolarities : necramechPolarities,
+      weaponPolarities,
+    };
+    const frameName = mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name;
+    const build: SavedBuild = {
+      id: currentBuildId || generateBuildId(),
+      name: buildName || `${frameName ?? mode} Build`,
+      type: "archwing",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      data,
+    };
+    saveBuild(build);
+    setCurrentBuildId(build.id);
+    setSavedBuilds(getSavedBuilds("archwing"));
+  };
+
+  const handleLoadBuild = (build: SavedBuild) => {
+    const d = build.data as ArchwingBuildData;
+    setMode(d.mode as BuilderMode);
+    const restoreMods = (slots: { modId: string; rank: number; slotIndex: number }[]) =>
+      slots.map((m) => { const mod = modsMap.get(m.modId); return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain }; });
+    if (d.mode === "archwing") {
+      setSelectedArchwing(archwings.find((a) => a.name === d.frameId) ?? null);
+      setArchwingMods(restoreMods(d.frameMods));
+      setArchwingPolarities(d.framePolarities || {});
+    } else {
+      setSelectedNecramech(necramechs.find((n) => n.name === d.frameId) ?? null);
+      setNecramechMods(restoreMods(d.frameMods));
+      setNecramechPolarities(d.framePolarities || {});
+    }
+    if (d.weaponId) {
+      setSelectedWeapon(allWeaponsData.find((w) => w.id === d.weaponId) ?? null);
+      setWeaponMods(restoreMods(d.weaponMods));
+    }
+    setHasReactor(d.hasReactor);
+    setHasCatalyst(d.hasCatalyst);
+    setIsMR30(d.isMR30);
+    setWeaponPolarities(d.weaponPolarities || {});
+    setCurrentBuildId(build.id);
+    setBuildName(build.name);
+    setShowSavedBuilds(false);
+  };
+
+  const handleDeleteBuild = (id: string) => {
+    deleteBuild(id);
+    setSavedBuilds(getSavedBuilds("archwing"));
+    if (currentBuildId === id) setCurrentBuildId(null);
+  };
+
+  // Filter archguns/archmelee from weapon data
+  const archWeapons = useMemo(() => {
+    return allWeaponsData.filter((w: Weapon) => w.category === "archgun" || w.category === "archmelee");
+  }, []);
+
+  // Weapon stats
+  const weaponStats = useMemo<CalculatedStats | null>(() => {
+    if (!selectedWeapon) return null;
+    return calculateWeaponBuild(selectedWeapon, weaponMods, modsMap);
+  }, [selectedWeapon, weaponMods]);
+
+  const frameCapacity = (hasReactor ? 60 : 30) + (isMR30 ? 10 : 0);
+  const weaponCapacity = (hasCatalyst ? 60 : 30) + (isMR30 ? 10 : 0);
+
+  const frameModsUsed = useMemo(() => {
+    const mods = mode === "archwing" ? archwingMods : necramechMods;
+    const pols = mode === "archwing" ? archwingPolarities : necramechPolarities;
+    return mods.reduce((sum, m) => {
+      const mod = modsMap.get(m.modId);
+      if (!mod) return sum;
+      const baseDrain = mod.drain + m.rank;
+      const slotPol = pols[m.slotIndex];
+      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
+      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
+      return sum + baseDrain;
+    }, 0);
+  }, [mode, archwingMods, necramechMods, archwingPolarities, necramechPolarities]);
+
+  const weaponModsUsed = useMemo(() => {
+    return weaponMods.reduce((sum, m) => {
+      const mod = modsMap.get(m.modId);
+      if (!mod) return sum;
+      const baseDrain = mod.drain + m.rank;
+      const slotPol = weaponPolarities[m.slotIndex];
+      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
+      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
+      return sum + baseDrain;
+    }, 0);
+  }, [weaponMods, weaponPolarities]);
+
+  // Mod categories
+  const frameModCategory = mode === "archwing" ? "archwing" : "necramech";
+
+  // Archwing mods filtered
+  const filteredFrameMods = useMemo(() => {
+    return allMods.filter((m) => m.category === frameModCategory);
+  }, [frameModCategory]);
+
+  // Archgun mods use dedicated archgun category; archmelee uses melee mods
+  const filteredWeaponMods = useMemo(() => {
+    if (!selectedWeapon) return [];
+    if (selectedWeapon.category === "archgun") {
+      return allMods.filter((m) => m.category === "archgun");
+    }
+    if (selectedWeapon.category === "archmelee") {
+      return allMods.filter((m) => m.category === "melee");
+    }
+    return [];
+  }, [selectedWeapon]);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <h1 className="text-xl sm:text-3xl font-bold">Archwing & Necramech Builder</h1>
+          <div className="flex items-center gap-2">
+            <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
+              <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
+            </button>
+            <button onClick={() => { setSavedBuilds(getSavedBuilds("archwing")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
+              <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
+            </button>
+          </div>
+        </div>
+        <p className="text-muted-foreground mb-6">Build Archwings, Necramechs, and their weapons</p>
+
+        {/* Mode selector */}
+        <div className="flex gap-2 mb-6">
+          {(["archwing", "necramech"] as BuilderMode[]).map((m) => (
+            <button
+              key={m}
+              onClick={() => { setMode(m); setSelectedWeapon(null); setWeaponMods([]); }}
+              className={cn(
+                "px-4 py-2 rounded-lg text-sm font-medium border transition-all capitalize",
+                mode === m
+                  ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400"
+                  : "border-border text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Left: Frame selection + mods */}
+          <div className="space-y-6">
+            {/* Frame selection */}
+            <div>
+              <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
+                {mode === "archwing" ? "SELECT ARCHWING" : "SELECT NECRAMECH"}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {mode === "archwing" ? archwings.map((aw) => (
+                  <button
+                    key={aw.id}
+                    onClick={() => { setSelectedArchwing(aw); setArchwingMods([]); setArchwingPolarities({}); }}
+                    className={cn(
+                      "p-3 rounded-lg border text-left transition-all",
+                      selectedArchwing?.id === aw.id
+                        ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400"
+                        : "border-border hover:border-cyan-500/30"
+                    )}
+                  >
+                    <span className="font-medium text-sm">{aw.name}</span>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
+                      HP {aw.health} • SH {aw.shield} • ARM {aw.armor}
+                    </div>
+                  </button>
+                )) : necramechs.map((nm) => (
+                  <button
+                    key={nm.id}
+                    onClick={() => { setSelectedNecramech(nm); setNecramechMods([]); setNecramechPolarities({}); }}
+                    className={cn(
+                      "p-3 rounded-lg border text-left transition-all",
+                      selectedNecramech?.id === nm.id
+                        ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400"
+                        : "border-border hover:border-cyan-500/30"
+                    )}
+                  >
+                    <span className="font-medium text-sm">{nm.name}</span>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
+                      HP {nm.health} • ARM {nm.armor} • EN {nm.energy}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Frame mod slots */}
+            {((mode === "archwing" && selectedArchwing) || (mode === "necramech" && selectedNecramech)) && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">
+                    {mode === "archwing" ? "ARCHWING MODS" : "NECRAMECH MODS"}
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsMR30(!isMR30)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                        isMR30 ? "bg-amber-500/10 border-amber-500/50 text-amber-400" : "border-border text-muted-foreground"
+                      )}
+                    >
+                      <Star className="h-3.5 w-3.5" /> MR 30+
+                    </button>
+                    <button
+                      onClick={() => setHasReactor(!hasReactor)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                        hasReactor ? "bg-blue-500/10 border-blue-500/50 text-blue-400" : "border-border text-muted-foreground"
+                      )}
+                    >
+                      <Zap className="h-3.5 w-3.5" /> Reactor
+                    </button>
+                    <span className={cn(
+                      "text-xs font-mono",
+                      frameModsUsed > frameCapacity ? "text-red-400" : "text-muted-foreground"
+                    )}>
+                      {frameModsUsed} / {frameCapacity}
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {Array.from({ length: mode === "necramech" ? 12 : 8 }, (_, i) => {
+                    const mods = mode === "archwing" ? archwingMods : necramechMods;
+                    const pols = mode === "archwing" ? archwingPolarities : necramechPolarities;
+                    const equipped = mods.find((m) => m.slotIndex === i);
+                    const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                    return (
+                      <ModSlotCard
+                        key={i}
+                        mod={mod}
+                        rank={equipped?.rank ?? 0}
+                        slotIndex={i}
+                        slotPolarity={pols[i]}
+                        onAdd={() => {
+                          setModPickerTarget("frame");
+                          if (mode === "archwing") { setArchwingActiveSlot(i); setArchwingModPickerOpen(true); }
+                          else { setNecramechActiveSlot(i); setNecramechModPickerOpen(true); }
+                        }}
+                        onRemove={() => {
+                          if (mode === "archwing") setArchwingMods((prev) => prev.filter((m) => m.slotIndex !== i));
+                          else setNecramechMods((prev) => prev.filter((m) => m.slotIndex !== i));
+                        }}
+                        onPolarize={(p) => {
+                          const setter = mode === "archwing" ? setArchwingPolarities : setNecramechPolarities;
+                          setter((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; });
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Stats display */}
+                <div className="mt-4 border border-border rounded-xl p-4 bg-card">
+                  <h3 className="text-xs font-semibold text-muted-foreground mb-2">
+                    {mode === "archwing" ? "ARCHWING STATS" : "NECRAMECH STATS"}
+                  </h3>
+                  {mode === "archwing" && selectedArchwing && (
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                      <div className="flex justify-between"><span className="text-muted-foreground">Health</span><span>{selectedArchwing.health}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span>{selectedArchwing.shield}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span>{selectedArchwing.armor}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Energy</span><span>{selectedArchwing.energy}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Speed</span><span>{selectedArchwing.speed}</span></div>
+                    </div>
+                  )}
+                  {mode === "necramech" && selectedNecramech && (
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                      <div className="flex justify-between"><span className="text-muted-foreground">Health</span><span>{selectedNecramech.health}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span>0</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span>{selectedNecramech.armor}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Energy</span><span>{selectedNecramech.energy}</span></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right: Weapon selection + mods */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
+                {mode === "archwing" ? "ARCHGUN / ARCHMELEE" : "ARCHGUN (NECRAMECH)"}
+              </h2>
+              <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
+                {archWeapons
+                  .filter((w) => mode === "necramech" ? w.category === "archgun" : true)
+                  .map((w) => (
+                  <button
+                    key={w.id}
+                    onClick={() => { setSelectedWeapon(w); setWeaponMods([]); setWeaponPolarities({}); }}
+                    className={cn(
+                      "p-2.5 rounded-lg border text-left transition-all text-sm",
+                      selectedWeapon?.id === w.id
+                        ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400"
+                        : "border-border hover:border-cyan-500/30"
+                    )}
+                  >
+                    <span className="font-medium">{w.name}</span>
+                    <span className={cn("ml-1.5 text-[10px]", w.category === "archgun" ? "text-blue-400" : "text-green-400")}>
+                      {w.category}
+                    </span>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
+                      DMG {w.damage} • CC {(w.criticalChance * 100).toFixed(0)}% • SC {(w.statusChance * 100).toFixed(0)}%
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedWeapon && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">WEAPON MODS</h2>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setHasCatalyst(!hasCatalyst)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
+                        hasCatalyst ? "bg-blue-500/10 border-blue-500/50 text-blue-400" : "border-border text-muted-foreground"
+                      )}
+                    >
+                      <Zap className="h-3.5 w-3.5" /> Catalyst
+                    </button>
+                    <span className={cn(
+                      "text-xs font-mono",
+                      weaponModsUsed > weaponCapacity ? "text-red-400" : "text-muted-foreground"
+                    )}>
+                      {weaponModsUsed} / {weaponCapacity}
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {Array.from({ length: selectedWeapon.modSlots }, (_, i) => {
+                    const equipped = weaponMods.find((m) => m.slotIndex === i);
+                    const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                    return (
+                      <ModSlotCard
+                        key={i}
+                        mod={mod}
+                        rank={equipped?.rank ?? 0}
+                        slotIndex={i}
+                        slotPolarity={weaponPolarities[i]}
+                        onAdd={() => { setModPickerTarget("weapon"); setWeaponActiveSlot(i); setWeaponModPickerOpen(true); }}
+                        onRemove={() => setWeaponMods((prev) => prev.filter((m) => m.slotIndex !== i))}
+                        onPolarize={(p) => setWeaponPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Weapon stats */}
+                {weaponStats && (
+                  <div className="mt-4 border border-border rounded-xl p-4 bg-card">
+                    <WeaponStatsPanel stats={weaponStats} />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* Archwing Mod Picker */}
+      <ModPicker
+        open={archwingModPickerOpen}
+        onClose={() => setArchwingModPickerOpen(false)}
+        mods={filteredFrameMods}
+        category="_prefiltered"
+        equippedModIds={archwingMods.map((m) => m.modId)}
+        onSelect={(mod, rank) => {
+          setArchwingMods((prev) => {
+            const filtered = prev.filter((m) => m.slotIndex !== archwingActiveSlot);
+            return [...filtered, { modId: mod.id, modName: mod.name, rank, slotIndex: archwingActiveSlot, polarity: mod.polarity, drain: mod.drain }];
+          });
+        }}
+      />
+
+      {/* Necramech Mod Picker */}
+      <ModPicker
+        open={necramechModPickerOpen}
+        onClose={() => setNecramechModPickerOpen(false)}
+        mods={filteredFrameMods}
+        category="_prefiltered"
+        equippedModIds={necramechMods.map((m) => m.modId)}
+        onSelect={(mod, rank) => {
+          setNecramechMods((prev) => {
+            const filtered = prev.filter((m) => m.slotIndex !== necramechActiveSlot);
+            return [...filtered, { modId: mod.id, modName: mod.name, rank, slotIndex: necramechActiveSlot, polarity: mod.polarity, drain: mod.drain }];
+          });
+        }}
+      />
+
+      {/* Weapon Mod Picker */}
+      <ModPicker
+        open={weaponModPickerOpen}
+        onClose={() => setWeaponModPickerOpen(false)}
+        mods={filteredWeaponMods}
+        category="_prefiltered"
+        equippedModIds={weaponMods.map((m) => m.modId)}
+        onSelect={(mod, rank) => {
+          setWeaponMods((prev) => {
+            const filtered = prev.filter((m) => m.slotIndex !== weaponActiveSlot);
+            return [...filtered, { modId: mod.id, modName: mod.name, rank, slotIndex: weaponActiveSlot, polarity: mod.polarity, drain: mod.drain }];
+          });
+        }}
+      />
+
+      {/* Saved Builds Dialog */}
+      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
+        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
+          <DialogHeader className="p-6 pb-3">
+            <DialogTitle>Saved Archwing/Necramech Builds</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
+            {savedBuilds.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {savedBuilds.map((build) => {
+                  const d = build.data as ArchwingBuildData;
+                  return (
+                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-cyan-500/30 transition-all">
+                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
+                        <span className="text-sm font-medium">{build.name}</span>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">
+                          {d.mode} • {d.frameMods.length + d.weaponMods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
+                        </div>
+                      </button>
+                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
