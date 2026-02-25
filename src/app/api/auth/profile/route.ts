@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession, isValidUsername, normalizeUsername } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +16,7 @@ export async function GET() {
     select: {
       id: true,
       name: true,
+      username: true,
       email: true,
       image: true,
       bio: true,
@@ -40,7 +41,7 @@ export async function PATCH(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { name, bio } = body as { name?: string; bio?: string };
+  const { name, bio, username } = body as { name?: string; bio?: string; username?: string };
 
   const updates: Record<string, unknown> = {};
 
@@ -60,6 +61,32 @@ export async function PATCH(req: NextRequest) {
     updates.bio = trimmed || null;
   }
 
+  if (username !== undefined) {
+    const trimmed = username.trim();
+    if (!trimmed) {
+      updates.username = null;
+    } else {
+      const normalized = normalizeUsername(trimmed);
+      if (!isValidUsername(normalized)) {
+        return NextResponse.json(
+          { error: "Username must be 3-24 chars and only include letters, numbers, ., _, or -" },
+          { status: 400 }
+        );
+      }
+
+      const existing = await prisma.user.findUnique({
+        where: { username: normalized },
+        select: { id: true },
+      });
+
+      if (existing && existing.id !== session.user.id) {
+        return NextResponse.json({ error: "Username is already taken" }, { status: 409 });
+      }
+
+      updates.username = normalized;
+    }
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
   }
@@ -67,7 +94,7 @@ export async function PATCH(req: NextRequest) {
   const user = await prisma.user.update({
     where: { id: session.user.id },
     data: updates,
-    select: { id: true, name: true, email: true, image: true, bio: true, role: true, createdAt: true },
+    select: { id: true, name: true, username: true, email: true, image: true, bio: true, role: true, createdAt: true },
   });
 
   return NextResponse.json({ user });

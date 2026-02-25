@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils";
 interface ProfileUser {
   id: string;
   name: string | null;
+  username: string | null;
   email: string | null;
   image: string | null;
   bio: string | null;
@@ -50,8 +52,10 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"builds" | "settings">("builds");
 
   // Edit states
+  const [editingUsername, setEditingUsername] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
+  const [usernameInput, setUsernameInput] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [bioInput, setBioInput] = useState("");
   const [saving, setSaving] = useState(false);
@@ -66,6 +70,7 @@ export default function ProfilePage() {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
+          setUsernameInput(data.user.username ?? "");
           setNameInput(data.user.name ?? "");
           setBioInput(data.user.bio ?? "");
         }
@@ -85,6 +90,30 @@ export default function ProfilePage() {
     setSaveMessage({ type, text });
     setTimeout(() => setSaveMessage(null), 3000);
   }, []);
+
+  const handleSaveUsername = useCallback(async () => {
+    if (!user) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: usernameInput }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser((prev) => prev ? { ...prev, ...data.user } : prev);
+        setUsernameInput(data.user.username ?? "");
+        setEditingUsername(false);
+        showMessage("success", "Username updated");
+      } else {
+        showMessage("error", data.error || "Failed to update username");
+      }
+    } catch {
+      showMessage("error", "Something went wrong");
+    }
+    setSaving(false);
+  }, [user, usernameInput, showMessage]);
 
   const handleSaveName = useCallback(async () => {
     if (!user) return;
@@ -212,6 +241,7 @@ export default function ProfilePage() {
   }
 
   const memberSince = new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const publicProfileHref = user.username ? `/u/${user.username}` : null;
 
   return (
     <div className="min-h-screen">
@@ -279,6 +309,13 @@ export default function ProfilePage() {
                   </span>
                 )}
               </div>
+              {publicProfileHref ? (
+                <Link href={publicProfileHref} className="text-xs text-primary hover:underline mb-2 inline-block">
+                  @{user.username}
+                </Link>
+              ) : (
+                <p className="text-xs text-muted-foreground mb-2">Set a username to get a public profile link.</p>
+              )}
               {user.bio && (
                 <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{user.bio}</p>
               )}
@@ -313,12 +350,15 @@ export default function ProfilePage() {
               </button>
             )}
             <div className="flex-1" />
-            <a
-              href="/api/auth/signout"
-              className="px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 transition-colors"
+            <button
+              onClick={async () => {
+                await fetch("/api/auth/signout", { method: "POST" });
+                window.location.href = "/";
+              }}
+              className="px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 transition-colors cursor-pointer"
             >
               Sign out
-            </a>
+            </button>
           </div>
         </div>
 
@@ -347,6 +387,51 @@ export default function ProfilePage() {
         {/* ========== SETTINGS TAB ========== */}
         {activeTab === "settings" && (
           <div className="space-y-4 max-w-xl">
+            {/* Username */}
+            <div className="p-4 rounded-xl border border-border bg-card">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
+                  <UserIcon className="h-3.5 w-3.5" /> USERNAME
+                </label>
+                {!editingUsername && (
+                  <button onClick={() => { setEditingUsername(true); setUsernameInput(user.username ?? ""); }} className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                    <Pencil className="h-3 w-3" /> Edit
+                  </button>
+                )}
+              </div>
+              {editingUsername ? (
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      value={usernameInput}
+                      onChange={(e) => setUsernameInput(e.target.value)}
+                      maxLength={24}
+                      placeholder="your-handle"
+                      className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:border-primary/50"
+                      autoFocus
+                      onKeyDown={(e) => { if (e.key === "Enter") handleSaveUsername(); if (e.key === "Escape") setEditingUsername(false); }}
+                    />
+                    <button onClick={handleSaveUsername} disabled={saving} className="px-3 py-2 bg-primary text-primary-foreground rounded-lg text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors">
+                      {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+                    </button>
+                    <button onClick={() => setEditingUsername(false)} className="px-3 py-2 border border-border rounded-lg text-xs text-muted-foreground hover:text-foreground transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">3-24 characters, lowercase letters, numbers, ., _, -</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <p className="text-sm">{user.username ? `@${user.username}` : <span className="text-muted-foreground italic">No username set</span>}</p>
+                  {publicProfileHref && (
+                    <Link href={publicProfileHref} className="text-xs text-primary hover:underline break-all">
+                      frame-hub.app{publicProfileHref}
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Display Name */}
             <div className="p-4 rounded-xl border border-border bg-card">
               <div className="flex items-center justify-between mb-2">

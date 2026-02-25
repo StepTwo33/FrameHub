@@ -4,17 +4,65 @@ import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 
 const SESSION_COOKIE = "framehub_session";
-const secret = new TextEncoder().encode(process.env.AUTH_SECRET || "dev-secret-change-me");
+const AUTH_SECRET_RAW = process.env.AUTH_SECRET;
+if (!AUTH_SECRET_RAW && process.env.NODE_ENV === "production") {
+  throw new Error("AUTH_SECRET environment variable is required in production");
+}
+const secret = new TextEncoder().encode(AUTH_SECRET_RAW || "dev-secret-change-me");
 
 export interface Session {
   user: {
     id: string;
     name: string | null;
+    username: string | null;
     email: string;
     image: string | null;
     emailVerified: boolean;
     role: string;
   };
+}
+
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 24;
+const USERNAME_PATTERN = /^[a-z0-9._-]+$/;
+
+function buildUsernameFallback(): string {
+  return `tenno-${crypto.randomBytes(3).toString("hex")}`;
+}
+
+export function normalizeUsername(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/[-._]{2,}/g, "-")
+    .replace(/^[-._]+|[-._]+$/g, "")
+    .slice(0, USERNAME_MAX_LENGTH);
+}
+
+export function isValidUsername(input: string): boolean {
+  return (
+    input.length >= USERNAME_MIN_LENGTH
+    && input.length <= USERNAME_MAX_LENGTH
+    && USERNAME_PATTERN.test(input)
+  );
+}
+
+export async function generateUniqueUsername(seed: string): Promise<string> {
+  const normalized = normalizeUsername(seed);
+  const base = (normalized.length >= USERNAME_MIN_LENGTH ? normalized : buildUsernameFallback())
+    .slice(0, USERNAME_MAX_LENGTH);
+
+  let candidate = base;
+  let suffix = 1;
+
+  while (await prisma.user.findUnique({ where: { username: candidate } })) {
+    const suffixText = `-${suffix}`;
+    candidate = `${base.slice(0, USERNAME_MAX_LENGTH - suffixText.length)}${suffixText}`;
+    suffix += 1;
+  }
+
+  return candidate;
 }
 
 // --------------- Password Hashing (PBKDF2) ---------------
@@ -92,10 +140,12 @@ export async function findOrCreateUser(
   let user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
+    const username = await generateUniqueUsername(data.name ?? email.split("@")[0] ?? "tenno");
     user = await prisma.user.create({
       data: {
         email,
         name: data.name ?? null,
+        username,
         image: data.image ?? null,
         emailVerified: data.emailVerified ? new Date() : null,
       },
@@ -138,6 +188,7 @@ export async function findOrCreateUser(
   return {
     id: user.id,
     name: user.name,
+    username: user.username,
     email: user.email!,
     image: user.image,
     emailVerified: !!(user.emailVerified || data.emailVerified),

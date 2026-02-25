@@ -12,7 +12,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { id } = await params;
   const body = await req.json();
   const updates: Record<string, unknown> = {};
-  if (body.status) updates.status = body.status;
+
+  const VALID_STATUSES = ["open", "resolved", "wontfix"];
+  if (body.status) {
+    if (!VALID_STATUSES.includes(body.status)) {
+      return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+    updates.status = body.status;
+  }
 
   try {
     const report = await prisma.report.update({

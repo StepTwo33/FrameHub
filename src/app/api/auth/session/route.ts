@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -8,5 +9,18 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ user: null });
   }
-  return NextResponse.json(session);
+
+  // Refresh key fields from DB so role/username changes are immediate
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true, username: true, name: true, image: true },
+  });
+
+  if (!dbUser) {
+    return NextResponse.json({ user: null });
+  }
+
+  return NextResponse.json({
+    user: { ...session.user, ...dbUser },
+  });
 }

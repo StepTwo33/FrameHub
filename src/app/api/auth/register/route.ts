@@ -4,6 +4,7 @@ import {
     generateVerificationCode,
     storeVerificationToken,
     findUserByEmail,
+    generateUniqueUsername,
 } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendVerificationEmail } from "@/lib/email";
@@ -67,10 +68,12 @@ export async function POST(req: NextRequest) {
 
         // ---------- Create user ----------
         const passwordHash = await hashPassword(password);
+        const username = await generateUniqueUsername(name?.trim() || email.split("@")[0] || "tenno");
         await prisma.user.create({
             data: {
                 email,
                 name: name?.trim() || null,
+                username,
                 passwordHash,
                 emailVerified: null,
             },

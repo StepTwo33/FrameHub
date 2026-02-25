@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
         const token = await createSession({
             id: user.id,
             name: user.name,
+            username: user.username,
             email: user.email!,
             image: user.image,
             emailVerified: true,

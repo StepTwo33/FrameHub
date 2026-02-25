@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { verifyAdmin } from "@/lib/admin";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 // GET /api/reports — anyone logged in can see their own reports; admin/mod sees all
 export async function GET(req: NextRequest) {
@@ -31,6 +32,15 @@ export async function GET(req: NextRequest) {
 // POST /api/reports — anyone (logged in or not) can submit
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req.headers);
+    const rl = checkRateLimit(`report:${ip}`, 10, 60 * 60 * 1000);
+    if (rl.limited) {
+      return NextResponse.json(
+        { error: "Too many reports. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const session = await getSession();
 

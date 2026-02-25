@@ -5,9 +5,19 @@ import {
     storeVerificationToken,
 } from "@/lib/auth";
 import { sendVerificationEmail } from "@/lib/email";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
     try {
+        const ip = getClientIp(req.headers);
+        const rl = checkRateLimit(`resend:${ip}`, 3, 15 * 60 * 1000);
+        if (rl.limited) {
+            return NextResponse.json(
+                { error: "Too many attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
+
         const body = await req.json();
         const { email } = body as { email?: string };
 

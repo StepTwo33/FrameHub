@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header";
 import Link from "next/link";
-import { Swords, Shield, Bug, Wrench, BarChart3, Users, Github } from "lucide-react";
+import { Swords, Shield, Bug, Wrench, BarChart3, Users, User } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -68,6 +68,37 @@ export default function AboutPage() {
                 <Link href="/report-issue" className="text-amber-400 hover:underline">Report Issue</Link>{" "}
                 page or contribute directly. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
               </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                Contributors
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Frame Hub is made possible by the following contributors:
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {[
+                  { name: "Step-Bro_Prime", role: "Lead Developer", profile: "/u/step-bro_prime" },
+                  { name: "Axel Shade", role: "Data & Design", profile: "/u/axel-shade" },
+                ].map((c) => (
+                  <Link
+                    key={c.name}
+                    href={c.profile}
+                    className="flex items-center gap-3 border border-border rounded-lg p-3 bg-card hover:border-primary/40 transition-colors group"
+                  >
+                    <div className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary text-sm font-bold shrink-0">
+                      {c.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold truncate group-hover:text-primary transition-colors">{c.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{c.role}</div>
+                    </div>
+                    <User className="h-3.5 w-3.5 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                ))}
+              </div>
             </section>
 
             <section className="border-t border-border pt-6 text-xs text-muted-foreground">

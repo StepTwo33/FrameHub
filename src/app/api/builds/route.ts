@@ -41,7 +41,13 @@ export async function POST(req: NextRequest) {
   if (rawBody.length > 500_000) {
     return NextResponse.json({ error: "Build data too large" }, { status: 413 });
   }
-  const body = JSON.parse(rawBody);
+
+  let body;
+  try {
+    body = JSON.parse(rawBody);
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
   const { id, name, type, data } = body;
 
   if (!name || !type || !data) {
