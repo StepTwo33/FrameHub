@@ -19,9 +19,11 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json(
-    builds.map((b: { id: string; name: string; type: string; data: string; createdAt: Date; updatedAt: Date }) => ({
+    builds.map((b: { id: string; name: string; description: string; isPublic: boolean; type: string; data: string; createdAt: Date; updatedAt: Date }) => ({
       id: b.id,
       name: b.name,
+      description: b.description,
+      isPublic: b.isPublic,
       type: b.type,
       data: JSON.parse(b.data),
       createdAt: b.createdAt.getTime(),
@@ -48,7 +50,7 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  const { id, name, type, data } = body;
+  const { id, name, description, isPublic, type, data } = body;
 
   if (!name || !type || !data) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -62,11 +64,18 @@ export async function POST(req: NextRequest) {
     if (existing) {
       const updated = await prisma.build.update({
         where: { id },
-        data: { name, data: JSON.stringify(data) },
+        data: {
+          name,
+          description: description || "",
+          isPublic: isPublic ?? false,
+          data: JSON.stringify(data)
+        },
       });
       return NextResponse.json({
         id: updated.id,
         name: updated.name,
+        description: updated.description,
+        isPublic: updated.isPublic,
         type: updated.type,
         data: JSON.parse(updated.data),
         createdAt: updated.createdAt.getTime(),
@@ -79,6 +88,8 @@ export async function POST(req: NextRequest) {
     data: {
       userId: session.user.id,
       name,
+      description: description || "",
+      isPublic: isPublic ?? false,
       type,
       data: JSON.stringify(data),
     },
@@ -87,6 +98,8 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     id: build.id,
     name: build.name,
+    description: build.description,
+    isPublic: build.isPublic,
     type: build.type,
     data: JSON.parse(build.data),
     createdAt: build.createdAt.getTime(),

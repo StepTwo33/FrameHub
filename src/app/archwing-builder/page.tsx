@@ -13,7 +13,8 @@ import { Weapon, Mod, EquippedMod, CalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Star, Zap, ChevronRight, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { toast } from "sonner";
 
 type BuilderMode = "archwing" | "necramech";
 
@@ -53,7 +54,7 @@ export default function ArchwingBuilderPage() {
 
   useState(() => { setSavedBuilds(getSavedBuilds("archwing")); });
 
-  const handleSaveBuild = () => {
+  const handleSaveBuild = async () => {
     const data: ArchwingBuildData = {
       mode,
       frameId: mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name,
@@ -78,6 +79,13 @@ export default function ArchwingBuilderPage() {
     saveBuild(build);
     setCurrentBuildId(build.id);
     setSavedBuilds(getSavedBuilds("archwing"));
+
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      toast.success("Build saved", { description: `${build.name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
   };
 
   const handleLoadBuild = (build: SavedBuild) => {
@@ -105,12 +113,14 @@ export default function ArchwingBuilderPage() {
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setShowSavedBuilds(false);
+    toast.info("Build loaded", { description: build.name });
   };
 
   const handleDeleteBuild = (id: string) => {
     deleteBuild(id);
     setSavedBuilds(getSavedBuilds("archwing"));
     if (currentBuildId === id) setCurrentBuildId(null);
+    toast.success("Build deleted");
   };
 
   // Filter archguns/archmelee from weapon data

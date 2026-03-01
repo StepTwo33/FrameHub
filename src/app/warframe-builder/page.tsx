@@ -19,8 +19,9 @@ import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { buildShareUrl, ShareableBuild } from "@/lib/build-url";
+import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 
@@ -57,8 +58,8 @@ const bonusLabels: Record<string, string> = {
 
 function formatBonusValue(key: string, value: number): string {
   if (key.includes("CritDamage") || key.includes("Resistance") || key.includes("Duration") ||
-      key.includes("Speed") || key.includes("Efficiency") || key.includes("Range") ||
-      key.includes("Strength") || key.includes("Velocity") || key.includes("Bonus")) {
+    key.includes("Speed") || key.includes("Efficiency") || key.includes("Range") ||
+    key.includes("Strength") || key.includes("Velocity") || key.includes("Bonus")) {
     return `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
   }
   return `${value > 0 ? "+" : ""}${value.toFixed(0)}`;
@@ -299,10 +300,11 @@ export default function WarframeBuilderPage() {
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
+  const [buildDescription, setBuildDescription] = useState("");
 
   useState(() => { setSavedBuilds(getSavedBuilds("warframe")); });
 
-  const handleSaveBuild = useCallback(() => {
+  const handleSaveBuild = useCallback(async () => {
     if (!selectedWarframe) return;
     const data: WarframeBuildData = {
       warframeId: selectedWarframe.id,
@@ -320,6 +322,7 @@ export default function WarframeBuilderPage() {
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
       name: buildName || `${selectedWarframe.name} Build`,
+      description: buildDescription || "",
       type: "warframe",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -328,12 +331,20 @@ export default function WarframeBuilderPage() {
     saveBuild(build);
     setCurrentBuildId(build.id);
     setSavedBuilds(getSavedBuilds("warframe"));
-  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, slotPolarities, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, currentBuildId]);
+
+    // Also save to cloud if logged in
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      toast.success("Build saved", { description: `${build.name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
+  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, slotPolarities, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WarframeBuildData;
     const wf = allWarframes.find((w) => w.id === d.warframeId);
-    if (!wf) return;
+    if (!wf) { toast.error("Warframe not found"); return; }
     setSelectedWarframe(wf);
     setEquippedMods(d.mods.map((m) => {
       const mod = modsMap.get(m.modId);
@@ -360,14 +371,17 @@ export default function WarframeBuilderPage() {
     }
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildDescription(build.description || "");
     setShowSavedBuilds(false);
     setShowWarframeList(false);
+    toast.info("Build loaded", { description: build.name });
   }, []);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
     setSavedBuilds(getSavedBuilds("warframe"));
     if (currentBuildId === id) setCurrentBuildId(null);
+    toast.success("Build deleted");
   }, [currentBuildId]);
 
   const allWeaponsData = useWeapons();
@@ -560,20 +574,70 @@ export default function WarframeBuilderPage() {
   }, []);
 
   const [shareCopied, setShareCopied] = useState(false);
-  const handleShareBuild = useCallback(() => {
+  const handleShareBuild = useCallback(async () => {
     if (!selectedWarframe) return;
+
+    // Fallback shareable object for offline/unauthenticated sharing
     const build: ShareableBuild = {
       type: "warframe",
       itemId: selectedWarframe.id,
       mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
       shards: equippedShards.filter((s): s is EquippedArchonShard => s !== null).map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
     };
+
+    try {
+      // First try to save the build publicly to the server
+      const data: WarframeBuildData = {
+        warframeId: selectedWarframe.id,
+        mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        shards: equippedShards,
+        arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
+        hasOrokinReactor,
+        isMR30,
+        slotPolarities,
+        helminthSlot,
+        helminthAbilityId: helminthAbility?.id ?? null,
+        exaltedMods: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        exaltedSlotPolarities,
+      };
+
+      const payload = {
+        id: currentBuildId || generateBuildId(),
+        name: buildName || `${selectedWarframe.name} Build`,
+        description: buildDescription || "",
+        isPublic: true,
+        type: "warframe",
+        data,
+      };
+
+      const res = await fetch("/api/builds", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const saved = await res.json();
+        setCurrentBuildId(saved.id);
+        const url = `${window.location.origin}/build/${saved.id}`;
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+        toast.success("Share link copied!", { description: "Link copied to clipboard" });
+        return;
+      }
+    } catch (e) {
+      console.error("Failed to share publicly, falling back to local URL logic", e);
+    }
+
+    // Fallback to local base64 sharing
     const url = window.location.origin + buildShareUrl(build);
     navigator.clipboard.writeText(url).then(() => {
       setShareCopied(true);
       setTimeout(() => setShareCopied(false), 2000);
+      toast.success("Share link copied!", { description: "Link copied to clipboard" });
     });
-  }, [selectedWarframe, equippedMods, equippedShards]);
+  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, slotPolarities, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
 
   const equippedModIds = equippedMods.map((m) => m.modId);
 
@@ -606,16 +670,16 @@ export default function WarframeBuilderPage() {
                     <div className="flex items-center gap-3">
                       <img src={getWarframeImage(wf.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                       <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">{wf.name}</span>
-                    </div>
-                    <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                      <span>HP {wf.health}</span>
-                      <span>SH {wf.shield}</span>
-                      <span>AR {wf.armor}</span>
-                      <span>EN {wf.energy}</span>
-                      <span>SPD {wf.sprintSpeed}</span>
-                    </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-sm">{wf.name}</span>
+                        </div>
+                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
+                          <span>HP {wf.health}</span>
+                          <span>SH {wf.shield}</span>
+                          <span>AR {wf.armor}</span>
+                          <span>EN {wf.energy}</span>
+                          <span>SPD {wf.sprintSpeed}</span>
+                        </div>
                       </div>
                     </div>
                   </button>
@@ -636,65 +700,77 @@ export default function WarframeBuilderPage() {
                 <img src={getWarframeImage(selectedWarframe.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWarframe.name}</h1>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
-                  <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
-                </button>
-                <button onClick={() => { setSavedBuilds(getSavedBuilds("warframe")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
-                  <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
-                </button>
-                <button
-                  onClick={() => setShowImporter(!showImporter)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    showImporter
-                      ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
-                      : "border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50"
-                  )}
-                  title="Import Build"
-                >
-                  <Upload className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Import</span>
-                </button>
-                <button
-                  onClick={handleShareBuild}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    shareCopied
-                      ? "bg-green-500/10 border-green-500/50 text-green-400"
-                      : "border-border text-muted-foreground hover:text-purple-400 hover:border-purple-500/50"
-                  )}
-                  title="Copy shareable link"
-                >
-                  {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
-                  <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
-                </button>
-                <button
-                  onClick={() => setIsMR30(!isMR30)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    isMR30
-                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Star className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">MR 30+</span>
-                </button>
-                <button
-                  onClick={() => setHasOrokinReactor(!hasOrokinReactor)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    hasOrokinReactor
-                      ? "bg-yellow-500/10 border-yellow-500/50 text-yellow-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Zap className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Reactor</span>
-                </button>
+              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
+                {/* primary actions */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium" title="Save Build">
+                    <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
+                  </button>
+                  <button onClick={() => { setSavedBuilds(getSavedBuilds("warframe")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10 transition-all font-medium" title="Load Build">
+                    <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
+                  </button>
+                  <div className="w-px h-4 bg-border mx-1" />
+                  <button
+                    onClick={() => setShowImporter(!showImporter)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      showImporter
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10"
+                    )}
+                    title="Import Build"
+                  >
+                    <Upload className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Import</span>
+                  </button>
+                  <button
+                    onClick={handleShareBuild}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      shareCopied
+                        ? "bg-green-500/10 text-green-400"
+                        : "text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10"
+                    )}
+                    title="Copy shareable link"
+                  >
+                    {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
+                    <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
+                  </button>
+                </div>
+
+                {/* build modifiers */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button
+                    onClick={() => setIsMR30(!isMR30)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      isMR30
+                        ? "bg-amber-500/10 text-amber-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Star className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">MR 30+</span>
+                  </button>
+                  <button
+                    onClick={() => setHasOrokinReactor(!hasOrokinReactor)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      hasOrokinReactor
+                        ? "bg-yellow-500/10 text-yellow-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Zap className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Reactor</span>
+                  </button>
+                </div>
+
+                <div className="flex-1" />
+
+                {/* meta */}
                 <a
                   href={`/report-issue?type=warframe&name=${encodeURIComponent(selectedWarframe.name)}&id=${encodeURIComponent(selectedWarframe.id)}`}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
@@ -906,6 +982,17 @@ export default function WarframeBuilderPage() {
                     </div>
                   </div>
                 )}
+
+                {/* Build Description */}
+                <div>
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">BUILD DESCRIPTION</h2>
+                  <textarea
+                    value={buildDescription}
+                    onChange={(e) => setBuildDescription(e.target.value)}
+                    placeholder="Write a description for this build... (e.g. mechanics, synergies, how to play)"
+                    className="w-full h-24 p-3 bg-card border border-border rounded-lg text-sm resize-y focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-foreground placeholder:text-muted-foreground/60 shadow-sm"
+                  />
+                </div>
               </div>
 
               <div className="space-y-4">

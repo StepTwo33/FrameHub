@@ -46,17 +46,20 @@ export default function SignInPage() {
     };
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen animate-in fade-in slide-in-from-bottom-8 duration-700">
             <Header />
             <div className="container mx-auto px-4 py-16 flex items-center justify-center">
-                <div className="w-full max-w-md">
+                <div className="w-full max-w-md p-8 sm:p-10 bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl relative overflow-hidden">
+                    {/* Decorative Background Blob */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -z-10" />
+
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
+                    <div className="text-center mb-8 relative">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4 shadow-lg shadow-primary/5">
                             <LogIn className="h-7 w-7 text-primary" />
                         </div>
-                        <h1 className="text-2xl font-bold">Welcome back</h1>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
+                        <p className="text-sm text-muted-foreground mt-1.5">
                             Sign in to your FrameHub account
                         </p>
                     </div>

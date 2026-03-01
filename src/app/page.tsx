@@ -7,7 +7,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
+      <main className="flex-1 container mx-auto px-4 py-8 sm:py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4">
             Build. Calculate. <span className="text-blue-400">Dominate.</span>
@@ -19,7 +19,7 @@ export default function Home() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
           <Link href="/weapon-builder" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-blue-500/50 hover:bg-blue-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-blue-500/10">
                   <Crosshair className="h-5 w-5 text-blue-400" />
@@ -35,7 +35,7 @@ export default function Home() {
           </Link>
 
           <Link href="/warframe-builder" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-purple-500/50 hover:bg-purple-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-purple-500/50 hover:bg-purple-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-purple-500/10">
                   <Shield className="h-5 w-5 text-purple-400" />
@@ -51,7 +51,7 @@ export default function Home() {
           </Link>
 
           <Link href="/companion-builder" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-cyan-500/50 hover:bg-cyan-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-cyan-500/10">
                   <Dog className="h-5 w-5 text-cyan-400" />
@@ -67,7 +67,7 @@ export default function Home() {
           </Link>
 
           <Link href="/riven-calculator" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-amber-500/50 hover:bg-amber-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-amber-500/50 hover:bg-amber-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-amber-500/10">
                   <Dice5 className="h-5 w-5 text-amber-400" />
@@ -83,7 +83,7 @@ export default function Home() {
           </Link>
 
           <Link href="/mod-browser" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-indigo-500/50 hover:bg-indigo-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-indigo-500/10">
                   <BookOpen className="h-5 w-5 text-indigo-400" />
@@ -99,7 +99,7 @@ export default function Home() {
           </Link>
 
           <Link href="/forma-planner" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-yellow-500/50 hover:bg-yellow-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-yellow-500/50 hover:bg-yellow-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-yellow-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-yellow-500/10">
                   <Wrench className="h-5 w-5 text-yellow-400" />
@@ -115,7 +115,7 @@ export default function Home() {
           </Link>
 
           <Link href="/damage-simulator" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-red-500/50 hover:bg-red-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-red-500/50 hover:bg-red-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-red-500/10">
                   <Target className="h-5 w-5 text-red-400" />
@@ -131,7 +131,7 @@ export default function Home() {
           </Link>
 
           <Link href="/loadouts" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-green-500/50 hover:bg-green-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-green-500/50 hover:bg-green-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-green-500/10">
                   <FolderOpen className="h-5 w-5 text-green-400" />
@@ -147,7 +147,7 @@ export default function Home() {
           </Link>
 
           <Link href="/compare" className="group h-full">
-            <div className="border border-border rounded-xl p-6 bg-card hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-200 h-full flex flex-col">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-teal-500/50 hover:bg-teal-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-teal-500/10">
                   <GitCompareArrows className="h-5 w-5 text-teal-400" />

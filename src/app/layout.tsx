@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer } from "@/components/footer";
+import { Toaster } from "sonner";
 import { PWARegister } from "@/components/pwa-register";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 
@@ -52,6 +53,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <TooltipProvider>
+          <Toaster theme="dark" position="bottom-right" richColors closeButton />
           <PWARegister />
           <PWAInstallPrompt />
           {children}

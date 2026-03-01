@@ -78,7 +78,7 @@ function NavDropdown({ group }: { group: typeof NAV_GROUPS[number] }) {
 
       {open && (
         <div className="absolute top-full left-0 pt-1 z-50" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
-          <div className="w-56 bg-card border border-border rounded-xl shadow-xl shadow-black/20 p-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="w-56 bg-card/90 backdrop-blur-xl border border-border/60 rounded-xl shadow-xl shadow-black/20 p-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
             {group.links.map((link) => (
               <Link
                 key={link.href}
@@ -117,7 +117,7 @@ export function Header() {
   const isAdmin = user?.role === "admin" || user?.role === "moderator";
 
   return (
-    <header className="border-b border-border bg-card sticky top-0 z-50">
+    <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight shrink-0">
           <span className="text-primary">Frame</span>

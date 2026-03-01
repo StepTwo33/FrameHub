@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ModularBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ModularBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { toast } from "sonner";
 import {
   kitgunChambers, kitgunGrips, kitgunLoaders, buildKitgun,
   zawStrikes, zawGrips, zawLinks, buildZaw,
@@ -111,7 +112,7 @@ export default function ModularBuilderPage() {
 
   useState(() => { setSavedBuilds(getSavedBuilds("modular")); });
 
-  const handleSaveBuild = () => {
+  const handleSaveBuild = async () => {
     const parts: Record<string, string> = {};
     if (modularType === "kitgun") {
       if (kitgunChamber) parts.chamber = kitgunChamber.id;
@@ -145,6 +146,13 @@ export default function ModularBuilderPage() {
     saveBuild(build);
     setCurrentBuildId(build.id);
     setSavedBuilds(getSavedBuilds("modular"));
+
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      toast.success("Build saved", { description: `${build.name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
   };
 
   const handleLoadBuild = (build: SavedBuild) => {
@@ -173,12 +181,14 @@ export default function ModularBuilderPage() {
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setShowSavedBuilds(false);
+    toast.info("Build loaded", { description: build.name });
   };
 
   const handleDeleteBuild = (id: string) => {
     deleteBuild(id);
     setSavedBuilds(getSavedBuilds("modular"));
     if (currentBuildId === id) setCurrentBuildId(null);
+    toast.success("Build deleted");
   };
 
   const resetMods = () => { setEquippedMods([]); setHasOrokinCatalyst(false); };

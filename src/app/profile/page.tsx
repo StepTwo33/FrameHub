@@ -244,7 +244,7 @@ export default function ProfilePage() {
   const publicProfileHref = user.username ? `/u/${user.username}` : null;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen animate-in fade-in slide-in-from-bottom-8 duration-700">
       <Header />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Save message toast */}
@@ -261,12 +261,12 @@ export default function ProfilePage() {
         )}
 
         {/* Profile Header Card */}
-        <div className="relative p-4 sm:p-6 rounded-xl border border-border bg-card mb-6">
+        <div className="relative p-4 sm:p-6 rounded-xl border border-border bg-card/60 backdrop-blur-md mb-6 shadow-sm">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5">
             {/* Avatar */}
             <div className="relative group">
               {user.image ? (
-                <img src={user.image} alt="" className="w-20 h-20 rounded-full border-2 border-border object-cover" />
+                <img src={user.image} alt="" className="w-20 h-20 rounded-full border-2 border-border object-cover bg-background" />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border">
                   <span className="text-3xl font-bold text-muted-foreground">{user.name?.[0]?.toUpperCase() ?? "?"}</span>
@@ -339,7 +339,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Quick actions */}
-          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
+          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
             {user.image && (
               <button
                 onClick={handleRemoveAvatar}
@@ -363,7 +363,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex gap-1 mb-6 p-1 rounded-lg bg-muted/30 border border-border w-fit">
+        <div className="flex gap-1 mb-6 p-1 rounded-lg bg-muted/30 border border-border w-fit backdrop-blur-sm">
           <button
             onClick={() => setActiveTab("builds")}
             className={cn(
@@ -386,9 +386,9 @@ export default function ProfilePage() {
 
         {/* ========== SETTINGS TAB ========== */}
         {activeTab === "settings" && (
-          <div className="space-y-4 max-w-xl">
+          <div className="space-y-4 max-w-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
             {/* Username */}
-            <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
                   <UserIcon className="h-3.5 w-3.5" /> USERNAME
@@ -433,7 +433,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Display Name */}
-            <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
                   <UserIcon className="h-3.5 w-3.5" /> DISPLAY NAME
@@ -468,7 +468,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Bio */}
-            <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
                   <FileText className="h-3.5 w-3.5" /> BIO
@@ -508,13 +508,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Profile Picture */}
-            <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
               <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 mb-3">
                 <Camera className="h-3.5 w-3.5" /> PROFILE PICTURE
               </label>
               <div className="flex items-center gap-4">
                 {user.image ? (
-                  <img src={user.image} alt="" className="w-16 h-16 rounded-full border-2 border-border object-cover" />
+                  <img src={user.image} alt="" className="w-16 h-16 rounded-full border-2 border-border object-cover bg-background" />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center border-2 border-border">
                     <span className="text-2xl font-bold text-muted-foreground">{user.name?.[0]?.toUpperCase() ?? "?"}</span>
@@ -534,7 +534,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Account Info (read-only) */}
-            <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
               <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 mb-3">
                 <Mail className="h-3.5 w-3.5" /> ACCOUNT
               </label>
@@ -559,7 +559,7 @@ export default function ProfilePage() {
         {/* ========== BUILDS TAB ========== */}
         {activeTab === "builds" && (<>
           {/* Build Type Filter */}
-          <div className="flex gap-2 mb-6 flex-wrap">
+          <div className="flex gap-2 mb-6 flex-wrap animate-in fade-in slide-in-from-bottom-2 duration-300">
             <button
               onClick={() => setFilter("all")}
               className={`px-3 py-1.5 text-xs rounded-lg border transition-all ${filter === "all" ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground hover:text-foreground"}`}
@@ -585,19 +585,31 @@ export default function ProfilePage() {
           {buildsLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 rounded-lg bg-muted animate-pulse" />
+                <div key={i} className="h-16 rounded-lg bg-muted animate-pulse border border-border/50" />
               ))}
             </div>
           ) : filteredBuilds.length === 0 ? (
-            <div className="text-center py-16 text-muted-foreground">
-              <p className="text-sm">
+            <div className="flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl border border-dashed border-border bg-card/30 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="w-20 h-20 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center mb-6">
+                <Shield className="h-10 w-10 text-primary/40" />
+              </div>
+              <h2 className="text-xl font-bold mb-2">Your Arsenal is Empty</h2>
+              <p className="text-muted-foreground text-sm max-w-sm mb-8">
                 {builds.length === 0
-                  ? "No saved builds yet. Create a build in any builder and save it!"
-                  : `No ${filter} builds found.`}
+                  ? "You haven't saved any builds to your account yet. Head over to the builder to start experimenting."
+                  : `No saved builds found for the "${filter}" category.`}
               </p>
+              {builds.length === 0 && (
+                <Link
+                  href="/weapon-builder"
+                  className="px-6 py-2.5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5"
+                >
+                  Create your first build
+                </Link>
+              )}
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {filteredBuilds.map((build) => {
                 const Icon = typeIcons[build.type] ?? Crosshair;
                 const colorClass = typeColors[build.type] ?? "text-muted-foreground border-border";

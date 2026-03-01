@@ -44,7 +44,7 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
       <div className="relative">
         <button
           onClick={onAdd}
-          className="w-full h-20 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-blue-500/50 hover:text-blue-400 hover:bg-blue-500/5 transition-all group"
+          className="w-full min-h-24 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-solid hover:border-primary border-primary/40 hover:text-primary hover:bg-primary/5 transition-all group"
         >
           {slotPolarity && (
             <PolarityIcon polarity={slotPolarity} size={14} />
@@ -99,56 +99,71 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   const polMatch = polarityDrainMod(mod.polarity, slotPolarity);
   const effectiveDrain = polMatch === -1 ? Math.ceil(drainVal / 2) : polMatch === 1 ? Math.ceil(drainVal * 1.25) : drainVal;
 
+  // Format mod stats into readable lines
+  const statEntries = Object.entries(mod.stats).slice(0, 3);
+  const formatStat = (key: string, val: number) => {
+    const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
+    const sign = val > 0 ? "+" : "";
+    const isPercent = Math.abs(val) < 20 || key.includes("Chance") || key.includes("Rate") || key.includes("Speed") || key.includes("Multiplier");
+    return `${sign}${isPercent ? (val * 100).toFixed(0) + "%" : val.toFixed(0)} ${label}`;
+  };
+
   return (
-    <div className={cn("relative w-full h-20 border rounded-lg p-3 bg-card", borderColor)}>
+    <div className={cn("group relative w-full min-h-24 border rounded-lg p-3 bg-card transition-all hover:ring-2 hover:ring-primary/20", borderColor)}>
       <button
         onClick={onRemove}
-        className="absolute top-1 right-1 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+        className="absolute top-1.5 right-1.5 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors z-10"
       >
         <X className="h-3 w-3" />
       </button>
       {onPolarize && (
         <button
           onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
-          className="absolute bottom-1 right-1 p-0.5 rounded text-[9px] text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute bottom-1.5 right-1.5 p-0.5 rounded text-[9px] text-muted-foreground hover:text-foreground transition-colors z-10"
           title="Set polarity"
         >
           ◆
         </button>
       )}
-      <div className="flex items-start gap-2 h-full">
+      <div className="flex items-start gap-2.5">
         <img
           src={getModImage(mod.name)}
           alt=""
-          className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0"
+          className="w-11 h-11 rounded object-contain bg-muted/20 shrink-0 mt-0.5"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 mb-0.5">
             {slotPolarity && <PolarityIcon polarity={slotPolarity} size={12} />}
             <PolarityIcon polarity={mod.polarity} size={14} />
-            <span className="text-sm font-medium truncate">{mod.name}</span>
+            <span className="text-[13px] font-semibold truncate leading-tight">{mod.name}</span>
           </div>
           {mod.subCategory === "riven" && rivenStats && Object.keys(rivenStats).length > 0 ? (
-            <div className="text-[10px] text-purple-300 mt-0.5 space-y-0">
-              {Object.entries(rivenStats).slice(0, 2).map(([k, v]) => {
+            <div className="text-[11px] text-purple-300 mt-0.5 space-y-0 leading-snug">
+              {Object.entries(rivenStats).slice(0, 3).map(([k, v]) => {
                 const pool = weaponCategory ? getRivenStatsForCategory(weaponCategory) : [];
                 const lbl = pool.find(s => s.key === k)?.label || k;
-                return <div key={k}>{v >= 0 ? "+" : ""}{(v * 100).toFixed(1)}% {lbl}</div>;
+                return <div key={k} className="truncate">{v >= 0 ? "+" : ""}{(v * 100).toFixed(1)}% {lbl}</div>;
               })}
-              {Object.keys(rivenStats).length > 2 && <div>+{Object.keys(rivenStats).length - 2} more</div>}
+              {Object.keys(rivenStats).length > 3 && <div className="text-purple-400/60">+{Object.keys(rivenStats).length - 3} more</div>}
+            </div>
+          ) : statEntries.length > 0 ? (
+            <div className="text-[11px] text-cyan-300/80 mt-0.5 space-y-0 leading-snug">
+              {statEntries.map(([k, v]) => (
+                <div key={k} className="truncate">{formatStat(k, v as number)}</div>
+              ))}
             </div>
           ) : (
-            <div className="text-xs text-muted-foreground mt-1 truncate">
-              {mod.description.replace(/<[^>]+>/g, "").substring(0, 60)}
+            <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
+              {mod.description.replace(/<[^>]+>/g, "").substring(0, 80)}
             </div>
           )}
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-[10px] text-muted-foreground">
-              Rank {rank}/{mod.maxRank}
+          <div className="flex items-center gap-2.5 mt-1.5">
+            <span className="text-[11px] text-muted-foreground font-medium">
+              R{rank}/{mod.maxRank}
             </span>
-            <span className={cn("text-[10px]", polMatch === -1 ? "text-green-400" : polMatch === 1 ? "text-red-400" : "text-muted-foreground")}>
-              Drain: {effectiveDrain}
+            <span className={cn("text-[11px] font-medium", polMatch === -1 ? "text-green-400" : polMatch === 1 ? "text-red-400" : "text-muted-foreground")}>
+              ⚡{effectiveDrain}
             </span>
             {mod.subCategory === "riven" && onEditRiven && (
               <button onClick={(e) => { e.stopPropagation(); onEditRiven(); }} className="text-purple-400 hover:text-purple-300 transition-colors" title="Edit Riven Stats">

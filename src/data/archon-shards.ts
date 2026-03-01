@@ -8,11 +8,12 @@ export const allArchonShards: ArchonShard[] = [
     "tier": 1,
     "statBonuses": {
       "abilityStrength": 10,
+      "abilityDuration": 10,
       "meleeCritDamage": 25,
       "primaryCritDamage": 25,
       "secondaryCritDamage": 25
     },
-    "description": "+10% Ability Strength OR +25% Critical Damage (Melee/Primary/Secondary)",
+    "description": "+10% Ability Strength OR +10% Ability Duration OR +25% Critical Damage (Melee/Primary/Secondary)",
     "isCoalescent": false
   },
   {
@@ -22,11 +23,12 @@ export const allArchonShards: ArchonShard[] = [
     "tier": 2,
     "statBonuses": {
       "abilityStrength": 15,
+      "abilityDuration": 15,
       "meleeCritDamage": 37.5,
       "primaryCritDamage": 37.5,
       "secondaryCritDamage": 37.5
     },
-    "description": "+15% Ability Strength OR +37.5% Critical Damage (Melee/Primary/Secondary)",
+    "description": "+15% Ability Strength OR +15% Ability Duration OR +37.5% Critical Damage (Melee/Primary/Secondary)",
     "isCoalescent": false
   },
   {

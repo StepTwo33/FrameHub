@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2, Plus, X, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/images";
 
 const companionTypeLabels: Record<string, string> = {
@@ -248,6 +249,7 @@ export default function CompanionBuilderPage() {
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
+  const [buildDescription, setBuildDescription] = useState("");
   // Weapon state
   const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
   const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
@@ -259,7 +261,7 @@ export default function CompanionBuilderPage() {
 
   useState(() => { setSavedBuilds(getSavedBuilds("companion")); });
 
-  const handleSaveBuild = useCallback(() => {
+  const handleSaveBuild = useCallback(async () => {
     if (!selectedCompanion) return;
     const data: CompanionBuildData = {
       companionId: selectedCompanion.id,
@@ -273,6 +275,7 @@ export default function CompanionBuilderPage() {
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
       name: buildName || `${selectedCompanion.name} Build`,
+      description: buildDescription || "",
       type: "companion",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -281,12 +284,19 @@ export default function CompanionBuilderPage() {
     saveBuild(build);
     setCurrentBuildId(build.id);
     setSavedBuilds(getSavedBuilds("companion"));
-  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, buildName, currentBuildId]);
+
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      toast.success("Build saved", { description: `${build.name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
+  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as CompanionBuildData;
     const comp = allCompanions.find((c) => c.id === d.companionId);
-    if (!comp) return;
+    if (!comp) { toast.error("Companion not found"); return; }
     setSelectedCompanion(comp);
     setEquippedMods(d.mods.map((m) => {
       const mod = modsMap.get(m.modId);
@@ -301,14 +311,17 @@ export default function CompanionBuilderPage() {
     setSlotPolarities(d.slotPolarities || {});
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildDescription(build.description || "");
     setShowSavedBuilds(false);
     setShowCompanionList(false);
+    toast.info("Build loaded", { description: build.name });
   }, [allCompanions]);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
     setSavedBuilds(getSavedBuilds("companion"));
     if (currentBuildId === id) setCurrentBuildId(null);
+    toast.success("Build deleted");
   }, [currentBuildId]);
 
   const filteredCompanions = useMemo(() => {
@@ -526,19 +539,19 @@ export default function CompanionBuilderPage() {
                     <div className="flex items-center gap-3">
                       <img src={getCompanionImage(comp.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                       <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
-                      <span className="font-medium text-sm">{comp.name}</span>
-                      <span className="text-xs text-muted-foreground capitalize ml-auto">{comp.type}</span>
-                    </div>
-                    <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                      <span>HP {comp.health}</span>
-                      <span>SH {comp.shield}</span>
-                      <span>AR {comp.armor}</span>
-                    </div>
-                    {comp.description && (
-                      <p className="text-xs text-muted-foreground/70 mt-1 truncate">{comp.description}</p>
-                    )}
+                        <div className="flex items-center gap-2">
+                          <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
+                          <span className="font-medium text-sm">{comp.name}</span>
+                          <span className="text-xs text-muted-foreground capitalize ml-auto">{comp.type}</span>
+                        </div>
+                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
+                          <span>HP {comp.health}</span>
+                          <span>SH {comp.shield}</span>
+                          <span>AR {comp.armor}</span>
+                        </div>
+                        {comp.description && (
+                          <p className="text-xs text-muted-foreground/70 mt-1 truncate">{comp.description}</p>
+                        )}
                       </div>
                     </div>
                   </button>
@@ -560,44 +573,64 @@ export default function CompanionBuilderPage() {
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedCompanion.name}</h1>
                 <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">{selectedCompanion.type}</span>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
-                  <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
-                </button>
-                <button onClick={() => { setSavedBuilds(getSavedBuilds("companion")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
-                  <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
-                </button>
-                <button
-                  onClick={() => setIsMR30(!isMR30)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    isMR30
-                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Star className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">MR 30+</span>
-                </button>
-                <button
-                  onClick={() => setHasReactor(!hasReactor)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    hasReactor
-                      ? "bg-yellow-500/10 border-yellow-500/50 text-yellow-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Zap className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Reactor</span>
-                </button>
+              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
+                {/* primary actions */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium" title="Save Build">
+                    <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
+                  </button>
+                  <button onClick={() => { setSavedBuilds(getSavedBuilds("companion")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10 transition-all font-medium" title="Load Build">
+                    <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
+                  </button>
+                </div>
+
+                {/* build modifiers */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button
+                    onClick={() => setIsMR30(!isMR30)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      isMR30
+                        ? "bg-amber-500/10 text-amber-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Star className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">MR 30+</span>
+                  </button>
+                  <button
+                    onClick={() => setHasReactor(!hasReactor)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      hasReactor
+                        ? "bg-yellow-500/10 text-yellow-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Zap className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Reactor</span>
+                  </button>
+                </div>
+
+                <div className="flex-1" />
+
+                {/* meta */}
                 <a
                   href={`/report-issue?type=companion&name=${encodeURIComponent(selectedCompanion.name)}&id=${encodeURIComponent(selectedCompanion.id)}`}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
               </div>
+            </div>
+
+            <div className="mb-6">
+              <textarea
+                value={buildDescription}
+                onChange={(e) => setBuildDescription(e.target.value)}
+                placeholder="Write a description for this build... (e.g. mechanics, synergies, how to play)"
+                className="w-full h-24 p-3 bg-card border border-border rounded-lg text-sm resize-y focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-foreground placeholder:text-muted-foreground/60 shadow-sm"
+              />
             </div>
 
             {selectedCompanion.precept && (

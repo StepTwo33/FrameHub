@@ -4,6 +4,7 @@ import { ModSlot, EquippedArchonShard } from "./types";
 export interface SavedBuild {
   id: string;
   name: string;
+  description?: string;
   type: "weapon" | "warframe" | "companion" | "modular" | "archwing";
   createdAt: number;
   updatedAt: number;

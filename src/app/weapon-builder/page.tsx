@@ -19,8 +19,9 @@ import { primaryArcanes, secondaryArcanes, meleeArcanes, kitgunArcanes, exodiaAr
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { INCARNON_WEAPON_IDS, incarnonDataMap, IncarnonEvolution } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
+import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 
@@ -85,6 +86,7 @@ export default function WeaponBuilderPage() {
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
   const [buildName, setBuildName] = useState("");
+  const [buildDescription, setBuildDescription] = useState("");
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
@@ -115,7 +117,7 @@ export default function WeaponBuilderPage() {
     window.history.replaceState({}, "", window.location.pathname);
   }, [allWeapons]);
 
-  const handleSaveBuild = useCallback(() => {
+  const handleSaveBuild = useCallback(async () => {
     if (!selectedWeapon) return;
     const data: WeaponBuildData = {
       weaponId: selectedWeapon.id,
@@ -129,6 +131,7 @@ export default function WeaponBuilderPage() {
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
       name: buildName || `${selectedWeapon.name} Build`,
+      description: buildDescription || "",
       type: "weapon",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -137,12 +140,20 @@ export default function WeaponBuilderPage() {
     saveBuild(build);
     setCurrentBuildId(build.id);
     setSavedBuilds(getSavedBuilds("weapon"));
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, currentBuildId]);
+
+    // Also save to cloud if logged in
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      toast.success("Build saved", { description: `${build.name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WeaponBuildData;
     const weapon = allWeapons.find((w) => w.id === d.weaponId);
-    if (!weapon) return;
+    if (!weapon) { toast.error("Weapon not found"); return; }
     setSelectedWeapon(weapon);
     setEquippedMods(d.mods.map((m) => {
       const mod = modsMap.get(m.modId);
@@ -160,31 +171,80 @@ export default function WeaponBuilderPage() {
     setSlotPolarities(d.slotPolarities || {});
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildDescription(build.description || "");
     setShowSavedBuilds(false);
     setShowWeaponList(false);
+    toast.info("Build loaded", { description: build.name });
   }, [allWeapons]);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
     setSavedBuilds(getSavedBuilds("weapon"));
     if (currentBuildId === id) setCurrentBuildId(null);
+    toast.success("Build deleted");
   }, [currentBuildId]);
 
   const [shareCopied, setShareCopied] = useState(false);
-  const handleShareBuild = useCallback(() => {
+  const handleShareBuild = useCallback(async () => {
     if (!selectedWeapon) return;
+
+    // Fallback shareable object for offline/unauthenticated sharing
     const build: ShareableBuild = {
       type: "weapon",
       itemId: selectedWeapon.id,
       mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
       arcanes: equippedArcanes.map((a) => a?.id ?? ""),
     };
+
+    try {
+      // First try to save the build publicly to the server
+      const data: WeaponBuildData = {
+        weaponId: selectedWeapon.id,
+        mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        stanceModId: stanceMod?.id,
+        arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
+        hasOrokinCatalyst,
+        isMR30,
+        slotPolarities,
+      };
+
+      const payload = {
+        id: currentBuildId || generateBuildId(),
+        name: buildName || `${selectedWeapon.name} Build`,
+        description: buildDescription || "",
+        isPublic: true,
+        type: "weapon",
+        data,
+      };
+
+      const res = await fetch("/api/builds", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const saved = await res.json();
+        setCurrentBuildId(saved.id);
+        const url = `${window.location.origin}/build/${saved.id}`;
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+        toast.success("Share link copied!", { description: "Link copied to clipboard" });
+        return;
+      }
+    } catch (e) {
+      console.error("Failed to share publicly, falling back to local URL logic", e);
+    }
+
+    // Fallback to local base64 sharing
     const url = window.location.origin + buildShareUrl(build);
     navigator.clipboard.writeText(url).then(() => {
       setShareCopied(true);
       setTimeout(() => setShareCopied(false), 2000);
+      toast.success("Share link copied!", { description: "Link copied to clipboard" });
     });
-  }, [selectedWeapon, equippedMods, equippedArcanes]);
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
 
   const filteredWeapons = useMemo(() => {
     const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
@@ -364,24 +424,24 @@ export default function WeaponBuilderPage() {
                     <div className="flex items-center gap-3">
                       <img src={getWeaponImage(weapon.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                       <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">
-                        {weapon.name}
-                        {weapon.isIncarnon && <Flame className="inline h-3 w-3 text-orange-400 ml-1" />}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{categoryLabels[weapon.category] || weapon.category}</span>
-                    </div>
-                    <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                      {weapon.category === "tektolyst" ? (
-                        <span>Tektolyst Artifact — {weapon.focusSchool || "Focus"} School</span>
-                      ) : (<>
-                        <span>DMG {weapon.damage}</span>
-                        <span>CC {(weapon.criticalChance * 100).toFixed(0)}%</span>
-                        <span>CM {weapon.criticalMultiplier.toFixed(1)}x</span>
-                        <span>SC {(weapon.statusChance * 100).toFixed(0)}%</span>
-                        <span>FR {weapon.fireRate.toFixed(1)}</span>
-                      </>)}
-                    </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-sm">
+                            {weapon.name}
+                            {weapon.isIncarnon && <Flame className="inline h-3 w-3 text-orange-400 ml-1" />}
+                          </span>
+                          <span className="text-xs text-muted-foreground">{categoryLabels[weapon.category] || weapon.category}</span>
+                        </div>
+                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
+                          {weapon.category === "tektolyst" ? (
+                            <span>Tektolyst Artifact — {weapon.focusSchool || "Focus"} School</span>
+                          ) : (<>
+                            <span>DMG {weapon.damage}</span>
+                            <span>CC {(weapon.criticalChance * 100).toFixed(0)}%</span>
+                            <span>CM {weapon.criticalMultiplier.toFixed(1)}x</span>
+                            <span>SC {(weapon.statusChance * 100).toFixed(0)}%</span>
+                            <span>FR {weapon.fireRate.toFixed(1)}</span>
+                          </>)}
+                        </div>
                       </div>
                     </div>
                   </button>
@@ -405,73 +465,85 @@ export default function WeaponBuilderPage() {
                   {selectedWeapon.category} • {selectedWeapon.triggerType}
                 </span>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <button
-                  onClick={handleSaveBuild}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all"
-                  title="Save Build"
-                >
-                  <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
-                </button>
-                <button
-                  onClick={() => { setSavedBuilds(getSavedBuilds("weapon")); setShowSavedBuilds(true); }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all"
-                  title="Load Build"
-                >
-                  <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
-                </button>
-                <button
-                  onClick={() => setShowImporter(!showImporter)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    showImporter
-                      ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
-                      : "border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50"
-                  )}
-                  title="Import Build"
-                >
-                  <Upload className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Import</span>
-                </button>
-                <button
-                  onClick={handleShareBuild}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    shareCopied
-                      ? "bg-green-500/10 border-green-500/50 text-green-400"
-                      : "border-border text-muted-foreground hover:text-purple-400 hover:border-purple-500/50"
-                  )}
-                  title="Copy shareable link"
-                >
-                  {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
-                  <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
-                </button>
-                <button
-                  onClick={() => setIsMR30(!isMR30)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    isMR30
-                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Star className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">MR 30+</span>
-                </button>
-                <button
-                  onClick={() => setHasOrokinCatalyst(!hasOrokinCatalyst)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-all",
-                    hasOrokinCatalyst
-                      ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Zap className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Catalyst</span>
-                </button>
+              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
+                {/* primary actions */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button
+                    onClick={handleSaveBuild}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium"
+                    title="Save Build"
+                  >
+                    <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
+                  </button>
+                  <button
+                    onClick={() => { setSavedBuilds(getSavedBuilds("weapon")); setShowSavedBuilds(true); }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10 transition-all font-medium"
+                    title="Load Build"
+                  >
+                    <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
+                  </button>
+                  <div className="w-px h-4 bg-border mx-1" />
+                  <button
+                    onClick={() => setShowImporter(!showImporter)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      showImporter
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10"
+                    )}
+                    title="Import Build"
+                  >
+                    <Upload className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Import</span>
+                  </button>
+                  <button
+                    onClick={handleShareBuild}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      shareCopied
+                        ? "bg-green-500/10 text-green-400"
+                        : "text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10"
+                    )}
+                    title="Copy shareable link"
+                  >
+                    {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
+                    <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
+                  </button>
+                </div>
+
+                {/* build modifiers */}
+                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                  <button
+                    onClick={() => setIsMR30(!isMR30)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      isMR30
+                        ? "bg-amber-500/10 text-amber-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Star className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">MR 30+</span>
+                  </button>
+                  <button
+                    onClick={() => setHasOrokinCatalyst(!hasOrokinCatalyst)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                      hasOrokinCatalyst
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Zap className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Catalyst</span>
+                  </button>
+                </div>
+
+                <div className="flex-1" />
+
+                {/* meta */}
                 <a
                   href={`/report-issue?type=weapon&name=${encodeURIComponent(selectedWeapon.name)}&id=${encodeURIComponent(selectedWeapon.id)}`}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
@@ -647,6 +719,17 @@ export default function WeaponBuilderPage() {
                     )}
                   </div>
                 )}
+
+                {/* Build Description */}
+                <div className="mt-6">
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">BUILD DESCRIPTION</h2>
+                  <textarea
+                    value={buildDescription}
+                    onChange={(e) => setBuildDescription(e.target.value)}
+                    placeholder="Write a description for this build... (e.g. mechanics, synergies, how to play)"
+                    className="w-full h-24 p-3 bg-card border border-border rounded-lg text-sm resize-y focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-foreground placeholder:text-muted-foreground/60 shadow-sm"
+                  />
+                </div>
               </div>
 
               <div className="space-y-4">

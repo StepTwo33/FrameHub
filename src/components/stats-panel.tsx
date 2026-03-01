@@ -49,9 +49,9 @@ function CollapsibleSection({ title, defaultOpen, children }: {
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 w-full text-left py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+        className="flex items-center gap-1 w-full text-left py-2.5 text-[10px] font-semibold tracking-wider text-muted-foreground hover:text-foreground transition-colors"
       >
-        {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+        {open ? <ChevronDown className="h-3 w-3 inline-block" /> : <ChevronRight className="h-3 w-3 inline-block" />}
         {title}
       </button>
       {open && <div className="ml-1">{children}</div>}
@@ -173,9 +173,15 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
       {/* Physical Damage */}
       <CollapsibleSection title="DAMAGE" defaultOpen>
         <StatRow label="Total Damage" value={stats.totalDamage.toFixed(1)} highlighted />
-        <StatRow label="Impact" value={stats.impact.toFixed(1)} color="text-slate-400" />
-        <StatRow label="Puncture" value={stats.puncture.toFixed(1)} color="text-stone-400" />
-        <StatRow label="Slash" value={stats.slash.toFixed(1)} color="text-red-400" />
+        {(stats.impact > 0 || (baseStats && baseStats.impact > 0)) && (
+          <StatRow label="Impact" value={stats.impact.toFixed(1)} color="text-slate-400" />
+        )}
+        {(stats.puncture > 0 || (baseStats && baseStats.puncture > 0)) && (
+          <StatRow label="Puncture" value={stats.puncture.toFixed(1)} color="text-stone-400" />
+        )}
+        {(stats.slash > 0 || (baseStats && baseStats.slash > 0)) && (
+          <StatRow label="Slash" value={stats.slash.toFixed(1)} color="text-red-400" />
+        )}
 
         {/* Elemental Damage */}
         {stats.elements && stats.elements.length > 0 && (
@@ -436,11 +442,10 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
           <button
             key={f}
             onClick={() => setSelectedFaction(f)}
-            className={`text-[9px] px-1.5 py-0.5 rounded border transition-all ${
-              selectedFaction === f
+            className={`text-[9px] px-1.5 py-0.5 rounded border transition-all ${selectedFaction === f
                 ? "border-primary text-primary bg-primary/10"
                 : "border-border/50 text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             {f === "all" ? "All" : f}
           </button>
@@ -456,9 +461,8 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
               <span className={`text-[10px] ${FACTION_COLORS[r.enemy.faction] || "text-muted-foreground"}`}>
                 {r.enemy.name}
               </span>
-              <span className={`text-[10px] font-mono ${
-                r.ttk < 1 ? "text-green-400" : r.ttk < 5 ? "text-yellow-400" : r.ttk < 15 ? "text-orange-400" : "text-red-400"
-              }`}>
+              <span className={`text-[10px] font-mono ${r.ttk < 1 ? "text-green-400" : r.ttk < 5 ? "text-yellow-400" : r.ttk < 15 ? "text-orange-400" : "text-red-400"
+                }`}>
                 {r.ttk === Infinity ? "∞" : r.ttk < 0.01 ? "<0.01s" : `${r.ttk.toFixed(2)}s`}
               </span>
             </button>

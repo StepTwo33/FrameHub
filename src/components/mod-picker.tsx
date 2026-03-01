@@ -5,6 +5,7 @@ import { Mod, getRivenStatsForCategory, RivenStatDef } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Search, Plus, X } from "lucide-react";
@@ -171,10 +172,10 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
               <div className="flex items-center gap-3 mb-2">
                 <img src={getModImage(selectedMod.name)} alt="" className="w-12 h-12 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                 <div className="flex-1 flex items-center justify-between">
-                <h4 className="font-semibold">{selectedMod.name}</h4>
-                <Badge variant="outline" className={cn("text-[10px]", rarityColors[selectedMod.rarity])}>
-                  {selectedMod.rarity}
-                </Badge>
+                  <h4 className="font-semibold">{selectedMod.name}</h4>
+                  <Badge variant="outline" className={cn("text-[10px]", rarityColors[selectedMod.rarity])}>
+                    {selectedMod.rarity}
+                  </Badge>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
@@ -259,38 +260,37 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 </div>
               );
             })() : (
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Rank: {selectedRank} / {selectedMod.maxRank}
-              </label>
-              <input
-                type="range"
-                min={0}
-                max={selectedMod.maxRank}
-                value={selectedRank}
-                onChange={(e) => setSelectedRank(parseInt(e.target.value))}
-                className="w-full accent-blue-500"
-              />
-              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                <span>0</span>
-                <span>{selectedMod.maxRank}</span>
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Rank: {selectedRank} / {selectedMod.maxRank}
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={selectedMod.maxRank}
+                  value={selectedRank}
+                  onChange={(e) => setSelectedRank(parseInt(e.target.value))}
+                  className="w-full accent-blue-500"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>0</span>
+                  <span>{selectedMod.maxRank}</span>
+                </div>
               </div>
-            </div>
             )}
 
-            <div className="flex gap-2 justify-end">
-              <button
+            <div className="flex gap-2 justify-end mt-4">
+              <Button
+                variant="outline"
                 onClick={() => setSelectedMod(null)}
-                className="px-4 py-2 text-sm rounded-lg border border-border hover:bg-secondary transition-colors"
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleConfirm}
-                className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
               >
                 Equip Mod
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
@@ -327,7 +327,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                         "w-full text-left p-3 rounded-lg border transition-all",
                         isDisabled
                           ? "border-border opacity-40 cursor-not-allowed"
-                          : "border-border hover:border-blue-500/50 hover:bg-blue-500/5 cursor-pointer"
+                          : "border-border hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.01] cursor-pointer shadow-sm"
                       )}
                     >
                       <div className="flex items-center justify-between">
