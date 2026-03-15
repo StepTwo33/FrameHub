@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows } from "lucide-react";
+import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket } from "lucide-react";
 import { Header } from "@/components/header";
 
 export default function Home() {
@@ -142,6 +142,22 @@ export default function Home() {
               <div className="mt-3 flex gap-2">
                 <span className="text-xs bg-secondary px-2 py-1 rounded">Local Storage</span>
                 <span className="text-xs bg-secondary px-2 py-1 rounded">Import/Export</span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/railjack-builder" className="group h-full">
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-rose-500/50 hover:bg-rose-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-500/10 transition-all duration-300 h-full flex flex-col">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-lg bg-rose-500/10">
+                  <Rocket className="h-5 w-5 text-rose-400" />
+                </div>
+                <h2 className="text-lg font-semibold group-hover:text-rose-400 transition-colors">Railjack Builder</h2>
+              </div>
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Configure ship components, armaments, and Plexus mods for your Railjack.</p>
+              <div className="mt-3 flex gap-2">
+                <span className="text-xs bg-secondary px-2 py-1 rounded">Components</span>
+                <span className="text-xs bg-secondary px-2 py-1 rounded">Plexus Mods</span>
               </div>
             </div>
           </Link>

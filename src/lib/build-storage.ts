@@ -5,7 +5,7 @@ export interface SavedBuild {
   id: string;
   name: string;
   description?: string;
-  type: "weapon" | "warframe" | "companion" | "modular" | "archwing";
+  type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
   createdAt: number;
   updatedAt: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,6 +131,22 @@ export interface ModularBuildData {
   isMR30: boolean;
   slotPolarities: Record<number, string>;
   customName?: string;
+}
+
+// Railjack build data
+export interface RailjackBuildData {
+  reactorId?: string;
+  shieldId?: string;
+  engineId?: string;
+  platingId?: string;
+  turretId?: string;
+  ordnanceId?: string;
+  integratedMods: ModSlot[];
+  battleMods: ModSlot[];
+  tacticalMods: ModSlot[];
+  integratedPolarities: Record<number, string>;
+  battlePolarities: Record<number, string>;
+  tacticalPolarities: Record<number, string>;
 }
 
 // Archwing/Necramech build data

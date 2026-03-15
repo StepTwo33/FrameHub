@@ -4,7 +4,7 @@
 import { ModSlot, EquippedMod } from "./types";
 
 export interface ShareableBuild {
-  type: "weapon" | "warframe" | "companion" | "modular" | "archwing";
+  type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
   itemId: string;
   mods: { id: string; rank: number }[];
   arcanes?: string[];
@@ -47,6 +47,7 @@ export function buildShareUrl(build: ShareableBuild): string {
     : build.type === "warframe" ? "/warframe-builder"
     : build.type === "companion" ? "/companion-builder"
     : build.type === "modular" ? "/modular-builder"
+    : build.type === "railjack" ? "/railjack-builder"
     : "/archwing-builder";
   return `${path}?build=${encoded}`;
 }

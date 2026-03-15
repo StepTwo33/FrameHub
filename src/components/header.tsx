@@ -24,6 +24,7 @@ const NAV_GROUPS = [
       { href: "/companion-builder", label: "Companions", desc: "Companion loadouts" },
       { href: "/modular-builder", label: "Modular", desc: "Kitguns, Zaws & more" },
       { href: "/archwing-builder", label: "Archwing", desc: "Archwing & Necramech" },
+      { href: "/railjack-builder", label: "Railjack", desc: "Ship components & Plexus" },
     ],
   },
   {
