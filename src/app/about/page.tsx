@@ -14,14 +14,14 @@ export default function AboutPage() {
             About <span className="text-primary">Frame</span><span className="text-muted-foreground">Hub</span>
           </h1>
           <p className="text-muted-foreground mb-8">
-            A community-built Warframe build planner and theorycrafting toolkit.
+            A Warframe build planner and theorycrafting toolkit.
           </p>
 
           <div className="space-y-8">
             <section>
               <h2 className="text-xl font-semibold mb-3">What is Frame Hub?</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Frame Hub is a free, open-source build planner for Digital Extremes&apos; Warframe.
+                Frame Hub is a free build planner for Digital Extremes&apos; Warframe.
                 It lets you theorycraft weapon, warframe, companion, archwing, and modular weapon builds
                 with real-time stat calculations, elemental combo resolution, damage simulation, and
                 time-to-kill estimates against every enemy faction.
@@ -62,11 +62,11 @@ export default function AboutPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-3">Contributing</h2>
+              <h2 className="text-xl font-semibold mb-3">Feedback</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Found incorrect data or a missing weapon? Use the{" "}
+                Found incorrect data or a missing entry? Use the{" "}
                 <Link href="/report-issue" className="text-amber-400 hover:underline">Report Issue</Link>{" "}
-                page or contribute directly. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
+                page. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
               </p>
             </section>
 
@@ -80,12 +80,22 @@ export default function AboutPage() {
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {[
-                  { name: "Step-Bro_Prime", role: "Lead Developer", profile: "/u/step-bro_prime" },
-                  { name: "Axel Shade", role: "Data & Design", profile: "/u/axel-shade" },
+                  {
+                    name: "Step-Bro_Prime",
+                    role: "Lead Developer",
+                    profileUrl: "https://www.reddit.com/user/Step-Bro_Prime/",
+                  },
+                  {
+                    name: "Axel Shade",
+                    role: "Data & Design",
+                    profileUrl: "https://www.reddit.com/user/Axel_Shade/",
+                  },
                 ].map((c) => (
-                  <Link
+                  <a
                     key={c.name}
-                    href={c.profile}
+                    href={c.profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-3 border border-border rounded-lg p-3 bg-card hover:border-primary/40 transition-colors group"
                   >
                     <div className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary text-sm font-bold shrink-0">
@@ -96,7 +106,7 @@ export default function AboutPage() {
                       <div className="text-xs text-muted-foreground truncate">{c.role}</div>
                     </div>
                     <User className="h-3.5 w-3.5 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </Link>
+                  </a>
                 ))}
               </div>
             </section>

@@ -56,7 +56,7 @@ const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: strin
   cold:        { duration: 6, ticks: 1, desc: '-50% movement/fire rate' },
   toxin:       { duration: 6, ticks: 6, desc: 'Poison (bypasses shields)' },
   electricity: { duration: 6, ticks: 1, desc: 'Chain stun to nearby enemies' },
-  blast:       { duration: 6, ticks: 1, desc: '-70% accuracy' },
+  blast:       { duration: 6, ticks: 1, desc: 'Detonate: 30% base dmg/stack after 1.5s, AoE at 10 stacks' },
   corrosive:   { duration: 8, ticks: 1, desc: '-26% armor per stack (max 10)' },
   gas:         { duration: 6, ticks: 6, desc: 'Toxin AoE cloud' },
   magnetic:    { duration: 6, ticks: 1, desc: '-75% shields, +100% shield damage' },
@@ -176,6 +176,7 @@ export function calculateWeaponBuild(
     criticalChance: baseWeapon.criticalChance,
     criticalMultiplier: baseWeapon.criticalMultiplier,
     statusChance: baseWeapon.statusChance,
+    statusChancePerShot: baseWeapon.statusChance,
     magazine: baseWeapon.magazine,
     reloadTime: baseWeapon.reloadTime,
     multishot: baseWeapon.multishot,
@@ -207,6 +208,9 @@ export function calculateWeaponBuild(
   let statusBonus = 0;
   let magBonus = 0;
   let reloadBonus = 0;
+  let impactBonus = 0;
+  let punctureBonus = 0;
+  let slashBonus = 0;
   const elementalMods: { type: string; value: number }[] = [];
   let hasConditionOverload = false;
   let conditionOverloadPerStatus = 0;
@@ -229,7 +233,7 @@ export function calculateWeaponBuild(
     const mod = allMods.get(modSlot.modId);
     if (!mod) continue;
 
-    const rank = Math.min(Math.max(modSlot.rank, 0), mod.maxRank);
+    const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
     const conditional = isConditionalMod(mod.name);
     // Sacrificial set bonus: multiply mod values by (1 + setBonus)
@@ -280,9 +284,9 @@ export function calculateWeaponBuild(
           case 'reloadSpeed': reloadBonus += modValue; break;
           case 'comboDuration': stats.comboDuration += modValue; break;
           case 'heavyAttackEfficiency': stats.heavyAttackEfficiency += modValue; break;
-          case 'impact': stats.impact *= (1 + modValue); break;
-          case 'puncture': stats.puncture *= (1 + modValue); break;
-          case 'slash': stats.slash *= (1 + modValue); break;
+          case 'impact': impactBonus += modValue; break;
+          case 'puncture': punctureBonus += modValue; break;
+          case 'slash': slashBonus += modValue; break;
         }
       }
     }
@@ -313,7 +317,10 @@ export function calculateWeaponBuild(
   }
   stats.berserkerFuryBonus = berserkerFuryPerStack;
 
-  // Apply damage bonus
+  // Apply IPS bonuses additively, then global damage multiplier
+  stats.impact *= (1 + impactBonus);
+  stats.puncture *= (1 + punctureBonus);
+  stats.slash *= (1 + slashBonus);
   const dmgMult = 1 + damageBonus;
   stats.totalDamage *= dmgMult;
   stats.impact *= dmgMult;
@@ -329,9 +336,26 @@ export function calculateWeaponBuild(
   stats.magazine = Math.round(stats.magazine * (1 + magBonus));
   // Reload: positive bonus = faster, negative bonus = slower (Burdened Magazine etc.)
   if (reloadBonus !== 0) {
-    if (reloadBonus > 0) stats.reloadTime /= (1 + reloadBonus);
+    if (reloadBonus > 0) stats.reloadTime /= Math.max(0.01, 1 + reloadBonus);
     else stats.reloadTime *= (1 + Math.abs(reloadBonus));
   }
+
+  // Scale mod-sourced elemental damage by the total damage multiplier (Serration/etc.)
+  for (const e of elementalMods) {
+    e.value *= dmgMult;
+  }
+
+  // Add innate weapon elements (kitgun chambers, Kuva/Tenet bonuses, etc.)
+  // Innate elements go BEFORE mod elements in combo ordering
+  const innateElemTypes = ['heat', 'cold', 'toxin', 'electricity', 'radiation', 'viral', 'corrosive', 'gas', 'magnetic', 'blast'] as const;
+  const innateElements: { type: string; value: number }[] = [];
+  for (const elem of innateElemTypes) {
+    const baseVal = (baseWeapon as unknown as Record<string, unknown>)[elem] as number | undefined;
+    if (baseVal && baseVal > 0) {
+      innateElements.push({ type: elem, value: baseVal * dmgMult });
+    }
+  }
+  elementalMods.unshift(...innateElements);
 
   // Resolve elemental combos
   stats.rawElements = elementalMods.map(e => ({ ...e }));
@@ -355,7 +379,7 @@ export function calculateWeaponBuild(
         case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
         case 'reloadSpeed': stats.reloadTime /= (1 + value); break;
         case 'heat': case 'cold': case 'toxin': case 'electricity':
-          elementalMods.push({ type: stat, value: baseWeapon.damage * value });
+          elementalMods.push({ type: stat, value: baseWeapon.damage * dmgMult * value });
           // Re-resolve elements with new additions
           stats.rawElements = elementalMods.map(e => ({ ...e }));
           stats.elements = resolveElementalCombos(elementalMods);
@@ -388,17 +412,18 @@ export function calculateWeaponBuild(
     stats.comboCount = sim.comboCount;
     stats.comboMultiplier = getComboMultiplier(stats.comboCount);
 
-    // Blood Rush: +X% crit chance per combo multiplier tier
+    // Blood Rush + Gladiator Set: additive with each other, multiplicative with mods
+    // Formula: modded_cc × (1 + BR × (combo-1) + Glad × (combo-1))
+    let comboScaling = 0;
     if (hasBloodRush) {
       stats.bloodRushStacks = bloodRushValue;
-      stats.criticalChance *= (1 + bloodRushValue * (stats.comboMultiplier - 1));
+      comboScaling += bloodRushValue * (stats.comboMultiplier - 1);
     }
-
-    // Gladiator Set Bonus: +10% CC per combo multiplier per set mod equipped
-    // Stacks additively with Blood Rush's combo scaling
     if (gladiatorCount > 0 && stats.comboMultiplier > 1) {
-      const gladBonus = 0.10 * gladiatorCount * (stats.comboMultiplier - 1);
-      stats.criticalChance *= (1 + gladBonus);
+      comboScaling += 0.10 * gladiatorCount * (stats.comboMultiplier - 1);
+    }
+    if (comboScaling > 0) {
+      stats.criticalChance *= (1 + comboScaling);
     }
 
     // Weeping Wounds: +X% status chance per combo multiplier tier
@@ -416,6 +441,13 @@ export function calculateWeaponBuild(
     stats.vigilanteCritBonus = 0.05 * vigilanteCount;
   }
 
+  // Multishot-adjusted status chance (what the game's arsenal displays)
+  if (stats.multishot > 1) {
+    stats.statusChancePerShot = 1 - Math.pow(1 - stats.statusChance, stats.multishot);
+  } else {
+    stats.statusChancePerShot = stats.statusChance;
+  }
+
   // Status procs
   stats.statusProcs = calculateStatusProcs(stats, baseWeapon.damage * dmgMult);
 
@@ -424,30 +456,6 @@ export function calculateWeaponBuild(
   stats.sustainedDps = calculateSustainedDps(stats);
 
   return stats;
-}
-
-function applyModStat(stats: CalculatedStats, statName: string, value: number): void {
-  switch (statName) {
-    case 'damage':
-      stats.totalDamage *= (1 + value);
-      stats.impact *= (1 + value);
-      stats.puncture *= (1 + value);
-      stats.slash *= (1 + value);
-      break;
-    case 'impact': stats.impact *= (1 + value); break;
-    case 'puncture': stats.puncture *= (1 + value); break;
-    case 'slash': stats.slash *= (1 + value); break;
-    case 'criticalChance': stats.criticalChance *= (1 + value); break;
-    case 'criticalMultiplier': stats.criticalMultiplier *= (1 + value); break;
-    case 'fireRate': case 'attackSpeed': stats.fireRate *= (1 + value); break;
-    case 'multishot': stats.multishot += value; break;
-    case 'statusChance': stats.statusChance *= (1 + value); break;
-    case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
-    case 'reloadSpeed': stats.reloadTime /= (1 + value); break;
-    case 'heat': case 'cold': case 'toxin': case 'electricity':
-      stats.totalDamage += stats.totalDamage * value;
-      break;
-  }
 }
 
 export function calculateWarframeBuild(
@@ -467,6 +475,10 @@ export function calculateWarframeBuild(
     energyBonus: 0,
     sprintSpeedBonus: 0,
     flowBonus: 0,
+    flatHealthBonus: 0,
+    flatShieldBonus: 0,
+    flatArmorBonus: 0,
+    flatEnergyBonus: 0,
     abilityStrength: 1.0,
     abilityDuration: 1.0,
     abilityEfficiency: 1.0,
@@ -478,6 +490,16 @@ export function calculateWarframeBuild(
     totalSprint: warframe.sprintSpeed,
     effectiveHealth: 0,
     damageReduction: 0,
+    castingSpeedBonus: 0,
+    parkourVelocityBonus: 0,
+    healthRegenPerSec: 0,
+    elementalResistance: 0,
+    primaryShardBonus: 0,
+    secondaryShardBonus: 0,
+    meleeCritDamageBonus: 0,
+    healingBonus: 0,
+    statusDurationBonus: 0,
+    energyCostReduction: 0,
   };
 
   // Count Umbral set mods for set bonus
@@ -487,7 +509,7 @@ export function calculateWarframeBuild(
     const mod = allMods.get(modSlot.modId);
     if (!mod) continue;
 
-    const rank = Math.min(Math.max(modSlot.rank, 0), mod.maxRank);
+    const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
     // Umbral set bonus: multiply mod values by (1 + setBonus)
     const setMult = UMBRAL_MOD_IDS.includes(modSlot.modId)
@@ -653,21 +675,24 @@ export function calculateWeaponBuildWithArcanes(
   return stats;
 }
 
+function critTierDamage(tier: number, critMultiplier: number): number {
+  // Warframe crit tiers: yellow = cm, orange = 2(cm-1)+1, red = 3(cm-1)+1, etc.
+  // General: tier_damage = tier × (cm - 1) + 1
+  return tier * (critMultiplier - 1.0) + 1.0;
+}
+
 function avgCritMultiplier(critChance: number, critMultiplier: number): number {
   if (critChance <= 0) return 1.0;
   if (critChance <= 1.0) {
+    // Blend between no-crit (1.0) and yellow crit
     return 1.0 + critChance * (critMultiplier - 1.0);
-  } else if (critChance <= 2.0) {
-    const orangeChance = critChance - 1.0;
-    return (1.0 - orangeChance) * critMultiplier + orangeChance * (2 * critMultiplier);
-  } else if (critChance <= 3.0) {
-    const redChance = critChance - 2.0;
-    return (1.0 - redChance) * (2 * critMultiplier) + redChance * (3 * critMultiplier);
-  } else {
-    const tier = Math.floor(critChance);
-    const remainder = critChance - tier;
-    return (1.0 - remainder) * (tier * critMultiplier) + remainder * ((tier + 1) * critMultiplier);
   }
+  // For >100% crit, interpolate between current tier and next tier
+  const tier = Math.floor(critChance);
+  const remainder = critChance - tier;
+  const currentTierDmg = critTierDamage(tier, critMultiplier);
+  const nextTierDmg = critTierDamage(tier + 1, critMultiplier);
+  return (1.0 - remainder) * currentTierDmg + remainder * nextTierDmg;
 }
 
 function calculateBurstDps(stats: CalculatedStats): number {
@@ -678,8 +703,10 @@ function calculateBurstDps(stats: CalculatedStats): number {
 
 function calculateSustainedDps(stats: CalculatedStats): number {
   if (stats.magazine === 0) return calculateBurstDps(stats); // Melee
+  if (stats.fireRate <= 0) return 0;
   const burstDps = calculateBurstDps(stats);
   const magTime = stats.magazine / stats.fireRate;
   const cycleTime = magTime + stats.reloadTime;
+  if (cycleTime <= 0) return burstDps;
   return burstDps * (magTime / cycleTime);
 }

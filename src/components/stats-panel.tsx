@@ -1,6 +1,7 @@
 "use client";
 
 import { CalculatedStats, WarframeCalculatedStats, Warframe, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
+import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight, Flame, Snowflake, Zap, Skull, Wind, Atom, CloudRain, Sun, Biohazard, Magnet, RadioTower, Bug } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
@@ -203,7 +204,7 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
       <CollapsibleSection title="CORE" defaultOpen>
         <StatRow label="Critical Chance" value={`${(stats.criticalChance * 100).toFixed(1)}%`} />
         <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(1)}x`} />
-        <StatRow label="Status Chance" value={`${(stats.statusChance * 100).toFixed(1)}%`} />
+        <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
         <StatRow label="Fire Rate" value={stats.fireRate.toFixed(2)} />
         <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />
         {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
@@ -316,9 +317,10 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
   );
 }
 
-export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods }: {
+export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility }: {
   stats: WarframeCalculatedStats | null; warframe?: Warframe | null;
   equippedMods?: EquippedMod[]; allMods?: Map<string, Mod>;
+  helminthSlot?: number | null; helminthAbility?: HelminthAbility | null;
 }) {
   if (!stats) {
     return (
@@ -350,6 +352,12 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods }: {
         <StatRow label="Armor" value={stats.totalArmor.toFixed(0)} />
         <StatRow label="Energy" value={stats.totalEnergy.toFixed(0)} />
         <StatRow label="Sprint Speed" value={stats.totalSprint.toFixed(2)} />
+        {stats.healthRegenPerSec > 0 && (
+          <StatRow label="Health Regen" value={`${stats.healthRegenPerSec.toFixed(1)}/s`} color="text-green-400" />
+        )}
+        {stats.elementalResistance > 0 && (
+          <StatRow label="Elemental Resist" value={`${stats.elementalResistance.toFixed(0)}%`} color="text-cyan-400" />
+        )}
         <div className="border-t border-border/50 my-1" />
         <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
         <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />
@@ -366,12 +374,41 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods }: {
           color={stats.abilityRange > 1 ? "text-green-400" : stats.abilityRange < 1 ? "text-red-400" : undefined} />
       </CollapsibleSection>
 
+      {/* Shard Bonuses (only show section if any are active) */}
+      {(stats.castingSpeedBonus > 0 || stats.parkourVelocityBonus > 0 ||
+        stats.primaryShardBonus > 0 || stats.secondaryShardBonus > 0 || stats.meleeCritDamageBonus > 0 ||
+        stats.healingBonus > 0 || stats.statusDurationBonus > 0 || stats.energyCostReduction > 0) && (
+        <CollapsibleSection title="SHARD BONUSES" defaultOpen>
+          {stats.castingSpeedBonus > 0 && (
+            <StatRow label="Casting Speed" value={`+${stats.castingSpeedBonus.toFixed(0)}%`} color="text-amber-400" />
+          )}
+          {stats.parkourVelocityBonus > 0 && (
+            <StatRow label="Parkour Velocity" value={`+${stats.parkourVelocityBonus.toFixed(0)}%`} color="text-amber-400" />
+          )}
+          {stats.primaryShardBonus > 0 && (
+            <StatRow label="Primary Status Chance" value={`+${stats.primaryShardBonus.toFixed(1)}%`} color="text-red-400" />
+          )}
+          {stats.secondaryShardBonus > 0 && (
+            <StatRow label="Secondary Crit Chance" value={`+${stats.secondaryShardBonus.toFixed(1)}%`} color="text-red-400" />
+          )}
+          {stats.meleeCritDamageBonus > 0 && (
+            <StatRow label="Melee Crit Damage" value={`+${stats.meleeCritDamageBonus.toFixed(1)}%`} color="text-red-400" />
+          )}
+          {stats.statusDurationBonus > 0 && (
+            <StatRow label="Toxin Status Damage" value={`+${stats.statusDurationBonus.toFixed(0)}%`} color="text-emerald-400" />
+          )}
+        </CollapsibleSection>
+      )}
+
       {/* Ability Preview */}
       {warframe && warframe.abilities && warframe.abilities.length > 0 && (
         <CollapsibleSection title="ABILITIES" defaultOpen={false}>
-          {warframe.abilities.map((ability, i) => (
-            <AbilityPreview key={i} ability={ability} stats={stats} index={i} />
-          ))}
+          {warframe.abilities.map((ability, i) => {
+            if (helminthSlot === i && helminthAbility) {
+              return <HelminthAbilityPreview key={i} ability={helminthAbility} stats={stats} index={i} />;
+            }
+            return <AbilityPreview key={i} ability={ability} stats={stats} index={i} />;
+          })}
         </CollapsibleSection>
       )}
 
@@ -510,7 +547,7 @@ function AbilityPreview({ ability, stats, index }: {
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
-  const eff = Math.max(0.25, stats.abilityEfficiency); // efficiency cap at 175%
+  const eff = Math.max(0.25, stats.abilityEfficiency);
   const rng = stats.abilityRange;
 
   const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
@@ -522,54 +559,103 @@ function AbilityPreview({ ability, stats, index }: {
         <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
       </div>
       <div className="mt-0.5 space-y-0">
-        {ability.damage && (
+        {ability.damage != null && ability.damage > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Damage: <span className="text-foreground font-mono">{(ability.damage * str).toFixed(0)}</span>
           </div>
         )}
-        {ability.directDamage && (
+        {ability.directDamage != null && ability.directDamage > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Direct Damage: <span className="text-foreground font-mono">{(ability.directDamage * str).toFixed(0)}</span>
           </div>
         )}
-        {ability.damagePerSecond && (
+        {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
           <div className="text-[10px] text-muted-foreground">
             DPS: <span className="text-foreground font-mono">{(ability.damagePerSecond * str).toFixed(0)}/s</span>
           </div>
         )}
-        {ability.damageBuff && (
+        {ability.damageBuff != null && ability.damageBuff > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Damage Buff: <span className="text-orange-400 font-mono">+{(ability.damageBuff * str * 100).toFixed(0)}%</span>
           </div>
         )}
-        {ability.damageReduction && (
+        {ability.damageReduction != null && ability.damageReduction > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            DR: <span className="text-cyan-400 font-mono">{(ability.damageReduction * str * 100).toFixed(0)}%</span>
+            DR: <span className="text-cyan-400 font-mono">{Math.min(ability.damageReduction * str * 100, 90).toFixed(0)}%</span>
           </div>
         )}
-        {ability.duration && (
+        {ability.duration != null && ability.duration > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Duration: <span className="text-foreground font-mono">{(ability.duration * dur).toFixed(1)}s</span>
           </div>
         )}
-        {ability.range && (
+        {ability.range != null && ability.range > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Range: <span className="text-foreground font-mono">{(ability.range * rng).toFixed(1)}m</span>
           </div>
         )}
-        {ability.radius && (
+        {ability.radius != null && ability.radius > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Radius: <span className="text-foreground font-mono">{(ability.radius * rng).toFixed(1)}m</span>
           </div>
         )}
-        {ability.health && (
+        {ability.health != null && ability.health > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Health: <span className="text-foreground font-mono">{(ability.health * str).toFixed(0)}</span>
           </div>
         )}
-        {ability.armor && (
+        {ability.armor != null && ability.armor > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Armor: <span className="text-foreground font-mono">{(ability.armor * str).toFixed(0)}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function HelminthAbilityPreview({ ability, stats, index }: {
+  ability: HelminthAbility; stats: WarframeCalculatedStats; index: number;
+}) {
+  const str = stats.abilityStrength;
+  const dur = stats.abilityDuration;
+  const eff = Math.max(0.25, stats.abilityEfficiency);
+
+  const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
+
+  return (
+    <div className="py-1.5 border-b border-green-500/20 last:border-0">
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-medium text-green-400">{ability.name}</span>
+        <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
+      </div>
+      <div className="text-[9px] text-green-400/60 mb-0.5">
+        {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
+      </div>
+      <div className="mt-0.5 space-y-0">
+        {ability.damage != null && ability.damage > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Damage: <span className="text-foreground font-mono">{(ability.damage * str).toFixed(0)}</span>
+          </div>
+        )}
+        {ability.damageBuff != null && ability.damageBuff > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Damage Buff: <span className="text-orange-400 font-mono">+{(ability.damageBuff * str * 100).toFixed(0)}%</span>
+          </div>
+        )}
+        {ability.damageReduction != null && ability.damageReduction > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            DR: <span className="text-cyan-400 font-mono">{Math.min(ability.damageReduction * str * 100, 75).toFixed(0)}%</span>
+          </div>
+        )}
+        {ability.duration != null && ability.duration > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Duration: <span className="text-foreground font-mono">{(ability.duration * dur).toFixed(1)}s</span>
+          </div>
+        )}
+        {ability.range != null && ability.range > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Range: <span className="text-foreground font-mono">{(ability.range * stats.abilityRange).toFixed(1)}m</span>
           </div>
         )}
       </div>

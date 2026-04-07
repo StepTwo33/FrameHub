@@ -84,16 +84,13 @@ export default function WeaponBuilderPage() {
   const [stancePickerOpen, setStancePickerOpen] = useState(false);
   const [stanceSearch, setStanceSearch] = useState("");
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
-  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("weapon"));
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [simParams, setSimParams] = useState<SimulationParams>({ ...DEFAULT_SIM_PARAMS });
-
-  // Load saved builds on mount
-  useState(() => { setSavedBuilds(getSavedBuilds("weapon")); });
 
   // Load build from URL ?build= param
   useEffect(() => {

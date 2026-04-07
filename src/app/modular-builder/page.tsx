@@ -18,7 +18,8 @@ import {
   kitgunChambers, kitgunGrips, kitgunLoaders, buildKitgun,
   zawStrikes, zawGrips, zawLinks, buildZaw,
   ampPrisms, ampScaffolds, ampBraces,
-  KitgunGrip, KitgunLoader, ZawGrip, ZawLink, AmpScaffold, AmpBrace,
+  recommendedBuilds,
+  KitgunChamber, KitgunGrip, KitgunLoader, ZawStrike, ZawGrip, ZawLink, AmpScaffold, AmpBrace,
 } from "@/data/modular-weapons";
 import { cn } from "@/lib/utils";
 
@@ -44,12 +45,12 @@ export default function ModularBuilderPage() {
   const [modularType, setModularType] = useState<ModularType>("kitgun");
 
   // Kitgun state
-  const [kitgunChamber, setKitgunChamber] = useState<Weapon | null>(null);
+  const [kitgunChamber, setKitgunChamber] = useState<KitgunChamber | null>(null);
   const [kitgunGrip, setKitgunGrip] = useState<KitgunGrip | null>(null);
   const [kitgunLoader, setKitgunLoader] = useState<KitgunLoader | null>(null);
 
   // Zaw state
-  const [zawStrike, setZawStrike] = useState<Weapon | null>(null);
+  const [zawStrike, setZawStrike] = useState<ZawStrike | null>(null);
   const [zawGripSel, setZawGripSel] = useState<ZawGrip | null>(null);
   const [zawLinkSel, setZawLinkSel] = useState<ZawLink | null>(null);
 
@@ -163,7 +164,7 @@ export default function ModularBuilderPage() {
       setKitgunGrip(kitgunGrips.find((g) => g.id === d.parts.grip) ?? null);
       setKitgunLoader(kitgunLoaders.find((l) => l.id === d.parts.loader) ?? null);
     } else if (d.modularType === "zaw") {
-      setZawStrike(zawStrikes.find((s) => s.id === d.parts.strike) ?? null);
+      setZawStrike(zawStrikes.find((s: ZawStrike) => s.id === d.parts.strike) ?? null);
       setZawGripSel(zawGrips.find((g) => g.id === d.parts.grip) ?? null);
       setZawLinkSel(zawLinks.find((l) => l.id === d.parts.link) ?? null);
     } else {
@@ -257,7 +258,7 @@ export default function ModularBuilderPage() {
                       >
                         <span className="font-medium">{c.name}</span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG {c.damage} • {c.triggerType}
+                          {c.description}
                         </div>
                       </button>
                     ))}
@@ -280,11 +281,11 @@ export default function ModularBuilderPage() {
                         )}
                       >
                         <span className="font-medium">{g.name}</span>
-                        <span className={cn("ml-1.5 text-[10px]", g.type === "primary" ? "text-blue-400" : g.type === "secondary" ? "text-green-400" : "text-amber-400")}>
+                        <span className={cn("ml-1.5 text-[10px]", g.type === "primary" ? "text-blue-400" : "text-green-400")}>
                           {g.type}
                         </span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG ×{g.damageMultiplier} • FR ×{g.fireRateMultiplier}
+                          {g.description}
                         </div>
                       </button>
                     ))}
@@ -308,7 +309,8 @@ export default function ModularBuilderPage() {
                       >
                         <span className="font-medium">{l.name}</span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          CC {l.criticalChanceBonus > 0 ? "+" : ""}{(l.criticalChanceBonus * 100).toFixed(0)}% •
+                          CC {l.critChanceBonus > 0 ? "+" : ""}{(l.critChanceBonus * 100).toFixed(0)}% •
+                          CM {l.critMultiplierBonus > 0 ? "+" : ""}{l.critMultiplierBonus.toFixed(1)}x •
                           SC {l.statusChanceBonus > 0 ? "+" : ""}{(l.statusChanceBonus * 100).toFixed(0)}%
                         </div>
                       </button>
@@ -340,7 +342,7 @@ export default function ModularBuilderPage() {
                       >
                         <span className="font-medium">{s.name}</span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG {s.damage} • CC {(s.criticalChance * 100).toFixed(0)}%
+                          {s.description}
                         </div>
                       </button>
                     ))}
@@ -365,7 +367,7 @@ export default function ModularBuilderPage() {
                         <span className="font-medium">{g.name}</span>
                         <span className={cn("ml-1.5 text-[10px]", g.type === "1h" ? "text-green-400" : "text-amber-400")}>{g.type}</span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG ×{g.damageMultiplier} • SPD ×{g.speedMultiplier}
+                          {g.description}
                         </div>
                       </button>
                     ))}
@@ -391,7 +393,7 @@ export default function ModularBuilderPage() {
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           CC {l.critBonus > 0 ? "+" : ""}{(l.critBonus * 100).toFixed(0)}% •
                           SC {l.statusBonus > 0 ? "+" : ""}{(l.statusBonus * 100).toFixed(0)}% •
-                          DMG {l.damageBonus > 0 ? "+" : ""}{(l.damageBonus * 100).toFixed(0)}%
+                          DMG {l.damageBonus > 0 ? "+" : ""}{l.damageBonus}
                         </div>
                       </button>
                     ))}
@@ -470,14 +472,30 @@ export default function ModularBuilderPage() {
                       >
                         <span className="font-medium">{b.name}</span>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {b.maxEnergyBonus > 0 && `+${b.maxEnergyBonus} Energy `}
-                          {b.rechargeRateBonus > 0 && `+${(b.rechargeRateBonus * 100).toFixed(0)}% Recharge `}
-                          {b.rechargeDelayReduction > 0 && `-${(b.rechargeDelayReduction * 100).toFixed(0)}% Delay `}
-                          {b.maxEnergyBonus === 0 && b.rechargeRateBonus === 0 && b.rechargeDelayReduction <= 0 && "Balanced"}
+                          {b.description}
                         </div>
                       </button>
                     ))}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Recommended builds */}
+            {!assembledWeapon && (
+              <div className="space-y-3">
+                <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">RECOMMENDED BUILDS</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {recommendedBuilds.filter(b => b.type === modularType).map((b, i) => (
+                    <div key={i} className="p-3 rounded-lg border border-border hover:border-cyan-500/30 transition-all">
+                      <div className="font-medium text-sm">{b.name}</div>
+                      <div className="text-[10px] text-cyan-400 font-mono mt-0.5">{b.parts.join(" + ")}</div>
+                      <div className="text-[10px] text-muted-foreground mt-1">{b.description}</div>
+                      <div className="flex gap-1 mt-1.5 flex-wrap">
+                        {b.tags.map(t => <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{t}</span>)}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

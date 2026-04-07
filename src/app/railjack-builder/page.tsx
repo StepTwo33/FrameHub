@@ -86,7 +86,7 @@ export default function RailjackBuilderPage() {
 
   const maxCapacity = plexusTab === "integrated" ? 60 : 15;
 
-  // Computed ship stats
+  // Computed ship stats including Plexus mod bonuses
   const computedStats = useMemo(() => {
     const base = { ...railjackBaseStats };
     if (selectedPlating) {
@@ -103,8 +103,47 @@ export default function RailjackBuilderPage() {
     if (selectedReactor) {
       base.fluxCapacity += selectedReactor.stats.fluxCapacity ?? 0;
     }
-    return base;
-  }, [selectedPlating, selectedShield, selectedEngine, selectedReactor]);
+
+    // Apply integrated Plexus mod bonuses
+    let speedBonus = 0;
+    let boostBonus = 0;
+    let turretDmgBonus = 0;
+    let turretCritBonus = 0;
+    let turretCritDmgBonus = 0;
+    let ordnanceDmgBonus = 0;
+    let artilleryDmgBonus = 0;
+
+    for (const em of integratedMods) {
+      const mod = modsMap.get(em.modId);
+      if (!mod) continue;
+      const rank = Math.min(em.rank, mod.maxRank);
+      const mult = rank + 1;
+      for (const [stat, val] of Object.entries(mod.stats)) {
+        const scaled = (val * mult) / 100;
+        switch (stat) {
+          case "engineSpeed": speedBonus += scaled; break;
+          case "boostSpeed": boostBonus += scaled; break;
+          case "turretDamage": turretDmgBonus += scaled; break;
+          case "turretCritChance": turretCritBonus += scaled; break;
+          case "turretCritDamage": turretCritDmgBonus += scaled; break;
+          case "ordnanceDamage": ordnanceDmgBonus += scaled; break;
+          case "artilleryDamage": artilleryDmgBonus += scaled; break;
+        }
+      }
+    }
+
+    base.speed = Math.round(base.speed * (1 + speedBonus));
+    base.boostSpeed = Math.round(base.boostSpeed * (1 + boostBonus));
+
+    return {
+      ...base,
+      turretDamageBonus: turretDmgBonus,
+      turretCritBonus,
+      turretCritDmgBonus,
+      ordnanceDamageBonus: ordnanceDmgBonus,
+      artilleryDamageBonus: artilleryDmgBonus,
+    };
+  }, [selectedPlating, selectedShield, selectedEngine, selectedReactor, integratedMods]);
 
   // Save
   const handleSaveBuild = useCallback(async () => {
@@ -211,6 +250,28 @@ export default function RailjackBuilderPage() {
                 <div className="flex justify-between"><span className="text-muted-foreground">Boost Speed</span><span className="font-mono">{computedStats.boostSpeed}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Flux Capacity</span><span className="font-mono">{computedStats.fluxCapacity}</span></div>
               </div>
+              {(computedStats.turretDamageBonus > 0 || computedStats.turretCritBonus > 0 || computedStats.turretCritDmgBonus > 0 || computedStats.ordnanceDamageBonus > 0 || computedStats.artilleryDamageBonus > 0) && (
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-1.5">PLEXUS BONUSES</h3>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                    {computedStats.turretDamageBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Turret Damage</span><span className="font-mono text-cyan-400">+{(computedStats.turretDamageBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                    {computedStats.turretCritBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Turret Crit</span><span className="font-mono text-cyan-400">+{(computedStats.turretCritBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                    {computedStats.turretCritDmgBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Turret Crit DMG</span><span className="font-mono text-cyan-400">+{(computedStats.turretCritDmgBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                    {computedStats.ordnanceDamageBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Ordnance Damage</span><span className="font-mono text-cyan-400">+{(computedStats.ordnanceDamageBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                    {computedStats.artilleryDamageBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Artillery Damage</span><span className="font-mono text-cyan-400">+{(computedStats.artilleryDamageBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Component Selectors */}

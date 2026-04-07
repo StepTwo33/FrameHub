@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Header } from "@/components/header";
-import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText } from "lucide-react";
+import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProfileUser {
@@ -25,6 +25,17 @@ interface CloudBuild {
   data: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
+}
+
+interface UserReport {
+  id: string;
+  itemType: string;
+  itemName: string;
+  itemId: string;
+  status: string;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const typeIcons: Record<string, typeof Crosshair> = {
@@ -49,7 +60,9 @@ export default function ProfilePage() {
   const [builds, setBuilds] = useState<CloudBuild[]>([]);
   const [buildsLoading, setBuildsLoading] = useState(false);
   const [filter, setFilter] = useState<string>("all");
-  const [activeTab, setActiveTab] = useState<"builds" | "settings">("builds");
+  const [activeTab, setActiveTab] = useState<"builds" | "reports" | "settings">("builds");
+  const [reports, setReports] = useState<UserReport[]>([]);
+  const [reportsLoading, setReportsLoading] = useState(false);
 
   // Edit states
   const [editingUsername, setEditingUsername] = useState(false);
@@ -85,6 +98,26 @@ export default function ProfilePage() {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "reports" || !user) return;
+    let cancelled = false;
+    setReportsLoading(true);
+    fetch("/api/reports")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) setReports(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setReports([]);
+      })
+      .finally(() => {
+        if (!cancelled) setReportsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, user]);
 
   const showMessage = useCallback((type: "success" | "error", text: string) => {
     setSaveMessage({ type, text });
@@ -363,7 +396,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex gap-1 mb-6 p-1 rounded-lg bg-muted/30 border border-border w-fit backdrop-blur-sm">
+        <div className="flex gap-1 mb-6 p-1 rounded-lg bg-muted/30 border border-border w-fit flex-wrap backdrop-blur-sm">
           <button
             onClick={() => setActiveTab("builds")}
             className={cn(
@@ -372,6 +405,15 @@ export default function ProfilePage() {
             )}
           >
             Builds ({builds.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("reports")}
+            className={cn(
+              "px-4 py-1.5 text-xs font-medium rounded-md transition-all",
+              activeTab === "reports" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Reports ({user._count.reports})
           </button>
           <button
             onClick={() => setActiveTab("settings")}
@@ -553,6 +595,78 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ========== REPORTS TAB ========== */}
+        {activeTab === "reports" && (
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-2xl">
+            <p className="text-xs text-muted-foreground">
+              Status updates for reports you filed while signed in. Anonymous reports are not listed here.
+            </p>
+            {reportsLoading ? (
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-20 rounded-lg bg-muted animate-pulse border border-border/50" />
+                ))}
+              </div>
+            ) : reports.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 px-4 text-center rounded-xl border border-dashed border-border bg-card/30">
+                <Flag className="h-10 w-10 text-muted-foreground/40 mb-4" />
+                <p className="text-sm text-muted-foreground mb-4">No reports yet, or none tied to this account.</p>
+                <Link
+                  href="/report-issue"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Submit a data issue
+                </Link>
+              </div>
+            ) : (
+              <ul className="space-y-2">
+                {reports.map((r) => {
+                  const statusCfg =
+                    r.status === "resolved"
+                      ? { label: "Resolved", Icon: CheckCircle2, className: "text-green-400 bg-green-500/10 border-green-500/25" }
+                      : r.status === "wontfix"
+                        ? { label: "Won't fix", Icon: Ban, className: "text-zinc-400 bg-zinc-500/10 border-zinc-500/25" }
+                        : { label: "Open", Icon: CircleDot, className: "text-amber-400 bg-amber-500/10 border-amber-500/25" };
+                  const SIcon = statusCfg.Icon;
+                  return (
+                    <li
+                      key={r.id}
+                      className="rounded-lg border border-border bg-card/60 p-4 flex flex-col sm:flex-row sm:items-start gap-3"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium text-sm truncate">{r.itemName}</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-border text-muted-foreground uppercase">
+                            {r.itemType}
+                          </span>
+                        </div>
+                        {r.comment ? (
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.comment}</p>
+                        ) : null}
+                        <p className="text-[10px] text-muted-foreground mt-2">
+                          Submitted {new Date(r.createdAt).toLocaleString()}
+                          {r.updatedAt !== r.createdAt && (
+                            <> · Updated {new Date(r.updatedAt).toLocaleString()}</>
+                          )}
+                        </p>
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center gap-1.5 shrink-0 text-[10px] font-semibold px-2 py-1 rounded-md border",
+                          statusCfg.className
+                        )}
+                      >
+                        <SIcon className="h-3 w-3" />
+                        {statusCfg.label}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         )}
 

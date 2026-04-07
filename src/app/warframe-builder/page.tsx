@@ -35,34 +35,56 @@ const shardColors: Record<string, string> = {
 };
 
 const bonusLabels: Record<string, string> = {
+  // Crimson
   abilityStrength: "Ability Strength",
   abilityDuration: "Ability Duration",
-  abilityEfficiency: "Ability Efficiency",
-  abilityRange: "Ability Range",
+  meleeCritDamage: "Melee Crit Damage",
+  primaryStatusChance: "Primary Status Chance",
+  secondaryCritChance: "Secondary Crit Chance",
+  // Azure
   health: "Health",
-  shield: "Shield",
-  armor: "Armor",
+  shield: "Shield Capacity",
   energyMax: "Max Energy",
-  sprintSpeed: "Sprint Speed",
+  armor: "Armor",
+  healthRegen: "Health Regen",
+  // Amber
   castingSpeed: "Casting Speed",
   parkourVelocity: "Parkour Velocity",
-  meleeCritDamage: "Melee Crit Damage",
-  primaryCritDamage: "Primary Crit Damage",
-  secondaryCritDamage: "Secondary Crit Damage",
-  elementalResistance: "Elemental Resistance",
-  healthRegen: "Health Regen",
-  healingBonus: "Healing Bonus",
-  statusDuration: "Status Duration",
-  abilityCastEnergyCost: "Energy Cost",
+  startingEnergy: "Starting Energy",
+  healthOrbEffectiveness: "Health Orb Effectiveness",
+  energyOrbEffectiveness: "Energy Orb Effectiveness",
+  // Violet
+  abilityDamageElectricity: "Ability Dmg vs Electricity",
+  primaryElectricityDamage: "Primary Electricity Damage",
+  meleeCritDamageEnergy: "Melee Crit Dmg (Energy>500: 2x)",
+  orbConversion: "Orb Conversion (Equilibrium)",
+  // Topaz
+  blastKillHealth: "Health per Blast Kill",
+  blastKillShields: "Shields on Blast Kill",
+  heatKillSecondaryCrit: "Sec. Crit/Heat Kill",
+  abilityDamageRadiation: "Ability Dmg vs Radiation",
+  // Emerald
+  toxinStatusDamage: "Toxin Status Damage",
+  toxinHealthRecovery: "Health per Toxin Tick",
+  abilityDamageCorrosion: "Ability Dmg vs Corrosion",
+  corrosionMaxStacks: "Max Corrosion Stacks",
 };
 
+const FLAT_SHARD_KEYS = new Set([
+  "health", "shield", "energyMax", "armor", "healthRegen",
+  "blastKillHealth", "blastKillShields", "toxinHealthRecovery",
+  "corrosionMaxStacks", "heatKillSecondaryCrit",
+]);
+
 function formatBonusValue(key: string, value: number): string {
-  if (key.includes("CritDamage") || key.includes("Resistance") || key.includes("Duration") ||
-    key.includes("Speed") || key.includes("Efficiency") || key.includes("Range") ||
-    key.includes("Strength") || key.includes("Velocity") || key.includes("Bonus")) {
-    return `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+  if (FLAT_SHARD_KEYS.has(key)) {
+    const dec = value % 1 !== 0 ? 1 : 0;
+    if (key === "healthRegen") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}/s`;
+    if (key === "heatKillSecondaryCrit") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%/kill`;
+    return `${value > 0 ? "+" : ""}${value.toFixed(dec)}`;
   }
-  return `${value > 0 ? "+" : ""}${value.toFixed(0)}`;
+  const dec = value % 1 !== 0 ? 1 : 0;
+  return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%`;
 }
 
 // Slot layout: 0=Aura, 1-8=Regular, 9=Exilus
@@ -295,14 +317,12 @@ export default function WarframeBuilderPage() {
   const [exaltedActiveSlot, setExaltedActiveSlot] = useState(0);
   const [exaltedSlotPolarities, setExaltedSlotPolarities] = useState<Record<number, string>>({});
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
-  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("warframe"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
-
-  useState(() => { setSavedBuilds(getSavedBuilds("warframe")); });
 
   const handleSaveBuild = useCallback(async () => {
     if (!selectedWarframe) return;
@@ -434,18 +454,20 @@ export default function WarframeBuilderPage() {
       const bonusKey = shard.selectedBonus;
       const bonusValue = shard.bonusValue;
       switch (bonusKey) {
+        // Flat bonuses (Azure health/shield/energy, Topaz armor)
         case "health":
-          stats.healthBonus += bonusValue / 100;
+          stats.flatHealthBonus += bonusValue;
           break;
         case "shield":
-          stats.shieldBonus += bonusValue / 100;
+          stats.flatShieldBonus += bonusValue;
           break;
         case "armor":
-          stats.armorBonus += bonusValue / 100;
+          stats.flatArmorBonus += bonusValue;
           break;
         case "energyMax":
-          stats.energyBonus += bonusValue / 100;
+          stats.flatEnergyBonus += bonusValue;
           break;
+        // Percentage bonuses (Crimson, Violet)
         case "abilityStrength":
           stats.abilityStrength += bonusValue / 100;
           break;
@@ -458,8 +480,54 @@ export default function WarframeBuilderPage() {
         case "abilityRange":
           stats.abilityRange += bonusValue / 100;
           break;
+        // Amber
         case "sprintSpeed":
           stats.sprintSpeedBonus += bonusValue / 100;
+          break;
+        case "castingSpeed":
+          stats.castingSpeedBonus += bonusValue;
+          break;
+        case "parkourVelocity":
+          stats.parkourVelocityBonus += bonusValue;
+          break;
+        case "startingEnergy":
+        case "healthOrbEffectiveness":
+        case "energyOrbEffectiveness":
+          break;
+        // Azure
+        case "healthRegen":
+          stats.healthRegenPerSec += bonusValue;
+          break;
+        // Crimson weapon bonuses (display only on warframe, applied via weapon builder)
+        case "meleeCritDamage":
+        case "meleeCritDamageEnergy":
+          stats.meleeCritDamageBonus += bonusValue;
+          break;
+        case "primaryStatusChance":
+          stats.primaryShardBonus += bonusValue;
+          break;
+        case "secondaryCritChance":
+          stats.secondaryShardBonus += bonusValue;
+          break;
+        // Violet
+        case "abilityDamageElectricity":
+        case "abilityDamageRadiation":
+        case "abilityDamageCorrosion":
+          break;
+        case "primaryElectricityDamage":
+        case "orbConversion":
+          break;
+        // Topaz (all conditional/on-kill)
+        case "blastKillHealth":
+        case "blastKillShields":
+        case "heatKillSecondaryCrit":
+          break;
+        // Emerald (conditional)
+        case "toxinStatusDamage":
+          stats.statusDurationBonus += bonusValue;
+          break;
+        case "toxinHealthRecovery":
+        case "corrosionMaxStacks":
           break;
       }
     }
@@ -469,18 +537,18 @@ export default function WarframeBuilderPage() {
       if (arcane) applyArcaneToWarframe(stats, arcane);
     }
 
-    // Recalculate derived stats after shard + arcane bonuses
-    stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus);
-    stats.totalShield = stats.baseShield * (1 + stats.shieldBonus);
-    stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus);
-    stats.totalEnergy = stats.baseEnergy * (1 + stats.energyBonus + stats.flowBonus);
+    // Recalculate derived stats after shard + arcane bonuses (flat shards add after percentage scaling)
+    stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus;
+    stats.totalShield = stats.baseShield * (1 + stats.shieldBonus) + stats.flatShieldBonus;
+    stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus) + stats.flatArmorBonus;
+    stats.totalEnergy = stats.baseEnergy * (1 + stats.energyBonus + stats.flowBonus) + stats.flatEnergyBonus;
     stats.totalSprint = stats.baseSprint * (1 + stats.sprintSpeedBonus);
     const armorDR = stats.totalArmor / (stats.totalArmor + 300);
     stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
     stats.damageReduction = armorDR * 100;
 
     return stats;
-  }, [selectedWarframe, equippedMods, equippedShards]);
+  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes]);
 
   // Calculate capacity
   const baseCapacity = (hasOrokinReactor ? 60 : 30) + (isMR30 ? 10 : 0);
@@ -996,7 +1064,7 @@ export default function WarframeBuilderPage() {
               </div>
 
               <div className="space-y-4">
-                <WarframeStatsPanel stats={calculatedStats} warframe={selectedWarframe} equippedMods={equippedMods} allMods={modsMap} />
+                <WarframeStatsPanel stats={calculatedStats} warframe={selectedWarframe} equippedMods={equippedMods} allMods={modsMap} helminthSlot={helminthSlot} helminthAbility={helminthAbility} />
 
                 {/* Exalted Weapon Section */}
                 {exaltedWeapon && (

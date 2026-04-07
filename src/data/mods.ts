@@ -792,7 +792,7 @@ export const allMods: Mod[] = [
     "stats": {
       "criticalChancePerCombo": 3.6364
     },
-    "description": "+6.5% Critical Chance per Combo Multiplier per rank",
+    "description": "+40% Critical Chance per Combo Multiplier at max rank",
     "rarity": "uncommon"
   },
   {
@@ -835,7 +835,7 @@ export const allMods: Mod[] = [
     "stats": {
       "damagePerStatus": 13.3333
     },
-    "description": "+40% Damage per status type on enemy per rank",
+    "description": "+80% Damage per Status Type affecting the target at max rank",
     "rarity": "rare"
   },
   {
@@ -14149,7 +14149,7 @@ export const allMods: Mod[] = [
     "name": "Stretch",
     "polarity": "naramon",
     "drain": 4,
-    "maxRank": 10,
+    "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
     "stats": {
@@ -16266,8 +16266,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+38.3% Railjack Speed",
+    "stats": { "engineSpeed": 4.25 },
+    "description": "+25.5% Railjack Speed",
     "rarity": "rare"
   },
   {
@@ -16433,8 +16433,8 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+110% Railjack Speed when no enemies within 3000m",
+    "stats": { "engineSpeed": 9.09 },
+    "description": "+100% Railjack Speed when no enemies within 3000m",
     "rarity": "uncommon"
   },
   {
@@ -17090,8 +17090,8 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+127.3% Forward Artillery Damage",
+    "stats": { "artilleryDamage": 9.09 },
+    "description": "+100% Forward Artillery Damage",
     "rarity": "rare"
   },
   {
@@ -17450,8 +17450,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+112.5% Turret Damage",
+    "stats": { "turretDamage": 12.5 },
+    "description": "+75% Turret Damage",
     "rarity": "common"
   },
   {
@@ -17576,8 +17576,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+67.5% Railjack Boost Speed",
+    "stats": { "boostSpeed": 7.5 },
+    "description": "+45% Railjack Boost Speed",
     "rarity": "common"
   },
   {
@@ -18829,8 +18829,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+90% Ordnance Projectile Speed",
+    "stats": { "ordnanceSpeed": 10 },
+    "description": "+60% Ordnance Projectile Speed",
     "rarity": "rare"
   },
   {
@@ -19163,8 +19163,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+75% Turret Critical Chance",
+    "stats": { "turretCritChance": 8.333 },
+    "description": "+50% Turret Critical Chance",
     "rarity": "uncommon"
   },
   {
@@ -19846,8 +19846,8 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+75% Turret Critical Damage",
+    "stats": { "turretCritDamage": 8.333 },
+    "description": "+50% Turret Critical Damage",
     "rarity": "uncommon"
   },
   {
@@ -20627,8 +20627,8 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+32.2% Turret Range, +70% Turret Projectile Speed",
+    "stats": { "turretRange": 2.3, "turretProjectileSpeed": 5 },
+    "description": "+25.3% Turret Range, +55% Turret Projectile Speed",
     "rarity": "rare"
   },
   {
@@ -21087,8 +21087,8 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": {},
-    "description": "+127.3% Ordnance Damage",
+    "stats": { "ordnanceDamage": 9.09 },
+    "description": "+100% Ordnance Damage",
     "rarity": "uncommon"
   },
   {

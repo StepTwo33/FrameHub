@@ -23,6 +23,13 @@ export interface Weapon {
   impact: number;
   puncture: number;
   slash: number;
+  heat?: number;
+  cold?: number;
+  toxin?: number;
+  electricity?: number;
+  radiation?: number;
+  viral?: number;
+  corrosive?: number;
   fireRate: number;
   criticalChance: number;
   criticalMultiplier: number;
@@ -172,6 +179,7 @@ export interface CalculatedStats {
   criticalChance: number;
   criticalMultiplier: number;
   statusChance: number;
+  statusChancePerShot: number;
   magazine: number;
   reloadTime: number;
   multishot: number;
@@ -212,6 +220,11 @@ export interface WarframeCalculatedStats {
   energyBonus: number;
   sprintSpeedBonus: number;
   flowBonus: number;
+  // Flat additions from Archon Shards (Azure, Topaz)
+  flatHealthBonus: number;
+  flatShieldBonus: number;
+  flatArmorBonus: number;
+  flatEnergyBonus: number;
   abilityStrength: number;
   abilityDuration: number;
   abilityEfficiency: number;
@@ -223,6 +236,17 @@ export interface WarframeCalculatedStats {
   totalSprint: number;
   effectiveHealth: number;
   damageReduction: number;
+  // Shard-specific display stats
+  castingSpeedBonus: number;
+  parkourVelocityBonus: number;
+  healthRegenPerSec: number;
+  elementalResistance: number;
+  primaryShardBonus: number;
+  secondaryShardBonus: number;
+  meleeCritDamageBonus: number;
+  healingBonus: number;
+  statusDurationBonus: number;
+  energyCostReduction: number;
 }
 
 export interface Companion {

@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES = ["All", "Primary", "Secondary", "Melee", "Warframe", "Companion", "Archwing"];
+const CATEGORIES = ["All", "Primary", "Secondary", "Melee", "Warframe", "Augment", "Companion", "Archwing"];
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"];
 const RARITIES = ["All", "Common", "Uncommon", "Rare", "Legendary"];
 
@@ -178,11 +178,16 @@ export default function ModBrowserPage() {
                       </div>
                       {Object.keys(mod.stats).length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-2">
-                          {Object.entries(mod.stats).map(([stat, value]) => (
-                            <span key={stat} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">
-                              {stat}: {value > 0 ? "+" : ""}{value}
-                            </span>
-                          ))}
+                          {Object.entries(mod.stats).map(([stat, value]) => {
+                            const maxVal = value * (mod.maxRank + 1);
+                            const label = stat.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
+                            const decimals = maxVal % 1 !== 0 ? 1 : 0;
+                            return (
+                              <span key={stat} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">
+                                {label}: {maxVal > 0 ? "+" : ""}{maxVal.toFixed(decimals)}%
+                              </span>
+                            );
+                          })}
                         </div>
                       )}
                       <div className="mt-2 pt-2 border-t border-border">

@@ -99,13 +99,14 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   const polMatch = polarityDrainMod(mod.polarity, slotPolarity);
   const effectiveDrain = polMatch === -1 ? Math.ceil(drainVal / 2) : polMatch === 1 ? Math.ceil(drainVal * 1.25) : drainVal;
 
-  // Format mod stats into readable lines
+  // Format mod stats into readable lines at the currently equipped rank
   const statEntries = Object.entries(mod.stats).slice(0, 3);
-  const formatStat = (key: string, val: number) => {
+  const formatStat = (key: string, perRankVal: number) => {
     const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
-    const sign = val > 0 ? "+" : "";
-    const isPercent = Math.abs(val) < 20 || key.includes("Chance") || key.includes("Rate") || key.includes("Speed") || key.includes("Multiplier");
-    return `${sign}${isPercent ? (val * 100).toFixed(0) + "%" : val.toFixed(0)} ${label}`;
+    const scaled = perRankVal * (rank + 1);
+    const sign = scaled > 0 ? "+" : "";
+    const decimals = scaled % 1 !== 0 ? 1 : 0;
+    return `${sign}${scaled.toFixed(decimals)}% ${label}`;
   };
 
   return (

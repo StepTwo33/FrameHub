@@ -1219,6 +1219,64 @@ export const allWarframes: Warframe[] = [
     ]
   },
   {
+    "id": "follie",
+    "name": "Follie",
+    "health": 485,
+    "shield": 225,
+    "armor": 325,
+    "energy": 175,
+    "sprintSpeed": 0.95,
+    "description": "Drop through an inky frame and emerge invulnerable at the aimed location in a splash of ink that inflicts Inkblot on nearby enemies.",
+    "passive": "INKBLOT: Follie's abilities splatter thick viscous ink onto enemies, applying a 50% slow for 10 seconds. While coated in ink, slain foes have a 20% chance to congeal an ink balloon that pops, dropping a random mixture of 3 Health and Energy Orbs.",
+    "abilities": [
+      {
+        "name": "Forced Perspective",
+        "energyCost": 15,
+        "description": "Drop through an inky frame and emerge invulnerable at the aimed location in a splash of ink that inflicts Inkblot on nearby enemies.",
+        "damage": 750,
+        "range": 100,
+        "radius": 5,
+        "duration": 3.5,
+        "castTime": 0.4,
+        "damageType": "Corrosive"
+      },
+      {
+        "name": "Shadowgraph",
+        "energyCost": 25,
+        "description": "Bring shadowgraphs from Follie's sketchbook to life as items that can be used for tactical advantage. Shadowgraphs splash Inkblot onto nearby enemies when created.",
+        "damage": 250,
+        "range": 50,
+        "duration": 20,
+        "radius": 4,
+        "castTime": 0.5
+      },
+      {
+        "name": "Self Portrait",
+        "energyCost": 50,
+        "description": "Draw an ink effigy to absorb the damage dealt to Follie and allies. A pool of ink spreads Inkblot; kill enemies inside the pool to grow the effigy and its ink puddle.",
+        "damage": 550,
+        "range": 50,
+        "duration": 30,
+        "radius": 20,
+        "damageReduction": 0.5,
+        "castTime": 0.6,
+        "miscStats": { "drCap": 0.9, "maxDuration": 60 }
+      },
+      {
+        "name": "Plein Air",
+        "energyCost": 75,
+        "description": "Tie nearby enemies to floating balloons that douse them with Inkblot. Pop the balloons to send them crashing to the ground, splashing Corrosive damage on nearby enemies.",
+        "damage": 25000,
+        "range": 18,
+        "duration": 25,
+        "radius": 18,
+        "castTime": 0.8,
+        "damageType": "Corrosive",
+        "miscStats": { "defenseReduction": 0.5, "splashRadius": 4 }
+      }
+    ]
+  },
+  {
     "id": "frost",
     "name": "Frost",
     "health": 270,
@@ -3025,28 +3083,32 @@ export const allWarframes: Warframe[] = [
         "name": "Shooting Gallery",
         "energyCost": 50,
         "description": "Gives an ally Extra Damage while jamming the guns of nearby enemies. This power shifts between team members.",
-        "range": 25,
+        "damageBuff": 0.25,
+        "range": 16,
         "duration": 30,
-        "radius": 25,
+        "radius": 16,
         "castTime": 0.5
       },
       {
         "name": "Shatter Shield",
         "energyCost": 75,
         "description": "Envelops Mesa in a barrier of energy, reflecting back incoming bullet damage.",
-        "range": 15,
-        "duration": 30,
-        "radius": 15,
-        "castTime": 0.6
+        "damageReduction": 0.8,
+        "range": 11,
+        "duration": 25,
+        "radius": 11,
+        "castTime": 0.6,
+        "miscStats": { "drCap": 0.95 }
       },
       {
         "name": "Peacemaker",
         "energyCost": 25,
         "description": "With intense focus, Mesa draws her Regulator pistols, shooting down her foes in rapid succession.",
-        "damage": 250,
+        "damage": 50,
         "range": 50,
         "castTime": 0.5,
-        "damageType": "Puncture"
+        "damageType": "Puncture",
+        "miscStats": { "energyDrain": 15, "damageBonus": 1.5 }
       }
     ]
   },
@@ -3072,28 +3134,32 @@ export const allWarframes: Warframe[] = [
         "name": "Shooting Gallery",
         "energyCost": 50,
         "description": "Gives an ally Extra Damage while jamming the guns of nearby enemies. This power shifts between team members.",
-        "range": 25,
+        "damageBuff": 0.25,
+        "range": 16,
         "duration": 30,
-        "radius": 25,
+        "radius": 16,
         "castTime": 0.5
       },
       {
         "name": "Shatter Shield",
         "energyCost": 75,
         "description": "Envelops Mesa in a barrier of energy, reflecting back incoming bullet damage.",
-        "range": 15,
-        "duration": 30,
-        "radius": 15,
-        "castTime": 0.6
+        "damageReduction": 0.8,
+        "range": 11,
+        "duration": 25,
+        "radius": 11,
+        "castTime": 0.6,
+        "miscStats": { "drCap": 0.95 }
       },
       {
         "name": "Peacemaker",
         "energyCost": 25,
         "description": "With intense focus, Mesa draws her Regulator pistols, shooting down her foes in rapid succession.",
-        "damage": 250,
+        "damage": 50,
         "range": 50,
         "castTime": 0.5,
-        "damageType": "Puncture"
+        "damageType": "Puncture",
+        "miscStats": { "energyDrain": 15, "damageBonus": 1.5 }
       }
     ]
   },
@@ -3130,7 +3196,9 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Eclipse",
         "energyCost": 25,
-        "description": "(TAP) Temporarily reduce the damage Mirage takes from enemies. (HOLD) Temporarily increase Mirage's weapon damage.",
+        "description": "(TAP) Lunar Eclipse: Reduce incoming damage by 75% (cap 90%). (HOLD) Solar Eclipse: +200% weapon damage.",
+        "damageBuff": 2.0,
+        "damageReduction": 0.75,
         "range": 20,
         "duration": 30,
         "castTime": 0.4
@@ -3181,7 +3249,9 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Eclipse",
         "energyCost": 25,
-        "description": "(TAP) Temporarily reduce the damage Mirage takes from enemies. (HOLD) Temporarily increase Mirage's weapon damage.",
+        "description": "(TAP) Lunar Eclipse: Reduce incoming damage by 75% (cap 90%). (HOLD) Solar Eclipse: +200% weapon damage.",
+        "damageBuff": 2.0,
+        "damageReduction": 0.75,
         "range": 20,
         "duration": 30,
         "castTime": 0.4
@@ -4209,7 +4279,7 @@ export const allWarframes: Warframe[] = [
         "name": "Rhino Charge",
         "energyCost": 25,
         "description": "Rhino charges towards a target, clobbering any in his path and goring his victim.",
-        "damage": 400,
+        "damage": 650,
         "range": 30,
         "castTime": 0.4,
         "damageType": "Impact"
@@ -4218,13 +4288,16 @@ export const allWarframes: Warframe[] = [
         "name": "Iron Skin",
         "energyCost": 50,
         "description": "Rhino hardens his skin, insulating himself from all damage and gaining Overguard.",
+        "armor": 1200,
         "range": 10,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": { "armorMultiplier": 2.5 }
       },
       {
         "name": "Roar",
         "energyCost": 75,
         "description": "Grants all nearby Warframes increased damage for a short duration.",
+        "damageBuff": 0.5,
         "range": 25,
         "duration": 30,
         "radius": 25,
@@ -4234,7 +4307,7 @@ export const allWarframes: Warframe[] = [
         "name": "Rhino Stomp",
         "energyCost": 100,
         "description": "Rhino stomps with force sufficient to disrupt time, tumbling enemies around him in stasis.",
-        "damage": 500,
+        "damage": 800,
         "range": 25,
         "duration": 8,
         "radius": 25,
@@ -4258,7 +4331,7 @@ export const allWarframes: Warframe[] = [
         "name": "Rhino Charge",
         "energyCost": 25,
         "description": "Rhino charges towards a target, clobbering any in his path and goring his victim.",
-        "damage": 400,
+        "damage": 650,
         "range": 30,
         "castTime": 0.4,
         "damageType": "Impact"
@@ -4267,13 +4340,16 @@ export const allWarframes: Warframe[] = [
         "name": "Iron Skin",
         "energyCost": 50,
         "description": "Rhino hardens his skin, insulating himself from all damage and gaining Overguard.",
+        "armor": 1200,
         "range": 10,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": { "armorMultiplier": 2.5 }
       },
       {
         "name": "Roar",
         "energyCost": 75,
         "description": "Grants all nearby Warframes increased damage for a short duration.",
+        "damageBuff": 0.5,
         "range": 25,
         "duration": 30,
         "radius": 25,
@@ -4283,7 +4359,7 @@ export const allWarframes: Warframe[] = [
         "name": "Rhino Stomp",
         "energyCost": 100,
         "description": "Rhino stomps with force sufficient to disrupt time, tumbling enemies around him in stasis.",
-        "damage": 500,
+        "damage": 800,
         "range": 25,
         "duration": 8,
         "radius": 25,
@@ -4307,35 +4383,39 @@ export const allWarframes: Warframe[] = [
         "name": "Spores",
         "energyCost": 25,
         "description": "Inflict a target with a pox of Corrosive spores. Spread spores to nearby enemies by destroying them or killing their host. The longer the Spore spreads, its damage increases.",
-        "damage": 50,
-        "range": 40,
+        "damagePerSecond": 10,
+        "range": 60,
         "castTime": 0.5,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "damageGrowth": 2 }
       },
       {
         "name": "Molt",
         "energyCost": 50,
         "description": "Shedding her skin like a snake, Saryn leaves a decoy behind to draw fire from enemies.",
-        "range": 20,
-        "duration": 15,
-        "castTime": 0.6
+        "health": 500,
+        "range": 10,
+        "duration": 40,
+        "castTime": 0.6,
+        "miscStats": { "speedBuff": 0.5 }
       },
       {
         "name": "Toxic Lash",
-        "energyCost": 75,
+        "energyCost": 50,
         "description": "While active, attacks deal additional Toxin Damage; this effect is doubled for Melee Strikes. Instantly burst spores when attacking afflicted enemies.",
         "range": 10,
-        "duration": 30,
-        "castTime": 0.4
+        "duration": 45,
+        "castTime": 0.4,
+        "miscStats": { "gunDamage": 0.3, "meleeDamage": 0.6 }
       },
       {
         "name": "Miasma",
-        "energyCost": 100,
+        "energyCost": 75,
         "description": "Release a poisonous miasma that deals Viral Damage to enemies in range. Foes afflicted by spores are more susceptible to the mist.",
-        "damage": 600,
-        "range": 25,
+        "damagePerSecond": 150,
+        "range": 20,
         "duration": 6,
-        "radius": 25,
+        "radius": 20,
         "castTime": 0.8,
         "damageType": "Viral"
       }
@@ -4356,35 +4436,39 @@ export const allWarframes: Warframe[] = [
         "name": "Spores",
         "energyCost": 25,
         "description": "Inflict a target with a pox of Corrosive spores. Spread spores to nearby enemies by destroying them or killing their host. The longer the Spore spreads, its damage increases.",
-        "damage": 50,
-        "range": 40,
+        "damagePerSecond": 10,
+        "range": 60,
         "castTime": 0.5,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "damageGrowth": 2 }
       },
       {
         "name": "Molt",
         "energyCost": 50,
         "description": "Shedding her skin like a snake, Saryn leaves a decoy behind to draw fire from enemies.",
-        "range": 20,
-        "duration": 15,
-        "castTime": 0.6
+        "health": 500,
+        "range": 10,
+        "duration": 40,
+        "castTime": 0.6,
+        "miscStats": { "speedBuff": 0.5 }
       },
       {
         "name": "Toxic Lash",
-        "energyCost": 75,
+        "energyCost": 50,
         "description": "While active, attacks deal additional Toxin Damage; this effect is doubled for Melee Strikes. Instantly burst spores when attacking afflicted enemies.",
         "range": 10,
-        "duration": 30,
-        "castTime": 0.4
+        "duration": 45,
+        "castTime": 0.4,
+        "miscStats": { "gunDamage": 0.3, "meleeDamage": 0.6 }
       },
       {
         "name": "Miasma",
-        "energyCost": 100,
+        "energyCost": 75,
         "description": "Release a poisonous miasma that deals Viral Damage to enemies in range. Foes afflicted by spores are more susceptible to the mist.",
-        "damage": 600,
-        "range": 25,
+        "damagePerSecond": 150,
+        "range": 20,
         "duration": 6,
-        "radius": 25,
+        "radius": 20,
         "castTime": 0.8,
         "damageType": "Viral"
       }
@@ -5013,22 +5097,25 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Shock",
-        "energyCost": 25,
+        "energyCost": 15,
         "description": "Launch a voltaic projectile that stuns and damages its target. A chain of electricity extends from the target to shock nearby enemies.",
-        "damage": 250,
+        "damage": 200,
         "range": 40,
-        "radius": 10,
+        "radius": 15,
         "castTime": 0.4,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "chainLinks": 3,
+        "chainRange": 15
       },
       {
         "name": "Speed",
         "energyCost": 25,
         "description": "Embody an electric current. Volt and his allies receive a brief movement speed boost and a reload speed buff.",
         "range": 25,
-        "duration": 10,
+        "duration": 12,
         "radius": 25,
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": { "speedBuff": 0.75, "reloadBuff": 0.25 }
       },
       {
         "name": "Electric Shield",
@@ -5036,16 +5123,17 @@ export const allWarframes: Warframe[] = [
         "description": "Volt deploys an electric shield that blocks projectiles and amplifies damage of allied shots that pass through.",
         "range": 20,
         "duration": 25,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "miscStats": { "electricDamageBonus": 0.5, "critDamageBonus": 1.0 }
       },
       {
         "name": "Discharge",
         "energyCost": 100,
         "description": "Volt discharges the electricity that courses through him. The shockwave paralyzes and damages nearby enemies. Enemies on the edge of the shockwave are stunned.",
-        "damage": 500,
+        "damage": 1200,
         "range": 20,
         "duration": 6,
-        "radius": 20,
+        "radius": 8,
         "castTime": 0.8,
         "damageType": "Electricity"
       }
@@ -5064,22 +5152,25 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Shock",
-        "energyCost": 25,
+        "energyCost": 15,
         "description": "Launch a voltaic projectile that stuns and damages its target. A chain of electricity extends from the target to shock nearby enemies.",
-        "damage": 250,
+        "damage": 200,
         "range": 40,
-        "radius": 10,
+        "radius": 15,
         "castTime": 0.4,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "chainLinks": 3,
+        "chainRange": 15
       },
       {
         "name": "Speed",
         "energyCost": 25,
         "description": "Embody an electric current. Volt and his allies receive a brief movement speed boost and a reload speed buff.",
         "range": 25,
-        "duration": 10,
+        "duration": 12,
         "radius": 25,
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": { "speedBuff": 0.75, "reloadBuff": 0.25 }
       },
       {
         "name": "Electric Shield",
@@ -5087,16 +5178,17 @@ export const allWarframes: Warframe[] = [
         "description": "Volt deploys an electric shield that blocks projectiles and amplifies damage of allied shots that pass through.",
         "range": 20,
         "duration": 25,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "miscStats": { "electricDamageBonus": 0.5, "critDamageBonus": 1.0 }
       },
       {
         "name": "Discharge",
         "energyCost": 100,
         "description": "Volt discharges the electricity that courses through him. The shockwave paralyzes and damages nearby enemies. Enemies on the edge of the shockwave are stunned.",
-        "damage": 500,
+        "damage": 1200,
         "range": 20,
         "duration": 6,
-        "radius": 20,
+        "radius": 8,
         "castTime": 0.8,
         "damageType": "Electricity"
       }
@@ -5160,7 +5252,7 @@ export const allWarframes: Warframe[] = [
         "energyCost": 35,
         "description": "Cast forward a spectral image of Wisp to confuse and distract enemies. Reactivate to travel to its position. Hold to have the image travel faster and teleport to its position on release.",
         "range": 40,
-        "duration": 8,
+        "duration": 4,
         "castTime": 0.4
       },
       {
@@ -5168,9 +5260,10 @@ export const allWarframes: Warframe[] = [
         "energyCost": 50,
         "description": "Open a dimensional breach to overwhelm nearby enemies and cause them to release aggressive Surge sparks when damaged. Wisp may also target a Reservoir to teleport to it and double the range of the surge.",
         "damage": 200,
-        "range": 25,
-        "duration": 12,
-        "radius": 20,
+        "range": 18,
+        "duration": 16,
+        "radius": 18,
+        "damageBuff": 2,
         "castTime": 0.6,
         "damageType": "Radiation"
       },
@@ -5178,10 +5271,11 @@ export const allWarframes: Warframe[] = [
         "name": "Sol Gate",
         "energyCost": 25,
         "description": "Open a portal to the sun to irradiate enemies with a devastating beam of pure solar plasma. Hold fire to double Damage at the cost of increased energy consumption. For the duration of the attack, Wisp is immune to damage and Status Effects and gains an infinite ammo Multishot buff.",
-        "damage": 500,
-        "range": 50,
+        "damage": 1500,
+        "range": 40,
         "castTime": 0.8,
-        "damageType": "Radiation"
+        "damageType": "Radiation",
+        "miscStats": { "energyDrain": 12 }
       }
     ]
   },
@@ -5210,7 +5304,7 @@ export const allWarframes: Warframe[] = [
         "energyCost": 35,
         "description": "Cast forward a spectral image of Wisp to confuse and distract enemies. Reactivate to travel to its position. Hold to have the image travel faster and teleport to its position on release.",
         "range": 40,
-        "duration": 8,
+        "duration": 4,
         "castTime": 0.4
       },
       {
@@ -5218,9 +5312,10 @@ export const allWarframes: Warframe[] = [
         "energyCost": 50,
         "description": "Open a dimensional breach to overwhelm nearby enemies and cause them to release aggressive Surge sparks when damaged. Wisp may also target a Reservoir to teleport to it and double the range of the surge.",
         "damage": 200,
-        "range": 25,
-        "duration": 12,
-        "radius": 20,
+        "range": 18,
+        "duration": 16,
+        "radius": 18,
+        "damageBuff": 2,
         "castTime": 0.6,
         "damageType": "Radiation"
       },
@@ -5228,10 +5323,11 @@ export const allWarframes: Warframe[] = [
         "name": "Sol Gate",
         "energyCost": 25,
         "description": "Open a portal to the sun to irradiate enemies with a devastating beam of pure solar plasma. Hold fire to double Damage at the cost of increased energy consumption. For the duration of the attack, Wisp is immune to damage and Status Effects and gains an infinite ammo Multishot buff.",
-        "damage": 500,
-        "range": 50,
+        "damage": 1500,
+        "range": 40,
         "castTime": 0.8,
-        "damageType": "Radiation"
+        "damageType": "Radiation",
+        "miscStats": { "energyDrain": 12 }
       }
     ]
   },
@@ -5251,33 +5347,36 @@ export const allWarframes: Warframe[] = [
         "energyCost": 25,
         "description": "Shedding part of himself, Wukong creates a twin to fight by his side. Attack at range and the twin will melee, pull a blade and the twin will lay down covering fire. Use again to command the twin to attack a target with increased damage.",
         "range": 50,
-        "duration": 30,
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": { "healthMultiplier": 2, "damageMultiplier": 0.5, "markDamageMultiplier": 3 }
       },
       {
         "name": "Cloud Walker",
-        "energyCost": 50,
+        "energyCost": 25,
         "description": "Evaporate into a cloud of mist and float through the battlefield, dazing any enemies encountered, while healing Wukong and his twin.",
         "range": 30,
-        "duration": 10,
-        "castTime": 0.4
+        "duration": 2,
+        "castTime": 0.4,
+        "miscStats": { "healPerMeter": 0.01, "stunRadius": 8 }
       },
       {
         "name": "Defy",
         "energyCost": 50,
         "description": "Wukong and his twin become invulnerable and defy enemies to attack. All damage is captured, stored, and dealt back in a single furious strike of Wukong's staff. Bonus Armor is then granted based on damage absorbed.",
-        "range": 15,
+        "range": 12,
         "duration": 2,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": { "armorCap": 1500, "armorDuration": 25, "damageMultiplier": 7.5 }
       },
       {
         "name": "Primal Fury",
-        "energyCost": 25,
+        "energyCost": 10,
         "description": "Summon the iron staff and unleash fury.",
         "damage": 300,
-        "range": 10,
+        "range": 3.5,
         "castTime": 0.8,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": { "energyDrain": 5 }
       }
     ]
   },
@@ -5297,33 +5396,36 @@ export const allWarframes: Warframe[] = [
         "energyCost": 25,
         "description": "Shedding part of himself, Wukong creates a twin to fight by his side. Attack at range and the twin will melee, pull a blade and the twin will lay down covering fire. Use again to command the twin to attack a target with increased damage.",
         "range": 50,
-        "duration": 30,
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": { "healthMultiplier": 2, "damageMultiplier": 0.5, "markDamageMultiplier": 3 }
       },
       {
         "name": "Cloud Walker",
-        "energyCost": 50,
+        "energyCost": 25,
         "description": "Evaporate into a cloud of mist and float through the battlefield, dazing any enemies encountered, while healing Wukong and his twin.",
         "range": 30,
-        "duration": 10,
-        "castTime": 0.4
+        "duration": 2,
+        "castTime": 0.4,
+        "miscStats": { "healPerMeter": 0.01, "stunRadius": 8 }
       },
       {
         "name": "Defy",
         "energyCost": 50,
         "description": "Wukong and his twin become invulnerable and defy enemies to attack. All damage is captured, stored, and dealt back in a single furious strike of Wukong's staff. Bonus Armor is then granted based on damage absorbed.",
-        "range": 15,
+        "range": 12,
         "duration": 2,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": { "armorCap": 1500, "armorDuration": 25, "damageMultiplier": 7.5 }
       },
       {
         "name": "Primal Fury",
-        "energyCost": 25,
+        "energyCost": 10,
         "description": "Summon the iron staff and unleash fury.",
         "damage": 300,
-        "range": 10,
+        "range": 3.5,
         "castTime": 0.8,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": { "energyDrain": 5 }
       }
     ]
   },
