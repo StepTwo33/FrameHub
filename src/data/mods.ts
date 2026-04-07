@@ -12797,7 +12797,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "health": 6.8182
+      "health": 6.8182,
+      "shield": 6.8182
     },
     "description": "+75% Shield Capacity, +75% Health",
     "rarity": "legendary"
@@ -14278,7 +14279,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "health": 8.3333
+      "health": 8.3333,
+      "shield": 8.3333
     },
     "description": "+50% Shield Capacity, +50% Health",
     "rarity": "rare"
