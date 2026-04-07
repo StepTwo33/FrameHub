@@ -46,7 +46,7 @@ export interface Weapon {
   hasRivenSlot: boolean;
   // Arcane configuration
   arcaneSlots?: number; // Number of arcane slots (default: 1 for weapons, 2 for warframes/archguns/kitguns/zaws)
-  arcaneType?: string; // 'primary' | 'secondary' | 'melee' | 'kitgun' | 'exodia' | 'archgun'
+  arcaneType?: string; // 'primary' | 'secondary' | 'melee' | 'kitgun' | 'exodia' | 'archgun' | 'amp'
   // Stance (melee only)
   stanceType?: string; // e.g. 'sword', 'heavy_blade', 'dual_swords', etc. Used to filter stance mods
   // Exalted weapon fields
@@ -58,6 +58,8 @@ export interface Weapon {
   weaponCategory?: string;
   // Tektolyst Artifact fields
   focusSchool?: string; // 'Zenurik' | 'Naramon' | 'Madurai' | 'Unairu' | 'Vazarin'
+  /** Kitgun chamber category — used for arsenal-parity status display. */
+  kitgunChamberCategory?: "projectile_shotgun" | "projectile_rifle" | "hitscan_auto" | "beam";
 }
 
 export interface Warframe {
@@ -212,6 +214,7 @@ export interface WarframeCalculatedStats {
   baseHealth: number;
   baseShield: number;
   baseArmor: number;
+  /** Unmodded max energy at rank 30 — Flow / +% energy mods multiply this (wiki Energymax). */
   baseEnergy: number;
   baseSprint: number;
   healthBonus: number;

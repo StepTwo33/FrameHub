@@ -8,7 +8,7 @@ import { allMods, modsMap } from "@/data/mods";
 import { calculateWeaponBuild, calculateWarframeBuild } from "@/lib/calculator";
 import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, WarframeCalculatedStats } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
-import { ModPicker } from "@/components/mod-picker";
+import { ModPicker, type SlotType as ModPickerSlotType } from "@/components/mod-picker";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -72,6 +72,8 @@ function CompareRow({ label, a, b, higher = "green", format }: {
 
 type CompareTab = "build" | "loadout";
 
+const SECONDARY_EXILUS_SLOT_INDEX = 8;
+
 /* ─── Build vs Build tab ─── */
 
 interface BuildSlot {
@@ -89,6 +91,7 @@ function BuildCompareTab() {
   const [activeSlot, setActiveSlot] = useState<0 | 1>(0);
   const [activeModSlot, setActiveModSlot] = useState(0);
   const [modPickerOpen, setModPickerOpen] = useState(false);
+  const [modPickerSlotType, setModPickerSlotType] = useState<ModPickerSlotType>("regular");
   const [weaponPickerOpen, setWeaponPickerOpen] = useState<0 | 1 | null>(null);
   const [weaponSearch, setWeaponSearch] = useState("");
 
@@ -209,24 +212,36 @@ function BuildCompareTab() {
               )}
 
               {/* Mod Slots */}
-              {build.weapon && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                  {Array.from({ length: build.weapon.modSlots }, (_, i) => {
-                    const equipped = build.mods.find((m) => m.slotIndex === i);
-                    const mod = equipped ? modsMap.get(equipped.modId) : null;
-                    return (
-                      <ModSlotCard
-                        key={i}
-                        slotIndex={i}
-                        mod={mod ?? null}
-                        rank={equipped?.rank ?? 0}
-                        onAdd={() => { setActiveSlot(side); setActiveModSlot(i); setModPickerOpen(true); }}
-                        onRemove={() => removeMod(side, i)}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+              {build.weapon && (() => {
+                const w = build.weapon;
+                const isSec = ["pistol", "secondary", "dual_pistols"].includes(w.category);
+                const nSlots = w.modSlots + (isSec ? 1 : 0);
+                return (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    {Array.from({ length: nSlots }, (_, i) => {
+                      const equipped = build.mods.find((m) => m.slotIndex === i);
+                      const mod = equipped ? modsMap.get(equipped.modId) : null;
+                      const isExilus = isSec && i === SECONDARY_EXILUS_SLOT_INDEX;
+                      return (
+                        <ModSlotCard
+                          key={i}
+                          slotIndex={i}
+                          mod={mod ?? null}
+                          rank={equipped?.rank ?? 0}
+                          label={isExilus ? "Exilus" : undefined}
+                          onAdd={() => {
+                            setActiveSlot(side);
+                            setActiveModSlot(i);
+                            setModPickerSlotType(isExilus ? "weapon_exilus_secondary" : "regular");
+                            setModPickerOpen(true);
+                          }}
+                          onRemove={() => removeMod(side, i)}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })()}
 
               {/* Stats */}
               <WeaponStatsPanel
@@ -260,6 +275,7 @@ function BuildCompareTab() {
         onClose={() => setModPickerOpen(false)}
         mods={allMods}
         category={builds[activeSlot].weapon ? getModCategory(builds[activeSlot].weapon!.category) : "primary"}
+        slotType={modPickerSlotType}
         equippedModIds={builds[activeSlot].mods.map((m) => m.modId)}
         onSelect={addMod}
       />

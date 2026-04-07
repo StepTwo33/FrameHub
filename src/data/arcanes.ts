@@ -1953,5 +1953,6 @@ export const primaryArcanes = allArcanes.filter(a => a.subCategory === 'primary'
 export const secondaryArcanes = allArcanes.filter(a => a.subCategory === 'secondary');
 export const meleeArcanes = allArcanes.filter(a => a.subCategory === 'melee');
 export const kitgunArcanes = allArcanes.filter(a => a.subCategory === 'kitgun' || a.subCategory === 'residual');
+export const ampArcanes = allArcanes.filter(a => a.subCategory === 'amp');
 export const exodiaArcanes = allArcanes.filter(a => a.subCategory === 'zaw');
 export const tektolystArcanes = allArcanes.filter(a => a.subCategory === 'tektolyst');

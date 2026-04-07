@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/header";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { Weapon, Mod, EquippedMod } from "@/lib/types";
+import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
+import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
+import type { SlotType } from "@/components/mod-picker";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2 } from "lucide-react";
+import { Search, Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2, Gem } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ModularBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
@@ -22,8 +25,16 @@ import {
   KitgunChamber, KitgunGrip, KitgunLoader, ZawStrike, ZawGrip, ZawLink, AmpScaffold, AmpBrace,
 } from "@/data/modular-weapons";
 import { cn } from "@/lib/utils";
+import { extractBuildFromUrl } from "@/lib/build-url";
+import { allArcanes } from "@/data/arcanes";
+
+function resolveArcaneMod(id: string): Mod | null {
+  return modsMap.get(id) ?? allArcanes.find((m) => m.id === id) ?? null;
+}
 
 type ModularType = "kitgun" | "zaw" | "amp";
+
+const SECONDARY_EXILUS_SLOT_INDEX = 8;
 
 const typeLabels: Record<ModularType, string> = {
   kitgun: "Kitgun",
@@ -63,6 +74,10 @@ export default function ModularBuilderPage() {
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
   const [modPickerOpen, setModPickerOpen] = useState(false);
   const [activeSlotIndex, setActiveSlotIndex] = useState(0);
+  const [modPickerSlotType, setModPickerSlotType] = useState<SlotType>("regular");
+  const [equippedArcanes, setEquippedArcanes] = useState<(Mod | null)[]>([null, null]);
+  const [arcanePickerOpen, setArcanePickerOpen] = useState(false);
+  const [activeArcaneSlot, setActiveArcaneSlot] = useState(0);
   const [hasOrokinCatalyst, setHasOrokinCatalyst] = useState(false);
   const [isMR30, setIsMR30] = useState(false);
 
@@ -75,15 +90,25 @@ export default function ModularBuilderPage() {
       return buildZaw(zawStrike, zawGripSel, zawLinkSel);
     }
     if (modularType === "amp" && ampPrism) {
-      return { ...ampPrism, name: `${ampPrism.name}${ampScaffold ? ` / ${ampScaffold.name}` : ""}${ampBrace ? ` / ${ampBrace.name}` : ""}` };
+      return {
+        ...ampPrism,
+        name: `${ampPrism.name}${ampScaffold ? ` / ${ampScaffold.name}` : ""}${ampBrace ? ` / ${ampBrace.name}` : ""}`,
+        arcaneSlots: 2,
+        arcaneType: "amp",
+      };
     }
     return null;
   }, [modularType, kitgunChamber, kitgunGrip, kitgunLoader, zawStrike, zawGripSel, zawLinkSel, ampPrism, ampScaffold, ampBrace]);
 
   const calculatedStats = useMemo(() => {
     if (!assembledWeapon) return null;
-    return calculateWeaponBuild(assembledWeapon, equippedMods, modsMap);
-  }, [assembledWeapon, equippedMods]);
+    const modSlots = equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex }));
+    const activeArcanes = equippedArcanes.filter((a): a is Mod => a !== null);
+    if (activeArcanes.length > 0) {
+      return calculateWeaponBuildWithArcanes(assembledWeapon, modSlots, modsMap, activeArcanes);
+    }
+    return calculateWeaponBuild(assembledWeapon, modSlots, modsMap);
+  }, [assembledWeapon, equippedMods, equippedArcanes]);
 
   const modCategory = useMemo(() => {
     if (!assembledWeapon) return "primary";
@@ -91,6 +116,14 @@ export default function ModularBuilderPage() {
     if (assembledWeapon.category === "secondary") return "secondary";
     return "primary";
   }, [assembledWeapon]);
+
+  const isSecondaryKitgun = assembledWeapon?.category === "secondary" && modularType === "kitgun";
+  const totalModSlots =
+    assembledWeapon && assembledWeapon.modSlots > 0
+      ? assembledWeapon.modSlots + (isSecondaryKitgun ? 1 : 0)
+      : 0;
+
+  const arcaneConfig = assembledWeapon ? getWeaponArcanes(assembledWeapon) : { slots: 0, arcanes: [], label: "" };
 
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const capacity = (hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0);
@@ -106,12 +139,61 @@ export default function ModularBuilderPage() {
     }, 0);
   }, [equippedMods, slotPolarities]);
 
-  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("modular"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
 
-  useState(() => { setSavedBuilds(getSavedBuilds("modular")); });
+  // Load build from ?build= share link (e.g. from /build/[id] page)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shared = extractBuildFromUrl(params);
+    if (!shared || shared.type !== "modular" || !shared.modularType || !shared.parts) return;
+    const mt = shared.modularType as ModularType;
+    setModularType(mt);
+    if (mt === "kitgun") {
+      setKitgunChamber(kitgunChambers.find((c) => c.id === shared.parts!.chamber) ?? null);
+      setKitgunGrip(kitgunGrips.find((g) => g.id === shared.parts!.grip) ?? null);
+      setKitgunLoader(kitgunLoaders.find((l) => l.id === shared.parts!.loader) ?? null);
+    } else if (mt === "zaw") {
+      setZawStrike(zawStrikes.find((s) => s.id === shared.parts!.strike) ?? null);
+      setZawGripSel(zawGrips.find((g) => g.id === shared.parts!.grip) ?? null);
+      setZawLinkSel(zawLinks.find((l) => l.id === shared.parts!.link) ?? null);
+    } else {
+      setAmpPrism(ampPrisms.find((p) => p.id === shared.parts!.prism) ?? null);
+      setAmpScaffold(ampScaffolds.find((s) => s.id === shared.parts!.scaffold) ?? null);
+      setAmpBrace(ampBraces.find((b) => b.id === shared.parts!.brace) ?? null);
+    }
+    setEquippedMods(
+      shared.mods.map((m, idx) => {
+        const mod = modsMap.get(m.id);
+        return {
+          modId: m.id,
+          modName: mod?.name ?? "",
+          rank: m.rank,
+          slotIndex: m.slotIndex ?? idx,
+          polarity: mod?.polarity,
+          drain: mod?.drain,
+        };
+      })
+    );
+    setHasOrokinCatalyst(shared.hasOrokinCatalyst ?? false);
+    setIsMR30(shared.isMR30 ?? false);
+    if (shared.arcanes?.length) {
+      setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneMod(id) : null)));
+    } else {
+      setEquippedArcanes([null, null]);
+    }
+    const pol: Record<number, string> = {};
+    if (shared.slotPolarities) {
+      for (const [k, v] of Object.entries(shared.slotPolarities)) {
+        pol[Number(k)] = v;
+      }
+    }
+    setSlotPolarities(pol);
+    window.history.replaceState({}, "", window.location.pathname);
+    toast.info("Build loaded from link", { description: "Modular configuration applied" });
+  }, []);
 
   const handleSaveBuild = async () => {
     const parts: Record<string, string> = {};
@@ -132,6 +214,7 @@ export default function ModularBuilderPage() {
       modularType,
       parts,
       mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
       hasOrokinCatalyst,
       isMR30,
       slotPolarities,
@@ -179,6 +262,11 @@ export default function ModularBuilderPage() {
     setHasOrokinCatalyst(d.hasOrokinCatalyst);
     setIsMR30(d.isMR30);
     setSlotPolarities(d.slotPolarities || {});
+    const aid = d.arcaneIds ?? [];
+    setEquippedArcanes([
+      aid[0] ? resolveArcaneMod(aid[0]) : null,
+      aid[1] ? resolveArcaneMod(aid[1]) : null,
+    ]);
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setShowSavedBuilds(false);
@@ -192,7 +280,11 @@ export default function ModularBuilderPage() {
     toast.success("Build deleted");
   };
 
-  const resetMods = () => { setEquippedMods([]); setHasOrokinCatalyst(false); };
+  const resetMods = () => {
+    setEquippedMods([]);
+    setEquippedArcanes([null, null]);
+    setHasOrokinCatalyst(false);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -535,7 +627,7 @@ export default function ModularBuilderPage() {
                   </div>
                 </div>
 
-                {assembledWeapon.modSlots > 0 && (
+                {totalModSlots > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-sm font-semibold tracking-wider text-muted-foreground">MOD CONFIGURATION</h3>
@@ -547,22 +639,49 @@ export default function ModularBuilderPage() {
                       </span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {Array.from({ length: assembledWeapon.modSlots }, (_, i) => {
+                      {Array.from({ length: totalModSlots }, (_, i) => {
                         const equipped = equippedMods.find((m) => m.slotIndex === i);
                         const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                        const isExilus = isSecondaryKitgun && i === SECONDARY_EXILUS_SLOT_INDEX;
                         return (
                           <ModSlotCard
                             key={i}
                             mod={mod}
                             rank={equipped?.rank ?? 0}
                             slotIndex={i}
+                            label={isExilus ? "Exilus" : undefined}
                             slotPolarity={slotPolarities[i]}
-                            onAdd={() => { setActiveSlotIndex(i); setModPickerOpen(true); }}
+                            onAdd={() => {
+                              setActiveSlotIndex(i);
+                              setModPickerSlotType(isExilus ? "weapon_exilus_secondary" : "regular");
+                              setModPickerOpen(true);
+                            }}
                             onRemove={() => setEquippedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
                             onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
                           />
                         );
                       })}
+                    </div>
+                  </div>
+                )}
+
+                {arcaneConfig.slots > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                      <Gem className="h-4 w-4 text-purple-400" />
+                      ARCANES
+                    </h3>
+                    <div className={cn("grid gap-2", arcaneConfig.slots === 2 ? "grid-cols-2" : "grid-cols-1")}>
+                      {Array.from({ length: arcaneConfig.slots }).map((_, i) => (
+                        <ArcaneSlotCard
+                          key={i}
+                          arcane={equippedArcanes[i]}
+                          rank={equippedArcanes[i]?.maxRank ?? 0}
+                          label={`${arcaneConfig.label} ${arcaneConfig.slots > 1 ? i + 1 : ""}`}
+                          onAdd={() => { setActiveArcaneSlot(i); setArcanePickerOpen(true); }}
+                          onRemove={() => setEquippedArcanes((prev) => { const next = [...prev]; next[i] = null; return next; })}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -674,6 +793,7 @@ export default function ModularBuilderPage() {
           onClose={() => setModPickerOpen(false)}
           mods={allMods}
           category={modCategory}
+          slotType={modPickerSlotType}
           equippedModIds={equippedMods.map((m) => m.modId)}
           onSelect={(mod, rank) => {
             setEquippedMods((prev) => {
@@ -681,6 +801,24 @@ export default function ModularBuilderPage() {
               return [...filtered, { modId: mod.id, modName: mod.name, rank, slotIndex: activeSlotIndex, polarity: mod.polarity, drain: mod.drain }];
             });
           }}
+        />
+      )}
+
+      {assembledWeapon && arcaneConfig.slots > 0 && (
+        <ArcanePicker
+          open={arcanePickerOpen}
+          onOpenChange={setArcanePickerOpen}
+          arcanes={arcaneConfig.arcanes}
+          equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}
+          onSelect={(arcane) => {
+            setEquippedArcanes((prev) => {
+              const next = [...prev];
+              next[activeArcaneSlot] = arcane;
+              return next;
+            });
+            setArcanePickerOpen(false);
+          }}
+          title={`Select ${arcaneConfig.label}`}
         />
       )}
 

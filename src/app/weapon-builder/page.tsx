@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { Header } from "@/components/header";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
-import { ModPicker } from "@/components/mod-picker";
+import { ModPicker, type SlotType } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Search, ChevronDown, Zap, Flag, Flame, Plus, X, ChevronRight, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
-import { primaryArcanes, secondaryArcanes, meleeArcanes, kitgunArcanes, exodiaArcanes, tektolystArcanes } from "@/data/arcanes";
+import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { INCARNON_WEAPON_IDS, incarnonDataMap, IncarnonEvolution } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
@@ -45,24 +45,15 @@ const categoryLabels: Record<string, string> = {
 
 function getModCategory(weaponCategory: string): string {
   if (["rifle", "shotgun", "bow", "primary", "launcher", "archgun"].includes(weaponCategory)) return "primary";
-  if (["pistol", "secondary"].includes(weaponCategory)) return "secondary";
+  if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
   if (["melee", "archmelee", "beast_claw"].includes(weaponCategory)) return "melee";
   if (["sentinel_weapon", "hound_weapon"].includes(weaponCategory)) return "primary";
   if (weaponCategory === "tektolyst") return "tektolyst";
   return weaponCategory;
 }
 
-function getWeaponArcanes(weapon: Weapon): { arcanes: Mod[]; slots: number; label: string } {
-  const cat = weapon.category;
-  if (cat === "kitgun_chamber") return { arcanes: [...secondaryArcanes, ...kitgunArcanes], slots: 2, label: "Kitgun Arcane" };
-  if (cat === "zaw_strike") return { arcanes: [...meleeArcanes, ...exodiaArcanes], slots: 2, label: "Zaw Arcane" };
-  if (cat === "archgun") return { arcanes: primaryArcanes, slots: 2, label: "Archgun Arcane" };
-  if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(cat)) return { arcanes: primaryArcanes, slots: 1, label: "Primary Arcane" };
-  if (["pistol", "secondary"].includes(cat)) return { arcanes: secondaryArcanes, slots: 1, label: "Secondary Arcane" };
-  if (cat === "melee") return { arcanes: meleeArcanes, slots: 1, label: "Melee Arcane" };
-  if (cat === "tektolyst") return { arcanes: tektolystArcanes, slots: 1, label: "Tektolyst Arcane" };
-  return { arcanes: [], slots: 0, label: "" };
-}
+/** 9th slot (index 8) for secondary pistols — matches in-game Exilus Weapon Adapter slot. */
+const SECONDARY_EXILUS_SLOT_INDEX = 8;
 
 export default function WeaponBuilderPage() {
   const allWeapons = useWeapons();
@@ -70,6 +61,7 @@ export default function WeaponBuilderPage() {
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
   const [modPickerOpen, setModPickerOpen] = useState(false);
   const [activeSlotIndex, setActiveSlotIndex] = useState(0);
+  const [modPickerSlotType, setModPickerSlotType] = useState<SlotType>("regular");
   const [weaponSearch, setWeaponSearch] = useState("");
   const [weaponCategory, setWeaponCategory] = useState("all");
   const [showWeaponList, setShowWeaponList] = useState(true);
@@ -325,8 +317,10 @@ export default function WeaponBuilderPage() {
 
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
+    const sec = selectedWeapon && ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category);
+    setModPickerSlotType(sec && slotIndex === SECONDARY_EXILUS_SLOT_INDEX ? "weapon_exilus_secondary" : "regular");
     setModPickerOpen(true);
-  }, []);
+  }, [selectedWeapon]);
 
   const handleSelectMod = useCallback((mod: Mod, rank: number) => {
     setEquippedMods((prev) => {
@@ -371,6 +365,8 @@ export default function WeaponBuilderPage() {
   const modCategory = selectedWeapon ? getModCategory(selectedWeapon.category) : "primary";
   const equippedModIds = equippedMods.map((m) => m.modId);
   const numSlots = selectedWeapon?.modSlots || 8;
+  const isSecondaryWeapon = selectedWeapon ? ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category) : false;
+  const totalModSlots = isSecondaryWeapon ? numSlots + 1 : numSlots;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -581,7 +577,7 @@ export default function WeaponBuilderPage() {
                   <div className="mb-4">
                     <BuildImporter
                       modCategory={modCategory}
-                      numSlots={numSlots}
+                      numSlots={totalModSlots}
                       onImport={(mods) => {
                         setEquippedMods(mods);
                         setShowImporter(false);
@@ -591,15 +587,17 @@ export default function WeaponBuilderPage() {
                   </div>
                 )}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {Array.from({ length: numSlots }, (_, i) => {
+                  {Array.from({ length: totalModSlots }, (_, i) => {
                     const equipped = equippedMods.find((m) => m.slotIndex === i);
                     const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                    const isExilus = isSecondaryWeapon && i === SECONDARY_EXILUS_SLOT_INDEX;
                     return (
                       <ModSlotCard
                         key={i}
                         mod={mod}
                         rank={equipped?.rank ?? 0}
                         slotIndex={i}
+                        label={isExilus ? "Exilus" : undefined}
                         slotPolarity={slotPolarities[i]}
                         rivenStats={rivenStatsMap[i]}
                         weaponCategory={selectedWeapon.category}
@@ -750,6 +748,7 @@ export default function WeaponBuilderPage() {
         onClose={() => setModPickerOpen(false)}
         mods={allMods}
         category={modCategory}
+        slotType={modPickerSlotType}
         equippedModIds={equippedModIds}
         onSelect={handleSelectMod}
         onSelectRiven={handleSelectRiven}

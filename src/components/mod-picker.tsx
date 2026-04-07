@@ -17,6 +17,18 @@ function isRivenMod(mod: Mod): boolean {
   return mod.subCategory === "riven" || mod.id.startsWith("riven_");
 }
 
+/** Augment data uses base warframe ids (e.g. loki); selected frame may be loki_prime or excalibur_umbra. */
+function augmentMatchesWarframe(mod: Mod, selectedWarframeId: string): boolean {
+  const mid = mod.warframeId;
+  if (!mid || mid === "universal") return mid === "universal";
+  const candidates = new Set([
+    selectedWarframeId,
+    selectedWarframeId.replace(/_prime$/i, ""),
+    selectedWarframeId.replace(/_umbra$/i, ""),
+  ]);
+  return candidates.has(mid);
+}
+
 const rarityColors: Record<string, string> = {
   common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
   uncommon: "bg-slate-500/20 text-slate-300 border-slate-500/50",
@@ -45,7 +57,32 @@ const EXILUS_MODS = new Set([
   "mobilize_r3", "patagium", "proton_pulse", "streamlined_form", "preparation_r10",
 ]);
 
-export type SlotType = "regular" | "aura" | "exilus";
+// Wiki: Exilus_Mods → Secondary weapon tab (+ patch-listed Vigilante Supplies)
+const SECONDARY_WEAPON_EXILUS_MOD_IDS = new Set([
+  "trick_mag_r3",
+  "pistol_ammo_mutation",
+  "primed_pistol_ammo_mutation",
+  "vigilante_supplies",
+  "air_recon",
+  "hawk_eye",
+  "spry_sights",
+  "strafing_slide",
+  "steady_hands",
+  "primed_steady_hands",
+  "targeting_subsystem",
+  "suppress_r3",
+  "reflex_draw",
+  "eject_magazine",
+  "lethal_momentum",
+  "energizing_shot",
+  "ruinous_extension",
+  "fass_canticle",
+  "jahu_canticle",
+  "khra_canticle",
+  "lohk_canticle",
+]);
+
+export type SlotType = "regular" | "aura" | "exilus" | "weapon_exilus_secondary";
 
 interface ModPickerProps {
   open: boolean;
@@ -73,7 +110,9 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
   const filteredMods = useMemo(() => {
     let categoryMods: Mod[];
-    if (category === "_prefiltered") {
+    if (slotType === "weapon_exilus_secondary") {
+      categoryMods = mods.filter((m) => SECONDARY_WEAPON_EXILUS_MOD_IDS.has(m.id));
+    } else if (category === "_prefiltered") {
       // Mods already filtered by caller (e.g. companion weapon mods)
       categoryMods = [...mods];
     } else {
@@ -108,11 +147,12 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       categoryMods = categoryMods.filter((m) => EXILUS_MODS.has(m.id));
     }
 
-    // Filter augments to matching warframe (+ universal augments)
+    // Filter augments to matching warframe (+ universal; primes/umbra base ids; Umbra polarity = any frame)
     if (warframeId) {
       categoryMods = categoryMods.filter((m) => {
         if (m.category !== "augment") return true;
-        return m.warframeId === warframeId || m.warframeId === "universal";
+        if (m.polarity === "umbra") return true;
+        return augmentMatchesWarframe(m, warframeId);
       });
     }
 
@@ -123,7 +163,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         m.name.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [mods, category, slotType, search, warframeId, weaponCategory]);
+  }, [mods, category, slotType, search, warframeId, weaponCategory, blockedByExclusion]);
 
   const handleSelectMod = (mod: Mod) => {
     setSelectedMod(mod);
@@ -162,7 +202,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle>
-            {slotType === "aura" ? "Select Aura Mod" : slotType === "exilus" ? "Select Exilus Mod" : "Select Mod"}
+            {slotType === "aura" ? "Select Aura Mod" : slotType === "exilus" ? "Select Exilus Mod" : slotType === "weapon_exilus_secondary" ? "Select Secondary Exilus Mod" : "Select Mod"}
           </DialogTitle>
         </DialogHeader>
 

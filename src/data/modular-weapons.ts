@@ -274,6 +274,7 @@ export function buildKitgun(chamber: KitgunChamber, grip: KitgunGrip, loader: Ki
     hasRivenSlot: true,
     arcaneSlots: 2,
     arcaneType: "kitgun",
+    kitgunChamberCategory: chamber.category,
   };
 }
 

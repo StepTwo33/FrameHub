@@ -1447,7 +1447,7 @@ export const allMods: Mod[] = [
     "stats": {
       "energy": 16.8182
     },
-    "description": "+25% Energy Capacity per rank (Primed)",
+    "description": "+185% Energy Max at max rank (Primed)",
     "rarity": "legendary"
   },
   {
@@ -1517,6 +1517,7 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "warframe",
     "subCategory": "",
+    "warframeId": "universal",
     "stats": {
       "abilityStrength": 4,
       "tauResistance": 1
@@ -1604,6 +1605,7 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "warframe",
     "subCategory": "",
+    "warframeId": "universal",
     "stats": {
       "armor": 9.0909,
       "tauResistance": 1
@@ -1619,6 +1621,7 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "warframe",
     "subCategory": "",
+    "warframeId": "universal",
     "stats": {
       "health": 9.0909,
       "tauResistance": 1

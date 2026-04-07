@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Header } from "@/components/header";
-import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot } from "lucide-react";
+import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProfileUser {
@@ -730,20 +730,29 @@ export default function ProfilePage() {
                 return (
                   <div
                     key={build.id}
-                    className={`flex items-center gap-3 p-4 rounded-lg border border-border hover:${colorClass.split(" ")[1]} transition-all bg-card`}
+                    className="flex items-stretch rounded-lg border border-border bg-card overflow-hidden transition-colors hover:border-primary/35 group"
                   >
-                    <div className={`p-2 rounded-lg bg-white/5 ${colorClass.split(" ")[0]}`}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">{build.name}</div>
-                      <div className="text-[10px] text-muted-foreground mt-0.5">
-                        {build.type} • {new Date(build.updatedAt).toLocaleDateString()} {new Date(build.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    <Link
+                      href={`/build/${build.id}`}
+                      className="flex flex-1 items-center gap-3 p-4 min-w-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-inset"
+                    >
+                      <div className={`p-2 rounded-lg bg-white/5 shrink-0 ${colorClass.split(" ")[0]}`}>
+                        <Icon className="h-4 w-4" />
                       </div>
-                    </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate group-hover:text-primary transition-colors">{build.name}</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">
+                          {build.type} • {new Date(build.updatedAt).toLocaleDateString()} {new Date(build.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                        <div className="text-[10px] text-primary/80 mt-1">Open build page</div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 self-center" aria-hidden />
+                    </Link>
                     <button
+                      type="button"
                       onClick={() => handleDelete(build.id)}
-                      className="p-2 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                      title="Delete build"
+                      className="px-3 shrink-0 border-l border-border flex items-center justify-center hover:bg-destructive/15 text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>

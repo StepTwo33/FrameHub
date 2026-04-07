@@ -6,11 +6,14 @@ import { ModSlot, EquippedMod } from "./types";
 export interface ShareableBuild {
   type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
   itemId: string;
-  mods: { id: string; rank: number }[];
+  mods: { id: string; rank: number; slotIndex?: number }[];
   arcanes?: string[];
   // Modular-specific
   modularType?: string;
   parts?: Record<string, string>;
+  hasOrokinCatalyst?: boolean;
+  isMR30?: boolean;
+  slotPolarities?: Record<string, string>;
   // Warframe-specific
   shards?: { id: string; bonus: string }[];
 }

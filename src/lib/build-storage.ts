@@ -127,6 +127,8 @@ export interface ModularBuildData {
   modularType: string; // 'kitgun' | 'zaw' | 'amp'
   parts: Record<string, string>; // partSlot -> partId
   mods: ModSlot[];
+  /** Kitgun / Zaw arcanes (same slot count as weapon builder). */
+  arcaneIds?: (string | null)[];
   hasOrokinCatalyst: boolean;
   isMR30: boolean;
   slotPolarities: Record<number, string>;

@@ -1,5 +1,14 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS } from './types';
+import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
+
+/** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
+export function getWarframeEnergyModBase(warframe: Warframe): number {
+  if (warframe.energy <= 0) return 0;
+  const fromTable = WARFRAME_ENERGY_RANK30[warframe.id];
+  if (fromTable != null) return fromTable;
+  return warframe.energy + 50;
+}
 
 // ── Elemental Combo Rules ───────────────────────────────────────────────
 const ELEMENTAL_COMBOS: Record<string, { a: string; b: string }> = {
@@ -441,12 +450,8 @@ export function calculateWeaponBuild(
     stats.vigilanteCritBonus = 0.05 * vigilanteCount;
   }
 
-  // Multishot-adjusted status chance (what the game's arsenal displays)
-  if (stats.multishot > 1) {
-    stats.statusChancePerShot = 1 - Math.pow(1 - stats.statusChance, stats.multishot);
-  } else {
-    stats.statusChancePerShot = stats.statusChance;
-  }
+  // Multishot-adjusted status chance (arsenal-style display).
+  setStatusChancePerShot(stats, baseWeapon);
 
   // Status procs
   stats.statusProcs = calculateStatusProcs(stats, baseWeapon.damage * dmgMult);
@@ -467,7 +472,7 @@ export function calculateWarframeBuild(
     baseHealth: warframe.health,
     baseShield: warframe.shield,
     baseArmor: warframe.armor,
-    baseEnergy: warframe.energy,
+    baseEnergy: getWarframeEnergyModBase(warframe),
     baseSprint: warframe.sprintSpeed,
     healthBonus: 0,
     shieldBonus: 0,
@@ -486,7 +491,7 @@ export function calculateWarframeBuild(
     totalHealth: warframe.health,
     totalShield: warframe.shield,
     totalArmor: warframe.armor,
-    totalEnergy: warframe.energy,
+    totalEnergy: getWarframeEnergyModBase(warframe),
     totalSprint: warframe.sprintSpeed,
     effectiveHealth: 0,
     damageReduction: 0,
@@ -574,6 +579,23 @@ function applyWarframeMod(stats: WarframeCalculatedStats, statName: string, valu
   }
 }
 
+/** Multishot-adjusted status chance (arsenal-style). Beams skip pellet aggregation. */
+function setStatusChancePerShot(stats: CalculatedStats, baseWeapon: Weapon): void {
+  const pRaw = Math.min(1, Math.max(0, stats.statusChance));
+  let pDisp = pRaw;
+  if (baseWeapon.kitgunChamberCategory) {
+    pDisp = Math.floor(pRaw * 10000 + 1e-12) / 10000;
+  }
+  const ms = stats.multishot;
+  if (baseWeapon.kitgunChamberCategory === "beam") {
+    stats.statusChancePerShot = pDisp;
+  } else if (ms > 1.0001) {
+    stats.statusChancePerShot = 1 - Math.pow(1 - pDisp, ms);
+  } else {
+    stats.statusChancePerShot = pDisp;
+  }
+}
+
 // Apply arcane stats to weapon
 // stacks: number of active stacks (1 = base effect, higher = scaled)
 export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks: number = 1): void {
@@ -604,6 +626,36 @@ export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks:
         break;
       case 'reloadSpeed':
         if (scaled > 0) stats.reloadTime /= (1 + scaled);
+        break;
+      case 'ampDamage':
+        stats.totalDamage *= (1 + scaled);
+        stats.impact *= (1 + scaled);
+        stats.puncture *= (1 + scaled);
+        stats.slash *= (1 + scaled);
+        break;
+      case 'ampHeatDamage':
+        // Heat-only bonus; not folded into single-type amp DPS here
+        break;
+      case 'ampCritChance':
+        stats.criticalChance += scaled;
+        break;
+      case 'ampCritDamage':
+        stats.criticalMultiplier += scaled;
+        break;
+      case 'ampFireRate':
+        stats.fireRate *= (1 + scaled);
+        break;
+      case 'ampMultishot':
+        stats.multishot += scaled;
+        break;
+      case 'ampStatusChance':
+        stats.statusChance += scaled;
+        break;
+      case 'ampReload':
+        if (scaled > 0) stats.reloadTime /= (1 + scaled);
+        break;
+      case 'ampRange':
+        // Flat meters per rank; not modeled on CalculatedStats
         break;
     }
   }
@@ -670,6 +722,7 @@ export function calculateWeaponBuildWithArcanes(
   for (const arcane of arcanes) {
     applyArcaneToWeapon(stats, arcane, sim.arcaneStacks);
   }
+  setStatusChancePerShot(stats, baseWeapon);
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
   return stats;

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { cookies, headers } from 'next/headers';
 import { Header } from '@/components/header';
 import { buildShareUrl, ShareableBuild } from '@/lib/build-url';
 import { Button } from '@/components/ui/button';
@@ -22,8 +23,19 @@ interface SharedBuild {
 }
 
 async function getBuild(id: string): Promise<SharedBuild | null> {
-    const apiUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const res = await fetch(`${apiUrl}/api/builds/${id}`, { cache: 'no-store' });
+    const headerList = await headers();
+    const host = headerList.get('x-forwarded-host') ?? headerList.get('host') ?? 'localhost:3000';
+    let protocol = headerList.get('x-forwarded-proto');
+    if (!protocol) {
+        protocol = host.startsWith('localhost') || host.startsWith('127.') ? 'http' : 'https';
+    }
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.getAll().map((c) => `${c.name}=${c.value}`).join('; ');
+    const url = `${protocol}://${host}/api/builds/${id}`;
+    const res = await fetch(url, {
+        cache: 'no-store',
+        headers: cookieHeader ? { cookie: cookieHeader } : {},
+    });
     if (!res.ok) return null;
     return res.json();
 }
@@ -55,21 +67,44 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
         shareable = {
             type: 'weapon',
             itemId: build.data.weaponId,
-            mods: build.data.mods.map((m: any) => ({ id: m.modId, rank: m.rank })),
+            mods: build.data.mods.map((m: { modId: string; rank: number }) => ({ id: m.modId, rank: m.rank })),
             arcanes: build.data.arcaneIds?.filter(Boolean) || [],
         };
     } else if (build.type === 'warframe') {
         shareable = {
             type: 'warframe',
             itemId: build.data.warframeId,
-            mods: build.data.mods.map((m: any) => ({ id: m.modId, rank: m.rank })),
-            shards: build.data.shards?.filter(Boolean).map((s: any) => ({ id: s.shardId, bonus: s.selectedBonus })) || [],
+            mods: build.data.mods.map((m: { modId: string; rank: number }) => ({ id: m.modId, rank: m.rank })),
+            shards: build.data.shards?.filter(Boolean).map((s: { shardId: string; selectedBonus: string }) => ({ id: s.shardId, bonus: s.selectedBonus })) || [],
         };
     } else if (build.type === 'companion') {
         shareable = {
             type: 'companion',
             itemId: build.data.companionId,
-            mods: build.data.mods.map((m: any) => ({ id: m.modId, rank: m.rank })),
+            mods: build.data.mods.map((m: { modId: string; rank: number }) => ({ id: m.modId, rank: m.rank })),
+        };
+    } else if (build.type === 'modular') {
+        const d = build.data;
+        const pol: Record<string, string> = {};
+        if (d.slotPolarities && typeof d.slotPolarities === 'object') {
+            for (const [k, v] of Object.entries(d.slotPolarities)) {
+                if (typeof v === 'string') pol[String(k)] = v;
+            }
+        }
+        shareable = {
+            type: 'modular',
+            itemId: '',
+            mods: (d.mods || []).map((m: { modId: string; rank: number; slotIndex?: number }) => ({
+                id: m.modId,
+                rank: m.rank,
+                slotIndex: m.slotIndex,
+            })),
+            modularType: d.modularType,
+            parts: d.parts || {},
+            hasOrokinCatalyst: Boolean(d.hasOrokinCatalyst),
+            isMR30: Boolean(d.isMR30),
+            slotPolarities: Object.keys(pol).length ? pol : undefined,
+            arcanes: (d.arcaneIds || []).map((id: string | null) => id || ""),
         };
     }
 
