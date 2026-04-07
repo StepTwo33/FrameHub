@@ -111,6 +111,9 @@ function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: 
   let multishot = weapon.multishot ?? 1;
   let magazineBonus = 0;
   let reloadBonus = 0;
+  let damagePerStatusBonus = 0;
+  let nonCritDamageBonus = 0;
+  let healthPerSlashStack = 0;
 
   for (const em of mods) {
     const mod = modsMap.get(em.modId);
@@ -122,12 +125,18 @@ function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: 
       switch (stat) {
         case "damage": dmgMult += v; break;
         case "criticalChance": critChance += weapon.criticalChance * v; break;
-        case "criticalMultiplier": critMult += weapon.criticalMultiplier * v; break;
+        case "criticalMultiplier":
+        case "criticalDamage":
+          critMult += weapon.criticalMultiplier * v;
+          break;
         case "statusChance": statusChance += weapon.statusChance * v; break;
         case "fireRate": case "attackSpeed": fireRate += weapon.fireRate * v; break;
         case "multishot": multishot += v; break;
         case "magazine": case "magazineSize": magazineBonus += v; break;
         case "reload": case "reloadSpeed": reloadBonus += v; break;
+        case "damagePerStatus": damagePerStatusBonus += v; break;
+        case "nonCritDamage": nonCritDamageBonus += v; break;
+        case "healthPerSlashStack": healthPerSlashStack += val * mult; break;
       }
     }
   }
@@ -138,7 +147,10 @@ function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: 
       switch (stat) {
         case "damage": dmgMult += val; break;
         case "criticalChance": critChance += weapon.criticalChance * val; break;
-        case "criticalMultiplier": critMult += weapon.criticalMultiplier * val; break;
+        case "criticalMultiplier":
+        case "criticalDamage":
+          critMult += weapon.criticalMultiplier * val;
+          break;
         case "statusChance": statusChance += weapon.statusChance * val; break;
         case "fireRate": fireRate += weapon.fireRate * val; break;
         case "multishot": multishot += val; break;
@@ -166,6 +178,9 @@ function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: 
     dps,
     magazine,
     reloadTime: reload,
+    damagePerStatusBonus,
+    nonCritDamageBonus,
+    healthPerSlashStack,
   };
 }
 
@@ -796,6 +811,15 @@ export default function CompanionBuilderPage() {
                             <StatRow label="Reload" value={`${weaponStats.reloadTime.toFixed(2)}s`} />
                             <div className="border-t border-border my-2" />
                             <StatRow label="DPS" value={weaponStats.dps.toFixed(0)} highlighted />
+                            {weaponStats.damagePerStatusBonus > 0 && (
+                              <StatRow label="Dmg / status on target" value={`+${(weaponStats.damagePerStatusBonus * 100).toFixed(0)}%`} />
+                            )}
+                            {weaponStats.nonCritDamageBonus > 0 && (
+                              <StatRow label="Non-crit damage" value={`+${(weaponStats.nonCritDamageBonus * 100).toFixed(0)}%`} />
+                            )}
+                            {weaponStats.healthPerSlashStack > 0 && (
+                              <StatRow label="Lifesteal / Slash stack" value={`${weaponStats.healthPerSlashStack.toFixed(0)} HP`} />
+                            )}
                           </div>
                         ) : (
                           <p className="text-sm text-muted-foreground">Select a weapon to see stats</p>

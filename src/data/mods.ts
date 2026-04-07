@@ -2692,6 +2692,64 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
+    "id": "bloodthirst",
+    "name": "Bloodthirst",
+    "polarity": "vazarin",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "healthPerSlashStack": 25
+    },
+    "description": "Health stolen per stack of Slash Damage on the target (+25 per rank, max 100)",
+    "rarity": "rare"
+  },
+  {
+    "id": "cull_the_weak",
+    "name": "Cull the Weak",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 5,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "damagePerStatus": 10,
+      "nonCritDamage": 40
+    },
+    "description": "+10% Melee Damage per Status type on the target, +40% Damage on non-Critical Hits per rank",
+    "rarity": "rare"
+  },
+  {
+    "id": "precision_conditioning",
+    "name": "Precision Conditioning",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 10,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "damage": 35
+    },
+    "description": "+35% Damage per rank (max +385%). Converts all base Physical Damage to Slash",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "radon_claws",
+    "name": "Radon Claws",
+    "polarity": "madurai",
+    "drain": 4,
+    "maxRank": 3,
+    "category": "companion_weapon",
+    "subCategory": "beast_weapon",
+    "stats": {
+      "damage": 15,
+      "criticalMultiplier": 20
+    },
+    "description": "+15% Damage and +20% Critical Damage per rank",
+    "rarity": "uncommon"
+  },
+  {
     "id": "hunters_syndrome",
     "name": "Hunter's Syndrome",
     "polarity": "madurai",
