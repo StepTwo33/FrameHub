@@ -72,7 +72,7 @@ function CompareRow({ label, a, b, higher = "green", format }: {
 
 type CompareTab = "build" | "loadout";
 
-const SECONDARY_EXILUS_SLOT_INDEX = 8;
+const WEAPON_EXILUS_SLOT_INDEX = 8;
 
 /* ─── Build vs Build tab ─── */
 
@@ -215,13 +215,15 @@ function BuildCompareTab() {
               {build.weapon && (() => {
                 const w = build.weapon;
                 const isSec = ["pistol", "secondary", "dual_pistols"].includes(w.category);
-                const nSlots = w.modSlots + (isSec ? 1 : 0);
+                const isMel = ["melee", "archmelee"].includes(w.category);
+                const hasExilus = isSec || isMel;
+                const nSlots = w.modSlots + (hasExilus ? 1 : 0);
                 return (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {Array.from({ length: nSlots }, (_, i) => {
                       const equipped = build.mods.find((m) => m.slotIndex === i);
                       const mod = equipped ? modsMap.get(equipped.modId) : null;
-                      const isExilus = isSec && i === SECONDARY_EXILUS_SLOT_INDEX;
+                      const isExilus = hasExilus && i === WEAPON_EXILUS_SLOT_INDEX;
                       return (
                         <ModSlotCard
                           key={i}
@@ -232,7 +234,13 @@ function BuildCompareTab() {
                           onAdd={() => {
                             setActiveSlot(side);
                             setActiveModSlot(i);
-                            setModPickerSlotType(isExilus ? "weapon_exilus_secondary" : "regular");
+                            setModPickerSlotType(
+                              isSec && isExilus
+                                ? "weapon_exilus_secondary"
+                                : isMel && isExilus
+                                  ? "weapon_exilus_melee"
+                                  : "regular"
+                            );
                             setModPickerOpen(true);
                           }}
                           onRemove={() => removeMod(side, i)}

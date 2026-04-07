@@ -156,7 +156,7 @@ export interface SimulationParams {
   comboCount: number;         // melee combo hit count (default 0)
   killStacks: number;         // Galvanized / Berserker on-kill stacks (0-5)
   statusTypesOnTarget: number; // Condition Overload / Galvanized Aptitude (0-5)
-  arcaneStacks: number;       // arcane stack count (0 to max, usually 0-5)
+  arcaneStacks: number;       // e.g. Merciless (0–12), other arcanes vary
   extraGladiatorMods: number; // Gladiator mods on warframe (0-3, adds to weapon-side count)
 }
 
@@ -196,7 +196,10 @@ export interface CalculatedStats {
   comboCount: number;
   comboDuration: number;
   heavyAttackEfficiency: number; // from mods like Killing Blow
-  comboMultiplier: number; // derived from comboCount
+  /** Melee Damage Multiplier tier for Blood Rush / Weeping Wounds / Gladiator (current game: first bonus at 20 hits). */
+  comboMultiplier: number;
+  /** Heavy Attack combo damage tier (2x–12x+ from combo counter; separate from BR scaling mult). */
+  heavyAttackComboMultiplier: number;
   // Conditional mod tracking
   conditionOverloadBonus: number; // per unique status
   bloodRushStacks: number; // crit from combo
@@ -286,33 +289,56 @@ export interface Loadout {
   name: string;
   createdAt: number;
   updatedAt: number;
+  /** Matches warframe builder / saved build payload so mods, arcanes, helminth, etc. round-trip. */
   warframeBuild?: {
     warframeId: string;
     mods: ModSlot[];
     shards: (EquippedArchonShard | null)[];
+    arcaneIds?: (string | null)[];
     hasOrokinReactor: boolean;
+    isMR30?: boolean;
+    slotPolarities?: Record<number, string>;
+    helminthSlot?: number | null;
+    helminthAbilityId?: string | null;
+    exaltedMods?: ModSlot[];
+    exaltedSlotPolarities?: Record<number, string>;
   };
   primaryBuild?: {
     weaponId: string;
     mods: ModSlot[];
+    stanceModId?: string;
+    arcaneIds?: (string | null)[];
     hasOrokinCatalyst: boolean;
+    isMR30?: boolean;
+    slotPolarities?: Record<number, string>;
   };
   secondaryBuild?: {
     weaponId: string;
     mods: ModSlot[];
+    stanceModId?: string;
+    arcaneIds?: (string | null)[];
     hasOrokinCatalyst: boolean;
+    isMR30?: boolean;
+    slotPolarities?: Record<number, string>;
   };
   meleeBuild?: {
     weaponId: string;
     mods: ModSlot[];
+    stanceModId?: string;
+    arcaneIds?: (string | null)[];
     hasOrokinCatalyst: boolean;
+    isMR30?: boolean;
+    slotPolarities?: Record<number, string>;
   };
   companionBuild?: {
     companionId: string;
     mods: ModSlot[];
     weaponMods: ModSlot[];
+    arcaneIds?: (string | null)[];
     hasReactor: boolean;
     hasCatalyst: boolean;
+    isMR30?: boolean;
+    slotPolarities?: Record<number, string>;
   };
   modularBuild?: {
     type: string; // 'kitgun' | 'zaw' | 'amp'

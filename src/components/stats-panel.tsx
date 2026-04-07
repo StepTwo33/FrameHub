@@ -113,9 +113,9 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
           <div className="space-y-1.5 py-1">
             {isMelee && (
               <SimSlider
-                label="Combo Hits" value={simParams.comboCount} min={0} max={245}
+                label="Combo Hits" value={simParams.comboCount} min={0} max={260}
                 onChange={(v) => onSimParamsChange({ ...simParams, comboCount: v })}
-                tooltip="Melee combo hit count — affects Blood Rush, Weeping Wounds, heavy attacks"
+                tooltip="Consecutive melee combo counter. BR/WW use scaling tiers starting at 20 hits (1.25x, then +0.25x per 20 hits to 3.75x at 220+). Heavy attacks use a separate 2x–12x tier table."
               />
             )}
             <SimSlider
@@ -129,15 +129,15 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
               tooltip="Unique status types on target — Condition Overload, Galvanized Aptitude/Savvy/Shot"
             />
             <SimSlider
-              label="Arcane Stacks" value={simParams.arcaneStacks} min={0} max={5}
+              label="Arcane Stacks" value={simParams.arcaneStacks} min={0} max={12}
               onChange={(v) => onSimParamsChange({ ...simParams, arcaneStacks: v })}
-              tooltip="Arcane activation stacks"
+              tooltip="Stack count for arcanes like Primary/Secondary/Melee Merciless (max 12)"
             />
             {isMelee && (
               <SimSlider
                 label="WF Gladiator" value={simParams.extraGladiatorMods} min={0} max={3}
                 onChange={(v) => onSimParamsChange({ ...simParams, extraGladiatorMods: v })}
-                tooltip="Gladiator mods on warframe (Aegis/Finesse/Resolve) — adds +10% CC per combo tier each"
+                tooltip="Gladiator mods on warframe (Aegis/Finesse/Resolve) — +10% crit per melee scaling multiplier tier each (same (CM−1) factor as Blood Rush)"
               />
             )}
           </div>
@@ -146,10 +146,10 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
             <div className="border-t border-border/50 pt-1 mt-1 space-y-0.5">
               <div className="text-[9px] text-muted-foreground/60 mb-0.5">Active conditional effects:</div>
               {stats.bloodRushStacks > 0 && (
-                <div className="text-[10px] text-red-400">Blood Rush: +{(stats.bloodRushStacks * (stats.simParams.comboCount > 0 ? stats.comboMultiplier - 1 : 0) * 100).toFixed(0)}% CC</div>
+                <div className="text-[10px] text-red-400">Blood Rush: ×{(1 + stats.bloodRushStacks * Math.max(0, stats.comboMultiplier - 1)).toFixed(2)} crit (coef × (CM−1) = {(stats.bloodRushStacks * Math.max(0, stats.comboMultiplier - 1) * 100).toFixed(0)}%)</div>
               )}
               {stats.weepingWoundsBonus > 0 && (
-                <div className="text-[10px] text-teal-400">Weeping Wounds: +{(stats.weepingWoundsBonus * (stats.simParams.comboCount > 0 ? stats.comboMultiplier - 1 : 0) * 100).toFixed(0)}% SC</div>
+                <div className="text-[10px] text-teal-400">Weeping Wounds: ×{(1 + stats.weepingWoundsBonus * Math.max(0, stats.comboMultiplier - 1)).toFixed(2)} status (coef × (CM−1) = {(stats.weepingWoundsBonus * Math.max(0, stats.comboMultiplier - 1) * 100).toFixed(0)}%)</div>
               )}
               {stats.conditionOverloadBonus > 0 && (
                 <div className="text-[10px] text-purple-400">Condition Overload: +{(stats.conditionOverloadBonus * stats.simParams.statusTypesOnTarget * 100).toFixed(0)}% DMG ({stats.simParams.statusTypesOnTarget} types)</div>
@@ -164,7 +164,9 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
                 <div className="text-[10px] text-yellow-400">Berserker Fury: +{(stats.berserkerFuryBonus * Math.min(stats.simParams.killStacks, 2) * 100).toFixed(0)}% AS ({Math.min(stats.simParams.killStacks, 2)}/2 stacks)</div>
               )}
               {stats.vigilanteCritBonus && stats.vigilanteCritBonus > 0 && (
-                <div className="text-[10px] text-orange-400">Vigilante Set: {(stats.vigilanteCritBonus * 100).toFixed(0)}% crit tier enhance chance</div>
+                <div className="text-[10px] text-orange-400" title="Primary rifles/shotguns/bows/archguns only — does not apply to secondaries or melee">
+                  Vigilante Set: {(stats.vigilanteCritBonus * 100).toFixed(0)}% crit tier enhance chance
+                </div>
               )}
             </div>
           )}
@@ -203,10 +205,18 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
       {/* Core Stats */}
       <CollapsibleSection title="CORE" defaultOpen>
         <StatRow label="Critical Chance" value={`${(stats.criticalChance * 100).toFixed(1)}%`} />
-        <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(1)}x`} />
+        <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(2)}x`} />
         <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
-        <StatRow label="Fire Rate" value={stats.fireRate.toFixed(2)} />
-        <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />
+        <StatRow
+          label={isMelee ? "Attack Speed" : "Fire Rate"}
+          value={stats.fireRate.toFixed(2)}
+          tooltip={
+            isMelee
+              ? "Melee attacks per second (same field as fire rate for guns in the build engine)."
+              : undefined
+          }
+        />
+        {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
         {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
         {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
       </CollapsibleSection>
@@ -214,15 +224,24 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
       {/* Melee-specific */}
       {isMelee && stats.heavyAttackDamage > 0 && (
         <CollapsibleSection title="MELEE" defaultOpen>
-          <StatRow label="Combo Multiplier" value={`${stats.comboMultiplier.toFixed(1)}x`} />
+          <StatRow
+            label="Combo scaling (BR/WW)"
+            value={`${stats.comboMultiplier.toFixed(2)}x`}
+            tooltip="Melee Damage Multiplier tier from combo counter (1.0 below 20 hits, then 1.25x at 20, +0.25x per 20 hits). Blood Rush & Weeping use (CM−1) in their formulas."
+          />
+          <StatRow
+            label="Heavy attack mult"
+            value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`}
+            tooltip="Separate heavy-attack combo tier (2x from 20 hits, +1x per 20 to 12x). Heavy damage shown uses this × total damage as a simple model."
+          />
           <StatRow label="Combo Duration" value={`${stats.comboDuration.toFixed(0)}s`} />
           <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted />
           {stats.bloodRushStacks > 0 && (
             <StatRow
               label="Blood Rush"
-              value={`+${(stats.bloodRushStacks * 100).toFixed(0)}%/combo`}
+              value={`+${(stats.bloodRushStacks * 100).toFixed(0)}% × (CM−1)`}
               color="text-red-400"
-              tooltip="Critical chance bonus per combo multiplier tier"
+              tooltip="Multiplies modded crit chance by (1 + this × (melee scaling multiplier − 1))"
             />
           )}
           {stats.conditionOverloadBonus > 0 && (
@@ -542,6 +561,11 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
   );
 }
 
+function fmtAbilityMisc(v: unknown): string {
+  if (typeof v === "number") return Number.isInteger(v) ? String(v) : v.toFixed(2);
+  return String(v);
+}
+
 function AbilityPreview({ ability, stats, index }: {
   ability: Ability; stats: WarframeCalculatedStats; index: number;
 }) {
@@ -551,6 +575,7 @@ function AbilityPreview({ ability, stats, index }: {
   const rng = stats.abilityRange;
 
   const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
+  const miscEntries = ability.miscStats ? Object.entries(ability.miscStats) : [];
 
   return (
     <div className="py-1.5 border-b border-border/30 last:border-0">
@@ -558,6 +583,13 @@ function AbilityPreview({ ability, stats, index }: {
         <span className="text-xs font-medium">{ability.name}</span>
         <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
       </div>
+      {ability.subAbilities != null && ability.subAbilities.length > 0 && (
+        <ul className="list-disc list-inside text-[9px] text-muted-foreground mt-1 space-y-0.5 leading-snug">
+          {ability.subAbilities.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ul>
+      )}
       <div className="mt-0.5 space-y-0">
         {ability.damage != null && ability.damage > 0 && (
           <div className="text-[10px] text-muted-foreground">
@@ -567,6 +599,11 @@ function AbilityPreview({ ability, stats, index }: {
         {ability.directDamage != null && ability.directDamage > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Direct Damage: <span className="text-foreground font-mono">{(ability.directDamage * str).toFixed(0)}</span>
+          </div>
+        )}
+        {ability.aoeDamage != null && ability.aoeDamage > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            AoE Damage: <span className="text-foreground font-mono">{(ability.aoeDamage * str).toFixed(0)}</span>
           </div>
         )}
         {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
@@ -607,6 +644,36 @@ function AbilityPreview({ ability, stats, index }: {
         {ability.armor != null && ability.armor > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Armor: <span className="text-foreground font-mono">{(ability.armor * str).toFixed(0)}</span>
+          </div>
+        )}
+        {ability.shield != null && ability.shield > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Shield: <span className="text-foreground font-mono">{(ability.shield * str).toFixed(0)}</span>
+          </div>
+        )}
+        {ability.statusChance != null && ability.statusChance > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Status: <span className="text-foreground font-mono">{(ability.statusChance * str * 100).toFixed(0)}%</span>
+          </div>
+        )}
+        {ability.castTime != null && ability.castTime > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Cast: <span className="text-foreground font-mono">{ability.castTime.toFixed(1)}s</span>
+          </div>
+        )}
+        {ability.cooldown != null && ability.cooldown > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Cooldown: <span className="text-foreground font-mono">{ability.cooldown.toFixed(1)}s</span>
+          </div>
+        )}
+        {miscEntries.length > 0 && (
+          <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
+            {miscEntries.map(([k, v]) => (
+              <div key={k} className="text-[9px] text-muted-foreground">
+                <span className="text-amber-400/90">{k}:</span>{" "}
+                <span className="text-foreground font-mono">{fmtAbilityMisc(v)}</span>
+              </div>
+            ))}
           </div>
         )}
       </div>

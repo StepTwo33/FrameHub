@@ -910,7 +910,7 @@ export const allArcanes: Mod[] = [
     category: "arcane",
     subCategory: "secondary",
     stats: {"damage": 30.0, "reloadSpeed": 30.0},
-    description: "On Kill: +10% Secondary Damage, max 12 stacks, 4s duration. +10% per rank.",
+    description: "On Kill: +30% Secondary Damage per stack at max rank (max 12 stacks, 4s). +30% Reload Speed at max rank.",
     rarity: "rare",
   },
 {

@@ -106,6 +106,9 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
 }
 
 // ── Set Bonus Detection ─────────────────────────────────────────────────
+// Implemented: Umbral (×stats on Vit/Fiber/Int; Tau unscaled), Sacrificial (1.5× on both mods when 2),
+// Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only).
+// Not modeled: Augur / Hunter / Mecha / Tek / Synth energy-shield & companion proc sets (no stubs in loop).
 const UMBRAL_MOD_IDS = ['umbra_vitality', 'umbra_fiber', 'umbra_intensify'];
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
@@ -134,11 +137,26 @@ const GLADIATOR_MOD_IDS = [
   'gladiator_resolve', 'gladiator_rush', 'gladiator_vice',
 ];
 
-// Vigilante set: +5% chance per mod to enhance crit tier on primary weapons
+// Vigilante set: +5% chance per mod to enhance crit tier (primary weapons only in-game)
 const VIGILANTE_MOD_IDS = [
-  'vigilante_armaments', 'vigilante_fervor', 'vigilante_offense',
-  'vigilante_pursuit', 'vigilante_supplies', 'vigilante_vigor',
+  "vigilante_armaments", "vigilante_fervor", "vigilante_offense",
+  "vigilante_pursuit", "vigilante_supplies", "vigilante_vigor",
 ];
+
+/** Categories that can proc Vigilante set (not secondaries / melee / pistols). */
+function weaponSupportsVigilanteSet(w: Weapon): boolean {
+  const c = w.category;
+  if (c === "melee" || w.triggerType === "Melee") return false;
+  if (c === "pistol" || c === "secondary" || c === "dual_pistols") return false;
+  return (
+    c === "primary" ||
+    c === "rifle" ||
+    c === "shotgun" ||
+    c === "bow" ||
+    c === "launcher" ||
+    c === "archgun"
+  );
+}
 
 // ── Conditional Mod Detection ───────────────────────────────────────────
 function isConditionalMod(modName: string): string | null {
@@ -152,15 +170,41 @@ function isConditionalMod(modName: string): string | null {
   return null;
 }
 
-// ── Heavy Attack / Combo ────────────────────────────────────────────────
-function getComboMultiplier(comboCount: number): number {
-  if (comboCount <= 0) return 1.0;
-  if (comboCount < 5) return 1.0;
-  if (comboCount < 15) return 1.5;
-  if (comboCount < 45) return 2.0;
-  if (comboCount < 135) return 2.5;
-  if (comboCount < 245) return 3.0;
-  return 3.5;
+// ── Melee combo (current system, wiki: Melee Combo) ─────────────────────
+// Blood Rush / Weeping Wounds / Gladiator use the "Melee Damage Multiplier" column.
+// Legacy pre–Melee 3.0 steps (5→1.5x, 15→2x, …) are obsolete in-game.
+
+function getMeleeScalingMultiplier(comboCount: number, weaponId?: string): number {
+  if (weaponId === "venka_prime" && comboCount >= 240) return 4.0;
+  if (comboCount < 20) return 1.0;
+  if (comboCount < 40) return 1.25;
+  if (comboCount < 60) return 1.5;
+  if (comboCount < 80) return 1.75;
+  if (comboCount < 100) return 2.0;
+  if (comboCount < 120) return 2.25;
+  if (comboCount < 140) return 2.5;
+  if (comboCount < 160) return 2.75;
+  if (comboCount < 180) return 3.0;
+  if (comboCount < 200) return 3.25;
+  if (comboCount < 220) return 3.5;
+  return 3.75;
+}
+
+/** Heavy attacks use the "Heavy Attack Multiplier" column (2x at 20 hits, +1x per 20 to 12x at 220+). */
+function getHeavyAttackComboMultiplier(comboCount: number, weaponId?: string): number {
+  if (weaponId === "venka_prime" && comboCount >= 240) return 13.0;
+  if (comboCount < 20) return 1.0;
+  if (comboCount < 40) return 2.0;
+  if (comboCount < 60) return 3.0;
+  if (comboCount < 80) return 4.0;
+  if (comboCount < 100) return 5.0;
+  if (comboCount < 120) return 6.0;
+  if (comboCount < 140) return 7.0;
+  if (comboCount < 160) return 8.0;
+  if (comboCount < 180) return 9.0;
+  if (comboCount < 200) return 10.0;
+  if (comboCount < 220) return 11.0;
+  return 12.0;
 }
 
 // ── Main Weapon Calculator ──────────────────────────────────────────────
@@ -198,6 +242,7 @@ export function calculateWeaponBuild(
     comboDuration: 5,
     heavyAttackEfficiency: 0,
     comboMultiplier: 1.0,
+    heavyAttackComboMultiplier: 1.0,
     conditionOverloadBonus: 0,
     bloodRushStacks: 0,
     weavingFrameBonus: 0,
@@ -419,17 +464,21 @@ export function calculateWeaponBuild(
   // Melee-specific: combo system, heavy attacks, blood rush, weeping wounds, gladiator set
   if (isMelee) {
     stats.comboCount = sim.comboCount;
-    stats.comboMultiplier = getComboMultiplier(stats.comboCount);
+    stats.comboMultiplier = getMeleeScalingMultiplier(stats.comboCount, baseWeapon.id);
+    stats.heavyAttackComboMultiplier = getHeavyAttackComboMultiplier(stats.comboCount, baseWeapon.id);
 
-    // Blood Rush + Gladiator Set: additive with each other, multiplicative with mods
-    // Formula: modded_cc × (1 + BR × (combo-1) + Glad × (combo-1))
+    // Blood Rush + Gladiator Set: additive with each other, multiplicative with modded crit
+    // Wiki: Final CC = Modded CC × (1 + Blood Rush × (Melee Damage Multiplier − 1) + …)
     let comboScaling = 0;
     if (hasBloodRush) {
       stats.bloodRushStacks = bloodRushValue;
       comboScaling += bloodRushValue * (stats.comboMultiplier - 1);
     }
+    // Per Gladiator piece: +10% crit per combo scaling tier; at 6 pieces +15% more (wiki full set).
     if (gladiatorCount > 0 && stats.comboMultiplier > 1) {
-      comboScaling += 0.10 * gladiatorCount * (stats.comboMultiplier - 1);
+      let gladPerTier = 0.10 * gladiatorCount;
+      if (gladiatorCount >= 6) gladPerTier += 0.15;
+      comboScaling += gladPerTier * (stats.comboMultiplier - 1);
     }
     if (comboScaling > 0) {
       stats.criticalChance *= (1 + comboScaling);
@@ -441,12 +490,11 @@ export function calculateWeaponBuild(
       stats.statusChance *= (1 + weepingWoundsValue * (stats.comboMultiplier - 1));
     }
 
-    stats.heavyAttackDamage = stats.totalDamage * stats.comboMultiplier * 2;
+    stats.heavyAttackDamage = stats.totalDamage * stats.heavyAttackComboMultiplier;
   }
 
-  // Vigilante Set Bonus: +5% chance per mod to enhance crit tier (primary only)
-  // Stored as vigilanteCritBonus for UI display — probabilistic, not a flat CC increase
-  if (vigilanteCount > 0 && !isMelee) {
+  // Vigilante: +5% per equipped set mod to upgrade primary crit tier (not secondaries / melee)
+  if (vigilanteCount > 0 && weaponSupportsVigilanteSet(baseWeapon)) {
     stats.vigilanteCritBonus = 0.05 * vigilanteCount;
   }
 
@@ -516,12 +564,12 @@ export function calculateWarframeBuild(
 
     const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
-    // Umbral set bonus: multiply mod values by (1 + setBonus)
-    const setMult = UMBRAL_MOD_IDS.includes(modSlot.modId)
-      ? (1 + getUmbralSetBonus(modSlot.modId, umbralCount))
-      : 1;
+    const isUmbral = UMBRAL_MOD_IDS.includes(modSlot.modId);
+    // Set bonus applies only to primary stats (health / armor / strength), not Tau Resistance.
+    const umbralSetMult = isUmbral ? (1 + getUmbralSetBonus(modSlot.modId, umbralCount)) : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
+      const setMult = isUmbral && statName === "tauResistance" ? 1 : umbralSetMult;
       const modValue = (value * multiplier * setMult) / 100.0;
       applyWarframeMod(stats, statName, modValue);
     }

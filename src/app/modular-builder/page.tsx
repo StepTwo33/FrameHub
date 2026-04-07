@@ -7,7 +7,8 @@ import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
-import { Weapon, Mod, EquippedMod } from "@/lib/types";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS } from "@/lib/types";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import type { SlotType } from "@/components/mod-picker";
@@ -80,6 +81,7 @@ export default function ModularBuilderPage() {
   const [activeArcaneSlot, setActiveArcaneSlot] = useState(0);
   const [hasOrokinCatalyst, setHasOrokinCatalyst] = useState(false);
   const [isMR30, setIsMR30] = useState(false);
+  const [simParams, setSimParams] = useState<SimulationParams>(() => ({ ...DEFAULT_SIM_PARAMS }));
 
   // Build the assembled weapon
   const assembledWeapon = useMemo<Weapon | null>(() => {
@@ -105,10 +107,10 @@ export default function ModularBuilderPage() {
     const modSlots = equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex }));
     const activeArcanes = equippedArcanes.filter((a): a is Mod => a !== null);
     if (activeArcanes.length > 0) {
-      return calculateWeaponBuildWithArcanes(assembledWeapon, modSlots, modsMap, activeArcanes);
+      return calculateWeaponBuildWithArcanes(assembledWeapon, modSlots, modsMap, activeArcanes, undefined, simParams);
     }
-    return calculateWeaponBuild(assembledWeapon, modSlots, modsMap);
-  }, [assembledWeapon, equippedMods, equippedArcanes]);
+    return calculateWeaponBuild(assembledWeapon, modSlots, modsMap, undefined, simParams);
+  }, [assembledWeapon, equippedMods, equippedArcanes, simParams]);
 
   const modCategory = useMemo(() => {
     if (!assembledWeapon) return "primary";
@@ -133,9 +135,7 @@ export default function ModularBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = slotPolarities[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [equippedMods, slotPolarities]);
 
@@ -284,6 +284,9 @@ export default function ModularBuilderPage() {
     setEquippedMods([]);
     setEquippedArcanes([null, null]);
     setHasOrokinCatalyst(false);
+    setSimParams({ ...DEFAULT_SIM_PARAMS });
+    setCurrentBuildId(null);
+    setBuildName("");
   };
 
   return (
@@ -696,7 +699,12 @@ export default function ModularBuilderPage() {
                 {assembledWeapon ? "WEAPON STATS" : "SELECT ALL PARTS"}
               </h3>
               {assembledWeapon && calculatedStats ? (
-                <WeaponStatsPanel stats={calculatedStats} />
+                <WeaponStatsPanel
+                  stats={calculatedStats}
+                  isMelee={assembledWeapon.category === "melee"}
+                  simParams={simParams}
+                  onSimParamsChange={setSimParams}
+                />
               ) : (
                 <div className="space-y-2 text-sm text-muted-foreground">
                   {modularType === "kitgun" && (

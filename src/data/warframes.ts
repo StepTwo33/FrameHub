@@ -575,39 +575,78 @@ export const allWarframes: Warframe[] = [
         "name": "Spectral Scream",
         "energyCost": 10,
         "description": "Exhale a deep breath of elemental destruction. Tap to cycle through elements, hold to cast. The chosen element applies to all of Chroma's abilities.",
-        "damage": 200,
-        "range": 15,
+        "damagePerSecond": 400,
+        "range": 10,
         "castTime": 0.5,
-        "damageType": "Elemental"
+        "statusChance": 1,
+        "damageType": "Elemental (Heat / Cold / Toxin / Electricity)",
+        "subAbilities": [
+          "Channeled: 3 energy/s while active (after the 10 energy cast).",
+          "Cone reach scales weakly with Ability Range (effective length scales with the cube root of Range).",
+          "Elemental stream can chain to one enemy within 10 m of targets hit by the cone."
+        ],
+        "miscStats": {
+          "Channel drain": "3/s",
+          "Stream link range": "10 m"
+        }
       },
       {
         "name": "Elemental Ward",
         "energyCost": 50,
-        "description": "Depending on Chroma's elemental alignment, an offensive area-of-effect is created. Chroma and its nearby allies are imbued with defensive energy.",
-        "range": 15,
+        "description": "Depending on Chroma's elemental alignment, an offensive area-of-effect is created. Chroma and nearby allies are imbued with defensive energy.",
+        "range": 12,
         "duration": 25,
-        "radius": 15,
-        "castTime": 0.6
+        "castTime": 1,
+        "subAbilities": [
+          "Heat: +55% max Health; aura deals 100 Heat/s in 5 m (10% status). Inner 5 m radius does not scale with Range.",
+          "Electric: +30% max Shields; incoming damage can arc to an enemy within 10 m (25% status, min 200 damage).",
+          "Toxin: +35% reload speed and holster damage (3 s buff); 50% chance per second for a toxin hit in 5 m (100% status on proc).",
+          "Cold: +145% base Armor; reflects damage as Cold (300% reflected multiplier, 25% status)."
+        ],
+        "miscStats": {
+          "Aura radius": "12 m (scales with Range)"
+        }
       },
       {
         "name": "Vex Armor",
         "energyCost": 75,
         "description": "Chroma fortifies squad Armor when his Shields are damaged or he kills an enemy with a melee weapon. He increases squad Weapon Damage when he loses Health or he kills an enemy with a ranged weapon.",
-        "range": 20,
+        "range": 18,
         "duration": 25,
-        "radius": 20,
-        "castTime": 0.5
+        "radius": 18,
+        "castTime": 0.5,
+        "subAbilities": [
+          "Scorn builds to +350% armor from shield damage taken or melee kills.",
+          "Fury builds to +275% weapon damage from health damage taken or ranged kills (headshots build faster).",
+          "Buffs apply to allies in aura range; percentages scale with Ability Strength."
+        ],
+        "miscStats": {
+          "Aura radius": "18 m (scales with Range)"
+        }
       },
       {
         "name": "Effigy",
         "energyCost": 50,
         "description": "Chroma turns his pelt into a massive sentry that strengthens nearby allies and engulfs enemies in elemental attacks.",
-        "damage": 300,
+        "damage": 400,
+        "damagePerSecond": 2000,
+        "health": 8000,
+        "armor": 200,
         "range": 20,
-        "duration": 30,
-        "radius": 10,
         "castTime": 1,
-        "damageType": "Elemental"
+        "damageType": "Elemental (matches alignment)",
+        "subAbilities": [
+          "Sentry fires in 20 m at 5 ticks/s; costs 10 energy/s while active.",
+          "Chroma: +20% movement speed and −50% total armor while the pelt is out.",
+          "Roar stuns in 30 m (15 s cooldown). Wing flap: 200 elemental damage in 5 m (5 s cooldown).",
+          "Kills by the sentry have a chance for bonus credits; pickups within 10 m gain +25–100% credits."
+        ],
+        "miscStats": {
+          "Sentry armor": "200",
+          "Energy drain": "10/s",
+          "Stun radius": "30 m",
+          "Credit pickup radius": "10 m"
+        }
       }
     ]
   },
@@ -626,39 +665,78 @@ export const allWarframes: Warframe[] = [
         "name": "Spectral Scream",
         "energyCost": 10,
         "description": "Exhale a deep breath of elemental destruction. Tap to cycle through elements, hold to cast. The chosen element applies to all of Chroma's abilities.",
-        "damage": 200,
-        "range": 15,
+        "damagePerSecond": 400,
+        "range": 10,
         "castTime": 0.5,
-        "damageType": "Elemental"
+        "statusChance": 1,
+        "damageType": "Elemental (Heat / Cold / Toxin / Electricity)",
+        "subAbilities": [
+          "Channeled: 3 energy/s while active (after the 10 energy cast).",
+          "Cone reach scales weakly with Ability Range (effective length scales with the cube root of Range).",
+          "Elemental stream can chain to one enemy within 10 m of targets hit by the cone."
+        ],
+        "miscStats": {
+          "Channel drain": "3/s",
+          "Stream link range": "10 m"
+        }
       },
       {
         "name": "Elemental Ward",
         "energyCost": 50,
-        "description": "Depending on Chroma's elemental alignment, an offensive area-of-effect is created. Chroma and its nearby allies are imbued with defensive energy.",
-        "range": 15,
+        "description": "Depending on Chroma's elemental alignment, an offensive area-of-effect is created. Chroma and nearby allies are imbued with defensive energy.",
+        "range": 12,
         "duration": 25,
-        "radius": 15,
-        "castTime": 0.6
+        "castTime": 1,
+        "subAbilities": [
+          "Heat: +55% max Health; aura deals 100 Heat/s in 5 m (10% status). Inner 5 m radius does not scale with Range.",
+          "Electric: +30% max Shields; incoming damage can arc to an enemy within 10 m (25% status, min 200 damage).",
+          "Toxin: +35% reload speed and holster damage (3 s buff); 50% chance per second for a toxin hit in 5 m (100% status on proc).",
+          "Cold: +145% base Armor; reflects damage as Cold (300% reflected multiplier, 25% status)."
+        ],
+        "miscStats": {
+          "Aura radius": "12 m (scales with Range)"
+        }
       },
       {
         "name": "Vex Armor",
         "energyCost": 75,
         "description": "Chroma fortifies squad Armor when his Shields are damaged or he kills an enemy with a melee weapon. He increases squad Weapon Damage when he loses Health or he kills an enemy with a ranged weapon.",
-        "range": 20,
+        "range": 18,
         "duration": 25,
-        "radius": 20,
-        "castTime": 0.5
+        "radius": 18,
+        "castTime": 0.5,
+        "subAbilities": [
+          "Scorn builds to +350% armor from shield damage taken or melee kills.",
+          "Fury builds to +275% weapon damage from health damage taken or ranged kills (headshots build faster).",
+          "Buffs apply to allies in aura range; percentages scale with Ability Strength."
+        ],
+        "miscStats": {
+          "Aura radius": "18 m (scales with Range)"
+        }
       },
       {
         "name": "Effigy",
         "energyCost": 50,
         "description": "Chroma turns his pelt into a massive sentry that strengthens nearby allies and engulfs enemies in elemental attacks.",
-        "damage": 300,
+        "damage": 400,
+        "damagePerSecond": 2000,
+        "health": 8000,
+        "armor": 200,
         "range": 20,
-        "duration": 30,
-        "radius": 10,
         "castTime": 1,
-        "damageType": "Elemental"
+        "damageType": "Elemental (matches alignment)",
+        "subAbilities": [
+          "Sentry fires in 20 m at 5 ticks/s; costs 10 energy/s while active.",
+          "Chroma: +20% movement speed and −50% total armor while the pelt is out.",
+          "Roar stuns in 30 m (15 s cooldown). Wing flap: 200 elemental damage in 5 m (5 s cooldown).",
+          "Kills by the sentry have a chance for bonus credits; pickups within 10 m gain +25–100% credits."
+        ],
+        "miscStats": {
+          "Sentry armor": "200",
+          "Energy drain": "10/s",
+          "Stun radius": "30 m",
+          "Credit pickup radius": "10 m"
+        }
       }
     ]
   },

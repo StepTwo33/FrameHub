@@ -9,6 +9,7 @@ import { allWarframes } from "@/data/warframes";
 import { allMods, modsMap } from "@/data/mods";
 import { allArchonShards } from "@/data/archon-shards";
 import { calculateWarframeBuild, calculateWeaponBuild, applyArcaneToWarframe } from "@/lib/calculator";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,7 +20,7 @@ import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { buildShareUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
@@ -146,9 +147,30 @@ function AbilityCard({ ability, index, stats }: {
   const effectiveCost = Math.max(ability.energyCost * 0.25, ability.energyCost * (2 - clampedEff));
   const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
 
-  const hasAnyStats = ability.damage || ability.range || ability.duration || ability.radius ||
-    ability.health || ability.armor || ability.shield || ability.damageReduction ||
-    ability.damageBuff || ability.statusChance;
+  const miscKeys = ability.miscStats ? Object.keys(ability.miscStats) : [];
+  const hasAnyStats =
+    (ability.damage != null && ability.damage > 0) ||
+    (ability.directDamage != null && ability.directDamage > 0) ||
+    (ability.aoeDamage != null && ability.aoeDamage > 0) ||
+    (ability.damagePerSecond != null && ability.damagePerSecond > 0) ||
+    ability.range != null ||
+    ability.duration != null ||
+    ability.radius != null ||
+    (ability.health != null && ability.health > 0) ||
+    (ability.armor != null && ability.armor > 0) ||
+    (ability.shield != null && ability.shield > 0) ||
+    (ability.damageReduction != null && ability.damageReduction > 0) ||
+    (ability.damageBuff != null && ability.damageBuff > 0) ||
+    ability.statusChance != null ||
+    (ability.castTime != null && ability.castTime > 0) ||
+    (ability.cooldown != null && ability.cooldown > 0) ||
+    (ability.subAbilities != null && ability.subAbilities.length > 0) ||
+    miscKeys.length > 0;
+
+  const fmtMiscVal = (v: unknown): string => {
+    if (typeof v === "number") return Number.isInteger(v) ? String(v) : v.toFixed(2);
+    return String(v);
+  };
 
   return (
     <div className="border border-border rounded-lg p-4 bg-card">
@@ -174,6 +196,14 @@ function AbilityCard({ ability, index, stats }: {
         {ability.description}
       </p>
 
+      {ability.subAbilities != null && ability.subAbilities.length > 0 && (
+        <ul className="list-disc list-inside text-[11px] text-muted-foreground space-y-1 mb-2 leading-relaxed">
+          {ability.subAbilities.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ul>
+      )}
+
       {ability.damageType && (
         <span className="inline-block text-[10px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-2">
           {ability.damageType}
@@ -182,11 +212,38 @@ function AbilityCard({ ability, index, stats }: {
 
       {hasAnyStats && (
         <div className="border-t border-border pt-2 mt-1 space-y-0">
-          {ability.damage != null && (
+          {ability.damage != null && ability.damage > 0 && (
             <AbilityStatRow
               label="Damage"
               baseValue={ability.damage.toFixed(0)}
               modifiedValue={(ability.damage * str).toFixed(0)}
+              isModified={str !== 1}
+              isPositive={str > 1}
+            />
+          )}
+          {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
+            <AbilityStatRow
+              label="Damage/s"
+              baseValue={ability.damagePerSecond.toFixed(0)}
+              modifiedValue={(ability.damagePerSecond * str).toFixed(0)}
+              isModified={str !== 1}
+              isPositive={str > 1}
+            />
+          )}
+          {ability.directDamage != null && ability.directDamage > 0 && (
+            <AbilityStatRow
+              label="Direct dmg"
+              baseValue={ability.directDamage.toFixed(0)}
+              modifiedValue={(ability.directDamage * str).toFixed(0)}
+              isModified={str !== 1}
+              isPositive={str > 1}
+            />
+          )}
+          {ability.aoeDamage != null && ability.aoeDamage > 0 && (
+            <AbilityStatRow
+              label="AoE dmg"
+              baseValue={ability.aoeDamage.toFixed(0)}
+              modifiedValue={(ability.aoeDamage * str).toFixed(0)}
               isModified={str !== 1}
               isPositive={str > 1}
             />
@@ -221,7 +278,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={rng > 1}
             />
           )}
-          {ability.health != null && (
+          {ability.health != null && ability.health > 0 && (
             <AbilityStatRow
               label="Health"
               baseValue={ability.health.toFixed(0)}
@@ -230,7 +287,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.armor != null && (
+          {ability.armor != null && ability.armor > 0 && (
             <AbilityStatRow
               label="Armor"
               baseValue={ability.armor.toFixed(0)}
@@ -239,7 +296,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.shield != null && (
+          {ability.shield != null && ability.shield > 0 && (
             <AbilityStatRow
               label="Shield"
               baseValue={ability.shield.toFixed(0)}
@@ -248,7 +305,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.damageReduction != null && (
+          {ability.damageReduction != null && ability.damageReduction > 0 && (
             <AbilityStatRow
               label="Dmg Reduction"
               baseValue={ability.damageReduction.toFixed(0)}
@@ -258,7 +315,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.damageBuff != null && (
+          {ability.damageBuff != null && ability.damageBuff > 0 && (
             <AbilityStatRow
               label="Dmg Buff"
               baseValue={ability.damageBuff.toFixed(0)}
@@ -268,7 +325,7 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.statusChance != null && (
+          {ability.statusChance != null && ability.statusChance > 0 && (
             <AbilityStatRow
               label="Status"
               baseValue={(ability.statusChance * 100).toFixed(0)}
@@ -278,10 +335,27 @@ function AbilityCard({ ability, index, stats }: {
               isPositive={str > 1}
             />
           )}
-          {ability.castTime != null && (
+          {ability.castTime != null && ability.castTime > 0 && (
             <div className="flex items-center gap-1.5 py-0.5">
               <span className="text-[11px] text-muted-foreground w-20 shrink-0">Cast Time</span>
               <span className="text-[11px]">{ability.castTime.toFixed(1)}s</span>
+            </div>
+          )}
+          {ability.cooldown != null && ability.cooldown > 0 && (
+            <div className="flex items-center gap-1.5 py-0.5">
+              <span className="text-[11px] text-muted-foreground w-20 shrink-0">Cooldown</span>
+              <span className="text-[11px]">{ability.cooldown.toFixed(1)}s</span>
+            </div>
+          )}
+          {miscKeys.length > 0 && (
+            <div className="pt-1 mt-1 border-t border-border/40 space-y-0.5">
+              <span className="text-[10px] font-semibold text-muted-foreground tracking-wide">OTHER</span>
+              {miscKeys.map((k) => (
+                <div key={k} className="flex items-baseline gap-1.5 py-0.5">
+                  <span className="text-[11px] text-muted-foreground w-24 shrink-0 leading-tight">{k}</span>
+                  <span className="text-[11px] font-mono text-foreground">{fmtMiscVal(ability.miscStats![k])}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -371,7 +445,7 @@ export default function WarframeBuilderPage() {
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
     setEquippedShards(d.shards || [null, null, null, null, null]);
-    setEquippedArcanes((d.arcaneIds || []).map((id) => id ? allMods.find((m) => m.id === id) ?? null : null));
+    setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
     setHasOrokinReactor(d.hasOrokinReactor);
     setIsMR30(d.isMR30);
     setSlotPolarities(d.slotPolarities || {});
@@ -424,9 +498,7 @@ export default function WarframeBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = exaltedSlotPolarities[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [exaltedMods, exaltedSlotPolarities]);
 
@@ -573,9 +645,7 @@ export default function WarframeBuilderPage() {
         if (!mod) return sum;
         const baseDrain = mod.drain + m.rank;
         const slotPol = slotPolarities[m.slotIndex];
-        if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-        if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-        return sum + baseDrain;
+        return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
       }, 0);
   }, [equippedMods, slotPolarities]);
 
@@ -583,10 +653,16 @@ export default function WarframeBuilderPage() {
     setSelectedWarframe(warframe);
     setEquippedMods([]);
     setEquippedShards([null, null, null, null, null]);
+    setEquippedArcanes([null, null]);
     setExaltedMods([]);
     setExaltedSlotPolarities({});
     setHelminthSlot(null);
     setHelminthAbility(null);
+    setSlotPolarities({});
+    // New frame from the picker = new draft; keep old id/name or cloud upsert overwrites the wrong row title
+    setCurrentBuildId(null);
+    setBuildName(`${warframe.name} Build`);
+    setBuildDescription("");
     setShowWarframeList(false);
   }, []);
 

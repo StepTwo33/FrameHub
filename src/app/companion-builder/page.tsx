@@ -15,6 +15,7 @@ import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, Co
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/images";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 
 const companionTypeLabels: Record<string, string> = {
   all: "All",
@@ -363,9 +364,7 @@ export default function CompanionBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = slotPolarities[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [equippedMods, slotPolarities]);
 
@@ -446,6 +445,10 @@ export default function CompanionBuilderPage() {
     setWeaponMods([]);
     setHasCatalyst(false);
     setWeaponRivenStatsMap(undefined);
+    setSlotPolarities({});
+    setCurrentBuildId(null);
+    setBuildName(`${companion.name} Build`);
+    setBuildDescription("");
     setShowCompanionList(false);
   }, []);
 

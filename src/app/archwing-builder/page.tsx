@@ -8,6 +8,7 @@ import { allMods, modsMap } from "@/data/mods";
 import { allWeapons as allWeaponsData } from "@/data/weapons";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { Weapon, Mod, EquippedMod, CalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -145,9 +146,7 @@ export default function ArchwingBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = pols[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [mode, archwingMods, necramechMods, archwingPolarities, necramechPolarities]);
 
@@ -157,9 +156,7 @@ export default function ArchwingBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = weaponPolarities[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [weaponMods, weaponPolarities]);
 
@@ -205,7 +202,13 @@ export default function ArchwingBuilderPage() {
           {(["archwing", "necramech"] as BuilderMode[]).map((m) => (
             <button
               key={m}
-              onClick={() => { setMode(m); setSelectedWeapon(null); setWeaponMods([]); }}
+              onClick={() => {
+                setMode(m);
+                setSelectedWeapon(null);
+                setWeaponMods([]);
+                setCurrentBuildId(null);
+                setBuildName("");
+              }}
               className={cn(
                 "px-4 py-2 rounded-lg text-sm font-medium border transition-all capitalize",
                 mode === m
@@ -230,7 +233,13 @@ export default function ArchwingBuilderPage() {
                 {mode === "archwing" ? archwings.map((aw) => (
                   <button
                     key={aw.id}
-                    onClick={() => { setSelectedArchwing(aw); setArchwingMods([]); setArchwingPolarities({}); }}
+                    onClick={() => {
+                      setSelectedArchwing(aw);
+                      setArchwingMods([]);
+                      setArchwingPolarities({});
+                      setCurrentBuildId(null);
+                      setBuildName(`${aw.name} Build`);
+                    }}
                     className={cn(
                       "p-3 rounded-lg border text-left transition-all",
                       selectedArchwing?.id === aw.id
@@ -246,7 +255,13 @@ export default function ArchwingBuilderPage() {
                 )) : necramechs.map((nm) => (
                   <button
                     key={nm.id}
-                    onClick={() => { setSelectedNecramech(nm); setNecramechMods([]); setNecramechPolarities({}); }}
+                    onClick={() => {
+                      setSelectedNecramech(nm);
+                      setNecramechMods([]);
+                      setNecramechPolarities({});
+                      setCurrentBuildId(null);
+                      setBuildName(`${nm.name} Build`);
+                    }}
                     className={cn(
                       "p-3 rounded-lg border text-left transition-all",
                       selectedNecramech?.id === nm.id
@@ -367,7 +382,13 @@ export default function ArchwingBuilderPage() {
                   .map((w) => (
                   <button
                     key={w.id}
-                    onClick={() => { setSelectedWeapon(w); setWeaponMods([]); setWeaponPolarities({}); }}
+                    onClick={() => {
+                      setSelectedWeapon(w);
+                      setWeaponMods([]);
+                      setWeaponPolarities({});
+                      setCurrentBuildId(null);
+                      setBuildName(`${w.name} Build`);
+                    }}
                     className={cn(
                       "p-2.5 rounded-lg border text-left transition-all text-sm",
                       selectedWeapon?.id === w.id
@@ -431,7 +452,10 @@ export default function ArchwingBuilderPage() {
                 {/* Weapon stats */}
                 {weaponStats && (
                   <div className="mt-4 border border-border rounded-xl p-4 bg-card">
-                    <WeaponStatsPanel stats={weaponStats} />
+                    <WeaponStatsPanel
+                      stats={weaponStats}
+                      isMelee={selectedWeapon?.category === "archmelee"}
+                    />
                   </div>
                 )}
               </div>

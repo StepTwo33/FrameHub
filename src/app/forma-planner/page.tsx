@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { allMods, modsMap } from "@/data/mods";
 import { EquippedMod } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Zap, RotateCcw } from "lucide-react";
 
 const POLARITIES = [
@@ -20,14 +21,7 @@ const POLARITIES = [
 
 function calculateModCost(modDrain: number, modRank: number, modPolarity: string, slotPolarity: string): number {
   const baseCost = modDrain + modRank;
-  if (slotPolarity && modPolarity === slotPolarity) {
-    return Math.max(1, Math.floor(baseCost / 2));
-  }
-  if (slotPolarity === "universal") return baseCost;
-  if (slotPolarity && modPolarity !== slotPolarity) {
-    return Math.ceil(baseCost * 1.25);
-  }
-  return baseCost;
+  return modSlotCapacityCost(baseCost, slotPolarity || undefined, modPolarity);
 }
 
 interface SlotState {

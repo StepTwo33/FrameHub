@@ -8,6 +8,7 @@ import { ModPicker, type SlotType } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,7 +20,7 @@ import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { INCARNON_WEAPON_IDS, incarnonDataMap, IncarnonEvolution } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
@@ -52,8 +53,8 @@ function getModCategory(weaponCategory: string): string {
   return weaponCategory;
 }
 
-/** 9th slot (index 8) for secondary pistols — matches in-game Exilus Weapon Adapter slot. */
-const SECONDARY_EXILUS_SLOT_INDEX = 8;
+/** 9th slot (index 8) for secondary / melee — matches in-game weapon Exilus slot (after regular slots). */
+const WEAPON_EXILUS_SLOT_INDEX = 8;
 
 export default function WeaponBuilderPage() {
   const allWeapons = useWeapons();
@@ -100,8 +101,11 @@ export default function WeaponBuilderPage() {
     });
     setEquippedMods(mods);
     if (shared.arcanes) {
-      setEquippedArcanes(shared.arcanes.map((id) => id ? allMods.find((m) => m.id === id) ?? null : null));
+      setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneById(id) : null)));
     }
+    setCurrentBuildId(null);
+    setBuildName(`${weapon.name} Build`);
+    setBuildDescription("");
     // Clear the URL param without reload
     window.history.replaceState({}, "", window.location.pathname);
   }, [allWeapons]);
@@ -154,7 +158,7 @@ export default function WeaponBuilderPage() {
     } else {
       setStanceMod(null);
     }
-    setEquippedArcanes(d.arcaneIds.map((id) => id ? allMods.find((m) => m.id === id) ?? null : null));
+    setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
     setHasOrokinCatalyst(d.hasOrokinCatalyst);
     setIsMR30(d.isMR30);
     setSlotPolarities(d.slotPolarities || {});
@@ -312,13 +316,22 @@ export default function WeaponBuilderPage() {
     setRivenStatsMap({});
     setEquippedArcanes([null, null]);
     setStanceMod(null);
+    setSlotPolarities({});
+    setCurrentBuildId(null);
+    setBuildName(`${weapon.name} Build`);
+    setBuildDescription("");
     setShowWeaponList(false);
   }, []);
 
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
-    const sec = selectedWeapon && ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category);
-    setModPickerSlotType(sec && slotIndex === SECONDARY_EXILUS_SLOT_INDEX ? "weapon_exilus_secondary" : "regular");
+    const w = selectedWeapon;
+    const sec = w && ["pistol", "secondary", "dual_pistols"].includes(w.category);
+    const mel = w && ["melee", "archmelee"].includes(w.category);
+    const isExilus = slotIndex === WEAPON_EXILUS_SLOT_INDEX && Boolean(sec || mel);
+    setModPickerSlotType(
+      sec && isExilus ? "weapon_exilus_secondary" : mel && isExilus ? "weapon_exilus_melee" : "regular"
+    );
     setModPickerOpen(true);
   }, [selectedWeapon]);
 
@@ -366,7 +379,9 @@ export default function WeaponBuilderPage() {
   const equippedModIds = equippedMods.map((m) => m.modId);
   const numSlots = selectedWeapon?.modSlots || 8;
   const isSecondaryWeapon = selectedWeapon ? ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category) : false;
-  const totalModSlots = isSecondaryWeapon ? numSlots + 1 : numSlots;
+  const isMeleeWeapon = selectedWeapon ? ["melee", "archmelee"].includes(selectedWeapon.category) : false;
+  const hasWeaponExilusSlot = isSecondaryWeapon || isMeleeWeapon;
+  const totalModSlots = hasWeaponExilusSlot ? numSlots + 1 : numSlots;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -556,9 +571,7 @@ export default function WeaponBuilderPage() {
                       if (!mod) return sum;
                       const baseDrain = mod.drain + m.rank;
                       const slotPol = slotPolarities[m.slotIndex];
-                      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-                      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-                      return sum + baseDrain;
+                      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
                     }, 0) > ((hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0))
                       ? "text-red-400" : "text-muted-foreground"
                   )}>
@@ -567,9 +580,7 @@ export default function WeaponBuilderPage() {
                       if (!mod) return sum;
                       const baseDrain = mod.drain + m.rank;
                       const slotPol = slotPolarities[m.slotIndex];
-                      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-                      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-                      return sum + baseDrain;
+                      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
                     }, 0)} / {(hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0)}
                   </span>
                 </div>
@@ -590,7 +601,7 @@ export default function WeaponBuilderPage() {
                   {Array.from({ length: totalModSlots }, (_, i) => {
                     const equipped = equippedMods.find((m) => m.slotIndex === i);
                     const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                    const isExilus = isSecondaryWeapon && i === SECONDARY_EXILUS_SLOT_INDEX;
+                    const isExilus = hasWeaponExilusSlot && i === WEAPON_EXILUS_SLOT_INDEX;
                     return (
                       <ModSlotCard
                         key={i}

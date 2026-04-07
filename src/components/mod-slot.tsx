@@ -34,7 +34,8 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
   const polarityDrainMod = (modPol: string, slotPol?: string): number => {
-    if (!slotPol || slotPol === "universal") return 0;
+    if (!slotPol) return 0;
+    if (slotPol === "universal") return -1; // universal = halved for any mod
     if (modPol === slotPol) return -1; // matching = halved
     return 1; // mismatched = +25% penalty (simplified)
   };

@@ -261,7 +261,7 @@ export function buildKitgun(chamber: KitgunChamber, grip: KitgunGrip, loader: Ki
     viral: dmgBreakdown.viral,
     fireRate: +gripStats.fireRate.toFixed(2),
     criticalChance: +(chamber.baseCritChance + loader.critChanceBonus).toFixed(4),
-    criticalMultiplier: +(chamber.baseCritMultiplier + loader.critMultiplierBonus).toFixed(1),
+    criticalMultiplier: +(chamber.baseCritMultiplier + loader.critMultiplierBonus).toFixed(3),
     statusChance: +(chamber.baseStatusChance + loader.statusChanceBonus).toFixed(4),
     magazine: chamber.magazineTiers[loader.magazineTier] || 10,
     reloadTime: loader.reloadTime,

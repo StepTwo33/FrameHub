@@ -82,7 +82,23 @@ const SECONDARY_WEAPON_EXILUS_MOD_IDS = new Set([
   "lohk_canticle",
 ]);
 
-export type SlotType = "regular" | "aura" | "exilus" | "weapon_exilus_secondary";
+/** Melee Exilus (utility / block / glaive); matches in-game Exilus-eligible melee weapon mods. */
+const MELEE_WEAPON_EXILUS_MOD_IDS = new Set([
+  "dispatch_overdrive",
+  "electromagnetic_shielding",
+  "focused_defense",
+  "guardian_derision",
+  "whirlwind",
+  "focus_energy_r3",
+  "power_throw",
+  "quick_return",
+  "rebound",
+  "volatile_quick_return",
+  "volatile_rebound",
+  "parry_r3",
+]);
+
+export type SlotType = "regular" | "aura" | "exilus" | "weapon_exilus_secondary" | "weapon_exilus_melee";
 
 interface ModPickerProps {
   open: boolean;
@@ -112,6 +128,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     let categoryMods: Mod[];
     if (slotType === "weapon_exilus_secondary") {
       categoryMods = mods.filter((m) => SECONDARY_WEAPON_EXILUS_MOD_IDS.has(m.id));
+    } else if (slotType === "weapon_exilus_melee") {
+      categoryMods = mods.filter((m) => MELEE_WEAPON_EXILUS_MOD_IDS.has(m.id));
     } else if (category === "_prefiltered") {
       // Mods already filtered by caller (e.g. companion weapon mods)
       categoryMods = [...mods];
@@ -202,7 +220,15 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle>
-            {slotType === "aura" ? "Select Aura Mod" : slotType === "exilus" ? "Select Exilus Mod" : slotType === "weapon_exilus_secondary" ? "Select Secondary Exilus Mod" : "Select Mod"}
+            {slotType === "aura"
+              ? "Select Aura Mod"
+              : slotType === "exilus"
+                ? "Select Exilus Mod"
+                : slotType === "weapon_exilus_secondary"
+                  ? "Select Secondary Exilus Mod"
+                  : slotType === "weapon_exilus_melee"
+                    ? "Select Melee Exilus Mod"
+                    : "Select Mod"}
           </DialogTitle>
         </DialogHeader>
 

@@ -3,17 +3,36 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Header } from "@/components/header";
 import { getLoadouts, saveLoadout, deleteLoadout, generateId } from "@/lib/loadouts";
-import { Loadout } from "@/lib/types";
-import { allWarframes, warframesMap } from "@/data/warframes";
-import { allWeapons, weaponsMap } from "@/data/weapons";
-import { allCompanions, companionsMap } from "@/data/companions";
+import { getSavedBuilds, SavedBuild, WarframeBuildData, WeaponBuildData, CompanionBuildData } from "@/lib/build-storage";
+import { Loadout, EquippedArchonShard } from "@/lib/types";
+import { allWarframes } from "@/data/warframes";
+import { allCompanions } from "@/data/companions";
+import { weaponsMap } from "@/data/weapons";
 import { useWeapons } from "@/lib/use-data";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Trash2, Edit2, Check, X, Swords, Shield, Dog, Crosshair, Search, ExternalLink } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Check,
+  X,
+  Swords,
+  Shield,
+  Dog,
+  Crosshair,
+  Search,
+  ExternalLink,
+  Copy,
+  Info,
+  Library,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
+import { toast } from "sonner";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
 
@@ -25,6 +44,15 @@ const SLOT_CONFIG: Record<SlotType, { label: string; color: string; builderPath:
   companion: { label: "Companion", color: "green", builderPath: "/companion-builder" },
 };
 
+/** Tailwind cannot compile dynamic `border-${color}` — use explicit classes. */
+const SLOT_CARD_STYLES: Record<SlotType, string> = {
+  warframe: "border-purple-500/35 bg-purple-500/[0.07]",
+  primary: "border-blue-500/35 bg-blue-500/[0.07]",
+  secondary: "border-cyan-500/35 bg-cyan-500/[0.07]",
+  melee: "border-orange-500/35 bg-orange-500/[0.07]",
+  companion: "border-green-500/35 bg-green-500/[0.07]",
+};
+
 const SLOT_ICONS: Record<SlotType, React.ReactNode> = {
   warframe: <Shield className="h-4 w-4" />,
   primary: <Crosshair className="h-4 w-4" />,
@@ -33,50 +61,102 @@ const SLOT_ICONS: Record<SlotType, React.ReactNode> = {
   companion: <Dog className="h-4 w-4" />,
 };
 
+const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
+
 function getSlotItemId(loadout: Loadout, slot: SlotType): string | undefined {
   switch (slot) {
-    case "warframe": return loadout.warframeBuild?.warframeId;
-    case "primary": return loadout.primaryBuild?.weaponId;
-    case "secondary": return loadout.secondaryBuild?.weaponId;
-    case "melee": return loadout.meleeBuild?.weaponId;
-    case "companion": return loadout.companionBuild?.companionId;
+    case "warframe":
+      return loadout.warframeBuild?.warframeId;
+    case "primary":
+      return loadout.primaryBuild?.weaponId;
+    case "secondary":
+      return loadout.secondaryBuild?.weaponId;
+    case "melee":
+      return loadout.meleeBuild?.weaponId;
+    case "companion":
+      return loadout.companionBuild?.companionId;
   }
 }
 
 function getSlotModCount(loadout: Loadout, slot: SlotType): number {
   switch (slot) {
-    case "warframe": return loadout.warframeBuild?.mods?.length ?? 0;
-    case "primary": return loadout.primaryBuild?.mods?.length ?? 0;
-    case "secondary": return loadout.secondaryBuild?.mods?.length ?? 0;
-    case "melee": return loadout.meleeBuild?.mods?.length ?? 0;
-    case "companion": return loadout.companionBuild?.mods?.length ?? 0;
+    case "warframe":
+      return loadout.warframeBuild?.mods?.length ?? 0;
+    case "primary":
+      return loadout.primaryBuild?.mods?.length ?? 0;
+    case "secondary":
+      return loadout.secondaryBuild?.mods?.length ?? 0;
+    case "melee":
+      return loadout.meleeBuild?.mods?.length ?? 0;
+    case "companion":
+      return (loadout.companionBuild?.mods?.length ?? 0) + (loadout.companionBuild?.weaponMods?.length ?? 0);
   }
 }
 
 function getItemName(slot: SlotType, id: string | undefined): string | null {
   if (!id) return null;
   switch (slot) {
-    case "warframe": return warframesMap.get(id)?.name ?? id;
-    case "primary": case "secondary": case "melee": return weaponsMap.get(id)?.name ?? id;
-    case "companion": return companionsMap.get(id)?.name ?? id;
+    case "warframe":
+      return allWarframes.find((w) => w.id === id)?.name ?? id;
+    case "primary":
+    case "secondary":
+    case "melee":
+      return weaponsMap.get(id)?.name ?? id;
+    case "companion":
+      return allCompanions.find((c) => c.id === id)?.name ?? id;
   }
 }
 
 function getSlotImage(slot: SlotType, name: string): string {
   switch (slot) {
-    case "warframe": return getWarframeImage(name);
-    case "primary": case "secondary": case "melee": return getWeaponImage(name);
-    case "companion": return getCompanionImage(name);
+    case "warframe":
+      return getWarframeImage(name);
+    case "primary":
+    case "secondary":
+    case "melee":
+      return getWeaponImage(name);
+    case "companion":
+      return getCompanionImage(name);
   }
 }
 
 function getWeaponCategories(slot: SlotType): string[] {
   switch (slot) {
-    case "primary": return ["primary", "rifle", "shotgun", "bow", "launcher"];
-    case "secondary": return ["secondary", "pistol"];
-    case "melee": return ["melee"];
-    default: return [];
+    case "primary":
+      return ["primary", "rifle", "shotgun", "bow", "launcher"];
+    case "secondary":
+      return ["secondary", "pistol", "dual_pistols"];
+    case "melee":
+      return ["melee"];
+    default:
+      return [];
   }
+}
+
+function listSavedBuildsForSlot(slot: SlotType): SavedBuild[] {
+  const all = getSavedBuilds();
+  if (slot === "warframe") return all.filter((b) => b.type === "warframe");
+  if (slot === "companion") return all.filter((b) => b.type === "companion");
+  const cats = getWeaponCategories(slot);
+  return all.filter((b) => {
+    if (b.type !== "weapon") return false;
+    const d = b.data as WeaponBuildData;
+    const w = weaponsMap.get(d.weaponId);
+    return !!w && cats.includes(w.category);
+  });
+}
+
+function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warframeBuild"]> {
+  const shards =
+    d.shards && d.shards.length === 5 ? d.shards : ([...EMPTY_SHARDS] as (EquippedArchonShard | null)[]);
+  return {
+    ...d,
+    shards,
+    arcaneIds: d.arcaneIds ?? [null, null],
+    slotPolarities: d.slotPolarities ?? {},
+    exaltedMods: d.exaltedMods ?? [],
+    exaltedSlotPolarities: d.exaltedSlotPolarities ?? {},
+  };
 }
 
 export default function LoadoutsPage() {
@@ -88,40 +168,70 @@ export default function LoadoutsPage() {
   const [pickerSlot, setPickerSlot] = useState<SlotType>("warframe");
   const [pickerLoadoutId, setPickerLoadoutId] = useState<string | null>(null);
   const [pickerSearch, setPickerSearch] = useState("");
+  const [pickerTab, setPickerTab] = useState<"saved" | "catalog">("catalog");
 
   useEffect(() => {
     setLoadouts(getLoadouts());
   }, []);
 
+  const refresh = useCallback(() => setLoadouts(getLoadouts()), []);
+
   const handleCreate = useCallback(() => {
+    const list = getLoadouts();
     const newLoadout: Loadout = {
       id: generateId(),
-      name: `Loadout ${loadouts.length + 1}`,
+      name: `Loadout ${list.length + 1}`,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
     saveLoadout(newLoadout);
-    setLoadouts(getLoadouts());
-  }, [loadouts.length]);
+    refresh();
+    toast.success("Loadout created", { description: "Add frames and weapons using the slots below." });
+  }, [refresh]);
 
-  const handleDelete = useCallback((id: string) => {
-    deleteLoadout(id);
-    setLoadouts(getLoadouts());
-  }, []);
+  const handleDuplicate = useCallback(
+    (loadout: Loadout) => {
+      const copy: Loadout = {
+        ...JSON.parse(JSON.stringify(loadout)) as Loadout,
+        id: generateId(),
+        name: `${loadout.name} (copy)`,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      saveLoadout(copy);
+      refresh();
+      toast.success("Loadout duplicated");
+    },
+    [refresh]
+  );
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (!confirm("Delete this loadout permanently?")) return;
+      deleteLoadout(id);
+      refresh();
+      toast.success("Loadout deleted");
+    },
+    [refresh]
+  );
 
   const handleStartEdit = useCallback((loadout: Loadout) => {
     setEditingId(loadout.id);
     setEditName(loadout.name);
   }, []);
 
-  const handleSaveEdit = useCallback((id: string) => {
-    const loadout = loadouts.find((l) => l.id === id);
-    if (loadout && editName.trim()) {
-      saveLoadout({ ...loadout, name: editName.trim() });
-      setLoadouts(getLoadouts());
-    }
-    setEditingId(null);
-  }, [loadouts, editName]);
+  const handleSaveEdit = useCallback(
+    (id: string) => {
+      const loadout = loadouts.find((l) => l.id === id);
+      if (loadout && editName.trim()) {
+        saveLoadout({ ...loadout, name: editName.trim() });
+        refresh();
+        toast.success("Name updated");
+      }
+      setEditingId(null);
+    },
+    [loadouts, editName, refresh]
+  );
 
   const handleCancelEdit = useCallback(() => {
     setEditingId(null);
@@ -132,53 +242,150 @@ export default function LoadoutsPage() {
     setPickerLoadoutId(loadoutId);
     setPickerSlot(slot);
     setPickerSearch("");
+    const saved = listSavedBuildsForSlot(slot);
+    setPickerTab(saved.length > 0 ? "saved" : "catalog");
     setPickerOpen(true);
   }, []);
 
-  const handlePickItem = useCallback((itemId: string) => {
-    if (!pickerLoadoutId) return;
-    const loadout = loadouts.find((l) => l.id === pickerLoadoutId);
-    if (!loadout) return;
+  const handlePickCatalogItem = useCallback(
+    (itemId: string) => {
+      if (!pickerLoadoutId) return;
+      const loadout = loadouts.find((l) => l.id === pickerLoadoutId);
+      if (!loadout) return;
 
-    const updated = { ...loadout };
-    switch (pickerSlot) {
-      case "warframe":
-        updated.warframeBuild = { warframeId: itemId, mods: [], shards: [null, null, null, null, null], hasOrokinReactor: false };
-        break;
-      case "primary":
-        updated.primaryBuild = { weaponId: itemId, mods: [], hasOrokinCatalyst: false };
-        break;
-      case "secondary":
-        updated.secondaryBuild = { weaponId: itemId, mods: [], hasOrokinCatalyst: false };
-        break;
-      case "melee":
-        updated.meleeBuild = { weaponId: itemId, mods: [], hasOrokinCatalyst: false };
-        break;
-      case "companion":
-        updated.companionBuild = { companionId: itemId, mods: [], weaponMods: [], hasReactor: false, hasCatalyst: false };
-        break;
-    }
-    saveLoadout(updated);
-    setLoadouts(getLoadouts());
-    setPickerOpen(false);
-  }, [pickerLoadoutId, pickerSlot, loadouts]);
+      const updated = { ...loadout };
+      switch (pickerSlot) {
+        case "warframe":
+          updated.warframeBuild = {
+            warframeId: itemId,
+            mods: [],
+            shards: [...EMPTY_SHARDS],
+            arcaneIds: [null, null],
+            hasOrokinReactor: false,
+            isMR30: false,
+            slotPolarities: {},
+            exaltedMods: [],
+            exaltedSlotPolarities: {},
+          };
+          break;
+        case "primary":
+        case "secondary":
+        case "melee":
+          {
+            const weaponShell: NonNullable<Loadout["primaryBuild"]> = {
+              weaponId: itemId,
+              mods: [],
+              arcaneIds: [null, null],
+              hasOrokinCatalyst: false,
+              isMR30: false,
+              slotPolarities: {},
+            };
+            if (pickerSlot === "primary") updated.primaryBuild = weaponShell;
+            else if (pickerSlot === "secondary") updated.secondaryBuild = weaponShell;
+            else updated.meleeBuild = weaponShell;
+          }
+          break;
+        case "companion":
+          updated.companionBuild = {
+            companionId: itemId,
+            mods: [],
+            weaponMods: [],
+            arcaneIds: [null, null],
+            hasReactor: false,
+            hasCatalyst: false,
+            isMR30: false,
+            slotPolarities: {},
+          };
+          break;
+      }
+      saveLoadout(updated);
+      refresh();
+      setPickerOpen(false);
+      toast.success(`${SLOT_CONFIG[pickerSlot].label} added`, {
+        description: "Empty build — attach a saved build or configure in the builder.",
+      });
+    },
+    [pickerLoadoutId, pickerSlot, loadouts, refresh]
+  );
 
-  const handleClearSlot = useCallback((loadoutId: string, slot: SlotType) => {
-    const loadout = loadouts.find((l) => l.id === loadoutId);
-    if (!loadout) return;
-    const updated = { ...loadout };
-    switch (slot) {
-      case "warframe": delete updated.warframeBuild; break;
-      case "primary": delete updated.primaryBuild; break;
-      case "secondary": delete updated.secondaryBuild; break;
-      case "melee": delete updated.meleeBuild; break;
-      case "companion": delete updated.companionBuild; break;
-    }
-    saveLoadout(updated);
-    setLoadouts(getLoadouts());
-  }, [loadouts]);
+  const handleAttachSavedBuild = useCallback(
+    (build: SavedBuild) => {
+      if (!pickerLoadoutId) return;
+      const loadout = loadouts.find((l) => l.id === pickerLoadoutId);
+      if (!loadout) return;
 
-  const pickerItems = useMemo(() => {
+      const updated = { ...loadout };
+
+      if (pickerSlot === "warframe" && build.type === "warframe") {
+        updated.warframeBuild = normalizeWarframeBuild(build.data as WarframeBuildData);
+      } else if (pickerSlot === "companion" && build.type === "companion") {
+        const d = build.data as CompanionBuildData & { hasCatalyst?: boolean };
+        updated.companionBuild = {
+          ...d,
+          arcaneIds: d.arcaneIds ?? [null, null],
+          slotPolarities: d.slotPolarities ?? {},
+          weaponMods: d.weaponMods ?? [],
+          hasCatalyst: d.hasCatalyst ?? false,
+        };
+      } else if (["primary", "secondary", "melee"].includes(pickerSlot) && build.type === "weapon") {
+        const d = build.data as WeaponBuildData;
+        const w = weaponsMap.get(d.weaponId);
+        if (!w || !getWeaponCategories(pickerSlot).includes(w.category)) {
+          toast.error("This saved build does not match this weapon slot.");
+          return;
+        }
+        const payload: NonNullable<Loadout["primaryBuild"]> = {
+          ...d,
+          arcaneIds: d.arcaneIds ?? [null, null],
+          slotPolarities: d.slotPolarities ?? {},
+        };
+        if (pickerSlot === "primary") updated.primaryBuild = payload;
+        else if (pickerSlot === "secondary") updated.secondaryBuild = payload;
+        else updated.meleeBuild = payload;
+      } else {
+        toast.error("Incompatible saved build for this slot.");
+        return;
+      }
+
+      saveLoadout(updated);
+      refresh();
+      setPickerOpen(false);
+      toast.success(`Attached “${build.name}”`, { description: SLOT_CONFIG[pickerSlot].label });
+    },
+    [pickerLoadoutId, pickerSlot, loadouts, refresh]
+  );
+
+  const handleClearSlot = useCallback(
+    (loadoutId: string, slot: SlotType) => {
+      if (!confirm(`Remove ${SLOT_CONFIG[slot].label} from this loadout?`)) return;
+      const loadout = loadouts.find((l) => l.id === loadoutId);
+      if (!loadout) return;
+      const updated = { ...loadout };
+      switch (slot) {
+        case "warframe":
+          delete updated.warframeBuild;
+          break;
+        case "primary":
+          delete updated.primaryBuild;
+          break;
+        case "secondary":
+          delete updated.secondaryBuild;
+          break;
+        case "melee":
+          delete updated.meleeBuild;
+          break;
+        case "companion":
+          delete updated.companionBuild;
+          break;
+      }
+      saveLoadout(updated);
+      refresh();
+      toast.info(`${SLOT_CONFIG[slot].label} cleared`);
+    },
+    [loadouts, refresh]
+  );
+
+  const pickerCatalogItems = useMemo(() => {
     const q = pickerSearch.toLowerCase();
     if (pickerSlot === "warframe") {
       return allWarframes
@@ -197,8 +404,35 @@ export default function LoadoutsPage() {
       .filter((w) => cats.includes(w.category))
       .filter((w) => !q || w.name.toLowerCase().includes(q))
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map((w) => ({ id: w.id, name: w.name, detail: `DMG ${w.damage} • CC ${(w.criticalChance * 100).toFixed(0)}% • SC ${(w.statusChance * 100).toFixed(0)}%` }));
+      .map((w) => ({
+        id: w.id,
+        name: w.name,
+        detail: `DMG ${w.damage} • CC ${(w.criticalChance * 100).toFixed(0)}% • SC ${(w.statusChance * 100).toFixed(0)}%`,
+      }));
   }, [pickerSlot, pickerSearch, weapons]);
+
+  const pickerSavedBuilds = useMemo(() => {
+    const q = pickerSearch.toLowerCase();
+    return listSavedBuildsForSlot(pickerSlot).filter((b) => {
+      if (!q) return true;
+      if (b.name.toLowerCase().includes(q)) return true;
+      if (b.type === "warframe") {
+        const wf = allWarframes.find((w) => w.id === (b.data as WarframeBuildData).warframeId);
+        return wf?.name.toLowerCase().includes(q);
+      }
+      if (b.type === "weapon") {
+        const w = weaponsMap.get((b.data as WeaponBuildData).weaponId);
+        return w?.name.toLowerCase().includes(q);
+      }
+      if (b.type === "companion") {
+        const c = allCompanions.find((x) => x.id === (b.data as CompanionBuildData).companionId);
+        return c?.name.toLowerCase().includes(q);
+      }
+      return false;
+    });
+  }, [pickerSlot, pickerSearch, pickerOpen]);
+
+  const savedCount = pickerSavedBuilds.length;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -206,42 +440,66 @@ export default function LoadoutsPage() {
 
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">Loadouts</h1>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Loadouts</h1>
+              <p className="text-sm text-muted-foreground mt-1 max-w-xl">
+                Group a warframe, three weapons, and a companion into named presets. Use{" "}
+                <span className="text-foreground/90 font-medium">My saved builds</span> to pull full mod setups from
+                each builder — picking from the catalog starts an empty build for that item.
+              </p>
+            </div>
             <button
+              type="button"
               onClick={handleCreate}
-              className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0"
             >
               <Plus className="h-4 w-4" />
-              New Loadout
+              New loadout
             </button>
           </div>
 
+          <div className="flex gap-2 rounded-xl border border-border bg-card/40 p-3 mb-6 text-xs text-muted-foreground">
+            <Info className="h-4 w-4 shrink-0 text-primary/80 mt-0.5" />
+            <div className="space-y-1.5 leading-relaxed">
+              <p>
+                <span className="text-foreground font-medium">1.</span> Save builds in Warframe / Weapon / Companion
+                builders (Load button lists them here).
+              </p>
+              <p>
+                <span className="text-foreground font-medium">2.</span> Open a slot → <strong>My saved builds</strong>{" "}
+                copies mods, polarities, and extras into this loadout.
+              </p>
+              <p>
+                <span className="text-foreground font-medium">3.</span> Loadouts stay on this device (separate from
+                cloud profile builds). Use Import/Export to back them up.
+              </p>
+            </div>
+          </div>
+
           {loadouts.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-border rounded-xl">
-              <p className="text-muted-foreground mb-4">No loadouts yet</p>
-              <p className="text-sm text-muted-foreground/70 mb-6">
-                Create a loadout to save your warframe, weapon, and companion builds together.
+            <div className="text-center py-20 border border-dashed border-border rounded-xl bg-card/20">
+              <Sparkles className="h-10 w-10 text-primary/40 mx-auto mb-4" />
+              <p className="text-muted-foreground mb-2 font-medium">No loadouts yet</p>
+              <p className="text-sm text-muted-foreground/80 mb-8 max-w-md mx-auto">
+                Create one, then attach saved builds from your builders for a full kit in one place.
               </p>
               <button
+                type="button"
                 onClick={handleCreate}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
-                Create First Loadout
+                Create first loadout
               </button>
             </div>
           ) : (
             <div className="space-y-4">
               {loadouts.map((loadout) => (
-                <div
-                  key={loadout.id}
-                  className="border border-border rounded-xl p-5 bg-card"
-                >
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-4">
+                <div key={loadout.id} className="border border-border rounded-xl p-5 bg-card/60 backdrop-blur-sm shadow-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     {editingId === loadout.id ? (
-                      <div className="flex items-center gap-2 flex-1">
+                      <div className="flex items-center gap-2 flex-1 flex-wrap">
                         <Input
                           value={editName}
                           onChange={(e) => setEditName(e.target.value)}
@@ -249,97 +507,132 @@ export default function LoadoutsPage() {
                             if (e.key === "Enter") handleSaveEdit(loadout.id);
                             if (e.key === "Escape") handleCancelEdit();
                           }}
-                          className="max-w-xs h-8 text-sm"
+                          className="max-w-xs h-9 text-sm"
                           autoFocus
                         />
-                        <button onClick={() => handleSaveEdit(loadout.id)} className="p-1.5 rounded hover:bg-green-500/10 text-green-400">
+                        <button
+                          type="button"
+                          onClick={() => handleSaveEdit(loadout.id)}
+                          className="p-2 rounded-lg hover:bg-green-500/10 text-green-400"
+                          aria-label="Save name"
+                        >
                           <Check className="h-4 w-4" />
                         </button>
-                        <button onClick={handleCancelEdit} className="p-1.5 rounded hover:bg-red-500/10 text-red-400">
+                        <button
+                          type="button"
+                          onClick={handleCancelEdit}
+                          className="p-2 rounded-lg hover:bg-red-500/10 text-red-400"
+                          aria-label="Cancel"
+                        >
                           <X className="h-4 w-4" />
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-semibold">{loadout.name}</h3>
-                        <button onClick={() => handleStartEdit(loadout)} className="p-1 rounded hover:bg-foreground/5 text-muted-foreground">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <h2 className="text-lg font-semibold truncate">{loadout.name}</h2>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEdit(loadout)}
+                          className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground shrink-0"
+                          aria-label="Rename loadout"
+                        >
                           <Edit2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     )}
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-muted-foreground/50">
-                        {new Date(loadout.updatedAt).toLocaleDateString()}
+                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                      <span className="text-[10px] text-muted-foreground tabular-nums mr-2">
+                        Updated {new Date(loadout.updatedAt).toLocaleDateString()}
                       </span>
                       <button
+                        type="button"
+                        onClick={() => handleDuplicate(loadout)}
+                        className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                        title="Duplicate loadout"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => handleDelete(loadout.id)}
-                        className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
+                        className="p-2 rounded-lg hover:bg-destructive/15 text-muted-foreground hover:text-destructive transition-colors"
+                        title="Delete loadout"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
 
-                  {/* Build Slots */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     {(["warframe", "primary", "secondary", "melee", "companion"] as SlotType[]).map((slot) => {
                       const cfg = SLOT_CONFIG[slot];
                       const itemId = getSlotItemId(loadout, slot);
                       const itemName = getItemName(slot, itemId);
                       const modCount = getSlotModCount(loadout, slot);
+                      const cardStyle = SLOT_CARD_STYLES[slot];
 
                       if (!itemName) {
                         return (
                           <button
                             key={slot}
+                            type="button"
                             onClick={() => handleOpenPicker(loadout.id, slot)}
-                            className="flex items-center gap-2 p-3 rounded-lg border border-dashed border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all group"
+                            className="flex items-center gap-3 p-4 rounded-xl border border-dashed border-border/80 hover:border-primary/45 hover:bg-primary/5 transition-all text-left group min-h-[100px]"
                           >
-                            <span className="text-muted-foreground/50 group-hover:text-blue-400">{SLOT_ICONS[slot]}</span>
-                            <div className="text-left">
-                              <span className="text-xs text-muted-foreground/50 group-hover:text-blue-400 block">{cfg.label}</span>
-                              <span className="text-[10px] text-muted-foreground/30">Click to add</span>
+                            <span className="text-muted-foreground/60 group-hover:text-primary">{SLOT_ICONS[slot]}</span>
+                            <div>
+                              <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground block">
+                                {cfg.label}
+                              </span>
+                              <span className="text-[11px] text-muted-foreground/50">Add frame, weapon, or companion</span>
                             </div>
                           </button>
                         );
                       }
 
                       return (
-                        <div
-                          key={slot}
-                          className={cn(
-                            "relative p-3 rounded-lg border transition-all",
-                            `border-${cfg.color}-500/30 bg-${cfg.color}-500/5`
-                          )}
-                        >
-                          <button
-                            onClick={() => handleClearSlot(loadout.id, slot)}
-                            className="absolute top-1 right-1 p-0.5 rounded hover:bg-red-500/20 text-muted-foreground/40 hover:text-red-400 transition-colors"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                          <div className="flex items-start gap-2">
-                            <img src={getSlotImage(slot, itemName)} alt="" className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0 mt-0.5" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                        <div key={slot} className={cn("relative rounded-xl border p-4 flex flex-col gap-2 min-h-[100px]", cardStyle)}>
+                          <div className="flex items-start gap-2.5">
+                            <img
+                              src={getSlotImage(slot, itemName)}
+                              alt=""
+                              className="w-10 h-10 rounded-md object-contain bg-background/40 border border-border/30 shrink-0"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = "none";
+                              }}
+                            />
                             <div className="flex-1 min-w-0">
-                              <span className="text-[10px] text-muted-foreground">{cfg.label}</span>
-                              <span className="text-sm font-medium truncate block">{itemName}</span>
-                              <div className="flex items-center gap-1.5 mt-1">
-                                <span className="text-[10px] text-muted-foreground">{modCount} mods</span>
-                                <a
-                                  href={cfg.builderPath}
-                                  className="inline-flex items-center gap-0.5 text-[10px] text-blue-400 hover:text-blue-300"
-                                >
-                                  Configure <ExternalLink className="h-2.5 w-2.5" />
-                                </a>
-                              </div>
+                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
+                                {cfg.label}
+                              </span>
+                              <span className="text-sm font-semibold truncate block leading-tight">{itemName}</span>
+                              <span className="text-[11px] text-muted-foreground mt-0.5">{modCount} mod slots filled</span>
                             </div>
                           </div>
-                          <button
-                            onClick={() => handleOpenPicker(loadout.id, slot)}
-                            className="mt-1.5 w-full text-[10px] text-muted-foreground hover:text-foreground py-0.5 rounded border border-border/50 hover:border-border transition-colors"
-                          >
-                            Change
-                          </button>
+                          <div className="flex flex-col gap-1.5 mt-auto pt-1">
+                            <a
+                              href={cfg.builderPath}
+                              className="inline-flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-background/60 border border-border/60 hover:border-primary/35 hover:text-primary transition-colors"
+                            >
+                              Open builder <ExternalLink className="h-3 w-3 opacity-70" />
+                            </a>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenPicker(loadout.id, slot)}
+                                className="text-xs py-1.5 rounded-lg border border-border/60 hover:bg-background/80 transition-colors"
+                              >
+                                Change
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleClearSlot(loadout.id, slot)}
+                                className="text-xs py-1.5 rounded-lg border border-border/60 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-colors"
+                              >
+                                Clear
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       );
                     })}
@@ -351,42 +644,130 @@ export default function LoadoutsPage() {
         </div>
       </main>
 
-      {/* Item Picker Dialog */}
-      <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-0">
-            <DialogTitle>Select {SLOT_CONFIG[pickerSlot]?.label}</DialogTitle>
+      <Dialog
+        open={pickerOpen}
+        onOpenChange={(open) => {
+          setPickerOpen(open);
+          if (!open) setPickerLoadoutId(null);
+        }}
+      >
+        <DialogContent className="max-w-lg max-h-[85vh] flex flex-col p-0 gap-0 sm:max-w-lg">
+          <DialogHeader className="p-5 pb-0 shrink-0">
+            <DialogTitle className="text-left">Fill {SLOT_CONFIG[pickerSlot]?.label} slot</DialogTitle>
+            <p className="text-xs text-muted-foreground text-left font-normal pt-1">
+              Saved builds include mods and settings from each builder. Catalog adds the item with an empty build.
+            </p>
           </DialogHeader>
-          <div className="px-6 pb-3">
+
+          <div className="px-5 pt-3 shrink-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
-                placeholder={`Search ${SLOT_CONFIG[pickerSlot]?.label.toLowerCase()}s...`}
+                placeholder="Search…"
                 value={pickerSearch}
                 onChange={(e) => setPickerSearch(e.target.value)}
-                className="pl-9"
-                autoFocus
+                className="pl-9 h-9"
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-2">{pickerItems.length} items</p>
           </div>
-          <ScrollArea className="flex-1 px-6 pb-6">
-            <div className="space-y-1">
-              {pickerItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handlePickItem(item.id)}
-                  className="w-full text-left p-3 rounded-lg border border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all flex items-center gap-3"
-                >
-                  <img src={getSlotImage(pickerSlot, item.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                  <div className="flex-1 min-w-0">
-                  <span className="text-sm font-medium">{item.name}</span>
-                  <span className="text-xs text-muted-foreground block mt-0.5">{item.detail}</span>
+
+          <Tabs value={pickerTab} onValueChange={(v) => setPickerTab(v as "saved" | "catalog")} className="flex flex-col flex-1 min-h-0 px-5 pb-5 pt-3">
+            <TabsList className="w-full grid grid-cols-2 mb-3 shrink-0 h-9">
+              <TabsTrigger value="saved" className="gap-1.5 text-xs sm:text-sm">
+                <Library className="h-3.5 w-3.5" />
+                My saved builds
+                {savedCount > 0 && (
+                  <span className="ml-0.5 rounded-full bg-primary/15 text-primary px-1.5 py-0 text-[10px] tabular-nums">
+                    {savedCount}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="catalog" className="gap-1.5 text-xs sm:text-sm">
+                <Crosshair className="h-3.5 w-3.5" />
+                Catalog
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="saved" className="flex-1 min-h-0 mt-0 data-[state=inactive]:hidden flex flex-col">
+              <ScrollArea className="h-[min(50vh,360px)] pr-3">
+                {pickerSavedBuilds.length === 0 ? (
+                  <div className="text-center py-10 px-2 text-sm text-muted-foreground">
+                    <p className="mb-2">No matching saved builds for this slot.</p>
+                    <p className="text-xs">
+                      Save a build in the {SLOT_CONFIG[pickerSlot].label} builder, then return here — or use the Catalog
+                      tab to start from a blank item.
+                    </p>
                   </div>
-                </button>
-              ))}
-            </div>
-          </ScrollArea>
+                ) : (
+                  <div className="space-y-1.5 pr-1">
+                    {pickerSavedBuilds.map((build) => {
+                      let subtitle = "";
+                      let modTotal = 0;
+                      if (build.type === "warframe") {
+                        const d = build.data as WarframeBuildData;
+                        subtitle = allWarframes.find((w) => w.id === d.warframeId)?.name ?? d.warframeId;
+                        modTotal = d.mods?.length ?? 0;
+                      } else if (build.type === "weapon") {
+                        const d = build.data as WeaponBuildData;
+                        subtitle = weaponsMap.get(d.weaponId)?.name ?? d.weaponId;
+                        modTotal = d.mods?.length ?? 0;
+                      } else if (build.type === "companion") {
+                        const d = build.data as CompanionBuildData;
+                        subtitle = allCompanions.find((c) => c.id === d.companionId)?.name ?? d.companionId;
+                        modTotal = (d.mods?.length ?? 0) + (d.weaponMods?.length ?? 0);
+                      }
+                      return (
+                        <button
+                          key={build.id}
+                          type="button"
+                          onClick={() => handleAttachSavedBuild(build)}
+                          className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all flex flex-col gap-0.5"
+                        >
+                          <span className="text-sm font-medium">{build.name}</span>
+                          <span className="text-xs text-muted-foreground">{subtitle}</span>
+                          <span className="text-[10px] text-muted-foreground/80">
+                            {modTotal} mods • {new Date(build.updatedAt).toLocaleDateString()}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="catalog" className="flex-1 min-h-0 mt-0 data-[state=inactive]:hidden flex flex-col">
+              <p className="text-[11px] text-muted-foreground mb-2">
+                {pickerCatalogItems.length} items — empty mod loadout; use builders to configure, save, then attach from{" "}
+                <strong>My saved builds</strong>.
+              </p>
+              <ScrollArea className="h-[min(50vh,360px)] pr-3">
+                <div className="space-y-1.5 pr-1">
+                  {pickerCatalogItems.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handlePickCatalogItem(item.id)}
+                      className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all flex items-center gap-3"
+                    >
+                      <img
+                        src={getSlotImage(pickerSlot, item.name)}
+                        alt=""
+                        className="w-9 h-9 rounded-md object-contain bg-muted/30 shrink-0 border border-border/40"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium block truncate">{item.name}</span>
+                        <span className="text-xs text-muted-foreground block truncate">{item.detail}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>

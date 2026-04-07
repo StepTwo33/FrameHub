@@ -17,6 +17,7 @@ import { Save, FolderOpen, Trash2, Crosshair, Shield, Zap, Gauge, ChevronRight }
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
+import { modSlotCapacityCost } from "@/lib/mod-capacity";
 
 type PlexusTab = "integrated" | "battle" | "tactical";
 
@@ -78,9 +79,7 @@ export default function RailjackBuilderPage() {
       if (!mod) return sum;
       const baseDrain = mod.drain + m.rank;
       const slotPol = currentPolarities[m.slotIndex];
-      if (slotPol && slotPol !== "universal" && mod.polarity === slotPol) return sum + Math.ceil(baseDrain / 2);
-      if (slotPol && slotPol !== "universal" && mod.polarity !== slotPol) return sum + Math.ceil(baseDrain * 1.25);
-      return sum + baseDrain;
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
   }, [currentMods, currentPolarities]);
 
@@ -210,6 +209,12 @@ export default function RailjackBuilderPage() {
     if (currentBuildId === id) setCurrentBuildId(null);
     toast.success("Build deleted");
   }, [currentBuildId]);
+
+  /** Picking different parts after a loaded save should not upsert the same cloud row with a stale name. */
+  const beginNewRailjackDraft = useCallback(() => {
+    setCurrentBuildId(null);
+    setBuildName("");
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -370,6 +375,7 @@ export default function RailjackBuilderPage() {
                       <button
                         key={comp.id}
                         onClick={() => {
+                          beginNewRailjackDraft();
                           if (showComponentPicker === "reactor") setSelectedReactor(comp);
                           else if (showComponentPicker === "shield") setSelectedShield(comp);
                           else if (showComponentPicker === "engine") setSelectedEngine(comp);
@@ -404,7 +410,7 @@ export default function RailjackBuilderPage() {
                     {turrets.map((t) => (
                       <button
                         key={t.id}
-                        onClick={() => setSelectedTurret(t)}
+                        onClick={() => { beginNewRailjackDraft(); setSelectedTurret(t); }}
                         className={cn(
                           "p-2 rounded-lg border text-left transition-all text-xs",
                           selectedTurret?.id === t.id
@@ -431,7 +437,7 @@ export default function RailjackBuilderPage() {
                     {ordnance.map((o) => (
                       <button
                         key={o.id}
-                        onClick={() => setSelectedOrdnance(o)}
+                        onClick={() => { beginNewRailjackDraft(); setSelectedOrdnance(o); }}
                         className={cn(
                           "p-2 rounded-lg border text-left transition-all text-xs",
                           selectedOrdnance?.id === o.id
