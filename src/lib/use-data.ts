@@ -12,12 +12,16 @@ import {
   applyCompanionOverrides,
   getOverrides,
 } from "@/lib/data-overrides";
+import { WEAPON_PASSIVES } from "@/data/weapon-passives";
 
 // Merge base weapons + custom-items.ts (wiki-verified additions)
 const mergedWeapons: Weapon[] = (() => {
   const ids = new Set(allWeapons.map((w) => w.id));
   const extras = customWeapons.filter((w) => !ids.has(w.id));
-  return [...allWeapons, ...extras];
+  return [...allWeapons, ...extras].map((w) => {
+    const passive = w.passive ?? WEAPON_PASSIVES[w.id];
+    return passive ? { ...w, passive } : w;
+  });
 })();
 
 export function useWeapons(): Weapon[] {

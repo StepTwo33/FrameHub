@@ -454,6 +454,7 @@ export default function ArchwingBuilderPage() {
                   <div className="mt-4 border border-border rounded-xl p-4 bg-card">
                     <WeaponStatsPanel
                       stats={weaponStats}
+                      weapon={selectedWeapon ?? undefined}
                       isMelee={selectedWeapon?.category === "archmelee"}
                     />
                   </div>

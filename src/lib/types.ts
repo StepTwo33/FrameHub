@@ -60,6 +60,8 @@ export interface Weapon {
   focusSchool?: string; // 'Zenurik' | 'Naramon' | 'Madurai' | 'Unairu' | 'Vazarin'
   /** Kitgun chamber category — used for arsenal-parity status display. */
   kitgunChamberCategory?: "projectile_shotgun" | "projectile_rifle" | "hitscan_auto" | "beam";
+  /** Codex-style passive (merged from data/weapon-passives when present). */
+  passive?: string;
 }
 
 export interface Warframe {
@@ -135,6 +137,26 @@ export interface EquippedArchonShard {
   selectedBonus: string;
   bonusValue: number;
   slotIndex: number;
+}
+
+/** Saved modular weapon (kitgun / zaw / amp) — matches builder payload. */
+export interface ModularBuildData {
+  modularType: string; // 'kitgun' | 'zaw' | 'amp'
+  parts: Record<string, string>;
+  mods: ModSlot[];
+  arcaneIds?: (string | null)[];
+  hasOrokinCatalyst: boolean;
+  isMR30?: boolean;
+  slotPolarities?: Record<number, string>;
+  customName?: string;
+}
+
+/** Extra weapon calculation options (Kuva/Tenet/Coda progenitor bonus, etc.). */
+export interface WeaponCalculationOptions {
+  /** Innate element key, e.g. heat, viral, corrosive */
+  progenitorElement?: string;
+  /** Bonus damage as percent of base weapon damage (typical 25–60%). */
+  progenitorBonusPercent?: number;
 }
 
 export interface ElementalDamage {
@@ -311,6 +333,9 @@ export interface Loadout {
     hasOrokinCatalyst: boolean;
     isMR30?: boolean;
     slotPolarities?: Record<number, string>;
+    /** Kuva/Tenet/Coda — same as saved weapon build. */
+    progenitorElement?: string;
+    progenitorBonusPercent?: number;
   };
   secondaryBuild?: {
     weaponId: string;
@@ -320,6 +345,8 @@ export interface Loadout {
     hasOrokinCatalyst: boolean;
     isMR30?: boolean;
     slotPolarities?: Record<number, string>;
+    progenitorElement?: string;
+    progenitorBonusPercent?: number;
   };
   meleeBuild?: {
     weaponId: string;
@@ -329,6 +356,8 @@ export interface Loadout {
     hasOrokinCatalyst: boolean;
     isMR30?: boolean;
     slotPolarities?: Record<number, string>;
+    progenitorElement?: string;
+    progenitorBonusPercent?: number;
   };
   companionBuild?: {
     companionId: string;
@@ -340,12 +369,9 @@ export interface Loadout {
     isMR30?: boolean;
     slotPolarities?: Record<number, string>;
   };
-  modularBuild?: {
-    type: string; // 'kitgun' | 'zaw' | 'amp'
-    parts: Record<string, string>; // part slot -> part id
-    mods: ModSlot[];
-    hasOrokinCatalyst: boolean;
-    name?: string; // custom name for the modular weapon
+  /** Modular preset occupying one weapon slot (mutually exclusive with that slot's normal weapon build). */
+  modularBuild?: ModularBuildData & {
+    slot: "primary" | "secondary" | "melee";
   };
   archwingBuild?: {
     archwingId?: string;

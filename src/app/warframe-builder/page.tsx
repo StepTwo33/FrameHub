@@ -20,6 +20,7 @@ import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
+import { formatAbilityDescription } from "@/lib/ability-text";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { buildShareUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
@@ -165,6 +166,9 @@ function AbilityCard({ ability, index, stats }: {
     (ability.castTime != null && ability.castTime > 0) ||
     (ability.cooldown != null && ability.cooldown > 0) ||
     (ability.subAbilities != null && ability.subAbilities.length > 0) ||
+    ability.chainRange != null ||
+    ability.chainLinks != null ||
+    ability.maxTargets != null ||
     miscKeys.length > 0;
 
   const fmtMiscVal = (v: unknown): string => {
@@ -193,7 +197,7 @@ function AbilityCard({ ability, index, stats }: {
       </div>
 
       <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
-        {ability.description}
+        {formatAbilityDescription(ability.description)}
       </p>
 
       {ability.subAbilities != null && ability.subAbilities.length > 0 && (
@@ -208,6 +212,26 @@ function AbilityCard({ ability, index, stats }: {
         <span className="inline-block text-[10px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-2">
           {ability.damageType}
         </span>
+      )}
+
+      {(ability.chainRange != null || ability.chainLinks != null || ability.maxTargets != null) && (
+        <div className="flex flex-wrap gap-2 mb-2 text-[10px] text-muted-foreground">
+          {ability.chainRange != null && ability.chainRange > 0 && (
+            <span title="Chain range (scaled by Range)">
+              Chain range: <span className="font-mono text-foreground">{(ability.chainRange * rng).toFixed(1)}m</span>
+            </span>
+          )}
+          {ability.chainLinks != null && ability.chainLinks > 0 && (
+            <span>
+              Chain links: <span className="font-mono text-foreground">{ability.chainLinks}</span>
+            </span>
+          )}
+          {ability.maxTargets != null && ability.maxTargets > 0 && (
+            <span>
+              Max targets: <span className="font-mono text-foreground">{ability.maxTargets}</span>
+            </span>
+          )}
+        </div>
       )}
 
       {hasAnyStats && (

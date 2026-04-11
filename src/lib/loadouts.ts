@@ -1,13 +1,39 @@
-import { Loadout } from "./types";
+import { Loadout, ModularBuildData, ModSlot } from "./types";
+import { inferModularLoadoutSlot } from "./modular-resolve";
 
 const STORAGE_KEY = "overframe_loadouts";
+
+function normalizeLoadout(raw: Loadout): Loadout {
+  const m = raw.modularBuild as Record<string, unknown> | undefined;
+  if (!m) return raw;
+  const modularType = (m.modularType ?? m.type) as string | undefined;
+  if (!modularType || !m.parts) return raw;
+  const partial: ModularBuildData = {
+    modularType,
+    parts: m.parts as Record<string, string>,
+    mods: (m.mods as ModSlot[]) || [],
+    hasOrokinCatalyst: Boolean(m.hasOrokinCatalyst),
+    isMR30: m.isMR30 as boolean | undefined,
+    slotPolarities: m.slotPolarities as Record<number, string> | undefined,
+    arcaneIds: m.arcaneIds as (string | null)[] | undefined,
+    customName: (m.customName ?? m.name) as string | undefined,
+  };
+  const slot =
+    (m.slot as "primary" | "secondary" | "melee" | undefined) ?? inferModularLoadoutSlot(partial);
+  const cleaned: ModularBuildData & { slot: "primary" | "secondary" | "melee" } = {
+    ...partial,
+    slot: slot as "primary" | "secondary" | "melee",
+  };
+  return { ...raw, modularBuild: cleaned };
+}
 
 export function getLoadouts(): Loadout[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    return JSON.parse(raw) as Loadout[];
+    const parsed = JSON.parse(raw) as Loadout[];
+    return parsed.map(normalizeLoadout);
   } catch {
     return [];
   }

@@ -9,7 +9,15 @@ import { allMods, modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
-import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS } from "@/lib/types";
+import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
+import {
+  weaponSupportsProgenitor,
+  PROGENITOR_ELEMENT_IDS,
+  PROGENITOR_ELEMENT_LABELS,
+  PROGENITOR_BONUS_DEFAULT,
+  PROGENITOR_BONUS_MIN,
+  PROGENITOR_BONUS_MAX,
+} from "@/lib/weapon-progenitor";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -84,6 +92,13 @@ export default function WeaponBuilderPage() {
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [simParams, setSimParams] = useState<SimulationParams>({ ...DEFAULT_SIM_PARAMS });
+  const [progenitorElement, setProgenitorElement] = useState<string>("heat");
+  const [progenitorBonusPercent, setProgenitorBonusPercent] = useState(PROGENITOR_BONUS_DEFAULT);
+
+  const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
+    if (!selectedWeapon || !weaponSupportsProgenitor(selectedWeapon)) return undefined;
+    return { progenitorElement, progenitorBonusPercent };
+  }, [selectedWeapon, progenitorElement, progenitorBonusPercent]);
 
   // Load build from URL ?build= param
   useEffect(() => {
@@ -106,6 +121,8 @@ export default function WeaponBuilderPage() {
     setCurrentBuildId(null);
     setBuildName(`${weapon.name} Build`);
     setBuildDescription("");
+    if (shared.progenitorElement) setProgenitorElement(shared.progenitorElement);
+    if (shared.progenitorBonusPercent != null) setProgenitorBonusPercent(shared.progenitorBonusPercent);
     // Clear the URL param without reload
     window.history.replaceState({}, "", window.location.pathname);
   }, [allWeapons]);
@@ -120,6 +137,12 @@ export default function WeaponBuilderPage() {
       hasOrokinCatalyst,
       isMR30,
       slotPolarities,
+      ...(weaponCalcOptions?.progenitorElement != null
+        ? {
+            progenitorElement: weaponCalcOptions.progenitorElement,
+            progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
+          }
+        : {}),
     };
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
@@ -141,7 +164,7 @@ export default function WeaponBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WeaponBuildData;
@@ -162,6 +185,13 @@ export default function WeaponBuilderPage() {
     setHasOrokinCatalyst(d.hasOrokinCatalyst);
     setIsMR30(d.isMR30);
     setSlotPolarities(d.slotPolarities || {});
+    if (weaponSupportsProgenitor(weapon)) {
+      setProgenitorElement(d.progenitorElement ?? "heat");
+      setProgenitorBonusPercent(d.progenitorBonusPercent ?? PROGENITOR_BONUS_DEFAULT);
+    } else {
+      setProgenitorElement("heat");
+      setProgenitorBonusPercent(PROGENITOR_BONUS_DEFAULT);
+    }
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
@@ -187,6 +217,12 @@ export default function WeaponBuilderPage() {
       itemId: selectedWeapon.id,
       mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
       arcanes: equippedArcanes.map((a) => a?.id ?? ""),
+      ...(weaponCalcOptions?.progenitorElement != null
+        ? {
+            progenitorElement: weaponCalcOptions.progenitorElement,
+            progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
+          }
+        : {}),
     };
 
     try {
@@ -199,6 +235,12 @@ export default function WeaponBuilderPage() {
         hasOrokinCatalyst,
         isMR30,
         slotPolarities,
+        ...(weaponCalcOptions?.progenitorElement != null
+          ? {
+              progenitorElement: weaponCalcOptions.progenitorElement,
+              progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
+            }
+          : {}),
       };
 
       const payload = {
@@ -237,7 +279,7 @@ export default function WeaponBuilderPage() {
       setTimeout(() => setShareCopied(false), 2000);
       toast.success("Share link copied!", { description: "Link copied to clipboard" });
     });
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions]);
 
   const filteredWeapons = useMemo(() => {
     const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
@@ -298,15 +340,15 @@ export default function WeaponBuilderPage() {
     }));
     const activeArcanes = equippedArcanes.filter((a): a is Mod => a !== null);
     if (activeArcanes.length > 0) {
-      return calculateWeaponBuildWithArcanes(selectedWeapon, modSlots, modsMap, activeArcanes, allExtraStatChanges, simParams);
+      return calculateWeaponBuildWithArcanes(selectedWeapon, modSlots, modsMap, activeArcanes, allExtraStatChanges, simParams, weaponCalcOptions);
     }
-    return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, allExtraStatChanges, simParams);
-  }, [selectedWeapon, equippedMods, equippedArcanes, allExtraStatChanges, simParams]);
+    return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, allExtraStatChanges, simParams, weaponCalcOptions);
+  }, [selectedWeapon, equippedMods, equippedArcanes, allExtraStatChanges, simParams, weaponCalcOptions]);
 
   const baseStats = useMemo<CalculatedStats | null>(() => {
     if (!selectedWeapon) return null;
-    return calculateWeaponBuild(selectedWeapon, [], modsMap);
-  }, [selectedWeapon]);
+    return calculateWeaponBuild(selectedWeapon, [], modsMap, undefined, simParams, weaponCalcOptions);
+  }, [selectedWeapon, simParams, weaponCalcOptions]);
 
   const handleSelectWeapon = useCallback((weapon: Weapon) => {
     setSelectedWeapon(weapon);
@@ -317,6 +359,8 @@ export default function WeaponBuilderPage() {
     setEquippedArcanes([null, null]);
     setStanceMod(null);
     setSlotPolarities({});
+    setProgenitorElement("heat");
+    setProgenitorBonusPercent(PROGENITOR_BONUS_DEFAULT);
     setCurrentBuildId(null);
     setBuildName(`${weapon.name} Build`);
     setBuildDescription("");
@@ -546,6 +590,42 @@ export default function WeaponBuilderPage() {
                   </button>
                 </div>
 
+                {selectedWeapon && weaponSupportsProgenitor(selectedWeapon) && (
+                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.06]">
+                    <span className="text-xs font-medium text-amber-400/90 shrink-0">Progenitor bonus</span>
+                    <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="hidden sm:inline">Element</span>
+                      <select
+                        value={progenitorElement}
+                        onChange={(e) => setProgenitorElement(e.target.value)}
+                        className="bg-background border border-border rounded-md px-2 py-1 text-xs text-foreground max-w-[140px]"
+                      >
+                        {PROGENITOR_ELEMENT_IDS.map((id) => (
+                          <option key={id} value={id}>
+                            {PROGENITOR_ELEMENT_LABELS[id] ?? id}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>Bonus %</span>
+                      <input
+                        type="number"
+                        min={PROGENITOR_BONUS_MIN}
+                        max={PROGENITOR_BONUS_MAX}
+                        value={progenitorBonusPercent}
+                        onChange={(e) => {
+                          const v = Number(e.target.value);
+                          if (!Number.isFinite(v)) return;
+                          setProgenitorBonusPercent(Math.min(PROGENITOR_BONUS_MAX, Math.max(PROGENITOR_BONUS_MIN, Math.round(v))));
+                        }}
+                        className="w-14 bg-background border border-border rounded-md px-1.5 py-1 text-xs font-mono text-foreground"
+                      />
+                      <span className="text-[10px] opacity-70">({PROGENITOR_BONUS_MIN}–{PROGENITOR_BONUS_MAX})</span>
+                    </label>
+                  </div>
+                )}
+
                 <div className="flex-1" />
 
                 {/* meta */}
@@ -742,6 +822,7 @@ export default function WeaponBuilderPage() {
                 <WeaponStatsPanel
                   stats={calculatedStats}
                   baseStats={baseStats}
+                  weapon={selectedWeapon}
                   isMelee={selectedWeapon?.category === 'melee' || selectedWeapon?.triggerType === 'Melee'}
                   selectedEvolutions={isIncarnon ? selectedEvolutions : undefined}
                   allEvolutions={incarnonData?.evolutions}

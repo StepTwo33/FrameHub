@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket, Hammer } from "lucide-react";
+import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket, Hammer, Landmark, ExternalLink } from "lucide-react";
 import { Header } from "@/components/header";
 
 export default function Home() {
@@ -194,6 +194,38 @@ export default function Home() {
               </div>
             </div>
           </Link>
+
+          <a
+            href="https://buff0000n.github.io/dojocad/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group h-full"
+          >
+            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-slate-400/50 hover:bg-slate-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-500/10 transition-all duration-300 h-full flex flex-col">
+              <div className="flex items-start gap-3 mb-2">
+                <div className="p-2 rounded-lg bg-slate-500/10 shrink-0">
+                  <Landmark className="h-5 w-5 text-slate-300" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold group-hover:text-slate-200 transition-colors">DojoCAD</h2>
+                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" aria-hidden />
+                  </div>
+                  <p className="text-[11px] text-slate-400/95 font-medium mt-0.5">
+                    By <span className="text-slate-300">buff0000n</span> — thanks for building this for the community.
+                  </p>
+                </div>
+              </div>
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+                Plan clan dojo layouts: room placement, capacity, and multi-floor design. Opens their site in a new tab; not part of Frame Hub.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span className="text-xs bg-secondary px-2 py-1 rounded">DojoCAD</span>
+                <span className="text-xs bg-secondary px-2 py-1 rounded">buff0000n</span>
+                <span className="text-xs bg-secondary px-2 py-1 rounded">External</span>
+              </div>
+            </div>
+          </a>
         </div>
       </main>
 

@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Header } from "@/components/header";
 import { getLoadouts, saveLoadout, deleteLoadout, generateId } from "@/lib/loadouts";
-import { getSavedBuilds, SavedBuild, WarframeBuildData, WeaponBuildData, CompanionBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, SavedBuild, WarframeBuildData, WeaponBuildData, CompanionBuildData, ModularBuildData } from "@/lib/build-storage";
 import { Loadout, EquippedArchonShard } from "@/lib/types";
+import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
+import type { LoadoutWeaponSlot } from "@/lib/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
 import { weaponsMap } from "@/data/weapons";
@@ -29,6 +31,7 @@ import {
   Info,
   Library,
   Sparkles,
+  Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
@@ -63,18 +66,48 @@ const SLOT_ICONS: Record<SlotType, React.ReactNode> = {
 
 const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
 
-function getSlotItemId(loadout: Loadout, slot: SlotType): string | undefined {
+function pickerSlotToWeaponSlot(slot: SlotType): LoadoutWeaponSlot | null {
+  if (slot === "primary" || slot === "secondary" || slot === "melee") return slot;
+  return null;
+}
+
+function getWeaponSlotPayload(
+  loadout: Loadout,
+  w: LoadoutWeaponSlot,
+): { kind: "weapon"; weaponId: string } | { kind: "modular"; data: ModularBuildData & { slot: LoadoutWeaponSlot } } | null {
+  if (loadout.modularBuild?.slot === w) {
+    return { kind: "modular", data: loadout.modularBuild };
+  }
+  const weaponId =
+    w === "primary"
+      ? loadout.primaryBuild?.weaponId
+      : w === "secondary"
+        ? loadout.secondaryBuild?.weaponId
+        : loadout.meleeBuild?.weaponId;
+  if (!weaponId) return null;
+  return { kind: "weapon", weaponId };
+}
+
+function getSlotLabelName(loadout: Loadout, slot: SlotType): string | null {
   switch (slot) {
-    case "warframe":
-      return loadout.warframeBuild?.warframeId;
+    case "warframe": {
+      const id = loadout.warframeBuild?.warframeId;
+      return id ? allWarframes.find((w) => w.id === id)?.name ?? id : null;
+    }
+    case "companion": {
+      const id = loadout.companionBuild?.companionId;
+      return id ? allCompanions.find((c) => c.id === id)?.name ?? id : null;
+    }
     case "primary":
-      return loadout.primaryBuild?.weaponId;
     case "secondary":
-      return loadout.secondaryBuild?.weaponId;
-    case "melee":
-      return loadout.meleeBuild?.weaponId;
-    case "companion":
-      return loadout.companionBuild?.companionId;
+    case "melee": {
+      const w = pickerSlotToWeaponSlot(slot);
+      if (!w) return null;
+      const p = getWeaponSlotPayload(loadout, w);
+      if (!p) return null;
+      if (p.kind === "modular") return modularBuildDisplayName(p.data);
+      return weaponsMap.get(p.weaponId)?.name ?? p.weaponId;
+    }
   }
 }
 
@@ -82,28 +115,24 @@ function getSlotModCount(loadout: Loadout, slot: SlotType): number {
   switch (slot) {
     case "warframe":
       return loadout.warframeBuild?.mods?.length ?? 0;
-    case "primary":
-      return loadout.primaryBuild?.mods?.length ?? 0;
-    case "secondary":
-      return loadout.secondaryBuild?.mods?.length ?? 0;
-    case "melee":
-      return loadout.meleeBuild?.mods?.length ?? 0;
     case "companion":
       return (loadout.companionBuild?.mods?.length ?? 0) + (loadout.companionBuild?.weaponMods?.length ?? 0);
-  }
-}
-
-function getItemName(slot: SlotType, id: string | undefined): string | null {
-  if (!id) return null;
-  switch (slot) {
-    case "warframe":
-      return allWarframes.find((w) => w.id === id)?.name ?? id;
     case "primary":
     case "secondary":
-    case "melee":
-      return weaponsMap.get(id)?.name ?? id;
-    case "companion":
-      return allCompanions.find((c) => c.id === id)?.name ?? id;
+    case "melee": {
+      const w = pickerSlotToWeaponSlot(slot);
+      if (!w) return 0;
+      const p = getWeaponSlotPayload(loadout, w);
+      if (!p) return 0;
+      if (p.kind === "modular") {
+        const mods = p.data.mods?.length ?? 0;
+        const arcanes = p.data.arcaneIds?.filter(Boolean).length ?? 0;
+        return mods + arcanes;
+      }
+      const build =
+        w === "primary" ? loadout.primaryBuild : w === "secondary" ? loadout.secondaryBuild : loadout.meleeBuild;
+      return build?.mods?.length ?? 0;
+    }
   }
 }
 
@@ -146,6 +175,15 @@ function listSavedBuildsForSlot(slot: SlotType): SavedBuild[] {
   });
 }
 
+function listModularBuildsForWeaponSlot(slot: SlotType): SavedBuild[] {
+  const ws = pickerSlotToWeaponSlot(slot);
+  if (!ws) return [];
+  return getSavedBuilds("modular").filter((b) => {
+    if (b.type !== "modular") return false;
+    return modularBuildMatchesLoadoutSlot(b.data as ModularBuildData, ws);
+  });
+}
+
 function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warframeBuild"]> {
   const shards =
     d.shards && d.shards.length === 5 ? d.shards : ([...EMPTY_SHARDS] as (EquippedArchonShard | null)[]);
@@ -168,7 +206,7 @@ export default function LoadoutsPage() {
   const [pickerSlot, setPickerSlot] = useState<SlotType>("warframe");
   const [pickerLoadoutId, setPickerLoadoutId] = useState<string | null>(null);
   const [pickerSearch, setPickerSearch] = useState("");
-  const [pickerTab, setPickerTab] = useState<"saved" | "catalog">("catalog");
+  const [pickerTab, setPickerTab] = useState<"saved" | "catalog" | "modular">("catalog");
 
   useEffect(() => {
     setLoadouts(getLoadouts());
@@ -243,7 +281,10 @@ export default function LoadoutsPage() {
     setPickerSlot(slot);
     setPickerSearch("");
     const saved = listSavedBuildsForSlot(slot);
-    setPickerTab(saved.length > 0 ? "saved" : "catalog");
+    const modular = listModularBuildsForWeaponSlot(slot);
+    if (saved.length > 0) setPickerTab("saved");
+    else if (modular.length > 0) setPickerTab("modular");
+    else setPickerTab("catalog");
     setPickerOpen(true);
   }, []);
 
@@ -272,6 +313,8 @@ export default function LoadoutsPage() {
         case "secondary":
         case "melee":
           {
+            const ws = pickerSlotToWeaponSlot(pickerSlot);
+            if (ws && updated.modularBuild?.slot === ws) delete updated.modularBuild;
             const weaponShell: NonNullable<Loadout["primaryBuild"]> = {
               weaponId: itemId,
               mods: [],
@@ -334,6 +377,8 @@ export default function LoadoutsPage() {
           toast.error("This saved build does not match this weapon slot.");
           return;
         }
+        const ws = pickerSlotToWeaponSlot(pickerSlot);
+        if (ws && updated.modularBuild?.slot === ws) delete updated.modularBuild;
         const payload: NonNullable<Loadout["primaryBuild"]> = {
           ...d,
           arcaneIds: d.arcaneIds ?? [null, null],
@@ -355,6 +400,34 @@ export default function LoadoutsPage() {
     [pickerLoadoutId, pickerSlot, loadouts, refresh]
   );
 
+  const handleAttachModularBuild = useCallback(
+    (build: SavedBuild) => {
+      if (!pickerLoadoutId || build.type !== "modular") return;
+      const ws = pickerSlotToWeaponSlot(pickerSlot);
+      if (!ws) return;
+      const data = build.data as ModularBuildData;
+      if (!modularBuildMatchesLoadoutSlot(data, ws)) {
+        toast.error("This modular build does not fit this weapon slot.");
+        return;
+      }
+      const loadout = loadouts.find((l) => l.id === pickerLoadoutId);
+      if (!loadout) return;
+      const updated: Loadout = {
+        ...loadout,
+        modularBuild: { ...data, slot: ws },
+        updatedAt: Date.now(),
+      };
+      if (ws === "primary") delete updated.primaryBuild;
+      if (ws === "secondary") delete updated.secondaryBuild;
+      if (ws === "melee") delete updated.meleeBuild;
+      saveLoadout(updated);
+      refresh();
+      setPickerOpen(false);
+      toast.success(`Attached “${build.name}”`, { description: `${SLOT_CONFIG[pickerSlot].label} (modular)` });
+    },
+    [pickerLoadoutId, pickerSlot, loadouts, refresh]
+  );
+
   const handleClearSlot = useCallback(
     (loadoutId: string, slot: SlotType) => {
       if (!confirm(`Remove ${SLOT_CONFIG[slot].label} from this loadout?`)) return;
@@ -366,13 +439,16 @@ export default function LoadoutsPage() {
           delete updated.warframeBuild;
           break;
         case "primary":
-          delete updated.primaryBuild;
+          if (loadout.modularBuild?.slot === "primary") delete updated.modularBuild;
+          else delete updated.primaryBuild;
           break;
         case "secondary":
-          delete updated.secondaryBuild;
+          if (loadout.modularBuild?.slot === "secondary") delete updated.modularBuild;
+          else delete updated.secondaryBuild;
           break;
         case "melee":
-          delete updated.meleeBuild;
+          if (loadout.modularBuild?.slot === "melee") delete updated.modularBuild;
+          else delete updated.meleeBuild;
           break;
         case "companion":
           delete updated.companionBuild;
@@ -432,7 +508,19 @@ export default function LoadoutsPage() {
     });
   }, [pickerSlot, pickerSearch, pickerOpen]);
 
+  const pickerModularBuilds = useMemo(() => {
+    const q = pickerSearch.toLowerCase();
+    return listModularBuildsForWeaponSlot(pickerSlot).filter((b) => {
+      if (!q) return true;
+      if (b.name.toLowerCase().includes(q)) return true;
+      const d = b.data as ModularBuildData;
+      return modularBuildDisplayName(d).toLowerCase().includes(q);
+    });
+  }, [pickerSlot, pickerSearch, pickerOpen]);
+
   const savedCount = pickerSavedBuilds.length;
+  const modularCount = pickerModularBuilds.length;
+  const showModularTab = pickerSlot === "primary" || pickerSlot === "secondary" || pickerSlot === "melee";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -444,9 +532,10 @@ export default function LoadoutsPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Loadouts</h1>
               <p className="text-sm text-muted-foreground mt-1 max-w-xl">
-                Group a warframe, three weapons, and a companion into named presets. Use{" "}
-                <span className="text-foreground/90 font-medium">My saved builds</span> to pull full mod setups from
-                each builder — picking from the catalog starts an empty build for that item.
+                Group a warframe, weapons (including kitguns, zaws, and amps from the{" "}
+                <span className="text-foreground/90 font-medium">Modular</span> tab), and a companion.{" "}
+                <span className="text-foreground/90 font-medium">My saved builds</span> pulls full setups; catalog starts
+                empty.
               </p>
             </div>
             <button
@@ -467,8 +556,8 @@ export default function LoadoutsPage() {
                 builders (Load button lists them here).
               </p>
               <p>
-                <span className="text-foreground font-medium">2.</span> Open a slot → <strong>My saved builds</strong>{" "}
-                copies mods, polarities, and extras into this loadout.
+                <span className="text-foreground font-medium">2.</span> Weapon slots also have a <strong>Modular</strong>{" "}
+                tab for saved kitgun / zaw / amp builds (replaces that slot; configure parts in Modular Builder).
               </p>
               <p>
                 <span className="text-foreground font-medium">3.</span> Loadouts stay on this device (separate from
@@ -566,9 +655,10 @@ export default function LoadoutsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     {(["warframe", "primary", "secondary", "melee", "companion"] as SlotType[]).map((slot) => {
                       const cfg = SLOT_CONFIG[slot];
-                      const itemId = getSlotItemId(loadout, slot);
-                      const itemName = getItemName(slot, itemId);
+                      const itemName = getSlotLabelName(loadout, slot);
                       const modCount = getSlotModCount(loadout, slot);
+                      const ws = pickerSlotToWeaponSlot(slot);
+                      const isModularSlot = ws && getWeaponSlotPayload(loadout, ws)?.kind === "modular";
                       const cardStyle = SLOT_CARD_STYLES[slot];
 
                       if (!itemName) {
@@ -593,25 +683,34 @@ export default function LoadoutsPage() {
                       return (
                         <div key={slot} className={cn("relative rounded-xl border p-4 flex flex-col gap-2 min-h-[100px]", cardStyle)}>
                           <div className="flex items-start gap-2.5">
+                            {isModularSlot ? (
+                              <span className="w-10 h-10 rounded-md flex items-center justify-center bg-amber-500/15 border border-amber-500/30 shrink-0">
+                                <Wrench className="h-5 w-5 text-amber-400/90" aria-hidden />
+                              </span>
+                            ) : (
                             <img
-                              src={getSlotImage(slot, itemName)}
+                              src={getSlotImage(slot, itemName ?? "")}
                               alt=""
                               className="w-10 h-10 rounded-md object-contain bg-background/40 border border-border/30 shrink-0"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = "none";
                               }}
                             />
+                            )}
                             <div className="flex-1 min-w-0">
                               <span className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
                                 {cfg.label}
                               </span>
                               <span className="text-sm font-semibold truncate block leading-tight">{itemName}</span>
-                              <span className="text-[11px] text-muted-foreground mt-0.5">{modCount} mod slots filled</span>
+                              <span className="text-[11px] text-muted-foreground mt-0.5">
+                                {modCount} mod{modCount === 1 ? "" : "s"} filled
+                                {isModularSlot ? " • Modular" : ""}
+                              </span>
                             </div>
                           </div>
                           <div className="flex flex-col gap-1.5 mt-auto pt-1">
                             <a
-                              href={cfg.builderPath}
+                              href={isModularSlot ? "/modular-builder" : cfg.builderPath}
                               className="inline-flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-background/60 border border-border/60 hover:border-primary/35 hover:text-primary transition-colors"
                             >
                               Open builder <ExternalLink className="h-3 w-3 opacity-70" />
@@ -671,17 +770,32 @@ export default function LoadoutsPage() {
             </div>
           </div>
 
-          <Tabs value={pickerTab} onValueChange={(v) => setPickerTab(v as "saved" | "catalog")} className="flex flex-col flex-1 min-h-0 px-5 pb-5 pt-3">
-            <TabsList className="w-full grid grid-cols-2 mb-3 shrink-0 h-9">
+          <Tabs
+            value={pickerTab}
+            onValueChange={(v) => setPickerTab(v as "saved" | "catalog" | "modular")}
+            className="flex flex-col flex-1 min-h-0 px-5 pb-5 pt-3"
+          >
+            <TabsList className={cn("w-full mb-3 shrink-0 h-9 grid", showModularTab ? "grid-cols-3" : "grid-cols-2")}>
               <TabsTrigger value="saved" className="gap-1.5 text-xs sm:text-sm">
                 <Library className="h-3.5 w-3.5" />
-                My saved builds
+                <span className="truncate">Saved</span>
                 {savedCount > 0 && (
                   <span className="ml-0.5 rounded-full bg-primary/15 text-primary px-1.5 py-0 text-[10px] tabular-nums">
                     {savedCount}
                   </span>
                 )}
               </TabsTrigger>
+              {showModularTab && (
+                <TabsTrigger value="modular" className="gap-1.5 text-xs sm:text-sm">
+                  <Wrench className="h-3.5 w-3.5" />
+                  <span className="truncate">Modular</span>
+                  {modularCount > 0 && (
+                    <span className="ml-0.5 rounded-full bg-amber-500/15 text-amber-400 px-1.5 py-0 text-[10px] tabular-nums">
+                      {modularCount}
+                    </span>
+                  )}
+                </TabsTrigger>
+              )}
               <TabsTrigger value="catalog" className="gap-1.5 text-xs sm:text-sm">
                 <Crosshair className="h-3.5 w-3.5" />
                 Catalog
@@ -739,7 +853,7 @@ export default function LoadoutsPage() {
             <TabsContent value="catalog" className="flex-1 min-h-0 mt-0 data-[state=inactive]:hidden flex flex-col">
               <p className="text-[11px] text-muted-foreground mb-2">
                 {pickerCatalogItems.length} items — empty mod loadout; use builders to configure, save, then attach from{" "}
-                <strong>My saved builds</strong>.
+                <strong>Saved</strong>.
               </p>
               <ScrollArea className="h-[min(50vh,360px)] pr-3">
                 <div className="space-y-1.5 pr-1">
@@ -767,6 +881,51 @@ export default function LoadoutsPage() {
                 </div>
               </ScrollArea>
             </TabsContent>
+
+            {showModularTab && (
+              <TabsContent value="modular" className="flex-1 min-h-0 mt-0 data-[state=inactive]:hidden flex flex-col">
+                <p className="text-[11px] text-muted-foreground mb-2">
+                  Kitgun, Zaw, and Amp presets from Modular Builder. Attaching one <strong>replaces</strong> this weapon
+                  slot (same as in-game).
+                </p>
+                <ScrollArea className="h-[min(50vh,360px)] pr-3">
+                  {pickerModularBuilds.length === 0 ? (
+                    <div className="text-center py-10 px-2 text-sm text-muted-foreground">
+                      <p className="mb-2">No modular builds fit this slot.</p>
+                      <p className="text-xs">
+                        Save a kitgun / zaw / amp in{" "}
+                        <a href="/modular-builder" className="text-primary underline">
+                          Modular Builder
+                        </a>
+                        , then return here.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 pr-1">
+                      {pickerModularBuilds.map((build) => {
+                        const d = build.data as ModularBuildData;
+                        const subtitle = `${d.modularType} • ${modularBuildDisplayName(d)}`;
+                        const modTotal = d.mods?.length ?? 0;
+                        return (
+                          <button
+                            key={build.id}
+                            type="button"
+                            onClick={() => handleAttachModularBuild(build)}
+                            className="w-full text-left p-3 rounded-xl border border-amber-500/20 hover:border-amber-500/45 hover:bg-amber-500/5 transition-all flex flex-col gap-0.5"
+                          >
+                            <span className="text-sm font-medium">{build.name}</span>
+                            <span className="text-xs text-muted-foreground">{subtitle}</span>
+                            <span className="text-[10px] text-muted-foreground/80">
+                              {modTotal} mods • {new Date(build.updatedAt).toLocaleDateString()}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </ScrollArea>
+              </TabsContent>
+            )}
           </Tabs>
         </DialogContent>
       </Dialog>

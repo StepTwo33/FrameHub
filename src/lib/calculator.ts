@@ -1,5 +1,5 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from './types';
 import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
 
 /** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
@@ -214,6 +214,7 @@ export function calculateWeaponBuild(
   allMods: Map<string, Mod>,
   incarnonStatChanges?: Record<string, number>,
   simParams?: SimulationParams,
+  calcOptions?: WeaponCalculationOptions,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
@@ -408,6 +409,20 @@ export function calculateWeaponBuild(
     if (baseVal && baseVal > 0) {
       innateElements.push({ type: elem, value: baseVal * dmgMult });
     }
+  }
+  // Kuva/Tenet/Coda progenitor bonus (% of base damage, scales with +damage mods). IPS goes to IPS stats; elements use combo pipeline.
+  if (
+    calcOptions?.progenitorElement &&
+    calcOptions.progenitorBonusPercent != null &&
+    calcOptions.progenitorBonusPercent > 0
+  ) {
+    const pct = calcOptions.progenitorBonusPercent / 100;
+    const bonus = baseWeapon.damage * pct * dmgMult;
+    const pe = calcOptions.progenitorElement;
+    if (pe === "impact") stats.impact += bonus;
+    else if (pe === "puncture") stats.puncture += bonus;
+    else if (pe === "slash") stats.slash += bonus;
+    else innateElements.push({ type: pe, value: bonus });
   }
   elementalMods.unshift(...innateElements);
 
@@ -764,9 +779,10 @@ export function calculateWeaponBuildWithArcanes(
   arcanes: Mod[],
   incarnonStatChanges?: Record<string, number>,
   simParams?: SimulationParams,
+  calcOptions?: WeaponCalculationOptions,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
-  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim);
+  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions);
   for (const arcane of arcanes) {
     applyArcaneToWeapon(stats, arcane, sim.arcaneStacks);
   }

@@ -8,7 +8,7 @@ import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
-import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS } from "@/lib/types";
+import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, ModularBuildData } from "@/lib/types";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import type { SlotType } from "@/components/mod-picker";
@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2, Gem } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ModularBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
 import {
   kitgunChambers, kitgunGrips, kitgunLoaders, buildKitgun,
@@ -260,7 +260,7 @@ export default function ModularBuilderPage() {
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
     setHasOrokinCatalyst(d.hasOrokinCatalyst);
-    setIsMR30(d.isMR30);
+    setIsMR30(d.isMR30 ?? false);
     setSlotPolarities(d.slotPolarities || {});
     const aid = d.arcaneIds ?? [];
     setEquippedArcanes([
@@ -701,6 +701,7 @@ export default function ModularBuilderPage() {
               {assembledWeapon && calculatedStats ? (
                 <WeaponStatsPanel
                   stats={calculatedStats}
+                  weapon={assembledWeapon}
                   isMelee={assembledWeapon.category === "melee"}
                   simParams={simParams}
                   onSimParamsChange={setSimParams}

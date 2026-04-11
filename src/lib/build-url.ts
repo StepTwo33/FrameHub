@@ -8,6 +8,8 @@ export interface ShareableBuild {
   itemId: string;
   mods: { id: string; rank: number; slotIndex?: number }[];
   arcanes?: string[];
+  progenitorElement?: string;
+  progenitorBonusPercent?: number;
   // Modular-specific
   modularType?: string;
   parts?: Record<string, string>;

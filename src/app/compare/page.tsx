@@ -5,8 +5,11 @@ import { Header } from "@/components/header";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { useWeapons } from "@/lib/use-data";
 import { allMods, modsMap } from "@/data/mods";
-import { calculateWeaponBuild, calculateWarframeBuild } from "@/lib/calculator";
-import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, WarframeCalculatedStats } from "@/lib/types";
+import { calculateWeaponBuild, calculateWeaponBuildWithArcanes, calculateWarframeBuild } from "@/lib/calculator";
+import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, WarframeCalculatedStats, WeaponCalculationOptions } from "@/lib/types";
+import { weaponFromModularData } from "@/lib/modular-resolve";
+import { resolveSavedArcaneSlots } from "@/lib/build-storage";
+import { WEAPON_PASSIVES } from "@/data/weapon-passives";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker, type SlotType as ModPickerSlotType } from "@/components/mod-picker";
 import { Input } from "@/components/ui/input";
@@ -254,6 +257,7 @@ function BuildCompareTab() {
               {/* Stats */}
               <WeaponStatsPanel
                 stats={build.stats}
+                weapon={build.weapon}
                 isMelee={build.weapon?.category === "melee" || build.weapon?.triggerType === "Melee"}
               />
             </div>
@@ -311,6 +315,12 @@ interface LoadoutStats {
   companion: { name: string; hp: number; shield: number; armor: number } | null;
 }
 
+function weaponWithPassive(w: Weapon): Weapon {
+  if (w.passive) return w;
+  const p = WEAPON_PASSIVES[w.id];
+  return p ? { ...w, passive: p } : w;
+}
+
 function calcLoadoutStats(loadout: Loadout): LoadoutStats {
   const result: LoadoutStats = { warframe: null, primary: null, secondary: null, melee: null, companion: null };
 
@@ -322,17 +332,48 @@ function calcLoadoutStats(loadout: Loadout): LoadoutStats {
     }
   }
 
-  const calcWeapon = (build: { weaponId: string; mods: ModSlot[] } | undefined) => {
+  const calcWeapon = (
+    build:
+      | ({
+          weaponId: string;
+          mods: ModSlot[];
+          progenitorElement?: string;
+          progenitorBonusPercent?: number;
+        })
+      | undefined,
+  ) => {
     if (!build) return null;
     const w = weaponsMap.get(build.weaponId);
     if (!w) return null;
-    const stats = calculateWeaponBuild(w, build.mods || [], modsMap);
+    const base = weaponWithPassive(w);
+    const calcOptions: WeaponCalculationOptions | undefined =
+      build.progenitorElement &&
+      build.progenitorBonusPercent != null &&
+      build.progenitorBonusPercent > 0
+        ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
+        : undefined;
+    const stats = calculateWeaponBuild(base, build.mods || [], modsMap, undefined, undefined, calcOptions);
+    return { name: base.name, stats };
+  };
+
+  const calcModularSlot = (slot: "primary" | "secondary" | "melee") => {
+    if (loadout.modularBuild?.slot !== slot) return null;
+    const data = loadout.modularBuild;
+    let w = weaponFromModularData(data);
+    if (!w) return null;
+    w = weaponWithPassive(w);
+    const modSlots = data.mods || [];
+    const arcaneMods = resolveSavedArcaneSlots(data.arcaneIds, 2).filter((m): m is Mod => m != null);
+    const stats =
+      arcaneMods.length > 0
+        ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods)
+        : calculateWeaponBuild(w, modSlots, modsMap);
     return { name: w.name, stats };
   };
 
-  result.primary = calcWeapon(loadout.primaryBuild);
-  result.secondary = calcWeapon(loadout.secondaryBuild);
-  result.melee = calcWeapon(loadout.meleeBuild);
+  result.primary = calcModularSlot("primary") ?? calcWeapon(loadout.primaryBuild);
+  result.secondary = calcModularSlot("secondary") ?? calcWeapon(loadout.secondaryBuild);
+  result.melee = calcModularSlot("melee") ?? calcWeapon(loadout.meleeBuild);
 
   if (loadout.companionBuild) {
     const c = companionsMap.get(loadout.companionBuild.companionId);

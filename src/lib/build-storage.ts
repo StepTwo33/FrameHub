@@ -1,5 +1,5 @@
 // Build storage utilities - localStorage fallback + cloud API when logged in
-import { ModSlot, EquippedArchonShard, Mod } from "./types";
+import { ModSlot, EquippedArchonShard, Mod, ModularBuildData } from "./types";
 import { modsMap } from "@/data/mods";
 import { allArcanes } from "@/data/arcanes";
 
@@ -112,6 +112,9 @@ export interface WeaponBuildData {
   hasOrokinCatalyst: boolean;
   isMR30: boolean;
   slotPolarities: Record<number, string>;
+  /** Kuva/Tenet/Coda progenitor bonus (optional). */
+  progenitorElement?: string;
+  progenitorBonusPercent?: number;
 }
 
 // Warframe build data
@@ -140,18 +143,7 @@ export interface CompanionBuildData {
   slotPolarities: Record<number, string>;
 }
 
-// Modular weapon build data
-export interface ModularBuildData {
-  modularType: string; // 'kitgun' | 'zaw' | 'amp'
-  parts: Record<string, string>; // partSlot -> partId
-  mods: ModSlot[];
-  /** Kitgun / Zaw arcanes (same slot count as weapon builder). */
-  arcaneIds?: (string | null)[];
-  hasOrokinCatalyst: boolean;
-  isMR30: boolean;
-  slotPolarities: Record<number, string>;
-  customName?: string;
-}
+export type { ModularBuildData };
 
 // Railjack build data
 export interface RailjackBuildData {

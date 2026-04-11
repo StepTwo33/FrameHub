@@ -1,11 +1,12 @@
 "use client";
 
-import { CalculatedStats, WarframeCalculatedStats, Warframe, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
+import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
 import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight, Flame, Snowflake, Zap, Skull, Wind, Atom, CloudRain, Sun, Biohazard, Magnet, RadioTower, Bug } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
 import { IncarnonEvolution } from "@/data/incarnon";
+import { formatAbilityDescription } from "@/lib/ability-text";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -85,8 +86,8 @@ function SimSlider({ label, value, min, max, onChange, suffix, tooltip }: {
   );
 }
 
-export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions, allEvolutions, simParams, onSimParamsChange }: {
-  stats: CalculatedStats | null; baseStats?: CalculatedStats | null; isMelee?: boolean;
+export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEvolutions, allEvolutions, simParams, onSimParamsChange }: {
+  stats: CalculatedStats | null; baseStats?: CalculatedStats | null; weapon?: Weapon | null; isMelee?: boolean;
   selectedEvolutions?: Record<number, number>; allEvolutions?: IncarnonEvolution[];
   simParams?: SimulationParams; onSimParamsChange?: (p: SimulationParams) => void;
 }) {
@@ -106,6 +107,12 @@ export function WeaponStatsPanel({ stats, baseStats, isMelee, selectedEvolutions
   return (
     <div className="border border-border rounded-xl p-4 bg-card space-y-1">
       <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-2">WEAPON STATS</h3>
+
+      {weapon?.passive && (
+        <CollapsibleSection title="PASSIVE" defaultOpen>
+          <p className="text-[11px] text-muted-foreground leading-relaxed py-1">{weapon.passive}</p>
+        </CollapsibleSection>
+      )}
 
       {/* Simulation Controls */}
       {simParams && onSimParamsChange && (
@@ -365,6 +372,12 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
     <div className="border border-border rounded-xl p-4 bg-card space-y-1">
       <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-2">WARFRAME STATS</h3>
 
+      {warframe?.passive && (
+        <CollapsibleSection title="PASSIVE" defaultOpen>
+          <p className="text-[11px] text-muted-foreground leading-relaxed py-1">{formatAbilityDescription(warframe.passive)}</p>
+        </CollapsibleSection>
+      )}
+
       <CollapsibleSection title="SURVIVABILITY" defaultOpen>
         <StatRow label="Health" value={stats.totalHealth.toFixed(0)} />
         <StatRow label="Shield" value={stats.totalShield.toFixed(0)} />
@@ -421,7 +434,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
 
       {/* Ability Preview */}
       {warframe && warframe.abilities && warframe.abilities.length > 0 && (
-        <CollapsibleSection title="ABILITIES" defaultOpen={false}>
+        <CollapsibleSection title="ABILITIES" defaultOpen>
           {warframe.abilities.map((ability, i) => {
             if (helminthSlot === i && helminthAbility) {
               return <HelminthAbilityPreview key={i} ability={helminthAbility} stats={stats} index={i} />;
@@ -577,12 +590,22 @@ function AbilityPreview({ ability, stats, index }: {
   const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
   const miscEntries = ability.miscStats ? Object.entries(ability.miscStats) : [];
 
+  const desc = formatAbilityDescription(ability.description);
   return (
     <div className="py-1.5 border-b border-border/30 last:border-0">
       <div className="flex justify-between items-center">
         <span className="text-xs font-medium">{ability.name}</span>
         <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
       </div>
+      {desc.length > 0 && (
+        <p className="text-[9px] text-muted-foreground/90 mt-1 leading-snug">{desc}</p>
+      )}
+      {ability.damageType != null && String(ability.damageType).length > 0 && (
+        <div className="text-[10px] text-muted-foreground mt-1">
+          Damage type:{" "}
+          <span className="text-sky-300/90 font-medium">{ability.damageType}</span>
+        </div>
+      )}
       {ability.subAbilities != null && ability.subAbilities.length > 0 && (
         <ul className="list-disc list-inside text-[9px] text-muted-foreground mt-1 space-y-0.5 leading-snug">
           {ability.subAbilities.map((line, i) => (
@@ -653,7 +676,10 @@ function AbilityPreview({ ability, stats, index }: {
         )}
         {ability.statusChance != null && ability.statusChance > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            Status: <span className="text-foreground font-mono">{(ability.statusChance * str * 100).toFixed(0)}%</span>
+            Status:{" "}
+            <span className="text-foreground font-mono">
+              {Math.min(100, ability.statusChance * str * 100).toFixed(0)}%
+            </span>
           </div>
         )}
         {ability.castTime != null && ability.castTime > 0 && (
@@ -664,6 +690,21 @@ function AbilityPreview({ ability, stats, index }: {
         {ability.cooldown != null && ability.cooldown > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Cooldown: <span className="text-foreground font-mono">{ability.cooldown.toFixed(1)}s</span>
+          </div>
+        )}
+        {ability.chainRange != null && ability.chainRange > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Chain range: <span className="text-foreground font-mono">{(ability.chainRange * rng).toFixed(1)}m</span>
+          </div>
+        )}
+        {ability.chainLinks != null && ability.chainLinks > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Chain links: <span className="text-foreground font-mono">{ability.chainLinks}</span>
+          </div>
+        )}
+        {ability.maxTargets != null && ability.maxTargets > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Max targets: <span className="text-foreground font-mono">{ability.maxTargets}</span>
           </div>
         )}
         {miscEntries.length > 0 && (
