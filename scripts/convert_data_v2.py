@@ -2,6 +2,15 @@
 """
 Robust Dart → TypeScript data converter for Overframe web.
 Reads ALL Dart data files directly, validates output, and reports discrepancies.
+
+Paths (override with env if your checkout layout differs):
+  OVERFRAME_TS_DIR   — default: <this-repo>/src/data
+  OVERFRAME_DART_DIR — default: <parent-of-repo>/overframe-app/lib/data
+
+Warning: this overwrites generated TS under src/data. Web-only additions that
+are not yet in the Dart app (e.g. new patch weapons) must be re-applied or
+merged into overframe-app first. Do not run with OVERFRAME_SYNC_DATA=1 on
+deploy unless you intend to regenerate from Dart.
 """
 
 import re
@@ -9,8 +18,18 @@ import json
 import os
 import sys
 
-DART_DIR = '/home/jason/Documents/testing/overframe-app/lib/data'
-TS_DIR = '/home/jason/Documents/testing/overframe-web/src/data'
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.dirname(_SCRIPT_DIR)
+
+
+def _default_dart_dir() -> str:
+    """Sibling checkout: <parent-of-overframe-web>/overframe-app/lib/data"""
+    return os.path.join(os.path.dirname(_REPO_ROOT), "overframe-app", "lib", "data")
+
+
+# Override with OVERFRAME_DART_DIR / OVERFRAME_TS_DIR when layouts differ from the default.
+TS_DIR = os.path.normpath(os.environ.get("OVERFRAME_TS_DIR") or os.path.join(_REPO_ROOT, "src", "data"))
+DART_DIR = os.path.normpath(os.environ.get("OVERFRAME_DART_DIR") or _default_dart_dir())
 os.makedirs(TS_DIR, exist_ok=True)
 
 errors = []

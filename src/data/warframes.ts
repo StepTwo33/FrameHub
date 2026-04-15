@@ -5306,6 +5306,39 @@ export const allWarframes: Warframe[] = [
     ]
   },
   {
+    "id": "voruna_prime",
+    "name": "Voruna Prime",
+    "health": 455,
+    "shield": 270,
+    "armor": 265,
+    "energy": 130,
+    "sprintSpeed": 1.2,
+    "description": "Splendor and ferocity reach their savage apex in Voruna Prime. Though exalted by Orokin gold, she is more feral than ever.",
+    "passive": "Voruna never fights alone. In mission, hold Abilities to call upon each wolf\u2019s unique Passive power.",
+    "abilities": [
+      {
+        "name": "Shroud Of Dynar",
+        "energyCost": 25,
+        "description": "(TAP) Dynar shrouds Voruna with invisibility and accelerates her speed. Invisibility ends when Voruna attacks. For a short time after invisibility ends, melee attacks have incre..."
+      },
+      {
+        "name": "Fangs Of Raksh",
+        "energyCost": 25,
+        "description": "(TAP) Raksh's fangs tear into your enemies. 5 random Status Effects are applied at 10 Stacks each on an enemy. On target's death, spread the Status Effects to other nearby ene..."
+      },
+      {
+        "name": "Lycath's Hunt",
+        "energyCost": 25,
+        "description": "(TAP) Lycath hunts to sustain the pack. Enemies killed by melee attacks drop health orbs and enemies killed by headshots drop energy orbs. Increase the duration of Lycath\u2019s hunt..."
+      },
+      {
+        "name": "Ulfrun's Descent",
+        "energyCost": 25,
+        "description": "(TAP) Voruna drops to all fours and prepares 5 brutal charges that lock onto enemies. Ulfrun, the most powerful wolf, leads the attack as Voruna dashes toward her target. The pa..."
+      }
+    ]
+  },
+  {
     "id": "wisp",
     "name": "Wisp",
     "health": 270,

@@ -104,6 +104,7 @@ export const WARFRAME_ENERGY_RANK30: Record<string, number> = {
   "volt": 150,
   "volt_prime": 300,
   "voruna": 150,
+  "voruna_prime": 180,
   "wisp": 300,
   "wisp_prime": 300,
   "wukong": 180,
