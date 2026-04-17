@@ -21,7 +21,8 @@ function isDeniedPath(pathname: string): boolean {
   return false;
 }
 
-export function middleware(request: NextRequest) {
+/** Next.js 16+ convention (replaces `middleware`). Early 404 for common exploit probes. */
+export function proxy(request: NextRequest) {
   if (isDeniedPath(request.nextUrl.pathname)) {
     return new NextResponse(null, { status: 404 });
   }
