@@ -1,0 +1,4 @@
+# Local secrets — do not index for AI context
+.env
+.env.*
+!.env.example

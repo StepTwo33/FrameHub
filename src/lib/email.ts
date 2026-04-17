@@ -4,6 +4,7 @@
  */
 
 import { Resend } from "resend";
+import { logServerError } from "@/lib/log-server-error";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = "FrameHub <support@frame-hub.com>";
@@ -17,7 +18,7 @@ export async function sendVerificationEmail(email: string, code: string): Promis
   });
 
   if (error) {
-    console.error("Failed to send verification email:", error);
+    logServerError("Failed to send verification email", error);
     throw new Error("Failed to send verification email");
   }
 }
@@ -31,7 +32,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
   });
 
   if (error) {
-    console.error("Failed to send email:", error);
+    logServerError("Failed to send email", error);
     throw new Error("Failed to send email");
   }
 }
@@ -54,7 +55,9 @@ export async function sendReportStatusEmail(params: {
   reportId: string;
 }): Promise<void> {
   if (!process.env.RESEND_API_KEY) {
-    console.warn("[email] RESEND_API_KEY missing; skipping report status notification");
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[email] RESEND_API_KEY missing; skipping report status notification");
+    }
     return;
   }
   const base = getAppBaseUrl();

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isAllowedBuildType, safeParseBuildJson } from "@/lib/build-types";
+
+const BUILD_NAME_MAX = 200;
 
 // GET /api/builds?type=weapon
 export async function GET(req: NextRequest) {
@@ -10,6 +13,10 @@ export async function GET(req: NextRequest) {
   }
 
   const type = req.nextUrl.searchParams.get("type");
+  if (type && !isAllowedBuildType(type)) {
+    return NextResponse.json({ error: "Invalid build type" }, { status: 400 });
+  }
+
   const where: { userId: string; type?: string } = { userId: session.user.id };
   if (type) where.type = type;
 
@@ -19,16 +26,19 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json(
-    builds.map((b: { id: string; name: string; description: string; isPublic: boolean; type: string; data: string; createdAt: Date; updatedAt: Date }) => ({
-      id: b.id,
-      name: b.name,
-      description: b.description,
-      isPublic: b.isPublic,
-      type: b.type,
-      data: JSON.parse(b.data),
-      createdAt: b.createdAt.getTime(),
-      updatedAt: b.updatedAt.getTime(),
-    }))
+    builds.map((b: { id: string; name: string; description: string; isPublic: boolean; type: string; data: string; createdAt: Date; updatedAt: Date }) => {
+      const data = safeParseBuildJson(b.data);
+      return {
+        id: b.id,
+        name: b.name,
+        description: b.description,
+        isPublic: b.isPublic,
+        type: b.type,
+        data: data ?? {},
+        createdAt: b.createdAt.getTime(),
+        updatedAt: b.updatedAt.getTime(),
+      };
+    })
   );
 }
 
@@ -56,6 +66,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
+  if (typeof name !== "string" || name.trim().length === 0 || name.length > BUILD_NAME_MAX) {
+    return NextResponse.json(
+      { error: `Name is required and must be at most ${BUILD_NAME_MAX} characters` },
+      { status: 400 }
+    );
+  }
+
+  if (!isAllowedBuildType(type)) {
+    return NextResponse.json({ error: "Invalid build type" }, { status: 400 });
+  }
+
   // Upsert: update if id exists and belongs to user, otherwise create
   if (id) {
     const existing = await prisma.build.findFirst({
@@ -65,8 +86,8 @@ export async function POST(req: NextRequest) {
       const updated = await prisma.build.update({
         where: { id },
         data: {
-          name,
-          description: description || "",
+          name: String(name).trim(),
+          description: typeof description === "string" ? description.slice(0, 2000) : "",
           isPublic: isPublic ?? false,
           data: JSON.stringify(data)
         },
@@ -87,8 +108,8 @@ export async function POST(req: NextRequest) {
   const build = await prisma.build.create({
     data: {
       userId: session.user.id,
-      name,
-      description: description || "",
+      name: String(name).trim(),
+      description: typeof description === "string" ? description.slice(0, 2000) : "",
       isPublic: isPublic ?? false,
       type,
       data: JSON.stringify(data),

@@ -9,6 +9,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { sendVerificationEmail } from "@/lib/email";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { logServerError } from "@/lib/log-server-error";
 
 export async function POST(req: NextRequest) {
     try {
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true, message: "Account created. Check your email for a verification code." });
     } catch (error) {
-        console.error("Registration error:", error);
+        logServerError("Registration error", error);
         return NextResponse.json(
             { error: "Something went wrong. Please try again." },
             { status: 500 }

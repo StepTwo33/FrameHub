@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { safeParseBuildJson } from "@/lib/build-types";
 
 // DELETE /api/builds/[id]
 export async function DELETE(
@@ -54,13 +55,18 @@ export async function GET(
     }
   }
 
+  const parsed = safeParseBuildJson(build.data);
+  if (parsed === null) {
+    return NextResponse.json({ error: "Invalid build data" }, { status: 500 });
+  }
+
   return NextResponse.json({
     id: build.id,
     name: build.name,
     description: build.description,
     isPublic: build.isPublic,
     type: build.type,
-    data: JSON.parse(build.data),
+    data: parsed,
     createdAt: build.createdAt.getTime(),
     updatedAt: build.updatedAt.getTime(),
     author: {

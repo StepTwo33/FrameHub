@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, isValidUsername, normalizeUsername } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { logServerError } from "@/lib/log-server-error";
 
 export const dynamic = "force-dynamic";
+
+const PROFILE_PATCH_BODY_MAX = 32_000;
 
 // GET full profile from DB (includes bio, createdAt, etc.)
 export async function GET() {
@@ -40,62 +44,84 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const body = await req.json();
-  const { name, bio, username } = body as { name?: string; bio?: string; username?: string };
+  const ip = getClientIp(req.headers);
+  const rl = checkRateLimit(`profile_patch:${session.user.id}:${ip}`, 30, 60 * 60 * 1000);
+  if (rl.limited) {
+    return NextResponse.json({ error: "Too many profile updates. Try again later." }, { status: 429 });
+  }
+
+  const raw = await req.text();
+  if (raw.length > PROFILE_PATCH_BODY_MAX) {
+    return NextResponse.json({ error: "Request body too large" }, { status: 413 });
+  }
+
+  let body: { name?: string; bio?: string; username?: string };
+  try {
+    body = JSON.parse(raw) as { name?: string; bio?: string; username?: string };
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const { name, bio, username } = body;
 
   const updates: Record<string, unknown> = {};
 
-  if (name !== undefined) {
-    const trimmed = name.trim();
-    if (trimmed.length > 50) {
-      return NextResponse.json({ error: "Name must be 50 characters or less" }, { status: 400 });
-    }
-    updates.name = trimmed || null;
-  }
-
-  if (bio !== undefined) {
-    const trimmed = bio.trim();
-    if (trimmed.length > 300) {
-      return NextResponse.json({ error: "Bio must be 300 characters or less" }, { status: 400 });
-    }
-    updates.bio = trimmed || null;
-  }
-
-  if (username !== undefined) {
-    const trimmed = username.trim();
-    if (!trimmed) {
-      updates.username = null;
-    } else {
-      const normalized = normalizeUsername(trimmed);
-      if (!isValidUsername(normalized)) {
-        return NextResponse.json(
-          { error: "Username must be 3-24 chars and only include letters, numbers, ., _, or -" },
-          { status: 400 }
-        );
+  try {
+    if (name !== undefined) {
+      const trimmed = typeof name === "string" ? name.trim() : "";
+      if (trimmed.length > 50) {
+        return NextResponse.json({ error: "Name must be 50 characters or less" }, { status: 400 });
       }
-
-      const existing = await prisma.user.findUnique({
-        where: { username: normalized },
-        select: { id: true },
-      });
-
-      if (existing && existing.id !== session.user.id) {
-        return NextResponse.json({ error: "Username is already taken" }, { status: 409 });
-      }
-
-      updates.username = normalized;
+      updates.name = trimmed || null;
     }
+
+    if (bio !== undefined) {
+      const trimmed = typeof bio === "string" ? bio.trim() : "";
+      if (trimmed.length > 300) {
+        return NextResponse.json({ error: "Bio must be 300 characters or less" }, { status: 400 });
+      }
+      updates.bio = trimmed || null;
+    }
+
+    if (username !== undefined) {
+      const trimmed = typeof username === "string" ? username.trim() : "";
+      if (!trimmed) {
+        updates.username = null;
+      } else {
+        const normalized = normalizeUsername(trimmed);
+        if (!isValidUsername(normalized)) {
+          return NextResponse.json(
+            { error: "Username must be 3-24 chars and only include letters, numbers, ., _, or -" },
+            { status: 400 }
+          );
+        }
+
+        const existing = await prisma.user.findUnique({
+          where: { username: normalized },
+          select: { id: true },
+        });
+
+        if (existing && existing.id !== session.user.id) {
+          return NextResponse.json({ error: "Username is already taken" }, { status: 409 });
+        }
+
+        updates.username = normalized;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: session.user.id },
+      data: updates,
+      select: { id: true, name: true, username: true, email: true, image: true, bio: true, role: true, createdAt: true },
+    });
+
+    return NextResponse.json({ user });
+  } catch (e) {
+    logServerError("PATCH /api/auth/profile", e);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
-
-  if (Object.keys(updates).length === 0) {
-    return NextResponse.json({ error: "No fields to update" }, { status: 400 });
-  }
-
-  const user = await prisma.user.update({
-    where: { id: session.user.id },
-    data: updates,
-    select: { id: true, name: true, username: true, email: true, image: true, bio: true, role: true, createdAt: true },
-  });
-
-  return NextResponse.json({ user });
 }

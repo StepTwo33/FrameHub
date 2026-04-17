@@ -6,6 +6,7 @@ import {
 } from "@/lib/auth";
 import { sendVerificationEmail } from "@/lib/email";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { logServerError } from "@/lib/log-server-error";
 
 export async function POST(req: NextRequest) {
     try {
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true, message: "A new verification code has been sent." });
     } catch (error) {
-        console.error("Resend verification error:", error);
+        logServerError("Resend verification error", error);
         return NextResponse.json(
             { error: "Something went wrong. Please try again." },
             { status: 500 }

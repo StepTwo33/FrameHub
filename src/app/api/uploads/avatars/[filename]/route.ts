@@ -16,8 +16,8 @@ export async function GET(
 ) {
   const { filename } = await params;
 
-  // Sanitize: only allow alphanumeric, dots, hyphens, underscores
-  if (!/^[a-zA-Z0-9._-]+$/.test(filename)) {
+  // Sanitize: only allow alphanumeric, dots, hyphens, underscores — reject path segments
+  if (!/^[a-zA-Z0-9._-]+$/.test(filename) || filename.includes("..")) {
     return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
   }
 
@@ -27,7 +27,13 @@ export async function GET(
     return NextResponse.json({ error: "Unsupported format" }, { status: 400 });
   }
 
-  const filePath = path.join(process.cwd(), "public", "uploads", "avatars", filename);
+  const root = path.join(process.cwd(), "public", "uploads", "avatars");
+  const filePath = path.join(root, filename);
+  const resolvedRoot = path.resolve(root) + path.sep;
+  const resolvedFile = path.resolve(filePath);
+  if (!resolvedFile.startsWith(resolvedRoot)) {
+    return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
+  }
 
   try {
     const buffer = await readFile(filePath);

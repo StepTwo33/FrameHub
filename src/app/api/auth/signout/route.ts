@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function POST(req: NextRequest) {
-  const origin = req.headers.get("x-forwarded-proto") && req.headers.get("x-forwarded-host")
-    ? `${req.headers.get("x-forwarded-proto")}://${req.headers.get("x-forwarded-host")}`
-    : req.nextUrl.origin;
+  const origin = getPublicOrigin(req);
   const response = NextResponse.json({ success: true });
   response.cookies.set(SESSION_COOKIE, "", {
     httpOnly: true,

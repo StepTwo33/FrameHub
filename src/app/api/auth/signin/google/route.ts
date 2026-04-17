@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGoogleAuthUrl, generateOAuthState } from "@/lib/auth";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function GET(req: NextRequest) {
-    const origin = req.headers.get("x-forwarded-proto") && req.headers.get("x-forwarded-host")
-        ? `${req.headers.get("x-forwarded-proto")}://${req.headers.get("x-forwarded-host")}`
-        : req.nextUrl.origin;
+    const origin = getPublicOrigin(req);
     const callbackUrl = `${origin}/api/auth/callback`;
     const state = generateOAuthState();
     const url = getGoogleAuthUrl(callbackUrl, state);

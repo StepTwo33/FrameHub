@@ -6,6 +6,8 @@ import {
     SESSION_COOKIE,
 } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { getPublicOrigin } from "@/lib/public-origin";
+import { logServerError } from "@/lib/log-server-error";
 
 export async function POST(req: NextRequest) {
     try {
@@ -55,9 +57,7 @@ export async function POST(req: NextRequest) {
             role: user.role,
         });
 
-        const origin = req.headers.get("x-forwarded-proto") && req.headers.get("x-forwarded-host")
-            ? `${req.headers.get("x-forwarded-proto")}://${req.headers.get("x-forwarded-host")}`
-            : req.nextUrl.origin;
+        const origin = getPublicOrigin(req);
 
         const response = NextResponse.json({ success: true });
         response.cookies.set(SESSION_COOKIE, token, {
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
         return response;
     } catch (error) {
-        console.error("Email verification error:", error);
+        logServerError("Email verification error", error);
         return NextResponse.json(
             { error: "Something went wrong. Please try again." },
             { status: 500 }

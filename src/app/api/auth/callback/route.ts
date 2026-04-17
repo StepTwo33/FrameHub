@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exchangeCodeForUser, findOrCreateUser, createSession, SESSION_COOKIE } from "@/lib/auth";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
@@ -14,9 +15,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/?error=invalid_state", req.url));
   }
 
-  const origin = req.headers.get("x-forwarded-proto") && req.headers.get("x-forwarded-host")
-    ? `${req.headers.get("x-forwarded-proto")}://${req.headers.get("x-forwarded-host")}`
-    : req.nextUrl.origin;
+  const origin = getPublicOrigin(req);
   const callbackUrl = `${origin}/api/auth/callback`;
 
   const googleUser = await exchangeCodeForUser(code, callbackUrl);
