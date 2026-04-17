@@ -43,12 +43,14 @@ export function ThemePicker() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("framehub_theme") || "void";
-    const savedMode = (localStorage.getItem("framehub_mode") || "dark") as "dark" | "light";
-    setCurrent(savedTheme);
-    setMode(savedMode);
-    applyTheme(savedTheme);
-    applyMode(savedMode);
+    queueMicrotask(() => {
+      const savedTheme = localStorage.getItem("framehub_theme") || "void";
+      const savedMode = (localStorage.getItem("framehub_mode") || "dark") as "dark" | "light";
+      setCurrent(savedTheme);
+      setMode(savedMode);
+      applyTheme(savedTheme);
+      applyMode(savedMode);
+    });
   }, []);
 
   useEffect(() => {

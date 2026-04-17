@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { allWeapons } from "@/data/weapons";
 import { customWeapons } from "@/data/custom-items";
 import { allMods, modsMap as baseModsMap } from "@/data/mods";
@@ -27,10 +27,12 @@ const mergedWeapons: Weapon[] = (() => {
 export function useWeapons(): Weapon[] {
   const [weapons, setWeapons] = useState<Weapon[]>(mergedWeapons);
   useEffect(() => {
-    const overrides = getOverrides();
-    if (overrides.some((o) => o.targetType === "weapon")) {
-      setWeapons(applyWeaponOverrides(mergedWeapons));
-    }
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "weapon")) {
+        setWeapons(applyWeaponOverrides(mergedWeapons));
+      }
+    });
   }, []);
   return weapons;
 }
@@ -39,12 +41,14 @@ export function useMods(): { mods: Mod[]; modsMap: Map<string, Mod> } {
   const [mods, setMods] = useState<Mod[]>(allMods);
   const [map, setMap] = useState<Map<string, Mod>>(baseModsMap);
   useEffect(() => {
-    const overrides = getOverrides();
-    if (overrides.some((o) => o.targetType === "mod")) {
-      const patched = applyModOverrides(allMods);
-      setMods(patched);
-      setMap(new Map(patched.map((m) => [m.id, m])));
-    }
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "mod")) {
+        const patched = applyModOverrides(allMods);
+        setMods(patched);
+        setMap(new Map(patched.map((m) => [m.id, m])));
+      }
+    });
   }, []);
   return { mods, modsMap: map };
 }
@@ -52,10 +56,12 @@ export function useMods(): { mods: Mod[]; modsMap: Map<string, Mod> } {
 export function useCompanions(): Companion[] {
   const [companions, setCompanions] = useState<Companion[]>(allCompanions);
   useEffect(() => {
-    const overrides = getOverrides();
-    if (overrides.some((o) => o.targetType === "companion")) {
-      setCompanions(applyCompanionOverrides(allCompanions));
-    }
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "companion")) {
+        setCompanions(applyCompanionOverrides(allCompanions));
+      }
+    });
   }, []);
   return companions;
 }

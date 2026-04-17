@@ -102,7 +102,9 @@ export default function ProfilePage() {
   useEffect(() => {
     if (activeTab !== "reports" || !user) return;
     let cancelled = false;
-    setReportsLoading(true);
+    queueMicrotask(() => {
+      if (!cancelled) setReportsLoading(true);
+    });
     fetch("/api/reports")
       .then((r) => r.json())
       .then((data) => {

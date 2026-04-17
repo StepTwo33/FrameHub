@@ -105,24 +105,28 @@ export default function ReportIssuePage() {
     fetch("/api/auth/session").then((r) => r.json()).then((data) => {
       if (data.user?.role) setUserRole(data.user.role);
     }).catch(() => {});
-    refresh();
-    setOverrides(getOverrides());
+    queueMicrotask(() => {
+      refresh();
+      setOverrides(getOverrides());
+    });
   }, [refresh]);
 
   // Pre-fill from URL query params (e.g. ?type=weapon&name=Braton&id=braton)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const qType = params.get("type");
-    const qName = params.get("name");
-    const qId = params.get("id");
-    if (qType && ITEM_TYPES.includes(qType as ItemType)) {
-      setFormType(qType as ItemType);
-    }
-    if (qName) {
-      setFormItemName(qName);
-      setShowForm(true);
-    }
-    if (qId) setFormItemId(qId);
+    queueMicrotask(() => {
+      const params = new URLSearchParams(window.location.search);
+      const qType = params.get("type");
+      const qName = params.get("name");
+      const qId = params.get("id");
+      if (qType && ITEM_TYPES.includes(qType as ItemType)) {
+        setFormType(qType as ItemType);
+      }
+      if (qName) {
+        setFormItemName(qName);
+        setShowForm(true);
+      }
+      if (qId) setFormItemId(qId);
+    });
   }, []);
 
   const filteredReports = useMemo(() => {
@@ -293,7 +297,7 @@ export default function ReportIssuePage() {
       (() => { try { return JSON.parse(report.statDiscrepancies || "[]"); } catch { return []; } })();
 
     let action: "modify" | "add" | "remove" = "modify";
-    let fields: Record<string, unknown> = {};
+    const fields: Record<string, unknown> = {};
     if (issues.doesNotExist) {
       action = "remove";
     } else if (discrepancies.length > 0) {

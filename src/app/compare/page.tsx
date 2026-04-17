@@ -515,7 +515,7 @@ function LoadoutCompareTab() {
   const [selB, setSelB] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoadouts(getLoadouts());
+    queueMicrotask(() => setLoadouts(getLoadouts()));
   }, []);
 
   const loadoutA = useMemo(() => loadouts.find((l) => l.id === selA) ?? null, [loadouts, selA]);

@@ -350,7 +350,7 @@ export default function CompanionBuilderPage() {
       comps = comps.filter((c) => c.name.toLowerCase().includes(q));
     }
     return comps.sort((a, b) => a.name.localeCompare(b.name));
-  }, [companionType, companionSearch]);
+  }, [allCompanions, companionType, companionSearch]);
 
   const calculatedStats = useMemo<CompanionCalculatedStats | null>(() => {
     if (!selectedCompanion) return null;

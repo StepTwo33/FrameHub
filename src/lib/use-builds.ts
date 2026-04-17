@@ -38,7 +38,9 @@ export function useBuilds(type: SavedBuild["type"]) {
 
   // Refresh on mount and when login state changes
   useEffect(() => {
-    refresh();
+    queueMicrotask(() => {
+      void refresh();
+    });
   }, [refresh]);
 
   const save = useCallback(

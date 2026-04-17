@@ -135,15 +135,17 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
   // Pre-fill field overrides from prefill prop
   useEffect(() => {
     if (prefill?.fields && Object.keys(prefill.fields).length > 0) {
-      const overrides: Record<string, string> = {};
-      for (const [key, value] of Object.entries(prefill.fields)) {
-        if (typeof value === "object") {
-          overrides[key] = JSON.stringify(value, null, 2);
-        } else {
-          overrides[key] = String(value);
+      queueMicrotask(() => {
+        const overrides: Record<string, string> = {};
+        for (const [key, value] of Object.entries(prefill.fields!)) {
+          if (typeof value === "object") {
+            overrides[key] = JSON.stringify(value, null, 2);
+          } else {
+            overrides[key] = String(value);
+          }
         }
-      }
-      setFieldOverrides(overrides);
+        setFieldOverrides(overrides);
+      });
     }
   }, [prefill?.fields]);
 

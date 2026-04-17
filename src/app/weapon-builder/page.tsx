@@ -102,29 +102,30 @@ export default function WeaponBuilderPage() {
 
   // Load build from URL ?build= param
   useEffect(() => {
-    if (allWeapons.length === 0) return;
-    const params = new URLSearchParams(window.location.search);
-    const shared = extractBuildFromUrl(params);
-    if (!shared || shared.type !== "weapon") return;
-    const weapon = allWeapons.find((w) => w.id === shared.itemId);
-    if (!weapon) return;
-    setSelectedWeapon(weapon);
-    setShowWeaponList(false);
-    const mods: EquippedMod[] = shared.mods.map((m, i) => {
-      const mod = modsMap.get(m.id);
-      return { modId: m.id, modName: mod?.name ?? "", rank: m.rank, slotIndex: i, polarity: mod?.polarity, drain: mod?.drain };
+    queueMicrotask(() => {
+      if (allWeapons.length === 0) return;
+      const params = new URLSearchParams(window.location.search);
+      const shared = extractBuildFromUrl(params);
+      if (!shared || shared.type !== "weapon") return;
+      const weapon = allWeapons.find((w) => w.id === shared.itemId);
+      if (!weapon) return;
+      setSelectedWeapon(weapon);
+      setShowWeaponList(false);
+      const mods: EquippedMod[] = shared.mods.map((m, i) => {
+        const mod = modsMap.get(m.id);
+        return { modId: m.id, modName: mod?.name ?? "", rank: m.rank, slotIndex: i, polarity: mod?.polarity, drain: mod?.drain };
+      });
+      setEquippedMods(mods);
+      if (shared.arcanes) {
+        setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneById(id) : null)));
+      }
+      setCurrentBuildId(null);
+      setBuildName(`${weapon.name} Build`);
+      setBuildDescription("");
+      if (shared.progenitorElement) setProgenitorElement(shared.progenitorElement);
+      if (shared.progenitorBonusPercent != null) setProgenitorBonusPercent(shared.progenitorBonusPercent);
+      window.history.replaceState({}, "", window.location.pathname);
     });
-    setEquippedMods(mods);
-    if (shared.arcanes) {
-      setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneById(id) : null)));
-    }
-    setCurrentBuildId(null);
-    setBuildName(`${weapon.name} Build`);
-    setBuildDescription("");
-    if (shared.progenitorElement) setProgenitorElement(shared.progenitorElement);
-    if (shared.progenitorBonusPercent != null) setProgenitorBonusPercent(shared.progenitorBonusPercent);
-    // Clear the URL param without reload
-    window.history.replaceState({}, "", window.location.pathname);
   }, [allWeapons]);
 
   const handleSaveBuild = useCallback(async () => {

@@ -209,7 +209,7 @@ export default function LoadoutsPage() {
   const [pickerTab, setPickerTab] = useState<"saved" | "catalog" | "modular">("catalog");
 
   useEffect(() => {
-    setLoadouts(getLoadouts());
+    queueMicrotask(() => setLoadouts(getLoadouts()));
   }, []);
 
   const refresh = useCallback(() => setLoadouts(getLoadouts()), []);
