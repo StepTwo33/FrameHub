@@ -21,17 +21,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, ChevronDown, Zap, Flag, Flame, Plus, X, ChevronRight, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
+import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
-import { INCARNON_WEAPON_IDS, incarnonDataMap, IncarnonEvolution } from "@/data/incarnon";
+import { incarnonDataMap } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 
 const categoryLabels: Record<string, string> = {
@@ -477,7 +478,7 @@ export default function WeaponBuilderPage() {
                     className="w-full text-left p-3 rounded-lg border border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <img src={getWeaponImage(weapon.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <GameAssetImage src={getWeaponImage(weapon.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-sm">
@@ -514,7 +515,7 @@ export default function WeaponBuilderPage() {
                 >
                   ← Change
                 </button>
-                <img src={getWeaponImage(selectedWeapon.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <GameAssetImage src={getWeaponImage(selectedWeapon.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWeapon.name}</h1>
                 <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">
                   {selectedWeapon.category} • {selectedWeapon.triggerType}

@@ -14,7 +14,7 @@ import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStat
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Diamond, Zap, Shield, Swords, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
+import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
 import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
@@ -25,6 +25,7 @@ import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, Wa
 import { buildShareUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 
 const shardColors: Record<string, string> = {
@@ -97,12 +98,6 @@ function getSlotType(index: number): SlotType {
   if (index === AURA_SLOT) return "aura";
   if (index === EXILUS_SLOT) return "exilus";
   return "regular";
-}
-
-function getSlotLabel(index: number): string {
-  if (index === AURA_SLOT) return "Aura";
-  if (index === EXILUS_SLOT) return "Exilus";
-  return `Slot ${index}`;
 }
 
 // Ability stat row with base → modified display
@@ -838,7 +833,7 @@ export default function WarframeBuilderPage() {
                     className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <img src={getWarframeImage(wf.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <GameAssetImage src={getWarframeImage(wf.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-sm">{wf.name}</span>
@@ -867,7 +862,7 @@ export default function WarframeBuilderPage() {
                 >
                   ← Change
                 </button>
-                <img src={getWarframeImage(selectedWarframe.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <GameAssetImage src={getWarframeImage(selectedWarframe.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWarframe.name}</h1>
               </div>
               <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">

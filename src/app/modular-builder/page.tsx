@@ -12,9 +12,7 @@ import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, Modular
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import type { SlotType } from "@/components/mod-picker";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2, Gem } from "lucide-react";
+import { Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2, Gem } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";

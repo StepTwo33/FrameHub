@@ -1,8 +1,6 @@
 // Shareable Build URL Encoder/Decoder
 // Encodes build state into a compact URL hash and decodes it back
 
-import { ModSlot, EquippedMod } from "./types";
-
 export interface ShareableBuild {
   type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
   itemId: string;

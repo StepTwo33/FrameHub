@@ -6,6 +6,7 @@ import { X, Plus, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PolarityIcon, polarityNames } from "@/components/polarity-icon";
 import { getModImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 
 const rarityBorderColors: Record<string, string> = {
   common: "border-amber-900/50",
@@ -128,11 +129,13 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
         </button>
       )}
       <div className="flex items-start gap-2.5">
-        <img
+        <GameAssetImage
           src={getModImage(mod.name)}
           alt=""
+          width={44}
+          height={44}
           className="w-11 h-11 rounded object-contain bg-muted/20 shrink-0 mt-0.5"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          hideOnError
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { ThemePicker } from "@/components/theme-picker";
+import { AvatarImage } from "@/components/game-asset-image";
 
 interface SessionUser {
   id: string;
@@ -169,7 +170,7 @@ export function Header() {
           ) : user ? (
             <Link href="/profile" className="flex items-center gap-2 ml-1 hover:opacity-80 transition-opacity">
               {user.image ? (
-                <img src={user.image} alt="" className="w-7 h-7 rounded-full border border-border" />
+                <AvatarImage src={user.image} alt="" size={28} className="w-7 h-7 rounded-full border border-border" />
               ) : (
                 <User className="w-5 h-5 text-muted-foreground" />
               )}
@@ -195,7 +196,7 @@ export function Header() {
           ) : user ? (
             <Link href="/profile" className="hover:opacity-80 transition-opacity">
               {user.image ? (
-                <img src={user.image} alt="" className="w-7 h-7 rounded-full border border-border" />
+                <AvatarImage src={user.image} alt="" size={28} className="w-7 h-7 rounded-full border border-border" />
               ) : (
                 <User className="w-5 h-5 text-muted-foreground" />
               )}

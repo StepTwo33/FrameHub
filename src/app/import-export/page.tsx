@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/header";
 import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/build-storage";
 import { getLoadouts, saveLoadout, generateId } from "@/lib/loadouts";
@@ -11,6 +11,7 @@ import {
   Link2, Swords, Shield, ChevronRight, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { QrCodeImage } from "@/components/game-asset-image";
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -367,7 +368,7 @@ export default function ImportExportPage() {
                     {/* QR Code */}
                     {qrDataUrl ? (
                       <div className="bg-white/10 p-3 rounded-xl">
-                        <img src={qrDataUrl} alt="QR Code" className="w-[240px] h-[240px]" />
+                        <QrCodeImage src={qrDataUrl} alt="QR Code" width={240} height={240} className="w-[240px] h-[240px]" />
                       </div>
                     ) : (
                       <div className="w-[240px] h-[240px] bg-muted/20 rounded-xl flex items-center justify-center">

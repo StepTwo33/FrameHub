@@ -3,12 +3,12 @@
 import { useState, useMemo } from "react";
 import { Mod } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, X, Plus, Gem } from "lucide-react";
+import { Search, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getArcaneImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 
 const rarityColors: Record<string, string> = {
   common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
@@ -47,7 +47,7 @@ export function ArcaneSlotCard({ arcane, rank, label, onAdd, onRemove }: ArcaneS
         <X className="h-3 w-3" />
       </button>
       <div className="flex items-center gap-2 h-full">
-        <img src={getArcaneImage(arcane.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+        <GameAssetImage src={getArcaneImage(arcane.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" hideOnError />
         <div className="flex-1 min-w-0">
           <span className="text-sm font-medium truncate block">{arcane.name}</span>
           <span className="text-[10px] text-muted-foreground">Rank {rank}/{arcane.maxRank}</span>
@@ -112,7 +112,7 @@ export function ArcanePicker({ open, onOpenChange, arcanes, equippedArcaneIds, o
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <img src={getArcaneImage(arcane.name)} alt="" className="w-7 h-7 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <GameAssetImage src={getArcaneImage(arcane.name)} alt="" width={28} height={28} className="w-7 h-7 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <span className="text-sm font-medium">{arcane.name}</span>
                     </div>
                     <Badge variant="outline" className={cn("text-[10px]", rarityColors[arcane.rarity])}>

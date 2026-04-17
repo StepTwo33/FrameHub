@@ -2,8 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Header } from "@/components/header";
-import { allMods, modsMap } from "@/data/mods";
-import { EquippedMod } from "@/lib/types";
+import { modsMap } from "@/data/mods";
 import { cn } from "@/lib/utils";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Zap, RotateCcw } from "lucide-react";

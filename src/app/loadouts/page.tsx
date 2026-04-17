@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
@@ -506,7 +507,7 @@ export default function LoadoutsPage() {
       }
       return false;
     });
-  }, [pickerSlot, pickerSearch, pickerOpen]);
+  }, [pickerSlot, pickerSearch]);
 
   const pickerModularBuilds = useMemo(() => {
     const q = pickerSearch.toLowerCase();
@@ -516,7 +517,7 @@ export default function LoadoutsPage() {
       const d = b.data as ModularBuildData;
       return modularBuildDisplayName(d).toLowerCase().includes(q);
     });
-  }, [pickerSlot, pickerSearch, pickerOpen]);
+  }, [pickerSlot, pickerSearch]);
 
   const savedCount = pickerSavedBuilds.length;
   const modularCount = pickerModularBuilds.length;
@@ -688,13 +689,13 @@ export default function LoadoutsPage() {
                                 <Wrench className="h-5 w-5 text-amber-400/90" aria-hidden />
                               </span>
                             ) : (
-                            <img
+                            <GameAssetImage
                               src={getSlotImage(slot, itemName ?? "")}
                               alt=""
+                              width={40}
+                              height={40}
                               className="w-10 h-10 rounded-md object-contain bg-background/40 border border-border/30 shrink-0"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = "none";
-                              }}
+                              hideOnError
                             />
                             )}
                             <div className="flex-1 min-w-0">
@@ -864,13 +865,13 @@ export default function LoadoutsPage() {
                       onClick={() => handlePickCatalogItem(item.id)}
                       className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all flex items-center gap-3"
                     >
-                      <img
+                      <GameAssetImage
                         src={getSlotImage(pickerSlot, item.name)}
                         alt=""
+                        width={36}
+                        height={36}
                         className="w-9 h-9 rounded-md object-contain bg-muted/30 shrink-0 border border-border/40"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
+                        hideOnError
                       />
                       <div className="flex-1 min-w-0">
                         <span className="text-sm font-medium block truncate">{item.name}</span>

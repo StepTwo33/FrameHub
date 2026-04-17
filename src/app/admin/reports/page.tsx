@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
+import { AvatarImage } from "@/components/game-asset-image";
 import {
   Flag, Check, X, ChevronDown, ChevronUp, Trash2, Search,
   AlertTriangle, Shield, RotateCcw, Clock, CheckCircle2, Ban,
@@ -332,7 +333,7 @@ export default function AdminReportsPage() {
                     {/* Reporter info */}
                     <div className="flex items-center gap-3">
                       {report.user?.image ? (
-                        <img src={report.user.image} alt="" className="w-8 h-8 rounded-full border border-border" />
+                        <AvatarImage src={report.user.image} alt="" size={32} className="w-8 h-8 rounded-full border border-border" />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                           <UserIcon className="h-4 w-4 text-muted-foreground" />

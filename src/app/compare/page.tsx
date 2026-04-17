@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { warframesMap } from "@/data/warframes";
 import { weaponsMap } from "@/data/weapons";
 import { companionsMap } from "@/data/companions";
@@ -179,7 +180,7 @@ function BuildCompareTab() {
                           onClick={() => selectWeapon(side, w)}
                           className="w-full text-left px-3 py-1.5 text-xs rounded hover:bg-accent transition-colors flex items-center gap-2"
                         >
-                          <img src={getWeaponImage(w.name)} alt="" className="w-6 h-6 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                          <GameAssetImage src={getWeaponImage(w.name)} alt="" width={24} height={24} className="w-6 h-6 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                           <span className="font-medium">{w.name}</span>
                           <span className="text-muted-foreground ml-auto text-[10px]">{w.category}</span>
                         </button>
@@ -199,7 +200,7 @@ function BuildCompareTab() {
                 >
                   {build.weapon ? (
                     <div className="flex items-center gap-3">
-                      <img src={getWeaponImage(build.weapon.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <GameAssetImage src={getWeaponImage(build.weapon.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <div>
                         <div className="text-lg font-bold">{build.weapon.name}</div>
                         <div className="text-xs text-muted-foreground capitalize">{build.weapon.category} • {build.weapon.triggerType}</div>
@@ -406,12 +407,12 @@ function SlotSection({ slot, a, b }: {
           <div className="px-4 pb-4">
             <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
               <div className="flex items-center gap-2 justify-end">
-                {wA && <img src={getWarframeImage(wA.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+                {wA && <GameAssetImage src={getWarframeImage(wA.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
                 <span className="text-xs font-medium">{wA?.name || "–"}</span>
               </div>
               <span className="text-[10px] text-muted-foreground">vs</span>
               <div className="flex items-center gap-2">
-                {wB && <img src={getWarframeImage(wB.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+                {wB && <GameAssetImage src={getWarframeImage(wB.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
                 <span className="text-xs font-medium">{wB?.name || "–"}</span>
               </div>
             </div>
@@ -447,12 +448,12 @@ function SlotSection({ slot, a, b }: {
           <div className="px-4 pb-4">
             <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
               <div className="flex items-center gap-2 justify-end">
-                {cA && <img src={getCompanionImage(cA.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+                {cA && <GameAssetImage src={getCompanionImage(cA.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
                 <span className="text-xs font-medium">{cA?.name || "–"}</span>
               </div>
               <span className="text-[10px] text-muted-foreground">vs</span>
               <div className="flex items-center gap-2">
-                {cB && <img src={getCompanionImage(cB.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+                {cB && <GameAssetImage src={getCompanionImage(cB.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
                 <span className="text-xs font-medium">{cB?.name || "–"}</span>
               </div>
             </div>
@@ -483,12 +484,12 @@ function SlotSection({ slot, a, b }: {
         <div className="px-4 pb-4">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
             <div className="flex items-center gap-2 justify-end">
-              {wA && <img src={getWeaponImage(wA.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+              {wA && <GameAssetImage src={getWeaponImage(wA.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
               <span className="text-xs font-medium">{wA?.name || "–"}</span>
             </div>
             <span className="text-[10px] text-muted-foreground">vs</span>
             <div className="flex items-center gap-2">
-              {wB && <img src={getWeaponImage(wB.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+              {wB && <GameAssetImage src={getWeaponImage(wB.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
               <span className="text-xs font-medium">{wB?.name || "–"}</span>
             </div>
           </div>

@@ -10,9 +10,9 @@ import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { WeaponStatsPanel } from "@/components/stats-panel";
-import { Weapon, Mod, EquippedMod, CalculatedStats } from "@/lib/types";
+import { Weapon, EquippedMod, CalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Star, Zap, ChevronRight, Save, FolderOpen, Trash2 } from "lucide-react";
+import { Star, Zap, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
@@ -47,7 +47,6 @@ export default function ArchwingBuilderPage() {
   const [hasReactor, setHasReactor] = useState(false);
   const [hasCatalyst, setHasCatalyst] = useState(false);
   const [isMR30, setIsMR30] = useState(false);
-  const [modPickerTarget, setModPickerTarget] = useState<"frame" | "weapon">("frame");
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
@@ -326,7 +325,6 @@ export default function ArchwingBuilderPage() {
                         slotIndex={i}
                         slotPolarity={pols[i]}
                         onAdd={() => {
-                          setModPickerTarget("frame");
                           if (mode === "archwing") { setArchwingActiveSlot(i); setArchwingModPickerOpen(true); }
                           else { setNecramechActiveSlot(i); setNecramechModPickerOpen(true); }
                         }}
@@ -441,7 +439,7 @@ export default function ArchwingBuilderPage() {
                         rank={equipped?.rank ?? 0}
                         slotIndex={i}
                         slotPolarity={weaponPolarities[i]}
-                        onAdd={() => { setModPickerTarget("weapon"); setWeaponActiveSlot(i); setWeaponModPickerOpen(true); }}
+                        onAdd={() => { setWeaponActiveSlot(i); setWeaponModPickerOpen(true); }}
                         onRemove={() => setWeaponMods((prev) => prev.filter((m) => m.slotIndex !== i))}
                         onPolarize={(p) => setWeaponPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
                       />

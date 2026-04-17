@@ -3,7 +3,7 @@
 import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
 import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
-import { ChevronDown, ChevronRight, Flame, Snowflake, Zap, Skull, Wind, Atom, CloudRain, Sun, Biohazard, Magnet, RadioTower, Bug } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
 import { IncarnonEvolution } from "@/data/incarnon";
 import { formatAbilityDescription } from "@/lib/ability-text";
@@ -437,9 +437,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         <CollapsibleSection title="ABILITIES" defaultOpen>
           {warframe.abilities.map((ability, i) => {
             if (helminthSlot === i && helminthAbility) {
-              return <HelminthAbilityPreview key={i} ability={helminthAbility} stats={stats} index={i} />;
+              return <HelminthAbilityPreview key={i} ability={helminthAbility} stats={stats} />;
             }
-            return <AbilityPreview key={i} ability={ability} stats={stats} index={i} />;
+            return <AbilityPreview key={i} ability={ability} stats={stats} />;
           })}
         </CollapsibleSection>
       )}
@@ -579,8 +579,8 @@ function fmtAbilityMisc(v: unknown): string {
   return String(v);
 }
 
-function AbilityPreview({ ability, stats, index }: {
-  ability: Ability; stats: WarframeCalculatedStats; index: number;
+function AbilityPreview({ ability, stats }: {
+  ability: Ability; stats: WarframeCalculatedStats;
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
@@ -722,8 +722,8 @@ function AbilityPreview({ ability, stats, index }: {
   );
 }
 
-function HelminthAbilityPreview({ ability, stats, index }: {
-  ability: HelminthAbility; stats: WarframeCalculatedStats; index: number;
+function HelminthAbilityPreview({ ability, stats }: {
+  ability: HelminthAbility; stats: WarframeCalculatedStats;
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;

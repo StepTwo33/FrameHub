@@ -36,9 +36,9 @@ export default function RivenCalculatorPage() {
   // Grader state
   const [graderPositives, setGraderPositives] = useState<{ name: string; value: number }[]>([]);
   const [graderNegative, setGraderNegative] = useState<{ name: string; value: number } | null>(null);
-  const [graderPolarity, setGraderPolarity] = useState("madurai");
-  const [graderRank, setGraderRank] = useState(8);
-  const [graderRerolls, setGraderRerolls] = useState(0);
+  const graderPolarity = "madurai";
+  const graderRank = 8;
+  const graderRerolls = 0;
 
   const filteredWeapons = useMemo(() => {
     let weapons = allWeapons.filter((w) => w.hasRivenSlot !== false);

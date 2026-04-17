@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { Header } from "@/components/header";
 import { prisma } from "@/lib/prisma";
 
@@ -39,7 +40,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
         <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {user.image ? (
-              <img src={user.image} alt="" className="w-20 h-20 rounded-full border-2 border-border object-cover" />
+              <Image src={user.image} alt="" width={80} height={80} className="w-20 h-20 rounded-full border-2 border-border object-cover" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border">
                 <span className="text-3xl font-bold text-muted-foreground">

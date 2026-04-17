@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Mod, getRivenStatsForCategory, RivenStatDef } from "@/lib/types";
+import { Mod, getRivenStatsForCategory } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -11,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Search, Plus, X } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { getModImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { getBlockedModIds } from "@/data/mod-exclusions";
 
 function isRivenMod(mod: Mod): boolean {
@@ -181,7 +181,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         m.name.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [mods, category, slotType, search, warframeId, weaponCategory, blockedByExclusion]);
+  }, [mods, category, slotType, search, warframeId, weaponCategory]);
 
   const handleSelectMod = (mod: Mod) => {
     setSelectedMod(mod);
@@ -236,7 +236,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
           <div className="p-6 space-y-4">
             <div className="border border-border rounded-lg p-4 bg-secondary/30">
               <div className="flex items-center gap-3 mb-2">
-                <img src={getModImage(selectedMod.name)} alt="" className="w-12 h-12 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <GameAssetImage src={getModImage(selectedMod.name)} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                 <div className="flex-1 flex items-center justify-between">
                   <h4 className="font-semibold">{selectedMod.name}</h4>
                   <Badge variant="outline" className={cn("text-[10px]", rarityColors[selectedMod.rarity])}>
@@ -398,7 +398,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <img src={getModImage(mod.name)} alt="" className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                          <GameAssetImage src={getModImage(mod.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                           <PolarityIcon polarity={mod.polarity} size={14} />
                           <span className="text-sm font-medium">{mod.name}</span>
                         </div>

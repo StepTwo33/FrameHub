@@ -9,12 +9,13 @@ import { useCompanions, useWeapons } from "@/lib/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2, Plus, X, ChevronRight } from "lucide-react";
+import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/images";
+import { GameAssetImage } from "@/components/game-asset-image";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 
 const companionTypeLabels: Record<string, string> = {
@@ -261,7 +262,7 @@ export default function CompanionBuilderPage() {
   const [hasReactor, setHasReactor] = useState(false);
   const [isMR30, setIsMR30] = useState(false);
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
-  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("companion"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
@@ -269,13 +270,10 @@ export default function CompanionBuilderPage() {
   // Weapon state
   const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
   const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
-  const [weaponModPickerOpen, setWeaponModPickerOpen] = useState(false);
   const [activeWeaponSlotIndex, setActiveWeaponSlotIndex] = useState(0);
   const [hasCatalyst, setHasCatalyst] = useState(false);
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
-
-  useState(() => { setSavedBuilds(getSavedBuilds("companion")); });
 
   const handleSaveBuild = useCallback(async () => {
     if (!selectedCompanion) return;
@@ -555,7 +553,7 @@ export default function CompanionBuilderPage() {
                     className="w-full text-left p-3 rounded-lg border border-border hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <img src={getCompanionImage(comp.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <GameAssetImage src={getCompanionImage(comp.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
@@ -587,7 +585,7 @@ export default function CompanionBuilderPage() {
                 >
                   ← Change
                 </button>
-                <img src={getCompanionImage(selectedCompanion.name)} alt="" className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <GameAssetImage src={getCompanionImage(selectedCompanion.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedCompanion.name}</h1>
                 <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">{selectedCompanion.type}</span>
               </div>

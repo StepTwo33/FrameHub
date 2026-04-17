@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Header } from "@/components/header";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AvatarImage } from "@/components/game-asset-image";
 
 interface ProfileUser {
   id: string;
@@ -301,7 +302,7 @@ export default function ProfilePage() {
             {/* Avatar */}
             <div className="relative group">
               {user.image ? (
-                <img src={user.image} alt="" className="w-20 h-20 rounded-full border-2 border-border object-cover bg-background" />
+                <AvatarImage src={user.image} alt="" size={80} className="w-20 h-20 rounded-full border-2 border-border object-cover bg-background" />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border">
                   <span className="text-3xl font-bold text-muted-foreground">{user.name?.[0]?.toUpperCase() ?? "?"}</span>
@@ -558,7 +559,7 @@ export default function ProfilePage() {
               </label>
               <div className="flex items-center gap-4">
                 {user.image ? (
-                  <img src={user.image} alt="" className="w-16 h-16 rounded-full border-2 border-border object-cover bg-background" />
+                  <AvatarImage src={user.image} alt="" size={64} className="w-16 h-16 rounded-full border-2 border-border object-cover bg-background" />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center border-2 border-border">
                     <span className="text-2xl font-bold text-muted-foreground">{user.name?.[0]?.toUpperCase() ?? "?"}</span>

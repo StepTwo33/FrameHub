@@ -11,7 +11,7 @@ import {
   railjackBaseStats, isRailjackMod,
   RailjackComponent, RailjackArmament,
 } from "@/data/railjack";
-import { Mod, EquippedMod } from "@/lib/types";
+import { EquippedMod } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Save, FolderOpen, Trash2, Crosshair, Shield, Zap, Gauge, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";

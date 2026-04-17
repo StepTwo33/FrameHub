@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { buildShareUrl, ShareableBuild } from '@/lib/build-url';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Simple interface for the expected API response
 interface SharedBuild {
@@ -151,7 +152,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
                             <h1 className="text-3xl font-bold mb-2 text-foreground">{build.name}</h1>
                             <div className="flex items-center gap-2">
                                 {build.author.image ? (
-                                    <img src={build.author.image} alt={build.author.username} className="w-5 h-5 rounded-full" />
+                                    <Image src={build.author.image} alt={build.author.username} width={20} height={20} className="w-5 h-5 rounded-full" />
                                 ) : (
                                     <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
                                         <span className="text-[10px] text-primary">{build.author.username[0].toUpperCase()}</span>
