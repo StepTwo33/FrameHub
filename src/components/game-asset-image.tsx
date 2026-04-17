@@ -16,17 +16,21 @@ type GameAssetImageProps = {
   hideOnError?: boolean;
 };
 
-/** Local /public item art — next/image for stable layout and efficient caching */
+/**
+ * Local /public item art (mods, weapons, frames, …).
+ * Uses a native img element so missing PNGs skip next/image optimization (which logs "received null" on 404/empty bodies).
+ */
 export function GameAssetImage({ src, alt, width, height, className, hideOnError }: GameAssetImageProps) {
   return (
-    <Image
+    <img
       src={src}
       alt={alt}
       width={width}
       height={height}
       className={className}
       onError={hideOnError ? hideOnImageError : undefined}
-      sizes={`${width}px`}
+      loading="lazy"
+      decoding="async"
     />
   );
 }
