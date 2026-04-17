@@ -275,4 +275,38 @@ export async function exchangeCodeForUser(
   };
 }
 
+const SESSION_MAX_AGE_SEC = 30 * 24 * 60 * 60;
+
+/** Cookie flags for `framehub_session` — keep in sync everywhere it is set or cleared. */
+export function framehubSessionCookieOptions(publicOrigin: string) {
+  return {
+    httpOnly: true,
+    secure: publicOrigin.startsWith("https"),
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: SESSION_MAX_AGE_SEC,
+  };
+}
+
+export function clearFramehubSessionCookieOptions(publicOrigin: string) {
+  return {
+    httpOnly: true,
+    secure: publicOrigin.startsWith("https"),
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: 0,
+  };
+}
+
+/** OAuth CSRF cookie — same shape for set (Google redirect) and clear (callback). */
+export function oauthStateCookieOptions(publicOrigin: string, maxAgeSec: number) {
+  return {
+    httpOnly: true,
+    secure: publicOrigin.startsWith("https"),
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: maxAgeSec,
+  };
+}
+
 export { SESSION_COOKIE };

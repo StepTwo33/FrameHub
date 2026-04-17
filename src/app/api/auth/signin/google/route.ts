@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGoogleAuthUrl, generateOAuthState } from "@/lib/auth";
+import { getGoogleAuthUrl, generateOAuthState, oauthStateCookieOptions } from "@/lib/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function GET(req: NextRequest) {
@@ -8,12 +8,6 @@ export async function GET(req: NextRequest) {
     const state = generateOAuthState();
     const url = getGoogleAuthUrl(callbackUrl, state);
     const response = NextResponse.redirect(url);
-    response.cookies.set("oauth_state", state, {
-        httpOnly: true,
-        secure: origin.startsWith("https"),
-        sameSite: "lax",
-        path: "/",
-        maxAge: 600, // 10 minutes
-    });
+    response.cookies.set("oauth_state", state, oauthStateCookieOptions(origin, 600));
     return response;
 }

@@ -795,7 +795,9 @@ export default function WarframeBuilderPage() {
         return;
       }
     } catch (e) {
-      console.error("Failed to share publicly, falling back to local URL logic", e);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to share publicly, falling back to local URL logic", e);
+      }
     }
 
     // Fallback to local base64 sharing

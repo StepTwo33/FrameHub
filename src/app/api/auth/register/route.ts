@@ -10,6 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { sendVerificationEmail } from "@/lib/email";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
+import { readJsonBodyLimited } from "@/lib/read-json-body";
 
 export async function POST(req: NextRequest) {
     try {
@@ -22,8 +23,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const body = await req.json();
-        const { email, password, name } = body as {
+        const parsed = await readJsonBodyLimited(req);
+        if (!parsed.ok) return parsed.response;
+        const { email, password, name } = parsed.body as {
             email?: string;
             password?: string;
             name?: string;

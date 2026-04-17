@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exchangeCodeForUser, findOrCreateUser, createSession, SESSION_COOKIE } from "@/lib/auth";
+import {
+  exchangeCodeForUser,
+  findOrCreateUser,
+  createSession,
+  SESSION_COOKIE,
+  framehubSessionCookieOptions,
+  oauthStateCookieOptions,
+} from "@/lib/auth";
 import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function GET(req: NextRequest) {
@@ -34,15 +41,8 @@ export async function GET(req: NextRequest) {
 
   const token = await createSession(user);
   const response = NextResponse.redirect(new URL("/", origin));
-  response.cookies.set(SESSION_COOKIE, token, {
-    httpOnly: true,
-    secure: origin.startsWith("https"),
-    sameSite: "lax",
-    path: "/",
-    maxAge: 30 * 24 * 60 * 60,
-  });
-  // Clear the oauth_state cookie
-  response.cookies.set("oauth_state", "", { maxAge: 0, path: "/" });
+  response.cookies.set(SESSION_COOKIE, token, framehubSessionCookieOptions(origin));
+  response.cookies.set("oauth_state", "", oauthStateCookieOptions(origin, 0));
 
   return response;
 }

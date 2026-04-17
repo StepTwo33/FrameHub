@@ -174,7 +174,9 @@ export function BuildImporter({ modCategory, numSlots, onImport, onClose }: Buil
       }
       setMatches(matched);
     } catch (err) {
-      console.error("OCR error:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("OCR error:", err);
+      }
       setOcrError("Failed to process image. Please try again.");
     } finally {
       setIsProcessing(false);

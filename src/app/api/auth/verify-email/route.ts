@@ -4,10 +4,12 @@ import {
     findUserByEmail,
     createSession,
     SESSION_COOKIE,
+    framehubSessionCookieOptions,
 } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { logServerError } from "@/lib/log-server-error";
+import { readJsonBodyLimited } from "@/lib/read-json-body";
 
 export async function POST(req: NextRequest) {
     try {
@@ -20,8 +22,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const body = await req.json();
-        const { email, code } = body as { email?: string; code?: string };
+        const parsed = await readJsonBodyLimited(req);
+        if (!parsed.ok) return parsed.response;
+        const { email, code } = parsed.body as { email?: string; code?: string };
 
         if (!email || !code) {
             return NextResponse.json(
@@ -60,13 +63,7 @@ export async function POST(req: NextRequest) {
         const origin = getPublicOrigin(req);
 
         const response = NextResponse.json({ success: true });
-        response.cookies.set(SESSION_COOKIE, token, {
-            httpOnly: true,
-            secure: origin.startsWith("https"),
-            sameSite: "lax",
-            path: "/",
-            maxAge: 30 * 24 * 60 * 60,
-        });
+        response.cookies.set(SESSION_COOKIE, token, framehubSessionCookieOptions(origin));
 
         return response;
     } catch (error) {
