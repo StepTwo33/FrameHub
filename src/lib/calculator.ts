@@ -1,5 +1,14 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage } from './types';
+import {
+  VIGILANTE_MOD_IDS,
+  weaponSupportsPrimaryStyleSets,
+  buildWarframeSetBonusSummary,
+  buildWeaponSetBonusSummary,
+  countSynthSetPieces,
+  countTekSetPieces,
+  weaponAcceptsSynthReloadBonus,
+} from './set-bonuses';
 import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
 
 /** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
@@ -107,8 +116,11 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
 
 // ── Set Bonus Detection ─────────────────────────────────────────────────
 // Implemented: Umbral (×stats on Vit/Fiber/Int; Tau unscaled), Sacrificial (1.5× on both mods when 2),
-// Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only).
-// Not modeled: Augur / Hunter / Mecha / Tek / Synth energy-shield & companion proc sets (no stubs in loop).
+// Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only;
+//   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe).
+// Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
+// Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % when complete.
+// Not modeled in DPS: Augur shield sustain from casts, Hunter proc timing, Mecha explosion burst.
 const UMBRAL_MOD_IDS = ['umbra_vitality', 'umbra_fiber', 'umbra_intensify'];
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
@@ -137,26 +149,7 @@ const GLADIATOR_MOD_IDS = [
   'gladiator_resolve', 'gladiator_rush', 'gladiator_vice',
 ];
 
-// Vigilante set: +5% chance per mod to enhance crit tier (primary weapons only in-game)
-const VIGILANTE_MOD_IDS = [
-  "vigilante_armaments", "vigilante_fervor", "vigilante_offense",
-  "vigilante_pursuit", "vigilante_supplies", "vigilante_vigor",
-];
-
-/** Categories that can proc Vigilante set (not secondaries / melee / pistols). */
-function weaponSupportsVigilanteSet(w: Weapon): boolean {
-  const c = w.category;
-  if (c === "melee" || w.triggerType === "Melee") return false;
-  if (c === "pistol" || c === "secondary" || c === "dual_pistols") return false;
-  return (
-    c === "primary" ||
-    c === "rifle" ||
-    c === "shotgun" ||
-    c === "bow" ||
-    c === "launcher" ||
-    c === "archgun"
-  );
-}
+const vigilanteIdList = VIGILANTE_MOD_IDS as unknown as string[];
 
 // ── Conditional Mod Detection ───────────────────────────────────────────
 function isConditionalMod(modName: string): string | null {
@@ -215,6 +208,7 @@ export function calculateWeaponBuild(
   incarnonStatChanges?: Record<string, number>,
   simParams?: SimulationParams,
   calcOptions?: WeaponCalculationOptions,
+  linkage?: SetBonusLinkage,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
@@ -282,7 +276,10 @@ export function calculateWeaponBuild(
   const sacCount = equippedMods.filter(s => SACRIFICIAL_MOD_IDS.includes(s.modId)).length;
   const sacSetBonus = getSacrificialSetBonus(sacCount);
   const gladiatorCount = equippedMods.filter(s => GLADIATOR_MOD_IDS.includes(s.modId)).length + (sim.extraGladiatorMods || 0);
-  const vigilanteCount = equippedMods.filter(s => VIGILANTE_MOD_IDS.includes(s.modId)).length;
+  const vigOnWeapon = equippedMods.filter((s) => vigilanteIdList.includes(s.modId)).length;
+  const vigFromLinkedWf = linkage?.warframeMods?.filter((s) => vigilanteIdList.includes(s.modId)).length ?? 0;
+  const vigFromSimFallback = linkage ? 0 : (sim.extraVigilanteModsFromWarframe ?? 0);
+  const vigilanteCount = vigOnWeapon + vigFromLinkedWf + vigFromSimFallback;
 
   for (const modSlot of equippedMods) {
     const mod = allMods.get(modSlot.modId);
@@ -389,6 +386,16 @@ export function calculateWeaponBuild(
   stats.multishot += multishotBonus;
   stats.statusChance *= (1 + statusBonus);
   stats.magazine = Math.round(stats.magazine * (1 + magBonus));
+
+  // Synth 4-set: +15% reload speed on pistols when full set across linked loadout
+  const synthPieces = linkage
+    ? countSynthSetPieces(linkage, equippedMods)
+    : countSynthSetPieces(undefined, equippedMods) + (sim.extraSynthSetPiecesOffWeapon ?? 0);
+  if (synthPieces >= 4 && weaponAcceptsSynthReloadBonus(baseWeapon)) {
+    reloadBonus += 0.15;
+    stats.synthSetReloadBonusApplied = 0.15;
+  }
+
   // Reload: positive bonus = faster, negative bonus = slower (Burdened Magazine etc.)
   if (reloadBonus !== 0) {
     if (reloadBonus > 0) stats.reloadTime /= Math.max(0.01, 1 + reloadBonus);
@@ -476,6 +483,23 @@ export function calculateWeaponBuild(
     stats.totalDamage = physDmg2 + eleDmg2;
   }
 
+  // Tek 4-set: +60% damage vs marked enemies (primary-style weapons; optional sim)
+  const tekPieces = linkage
+    ? countTekSetPieces(linkage, equippedMods)
+    : countTekSetPieces(undefined, equippedMods) + (sim.extraTekSetPiecesOffWeapon ?? 0);
+  if (tekPieces >= 4 && sim.applyTekSetVsMarkedDamage && weaponSupportsPrimaryStyleSets(baseWeapon)) {
+    const tm = 1.6;
+    stats.tekSetVsMarkedDamageMultiplier = tm;
+    stats.impact *= tm;
+    stats.puncture *= tm;
+    stats.slash *= tm;
+    for (const e of stats.elements) e.value *= tm;
+    for (const e of stats.rawElements) e.value *= tm;
+    const physTek = stats.impact + stats.puncture + stats.slash;
+    const eleTek = stats.elements.reduce((sum, e) => sum + e.value, 0);
+    stats.totalDamage = physTek + eleTek;
+  }
+
   // Melee-specific: combo system, heavy attacks, blood rush, weeping wounds, gladiator set
   if (isMelee) {
     stats.comboCount = sim.comboCount;
@@ -509,7 +533,7 @@ export function calculateWeaponBuild(
   }
 
   // Vigilante: +5% per equipped set mod to upgrade primary crit tier (not secondaries / melee)
-  if (vigilanteCount > 0 && weaponSupportsVigilanteSet(baseWeapon)) {
+  if (vigilanteCount > 0 && weaponSupportsPrimaryStyleSets(baseWeapon)) {
     stats.vigilanteCritBonus = 0.05 * vigilanteCount;
   }
 
@@ -523,6 +547,8 @@ export function calculateWeaponBuild(
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
 
+  stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
+
   return stats;
 }
 
@@ -530,6 +556,7 @@ export function calculateWarframeBuild(
   warframe: Warframe,
   equippedMods: ModSlot[],
   allMods: Map<string, Mod>,
+  linkage?: SetBonusLinkage,
 ): WarframeCalculatedStats {
   const stats: WarframeCalculatedStats = {
     baseHealth: warframe.health,
@@ -601,6 +628,16 @@ export function calculateWarframeBuild(
   const armorDR = stats.totalArmor / (stats.totalArmor + 300);
   stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
   stats.damageReduction = armorDR * 100;
+
+  stats.setBonusSummary = buildWarframeSetBonusSummary(equippedMods, linkage);
+  const aug = stats.setBonusSummary.find((s) => s.setId === "augur");
+  const hun = stats.setBonusSummary.find((s) => s.setId === "hunter");
+  stats.augurEnergyToShieldsPercent = aug?.active ? 40 : 0;
+  stats.hunterCompanionVsStatusDamagePercent = hun?.active ? 150 : 0;
+
+  if (equippedMods.some((s) => s.modId === "adaptation")) {
+    stats.adaptationNoteMaxTypedDRPercent = 90;
+  }
 
   return stats;
 }
@@ -780,9 +817,10 @@ export function calculateWeaponBuildWithArcanes(
   incarnonStatChanges?: Record<string, number>,
   simParams?: SimulationParams,
   calcOptions?: WeaponCalculationOptions,
+  linkage?: SetBonusLinkage,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
-  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions);
+  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions, linkage);
   for (const arcane of arcanes) {
     applyArcaneToWeapon(stats, arcane, sim.arcaneStacks);
   }

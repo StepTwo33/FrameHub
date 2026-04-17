@@ -64,7 +64,7 @@ for (const mod of allMods) {
 
   const keys = Object.keys(mod.stats);
   // These categories legitimately may have no calculator stats
-  const noStatsOk = ["parazon", "stance", "arcane", "operator", "set", "evolution", "companion_weapon", "augment"];
+  const noStatsOk = ["parazon", "stance", "arcane", "operator", "set", "evolution", "companion_weapon", "companion", "augment"];
   if (keys.length === 0 && !noStatsOk.includes(mod.category)) {
     warn(mod.id, `Empty stats (category: ${mod.category}) — no effect in calculator`);
   }

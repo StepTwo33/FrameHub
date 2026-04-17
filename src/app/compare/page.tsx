@@ -6,7 +6,7 @@ import { WeaponStatsPanel } from "@/components/stats-panel";
 import { useWeapons } from "@/lib/use-data";
 import { allMods, modsMap } from "@/data/mods";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes, calculateWarframeBuild } from "@/lib/calculator";
-import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, WarframeCalculatedStats, WeaponCalculationOptions } from "@/lib/types";
+import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, SetBonusLinkage, WarframeCalculatedStats, WeaponCalculationOptions } from "@/lib/types";
 import { weaponFromModularData } from "@/lib/modular-resolve";
 import { resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { WEAPON_PASSIVES } from "@/data/weapon-passives";
@@ -322,13 +322,27 @@ function weaponWithPassive(w: Weapon): Weapon {
   return p ? { ...w, passive: p } : w;
 }
 
+/** Mods from other slots so Augur / Hunter / Synth / Tek / Vigilante / Mecha sets count across the full loadout. */
+function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
+  const m = loadout.modularBuild;
+  return {
+    warframeMods: loadout.warframeBuild?.mods,
+    primaryMods: loadout.primaryBuild?.mods ?? (m?.slot === "primary" ? m.mods : undefined),
+    secondaryMods: loadout.secondaryBuild?.mods ?? (m?.slot === "secondary" ? m.mods : undefined),
+    meleeMods: loadout.meleeBuild?.mods ?? (m?.slot === "melee" ? m.mods : undefined),
+    companionMods: loadout.companionBuild?.mods,
+  };
+}
+
 function calcLoadoutStats(loadout: Loadout): LoadoutStats {
   const result: LoadoutStats = { warframe: null, primary: null, secondary: null, melee: null, companion: null };
+
+  const setLinkage = setBonusLinkageFromLoadout(loadout);
 
   if (loadout.warframeBuild) {
     const wf = warframesMap.get(loadout.warframeBuild.warframeId);
     if (wf) {
-      const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap);
+      const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap, setLinkage);
       result.warframe = { name: wf.name, stats };
     }
   }
@@ -353,7 +367,7 @@ function calcLoadoutStats(loadout: Loadout): LoadoutStats {
       build.progenitorBonusPercent > 0
         ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
         : undefined;
-    const stats = calculateWeaponBuild(base, build.mods || [], modsMap, undefined, undefined, calcOptions);
+    const stats = calculateWeaponBuild(base, build.mods || [], modsMap, undefined, undefined, calcOptions, setLinkage);
     return { name: base.name, stats };
   };
 
@@ -367,8 +381,8 @@ function calcLoadoutStats(loadout: Loadout): LoadoutStats {
     const arcaneMods = resolveSavedArcaneSlots(data.arcaneIds, 2).filter((m): m is Mod => m != null);
     const stats =
       arcaneMods.length > 0
-        ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods)
-        : calculateWeaponBuild(w, modSlots, modsMap);
+        ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods, undefined, undefined, undefined, setLinkage)
+        : calculateWeaponBuild(w, modSlots, modsMap, undefined, undefined, undefined, setLinkage);
     return { name: w.name, stats };
   };
 

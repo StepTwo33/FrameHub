@@ -1,6 +1,7 @@
 "use client";
 
 import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
+import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/set-bonuses";
 import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -147,6 +148,44 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 tooltip="Gladiator mods on warframe (Aegis/Finesse/Resolve) — +10% crit per melee scaling multiplier tier each (same (CM−1) factor as Blood Rush)"
               />
             )}
+            {!isMelee && weapon && weaponSupportsPrimaryStyleSets(weapon) && (
+              <>
+                <SimSlider
+                  label="WF Vigilante (count)"
+                  value={simParams.extraVigilanteModsFromWarframe ?? 0}
+                  min={0}
+                  max={6}
+                  onChange={(v) => onSimParamsChange({ ...simParams, extraVigilanteModsFromWarframe: v })}
+                  tooltip="Vigilante mods equipped on your Warframe (e.g. Pursuit on Exilus). Each counts toward primary crit-tier upgrade when not using full loadout linkage."
+                />
+                <SimSlider
+                  label="Off-weapon Tek pieces"
+                  value={simParams.extraTekSetPiecesOffWeapon ?? 0}
+                  min={0}
+                  max={3}
+                  onChange={(v) => onSimParamsChange({ ...simParams, extraTekSetPiecesOffWeapon: v })}
+                  tooltip="Tek mods on other slots (Collateral on frame, Gravity on melee, Enhance on Kavat). In-game set needs 4; data may show 3/4 until Tek Enhance exists."
+                />
+                <SimSlider
+                  label="Tek vs marked (DPS)"
+                  value={simParams.applyTekSetVsMarkedDamage ? 1 : 0}
+                  min={0}
+                  max={1}
+                  onChange={(v) => onSimParamsChange({ ...simParams, applyTekSetVsMarkedDamage: v >= 1 })}
+                  tooltip="When Tek 4-set is complete, apply +60% damage vs Kavat-marked enemies to this primary's paper DPS."
+                />
+              </>
+            )}
+            {weapon && weaponAcceptsSynthReloadBonus(weapon) && (
+              <SimSlider
+                label="Off-weapon Synth pieces"
+                value={simParams.extraSynthSetPiecesOffWeapon ?? 0}
+                min={0}
+                max={3}
+                onChange={(v) => onSimParamsChange({ ...simParams, extraSynthSetPiecesOffWeapon: v })}
+                tooltip="Synth Fiber + Deconstruct on companion and Synth Reflex on Warframe (max 3 off this pistol). At 4 total with Synth Charge here, +15% reload speed applies."
+              />
+            )}
           </div>
           {/* Active conditional summary */}
           {hasConditionals && (
@@ -175,8 +214,34 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   Vigilante Set: {(stats.vigilanteCritBonus * 100).toFixed(0)}% crit tier enhance chance
                 </div>
               )}
+              {stats.synthSetReloadBonusApplied != null && stats.synthSetReloadBonusApplied > 0 && (
+                <div className="text-[10px] text-cyan-400">
+                  Synth 4-set: +{(stats.synthSetReloadBonusApplied * 100).toFixed(0)}% reload speed
+                </div>
+              )}
+              {stats.tekSetVsMarkedDamageMultiplier != null && stats.tekSetVsMarkedDamageMultiplier > 1 && (
+                <div className="text-[10px] text-fuchsia-400">
+                  Tek 4-set vs marked: ×{stats.tekSetVsMarkedDamageMultiplier.toFixed(2)} damage (optional)
+                </div>
+              )}
             </div>
           )}
+        </CollapsibleSection>
+      )}
+
+      {stats.setBonusSummary && stats.setBonusSummary.length > 0 && (
+        <CollapsibleSection title="SET BONUSES" defaultOpen={false}>
+          <div className="space-y-1 py-1">
+            {stats.setBonusSummary.map((row) => (
+              <div key={row.setId} className="text-[10px] leading-snug">
+                <span className={row.active ? "text-green-400 font-medium" : "text-muted-foreground"}>
+                  {row.label}: {row.pieces}/{row.required}
+                  {row.active ? " ✓" : ""}
+                </span>
+                <div className="text-[9px] text-muted-foreground/80 pl-0.5">{row.description}</div>
+              </div>
+            ))}
+          </div>
         </CollapsibleSection>
       )}
 
@@ -390,6 +455,11 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         {stats.elementalResistance > 0 && (
           <StatRow label="Elemental Resist" value={`${stats.elementalResistance.toFixed(0)}%`} color="text-cyan-400" />
         )}
+        {stats.adaptationNoteMaxTypedDRPercent != null && (
+          <p className="text-[10px] text-violet-400/90 leading-snug pt-0.5" title="Per damage type; builds from getting hit. Not shown in arsenal EHP.">
+            Adaptation: up to {stats.adaptationNoteMaxTypedDRPercent}% resistance per damage type you take (on-hit, 20s stacks — not included in EHP below).
+          </p>
+        )}
         <div className="border-t border-border/50 my-1" />
         <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
         <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />
@@ -405,6 +475,28 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         <StatRow label="Range" value={`${(stats.abilityRange * 100).toFixed(0)}%`}
           color={stats.abilityRange > 1 ? "text-green-400" : stats.abilityRange < 1 ? "text-red-400" : undefined} />
       </CollapsibleSection>
+
+      {stats.setBonusSummary && stats.setBonusSummary.length > 0 && (
+        <CollapsibleSection title="SET BONUSES" defaultOpen={false}>
+          <div className="space-y-1 py-1">
+            {stats.setBonusSummary.map((row) => (
+              <div key={row.setId} className="text-[10px] leading-snug">
+                <span className={row.active ? "text-green-400 font-medium" : "text-muted-foreground"}>
+                  {row.label}: {row.pieces}/{row.required}
+                  {row.active ? " ✓" : ""}
+                </span>
+                <div className="text-[9px] text-muted-foreground/80 pl-0.5">{row.description}</div>
+              </div>
+            ))}
+            {(stats.augurEnergyToShieldsPercent ?? 0) > 0 && (
+              <StatRow label="Augur (shields)" value={`${stats.augurEnergyToShieldsPercent}% of energy → shields`} color="text-sky-400" />
+            )}
+            {(stats.hunterCompanionVsStatusDamagePercent ?? 0) > 0 && (
+              <StatRow label="Hunter (companion)" value={`+${stats.hunterCompanionVsStatusDamagePercent}% dmg vs status targets`} color="text-amber-400" />
+            )}
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* Shard Bonuses (only show section if any are active) */}
       {(stats.castingSpeedBonus > 0 || stats.parkourVelocityBonus > 0 ||

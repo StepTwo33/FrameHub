@@ -121,6 +121,24 @@ export interface ModSlot {
   slotIndex: number;
 }
 
+/** Optional other loadout slots so cross-slot mod sets (Augur, Hunter, Synth, …) count correctly. */
+export interface SetBonusLinkage {
+  warframeMods?: ModSlot[];
+  primaryMods?: ModSlot[];
+  secondaryMods?: ModSlot[];
+  meleeMods?: ModSlot[];
+  companionMods?: ModSlot[];
+}
+
+export interface SetBonusSummaryLine {
+  setId: string;
+  label: string;
+  pieces: number;
+  required: number;
+  active: boolean;
+  description: string;
+}
+
 export interface EquippedMod {
   modId: string;
   modName: string;
@@ -180,6 +198,14 @@ export interface SimulationParams {
   statusTypesOnTarget: number; // Condition Overload / Galvanized Aptitude (0-5)
   arcaneStacks: number;       // e.g. Merciless (0–12), other arcanes vary
   extraGladiatorMods: number; // Gladiator mods on warframe (0-3, adds to weapon-side count)
+  /** When no SetBonusLinkage: Vigilante mods on Warframe that apply to primary crit tier. */
+  extraVigilanteModsFromWarframe?: number;
+  /** When no SetBonusLinkage: Synth set pieces equipped outside this weapon (0–3). */
+  extraSynthSetPiecesOffWeapon?: number;
+  /** When no SetBonusLinkage: Tek set pieces outside this weapon (0–3). Data may cap at 3 until Tek Enhance exists. */
+  extraTekSetPiecesOffWeapon?: number;
+  /** If Tek 4-set is complete and this is enabled, apply +60% damage vs marked enemies to primary DPS. */
+  applyTekSetVsMarkedDamage?: boolean;
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {
@@ -188,6 +214,10 @@ export const DEFAULT_SIM_PARAMS: SimulationParams = {
   statusTypesOnTarget: 0,
   arcaneStacks: 0,
   extraGladiatorMods: 0,
+  extraVigilanteModsFromWarframe: 0,
+  extraSynthSetPiecesOffWeapon: 0,
+  extraTekSetPiecesOffWeapon: 0,
+  applyTekSetVsMarkedDamage: false,
 };
 
 export interface CalculatedStats {
@@ -233,6 +263,12 @@ export interface CalculatedStats {
   berserkerFuryBonus: number; // per-stack attack speed bonus
   weepingWoundsBonus: number; // status chance bonus per combo tier
   vigilanteCritBonus?: number; // Vigilante set: chance to enhance crit tier (0.05 per mod)
+  /** Synth 4-set: +0.15 reload speed bonus applied to secondaries when complete. */
+  synthSetReloadBonusApplied?: number;
+  /** Tek 4-set: damage multiplier vs marked when sim + set complete (primary only). */
+  tekSetVsMarkedDamageMultiplier?: number;
+  /** Cross-slot set detection (optional). */
+  setBonusSummary?: SetBonusSummaryLine[];
 }
 
 export interface WarframeCalculatedStats {
@@ -275,6 +311,16 @@ export interface WarframeCalculatedStats {
   healingBonus: number;
   statusDurationBonus: number;
   energyCostReduction: number;
+  /** Active cross-slot set bonuses (needs linked weapon/companion mods where relevant). */
+  setBonusSummary?: SetBonusSummaryLine[];
+  /** Augur 6-set: percent of energy spent converted to shields (display / future EHP modeling). */
+  augurEnergyToShieldsPercent?: number;
+  /** Hunter 6-set: companion damage bonus vs status-affected enemies (+150% → 150 here). */
+  hunterCompanionVsStatusDamagePercent?: number;
+  /**
+   * When Adaptation is equipped: in-mission cap for resistance to each damage type you have been hit with (+10% per stack, 20s, not folded into EHP).
+   */
+  adaptationNoteMaxTypedDRPercent?: number;
 }
 
 export interface Companion {
