@@ -65,11 +65,31 @@ export const TEK_SET_MOD_IDS = [
   "tek_enhance",
 ] as const;
 
+export const UMBRAL_MOD_IDS = [
+  "umbra_vitality",
+  "umbra_fiber",
+  "umbra_intensify",
+] as const;
+
 const AUGUR_SET = new Set<string>(AUGUR_SET_MOD_IDS);
 const HUNTER_SET = new Set<string>(HUNTER_SET_MOD_IDS);
 const MECHA_SET = new Set<string>(MECHA_SET_MOD_IDS);
 const SYNTH_SET = new Set<string>(SYNTH_SET_MOD_IDS);
 const TEK_SET = new Set<string>(TEK_SET_MOD_IDS);
+const UMBRAL_SET = new Set<string>(UMBRAL_MOD_IDS);
+
+/** Umbral set bonus multiplier for a mod's primary stat (1 = no bonus). Tau Resistance is excluded by caller. */
+export function getUmbralSetBonusMultiplier(modId: string, umbralCount: number): number {
+  if (umbralCount < 2 || !UMBRAL_SET.has(modId)) return 1;
+  if (modId === "umbra_intensify") {
+    return 1 + (umbralCount >= 3 ? 0.75 : 0.25);
+  }
+  return 1 + (umbralCount >= 3 ? 0.8 : 0.3);
+}
+
+export function countUmbralSetPieces(warframeMods: ModSlot[]): number {
+  return countSetModsInSlots(warframeMods, UMBRAL_SET);
+}
 
 export function countSetModsInSlots(slots: ModSlot[] | undefined, setMembers: Set<string>): number {
   if (!slots?.length) return 0;
@@ -201,6 +221,7 @@ export function buildWarframeSetBonusSummary(
   warframeMods: ModSlot[],
   linkage?: SetBonusLinkage,
 ): SetBonusSummaryLine[] {
+  const umbral = countUmbralSetPieces(warframeMods);
   const augur = countAugurSetPieces(warframeMods, linkage?.secondaryMods);
   const hunter = countHunterSetPieces(linkage, warframeMods);
   const mecha = countMechaSetPieces(warframeMods, linkage?.companionMods);
@@ -208,6 +229,19 @@ export function buildWarframeSetBonusSummary(
   const tek = countTekSetPieces(linkage, warframeMods);
 
   return [
+    {
+      setId: "umbral",
+      label: "Umbral",
+      pieces: umbral,
+      required: 3,
+      active: umbral >= 2,
+      description:
+        umbral >= 3
+          ? "3-piece: +80% Health/Armor and +75% Strength on Umbral mods (Tau Resistance unscaled)"
+          : umbral >= 2
+            ? "2-piece: +30% Health/Armor and +25% Strength on Umbral mods (Tau Resistance unscaled)"
+            : "2-piece: +30%/+25%; 3-piece: +80%/+75% on Umbral mod primary stats",
+    },
     {
       setId: "augur",
       label: "Augur",

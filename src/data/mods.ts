@@ -1607,10 +1607,10 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "warframeId": "universal",
     "stats": {
-      "armor": 9.0909,
+      "armor": 5,
       "tauResistance": 1
     },
-    "description": "+11% Armor, +1% Tau Resistance per rank",
+    "description": "+55% Armor, +11% Tau Resistance",
     "rarity": "legendary"
   },
   {
@@ -1623,10 +1623,10 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "warframeId": "universal",
     "stats": {
-      "health": 9.0909,
+      "health": 4,
       "tauResistance": 1
     },
-    "description": "+44% Health, +1% Tau Resistance per rank",
+    "description": "+44% Health, +11% Tau Resistance",
     "rarity": "legendary"
   },
   {

@@ -976,6 +976,7 @@ export default function WarframeBuilderPage() {
                           slotIndex={AURA_SLOT}
                           label="Aura"
                           slotPolarity={slotPolarities[AURA_SLOT]}
+                          equippedModIds={equippedModIds}
                           onAdd={() => handleOpenModPicker(AURA_SLOT)}
                           onRemove={() => handleRemoveMod(AURA_SLOT)}
                           onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[AURA_SLOT] = p; else delete next[AURA_SLOT]; return next; })}
@@ -1012,6 +1013,7 @@ export default function WarframeBuilderPage() {
                           rank={equipped?.rank ?? 0}
                           slotIndex={slotIdx}
                           slotPolarity={slotPolarities[slotIdx]}
+                          equippedModIds={equippedModIds}
                           onAdd={() => handleOpenModPicker(slotIdx)}
                           onRemove={() => handleRemoveMod(slotIdx)}
                           onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[slotIdx] = p; else delete next[slotIdx]; return next; })}
@@ -1033,6 +1035,7 @@ export default function WarframeBuilderPage() {
                           slotIndex={EXILUS_SLOT}
                           label="Exilus"
                           slotPolarity={slotPolarities[EXILUS_SLOT]}
+                          equippedModIds={equippedModIds}
                           onAdd={() => handleOpenModPicker(EXILUS_SLOT)}
                           onRemove={() => handleRemoveMod(EXILUS_SLOT)}
                           onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[EXILUS_SLOT] = p; else delete next[EXILUS_SLOT]; return next; })}

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { PolarityIcon, polarityNames } from "@/components/polarity-icon";
 import { getModImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
+import { UMBRAL_MOD_IDS, getUmbralSetBonusMultiplier } from "@/lib/set-bonuses";
 
 const rarityBorderColors: Record<string, string> = {
   common: "border-amber-900/50",
@@ -29,9 +30,11 @@ interface ModSlotProps {
   onRemove: () => void;
   onPolarize?: (polarity: string | null) => void;
   onEditRiven?: () => void;
+  /** When set (warframe builder), Umbral set bonuses scale displayed mod stats. */
+  equippedModIds?: string[];
 }
 
-export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven }: ModSlotProps) {
+export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds }: ModSlotProps) {
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
   const polarityDrainMod = (modPol: string, slotPol?: string): number => {
@@ -101,11 +104,15 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   const polMatch = polarityDrainMod(mod.polarity, slotPolarity);
   const effectiveDrain = polMatch === -1 ? Math.ceil(drainVal / 2) : polMatch === 1 ? Math.ceil(drainVal * 1.25) : drainVal;
 
+  const umbralCount = equippedModIds?.filter((id) => UMBRAL_MOD_IDS.includes(id as (typeof UMBRAL_MOD_IDS)[number])).length ?? 0;
+  const umbralSetMult = getUmbralSetBonusMultiplier(mod.id, umbralCount);
+
   // Format mod stats into readable lines at the currently equipped rank
   const statEntries = Object.entries(mod.stats).slice(0, 3);
   const formatStat = (key: string, perRankVal: number) => {
     const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
-    const scaled = perRankVal * (rank + 1);
+    const setMult = key === "tauResistance" ? 1 : umbralSetMult;
+    const scaled = perRankVal * (rank + 1) * setMult;
     const sign = scaled > 0 ? "+" : "";
     const decimals = scaled % 1 !== 0 ? 1 : 0;
     return `${sign}${scaled.toFixed(decimals)}% ${label}`;

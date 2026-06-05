@@ -2,11 +2,14 @@
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage } from './types';
 import {
   VIGILANTE_MOD_IDS,
+  UMBRAL_MOD_IDS,
   weaponSupportsPrimaryStyleSets,
   buildWarframeSetBonusSummary,
   buildWeaponSetBonusSummary,
   countSynthSetPieces,
   countTekSetPieces,
+  countUmbralSetPieces,
+  getUmbralSetBonusMultiplier,
   weaponAcceptsSynthReloadBonus,
 } from './set-bonuses';
 import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
@@ -121,20 +124,7 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
 // Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % when complete.
 // Not modeled in DPS: Augur shield sustain from casts, Hunter proc timing, Mecha explosion burst.
-const UMBRAL_MOD_IDS = ['umbra_vitality', 'umbra_fiber', 'umbra_intensify'];
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
-
-// Umbral set bonus: modSetValues per WFCD
-// Vitality/Fiber: [0.30, 0.80], Intensify: [0.25, 0.75]
-// Index 0 = 2 mods equipped, Index 1 = 3 mods equipped
-function getUmbralSetBonus(modId: string, umbralCount: number): number {
-  if (umbralCount < 2) return 0;
-  if (modId === 'umbra_intensify') {
-    return umbralCount >= 3 ? 0.75 : 0.25;
-  }
-  // Vitality and Fiber
-  return umbralCount >= 3 ? 0.80 : 0.30;
-}
 
 // Sacrificial set bonus: [0.25, 0.50]
 function getSacrificialSetBonus(sacCount: number): number {
@@ -597,8 +587,7 @@ export function calculateWarframeBuild(
     energyCostReduction: 0,
   };
 
-  // Count Umbral set mods for set bonus
-  const umbralCount = equippedMods.filter(s => UMBRAL_MOD_IDS.includes(s.modId)).length;
+  const umbralCount = countUmbralSetPieces(equippedMods);
 
   for (const modSlot of equippedMods) {
     const mod = allMods.get(modSlot.modId);
@@ -606,9 +595,8 @@ export function calculateWarframeBuild(
 
     const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
-    const isUmbral = UMBRAL_MOD_IDS.includes(modSlot.modId);
-    // Set bonus applies only to primary stats (health / armor / strength), not Tau Resistance.
-    const umbralSetMult = isUmbral ? (1 + getUmbralSetBonus(modSlot.modId, umbralCount)) : 1;
+    const isUmbral = UMBRAL_MOD_IDS.includes(modSlot.modId as (typeof UMBRAL_MOD_IDS)[number]);
+    const umbralSetMult = isUmbral ? getUmbralSetBonusMultiplier(modSlot.modId, umbralCount) : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
       const setMult = isUmbral && statName === "tauResistance" ? 1 : umbralSetMult;
