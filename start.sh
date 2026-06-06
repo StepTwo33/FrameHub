@@ -5,6 +5,7 @@
 #
 # Environment (all optional):
 #   PORT                 Default 3000
+#   DATABASE_URL         SQLite URL for Prisma; default file:./dev.db
 #   PUBLIC_DOMAIN        Shown in banner; default https://frame-hub.com
 #   CLOUDFLARED_CONFIG   Tunnel config file; default ~/.cloudflared/config-framehub.yml
 #   SKIP_TUNNEL          Set to 1 to skip Cloudflare (local or no creds)
@@ -32,6 +33,33 @@ cleanup() {
   exit 0
 }
 trap cleanup SIGINT SIGTERM
+
+# --- Load env + apply Prisma migrations (same DB file the app uses) ---
+prepare_database() {
+  for env_file in .env .env.local .env.production; do
+    if [ -f "$DIR/$env_file" ]; then
+      set -a
+      # shellcheck disable=SC1090
+      source "$DIR/$env_file"
+      set +a
+    fi
+  done
+
+  export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"
+
+  local db_path="${DATABASE_URL#file:}"
+  if [[ "$db_path" != /* ]]; then
+    db_path="$DIR/$db_path"
+  fi
+  mkdir -p "$(dirname "$db_path")"
+
+  echo "DATABASE_URL=$DATABASE_URL"
+  echo "SQLite: $db_path"
+  echo "Applying Prisma migrations..."
+  npx prisma migrate deploy
+}
+
+prepare_database
 
 # --- Optional: Dart → TypeScript data sync (host must have OVERFRAME_DART_DIR or sibling overframe-app) ---
 if [ "${OVERFRAME_SYNC_DATA:-}" = "1" ] && [ -f "$DIR/scripts/convert_data_v2.py" ]; then
