@@ -321,6 +321,12 @@ export interface WarframeCalculatedStats {
    * When Adaptation is equipped: in-mission cap for resistance to each damage type you have been hit with (+10% per stack, 20s, not folded into EHP).
    */
   adaptationNoteMaxTypedDRPercent?: number;
+  /** Arcane Persistence: shields stripped while equipped. */
+  shieldsNullifiedByPersistence?: boolean;
+  /** Arcane Persistence damage/s cap at current arcane rank (inactive below 700 armor). */
+  persistenceDamageCapPerSecond?: number;
+  /** True when Persistence is equipped and armor ≥ 700. */
+  persistenceActive?: boolean;
 }
 
 export interface Companion {

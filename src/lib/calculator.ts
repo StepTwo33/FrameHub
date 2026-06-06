@@ -749,12 +749,36 @@ export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks:
   }
 }
 
+/** Arcane Persistence damage/s cap by rank (wiki: ranks 0–5). */
+export const PERSISTENCE_DAMAGE_CAP_BY_RANK = [750, 700, 650, 600, 550, 500] as const;
+
+export function getPersistenceDamageCap(rank: number, maxRank = 5): number {
+  const r = Math.min(Math.max(rank, 0), maxRank);
+  return PERSISTENCE_DAMAGE_CAP_BY_RANK[r] ?? PERSISTENCE_DAMAGE_CAP_BY_RANK[PERSISTENCE_DAMAGE_CAP_BY_RANK.length - 1];
+}
+
 // Apply arcane stats to warframe
-export function applyArcaneToWarframe(stats: WarframeCalculatedStats, arcane: Mod, stacks: number = 1): void {
+export function applyArcaneToWarframe(
+  stats: WarframeCalculatedStats,
+  arcane: Mod,
+  stacks: number = 1,
+  rank?: number,
+): void {
   if (stacks <= 0) return;
+
+  if (arcane.id === "arcane_persistence") {
+    const capRank = rank ?? arcane.maxRank;
+    stats.persistenceDamageCapPerSecond = getPersistenceDamageCap(capRank, arcane.maxRank);
+    stats.shieldsNullifiedByPersistence = true;
+    return;
+  }
+
   for (const [stat, value] of Object.entries(arcane.stats)) {
     const scaled = (value * stacks) / 100;
     switch (stat) {
+      case "persistenceDamageCapPerSecond":
+      case "removeShields":
+        break;
       case 'energyOrbBonus':
       case 'allyEnergy':
       case 'healthRegen':

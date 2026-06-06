@@ -460,6 +460,18 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
             Adaptation: up to {stats.adaptationNoteMaxTypedDRPercent}% resistance per damage type you take (on-hit, 20s stacks — not included in EHP below).
           </p>
         )}
+        {stats.persistenceDamageCapPerSecond != null && (
+          <p
+            className={`text-[10px] leading-snug pt-0.5 ${stats.persistenceActive ? "text-amber-400/90" : "text-muted-foreground"}`}
+            title="Shields removed while equipped. Magnetic and nullify disable the damage cap."
+          >
+            Arcane Persistence: shields removed
+            {stats.persistenceActive
+              ? ` — damage capped at ${stats.persistenceDamageCapPerSecond}/s (armor ≥ 700)`
+              : ` — needs 700+ armor for ${stats.persistenceDamageCapPerSecond}/s damage cap (currently ${stats.totalArmor.toFixed(0)} armor)`}
+            {" "}(not included in EHP).
+          </p>
+        )}
         <div className="border-t border-border/50 my-1" />
         <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
         <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />

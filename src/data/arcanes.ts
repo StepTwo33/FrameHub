@@ -1377,8 +1377,8 @@ export const allArcanes: Mod[] = [
     maxRank: 5,
     category: "arcane",
     subCategory: "warframe",
-    stats: {"shieldRegenDelay": 0.6},
-    description: "-0.6s Shield Regen Delay per rank",
+    stats: {"persistenceDamageCapPerSecond": 500, "removeShields": 1},
+    description: "Remove all Shields. If Armor is above 700: Cannot be hit for more than 750 / 700 / 650 / 600 / 550 / 500 Damage/s. Magnetic and nullify disable.",
     rarity: "rare",
   },
 {

@@ -634,6 +634,12 @@ export default function WarframeBuilderPage() {
     stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus) + stats.flatArmorBonus;
     stats.totalEnergy = stats.baseEnergy * (1 + stats.energyBonus + stats.flowBonus) + stats.flatEnergyBonus;
     stats.totalSprint = stats.baseSprint * (1 + stats.sprintSpeedBonus);
+    if (stats.shieldsNullifiedByPersistence) {
+      stats.totalShield = 0;
+    }
+    if (stats.persistenceDamageCapPerSecond != null) {
+      stats.persistenceActive = stats.totalArmor >= 700;
+    }
     const armorDR = stats.totalArmor / (stats.totalArmor + 300);
     stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
     stats.damageReduction = armorDR * 100;
