@@ -22,6 +22,18 @@ export interface Session {
   };
 }
 
+/** Auth lookups — omit optional columns so login works before every migration is applied. */
+const AUTH_USER_SELECT = {
+  id: true,
+  name: true,
+  username: true,
+  email: true,
+  image: true,
+  emailVerified: true,
+  role: true,
+  passwordHash: true,
+} as const;
+
 const USERNAME_MIN_LENGTH = 3;
 const USERNAME_MAX_LENGTH = 24;
 const USERNAME_PATTERN = /^[a-z0-9._-]+$/;
@@ -56,7 +68,7 @@ export async function generateUniqueUsername(seed: string): Promise<string> {
   let candidate = base;
   let suffix = 1;
 
-  while (await prisma.user.findUnique({ where: { username: candidate } })) {
+  while (await prisma.user.findUnique({ where: { username: candidate }, select: { id: true } })) {
     const suffixText = `-${suffix}`;
     candidate = `${base.slice(0, USERNAME_MAX_LENGTH - suffixText.length)}${suffixText}`;
     suffix += 1;
@@ -137,7 +149,7 @@ export async function findOrCreateUser(
   email: string,
   data: { name?: string | null; image?: string | null; emailVerified?: boolean; provider?: string; providerAccountId?: string }
 ): Promise<Session["user"]> {
-  let user = await prisma.user.findUnique({ where: { email } });
+  let user = await prisma.user.findUnique({ where: { email }, select: AUTH_USER_SELECT });
 
   if (!user) {
     const username = await generateUniqueUsername(data.name ?? email.split("@")[0] ?? "tenno");
@@ -149,6 +161,7 @@ export async function findOrCreateUser(
         image: data.image ?? null,
         emailVerified: data.emailVerified ? new Date() : null,
       },
+      select: AUTH_USER_SELECT,
     });
   }
 
@@ -181,6 +194,7 @@ export async function findOrCreateUser(
       user = await prisma.user.update({
         where: { id: user.id },
         data: updates,
+        select: AUTH_USER_SELECT,
       });
     }
   }
@@ -197,7 +211,7 @@ export async function findOrCreateUser(
 }
 
 export async function findUserByEmail(email: string) {
-  return prisma.user.findUnique({ where: { email } });
+  return prisma.user.findUnique({ where: { email }, select: AUTH_USER_SELECT });
 }
 
 // --------------- Session (JWT) ---------------

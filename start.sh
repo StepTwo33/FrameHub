@@ -35,6 +35,41 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # --- Load env + apply Prisma migrations (same DB file the app uses) ---
+resolve_db_path() {
+  local url="${DATABASE_URL:-file:./dev.db}"
+  local db_path="${url#file:}"
+  if [[ "$db_path" != /* ]]; then
+    db_path="$DIR/$db_path"
+  fi
+  printf '%s' "$db_path"
+}
+
+repair_user_bio_column() {
+  local db_path="$1"
+  if [ ! -f "$db_path" ]; then
+    echo "Database file not found yet: $db_path"
+    return 0
+  fi
+  if ! command -v sqlite3 >/dev/null 2>&1; then
+    echo "ERROR: sqlite3 is required to verify the database schema."
+    return 1
+  fi
+  if ! sqlite3 "$db_path" "SELECT 1 FROM sqlite_master WHERE type='table' AND name='User';" | grep -q 1; then
+    echo "User table not found in $db_path — waiting for Prisma init migration."
+    return 0
+  fi
+  local has_bio user_count
+  has_bio=$(sqlite3 "$db_path" "SELECT COUNT(*) FROM pragma_table_info('User') WHERE name='bio';")
+  user_count=$(sqlite3 "$db_path" "SELECT COUNT(*) FROM \"User\";" 2>/dev/null || echo "?")
+  echo "Users in database: $user_count"
+  if [ "$has_bio" = "0" ]; then
+    echo "Repair: adding User.bio column to $db_path"
+    sqlite3 "$db_path" 'ALTER TABLE "User" ADD COLUMN "bio" TEXT;'
+  else
+    echo "User.bio column present"
+  fi
+}
+
 prepare_database() {
   for env_file in .env .env.local .env.production; do
     if [ -f "$DIR/$env_file" ]; then
@@ -47,16 +82,21 @@ prepare_database() {
 
   export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"
 
-  local db_path="${DATABASE_URL#file:}"
-  if [[ "$db_path" != /* ]]; then
-    db_path="$DIR/$db_path"
-  fi
+  local db_path
+  db_path="$(resolve_db_path)"
   mkdir -p "$(dirname "$db_path")"
+  # Next.js / Prisma runtime must open this exact file (not a different cwd-relative path)
+  export SQLITE_DATABASE_PATH="$db_path"
 
   echo "DATABASE_URL=$DATABASE_URL"
   echo "SQLite: $db_path"
   echo "Applying Prisma migrations..."
-  npx prisma migrate deploy
+  if ! npx prisma migrate deploy; then
+    echo "WARN: prisma migrate deploy failed — clearing failed migration record if needed..."
+    npx prisma migrate resolve --applied 20260604120000_add_user_bio 2>/dev/null || true
+    npx prisma migrate deploy || echo "WARN: migrate deploy still failing; applying schema repair..."
+  fi
+  repair_user_bio_column "$db_path"
 }
 
 prepare_database
