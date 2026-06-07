@@ -45,29 +45,8 @@ resolve_db_path() {
 }
 
 repair_user_bio_column() {
-  local db_path="$1"
-  if [ ! -f "$db_path" ]; then
-    echo "Database file not found yet: $db_path"
-    return 0
-  fi
-  if ! command -v sqlite3 >/dev/null 2>&1; then
-    echo "ERROR: sqlite3 is required to verify the database schema."
-    return 1
-  fi
-  if ! sqlite3 "$db_path" "SELECT 1 FROM sqlite_master WHERE type='table' AND name='User';" | grep -q 1; then
-    echo "User table not found in $db_path — waiting for Prisma init migration."
-    return 0
-  fi
-  local has_bio user_count
-  has_bio=$(sqlite3 "$db_path" "SELECT COUNT(*) FROM pragma_table_info('User') WHERE name='bio';")
-  user_count=$(sqlite3 "$db_path" "SELECT COUNT(*) FROM \"User\";" 2>/dev/null || echo "?")
-  echo "Users in database: $user_count"
-  if [ "$has_bio" = "0" ]; then
-    echo "Repair: adding User.bio column to $db_path"
-    sqlite3 "$db_path" 'ALTER TABLE "User" ADD COLUMN "bio" TEXT;'
-  else
-    echo "User.bio column present"
-  fi
+  echo "Verifying database schema (Node)..."
+  node "$DIR/scripts/repair-db.mjs"
 }
 
 prepare_database() {
@@ -84,6 +63,9 @@ prepare_database() {
 
   local db_path
   db_path="$(resolve_db_path)"
+  if command -v realpath >/dev/null 2>&1; then
+    db_path="$(realpath -m "$db_path")"
+  fi
   mkdir -p "$(dirname "$db_path")"
   # Next.js / Prisma runtime must open this exact file (not a different cwd-relative path)
   export SQLITE_DATABASE_PATH="$db_path"
