@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * Ensure User.bio exists (no sqlite3 CLI required — uses better-sqlite3).
+ * Align SQLite schema with prisma/schema.prisma when migrate history is ahead of the
+ * actual database (no sqlite3 CLI required).
+ *
  * Env: SQLITE_DATABASE_PATH and/or DATABASE_URL (set by start.sh).
  */
 import Database from "better-sqlite3";
@@ -10,12 +12,82 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/** Columns that may be missing if migrations were marked applied without running. */
+const TABLE_COLUMNS = {
+  User: [
+    { name: "username", alter: 'ALTER TABLE "User" ADD COLUMN "username" TEXT' },
+    { name: "bio", alter: 'ALTER TABLE "User" ADD COLUMN "bio" TEXT' },
+    { name: "passwordHash", alter: 'ALTER TABLE "User" ADD COLUMN "passwordHash" TEXT' },
+    { name: "role", alter: `ALTER TABLE "User" ADD COLUMN "role" TEXT NOT NULL DEFAULT 'user'` },
+    {
+      name: "createdAt",
+      alter: 'ALTER TABLE "User" ADD COLUMN "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    },
+  ],
+  Build: [
+    {
+      name: "description",
+      alter: `ALTER TABLE "Build" ADD COLUMN "description" TEXT NOT NULL DEFAULT ''`,
+    },
+    {
+      name: "isPublic",
+      alter: 'ALTER TABLE "Build" ADD COLUMN "isPublic" BOOLEAN NOT NULL DEFAULT false',
+    },
+  ],
+};
+
+const INDEXES = [
+  {
+    name: "User_username_key",
+    sql: 'CREATE UNIQUE INDEX IF NOT EXISTS "User_username_key" ON "User"("username")',
+  },
+  {
+    name: "Build_isPublic_idx",
+    sql: 'CREATE INDEX IF NOT EXISTS "Build_isPublic_idx" ON "Build"("isPublic")',
+  },
+];
+
 function resolveDbPath() {
   const explicit = process.env.SQLITE_DATABASE_PATH?.trim();
   if (explicit) return explicit;
   const raw = process.env.DATABASE_URL?.trim() || "file:./dev.db";
   const filePath = raw.startsWith("file:") ? raw.slice("file:".length) : raw;
   return path.isAbsolute(filePath) ? filePath : path.resolve(root, filePath);
+}
+
+function tableExists(db, table) {
+  return (
+    db
+      .prepare("SELECT 1 AS ok FROM sqlite_master WHERE type = 'table' AND name = ?")
+      .get(table)?.ok === 1
+  );
+}
+
+function columnExists(db, table, column) {
+  const rows = db.prepare(`PRAGMA table_info("${table}")`).all();
+  return rows.some((row) => row.name === column);
+}
+
+function indexExists(db, name) {
+  return (
+    db
+      .prepare("SELECT 1 AS ok FROM sqlite_master WHERE type = 'index' AND name = ?")
+      .get(name)?.ok === 1
+  );
+}
+
+function ensureColumn(db, table, { name, alter }) {
+  if (columnExists(db, table, name)) return false;
+  console.log(`[repair-db] Adding ${table}.${name}…`);
+  db.exec(alter);
+  return true;
+}
+
+function ensureIndex(db, { name, sql }) {
+  if (indexExists(db, name)) return false;
+  console.log(`[repair-db] Creating index ${name}…`);
+  db.exec(sql);
+  return true;
 }
 
 const dbPath = resolveDbPath();
@@ -34,11 +106,10 @@ try {
   process.exit(1);
 }
 
+let changes = 0;
+
 try {
-  const userTable = db
-    .prepare("SELECT 1 AS ok FROM sqlite_master WHERE type = 'table' AND name = 'User'")
-    .get();
-  if (!userTable?.ok) {
+  if (!tableExists(db, "User")) {
     console.log("[repair-db] User table not found — run Prisma migrations first.");
     process.exit(0);
   }
@@ -46,15 +117,23 @@ try {
   const userCount = db.prepare('SELECT COUNT(*) AS n FROM "User"').get();
   console.log(`[repair-db] Users in database: ${userCount?.n ?? "?"}`);
 
-  const hasBio = db
-    .prepare("SELECT COUNT(*) AS n FROM pragma_table_info('User') WHERE name = 'bio'")
-    .get();
-  if ((hasBio?.n ?? 0) === 0) {
-    console.log("[repair-db] Adding User.bio column…");
-    db.exec('ALTER TABLE "User" ADD COLUMN "bio" TEXT');
-    console.log("[repair-db] User.bio added.");
+  for (const [table, columns] of Object.entries(TABLE_COLUMNS)) {
+    if (!tableExists(db, table)) continue;
+    for (const col of columns) {
+      if (ensureColumn(db, table, col)) changes += 1;
+    }
+  }
+
+  for (const idx of INDEXES) {
+    if (tableExists(db, idx.name.startsWith("User_") ? "User" : "Build")) {
+      if (ensureIndex(db, idx)) changes += 1;
+    }
+  }
+
+  if (changes === 0) {
+    console.log("[repair-db] Schema OK.");
   } else {
-    console.log("[repair-db] User.bio column present.");
+    console.log(`[repair-db] Applied ${changes} repair(s).`);
   }
 } catch (err) {
   console.error("[repair-db] Schema repair failed:", err);
