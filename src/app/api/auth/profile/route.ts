@@ -132,7 +132,7 @@ export async function PATCH(req: NextRequest) {
       emailVerified: session.user.emailVerified,
       role: user.role,
     });
-    const origin = getPublicOrigin(req.headers);
+    const origin = getPublicOrigin(req);
     response.cookies.set(SESSION_COOKIE, token, framehubSessionCookieOptions(origin));
 
     return response;
