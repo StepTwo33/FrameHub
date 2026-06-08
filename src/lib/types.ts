@@ -318,7 +318,7 @@ export interface WarframeCalculatedStats {
   /** Hunter 6-set: companion damage bonus vs status-affected enemies (+150% → 150 here). */
   hunterCompanionVsStatusDamagePercent?: number;
   /**
-   * When Adaptation is equipped: in-mission cap for resistance to each damage type you have been hit with (+10% per stack, 20s, not folded into EHP).
+   * When Adaptation is equipped: typed DR stacks (see computeAdaptationSurvivability in UI).
    */
   adaptationNoteMaxTypedDRPercent?: number;
   /** Arcane Persistence: shields stripped while equipped. */

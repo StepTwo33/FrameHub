@@ -10,6 +10,10 @@ import { IncarnonEvolution } from "@/data/incarnon";
 import { formatAbilityDescription } from "@/lib/ability-text";
 import { buildShardBonusLines } from "@/lib/shard-display";
 import { getArcaneDisplayInfo } from "@/lib/arcane-display";
+import {
+  ADAPTATION_MAX_STACKS,
+  computeAdaptationSurvivability,
+} from "@/lib/calculator";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -410,6 +414,51 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
   );
 }
 
+function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
+  const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
+  const armorDR = stats.damageReduction / 100;
+  const { typedDRPercent, combinedDRPercent, adaptedEHP } = computeAdaptationSurvivability(
+    stats.effectiveHealth,
+    armorDR,
+    stacks,
+  );
+
+  return (
+    <div className="py-1 space-y-1 border-t border-violet-500/20 mt-1">
+      <div className="text-[10px] font-medium text-violet-400/90">Adaptation (typed DR)</div>
+      <SimSlider
+        label="Stacks"
+        value={stacks}
+        min={0}
+        max={ADAPTATION_MAX_STACKS}
+        onChange={setStacks}
+        tooltip="+10% resistance per stack to the damage type you're taking (20s)"
+      />
+      <StatRow
+        label="Typed resist"
+        value={`${typedDRPercent.toFixed(0)}%`}
+        color="text-violet-300"
+        tooltip="Resistance to the adapted damage type only"
+      />
+      <StatRow
+        label="Combined DR"
+        value={`${combinedDRPercent.toFixed(1)}%`}
+        color="text-violet-400"
+        tooltip="Armor DR and Adaptation stack multiplicatively vs that type"
+      />
+      <StatRow
+        label="Adapted EHP"
+        value={adaptedEHP.toFixed(0)}
+        color="text-violet-400"
+        tooltip="Effective health vs fully adapted single-type damage"
+      />
+      <p className="text-[9px] text-muted-foreground/80 leading-snug">
+        Ramps when you take hits; each element tracks separately. Uses base EHP/DR above.
+      </p>
+    </div>
+  );
+}
+
 export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility, equippedShards, equippedArcanes, arcaneRanks }: {
   stats: WarframeCalculatedStats | null; warframe?: Warframe | null;
   equippedMods?: EquippedMod[]; allMods?: Map<string, Mod>;
@@ -479,11 +528,6 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         {stats.elementalResistance > 0 && (
           <StatRow label="Elemental Resist" value={`${stats.elementalResistance.toFixed(0)}%`} color="text-cyan-400" />
         )}
-        {stats.adaptationNoteMaxTypedDRPercent != null && (
-          <p className="text-[10px] text-violet-400/90 leading-snug pt-0.5" title="Per damage type; builds from getting hit. Not shown in arsenal EHP.">
-            Adaptation: up to {stats.adaptationNoteMaxTypedDRPercent}% resistance per damage type you take (on-hit, 20s stacks — not included in EHP below).
-          </p>
-        )}
         {stats.persistenceDamageCapPerSecond != null && (
           <p
             className={`text-[10px] leading-snug pt-0.5 ${stats.persistenceActive ? "text-amber-400/90" : "text-muted-foreground"}`}
@@ -499,6 +543,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         <div className="border-t border-border/50 my-1" />
         <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
         <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />
+        {stats.adaptationNoteMaxTypedDRPercent != null && (
+          <AdaptationSurvivability stats={stats} />
+        )}
       </CollapsibleSection>
 
       <CollapsibleSection title="ABILITY MODS" defaultOpen>

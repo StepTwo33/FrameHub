@@ -630,6 +630,25 @@ export function calculateWarframeBuild(
   return stats;
 }
 
+/** Adaptation: +10% typed resistance per stack when hit, max 9 stacks (90%). */
+export const ADAPTATION_MAX_STACKS = 9;
+export const ADAPTATION_DR_PER_STACK = 0.1;
+
+/** Multiplicative armor DR + typed Adaptation resistance vs one adapted damage type. */
+export function computeAdaptationSurvivability(
+  effectiveHealth: number,
+  armorDRFraction: number,
+  stacks: number,
+): { typedDRPercent: number; combinedDRPercent: number; adaptedEHP: number } {
+  const cappedStacks = Math.min(Math.max(Math.round(stacks), 0), ADAPTATION_MAX_STACKS);
+  const typedDR = cappedStacks * ADAPTATION_DR_PER_STACK;
+  const armorMult = 1 - Math.min(Math.max(armorDRFraction, 0), 0.99);
+  const combinedMult = armorMult * (1 - typedDR);
+  const combinedDRPercent = (1 - combinedMult) * 100;
+  const adaptedEHP = typedDR < 1 ? effectiveHealth / (1 - typedDR) : effectiveHealth;
+  return { typedDRPercent: typedDR * 100, combinedDRPercent, adaptedEHP };
+}
+
 function applyWarframeMod(stats: WarframeCalculatedStats, statName: string, value: number): void {
   switch (statName) {
     case 'health':
