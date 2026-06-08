@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Mod, getRivenStatsForCategory } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { Search, Plus, X } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
-import { getModImage } from "@/lib/images";
+import { getModImage, getArcaneImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getBlockedModIds } from "@/data/mod-exclusions";
 
@@ -111,12 +111,17 @@ interface ModPickerProps {
   onSelectRiven?: (mod: Mod, stats: Record<string, number>) => void;
   weaponCategory?: string; // for riven stat pool filtering
   warframeId?: string; // When set, augment mods are filtered to this warframe + universal
+  /** When provided, shows Mods / Arcanes tabs for browsing warframe arcanes. */
+  arcaneCatalog?: Mod[];
+  initialBrowseTab?: "mods" | "arcanes";
+  equippedArcaneIds?: string[];
 }
 
-export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, warframeId }: ModPickerProps) {
+export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, warframeId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
   const [search, setSearch] = useState("");
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
+  const [browseTab, setBrowseTab] = useState<"mods" | "arcanes">(initialBrowseTab);
   // Riven stat configuration state
   const [rivenStats, setRivenStats] = useState<Record<string, number>>({});
   const [rivenStatKey, setRivenStatKey] = useState("");
@@ -183,6 +188,23 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     );
   }, [mods, category, slotType, search, warframeId, weaponCategory]);
 
+  const filteredArcanes = useMemo(() => {
+    if (!arcaneCatalog) return [];
+    if (!search.trim()) return arcaneCatalog;
+    const q = search.toLowerCase();
+    return arcaneCatalog.filter(
+      (a) =>
+        a.name.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q),
+    );
+  }, [arcaneCatalog, search]);
+
+  const isArcaneBrowse = browseTab === "arcanes" && !!arcaneCatalog;
+
+  useEffect(() => {
+    if (open) setBrowseTab(initialBrowseTab);
+  }, [open, initialBrowseTab]);
+
   const handleSelectMod = (mod: Mod) => {
     setSelectedMod(mod);
     setSelectedRank(mod.maxRank);
@@ -212,6 +234,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     setRivenStatKey("");
     setRivenStatValue("");
     setSearch("");
+    setBrowseTab(initialBrowseTab);
     onClose();
   };
 
@@ -220,15 +243,17 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle>
-            {slotType === "aura"
-              ? "Select Aura Mod"
-              : slotType === "exilus"
-                ? "Select Exilus Mod"
-                : slotType === "weapon_exilus_secondary"
-                  ? "Select Secondary Exilus Mod"
-                  : slotType === "weapon_exilus_melee"
-                    ? "Select Melee Exilus Mod"
-                    : "Select Mod"}
+            {isArcaneBrowse
+              ? "Select Arcane"
+              : slotType === "aura"
+                ? "Select Aura Mod"
+                : slotType === "exilus"
+                  ? "Select Exilus Mod"
+                  : slotType === "weapon_exilus_secondary"
+                    ? "Select Secondary Exilus Mod"
+                    : slotType === "weapon_exilus_melee"
+                      ? "Select Melee Exilus Mod"
+                      : "Select Mod"}
           </DialogTitle>
         </DialogHeader>
 
@@ -236,7 +261,14 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
           <div className="p-6 space-y-4">
             <div className="border border-border rounded-lg p-4 bg-secondary/30">
               <div className="flex items-center gap-3 mb-2">
-                <GameAssetImage src={getModImage(selectedMod.name)} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain bg-muted/20 shrink-0" hideOnError />
+                <GameAssetImage
+                  src={selectedMod.category === "arcane" ? getArcaneImage(selectedMod.name) : getModImage(selectedMod.name)}
+                  alt=""
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded object-contain bg-muted/20 shrink-0"
+                  hideOnError
+                />
                 <div className="flex-1 flex items-center justify-between">
                   <h4 className="font-semibold">{selectedMod.name}</h4>
                   <Badge variant="outline" className={cn("text-[10px]", rarityColors[selectedMod.rarity])}>
@@ -355,17 +387,41 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
               <Button
                 onClick={handleConfirm}
               >
-                Equip Mod
+                {selectedMod?.category === "arcane" ? "Equip Arcane" : "Equip Mod"}
               </Button>
             </div>
           </div>
         ) : (
           <>
             <div className="px-6 pb-3">
+              {arcaneCatalog && arcaneCatalog.length > 0 && (
+                <div className="flex gap-1 mb-3 p-1 rounded-lg bg-secondary/40">
+                  <button
+                    type="button"
+                    onClick={() => setBrowseTab("mods")}
+                    className={cn(
+                      "flex-1 text-xs py-1.5 rounded-md transition-colors",
+                      browseTab === "mods" ? "bg-background text-foreground font-medium" : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    Mods
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setBrowseTab("arcanes")}
+                    className={cn(
+                      "flex-1 text-xs py-1.5 rounded-md transition-colors",
+                      browseTab === "arcanes" ? "bg-background text-foreground font-medium" : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    Arcanes
+                  </button>
+                </div>
+              )}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search mods..."
+                  placeholder={isArcaneBrowse ? "Search arcanes..." : "Search mods..."}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9"
@@ -373,13 +429,45 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                {filteredMods.length} mods available
+                {isArcaneBrowse ? filteredArcanes.length : filteredMods.length}{" "}
+                {isArcaneBrowse ? "arcanes" : "mods"} available
               </p>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
               <div className="space-y-1">
-                {filteredMods.map((mod) => {
+                {isArcaneBrowse ? filteredArcanes.map((arcane) => {
+                  const isEquipped = equippedArcaneIds.includes(arcane.id);
+                  return (
+                    <button
+                      key={arcane.id}
+                      onClick={() => !isEquipped && handleSelectMod(arcane)}
+                      disabled={isEquipped}
+                      className={cn(
+                        "w-full text-left p-3 rounded-lg border transition-all",
+                        isEquipped
+                          ? "border-border opacity-40 cursor-not-allowed"
+                          : "border-border hover:border-purple-500/50 hover:bg-purple-500/5 hover:scale-[1.01] cursor-pointer shadow-sm",
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <GameAssetImage src={getArcaneImage(arcane.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" hideOnError />
+                          <span className="text-sm font-medium">{arcane.name}</span>
+                        </div>
+                        <Badge variant="outline" className={cn("text-[10px]", rarityColors[arcane.rarity])}>
+                          {arcane.rarity}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                        {arcane.description.replace(/<[^>]+>/g, "").substring(0, 100)}
+                      </p>
+                      {isEquipped && (
+                        <span className="text-[10px] text-muted-foreground">Already equipped</span>
+                      )}
+                    </button>
+                  );
+                }) : filteredMods.map((mod) => {
                   const isEquipped = equippedModIds.includes(mod.id);
                   const isBlocked = blockedByExclusion.has(mod.id);
                   const isDisabled = isEquipped || isBlocked;

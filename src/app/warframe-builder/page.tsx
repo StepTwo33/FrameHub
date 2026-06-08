@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
 import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
-import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
+import { ArcaneSlotCard } from "@/components/arcane-picker";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
 import { formatAbilityDescription } from "@/lib/ability-text";
@@ -383,6 +383,89 @@ function AbilityCard({ ability, index, stats }: {
   );
 }
 
+function HelminthAbilityCard({ ability, stats, onRemove }: {
+  ability: HelminthAbility;
+  stats: WarframeCalculatedStats | null;
+  onRemove: () => void;
+}) {
+  const str = stats?.abilityStrength ?? 1;
+  const dur = stats?.abilityDuration ?? 1;
+  const rng = stats?.abilityRange ?? 1;
+  const eff = stats?.abilityEfficiency ?? 1;
+  const clampedEff = Math.min(Math.max(eff, 0), 1.75);
+  const effectiveCost = Math.max(ability.energyCost * 0.25, ability.energyCost * (2 - clampedEff));
+  const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
+
+  const miscKeys = ability.miscStats
+    ? Object.keys(ability.miscStats).filter((k) => k !== "slowCap" && k !== "channeled")
+    : [];
+  const hasAnyStats =
+    (ability.damage != null && ability.damage > 0) ||
+    ability.range != null ||
+    ability.duration != null ||
+    ability.radius != null ||
+    (ability.damageBuff != null && ability.damageBuff > 0) ||
+    (ability.damageReduction != null && ability.damageReduction > 0) ||
+    miscKeys.length > 0;
+
+  const fmtMisc = (k: string, v: unknown): string => {
+    if (typeof v !== "number") return String(v);
+    if (k === "slowPercent") return `${Math.min(v * str, Number(ability.miscStats?.slowCap ?? 95)).toFixed(0)}%`;
+    if (k === "lifeStealPercent") return `${(v * str).toFixed(1)}%`;
+    if (k === "minRadius" || k === "maxRadius") return `${(v * rng).toFixed(1)}m`;
+    return Number.isInteger(v) ? String(v) : v.toFixed(2);
+  };
+
+  const miscLabel = (k: string) =>
+    k === "slowPercent" ? "Slow" : k === "lifeStealPercent" ? "Life Steal" : k === "minRadius" ? "Min Radius" : k === "maxRadius" ? "Max Radius" : k;
+
+  return (
+    <div className="border border-green-500/30 rounded-xl p-3 bg-green-500/5">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-xs font-bold text-green-400">{ability.name}</span>
+        <button onClick={onRemove} className="text-[10px] text-red-400 hover:text-red-300">✕</button>
+      </div>
+      <p className="text-[10px] text-muted-foreground leading-relaxed">{formatAbilityDescription(ability.description)}</p>
+      <div className="flex items-center gap-2 mt-1.5">
+        <span className={cn("text-[9px] font-mono", costModified ? "text-green-400" : "text-green-400/70")}>
+          ⚡ {costModified ? effectiveCost.toFixed(0) : ability.energyCost}
+        </span>
+        <span className="text-[9px] text-green-400/70">
+          {ability.sourceWarframe ? `from ${ability.sourceWarframe}` : "Helminth"}
+        </span>
+      </div>
+      {hasAnyStats && (
+        <div className="border-t border-green-500/20 pt-2 mt-2 space-y-0">
+          {ability.damage != null && ability.damage > 0 && (
+            <AbilityStatRow label="Damage" baseValue={ability.damage.toFixed(0)} modifiedValue={(ability.damage * str).toFixed(0)} isModified={str !== 1} isPositive={str > 1} />
+          )}
+          {ability.damageBuff != null && ability.damageBuff > 0 && (
+            <AbilityStatRow label="Dmg Buff" baseValue={(ability.damageBuff * 100).toFixed(0)} modifiedValue={(ability.damageBuff * str * 100).toFixed(0)} unit="%" isModified={str !== 1} isPositive={str > 1} />
+          )}
+          {ability.duration != null && (
+            <AbilityStatRow label="Duration" baseValue={ability.duration.toFixed(1)} modifiedValue={(ability.duration * dur).toFixed(1)} unit="s" isModified={dur !== 1} isPositive={dur > 1} />
+          )}
+          {ability.range != null && (
+            <AbilityStatRow label="Range" baseValue={ability.range.toFixed(1)} modifiedValue={(ability.range * rng).toFixed(1)} unit="m" isModified={rng !== 1} isPositive={rng > 1} />
+          )}
+          {ability.radius != null && (
+            <AbilityStatRow label="Radius" baseValue={ability.radius.toFixed(1)} modifiedValue={(ability.radius * rng).toFixed(1)} unit="m" isModified={rng !== 1} isPositive={rng > 1} />
+          )}
+          {miscKeys.map((k) => (
+            <div key={k} className="flex items-baseline gap-1.5 py-0.5">
+              <span className="text-[11px] text-muted-foreground w-24 shrink-0">{miscLabel(k)}</span>
+              <span className="text-[11px] font-mono text-foreground">{fmtMisc(k, ability.miscStats![k])}</span>
+            </div>
+          ))}
+          {ability.miscStats?.channeled === true && (
+            <div className="text-[10px] text-green-400/80 pt-0.5">Channeled</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function WarframeBuilderPage() {
   const [selectedWarframe, setSelectedWarframe] = useState<Warframe | null>(null);
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
@@ -402,8 +485,9 @@ export default function WarframeBuilderPage() {
   const [helminthPickerOpen, setHelminthPickerOpen] = useState(false);
   const [helminthPickerSlot, setHelminthPickerSlot] = useState(0);
   const [helminthSearch, setHelminthSearch] = useState("");
+  const [modPickerBrowseTab, setModPickerBrowseTab] = useState<"mods" | "arcanes">("mods");
   const [equippedArcanes, setEquippedArcanes] = useState<(Mod | null)[]>([null, null]);
-  const [arcanePickerOpen, setArcanePickerOpen] = useState(false);
+  const [equippedArcaneRanks, setEquippedArcaneRanks] = useState<number[]>([5, 5]);
   const [activeArcaneSlot, setActiveArcaneSlot] = useState(0);
   const [exaltedMods, setExaltedMods] = useState<EquippedMod[]>([]);
   const [exaltedModPickerOpen, setExaltedModPickerOpen] = useState(false);
@@ -624,8 +708,9 @@ export default function WarframeBuilderPage() {
     }
 
     // Apply warframe arcanes
-    for (const arcane of equippedArcanes) {
-      if (arcane) applyArcaneToWarframe(stats, arcane);
+    for (let i = 0; i < equippedArcanes.length; i++) {
+      const arcane = equippedArcanes[i];
+      if (arcane) applyArcaneToWarframe(stats, arcane, 1, equippedArcaneRanks[i] ?? arcane.maxRank);
     }
 
     // Recalculate derived stats after shard + arcane bonuses (flat shards add after percentage scaling)
@@ -645,7 +730,7 @@ export default function WarframeBuilderPage() {
     stats.damageReduction = armorDR * 100;
 
     return stats;
-  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes]);
+  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, equippedArcaneRanks]);
 
   // Calculate capacity
   const baseCapacity = (hasOrokinReactor ? 60 : 30) + (isMR30 ? 10 : 0);
@@ -679,6 +764,7 @@ export default function WarframeBuilderPage() {
     setEquippedMods([]);
     setEquippedShards([null, null, null, null, null]);
     setEquippedArcanes([null, null]);
+    setEquippedArcaneRanks([5, 5]);
     setExaltedMods([]);
     setExaltedSlotPolarities({});
     setHelminthSlot(null);
@@ -694,18 +780,38 @@ export default function WarframeBuilderPage() {
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
     setActiveSlotType(getSlotType(slotIndex));
+    setModPickerBrowseTab("mods");
     setModPickerOpen(true);
   }, []);
 
-  const handleSelectMod = useCallback((mod: Mod, rank: number) => {
-    setEquippedMods((prev) => {
-      const filtered = prev.filter((m) => m.slotIndex !== activeSlotIndex);
-      return [
-        ...filtered,
-        { modId: mod.id, modName: mod.name, rank, slotIndex: activeSlotIndex, polarity: mod.polarity, drain: mod.drain },
-      ];
-    });
-  }, [activeSlotIndex]);
+  const handleOpenArcanePicker = useCallback((slotIndex: number) => {
+    setActiveArcaneSlot(slotIndex);
+    setModPickerBrowseTab("arcanes");
+    setModPickerOpen(true);
+  }, []);
+
+  const handleSelectFromPicker = useCallback((mod: Mod, rank: number) => {
+    if (mod.category === "arcane") {
+      setEquippedArcanes((prev) => {
+        const next = [...prev];
+        next[activeArcaneSlot] = mod;
+        return next;
+      });
+      setEquippedArcaneRanks((prev) => {
+        const next = [...prev];
+        next[activeArcaneSlot] = rank;
+        return next;
+      });
+    } else {
+      setEquippedMods((prev) => {
+        const filtered = prev.filter((m) => m.slotIndex !== activeSlotIndex);
+        return [
+          ...filtered,
+          { modId: mod.id, modName: mod.name, rank, slotIndex: activeSlotIndex, polarity: mod.polarity, drain: mod.drain },
+        ];
+      });
+    }
+  }, [activeSlotIndex, activeArcaneSlot]);
 
   const handleRemoveMod = useCallback((slotIndex: number) => {
     setEquippedMods((prev) => prev.filter((m) => m.slotIndex !== slotIndex));
@@ -1101,10 +1207,13 @@ export default function WarframeBuilderPage() {
                       <ArcaneSlotCard
                         key={i}
                         arcane={arcane}
-                        rank={arcane?.maxRank ?? 0}
+                        rank={equippedArcaneRanks[i] ?? arcane?.maxRank ?? 0}
                         label={`Arcane ${i + 1}`}
-                        onAdd={() => { setActiveArcaneSlot(i); setArcanePickerOpen(true); }}
-                        onRemove={() => setEquippedArcanes((prev) => { const next = [...prev]; next[i] = null; return next; })}
+                        onAdd={() => handleOpenArcanePicker(i)}
+                        onRemove={() => {
+                          setEquippedArcanes((prev) => { const next = [...prev]; next[i] = null; return next; });
+                          setEquippedArcaneRanks((prev) => { const next = [...prev]; next[i] = 5; return next; });
+                        }}
                       />
                     ))}
                   </div>
@@ -1122,22 +1231,11 @@ export default function WarframeBuilderPage() {
                         return (
                           <div key={i} className="relative group">
                             {isHelminthed ? (
-                              <div className="border border-green-500/30 rounded-xl p-3 bg-green-500/5">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs font-bold text-green-400">{helminthAbility.name}</span>
-                                  <button
-                                    onClick={() => { setHelminthSlot(null); setHelminthAbility(null); }}
-                                    className="text-[10px] text-red-400 hover:text-red-300"
-                                  >✕</button>
-                                </div>
-                                <p className="text-[10px] text-muted-foreground leading-relaxed">{helminthAbility.description}</p>
-                                <div className="flex items-center gap-2 mt-1.5">
-                                  <span className="text-[9px] text-green-400/70">⚡ {helminthAbility.energyCost}</span>
-                                  <span className="text-[9px] text-green-400/70">
-                                    {helminthAbility.sourceWarframe ? `from ${helminthAbility.sourceWarframe}` : "Helminth"}
-                                  </span>
-                                </div>
-                              </div>
+                              <HelminthAbilityCard
+                                ability={helminthAbility}
+                                stats={calculatedStats}
+                                onRemove={() => { setHelminthSlot(null); setHelminthAbility(null); }}
+                              />
                             ) : (
                               <AbilityCard ability={ability} index={i} stats={calculatedStats} />
                             )}
@@ -1170,7 +1268,17 @@ export default function WarframeBuilderPage() {
               </div>
 
               <div className="space-y-4">
-                <WarframeStatsPanel stats={calculatedStats} warframe={selectedWarframe} equippedMods={equippedMods} allMods={modsMap} helminthSlot={helminthSlot} helminthAbility={helminthAbility} />
+                <WarframeStatsPanel
+                  stats={calculatedStats}
+                  warframe={selectedWarframe}
+                  equippedMods={equippedMods}
+                  allMods={modsMap}
+                  helminthSlot={helminthSlot}
+                  helminthAbility={helminthAbility}
+                  equippedShards={equippedShards}
+                  equippedArcanes={equippedArcanes}
+                  arcaneRanks={equippedArcaneRanks}
+                />
 
                 {/* Exalted Weapon Section */}
                 {exaltedWeapon && (
@@ -1231,8 +1339,11 @@ export default function WarframeBuilderPage() {
         category="warframe"
         slotType={activeSlotType}
         equippedModIds={equippedModIds}
-        onSelect={handleSelectMod}
+        onSelect={handleSelectFromPicker}
         warframeId={selectedWarframe?.id}
+        arcaneCatalog={warframeArcanes}
+        initialBrowseTab={modPickerBrowseTab}
+        equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}
       />
 
       {/* Archon Shard Picker */}
@@ -1336,23 +1447,6 @@ export default function WarframeBuilderPage() {
           </ScrollArea>
         </DialogContent>
       </Dialog>
-
-      {/* Arcane Picker */}
-      <ArcanePicker
-        open={arcanePickerOpen}
-        onOpenChange={setArcanePickerOpen}
-        arcanes={warframeArcanes}
-        equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}
-        onSelect={(arcane) => {
-          setEquippedArcanes((prev) => {
-            const next = [...prev];
-            next[activeArcaneSlot] = arcane;
-            return next;
-          });
-          setArcanePickerOpen(false);
-        }}
-        title="Select Warframe Arcane"
-      />
 
       {/* Exalted Weapon Mod Picker */}
       {exaltedWeapon && (

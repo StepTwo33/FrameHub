@@ -12236,14 +12236,15 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "parkourVelocity": 12.5,
       "sprintSpeed": 12.5
     },
     "description": "Hysteria Augment: Attack with Valkyr’s Talons to leap onto targeted enemies up to 50m away. Gain +50% Parkour Velocity and +50% Sprint Speed for 5s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "hysterical_fixation",
@@ -12251,11 +12252,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Hysteria Augment: While Hysteria is active, each kill restores 20% Maximum Shields.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "ice_spring",

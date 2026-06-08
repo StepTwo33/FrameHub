@@ -4631,23 +4631,40 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Axios Javelin",
-        "energyCost": 25,
-        "description": "Throw an Axios Javelin. When the javelin impales an enemy against a wall, surrounding enemies are pulled into the area and suffer a burst of damage."
+        "energyCost": 15,
+        "description": "Throw an Axios Javelin. When the javelin impales an enemy against a wall, surrounding enemies are pulled into the area and suffer a burst of damage.",
+        "directDamage": 1250,
+        "aoeDamage": 1250,
+        "range": 50,
+        "radius": 15,
+        "duration": 8,
+        "castTime": 0.5
       },
       {
         "name": "Tharros Strike",
         "energyCost": 25,
-        "description": "Summon Tharros, the shield of Styanax. Swing Tharros to repel enemies and reduce their shields and armor. Styanax regenerates health for every enemy struck."
+        "description": "Summon Tharros, the shield of Styanax. Swing Tharros to repel enemies and reduce their shields and armor. Styanax regenerates health for every enemy struck.",
+        "range": 9,
+        "castTime": 0.75,
+        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%", "healthPerHit": "250" }
       },
       {
         "name": "Rally Point",
-        "energyCost": 25,
-        "description": "Draw enemy attention to Styanax. His resolve uplifts him and nearby allies, regenerating the squad's energy over time. Styanax and his allies also regenerate shields for every ..."
+        "energyCost": 75,
+        "description": "Draw enemy attention to Styanax. His resolve uplifts him and nearby allies, regenerating the squad's energy over time. Styanax and his allies also regenerate shields for every kill assist.",
+        "duration": 30,
+        "radius": 30,
+        "miscStats": { "energyRegen": 3, "shieldsPerKill": 50 }
       },
       {
         "name": "Final Stand",
-        "energyCost": 25,
-        "description": "Exude might and valor. Rise into the air and throw a barrage of Axios Javelins. The javelins deal damage to nearby enemies wherever they land. Direct hits to enemies deal greate..."
+        "energyCost": 100,
+        "description": "Exude might and valor. Rise into the air and throw a barrage of Axios Javelins. The javelins deal damage to nearby enemies wherever they land. Direct hits to enemies deal greater damage.",
+        "directDamage": 1500,
+        "aoeDamage": 1500,
+        "duration": 2.5,
+        "radius": 6,
+        "miscStats": { "javelins": 30, "statusChance": "50%" }
       }
     ]
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams } from "@/lib/types";
+import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams, EquippedArchonShard } from "@/lib/types";
 import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/set-bonuses";
 import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
@@ -8,6 +8,8 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
 import { IncarnonEvolution } from "@/data/incarnon";
 import { formatAbilityDescription } from "@/lib/ability-text";
+import { buildShardBonusLines } from "@/lib/shard-display";
+import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -408,11 +410,33 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
   );
 }
 
-export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility }: {
+export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility, equippedShards, equippedArcanes, arcaneRanks }: {
   stats: WarframeCalculatedStats | null; warframe?: Warframe | null;
   equippedMods?: EquippedMod[]; allMods?: Map<string, Mod>;
   helminthSlot?: number | null; helminthAbility?: HelminthAbility | null;
+  equippedShards?: (EquippedArchonShard | null)[];
+  equippedArcanes?: (Mod | null)[];
+  arcaneRanks?: number[];
 }) {
+  const shardLines = useMemo(
+    () => buildShardBonusLines(equippedShards ?? []),
+    [equippedShards],
+  );
+
+  const arcaneDisplays = useMemo(() => {
+    if (!equippedArcanes || !stats) return [];
+    return equippedArcanes
+      .map((arcane, i) => {
+        if (!arcane) return null;
+        const rank = arcaneRanks?.[i] ?? arcane.maxRank;
+        return getArcaneDisplayInfo(arcane, rank, {
+          totalArmor: stats.totalArmor,
+          persistenceActive: stats.persistenceActive,
+        });
+      })
+      .filter(Boolean);
+  }, [equippedArcanes, arcaneRanks, stats]);
+
   if (!stats) {
     return (
       <div className="border border-border rounded-xl p-4 bg-card">
@@ -510,29 +534,53 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         </CollapsibleSection>
       )}
 
-      {/* Shard Bonuses (only show section if any are active) */}
-      {(stats.castingSpeedBonus > 0 || stats.parkourVelocityBonus > 0 ||
-        stats.primaryShardBonus > 0 || stats.secondaryShardBonus > 0 || stats.meleeCritDamageBonus > 0 ||
-        stats.healingBonus > 0 || stats.statusDurationBonus > 0 || stats.energyCostReduction > 0) && (
+      {/* Shard Bonuses */}
+      {shardLines.length > 0 && (
         <CollapsibleSection title="SHARD BONUSES" defaultOpen>
-          {stats.castingSpeedBonus > 0 && (
-            <StatRow label="Casting Speed" value={`+${stats.castingSpeedBonus.toFixed(0)}%`} color="text-amber-400" />
-          )}
-          {stats.parkourVelocityBonus > 0 && (
-            <StatRow label="Parkour Velocity" value={`+${stats.parkourVelocityBonus.toFixed(0)}%`} color="text-amber-400" />
-          )}
-          {stats.primaryShardBonus > 0 && (
-            <StatRow label="Primary Status Chance" value={`+${stats.primaryShardBonus.toFixed(1)}%`} color="text-red-400" />
-          )}
-          {stats.secondaryShardBonus > 0 && (
-            <StatRow label="Secondary Crit Chance" value={`+${stats.secondaryShardBonus.toFixed(1)}%`} color="text-red-400" />
-          )}
-          {stats.meleeCritDamageBonus > 0 && (
-            <StatRow label="Melee Crit Damage" value={`+${stats.meleeCritDamageBonus.toFixed(1)}%`} color="text-red-400" />
-          )}
-          {stats.statusDurationBonus > 0 && (
-            <StatRow label="Toxin Status Damage" value={`+${stats.statusDurationBonus.toFixed(0)}%`} color="text-emerald-400" />
-          )}
+          {shardLines.map((line, i) => (
+            <div key={i} className="py-0.5">
+              <StatRow
+                label={line.label}
+                value={line.value}
+                color={line.conditional ? "text-muted-foreground" : "text-purple-400"}
+                tooltip={line.conditional ? `${line.shardName} — conditional` : line.shardName}
+              />
+            </div>
+          ))}
+        </CollapsibleSection>
+      )}
+
+      {/* Arcane Bonuses */}
+      {arcaneDisplays.length > 0 && (
+        <CollapsibleSection title="ARCANE BONUSES" defaultOpen>
+          {arcaneDisplays.map((info) => info && (
+            <div key={info.name} className="py-1.5 border-b border-border/30 last:border-0">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-medium text-purple-300">{info.name}</span>
+                <span className="text-[10px] text-muted-foreground font-mono">R{info.rank}/{info.maxRank}</span>
+              </div>
+              {info.applied.map((line, i) => (
+                <StatRow
+                  key={`a-${i}`}
+                  label={line.label}
+                  value={line.value}
+                  color={line.active === false ? "text-muted-foreground" : "text-purple-400"}
+                />
+              ))}
+              {info.conditional.map((line, i) => (
+                <div key={`c-${i}`} className="py-0.5">
+                  <StatRow
+                    label={line.label}
+                    value={line.value}
+                    color={line.active ? "text-green-400" : "text-muted-foreground"}
+                  />
+                  {line.note && (
+                    <p className="text-[9px] text-muted-foreground/80 pl-0.5">{line.note}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
         </CollapsibleSection>
       )}
 
@@ -832,8 +880,19 @@ function HelminthAbilityPreview({ ability, stats }: {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
   const eff = Math.max(0.25, stats.abilityEfficiency);
+  const rng = stats.abilityRange;
 
   const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
+  const miscEntries = ability.miscStats ? Object.entries(ability.miscStats) : [];
+  const desc = formatAbilityDescription(ability.description);
+
+  const scaledMisc = (key: string, v: unknown): string => {
+    if (typeof v !== "number") return fmtAbilityMisc(v);
+    if (key === "slowPercent") return `${Math.min((v * str), Number(ability.miscStats?.slowCap ?? 95)).toFixed(0)}%`;
+    if (key === "lifeStealPercent") return `${(v * str).toFixed(1)}%`;
+    if (key === "minRadius" || key === "maxRadius") return `${(v * rng).toFixed(1)}m`;
+    return fmtAbilityMisc(v);
+  };
 
   return (
     <div className="py-1.5 border-b border-green-500/20 last:border-0">
@@ -844,6 +903,9 @@ function HelminthAbilityPreview({ ability, stats }: {
       <div className="text-[9px] text-green-400/60 mb-0.5">
         {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
       </div>
+      {desc.length > 0 && (
+        <p className="text-[9px] text-muted-foreground/90 mt-1 leading-snug">{desc}</p>
+      )}
       <div className="mt-0.5 space-y-0">
         {ability.damage != null && ability.damage > 0 && (
           <div className="text-[10px] text-muted-foreground">
@@ -867,7 +929,40 @@ function HelminthAbilityPreview({ ability, stats }: {
         )}
         {ability.range != null && ability.range > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            Range: <span className="text-foreground font-mono">{(ability.range * stats.abilityRange).toFixed(1)}m</span>
+            Range: <span className="text-foreground font-mono">{(ability.range * rng).toFixed(1)}m</span>
+          </div>
+        )}
+        {ability.radius != null && ability.radius > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Radius: <span className="text-foreground font-mono">{(ability.radius * rng).toFixed(1)}m</span>
+          </div>
+        )}
+        {ability.castTime != null && ability.castTime > 0 && (
+          <div className="text-[10px] text-muted-foreground">
+            Cast: <span className="text-foreground font-mono">{ability.castTime.toFixed(1)}s</span>
+          </div>
+        )}
+        {miscEntries.length > 0 && (
+          <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
+            {miscEntries.map(([k, v]) => {
+              if (k === "slowCap" || k === "channeled") return null;
+              const label = k === "slowPercent" ? "Slow"
+                : k === "lifeStealPercent" ? "Life Steal"
+                : k === "minRadius" ? "Min Radius"
+                : k === "maxRadius" ? "Max Radius"
+                : k;
+              return (
+                <div key={k} className="text-[9px] text-muted-foreground">
+                  <span className="text-green-400/90">{label}:</span>{" "}
+                  <span className="text-foreground font-mono">{scaledMisc(k, v)}</span>
+                </div>
+              );
+            })}
+            {ability.miscStats?.channeled === true && (
+              <div className="text-[9px] text-muted-foreground">
+                <span className="text-green-400/90">Channeled</span>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -25,6 +25,7 @@ export interface HelminthAbility {
   range?: number;
   radius?: number;
   castTime?: number;
+  miscStats?: Record<string, unknown>;
 }
 
 // ── Helminth Unique Abilities (not from any warframe) ────────────────────
@@ -137,7 +138,7 @@ const subsumedAbilities: HelminthAbility[] = [
   { id: "subsume_revenant", name: "Reave", description: "Dash through enemies as a wave of energy, stealing shields and health.", energyCost: 50, source: "revenant", sourceWarframe: "Revenant", abilitySlot: 3, range: 15 },
   { id: "subsume_rhino", name: "Roar", description: "Buff damage for yourself and nearby allies by +50%.", energyCost: 50, source: "rhino", sourceWarframe: "Rhino", abilitySlot: 3, damageBuff: 0.5, duration: 30, radius: 25 },
   { id: "subsume_saryn", name: "Molt", description: "Shed your skin, leaving a decoy that draws fire and explodes.", energyCost: 50, source: "saryn", sourceWarframe: "Saryn", abilitySlot: 2, duration: 10 },
-  { id: "subsume_sevagoth", name: "Gloom", description: "Slow enemies up to 80% in range and gain life steal on hits. Channeled.", energyCost: 50, source: "sevagoth", sourceWarframe: "Sevagoth", abilitySlot: 3, range: 8 },
+  { id: "subsume_sevagoth", name: "Gloom", description: "Summon a channeled radial aura that slows enemies and grants life steal to you and allies within range.", energyCost: 50, source: "sevagoth", sourceWarframe: "Sevagoth", abilitySlot: 3, radius: 4, range: 16, miscStats: { slowPercent: 35, slowCap: 95, lifeStealPercent: 5, minRadius: 4, maxRadius: 16, channeled: true } },
   { id: "subsume_styanax", name: "Rally Point", description: "Buff nearby allies with energy regeneration and status immunity.", energyCost: 75, source: "styanax", sourceWarframe: "Styanax", abilitySlot: 3, duration: 12, radius: 20 },
   { id: "subsume_titania", name: "Tribute", description: "Extract buffs from enemies: Thorns, Dust, Full Moon, or Entangle.", energyCost: 50, source: "titania", sourceWarframe: "Titania", abilitySlot: 2, duration: 12 },
   { id: "subsume_trinity", name: "Well of Life", description: "Trap an enemy in stasis, converting it into a healing source.", energyCost: 25, source: "trinity", sourceWarframe: "Trinity", abilitySlot: 1, duration: 12 },
