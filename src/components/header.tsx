@@ -116,6 +116,17 @@ export function Header() {
       .catch(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    const refresh = () => {
+      fetch("/api/auth/session")
+        .then((r) => r.json())
+        .then((data) => { if (data.user) setUser(data.user); })
+        .catch(() => {});
+    };
+    window.addEventListener("framehub-profile-updated", refresh);
+    return () => window.removeEventListener("framehub-profile-updated", refresh);
+  }, []);
+
   const isAdmin = user?.role === "admin" || user?.role === "moderator";
 
   return (

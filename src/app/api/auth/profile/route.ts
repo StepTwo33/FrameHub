@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, isValidUsername, normalizeUsername } from "@/lib/auth";
+import { getSession, isValidUsername, normalizeUsername, createSession, SESSION_COOKIE, framehubSessionCookieOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export const dynamic = "force-dynamic";
 
@@ -119,7 +120,22 @@ export async function PATCH(req: NextRequest) {
       select: { id: true, name: true, username: true, email: true, image: true, bio: true, role: true, createdAt: true },
     });
 
-    return NextResponse.json({ user });
+    const response = NextResponse.json({ user });
+
+    // Refresh JWT so header/session reflect name & username immediately
+    const token = await createSession({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email ?? session.user.email,
+      image: user.image,
+      emailVerified: session.user.emailVerified,
+      role: user.role,
+    });
+    const origin = getPublicOrigin(req.headers);
+    response.cookies.set(SESSION_COOKIE, token, framehubSessionCookieOptions(origin));
+
+    return response;
   } catch (e) {
     logServerError("PATCH /api/auth/profile", e);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

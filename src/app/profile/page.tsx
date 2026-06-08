@@ -127,6 +127,10 @@ export default function ProfilePage() {
     setTimeout(() => setSaveMessage(null), 3000);
   }, []);
 
+  const notifyProfileUpdated = useCallback(() => {
+    window.dispatchEvent(new CustomEvent("framehub-profile-updated"));
+  }, []);
+
   const handleSaveUsername = useCallback(async () => {
     if (!user) return;
     setSaving(true);
@@ -142,6 +146,7 @@ export default function ProfilePage() {
         setUsernameInput(data.user.username ?? "");
         setEditingUsername(false);
         showMessage("success", "Username updated");
+        notifyProfileUpdated();
       } else {
         showMessage("error", data.error || "Failed to update username");
       }
@@ -149,7 +154,7 @@ export default function ProfilePage() {
       showMessage("error", "Something went wrong");
     }
     setSaving(false);
-  }, [user, usernameInput, showMessage]);
+  }, [user, usernameInput, showMessage, notifyProfileUpdated]);
 
   const handleSaveName = useCallback(async () => {
     if (!user) return;
@@ -165,6 +170,7 @@ export default function ProfilePage() {
         setUser((prev) => prev ? { ...prev, ...data.user } : prev);
         setEditingName(false);
         showMessage("success", "Name updated");
+        notifyProfileUpdated();
       } else {
         showMessage("error", data.error || "Failed to update name");
       }
@@ -172,7 +178,7 @@ export default function ProfilePage() {
       showMessage("error", "Something went wrong");
     }
     setSaving(false);
-  }, [user, nameInput, showMessage]);
+  }, [user, nameInput, showMessage, notifyProfileUpdated]);
 
   const handleSaveBio = useCallback(async () => {
     if (!user) return;
@@ -336,6 +342,14 @@ export default function ProfilePage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 justify-center sm:justify-start">
                 <h1 className="text-xl sm:text-2xl font-bold truncate">{user.name ?? "Tenno"}</h1>
+                <button
+                  type="button"
+                  onClick={() => { setActiveTab("settings"); setEditingName(true); setNameInput(user.name ?? ""); }}
+                  className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors shrink-0"
+                  title="Edit display name"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
                 {user.role !== "user" && (
                   <span className={cn(
                     "text-[10px] px-1.5 py-0.5 rounded-full font-semibold uppercase",
@@ -350,7 +364,13 @@ export default function ProfilePage() {
                   @{user.username}
                 </Link>
               ) : (
-                <p className="text-xs text-muted-foreground mb-2">Set a username to get a public profile link.</p>
+                <button
+                  type="button"
+                  onClick={() => { setActiveTab("settings"); setEditingUsername(true); setUsernameInput(user.username ?? ""); }}
+                  className="text-xs text-primary hover:underline mb-2 inline-block"
+                >
+                  Set a public username →
+                </button>
               )}
               {user.bio && (
                 <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{user.bio}</p>
@@ -376,6 +396,13 @@ export default function ProfilePage() {
 
           {/* Quick actions */}
           <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
+            <button
+              type="button"
+              onClick={() => setActiveTab("settings")}
+              className="text-xs text-primary hover:underline transition-colors"
+            >
+              Edit profile
+            </button>
             {user.image && (
               <button
                 onClick={handleRemoveAvatar}

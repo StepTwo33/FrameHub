@@ -4774,36 +4774,6 @@ export const allMods: Mod[] = [
     "warframeId": "caliban"
   },
   {
-    "id": "augment_styanax_axios_javelin_aug",
-    "name": "Axios Javelin Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "spearReturn": 100
-    },
-    "description": "Spears return after throw per rank",
-    "rarity": "rare",
-    "warframeId": "styanax"
-  },
-  {
-    "id": "augment_styanax_intrepid_stand",
-    "name": "Intrepid Stand",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "overguardOnHit": 10
-    },
-    "description": "Final Stand hits grant Overguard per rank",
-    "rarity": "rare",
-    "warframeId": "styanax"
-  },
-  {
     "id": "augment_kullervo_wrathful_clarity",
     "name": "Wrathful Clarity",
     "polarity": "madurai",
@@ -11505,14 +11475,18 @@ export const allMods: Mod[] = [
   {
     "id": "axios_javelineers",
     "name": "Axios Javelineers",
-    "polarity": "zenurik",
+    "polarity": "naramon",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
-    "stats": {},
-    "description": "Axios Javelin Augment: A pair of Styanax Specters spawn to throw javelins, creating vortexes on impact. Impale an enemy to increase vortex duration by 5s.",
-    "rarity": "rare"
+    "stats": {
+      "vortexDuration": 5,
+      "vortexBonusOnHit": 5
+    },
+    "description": "Axios Javelin Augment: Spawns specters that throw two extra javelins with guaranteed vortexes. Direct hits add +5s vortex duration (scales with Duration). Base vortex duration 5s at max rank.",
+    "rarity": "rare",
+    "warframeId": "styanax"
   },
   {
     "id": "battering_maneuver",
@@ -12300,14 +12274,19 @@ export const allMods: Mod[] = [
   {
     "id": "intrepid_stand",
     "name": "Intrepid Stand",
-    "polarity": "zenurik",
+    "polarity": "vazarin",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
-    "stats": {},
-    "description": "Final Stand Augment: Each javelin that damages an enemy grants 60 Overguard to Styanax and 30 Overguard to his allies within Affinity Range.",
-    "rarity": "rare"
+    "stats": {
+      "overguardSelf": 60,
+      "overguardAlly": 30,
+      "overguardCap": 15000
+    },
+    "description": "Final Stand Augment: Each javelin that damages an enemy grants 60 Overguard to Styanax and 30 to allies in Affinity Range. Overguard cap 15,000 (scales with Strength).",
+    "rarity": "rare",
+    "warframeId": "styanax"
   },
   {
     "id": "intruder",
@@ -21601,3 +21580,13 @@ export const allMods: Mod[] = [
 ];
 
 export const modsMap = new Map<string, Mod>(allMods.map(m => [m.id, m]));
+
+/** Legacy duplicate augment ids → canonical mod (saved builds). */
+const MOD_ID_ALIASES: Record<string, string> = {
+  augment_styanax_intrepid_stand: "intrepid_stand",
+  augment_styanax_axios_javelin_aug: "axios_javelineers",
+};
+for (const [alias, canonical] of Object.entries(MOD_ID_ALIASES)) {
+  const mod = modsMap.get(canonical);
+  if (mod) modsMap.set(alias, mod);
+}
