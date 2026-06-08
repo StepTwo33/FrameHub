@@ -1,10 +1,11 @@
 {
-  "name": "overframe-web",
+  "name": "framehub",
   "version": "0.1.0",
-  "private": true,
+  "description": "Open-source Warframe build planner (Frame Hub)",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StepTwo33/overframe-web.git"
+    "url": "https://github.com/StepTwo33/FrameHub.git"
   },
   "scripts": {
     "dev": "next dev",

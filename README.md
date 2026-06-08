@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frame Hub
 
-## Getting Started
+Open-source Warframe build planner — warframe, weapon, companion, and modular (kitgun / zaw / amp) builders with mod capacity, set bonuses, archon shards, arcanes, and cloud saves.
 
-First, run the development server:
+**Live site:** [frame-hub.com](https://frame-hub.com)
+
+> **Fan project disclaimer:** Frame Hub is not affiliated with, endorsed by, or sponsored by Digital Extremes. *Warframe* and related logos are trademarks of Digital Extremes Ltd. All game data is used for informational purposes under community fan-site conventions.
+
+## Features
+
+- Warframe, primary/secondary/melee, companion, and modular weapon builders
+- Mod capacity, polarity, set bonuses, Helminth subsume, archon shards, and warframe arcanes
+- Local builds (no account) or cloud saves with email/password or Google sign-in
+- Share builds via URL; loadout grouping across slots
+
+## Tech stack
+
+- [Next.js](https://nextjs.org) 16 (App Router), React 19, TypeScript, Tailwind CSS
+- SQLite via Prisma + `better-sqlite3`
+- Session auth (JWT cookies), optional Google OAuth and Resend email
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Setup
+
+```bash
+git clone https://github.com/StepTwo33/FrameHub.git
+cd FrameHub
+npm install
+cp .env.example .env
+```
+
+Edit `.env`:
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `DATABASE_URL` | Dev | Default `file:./dev.db` |
+| `AUTH_SECRET` | **Production** | Long random string for session signing |
+| `AUTH_URL` | Production | Public origin, e.g. `https://frame-hub.com` |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Optional | Google sign-in |
+| `RESEND_API_KEY` | Optional | Verification / notification email |
+
+Generate a secret:
+
+```bash
+openssl rand -base64 32
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production (self-hosted)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+./start.sh          # build + migrate + start on PORT (default 3000)
+./start.sh --dev    # dev server instead of production build
+```
 
-## Learn More
+`start.sh` loads `.env`, runs `prisma migrate deploy`, and optionally a Cloudflare tunnel (`SKIP_TUNNEL=1` to disable).
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Next.js dev server |
+| `npm run build` | Production build |
+| `npm run db:migrate` | Apply Prisma migrations |
+| `CONFIRM_SET_ADMIN=1 npx tsx scripts/set-admin.ts` | **Local dev only** — promote users to admin |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Never run `set-admin.ts` against a production database you do not fully control.
 
-## Deploy on Vercel
+## Security
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Do **not** commit `.env`, `*.db`, or `public/uploads/` — they are gitignored.
+- Set a strong `AUTH_SECRET` in production (the app refuses to start without one).
+- See [`.env.example`](.env.example) for all supported environment variables.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Issues and pull requests are welcome. Please do not commit secrets, database files, or user uploads.
+
+## License
+
+[MIT](LICENSE)
