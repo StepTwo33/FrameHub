@@ -96,7 +96,7 @@ fi
 # --- Kill anything already on our port ---
 echo "Checking for existing processes on port $PORT..."
 if command -v fuser >/dev/null 2>&1; then
-  fuser -k "$PORT"/tcp 2>/dev/null && sleep 1 || true
+  fuser -k "$PORT"/tcp 2>/dev/null && sleep 2 || true
 else
   echo "(fuser not installed; skip port cleanup — ensure port $PORT is free)"
 fi

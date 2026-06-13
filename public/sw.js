@@ -1,7 +1,7 @@
 /// Frame Hub Service Worker
-/// v2: Do not precache or cache HTML /_next assets — stale shells caused ChunkLoadError after deploys.
+/// v3: icons only — never cache HTML or /_next (avoids stale bundles after deploy)
 
-const CACHE_NAME = "framehub-v2";
+const CACHE_NAME = "framehub-v3";
 
 const PRECACHE_URLS = ["/icons/icon-192x192.png", "/icons/icon-512x512.png"];
 

@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
 import { PWARegister } from "@/components/pwa-register";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
+import { DeployRefreshNotifier } from "@/components/deploy-refresh-notifier";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,6 +57,7 @@ export default function RootLayout({
           <Toaster theme="dark" position="bottom-right" richColors closeButton />
           <PWARegister />
           <PWAInstallPrompt />
+          <DeployRefreshNotifier />
           {children}
           <Footer />
         </TooltipProvider>
