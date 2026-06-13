@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket, Hammer, Landmark, ExternalLink } from "lucide-react";
+import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket, Hammer, Landmark, ExternalLink, Github } from "lucide-react";
 import { Header } from "@/components/header";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 export default function Home() {
   return (
@@ -15,6 +16,22 @@ export default function Home() {
           <p className="text-base sm:text-lg text-muted-foreground">
             Plan and optimize your Warframe builds with real-time stat calculations, mod stacking, and DPS analysis.
           </p>
+          <div className="mt-6 mx-auto max-w-xl rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3 text-left sm:text-center">
+            <p className="text-sm text-foreground/90 leading-relaxed">
+              <span className="font-medium text-emerald-400">Frame Hub is open source.</span>{" "}
+              Contribute, report bugs, or fork the project on GitHub.
+            </p>
+            <a
+              href={FRAME_HUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              <Github className="h-4 w-4" />
+              StepTwo33/FrameHub
+              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
+            </a>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
@@ -228,10 +245,6 @@ export default function Home() {
           </a>
         </div>
       </main>
-
-      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        Frame Hub — Warframe Build Planner. Not affiliated with Digital Extremes.
-      </footer>
     </div>
   );
 }

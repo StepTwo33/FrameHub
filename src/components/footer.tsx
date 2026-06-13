@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 export function Footer() {
   return (
@@ -15,6 +16,14 @@ export function Footer() {
             <span>Fan-made Warframe build planner</span>
           </div>
           <nav className="flex items-center gap-4 text-xs text-muted-foreground">
+            <a
+              href={FRAME_HUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              Open Source
+            </a>
             <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
             <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
             <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>

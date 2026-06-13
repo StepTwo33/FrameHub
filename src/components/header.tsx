@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield } from "lucide-react";
+import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { ThemePicker } from "@/components/theme-picker";
 import { AvatarImage } from "@/components/game-asset-image";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 interface SessionUser {
   id: string;
@@ -164,6 +165,16 @@ export function Header() {
           )}
 
           <a
+            href={FRAME_HUB_GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
+            title="Open source on GitHub"
+          >
+            <Github className="h-4 w-4" />
+          </a>
+
+          <a
             href="https://discord.gg/bqQXaYdTjS"
             target="_blank"
             rel="noopener noreferrer"
@@ -279,6 +290,16 @@ export function Header() {
                 Admin Reports
               </Link>
             )}
+            <a
+              href={FRAME_HUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <Github className="h-4 w-4" />
+              GitHub (open source)
+            </a>
             <a
               href="https://discord.gg/bqQXaYdTjS"
               target="_blank"

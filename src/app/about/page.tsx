@@ -2,7 +2,8 @@
 
 import { Header } from "@/components/header";
 import Link from "next/link";
-import { Swords, Shield, Bug, Wrench, BarChart3, Users, User } from "lucide-react";
+import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github } from "lucide-react";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 export default function AboutPage() {
   return (
@@ -48,6 +49,25 @@ export default function AboutPage() {
                   </div>
                 ))}
               </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Github className="h-5 w-5 text-primary" />
+                Open Source
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                Frame Hub is open source under the MIT license. You can browse the code, file issues, suggest features, or contribute pull requests on GitHub.
+              </p>
+              <a
+                href={FRAME_HUB_GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                <Github className="h-4 w-4" />
+                github.com/StepTwo33/FrameHub
+              </a>
             </section>
 
             <section>
