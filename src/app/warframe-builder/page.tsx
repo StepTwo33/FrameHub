@@ -27,6 +27,13 @@ import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
+import { DualFormTabs } from "@/components/dual-form-tabs";
+import {
+  dualFormStatesFromBuild,
+  getDualFormConfig,
+  serializeDualFormBuilds,
+  type DualFormBuildSlice,
+} from "@/lib/dual-form-warframes";
 
 const shardColors: Record<string, string> = {
   crimson: "#E74C3C",
@@ -494,6 +501,8 @@ export default function WarframeBuilderPage() {
   const [exaltedActiveSlot, setExaltedActiveSlot] = useState(0);
   const [exaltedSlotPolarities, setExaltedSlotPolarities] = useState<Record<number, string>>({});
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
+  const [activeDualFormId, setActiveDualFormId] = useState("sirius");
+  const [dualFormBuilds, setDualFormBuilds] = useState<Record<string, DualFormBuildSlice>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("warframe"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [showImporter, setShowImporter] = useState(false);
@@ -501,16 +510,61 @@ export default function WarframeBuilderPage() {
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
 
+  const dualFormConfig = useMemo(
+    () => (selectedWarframe ? getDualFormConfig(selectedWarframe.id) : null),
+    [selectedWarframe],
+  );
+
+  const modSlotsToEquipped = useCallback((mods: { modId: string; rank: number; slotIndex: number }[]): EquippedMod[] => {
+    return mods.map((m) => {
+      const mod = modsMap.get(m.modId);
+      return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
+    });
+  }, []);
+
+  const currentFormSnapshot = useCallback((): DualFormBuildSlice => ({
+    mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+    slotPolarities: { ...slotPolarities },
+  }), [equippedMods, slotPolarities]);
+
+  const buildWarframePayload = useCallback((): Pick<
+    WarframeBuildData,
+    "mods" | "slotPolarities" | "dualFormBuilds"
+  > => {
+    if (!selectedWarframe) return { mods: [], slotPolarities: {} };
+    if (!dualFormConfig) {
+      return currentFormSnapshot();
+    }
+    const formStates = {
+      ...dualFormBuilds,
+      [activeDualFormId]: currentFormSnapshot(),
+    };
+    return serializeDualFormBuilds(selectedWarframe.id, formStates);
+  }, [selectedWarframe, dualFormConfig, dualFormBuilds, activeDualFormId, currentFormSnapshot]);
+
+  const handleDualFormSwitch = useCallback(
+    (newFormId: string) => {
+      if (!dualFormConfig || newFormId === activeDualFormId) return;
+      const merged = { ...dualFormBuilds, [activeDualFormId]: currentFormSnapshot() };
+      const next = merged[newFormId] ?? { mods: [], slotPolarities: {} };
+      setDualFormBuilds(merged);
+      setActiveDualFormId(newFormId);
+      setEquippedMods(modSlotsToEquipped(next.mods));
+      setSlotPolarities(next.slotPolarities);
+    },
+    [dualFormConfig, activeDualFormId, dualFormBuilds, currentFormSnapshot, modSlotsToEquipped],
+  );
+
   const handleSaveBuild = useCallback(async () => {
     if (!selectedWarframe) return;
+    const modPayload = buildWarframePayload();
     const data: WarframeBuildData = {
       warframeId: selectedWarframe.id,
-      mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      ...modPayload,
       shards: equippedShards,
       arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
       hasOrokinReactor: hasOrokinReactor,
       isMR30,
-      slotPolarities,
       helminthSlot,
       helminthAbilityId: helminthAbility?.id ?? null,
       exaltedMods: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
@@ -536,22 +590,35 @@ export default function WarframeBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, slotPolarities, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
+  }, [selectedWarframe, buildWarframePayload, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WarframeBuildData;
     const wf = allWarframes.find((w) => w.id === d.warframeId);
     if (!wf) { toast.error("Warframe not found"); return; }
+    const config = getDualFormConfig(d.warframeId);
+    if (config) {
+      const states = dualFormStatesFromBuild(d)!;
+      const nonDefault: Record<string, DualFormBuildSlice> = {};
+      for (const form of config.forms) {
+        if (form.id !== config.defaultFormId) nonDefault[form.id] = states[form.id];
+      }
+      setDualFormBuilds(nonDefault);
+      setActiveDualFormId(config.defaultFormId);
+      setEquippedMods(modSlotsToEquipped(states[config.defaultFormId].mods));
+      setSlotPolarities(states[config.defaultFormId].slotPolarities);
+    } else {
+      setDualFormBuilds({});
+      setActiveDualFormId("sirius");
+      setEquippedMods(modSlotsToEquipped(d.mods));
+      setSlotPolarities(d.slotPolarities || {});
+    }
     setSelectedWarframe(wf);
-    setEquippedMods(d.mods.map((m) => {
-      const mod = modsMap.get(m.modId);
-      return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
-    }));
     setEquippedShards(d.shards || [null, null, null, null, null]);
     setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
     setHasOrokinReactor(d.hasOrokinReactor);
     setIsMR30(d.isMR30);
-    setSlotPolarities(d.slotPolarities || {});
+    if (!config) setSlotPolarities(d.slotPolarities || {});
     setExaltedMods((d.exaltedMods || []).map((m) => {
       const mod = modsMap.get(m.modId);
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
@@ -572,7 +639,7 @@ export default function WarframeBuilderPage() {
     setShowSavedBuilds(false);
     setShowWarframeList(false);
     toast.info("Build loaded", { description: build.name });
-  }, []);
+  }, [modSlotsToEquipped]);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
@@ -770,6 +837,9 @@ export default function WarframeBuilderPage() {
     setHelminthSlot(null);
     setHelminthAbility(null);
     setSlotPolarities({});
+    const config = getDualFormConfig(warframe.id);
+    setActiveDualFormId(config?.defaultFormId ?? "sirius");
+    setDualFormBuilds({});
     // New frame from the picker = new draft; keep old id/name or cloud upsert overwrites the wrong row title
     setCurrentBuildId(null);
     setBuildName(`${warframe.name} Build`);
@@ -862,14 +932,14 @@ export default function WarframeBuilderPage() {
 
     try {
       // First try to save the build publicly to the server
+      const modPayload = buildWarframePayload();
       const data: WarframeBuildData = {
         warframeId: selectedWarframe.id,
-        mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        ...modPayload,
         shards: equippedShards,
         arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
         hasOrokinReactor,
         isMR30,
-        slotPolarities,
         helminthSlot,
         helminthAbilityId: helminthAbility?.id ?? null,
         exaltedMods: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
@@ -914,7 +984,7 @@ export default function WarframeBuilderPage() {
       setTimeout(() => setShareCopied(false), 2000);
       toast.success("Share link copied!", { description: "Link copied to clipboard" });
     });
-  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, slotPolarities, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
+  }, [selectedWarframe, buildWarframePayload, equippedMods, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, buildName, buildDescription, currentBuildId]);
 
   const equippedModIds = equippedMods.map((m) => m.modId);
 
@@ -1058,9 +1128,22 @@ export default function WarframeBuilderPage() {
               <div className="space-y-6">
                 {/* Mod Configuration */}
                 <div>
+                  {dualFormConfig && (
+                    <div className="mb-4 space-y-2">
+                      <DualFormTabs
+                        forms={dualFormConfig.forms}
+                        activeFormId={activeDualFormId}
+                        onChange={handleDualFormSwitch}
+                      />
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        Sirius and Orion share one warframe slot — arcanes, shards, and helminth apply to both.
+                        Mod configs are saved separately per form; weapons and companion stay on your loadout.
+                      </p>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">
-                      MOD CONFIGURATION
+                      MOD CONFIGURATION{dualFormConfig ? ` — ${dualFormConfig.forms.find((f) => f.id === activeDualFormId)?.label ?? ""}` : ""}
                     </h2>
                     <div className="flex items-center gap-2">
                       <span className={cn(

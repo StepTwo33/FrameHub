@@ -4,6 +4,8 @@ import { warframesMap } from "@/data/warframes";
 import { weaponsMap, allWeapons as allWeaponsData } from "@/data/weapons";
 import { companionsMap } from "@/data/companions";
 import { incarnonDataMap } from "@/data/incarnon";
+import type { WarframeBuildData } from "@/lib/build-storage";
+import { allDualFormMods, getDualFormConfig } from "@/lib/dual-form-warframes";
 import { resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import { weaponFromModularData } from "@/lib/modular-resolve";
@@ -66,8 +68,15 @@ export interface LoadoutWeaponSlotStats {
   isMelee: boolean;
 }
 
+export interface LoadoutWarframeStats {
+  name: string;
+  stats: WarframeCalculatedStats;
+  /** Per-form stats when the warframe has separate mod setups (e.g. Sirius & Orion). */
+  forms?: { id: string; label: string; stats: WarframeCalculatedStats }[];
+}
+
 export interface LoadoutStatsResult {
-  warframe: { name: string; stats: WarframeCalculatedStats } | null;
+  warframe: LoadoutWarframeStats | null;
   primary: LoadoutWeaponSlotStats | null;
   secondary: LoadoutWeaponSlotStats | null;
   melee: LoadoutWeaponSlotStats | null;
@@ -94,8 +103,11 @@ function weaponWithPassive(w: Weapon): Weapon {
 
 export function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
   const m = loadout.modularBuild;
+  const wfMods = loadout.warframeBuild
+    ? allDualFormMods(loadout.warframeBuild as WarframeBuildData)
+    : undefined;
   return {
-    warframeMods: loadout.warframeBuild?.mods,
+    warframeMods: wfMods,
     primaryMods: loadout.primaryBuild?.mods ?? (m?.slot === "primary" ? m.mods : undefined),
     secondaryMods: loadout.secondaryBuild?.mods ?? (m?.slot === "secondary" ? m.mods : undefined),
     meleeMods: loadout.meleeBuild?.mods ?? (m?.slot === "melee" ? m.mods : undefined),
@@ -284,8 +296,28 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   if (loadout.warframeBuild) {
     const wf = warframesMap.get(loadout.warframeBuild.warframeId);
     if (wf) {
-      const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap, setLinkage);
-      result.warframe = { name: wf.name, stats };
+      const dualConfig = getDualFormConfig(loadout.warframeBuild.warframeId);
+      if (dualConfig) {
+        const formStats = dualConfig.forms.map((form) => {
+          const mods =
+            form.id === dualConfig.defaultFormId
+              ? loadout.warframeBuild!.mods || []
+              : loadout.warframeBuild!.dualFormBuilds?.[form.id]?.mods || [];
+          return {
+            id: form.id,
+            label: form.label,
+            stats: calculateWarframeBuild(wf, mods, modsMap, setLinkage),
+          };
+        });
+        result.warframe = {
+          name: wf.name,
+          stats: formStats.find((f) => f.id === dualConfig.defaultFormId)!.stats,
+          forms: formStats,
+        };
+      } else {
+        const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap, setLinkage);
+        result.warframe = { name: wf.name, stats };
+      }
 
       const exaltedWeapon = weaponList.find(
         (w) => w.isExalted && w.warframeId === loadout.warframeBuild!.warframeId,

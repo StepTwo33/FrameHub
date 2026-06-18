@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
-import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
+import { dualFormModCountSummary, emptyDualFormBuilds, isDualFormWarframe } from "@/lib/dual-form-warframes";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
 
@@ -115,8 +115,19 @@ function getSlotLabelName(loadout: Loadout, slot: SlotType): string | null {
 
 function getSlotModCount(loadout: Loadout, slot: SlotType): number {
   switch (slot) {
-    case "warframe":
-      return loadout.warframeBuild?.mods?.length ?? 0;
+    case "warframe": {
+      const wb = loadout.warframeBuild;
+      if (!wb) return 0;
+      if (isDualFormWarframe(wb.warframeId)) {
+        const primary = wb.mods?.length ?? 0;
+        const secondary = Object.values(wb.dualFormBuilds ?? {}).reduce(
+          (sum, s) => sum + (s.mods?.length ?? 0),
+          0,
+        );
+        return primary + secondary;
+      }
+      return wb.mods?.length ?? 0;
+    }
     case "companion":
       return (loadout.companionBuild?.mods?.length ?? 0) + (loadout.companionBuild?.weaponMods?.length ?? 0);
     case "primary":
@@ -136,6 +147,14 @@ function getSlotModCount(loadout: Loadout, slot: SlotType): number {
       return build?.mods?.length ?? 0;
     }
   }
+}
+
+function getSlotModLabel(loadout: Loadout, slot: SlotType): string {
+  if (slot === "warframe" && loadout.warframeBuild && isDualFormWarframe(loadout.warframeBuild.warframeId)) {
+    return dualFormModCountSummary(loadout.warframeBuild as WarframeBuildData);
+  }
+  const count = getSlotModCount(loadout, slot);
+  return `${count} mod${count === 1 ? "" : "s"} filled`;
 }
 
 function getSlotImage(slot: SlotType, name: string): string {
@@ -198,6 +217,7 @@ function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warf
     slotPolarities: d.slotPolarities ?? {},
     exaltedMods: d.exaltedMods ?? [],
     exaltedSlotPolarities: d.exaltedSlotPolarities ?? {},
+    dualFormBuilds: d.dualFormBuilds,
   };
 }
 
@@ -311,6 +331,7 @@ export default function LoadoutsPage() {
             slotPolarities: {},
             exaltedMods: [],
             exaltedSlotPolarities: {},
+            dualFormBuilds: emptyDualFormBuilds(itemId),
           };
           break;
         case "primary":
@@ -660,7 +681,6 @@ export default function LoadoutsPage() {
                     {(["warframe", "primary", "secondary", "melee", "companion"] as SlotType[]).map((slot) => {
                       const cfg = SLOT_CONFIG[slot];
                       const itemName = getSlotLabelName(loadout, slot);
-                      const modCount = getSlotModCount(loadout, slot);
                       const ws = pickerSlotToWeaponSlot(slot);
                       const isModularSlot = ws && getWeaponSlotPayload(loadout, ws)?.kind === "modular";
                       const cardStyle = SLOT_CARD_STYLES[slot];
@@ -707,7 +727,7 @@ export default function LoadoutsPage() {
                               </span>
                               <span className="text-sm font-semibold truncate block leading-tight">{itemName}</span>
                               <span className="text-[11px] text-muted-foreground mt-0.5">
-                                {modCount} mod{modCount === 1 ? "" : "s"} filled
+                                {getSlotModLabel(loadout, slot)}
                                 {isModularSlot ? " • Modular" : ""}
                               </span>
                             </div>

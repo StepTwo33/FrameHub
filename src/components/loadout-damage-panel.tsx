@@ -193,12 +193,28 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
               <Shield className="h-3.5 w-3.5 text-purple-400" />
               <span className="text-xs font-medium">{stats.warframe.name}</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
-              <MiniStat label="EHP" value={fmtDamageNum(stats.warframe.stats.effectiveHealth)} />
-              <MiniStat label="Strength" value={`${(stats.warframe.stats.abilityStrength * 100).toFixed(0)}%`} />
-              <MiniStat label="Duration" value={`${(stats.warframe.stats.abilityDuration * 100).toFixed(0)}%`} />
-              <MiniStat label="Efficiency" value={`${(stats.warframe.stats.abilityEfficiency * 100).toFixed(0)}%`} />
-            </div>
+            {stats.warframe.forms ? (
+              <div className="space-y-2">
+                {stats.warframe.forms.map((form) => (
+                  <div key={form.id} className="rounded-md border border-purple-500/15 bg-background/30 px-2 py-1.5">
+                    <p className="text-[10px] font-semibold text-purple-300/90 mb-1">{form.label}</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
+                      <MiniStat label="EHP" value={fmtDamageNum(form.stats.effectiveHealth)} />
+                      <MiniStat label="Strength" value={`${(form.stats.abilityStrength * 100).toFixed(0)}%`} />
+                      <MiniStat label="Duration" value={`${(form.stats.abilityDuration * 100).toFixed(0)}%`} />
+                      <MiniStat label="Efficiency" value={`${(form.stats.abilityEfficiency * 100).toFixed(0)}%`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
+                <MiniStat label="EHP" value={fmtDamageNum(stats.warframe.stats.effectiveHealth)} />
+                <MiniStat label="Strength" value={`${(stats.warframe.stats.abilityStrength * 100).toFixed(0)}%`} />
+                <MiniStat label="Duration" value={`${(stats.warframe.stats.abilityDuration * 100).toFixed(0)}%`} />
+                <MiniStat label="Efficiency" value={`${(stats.warframe.stats.abilityEfficiency * 100).toFixed(0)}%`} />
+              </div>
+            )}
           </div>
         )}
 

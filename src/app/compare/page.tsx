@@ -327,6 +327,46 @@ function SlotSection({ slot, a, b }: {
     const wA = a.warframe;
     const wB = b.warframe;
     if (!wA && !wB) return null;
+
+    const renderWarframeCompare = (
+      labelA: string,
+      statsA: typeof wA extends null ? never : NonNullable<typeof wA>["stats"] | undefined,
+      labelB: string,
+      statsB: typeof wB extends null ? never : NonNullable<typeof wB>["stats"] | undefined,
+      subtitle?: string,
+    ) => (
+      <>
+        {subtitle && <p className="text-[10px] text-muted-foreground mb-2 font-medium">{subtitle}</p>}
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
+          <div className="flex items-center gap-2 justify-end">
+            {statsA && <GameAssetImage src={getWarframeImage(labelA)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
+            <span className="text-xs font-medium">{labelA || "–"}</span>
+          </div>
+          <span className="text-[10px] text-muted-foreground">vs</span>
+          <div className="flex items-center gap-2">
+            {statsB && <GameAssetImage src={getWarframeImage(labelB)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
+            <span className="text-xs font-medium">{labelB || "–"}</span>
+          </div>
+        </div>
+        <CompareRow label="Health" a={statsA?.totalHealth ?? null} b={statsB?.totalHealth ?? null} />
+        <CompareRow label="Shield" a={statsA?.totalShield ?? null} b={statsB?.totalShield ?? null} />
+        <CompareRow label="Armor" a={statsA?.totalArmor ?? null} b={statsB?.totalArmor ?? null} />
+        <CompareRow label="Energy" a={statsA?.totalEnergy ?? null} b={statsB?.totalEnergy ?? null} />
+        <CompareRow label="Sprint" a={statsA?.totalSprint ?? null} b={statsB?.totalSprint ?? null} format={(v) => v.toFixed(2)} />
+        <CompareRow label="EHP" a={statsA?.effectiveHealth ?? null} b={statsB?.effectiveHealth ?? null} />
+        <CompareRow label="DR %" a={statsA?.damageReduction ?? null} b={statsB?.damageReduction ?? null} format={(v) => `${v.toFixed(1)}%`} />
+        <CompareRow label="Strength" a={statsA ? statsA.abilityStrength * 100 : null} b={statsB ? statsB.abilityStrength * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
+        <CompareRow label="Duration" a={statsA ? statsA.abilityDuration * 100 : null} b={statsB ? statsB.abilityDuration * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
+        <CompareRow label="Efficiency" a={statsA ? statsA.abilityEfficiency * 100 : null} b={statsB ? statsB.abilityEfficiency * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
+        <CompareRow label="Range" a={statsA ? statsA.abilityRange * 100 : null} b={statsB ? statsB.abilityRange * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
+      </>
+    );
+
+    const formIds = new Set([
+      ...(wA?.forms?.map((f) => f.id) ?? []),
+      ...(wB?.forms?.map((f) => f.id) ?? []),
+    ]);
+
     return (
       <div className="border border-border rounded-xl bg-card overflow-hidden">
         <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
@@ -335,29 +375,24 @@ function SlotSection({ slot, a, b }: {
           {meta.label}
         </button>
         {open && (
-          <div className="px-4 pb-4">
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
-              <div className="flex items-center gap-2 justify-end">
-                {wA && <GameAssetImage src={getWarframeImage(wA.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
-                <span className="text-xs font-medium">{wA?.name || "–"}</span>
-              </div>
-              <span className="text-[10px] text-muted-foreground">vs</span>
-              <div className="flex items-center gap-2">
-                {wB && <GameAssetImage src={getWarframeImage(wB.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
-                <span className="text-xs font-medium">{wB?.name || "–"}</span>
-              </div>
-            </div>
-            <CompareRow label="Health" a={wA?.stats.totalHealth ?? null} b={wB?.stats.totalHealth ?? null} />
-            <CompareRow label="Shield" a={wA?.stats.totalShield ?? null} b={wB?.stats.totalShield ?? null} />
-            <CompareRow label="Armor" a={wA?.stats.totalArmor ?? null} b={wB?.stats.totalArmor ?? null} />
-            <CompareRow label="Energy" a={wA?.stats.totalEnergy ?? null} b={wB?.stats.totalEnergy ?? null} />
-            <CompareRow label="Sprint" a={wA?.stats.totalSprint ?? null} b={wB?.stats.totalSprint ?? null} format={(v) => v.toFixed(2)} />
-            <CompareRow label="EHP" a={wA?.stats.effectiveHealth ?? null} b={wB?.stats.effectiveHealth ?? null} />
-            <CompareRow label="DR %" a={wA?.stats.damageReduction ?? null} b={wB?.stats.damageReduction ?? null} format={(v) => `${v.toFixed(1)}%`} />
-            <CompareRow label="Strength" a={wA ? wA.stats.abilityStrength * 100 : null} b={wB ? wB.stats.abilityStrength * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
-            <CompareRow label="Duration" a={wA ? wA.stats.abilityDuration * 100 : null} b={wB ? wB.stats.abilityDuration * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
-            <CompareRow label="Efficiency" a={wA ? wA.stats.abilityEfficiency * 100 : null} b={wB ? wB.stats.abilityEfficiency * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
-            <CompareRow label="Range" a={wA ? wA.stats.abilityRange * 100 : null} b={wB ? wB.stats.abilityRange * 100 : null} format={(v) => `${v.toFixed(0)}%`} />
+          <div className="px-4 pb-4 space-y-4">
+            {formIds.size > 0
+              ? Array.from(formIds).map((formId) => {
+                  const fA = wA?.forms?.find((f) => f.id === formId);
+                  const fB = wB?.forms?.find((f) => f.id === formId);
+                  return (
+                    <div key={formId}>
+                      {renderWarframeCompare(
+                        fA ? `${wA!.name} (${fA.label})` : wA?.name ?? "–",
+                        fA?.stats ?? wA?.stats,
+                        fB ? `${wB!.name} (${fB.label})` : wB?.name ?? "–",
+                        fB?.stats ?? wB?.stats,
+                        fA?.label ?? fB?.label,
+                      )}
+                    </div>
+                  );
+                })
+              : renderWarframeCompare(wA?.name ?? "–", wA?.stats, wB?.name ?? "–", wB?.stats)}
           </div>
         )}
       </div>

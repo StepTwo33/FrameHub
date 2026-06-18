@@ -379,6 +379,8 @@ export interface Loadout {
     helminthAbilityId?: string | null;
     exaltedMods?: ModSlot[];
     exaltedSlotPolarities?: Record<number, string>;
+    /** Non-default form mod configs for dual-form warframes (e.g. Orion on Sirius & Orion). */
+    dualFormBuilds?: Record<string, { mods: ModSlot[]; slotPolarities?: Record<number, string> }>;
   };
   primaryBuild?: {
     weaponId: string;
