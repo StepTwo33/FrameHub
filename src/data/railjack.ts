@@ -57,8 +57,8 @@ export const engines: RailjackComponent[] = [
   { id: "sigma_engine_mk1", name: "Sigma Engines Mk I", type: "engine", tier: "sigma", stats: { speed: 20, boostSpeed: 40, boostCostReduction: 0 }, description: "Basic Sigma engines" },
   { id: "sigma_engine_mk2", name: "Sigma Engines Mk II", type: "engine", tier: "sigma", stats: { speed: 40, boostSpeed: 80, boostCostReduction: 5 }, description: "Improved Sigma engines" },
   { id: "sigma_engine_mk3", name: "Sigma Engines Mk III", type: "engine", tier: "sigma", stats: { speed: 60, boostSpeed: 120, boostCostReduction: 10 }, description: "Advanced Sigma engines" },
-  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 80, boostSpeed: 100, boostCostReduction: 15 }, description: "High cruise speed Lavan engines" },
-  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 60, boostSpeed: 160, boostCostReduction: 5 }, description: "High boost speed Vidar engines" },
+  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 80, boostSpeed: 100, boostCostReduction: 15 }, description: "High cruise speed Lavan engines. Unique: +50% top speed while shields depleted; Slingshot grants 1200 Overshields." },
+  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 60, boostSpeed: 160, boostCostReduction: 5 }, description: "High boost speed Vidar engines. Unique: +100% boost speed while shields depleted; Intruder Stasis strips 50% armor." },
   { id: "zetki_engine_mk3", name: "Zetki Engines Mk III", type: "engine", tier: "zetki", stats: { speed: 70, boostSpeed: 140, boostCostReduction: 10 }, description: "Balanced Zetki engines" },
 ];
 
@@ -91,6 +91,14 @@ export const turrets: RailjackArmament[] = [
   { id: "sigma_talyn", name: "Sigma Talyn", type: "turret", house: "sigma", damage: 180, critChance: 0.15, critMultiplier: 1.8, statusChance: 0.15, fireRate: 5, description: "Balanced burst turret" },
   { id: "vidar_talyn", name: "Vidar Talyn", type: "turret", house: "vidar", damage: 250, critChance: 0.18, critMultiplier: 2.0, statusChance: 0.18, fireRate: 5, description: "Enhanced Vidar burst turret" },
   { id: "zetki_talyn", name: "Zetki Talyn", type: "turret", house: "zetki", damage: 310, critChance: 0.22, critMultiplier: 2.2, statusChance: 0.12, fireRate: 5, description: "High-damage Zetki burst turret" },
+  { id: "sigma_laith", name: "Sigma Laith", type: "turret", house: "sigma", damage: 2832, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.09, fireRate: 2.5, description: "8-pellet shrapnel burst turret (Impact/Puncture/Slash)" },
+  { id: "lavan_laith", name: "Lavan Laith", type: "turret", house: "lavan", damage: 3120, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.126, fireRate: 2.5, description: "Status-focused Lavan shrapnel burst turret" },
+  { id: "vidar_laith", name: "Vidar Laith", type: "turret", house: "vidar", damage: 2832, critChance: 0.39, critMultiplier: 2.0, statusChance: 0.09, fireRate: 2.5, description: "High-crit Vidar shrapnel burst turret" },
+  { id: "zetki_laith", name: "Zetki Laith", type: "turret", house: "zetki", damage: 3680, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.135, fireRate: 2.5, description: "High-damage Zetki shrapnel burst turret (8 pellets)" },
+  { id: "sigma_vort", name: "Sigma Vort", type: "turret", house: "sigma", damage: 1224, critChance: 0.20, critMultiplier: 2.0, statusChance: 0.17, fireRate: 5, description: "Electricity line turret with high burst DPS" },
+  { id: "lavan_vort", name: "Lavan Vort", type: "turret", house: "lavan", damage: 1310, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.28, fireRate: 5, description: "Status-focused Lavan electricity turret" },
+  { id: "vidar_vort", name: "Vidar Vort", type: "turret", house: "vidar", damage: 1224, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.20, fireRate: 5, description: "High-crit Vidar electricity turret" },
+  { id: "zetki_vort", name: "Zetki Vort", type: "turret", house: "zetki", damage: 1592, critChance: 0.26, critMultiplier: 2.0, statusChance: 0.10, fireRate: 5, description: "High-damage Zetki electricity turret" },
 ];
 
 // ── Ordnance ───────────────────────────────────────────────────────
@@ -104,6 +112,112 @@ export const ordnance: RailjackArmament[] = [
   { id: "sigma_galvarc", name: "Sigma Galvarc", type: "ordnance", house: "sigma", damage: 4000, critChance: 0.25, critMultiplier: 2.5, statusChance: 0.05, fireRate: 0.3, description: "Chain lightning ordnance" },
   { id: "vidar_galvarc", name: "Vidar Galvarc", type: "ordnance", house: "vidar", damage: 5500, critChance: 0.30, critMultiplier: 2.8, statusChance: 0.06, fireRate: 0.3, description: "Enhanced Vidar chain lightning" },
   { id: "zetki_galvarc", name: "Zetki Galvarc", type: "ordnance", house: "zetki", damage: 6500, critChance: 0.35, critMultiplier: 3.0, statusChance: 0.04, fireRate: 0.3, description: "High-damage Zetki chain lightning" },
+];
+
+export function findRailjackComponent(id: string): RailjackComponent | undefined {
+  return [...reactors, ...shieldArrays, ...engines, ...plating].find((c) => c.id === id);
+}
+
+export function findRailjackArmament(id: string): RailjackArmament | undefined {
+  return [...turrets, ...ordnance].find((a) => a.id === id);
+}
+
+// ── Update 43: Uranus Proxima & reference loadouts ─────────────────
+
+export interface RailjackMission {
+  id: string;
+  name: string;
+  proxima: string;
+  description: string;
+  ally: string;
+  rewards: string[];
+  steelPath: boolean;
+}
+
+export interface RailjackPreset {
+  id: string;
+  name: string;
+  owner: string;
+  missionId: string;
+  reactorId: string;
+  shieldId: string;
+  engineId: string;
+  platingId: string;
+  turretIds: string[];
+  ordnanceId: string;
+  integratedMods: string[];
+  tacticalMods: string[];
+  battleMods: string[];
+}
+
+export interface RailjackEliteCrew {
+  id: string;
+  name: string;
+  description: string;
+  competency: { piloting: number; gunnery: number; repair: number; combat: number; endurance: number };
+  vendorCost: "crimson" | "emerald" | "both";
+  requiresCommandRank: number;
+}
+
+export const uranusProximaMissions: RailjackMission[] = [
+  {
+    id: "scorias_angel",
+    name: "Scoria's Angel",
+    proxima: "Uranus",
+    description: "Skirmish against Ryoku aboard Vena's Railjack The Marrowbone, then board his capital ship.",
+    ally: "Vena",
+    rewards: ["Crimson Talent", "Wrath blueprints", "Railjack components", "New Arcanes"],
+    steelPath: true,
+  },
+  {
+    id: "the_kuva_wytch",
+    name: "The Kuva Wytch",
+    proxima: "Uranus",
+    description: "Skirmish against Vena aboard Ryoku's Railjack Santovan's Oath, then board her capital ship.",
+    ally: "Ryoku",
+    rewards: ["Emerald Talent", "Pride blueprints", "Railjack components", "New Arcanes"],
+    steelPath: true,
+  },
+];
+
+export const railjackPresets: RailjackPreset[] = [
+  {
+    id: "the_marrowbone",
+    name: "The Marrowbone",
+    owner: "Vena",
+    missionId: "scorias_angel",
+    reactorId: "lavan_reactor_mk3",
+    shieldId: "zetki_shield_mk3",
+    engineId: "vidar_engine_mk3",
+    platingId: "lavan_plating_mk3",
+    turretIds: ["zetki_laith", "zetki_pulsar"],
+    ordnanceId: "zetki_tycho_seeker",
+    integratedMods: ["Ironclad Matrix", "Conic Nozzle", "Crimson Fugue", "Forward Artillery", "Predator", "Cruising Speed", "Hyperstrike", "Ion Burn", "Waveband Disruptor"],
+    tacticalMods: ["Squad Renew", "Battle Stations", "Flow Burn"],
+    battleMods: ["Munitions Vortex", "Particle Ram", "Phoenix Blaze"],
+  },
+  {
+    id: "santovans_oath",
+    name: "Santovan's Oath",
+    owner: "Ryoku",
+    missionId: "the_kuva_wytch",
+    reactorId: "vidar_reactor_mk3",
+    shieldId: "lavan_shield_mk3",
+    engineId: "vidar_engine_mk3",
+    platingId: "lavan_plating_mk3",
+    turretIds: ["zetki_vort", "zetki_photor"],
+    ordnanceId: "zetki_tycho_seeker",
+    integratedMods: ["Onslaught Matrix", "Ion Burn", "Fortifying Fire", "Conic Nozzle", "Forward Artillery", "Predator", "Protective Shots", "Section Density", "Cruising Speed"],
+    tacticalMods: ["Intruder Stasis", "Death Blossom", "Void Cloak"],
+    battleMods: ["Blackout Pulse", "Tether", "Void Hole"],
+  },
+];
+
+export const railjackEliteCrew: RailjackEliteCrew[] = [
+  { id: "vena", name: "Vena", description: "Garuda Protoframe — queen of gore.", competency: { piloting: 0, gunnery: 2, repair: 0, combat: 5, endurance: 5 }, vendorCost: "both", requiresCommandRank: 10 },
+  { id: "ryoku", name: "Ryoku", description: "Ash Protoframe — Scoria's deadliest assassin.", competency: { piloting: 0, gunnery: 2, repair: 2, combat: 5, endurance: 3 }, vendorCost: "both", requiresCommandRank: 10 },
+  { id: "latrox_une", name: "Latrox Une", description: "Corpus researcher and Deimos ally.", competency: { piloting: 0, gunnery: 0, repair: 5, combat: 3, endurance: 4 }, vendorCost: "both", requiresCommandRank: 10 },
+  { id: "jarka_lar", name: "Jarka Lar", description: "Freed from the Grineer Queens.", competency: { piloting: 0, gunnery: 2, repair: 0, combat: 5, endurance: 5 }, vendorCost: "both", requiresCommandRank: 10 },
 ];
 
 // Helper to identify Railjack-relevant mods from the "general" category

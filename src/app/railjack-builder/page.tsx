@@ -10,6 +10,8 @@ import {
   turrets, ordnance,
   railjackBaseStats, isRailjackMod,
   RailjackComponent, RailjackArmament,
+  railjackPresets, uranusProximaMissions,
+  findRailjackComponent, findRailjackArmament,
 } from "@/data/railjack";
 import { EquippedMod } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -216,6 +218,19 @@ export default function RailjackBuilderPage() {
     setBuildName("");
   }, []);
 
+  const applyRailjackPreset = useCallback((presetId: string) => {
+    const preset = railjackPresets.find((p) => p.id === presetId);
+    if (!preset) return;
+    beginNewRailjackDraft();
+    setSelectedReactor(findRailjackComponent(preset.reactorId) ?? null);
+    setSelectedShield(findRailjackComponent(preset.shieldId) ?? null);
+    setSelectedEngine(findRailjackComponent(preset.engineId) ?? null);
+    setSelectedPlating(findRailjackComponent(preset.platingId) ?? null);
+    setSelectedTurret(findRailjackArmament(preset.turretIds[0]) ?? null);
+    setSelectedOrdnance(findRailjackArmament(preset.ordnanceId) ?? null);
+    setBuildName(preset.name);
+  }, [beginNewRailjackDraft]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
@@ -239,7 +254,36 @@ export default function RailjackBuilderPage() {
             </button>
           </div>
         </div>
-        <p className="text-muted-foreground mb-6">Configure your Railjack components, armaments, and Plexus mods</p>
+        <p className="text-muted-foreground mb-4">Configure your Railjack components, armaments, and Plexus mods</p>
+
+        <div className="mb-6 border border-rose-500/20 rounded-xl p-4 bg-rose-500/5">
+          <h2 className="text-xs font-semibold tracking-wider text-rose-300 mb-2">URANUS PROXIMA (UPDATE 43)</h2>
+          <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+            Jade Shadows: Constellations adds Pontis Tower, Steel Path Railjack, four new Arcanes, and two story missions with reference ship loadouts.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-2 mb-3">
+            {uranusProximaMissions.map((m) => (
+              <div key={m.id} className="text-xs border border-border/50 rounded-lg p-2.5 bg-card/50">
+                <div className="font-medium">{m.name}</div>
+                <div className="text-muted-foreground mt-0.5">Ally: {m.ally} • {m.rewards[0]}</div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {railjackPresets.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => applyRailjackPreset(p.id)}
+                className="px-3 py-1.5 text-xs rounded-lg border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 transition-colors"
+              >
+                Load {p.name} ({p.owner})
+              </button>
+            ))}
+          </div>
+          <p className="text-[10px] text-muted-foreground/80 mt-2">
+            Presets apply components and primary turret/ordnance. Plexus mod lists are stored as reference only.
+          </p>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* ── Left Column: Ship Components & Stats ── */}
