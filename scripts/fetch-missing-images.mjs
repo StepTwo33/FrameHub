@@ -17,6 +17,14 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+/** Match FrameHub local paths: spaces → "_", roman numerals uppercase (avoids Ruhang_Ii vs Ruhang_II on Windows). */
+function imageStem(name) {
+  return name
+    .replace(/ /g, "_")
+    .replace(/_Ii(?=_|$)/g, "_II")
+    .replace(/_Iii(?=_|$)/g, "_III");
+}
+
 function extractNames(file, onlyFirst = false) {
   const data = readFileSync(join(ROOT, file), "utf8");
   if (onlyFirst) {
@@ -35,8 +43,10 @@ function extractNames(file, onlyFirst = false) {
 function getMissing(names, category) {
   const dir = join(ROOT, "public/images", category);
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  const existing = new Set(readdirSync(dir).map((f) => f.replace(".png", "")));
-  return names.filter((n) => !existing.has(n.replace(/ /g, "_")));
+  const existingNormalized = new Set(
+    readdirSync(dir).map((f) => imageStem(f.replace(/\.png$/i, ""))),
+  );
+  return names.filter((n) => !existingNormalized.has(imageStem(n)));
 }
 
 async function queryWikiImageUrl(fileTitle) {
@@ -121,7 +131,7 @@ async function fetchCategory(missingNames, category, patternsFn) {
     for (const pattern of patterns) {
       const url = await queryWikiImageUrl(pattern);
       if (url) {
-        const dest = join(dir, name.replace(/ /g, "_") + ".png");
+        const dest = join(dir, imageStem(name) + ".png");
         const ok = await downloadImage(url, dest);
         if (ok) {
           console.log(`  ✓ ${name} (via ${pattern})`);
