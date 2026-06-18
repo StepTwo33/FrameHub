@@ -144,8 +144,10 @@ function getSlotImage(slot: SlotType, name: string): string {
       return getWarframeImage(name);
     case "primary":
     case "secondary":
-    case "melee":
-      return getWeaponImage(name);
+    case "melee": {
+      const w = [...weaponsMap.values()].find((x) => x.name === name);
+      return getWeaponImage(name, w ? { category: w.category } : undefined);
+    }
     case "companion":
       return getCompanionImage(name);
   }

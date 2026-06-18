@@ -481,7 +481,7 @@ export default function WeaponBuilderPage() {
                     className="w-full text-left p-3 rounded-lg border border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <GameAssetImage src={getWeaponImage(weapon.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
+                      <GameAssetImage src={getWeaponImage(weapon.name, { category: weapon.category })} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-sm">
@@ -518,7 +518,7 @@ export default function WeaponBuilderPage() {
                 >
                   ← Change
                 </button>
-                <GameAssetImage src={getWeaponImage(selectedWeapon.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
+                <GameAssetImage src={getWeaponImage(selectedWeapon.name, { category: selectedWeapon.category })} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
                 <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWeapon.name}</h1>
                 <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">
                   {selectedWeapon.category} • {selectedWeapon.triggerType}

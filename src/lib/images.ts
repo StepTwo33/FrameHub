@@ -1,7 +1,8 @@
 // Image path utilities for item thumbnails.
 //
-// Default: icons are resolved via /api/wiki-game-image → wiki.warframe.com/images (no huge /public tree).
-// Disable with NEXT_PUBLIC_USE_WIKI_GAME_IMAGES=false to use /public/images/{category}/ only.
+// Default: icons are resolved via /api/wiki-game-image → local /public/images when present,
+// otherwise wiki.warframe.com/images (no huge /public tree required).
+// Disable wiki proxy with NEXT_PUBLIC_USE_WIKI_GAME_IMAGES=false to use /public/images/{category}/ only.
 //
 // When using local files, names map to Name_With_Underscores.png (spaces → "_"), with optional stem maps below.
 
@@ -14,12 +15,15 @@ const WEAPON_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Afentis Prime": "Afentis",
   "Athodai Prime": "Athodai",
   "Sarofang Prime": "Sarofang",
+  "Ax-52": "Ax-52",
+  "Efv-5 Jupiter": "Efv-5_Jupiter",
+  "Efv-8 Mars": "Efv-8_Mars",
 };
 
 const WARFRAME_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Voruna Prime": "Voruna",
   "Styanax Prime": "Styanax",
-  "Sirius & Orion": "Sirius",
+  "Sirius & Orion": "Sirius_Orion",
 };
 
 export type GameImageCategory = "weapons" | "warframes" | "mods" | "arcanes" | "companions";
@@ -32,6 +36,51 @@ export const WIKI_IMAGE_FALLBACK_URL = `${WIKI_IMAGE_ROOT}/Logo.png`;
 /** When not "false", mod/weapon/etc. thumbnails go through /api/wiki-game-image (wiki CDN). */
 export const USE_WIKI_GAME_IMAGES = process.env.NEXT_PUBLIC_USE_WIKI_GAME_IMAGES !== "false";
 
+/** Shared icon for companion beast claw weapons. */
+export const BEAST_CLAW_IMAGE_PATH = "/images/weapons/Beast_Claws.png";
+
+/** Explicit local PNG overrides (always preferred over wiki). */
+const LOCAL_IMAGE_OVERRIDES: Partial<Record<GameImageCategory, Record<string, string>>> = {
+  warframes: {
+    "Sirius & Orion": "/images/warframes/Sirius_Orion.png",
+  },
+  weapons: {
+    Wrath: "/images/weapons/Wrath.png",
+    Pride: "/images/weapons/Pride.png",
+    Enkaus: "/images/weapons/Enkaus.png",
+  },
+};
+
+/**
+ * Exact wiki.warframe.com filenames to try before generic underscore/compact candidates.
+ * Prevents wrong matches (e.g. Boar.png before Boar_Prime.png, Machete_Wraith render vs icon).
+ */
+const WIKI_PREFERRED_IMAGE_FILES: Partial<Record<GameImageCategory, Record<string, string[]>>> = {
+  weapons: {
+    "Ax-52": ["AX-52.png"],
+    "Boar Prime": ["Boar_Prime.png", "BoarPrime.png"],
+    "Mk1-Braton": ["MK1-Braton.png"],
+    "Mk1-Paris": ["MK1-Paris.png"],
+    "Mk1-Strun": ["MK1-Strun.png"],
+    "Mk1-Furis": ["MK1-Furis.png"],
+    "Mk1-Kunai": ["MK1-Kunai.png"],
+    "Mk1-Bo": ["MK1-Bo.png"],
+    "Mk1-Furax": ["MK1-Furax.png"],
+    "Efv-5 Jupiter": ["EFV-5Jupiter.png"],
+    "Efv-8 Mars": ["EFV-8Mars.png"],
+    "Machete Wraith": ["MacheteWraith.png", "Machete_Wraith.png"],
+    "Dex Furis": ["Dex_Furis.png", "DexFuris.png"],
+    "Dual Ether": ["DualEther.png", "Dual_Ether.png"],
+    "Strun Wraith": ["Strun_Wraith.png", "StrunWraith.png"],
+    "Snipetron Vandal": ["Snipetron_Vandal.png", "SnipetronVandal.png"],
+    "Rubico Prime": ["Rubico_Prime.png", "RubicoPrime.png"],
+    "Pangolin Prime": ["Pangolin_Prime.png", "PangolinPrime.png"],
+    "Sancti Tigris": ["Sancti_Tigris.png", "SanctiTigris.png"],
+    "Dark Split-Sword": ["Dark_Split-Sword.png", "DarkSplitSword.png"],
+    "Exalted Blade": ["Exalted_Blade.png", "ExaltedBlade.png"],
+  },
+};
+
 /** Last-resort wiki icons per category (better than Logo.png when item art is not uploaded yet). */
 const WIKI_CATEGORY_FALLBACK_FILE: Partial<Record<GameImageCategory, string>> = {
   arcanes: "Arcane.png",
@@ -43,10 +92,11 @@ const WIKI_CATEGORY_FALLBACK_FILE: Partial<Record<GameImageCategory, string>> = 
  */
 const WIKI_RELATED_IMAGE_FILES: Partial<Record<GameImageCategory, Record<string, string[]>>> = {
   weapons: {
-    // Orion's scythe — same mesh as Pride, inverted; wiki icon not uploaded yet (U43).
-    Wrath: ["Pride.png"],
     "Athodai Prime": ["AthodaiPrime.png"],
     "Afentis Prime": ["AfentisPrime.png"],
+    "Desert Wind Prime": ["DesertWind.png"],
+    "Exalted Blade (Umbra)": ["ExaltedBladeR.png"],
+    "Exalted Blade (Prime)": ["ExaltedBladeR.png"],
   },
   arcanes: {
     "Arcane Sculptor": ["ArcaneSculptor.png"],
@@ -65,7 +115,7 @@ function wikiPng(filename: string): string {
 }
 
 function compactWikiName(name: string): string {
-  return name.replace(/\s+/g, "").replace(/&/g, "And");
+  return name.replace(/\s+/g, "").replace(/&/g, "And").replace(/-/g, "");
 }
 
 function resolvedDisplayName(name: string, category: GameImageCategory): string {
@@ -82,7 +132,7 @@ function pushUnique(urls: string[], ...candidates: string[]): void {
 
 /**
  * Candidate wiki.warframe.com image.png URLs (first working wins in /api/wiki-game-image).
- * Tries display-name variants before stem maps, then category-specific patterns and related fallbacks.
+ * Preferred filenames first, then display-name variants, stem maps, and related fallbacks.
  */
 export function buildWikiImageCandidates(displayName: string, category: GameImageCategory): string[] {
   const resolved = resolvedDisplayName(displayName, category);
@@ -91,6 +141,11 @@ export function buildWikiImageCandidates(displayName: string, category: GameImag
   const underscored = resolved.replace(/\s+/g, "_");
   const compact = resolved.replace(/\s+/g, "");
   const urls: string[] = [];
+
+  const preferred = WIKI_PREFERRED_IMAGE_FILES[category]?.[displayName];
+  if (preferred) {
+    pushUnique(urls, ...preferred.map(wikiPng));
+  }
 
   // Full display name before stem remaps (Prime thumbs, Update 43 weapons, etc.)
   if (displayName !== resolved) {
@@ -140,7 +195,7 @@ export function buildWikiImageCandidates(displayName: string, category: GameImag
   return urls;
 }
 
-function pngStemForCategory(name: string, category: GameImageCategory): string {
+export function pngStemForCategory(name: string, category: GameImageCategory): string {
   return resolvedDisplayName(name, category).replace(/ /g, "_");
 }
 
@@ -149,26 +204,53 @@ export function getImagePath(name: string, category: GameImageCategory): string 
   return `/images/${category}/${filename}`;
 }
 
-function wikiProxyUrl(category: GameImageCategory, displayName: string): string {
-  return `/api/wiki-game-image?k=${category}&n=${encodeURIComponent(displayName)}`;
+export function getLocalImageOverride(category: GameImageCategory, name: string): string | undefined {
+  return LOCAL_IMAGE_OVERRIDES[category]?.[name];
 }
 
-export function getWeaponImage(name: string): string {
-  return USE_WIKI_GAME_IMAGES ? wikiProxyUrl("weapons", name) : getImagePath(name, "weapons");
+export interface WeaponImageOptions {
+  category?: string;
+}
+
+function wikiProxyUrl(category: GameImageCategory, displayName: string, weaponCategory?: string): string {
+  const params = new URLSearchParams({ k: category, n: displayName });
+  if (weaponCategory) params.set("c", weaponCategory);
+  return `/api/wiki-game-image?${params.toString()}`;
+}
+
+function resolveLocalGameImage(category: GameImageCategory, name: string, weaponCategory?: string): string | undefined {
+  if (weaponCategory === "beast_claw") return BEAST_CLAW_IMAGE_PATH;
+  const override = getLocalImageOverride(category, name);
+  if (override) return override;
+  return getImagePath(name, category);
+}
+
+export function getWeaponImage(name: string, options?: WeaponImageOptions): string {
+  const local = resolveLocalGameImage("weapons", name, options?.category);
+  if (!USE_WIKI_GAME_IMAGES) return local ?? getImagePath(name, "weapons");
+  if (local && LOCAL_IMAGE_OVERRIDES.weapons?.[name]) return local;
+  if (options?.category === "beast_claw") return BEAST_CLAW_IMAGE_PATH;
+  return wikiProxyUrl("weapons", name, options?.category);
 }
 
 export function getWarframeImage(name: string): string {
-  return USE_WIKI_GAME_IMAGES ? wikiProxyUrl("warframes", name) : getImagePath(name, "warframes");
+  const override = getLocalImageOverride("warframes", name);
+  if (override) return override;
+  if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "warframes");
+  return wikiProxyUrl("warframes", name);
 }
 
 export function getModImage(name: string): string {
-  return USE_WIKI_GAME_IMAGES ? wikiProxyUrl("mods", name) : getImagePath(name, "mods");
+  if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "mods");
+  return wikiProxyUrl("mods", name);
 }
 
 export function getArcaneImage(name: string): string {
-  return USE_WIKI_GAME_IMAGES ? wikiProxyUrl("arcanes", name) : getImagePath(name, "arcanes");
+  if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "arcanes");
+  return wikiProxyUrl("arcanes", name);
 }
 
 export function getCompanionImage(name: string): string {
-  return USE_WIKI_GAME_IMAGES ? wikiProxyUrl("companions", name) : getImagePath(name, "companions");
+  if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "companions");
+  return wikiProxyUrl("companions", name);
 }
