@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
+import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
 import { dualFormModCountSummary, emptyDualFormBuilds, isDualFormWarframe } from "@/lib/dual-form-warframes";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
