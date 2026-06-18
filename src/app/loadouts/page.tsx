@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
+import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
 
@@ -737,6 +738,8 @@ export default function LoadoutsPage() {
                       );
                     })}
                   </div>
+
+                  <LoadoutDamagePanel loadout={loadout} />
                 </div>
               ))}
             </div>

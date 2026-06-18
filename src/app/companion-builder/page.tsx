@@ -49,61 +49,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
   }
 }
 
-// Map companion names to their specific claw weapon IDs
-// Source: https://wiki.warframe.com/w/Module:Companions/data
-const COMPANION_CLAW_MAP: Record<string, string> = {
-  // Kubrows
-  "Chesa Kubrow": "chesa_claws",
-  "Huras Kubrow": "huras_claws",
-  "Raksa Kubrow": "raksa_claws",
-  "Sahasa Kubrow": "sahasa_claws",
-  "Sunika Kubrow": "sunika_claws",
-  "Helminth Charger": "helminth_claws",
-  // Kavats
-  "Adarza Kavat": "adarza_claws",
-  "Smeeta Kavat": "smeeta_claws",
-  "Vasca Kavat": "vasca_claws",
-  "Venari": "venari_claws",
-  "Venari Prime": "venari_prime_claws",
-  // Predasites
-  "Vizier Predasite": "vizier_claws",
-  "Pharaoh Predasite": "pharaoh_claws",
-  "Medjay Predasite": "medjay_claws",
-  // Vulpaphylas
-  "Sly Vulpaphyla": "sly_claws",
-  "Crescent Vulpaphyla": "crescent_claws",
-  "Panzer Vulpaphyla": "panzer_claws",
-};
-
-function getCompanionWeapons(companion: Companion, weaponList: Weapon[]): Weapon[] {
-  const type = companion.type;
-  if (type === "sentinel") {
-    return weaponList.filter((w) => w.category === "sentinel_weapon");
-  }
-  // Beast companions: show their specific claws first, then all claws of same type
-  if (type === "kubrow" || type === "predasite" || type === "kavat" || type === "vulpaphyla") {
-    const specificClawId = COMPANION_CLAW_MAP[companion.name];
-    const allClaws = weaponList.filter((w) => w.category === "beast_claw");
-    if (specificClawId) {
-      // Put specific claw first, then others of the same companion type
-      const specific = allClaws.filter((w) => w.id === specificClawId);
-      const others = allClaws.filter((w) => w.id !== specificClawId && w.companionType === type);
-      return [...specific, ...others];
-    }
-    return allClaws.filter((w) => w.companionType === type || w.companionType === "kubrow");
-  }
-  if (type === "moa") {
-    return weaponList.filter((w) =>
-      w.category === "sentinel_weapon" &&
-      !w.name.toLowerCase().includes("deconstructor")
-    );
-  }
-  if (type === "hound") {
-    return weaponList.filter((w) => w.category === "hound_weapon" || w.companionType === "hound");
-  }
-  return [];
-}
-
+import { getCompanionWeapons } from "@/lib/companion-weapons";
 function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: Record<string, number> | null) {
   let dmgMult = 1;
   let critChance = weapon.criticalChance;

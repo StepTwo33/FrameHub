@@ -391,6 +391,7 @@ export interface Loadout {
     /** Kuva/Tenet/Coda — same as saved weapon build. */
     progenitorElement?: string;
     progenitorBonusPercent?: number;
+    incarnonEvolutions?: Record<number, number>;
   };
   secondaryBuild?: {
     weaponId: string;
@@ -402,6 +403,7 @@ export interface Loadout {
     slotPolarities?: Record<number, string>;
     progenitorElement?: string;
     progenitorBonusPercent?: number;
+    incarnonEvolutions?: Record<number, number>;
   };
   meleeBuild?: {
     weaponId: string;
@@ -413,6 +415,7 @@ export interface Loadout {
     slotPolarities?: Record<number, string>;
     progenitorElement?: string;
     progenitorBonusPercent?: number;
+    incarnonEvolutions?: Record<number, number>;
   };
   companionBuild?: {
     companionId: string;

@@ -5,26 +5,21 @@ import { Header } from "@/components/header";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { useWeapons } from "@/lib/use-data";
 import { allMods, modsMap } from "@/data/mods";
-import { calculateWeaponBuild, calculateWeaponBuildWithArcanes, calculateWarframeBuild } from "@/lib/calculator";
-import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout, ModSlot, SetBonusLinkage, WarframeCalculatedStats, WeaponCalculationOptions } from "@/lib/types";
-import { weaponFromModularData } from "@/lib/modular-resolve";
-import { resolveSavedArcaneSlots } from "@/lib/build-storage";
-import { WEAPON_PASSIVES } from "@/data/weapon-passives";
+import { calculateWeaponBuild } from "@/lib/calculator";
+import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker, type SlotType as ModPickerSlotType } from "@/components/mod-picker";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Search, ArrowLeftRight, ChevronDown, ChevronRight, X,
-  Shield, Swords, Crosshair, Dog, Trophy,
+  Shield, Swords, Crosshair, Dog, Trophy, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { warframesMap } from "@/data/warframes";
-import { weaponsMap } from "@/data/weapons";
-import { companionsMap } from "@/data/companions";
 import { getLoadouts } from "@/lib/loadouts";
+import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
 
 /* ─── Shared helpers ─── */
 
@@ -298,110 +293,26 @@ function BuildCompareTab() {
 
 /* ─── Loadout vs Loadout tab ─── */
 
-type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
+type SlotType = "warframe" | "primary" | "secondary" | "melee" | "exalted" | "companion";
 
 const SLOT_META: Record<SlotType, { label: string; icon: React.ReactNode; color: string }> = {
   warframe:  { label: "Warframe",  icon: <Shield className="h-4 w-4" />,    color: "text-purple-400" },
   primary:   { label: "Primary",   icon: <Crosshair className="h-4 w-4" />, color: "text-blue-400" },
   secondary: { label: "Secondary", icon: <Crosshair className="h-4 w-4" />, color: "text-cyan-400" },
   melee:     { label: "Melee",     icon: <Swords className="h-4 w-4" />,    color: "text-orange-400" },
+  exalted:   { label: "Exalted",   icon: <Sparkles className="h-4 w-4" />,  color: "text-violet-400" },
   companion: { label: "Companion", icon: <Dog className="h-4 w-4" />,       color: "text-green-400" },
 };
 
-interface LoadoutStats {
-  warframe: { name: string; stats: WarframeCalculatedStats } | null;
-  primary: { name: string; stats: CalculatedStats } | null;
-  secondary: { name: string; stats: CalculatedStats } | null;
-  melee: { name: string; stats: CalculatedStats } | null;
-  companion: { name: string; hp: number; shield: number; armor: number } | null;
-}
-
-function weaponWithPassive(w: Weapon): Weapon {
-  if (w.passive) return w;
-  const p = WEAPON_PASSIVES[w.id];
-  return p ? { ...w, passive: p } : w;
-}
-
-/** Mods from other slots so Augur / Hunter / Synth / Tek / Vigilante / Mecha sets count across the full loadout. */
-function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
-  const m = loadout.modularBuild;
-  return {
-    warframeMods: loadout.warframeBuild?.mods,
-    primaryMods: loadout.primaryBuild?.mods ?? (m?.slot === "primary" ? m.mods : undefined),
-    secondaryMods: loadout.secondaryBuild?.mods ?? (m?.slot === "secondary" ? m.mods : undefined),
-    meleeMods: loadout.meleeBuild?.mods ?? (m?.slot === "melee" ? m.mods : undefined),
-    companionMods: loadout.companionBuild?.mods,
-  };
-}
-
-function calcLoadoutStats(loadout: Loadout): LoadoutStats {
-  const result: LoadoutStats = { warframe: null, primary: null, secondary: null, melee: null, companion: null };
-
-  const setLinkage = setBonusLinkageFromLoadout(loadout);
-
-  if (loadout.warframeBuild) {
-    const wf = warframesMap.get(loadout.warframeBuild.warframeId);
-    if (wf) {
-      const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap, setLinkage);
-      result.warframe = { name: wf.name, stats };
-    }
-  }
-
-  const calcWeapon = (
-    build:
-      | ({
-          weaponId: string;
-          mods: ModSlot[];
-          progenitorElement?: string;
-          progenitorBonusPercent?: number;
-        })
-      | undefined,
-  ) => {
-    if (!build) return null;
-    const w = weaponsMap.get(build.weaponId);
-    if (!w) return null;
-    const base = weaponWithPassive(w);
-    const calcOptions: WeaponCalculationOptions | undefined =
-      build.progenitorElement &&
-      build.progenitorBonusPercent != null &&
-      build.progenitorBonusPercent > 0
-        ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
-        : undefined;
-    const stats = calculateWeaponBuild(base, build.mods || [], modsMap, undefined, undefined, calcOptions, setLinkage);
-    return { name: base.name, stats };
-  };
-
-  const calcModularSlot = (slot: "primary" | "secondary" | "melee") => {
-    if (loadout.modularBuild?.slot !== slot) return null;
-    const data = loadout.modularBuild;
-    let w = weaponFromModularData(data);
-    if (!w) return null;
-    w = weaponWithPassive(w);
-    const modSlots = data.mods || [];
-    const arcaneMods = resolveSavedArcaneSlots(data.arcaneIds, 2).filter((m): m is Mod => m != null);
-    const stats =
-      arcaneMods.length > 0
-        ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods, undefined, undefined, undefined, setLinkage)
-        : calculateWeaponBuild(w, modSlots, modsMap, undefined, undefined, undefined, setLinkage);
-    return { name: w.name, stats };
-  };
-
-  result.primary = calcModularSlot("primary") ?? calcWeapon(loadout.primaryBuild);
-  result.secondary = calcModularSlot("secondary") ?? calcWeapon(loadout.secondaryBuild);
-  result.melee = calcModularSlot("melee") ?? calcWeapon(loadout.meleeBuild);
-
-  if (loadout.companionBuild) {
-    const c = companionsMap.get(loadout.companionBuild.companionId);
-    if (c) result.companion = { name: c.name, hp: c.health, shield: c.shield, armor: c.armor };
-  }
-
-  return result;
+function sustainedDps(entry: LoadoutStatsResult["primary"]): number {
+  if (!entry) return 0;
+  return entry.ttk?.sustainedDps ?? entry.stats.sustainedDps;
 }
 
 function SlotSection({ slot, a, b }: {
   slot: SlotType;
-  a: LoadoutStats;
-  b: LoadoutStats;
+  a: LoadoutStatsResult;
+  b: LoadoutStatsResult;
 }) {
   const [open, setOpen] = useState(true);
   const meta = SLOT_META[slot];
@@ -471,9 +382,11 @@ function SlotSection({ slot, a, b }: {
                 <span className="text-xs font-medium">{cB?.name || "–"}</span>
               </div>
             </div>
-            <CompareRow label="Health" a={cA?.hp ?? null} b={cB?.hp ?? null} />
-            <CompareRow label="Shield" a={cA?.shield ?? null} b={cB?.shield ?? null} />
-            <CompareRow label="Armor" a={cA?.armor ?? null} b={cB?.armor ?? null} />
+            <CompareRow label="Health" a={cA?.bodyStats.totalHealth ?? null} b={cB?.bodyStats.totalHealth ?? null} />
+            <CompareRow label="Shield" a={cA?.bodyStats.totalShield ?? null} b={cB?.bodyStats.totalShield ?? null} />
+            <CompareRow label="Armor" a={cA?.bodyStats.totalArmor ?? null} b={cB?.bodyStats.totalArmor ?? null} />
+            <CompareRow label="EHP" a={cA?.bodyStats.effectiveHealth ?? null} b={cB?.bodyStats.effectiveHealth ?? null} />
+            <CompareRow label="Weapon DPS" a={cA?.weapon ? sustainedDps(cA.weapon) : null} b={cB?.weapon ? sustainedDps(cB.weapon) : null} />
           </div>
         )}
       </div>
@@ -525,6 +438,7 @@ function SlotSection({ slot, a, b }: {
 }
 
 function LoadoutCompareTab() {
+  const allWeapons = useWeapons();
   const [loadouts, setLoadouts] = useState<Loadout[]>([]);
   const [selA, setSelA] = useState<string | null>(null);
   const [selB, setSelB] = useState<string | null>(null);
@@ -536,13 +450,23 @@ function LoadoutCompareTab() {
   const loadoutA = useMemo(() => loadouts.find((l) => l.id === selA) ?? null, [loadouts, selA]);
   const loadoutB = useMemo(() => loadouts.find((l) => l.id === selB) ?? null, [loadouts, selB]);
 
-  const statsA = useMemo(() => loadoutA ? calcLoadoutStats(loadoutA) : null, [loadoutA]);
-  const statsB = useMemo(() => loadoutB ? calcLoadoutStats(loadoutB) : null, [loadoutB]);
+  const simParams = useMemo(() => scenarioSimParams("midFight"), []);
+
+  const statsA = useMemo(
+    () => (loadoutA ? calcLoadoutStats(loadoutA, { simParams, allWeapons }) : null),
+    [loadoutA, simParams, allWeapons],
+  );
+  const statsB = useMemo(
+    () => (loadoutB ? calcLoadoutStats(loadoutB, { simParams, allWeapons }) : null),
+    [loadoutB, simParams, allWeapons],
+  );
 
   const aggregate = useMemo(() => {
     if (!statsA || !statsB) return null;
-    const totalDpsA = (statsA.primary?.stats.sustainedDps ?? 0) + (statsA.secondary?.stats.sustainedDps ?? 0) + (statsA.melee?.stats.sustainedDps ?? 0);
-    const totalDpsB = (statsB.primary?.stats.sustainedDps ?? 0) + (statsB.secondary?.stats.sustainedDps ?? 0) + (statsB.melee?.stats.sustainedDps ?? 0);
+    const sumDps = (s: LoadoutStatsResult) =>
+      sustainedDps(s.primary) + sustainedDps(s.secondary) + sustainedDps(s.melee) + sustainedDps(s.exalted);
+    const totalDpsA = sumDps(statsA);
+    const totalDpsB = sumDps(statsB);
     const ehpA = statsA.warframe?.stats.effectiveHealth ?? 0;
     const ehpB = statsB.warframe?.stats.effectiveHealth ?? 0;
     return { totalDpsA, totalDpsB, ehpA, ehpB };
@@ -598,7 +522,7 @@ function LoadoutCompareTab() {
           <h2 className="text-xs font-semibold tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Trophy className="h-3.5 w-3.5 text-primary" /> AGGREGATE
           </h2>
-          <CompareRow label="Total Sustained DPS" a={aggregate.totalDpsA} b={aggregate.totalDpsB} />
+          <CompareRow label="Total Sustained DPS" a={aggregate.totalDpsA} b={aggregate.totalDpsB} format={(v) => fmtDamageNum(v)} />
           <CompareRow label="Warframe EHP" a={aggregate.ehpA} b={aggregate.ehpB} />
         </div>
       )}
@@ -606,7 +530,7 @@ function LoadoutCompareTab() {
       {/* Per-Slot Comparisons */}
       {statsA && statsB && (
         <div className="space-y-4">
-          {(["warframe", "primary", "secondary", "melee", "companion"] as SlotType[]).map((slot) => (
+          {(["warframe", "primary", "secondary", "melee", "exalted", "companion"] as SlotType[]).map((slot) => (
             <SlotSection key={slot} slot={slot} a={statsA} b={statsB} />
           ))}
         </div>

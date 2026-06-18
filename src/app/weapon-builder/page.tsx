@@ -145,6 +145,7 @@ export default function WeaponBuilderPage() {
             progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
           }
         : {}),
+      ...(Object.keys(selectedEvolutions).length > 0 ? { incarnonEvolutions: selectedEvolutions } : {}),
     };
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
@@ -166,7 +167,7 @@ export default function WeaponBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions]);
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions, selectedEvolutions]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WeaponBuildData;
@@ -197,6 +198,7 @@ export default function WeaponBuilderPage() {
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
+    setSelectedEvolutions(d.incarnonEvolutions ?? {});
     setShowSavedBuilds(false);
     setShowWeaponList(false);
     toast.info("Build loaded", { description: build.name });
@@ -225,6 +227,7 @@ export default function WeaponBuilderPage() {
             progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
           }
         : {}),
+      ...(Object.keys(selectedEvolutions).length > 0 ? { incarnonEvolutions: selectedEvolutions } : {}),
     };
 
     try {

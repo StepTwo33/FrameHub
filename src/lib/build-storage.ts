@@ -115,6 +115,8 @@ export interface WeaponBuildData {
   /** Kuva/Tenet/Coda progenitor bonus (optional). */
   progenitorElement?: string;
   progenitorBonusPercent?: number;
+  /** Incarnon evolution picks: tier → slot index. */
+  incarnonEvolutions?: Record<number, number>;
 }
 
 // Warframe build data
