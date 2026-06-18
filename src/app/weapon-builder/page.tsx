@@ -300,7 +300,7 @@ export default function WeaponBuilderPage() {
 
   // Get Incarnon evolution data for selected weapon
   const incarnonData = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;
-  const isIncarnon = selectedWeapon?.isIncarnon || false;
+  const isIncarnon = !!(incarnonData || selectedWeapon?.isIncarnon);
 
   // Merge selected incarnon evolution stat changes
   const incarnonStatChanges = useMemo<Record<string, number> | undefined>(() => {
@@ -483,7 +483,7 @@ export default function WeaponBuilderPage() {
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-sm">
                             {weapon.name}
-                            {weapon.isIncarnon && <Flame className="inline h-3 w-3 text-orange-400 ml-1" />}
+                            {incarnonDataMap.has(weapon.id) && <Flame className="inline h-3 w-3 text-orange-400 ml-1" />}
                           </span>
                           <span className="text-xs text-muted-foreground">{categoryLabels[weapon.category] || weapon.category}</span>
                         </div>

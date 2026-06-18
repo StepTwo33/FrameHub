@@ -2,7 +2,7 @@
 // INCARNON EVOLUTION DATA
 // ==========================================================================
 // Converted from lib/data/incarnon_data_complete.dart
-// 48 Incarnon weapons with full evolution data
+// 53 Incarnon weapons with full evolution data
 // ==========================================================================
 
 export interface IncarnonEvolution {
@@ -90,6 +90,9 @@ export const INCARNON_WEAPON_IDS = new Set([
   "anku_incarnon",
   "atomos",
   "atomos_incarnon",
+  "ballistica",
+  "ballistica_incarnon",
+  "ballistica_prime",
   "bo",
   "bo_incarnon",
   "bo_prime",
@@ -118,6 +121,9 @@ export const INCARNON_WEAPON_IDS = new Set([
   "dera_vandal",
   "despair",
   "despair_incarnon",
+  "destreza",
+  "destreza_incarnon",
+  "destreza_prime",
   "dex_sybaris",
   "dread",
   "dread_incarnon",
@@ -166,6 +172,8 @@ export const INCARNON_WEAPON_IDS = new Set([
   "mk1_strun",
   "nami_solo",
   "nami_solo_incarnon",
+  "obex",
+  "obex_incarnon",
   "okina",
   "okina_incarnon",
   "okina_prime",
@@ -177,7 +185,9 @@ export const INCARNON_WEAPON_IDS = new Set([
   "praedos",
   "prisma_angstrum",
   "prisma_gorgon",
+  "prisma_obex",
   "prisma_skana",
+  "rakta_ballistica",
   "ruvox",
   "sancti_magistar",
   "sibear",
@@ -195,6 +205,8 @@ export const INCARNON_WEAPON_IDS = new Set([
   "strun_incarnon",
   "strun_prime",
   "strun_wraith",
+  "stug",
+  "stug_incarnon",
   "sybaris",
   "sybaris_incarnon",
   "sybaris_prime",
@@ -206,6 +218,9 @@ export const INCARNON_WEAPON_IDS = new Set([
   "vasto",
   "vasto_incarnon",
   "vasto_prime",
+  "vectis",
+  "vectis_incarnon",
+  "vectis_prime",
   "zylok",
   "zylok_incarnon",
   "zylok_prime",
@@ -1316,6 +1331,121 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
     ],
   },
+  // Vectis Incarnon (genesis_primary) — Update 43
+  {
+    weaponId: "vectis_incarnon",
+    weaponName: "Vectis Incarnon",
+    challenge: "Land 10 headshots in a single mission",
+    category: "genesis_primary",
+    variants: ["vectis", "vectis_prime"],
+    forms: [
+      { name: "Vectis", damage: 225.0, fireRate: 1.5, criticalChance: 0.25, criticalMultiplier: 2.0, statusChance: 0.3, triggerType: "Sniper", magazine: 1, reloadTime: 1.0 },
+      { name: "Vectis Incarnon", damage: 450.0, fireRate: 1.5, criticalChance: 0.35, criticalMultiplier: 2.5, statusChance: 0.45, triggerType: "Semi", magazine: 30, reloadTime: 1.0, specialMechanics: { evolutionMode: "Slowing projectiles explode on headshots", modeSwitch: "Alt-fire while unscoped; weakpoint hits charge gauge" } },
+    ],
+    evolutions: [
+      { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform while unscoped.", statChanges: {} },
+      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
+      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
+      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
+      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
+      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
+      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
+      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
+      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
+    ],
+  },
+  // Stug Incarnon (genesis_secondary) — Update 43
+  {
+    weaponId: "stug_incarnon",
+    weaponName: "Stug Incarnon",
+    challenge: "Kill 100 enemies with this weapon's Incarnon Form",
+    category: "genesis_secondary",
+    variants: ["stug"],
+    forms: [
+      { name: "Stug", damage: 79.0, fireRate: 4.0, criticalChance: 0.05, criticalMultiplier: 1.5, statusChance: 0.0, triggerType: "Charge", magazine: 20, reloadTime: 2.0 },
+      { name: "Stug Incarnon", damage: 158.0, fireRate: 4.0, criticalChance: 0.15, criticalMultiplier: 2.0, statusChance: 0.25, triggerType: "Auto", magazine: 34, reloadTime: 2.0, specialMechanics: { evolutionMode: "Chaotic maelstrom of bouncing corrosive blobs", modeSwitch: "Direct hits charge gauge; alt-fire to transform" } },
+    ],
+    evolutions: [
+      { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
+      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
+      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
+      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
+      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
+      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
+      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
+      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
+      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
+    ],
+  },
+  // Ballistica Incarnon (genesis_secondary) — Update 43
+  {
+    weaponId: "ballistica_incarnon",
+    weaponName: "Ballistica Incarnon",
+    challenge: "Land 10 headshots in a single mission",
+    category: "genesis_secondary",
+    variants: ["ballistica", "ballistica_prime", "rakta_ballistica"],
+    forms: [
+      { name: "Ballistica", damage: 100.0, fireRate: 3.33, criticalChance: 0.025, criticalMultiplier: 1.5, statusChance: 0.1, triggerType: "Burst", magazine: 16, reloadTime: 2.0 },
+      { name: "Ballistica Incarnon", damage: 200.0, fireRate: 3.33, criticalChance: 0.12, criticalMultiplier: 2.0, statusChance: 0.28, triggerType: "Burst", magazine: 16, reloadTime: 2.0, specialMechanics: { evolutionMode: "Cross-shaped projectiles high in Slash Damage", modeSwitch: "Weakpoint hits charge gauge; alt-fire to transform" } },
+    ],
+    evolutions: [
+      { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
+      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
+      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
+      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
+      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
+      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
+      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
+      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
+      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
+    ],
+  },
+  // Destreza Incarnon (genesis_melee) — Update 43
+  {
+    weaponId: "destreza_incarnon",
+    weaponName: "Destreza Incarnon",
+    challenge: "Kill 100 enemies with Heavy Attacks",
+    category: "genesis_melee",
+    variants: ["destreza", "destreza_prime"],
+    forms: [
+      { name: "Destreza", damage: 158.0, fireRate: 1.0, criticalChance: 0.28, criticalMultiplier: 2.0, statusChance: 0.14, triggerType: "Melee" },
+      { name: "Destreza Incarnon", damage: 316.0, fireRate: 1.0, criticalChance: 0.38, criticalMultiplier: 2.5, statusChance: 0.28, triggerType: "Melee", specialMechanics: { evolutionMode: "Ghostly rapiers fly forth on Heavy Attacks; Heavy kills grant Puncture Damage", modeSwitch: "Build 6x combo then Heavy Attack; lasts 180s" } },
+    ],
+    evolutions: [
+      { tier: 1, slot: 0, name: "Incarnon Form", description: "Build 6x Melee Combo then Heavy Attack to transform. Lasts 180 seconds.", statChanges: {} },
+      { tier: 2, slot: 0, name: "Rupture Strike", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
+      { tier: 2, slot: 1, name: "Critical Strike", description: "+20% Critical Chance.", statChanges: { criticalChance: 0.2 } },
+      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
+      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
+      { tier: 4, slot: 0, name: "Extended Strike", description: "+1.5m Range.", statChanges: {} },
+      { tier: 4, slot: 1, name: "Finishing Touch", description: "+150% Finisher Damage.", statChanges: {} },
+      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
+      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
+    ],
+  },
+  // Obex Incarnon (genesis_melee) — Update 43
+  {
+    weaponId: "obex_incarnon",
+    weaponName: "Obex Incarnon",
+    challenge: "Kill 100 enemies with Finisher Attacks",
+    category: "genesis_melee",
+    variants: ["obex", "prisma_obex"],
+    forms: [
+      { name: "Obex", damage: 120.0, fireRate: 1.0, criticalChance: 0.25, criticalMultiplier: 2.0, statusChance: 0.1, triggerType: "Melee" },
+      { name: "Obex Incarnon", damage: 240.0, fireRate: 1.0, criticalChance: 0.35, criticalMultiplier: 2.5, statusChance: 0.22, triggerType: "Melee", specialMechanics: { evolutionMode: "Large radial attack for each Finisher strike", modeSwitch: "Build 6x combo then Heavy Attack; lasts 180s" } },
+    ],
+    evolutions: [
+      { tier: 1, slot: 0, name: "Incarnon Form", description: "Build 6x Melee Combo then Heavy Attack to transform. Lasts 180 seconds.", statChanges: {} },
+      { tier: 2, slot: 0, name: "Rupture Strike", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
+      { tier: 2, slot: 1, name: "Critical Strike", description: "+20% Critical Chance.", statChanges: { criticalChance: 0.2 } },
+      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
+      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
+      { tier: 4, slot: 0, name: "Extended Strike", description: "+1.5m Range.", statChanges: {} },
+      { tier: 4, slot: 1, name: "Finishing Touch", description: "+150% Finisher Damage.", statChanges: {} },
+      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
+      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
+    ],
+  },
 ];
 
 // Melee weapon IDs (for determining evolution pool)
@@ -1325,12 +1455,14 @@ const MELEE_INCARNON_IDS = new Set([
   "anku_incarnon", "anku",
   "bo_incarnon", "bo", "bo_prime", "mk1_bo",
   "ceramic_dagger_incarnon", "ceramic_dagger",
+  "destreza_incarnon", "destreza", "destreza_prime",
   "dual_ichor_incarnon", "dual_ichor",
   "furax_incarnon", "furax", "furax_wraith", "mk1_furax",
   "hate_incarnon", "hate",
   "magistar_incarnon", "magistar", "sancti_magistar",
   "nami_solo_incarnon", "nami_solo",
   "okina_incarnon", "okina", "okina_prime",
+  "obex_incarnon", "obex", "prisma_obex",
   "sibear_incarnon", "sibear",
   "skana_incarnon", "skana", "skana_prime", "prisma_skana",
 ]);
