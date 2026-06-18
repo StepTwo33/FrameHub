@@ -1010,7 +1010,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -2207,7 +2207,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -2713,7 +2713,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -4551,10 +4551,9 @@ export const allWeapons: Weapon[] = [
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
     "isIncarnon": false,
-    "hasRivenSlot": true
+    "hasRivenSlot": true,
+    "warframeId": "follie"
   },
-  {
-    "id": "evensong",
     "name": "Evensong",
     "category": "primary",
     "damage": 650,
@@ -7236,7 +7235,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -9437,7 +9436,8 @@ export const allWeapons: Weapon[] = [
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
     "isIncarnon": false,
-    "hasRivenSlot": true
+    "hasRivenSlot": true,
+    "warframeId": "oraxia"
   },
   {
     "id": "secura_dual_cestra",
@@ -9634,7 +9634,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -13290,7 +13290,8 @@ export const allWeapons: Weapon[] = [
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
     "isIncarnon": false,
-    "hasRivenSlot": true
+    "hasRivenSlot": true,
+    "warframeId": "oraxia"
   },
   {
     "id": "spinnerex",
@@ -14048,7 +14049,8 @@ export const allWeapons: Weapon[] = [
     "hasPrimaryArcaneSlot": true,
     "hasSecondaryArcaneSlot": true,
     "isIncarnon": false,
-    "hasRivenSlot": true
+    "hasRivenSlot": true,
+    "warframeId": "nokko"
   },
   {
     "id": "dual_decurion",

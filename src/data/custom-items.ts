@@ -6,7 +6,7 @@
 // eventually merged into the main data files or the Dart source.
 //
 // Stats sourced from: https://wiki.warframe.com  (WARFRAME Wiki)
-// Last verified: 2025-02
+// Last verified: 2026-06
 // ==========================================================================
 
 import { Weapon } from "@/lib/types";
@@ -444,6 +444,109 @@ export const customWeapons: Weapon[] = [
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
     companionType: "vulpaphyla",
+  },
+
+  // ── JADE SHADOWS: CONSTELLATIONS (Update 43) ───────────────────────────
+  // Source: https://wiki.warframe.com/w/Styanax/Prime
+  // Source: https://wiki.warframe.com/w/Athodai_Prime
+  // Source: https://wiki.warframe.com/w/Afentis (Prime stats estimated from Prime pattern until wiki JSON)
+  // Source: https://wiki.warframe.com/w/Pride_(Weapon) / Wrath (heavy scythe stats approximate)
+
+  {
+    id: "afentis_prime",
+    name: "Afentis Prime",
+    category: "primary",
+    damage: 115,
+    impact: 23,
+    puncture: 69,
+    slash: 23,
+    fireRate: 0.83333337,
+    criticalChance: 0.32,
+    criticalMultiplier: 2.4,
+    statusChance: 0.28,
+    magazine: 5,
+    reloadTime: 1.7,
+    multishot: 1,
+    triggerType: "Rifle",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
+    warframeId: "styanax_prime",
+  },
+  {
+    id: "athodai_prime",
+    name: "Athodai Prime",
+    category: "secondary",
+    damage: 80,
+    impact: 0,
+    puncture: 24,
+    slash: 0,
+    heat: 56,
+    fireRate: 5,
+    criticalChance: 0.4,
+    criticalMultiplier: 2,
+    statusChance: 0.1,
+    magazine: 24,
+    reloadTime: 2,
+    multishot: 1,
+    triggerType: "Pistol",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
+    warframeId: "styanax_prime",
+  },
+  {
+    id: "pride",
+    name: "Pride",
+    category: "melee",
+    stanceType: "scythe",
+    damage: 280,
+    impact: 0,
+    puncture: 0,
+    slash: 196,
+    heat: 84,
+    fireRate: 1,
+    criticalChance: 0.38,
+    criticalMultiplier: 2.6,
+    statusChance: 0.14,
+    magazine: 0,
+    reloadTime: 0,
+    multishot: 1,
+    triggerType: "Melee",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
+    warframeId: "sirius_orion",
+  },
+  {
+    id: "wrath",
+    name: "Wrath",
+    category: "melee",
+    stanceType: "scythe",
+    damage: 280,
+    impact: 0,
+    puncture: 28,
+    slash: 252,
+    fireRate: 1,
+    criticalChance: 0.22,
+    criticalMultiplier: 2.2,
+    statusChance: 0.32,
+    magazine: 0,
+    reloadTime: 0,
+    multishot: 1,
+    triggerType: "Melee",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
+    warframeId: "sirius_orion",
   },
 ];
 

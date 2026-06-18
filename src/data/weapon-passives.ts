@@ -91,6 +91,9 @@ const WIKI_PASSIVES: Record<string, string> = {
   arca_scisco:
     "Target Analysis: each hit grants +4% critical and status chance, stacking to +20%; decays one stack at a time; 2s duration, refreshable.",
   athodai: "Overdrive on headshot kill: +100% fire rate and unlimited ammo for 8s.",
+  athodai_prime: "Overdrive on weakpoint kill: +100% fire rate, -100% recoil, and unlimited ammo for 8s (disables alt-fire).",
+  afentis: "Thrown spear impales enemies or creates a Ballistarii Might field (+50% reload, +20% fire/attack speed, +100% reserve ammo, -50% recoil).",
+  afentis_prime: "Thrown spear impales enemies or creates a Ballistarii Might field (+50% reload, +20% fire/attack speed, +100% reserve ammo, -50% recoil). Reloads 33% of magazine per second while holstered.",
   ballistica_prime: "Charged shot kills within 50m spawn a scannable 7s ghost of the enemy.",
   dual_toxocyst:
     "Frenzy on headshot (3s): +150% fire rate, +100% additive damage, less recoil, no ammo use while firing.",
@@ -147,6 +150,8 @@ const WIKI_PASSIVES: Record<string, string> = {
     "Blocking grants +15% additive crit and status to the next attack, stacks to 4.",
   skiajati: "Finisher attacks grant 5s invisibility (broken by attacks/abilities; refreshable).",
   slaytra: "Innate +100% Slash proc duration.",
+  enkaus: "Ink-stained enemies below 35% health are dissolved on hit. Alt-fire stains enemies with ink; Follie's Inkblot counts as stained.",
+  scyotid: "Thrown darts apply Toxin; kills can spread Toxin stacks to nearby enemies.",
   spinnerex: "Enemies hit then killed may explode per Toxin stack, spreading Toxin.",
   syam: "Unique heavy attacks fire long-range piercing Heat shockwaves (scales with mods and combo).",
   synoid_heliocor:

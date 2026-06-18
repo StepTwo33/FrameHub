@@ -4669,6 +4669,133 @@ export const allWarframes: Warframe[] = [
     ]
   },
   {
+    "id": "styanax_prime",
+    "name": "Styanax Prime",
+    "health": 270,
+    "shield": 925,
+    "armor": 265,
+    "energy": 215,
+    "sprintSpeed": 1,
+    "description": "Shield of the innocent. Spear of justice. Styanax Prime holds the line in defiance of tyranny.",
+    "passive": "Styanax's critical chance increases with his shields and doubles for spearguns.",
+    "abilities": [
+      {
+        "name": "Axios Javelin",
+        "energyCost": 15,
+        "description": "Throw an Axios Javelin. When the javelin impales an enemy against a wall, surrounding enemies are pulled into the area and suffer a burst of damage.",
+        "directDamage": 1250,
+        "aoeDamage": 1250,
+        "range": 50,
+        "radius": 15,
+        "duration": 8,
+        "castTime": 0.5
+      },
+      {
+        "name": "Tharros Strike",
+        "energyCost": 25,
+        "description": "Summon Tharros, the shield of Styanax. Swing Tharros to repel enemies and reduce their shields and armor. Styanax regenerates health for every enemy struck.",
+        "range": 9,
+        "castTime": 0.75,
+        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%", "healthPerHit": "250" }
+      },
+      {
+        "name": "Rally Point",
+        "energyCost": 75,
+        "description": "Draw enemy attention to Styanax. His resolve uplifts him and nearby allies, regenerating the squad's energy over time. Styanax and his allies also regenerate shields for every kill assist.",
+        "duration": 30,
+        "radius": 30,
+        "miscStats": { "energyRegen": 3, "shieldsPerKill": 50 }
+      },
+      {
+        "name": "Final Stand",
+        "energyCost": 100,
+        "description": "Exude might and valor. Rise into the air and throw a barrage of Axios Javelins. The javelins deal damage to nearby enemies wherever they land. Direct hits to enemies deal greater damage.",
+        "directDamage": 1500,
+        "aoeDamage": 1500,
+        "duration": 2.5,
+        "radius": 6,
+        "miscStats": { "javelins": 30, "statusChance": "50%" }
+      }
+    ]
+  },
+  {
+    "id": "sirius_orion",
+    "name": "Sirius & Orion",
+    "health": 475,
+    "shield": 355,
+    "armor": 160,
+    "energy": 200,
+    "sprintSpeed": 1.15,
+    "description": "Wield the power of the stars in a constant battle for supremacy. Swap between Sirius and Orion during combat to rain cosmic destruction upon foes.",
+    "passive": "Swapping between Sirius and Orion grants 45% Ability Efficiency for the next 2 casts. When below 50 energy, they steal energy from each other.",
+    "abilities": [
+      {
+        "name": "Coronal Ejection",
+        "energyCost": 25,
+        "description": "Hurl Sirius' Jade Light infused scythe, dealing Heat damage while collecting any pickups in its path.",
+        "damage": 500,
+        "range": 40,
+        "castTime": 0.5,
+        "damageType": "Heat"
+      },
+      {
+        "name": "Gravitic Slash",
+        "energyCost": 25,
+        "description": "Carve through foes with Orion's scythe, dealing Slash damage while reducing shields and armor.",
+        "damage": 750,
+        "range": 9,
+        "castTime": 0.6,
+        "damageType": "Slash",
+        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%" }
+      },
+      {
+        "name": "Jade Stars",
+        "energyCost": 50,
+        "description": "Sirius conjures Jade Light motes that slowly regenerate over time. Attacking enemies launches the motes, dealing Heat damage.",
+        "damage": 300,
+        "duration": 30,
+        "radius": 15,
+        "castTime": 0.5,
+        "damageType": "Heat"
+      },
+      {
+        "name": "Astral Shell",
+        "energyCost": 50,
+        "description": "Envelop Orion in an Astral Shell. Upon taking damage the shell becomes a projection that draws fire until it is destroyed.",
+        "duration": 20,
+        "castTime": 0.4
+      },
+      {
+        "name": "Light's Sanctuary",
+        "energyCost": 75,
+        "description": "Sirius creates a well of light that heals and revives allies, while reducing incoming damage. The well slowly grows in size and power.",
+        "duration": 25,
+        "radius": 12,
+        "castTime": 0.6,
+        "miscStats": { "damageReduction": "50%", "revive": true }
+      },
+      {
+        "name": "Event Horizon",
+        "energyCost": 75,
+        "description": "Orion forms a drifting black hole, trapping enemies within its gravity. Enemies killed within the black hole empower it.",
+        "damage": 400,
+        "duration": 20,
+        "radius": 10,
+        "castTime": 0.7
+      },
+      {
+        "name": "Celestial Clash",
+        "energyCost": 100,
+        "description": "Sirius and Orion take to the skies in a cosmic clash, dealing colossal collateral damage to anything caught in their path.",
+        "directDamage": 2000,
+        "aoeDamage": 3000,
+        "duration": 4,
+        "radius": 20,
+        "castTime": 1
+      }
+    ]
+  },
+  {
     "id": "temple",
     "name": "Temple",
     "health": 405,

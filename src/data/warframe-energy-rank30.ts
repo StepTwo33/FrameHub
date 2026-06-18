@@ -91,6 +91,8 @@ export const WARFRAME_ENERGY_RANK30: Record<string, number> = {
   "sevagoth": 190,
   "sevagoth_prime": 225,
   "styanax": 225,
+  "styanax_prime": 265,
+  "sirius_orion": 250,
   "temple": 215,
   "titania": 225,
   "titania_prime": 265,

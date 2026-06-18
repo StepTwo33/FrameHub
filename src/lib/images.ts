@@ -11,11 +11,15 @@ const WEAPON_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Kuva Ghoulsaw": "Ghoulsaw",
   "Tenet Quanta": "Quanta",
   "Perigale Prime": "Perigale",
+  "Afentis Prime": "Afentis",
+  "Athodai Prime": "Athodai",
   "Sarofang Prime": "Sarofang",
 };
 
 const WARFRAME_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Voruna Prime": "Voruna",
+  "Styanax Prime": "Styanax",
+  "Sirius & Orion": "Sirius",
 };
 
 export type GameImageCategory = "weapons" | "warframes" | "mods" | "arcanes" | "companions";
