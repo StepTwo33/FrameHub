@@ -151,6 +151,8 @@ const WIKI_PASSIVES: Record<string, string> = {
   skiajati: "Finisher attacks grant 5s invisibility (broken by attacks/abilities; refreshable).",
   slaytra: "Innate +100% Slash proc duration.",
   enkaus: "Ink-stained enemies below 35% health are dissolved on hit. Alt-fire stains enemies with ink; Follie's Inkblot counts as stained.",
+  war: "Every hit on enemies that are not ragdolled procs an Impact status effect.",
+  war_prime: "Every hit on enemies that are not ragdolled procs an Impact status effect.",
   scyotid: "Thrown darts apply Toxin; kills can spread Toxin stacks to nearby enemies.",
   spinnerex: "Enemies hit then killed may explode per Toxin stack, spreading Toxin.",
   syam: "Unique heavy attacks fire long-range piercing Heat shockwaves (scales with mods and combo).",
