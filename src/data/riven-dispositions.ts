@@ -571,6 +571,7 @@ export const rivenDispositions: Record<string, number> = {
   "Vericres": 1.2,
   "Volnus": 1.4,
   "War": 1.0,
+  "War Prime": 1.0,
   "Arbucep": 0.6,
   "Cortege": 1.0,
   "Corvas": 1.2,

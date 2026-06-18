@@ -451,6 +451,7 @@ export const customWeapons: Weapon[] = [
   // Afentis Prime: in-game arsenal (primary/SEMI fire mode)
   // Athodai Prime: https://wiki.warframe.com/w/Athodai_Prime (primary/auto fire mode)
   // Source: in-game codex (Update 43) for Pride & Wrath
+  // War Prime: Public Export /Lotus/Weapons/Tenno/Melee/Swords/PrimeWar/PrimeWarWeapon (U43 secret)
 
   {
     id: "afentis_prime",
@@ -546,6 +547,29 @@ export const customWeapons: Weapon[] = [
     isIncarnon: false,
     hasRivenSlot: true,
     warframeId: "sirius_orion",
+  },
+  {
+    id: "war_prime",
+    name: "War Prime",
+    category: "melee",
+    stanceType: "heavy_blade",
+    damage: 270,
+    impact: 194,
+    puncture: 32,
+    slash: 43,
+    fireRate: 0.9167,
+    criticalChance: 0.26,
+    criticalMultiplier: 3.2,
+    statusChance: 0.32,
+    magazine: 0,
+    reloadTime: 0,
+    multishot: 1,
+    triggerType: "Melee",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
   },
 ];
 
