@@ -1,8 +1,8 @@
 // Image path utilities for item thumbnails.
 //
-// Default: icons are resolved via /api/wiki-game-image → local /public/images when present,
-// otherwise wiki.warframe.com/images (no huge /public tree required).
-// Disable wiki proxy with NEXT_PUBLIC_USE_WIKI_GAME_IMAGES=false to use /public/images/{category}/ only.
+// Weapons, warframes, and companions load from /public/images (static, instant).
+// Mods and arcanes use /api/wiki-game-image → wiki.warframe.com when USE_WIKI_GAME_IMAGES is enabled.
+// Set NEXT_PUBLIC_USE_WIKI_GAME_IMAGES=false to use /public/images/{category}/ for everything.
 //
 // When using local files, names map to Name_With_Underscores.png (spaces → "_"), with optional stem maps below.
 
@@ -218,7 +218,7 @@ function wikiProxyUrl(category: GameImageCategory, displayName: string, weaponCa
   return `/api/wiki-game-image?${params.toString()}`;
 }
 
-function resolveLocalGameImage(category: GameImageCategory, name: string, weaponCategory?: string): string | undefined {
+function resolveDirectGameImage(category: GameImageCategory, name: string, weaponCategory?: string): string {
   if (weaponCategory === "beast_claw") return BEAST_CLAW_IMAGE_PATH;
   const override = getLocalImageOverride(category, name);
   if (override) return override;
@@ -226,18 +226,11 @@ function resolveLocalGameImage(category: GameImageCategory, name: string, weapon
 }
 
 export function getWeaponImage(name: string, options?: WeaponImageOptions): string {
-  const local = resolveLocalGameImage("weapons", name, options?.category);
-  if (!USE_WIKI_GAME_IMAGES) return local ?? getImagePath(name, "weapons");
-  if (local && LOCAL_IMAGE_OVERRIDES.weapons?.[name]) return local;
-  if (options?.category === "beast_claw") return BEAST_CLAW_IMAGE_PATH;
-  return wikiProxyUrl("weapons", name, options?.category);
+  return resolveDirectGameImage("weapons", name, options?.category);
 }
 
 export function getWarframeImage(name: string): string {
-  const override = getLocalImageOverride("warframes", name);
-  if (override) return override;
-  if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "warframes");
-  return wikiProxyUrl("warframes", name);
+  return resolveDirectGameImage("warframes", name);
 }
 
 export function getModImage(name: string): string {
@@ -252,5 +245,5 @@ export function getArcaneImage(name: string): string {
 
 export function getCompanionImage(name: string): string {
   if (!USE_WIKI_GAME_IMAGES) return getImagePath(name, "companions");
-  return wikiProxyUrl("companions", name);
+  return resolveDirectGameImage("companions", name);
 }
