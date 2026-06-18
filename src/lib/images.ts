@@ -17,7 +17,6 @@ const WEAPON_IMAGE_STEM_BY_NAME: Record<string, string> = {
 
 const WARFRAME_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Voruna Prime": "Voruna",
-  "Styanax Prime": "Styanax",
   "Sirius & Orion": "Sirius_Orion",
 };
 
@@ -30,11 +29,6 @@ export const BEAST_CLAW_IMAGE_PATH = "/images/weapons/Beast_Claws.png";
 const LOCAL_IMAGE_OVERRIDES: Partial<Record<GameImageCategory, Record<string, string>>> = {
   warframes: {
     "Sirius & Orion": "/images/warframes/Sirius_Orion.png",
-  },
-  weapons: {
-    Wrath: "/images/weapons/Wrath.png",
-    Pride: "/images/weapons/Pride.png",
-    Enkaus: "/images/weapons/Enkaus.png",
   },
 };
 
