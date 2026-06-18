@@ -4731,67 +4731,69 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Coronal Ejection",
-        "energyCost": 25,
-        "description": "Hurl Sirius' Jade Light infused scythe, dealing Heat damage while collecting any pickups in its path.",
-        "damage": 500,
-        "range": 40,
+        "energyCost": 15,
+        "description": "Hurl Sirius' Jade Light infused scythe, dealing Heat damage while collecting any pickups in its path. (HOLD) Swap to Orion and cast Gravitic Slash.",
+        "damage": 750,
+        "radius": 3,
+        "statusChance": 1,
         "castTime": 0.5,
         "damageType": "Heat"
       },
       {
         "name": "Gravitic Slash",
-        "energyCost": 25,
-        "description": "Carve through foes with Orion's scythe, dealing Slash damage while reducing shields and armor.",
-        "damage": 750,
-        "range": 9,
+        "energyCost": 15,
+        "description": "Repel enemies with Orion's scythe, dealing Slash damage while reducing shields and armor. (HOLD) Swap to Sirius and cast Coronal Ejection.",
+        "damage": 1250,
+        "radius": 6,
+        "statusChance": 1,
         "castTime": 0.6,
         "damageType": "Slash",
-        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%" }
+        "miscStats": { "shieldStrip": "35%", "armorStrip": "35%", "arc": "67.5°" }
       },
       {
         "name": "Jade Stars",
         "energyCost": 50,
-        "description": "Sirius conjures Jade Light motes that slowly regenerate over time. Attacking enemies launches the motes, dealing Heat damage.",
-        "damage": 300,
-        "duration": 30,
-        "radius": 15,
+        "description": "Sirius conjures Jade Light motes that slowly regenerate over time. Attacking enemies launches the motes, dealing Heat damage. (HOLD) Swap to Orion and cast Astral Shell.",
+        "damage": 350,
+        "duration": 20,
+        "radius": 4,
+        "statusChance": 0.3,
         "castTime": 0.5,
         "damageType": "Heat"
       },
       {
         "name": "Astral Shell",
         "energyCost": 50,
-        "description": "Envelop Orion in an Astral Shell. Upon taking damage the shell becomes a projection that draws fire until it is destroyed.",
+        "description": "Envelop Orion in an Astral Shell. Upon taking damage the shell becomes a decoy that draws fire until it is destroyed. (HOLD) Swap to Sirius and cast Jade Stars.",
         "duration": 20,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "miscStats": { "decoyDuration": "5s", "decoyDamage": 50, "decoyRadius": 5, "decoyCooldown": "5s" }
       },
       {
         "name": "Light's Sanctuary",
-        "energyCost": 75,
-        "description": "Sirius creates a well of light that heals and revives allies, while reducing incoming damage. The well slowly grows in size and power.",
+        "energyCost": 50,
+        "description": "Sirius creates a well of light that heals and revives allies, while reducing incoming damage. The well slowly grows in size and power. (HOLD) Swap to Orion and cast Event Horizon.",
         "duration": 25,
-        "radius": 12,
+        "radius": 10,
         "castTime": 0.6,
-        "miscStats": { "damageReduction": "50%", "revive": true }
+        "miscStats": { "minRadius": 5, "maxRadius": 10, "healthRegen": "10-40/s", "damageReduction": "15-45%", "reviveCooldown": "60s" }
       },
       {
         "name": "Event Horizon",
-        "energyCost": 75,
-        "description": "Orion forms a drifting black hole, trapping enemies within its gravity. Enemies killed within the black hole empower it.",
-        "damage": 400,
-        "duration": 20,
-        "radius": 10,
-        "castTime": 0.7
+        "energyCost": 50,
+        "description": "Orion forms a drifting black hole, trapping enemies within its gravity. Enemies killed within the black hole empower it. (HOLD) Swap to Sirius and cast Light's Sanctuary.",
+        "castTime": 0.7,
+        "miscStats": { "durationExtension": "+5s per kill in radius" }
       },
       {
         "name": "Celestial Clash",
         "energyCost": 100,
-        "description": "Sirius and Orion take to the skies in a cosmic clash, dealing colossal collateral damage to anything caught in their path.",
-        "directDamage": 2000,
-        "aoeDamage": 3000,
-        "duration": 4,
+        "description": "Sirius and Orion take to the skies in a cosmic clash. Each attack consumes a Constellation Star to inflict colossal Blast damage. Match the star color for +55% Critical Chance.",
+        "damage": 7000,
         "radius": 20,
-        "castTime": 1
+        "castTime": 1,
+        "damageType": "Blast",
+        "miscStats": { "criticalChanceBonus": "55%", "maxConstellationStars": 7 }
       }
     ]
   },
