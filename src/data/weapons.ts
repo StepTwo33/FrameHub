@@ -4554,6 +4554,8 @@ export const allWeapons: Weapon[] = [
     "hasRivenSlot": true,
     "warframeId": "follie"
   },
+  {
+    "id": "evensong",
     "name": "Evensong",
     "category": "primary",
     "damage": 650,
