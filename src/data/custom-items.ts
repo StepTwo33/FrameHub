@@ -448,7 +448,7 @@ export const customWeapons: Weapon[] = [
 
   // ── JADE SHADOWS: CONSTELLATIONS (Update 43) ───────────────────────────
   // Source: https://wiki.warframe.com/w/Styanax/Prime
-  // Source: https://wiki.warframe.com/w/Afentis (Prime stats estimated until wiki JSON)
+  // Afentis Prime: in-game arsenal (primary/SEMI fire mode)
   // Athodai Prime: https://wiki.warframe.com/w/Athodai_Prime (primary/auto fire mode)
   // Source: in-game codex (Update 43) for Pride & Wrath
 
@@ -456,16 +456,16 @@ export const customWeapons: Weapon[] = [
     id: "afentis_prime",
     name: "Afentis Prime",
     category: "primary",
-    damage: 115,
-    impact: 23,
-    puncture: 69,
-    slash: 23,
-    fireRate: 0.83333337,
-    criticalChance: 0.32,
-    criticalMultiplier: 2.4,
-    statusChance: 0.28,
-    magazine: 5,
-    reloadTime: 1.7,
+    damage: 200,
+    impact: 40,
+    puncture: 120,
+    slash: 40,
+    fireRate: 1.33,
+    criticalChance: 0.26,
+    criticalMultiplier: 3.8,
+    statusChance: 0.3,
+    magazine: 4,
+    reloadTime: 1.8,
     multishot: 1,
     triggerType: "Rifle",
     modSlots: 8,
