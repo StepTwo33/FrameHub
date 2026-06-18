@@ -3550,102 +3550,112 @@ export const allWarframes: Warframe[] = [
   {
     "id": "nidus",
     "name": "Nidus",
-    "health": 455,
+    "health": 675,
     "shield": 0,
     "armor": 350,
     "energy": 100,
     "sprintSpeed": 1,
-    "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. For every five enemies hit, the Infestation mutates, multiplying its destructive power.",
-    "passive": "If Nidus is killed with at least |STACKS| stacks of Mutation, those |STACKS| stacks are consumed; this grants |DURATION|s of invulnerability and restores Health to |HEAL|%.",
+    "description": "Command the Infestation with Mutation Stacks that fuel his abilities. Virulence ruptures the ground with fungal growth; Larva, Parasitic Link, and Ravenous build and spend stacks for crowd control and healing.",
+    "passive": "If Nidus is killed with at least 15 stacks of Mutation, those stacks are consumed; this grants 5s of invulnerability and restores Health to 50%. Mutation stacks cap at 200.",
     "abilities": [
       {
         "name": "Virulence",
-        "energyCost": 25,
-        "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. For every five enemies hit, the Infestation mutates, multiplying its destructive power.",
+        "energyCost": 40,
+        "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. Initial hits and damage over time both build Mutation Stacks.",
         "damage": 200,
-        "range": 40,
-        "radius": 8,
+        "duration": 5,
+        "range": 16,
+        "radius": 4,
         "castTime": 0.4,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "energyRefundPerHit": 10, "width": "4m" }
       },
       {
         "name": "Larva",
         "energyCost": 25,
-        "description": "Spawn an Infested pod that erupts with tendrils, latches onto nearby enemies and pulls them in. Enemies killed while held have a chance of generating a Mutation stack.",
-        "range": 30,
-        "duration": 10,
-        "radius": 15,
-        "castTime": 0.6
+        "description": "Spawn an Infested pod that erupts with tendrils, latches onto nearby enemies and pulls them in. Recasting removes the previous Larva. Enemies killed while held can generate Mutation stacks; chance scales with Ability Strength up to 100%.",
+        "duration": 7,
+        "radius": 12,
+        "castTime": 0.6,
+        "miscStats": { "mutationStackChance": "50% (100% at 200% Str)" }
       },
       {
         "name": "Parasitic Link",
         "energyCost": 25,
-        "description": "Bind to a target with parasitic link. When cast on an ally, both the host and Nidus have their Ability Strength increased. Linked enemies take some of the damage inflicted on Nidus.",
-        "range": 50,
+        "description": "Bind to a target with parasitic link. When cast on an ally or Companion, both receive Ability Strength and weapon damage bonuses. Linked enemies redirect damage to themselves. Recast to retarget or refresh duration.",
+        "range": 40,
         "duration": 60,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "damageBuff": 0.25,
+        "damageReduction": 0.5,
+        "miscStats": { "strengthBonus": "25%", "enemyLinkRange": 20 }
       },
       {
         "name": "Ravenous",
-        "energyCost": 50,
-        "description": "Gluttonous maggots swarm nearby enemies, feasting until they are hit with Virulence and burst with Infestation. The maggots benefit from Mutation and each enemy hit adds to the Mutation gauge.",
-        "damage": 100,
-        "range": 30,
+        "energyCost": 0,
+        "description": "Expend 3 Mutation stacks to spawn gluttonous maggots and an infestation zone. Allies inside regenerate health and are cleansed of status effects. Recasting on the zone refreshes duration and detonates maggots.",
+        "damage": 150,
         "duration": 40,
-        "radius": 25,
+        "radius": 8,
         "castTime": 0.8,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "mutationStackCost": 3, "healthRegen": "75/s", "explosionRadius": 4, "maggots": 9, "statusCleanse": true }
       }
     ]
   },
   {
     "id": "nidus_prime",
     "name": "Nidus Prime",
-    "health": 550,
+    "health": 825,
     "shield": 0,
     "armor": 425,
     "energy": 140,
     "sprintSpeed": 1,
-    "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. For every five enemies hit, the Infestation mutates, multiplying its destructive power.",
-    "passive": "If Nidus is killed with at least |STACKS| stacks of Mutation, those |STACKS| stacks are consumed; this grants |DURATION|s of invulnerability and restores Health to |HEAL|%.",
+    "description": "Command the Infestation with Mutation Stacks that fuel his abilities. Virulence ruptures the ground with fungal growth; Larva, Parasitic Link, and Ravenous build and spend stacks for crowd control and healing.",
+    "passive": "If Nidus is killed with at least 15 stacks of Mutation, those stacks are consumed; this grants 5s of invulnerability and restores Health to 50%. Mutation stacks cap at 200.",
     "abilities": [
       {
         "name": "Virulence",
-        "energyCost": 25,
-        "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. For every five enemies hit, the Infestation mutates, multiplying its destructive power.",
+        "energyCost": 40,
+        "description": "Rupture the ground with a damaging fungal growth that steals energy from each enemy it strikes. Initial hits and damage over time both build Mutation Stacks.",
         "damage": 200,
-        "range": 40,
-        "radius": 8,
+        "duration": 5,
+        "range": 16,
+        "radius": 4,
         "castTime": 0.4,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "energyRefundPerHit": 10, "width": "4m" }
       },
       {
         "name": "Larva",
         "energyCost": 25,
-        "description": "Spawn an Infested pod that erupts with tendrils, latches onto nearby enemies and pulls them in. Enemies killed while held have a chance of generating a Mutation stack.",
-        "range": 30,
-        "duration": 10,
-        "radius": 15,
-        "castTime": 0.6
+        "description": "Spawn an Infested pod that erupts with tendrils, latches onto nearby enemies and pulls them in. Recasting removes the previous Larva. Enemies killed while held can generate Mutation stacks; chance scales with Ability Strength up to 100%.",
+        "duration": 7,
+        "radius": 12,
+        "castTime": 0.6,
+        "miscStats": { "mutationStackChance": "50% (100% at 200% Str)" }
       },
       {
         "name": "Parasitic Link",
         "energyCost": 25,
-        "description": "Bind to a target with parasitic link. When cast on an ally, both the host and Nidus have their Ability Strength increased. Linked enemies take some of the damage inflicted on Nidus.",
-        "range": 50,
+        "description": "Bind to a target with parasitic link. When cast on an ally or Companion, both receive Ability Strength and weapon damage bonuses. Linked enemies redirect damage to themselves. Recast to retarget or refresh duration.",
+        "range": 40,
         "duration": 60,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "damageBuff": 0.25,
+        "damageReduction": 0.5,
+        "miscStats": { "strengthBonus": "25%", "enemyLinkRange": 20 }
       },
       {
         "name": "Ravenous",
-        "energyCost": 50,
-        "description": "Gluttonous maggots swarm nearby enemies, feasting until they are hit with Virulence and burst with Infestation. The maggots benefit from Mutation and each enemy hit adds to the Mutation gauge.",
-        "damage": 100,
-        "range": 30,
+        "energyCost": 0,
+        "description": "Expend 3 Mutation stacks to spawn gluttonous maggots and an infestation zone. Allies inside regenerate health and are cleansed of status effects. Recasting on the zone refreshes duration and detonates maggots.",
+        "damage": 150,
         "duration": 40,
-        "radius": 25,
+        "radius": 8,
         "castTime": 0.8,
-        "damageType": "Corrosive"
+        "damageType": "Corrosive",
+        "miscStats": { "mutationStackCost": 3, "healthRegen": "75/s", "explosionRadius": 4, "maggots": 9, "statusCleanse": true }
       }
     ]
   },

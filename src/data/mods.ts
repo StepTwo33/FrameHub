@@ -11159,7 +11159,7 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {},
-    "description": "Passive Augment: Nidus gains an additional 200 max stacks of Mutation. Undying has a 30s cooldown.",
+    "description": "Passive Augment: Nidus gains an additional 300 max stacks of Mutation (500 total). Undying has a 30s cooldown.",
     "rarity": "rare"
   },
   {
@@ -12384,7 +12384,7 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {},
-    "description": "Larva Augment: Reactivate Larva to detonate and deal 600 <DT_POISON_COLOR>Toxin Damage in a 8m radius. This damage stacks for every enemy grabbed by the Larva.",
+    "description": "Larva Augment: Reactivate Larva to detonate and deal 600 <DT_POISON_COLOR>Toxin Damage in an 8m radius. Applies one guaranteed Toxin proc per enemy grabbed.",
     "rarity": "rare"
   },
   {
@@ -13520,7 +13520,7 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {},
-    "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 120% Primary Weapon Critical Chance for 15s.",
+    "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 150% Primary Weapon Critical Chance for 15s.",
     "rarity": "rare"
   },
   {
