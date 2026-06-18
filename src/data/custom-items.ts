@@ -448,8 +448,8 @@ export const customWeapons: Weapon[] = [
 
   // ── JADE SHADOWS: CONSTELLATIONS (Update 43) ───────────────────────────
   // Source: https://wiki.warframe.com/w/Styanax/Prime
-  // Source: https://wiki.warframe.com/w/Athodai_Prime
-  // Source: https://wiki.warframe.com/w/Afentis (Prime stats estimated from Prime pattern until wiki JSON)
+  // Source: https://wiki.warframe.com/w/Afentis (Prime stats estimated until wiki JSON)
+  // Athodai Prime: https://wiki.warframe.com/w/Athodai_Prime (primary/auto fire mode)
   // Source: in-game codex (Update 43) for Pride & Wrath
 
   {
@@ -491,7 +491,7 @@ export const customWeapons: Weapon[] = [
     magazine: 24,
     reloadTime: 2,
     multishot: 1,
-    triggerType: "Pistol",
+    triggerType: "Auto",
     modSlots: 8,
     hasPrimaryArcaneSlot: false,
     hasSecondaryArcaneSlot: false,
