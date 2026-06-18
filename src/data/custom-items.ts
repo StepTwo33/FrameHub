@@ -450,7 +450,7 @@ export const customWeapons: Weapon[] = [
   // Source: https://wiki.warframe.com/w/Styanax/Prime
   // Source: https://wiki.warframe.com/w/Athodai_Prime
   // Source: https://wiki.warframe.com/w/Afentis (Prime stats estimated from Prime pattern until wiki JSON)
-  // Source: https://wiki.warframe.com/w/Pride_(Weapon) / Wrath (heavy scythe stats approximate)
+  // Source: in-game codex (Update 43) for Pride & Wrath
 
   {
     id: "afentis_prime",
@@ -504,15 +504,14 @@ export const customWeapons: Weapon[] = [
     name: "Pride",
     category: "melee",
     stanceType: "scythe",
-    damage: 280,
+    damage: 250,
     impact: 0,
-    puncture: 0,
-    slash: 196,
-    heat: 84,
-    fireRate: 1,
-    criticalChance: 0.38,
-    criticalMultiplier: 2.6,
-    statusChance: 0.14,
+    puncture: 125,
+    slash: 125,
+    fireRate: 1.2,
+    criticalChance: 0.15,
+    criticalMultiplier: 2,
+    statusChance: 0.35,
     magazine: 0,
     reloadTime: 0,
     multishot: 1,
@@ -529,14 +528,14 @@ export const customWeapons: Weapon[] = [
     name: "Wrath",
     category: "melee",
     stanceType: "scythe",
-    damage: 280,
+    damage: 220,
     impact: 0,
-    puncture: 28,
-    slash: 252,
-    fireRate: 1,
-    criticalChance: 0.22,
-    criticalMultiplier: 2.2,
-    statusChance: 0.32,
+    puncture: 44,
+    slash: 176,
+    fireRate: 1.2,
+    criticalChance: 0.3,
+    criticalMultiplier: 2,
+    statusChance: 0.15,
     magazine: 0,
     reloadTime: 0,
     multishot: 1,

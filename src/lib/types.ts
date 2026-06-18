@@ -30,6 +30,9 @@ export interface Weapon {
   radiation?: number;
   viral?: number;
   corrosive?: number;
+  blast?: number;
+  gas?: number;
+  magnetic?: number;
   fireRate: number;
   criticalChance: number;
   criticalMultiplier: number;
