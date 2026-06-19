@@ -1158,26 +1158,48 @@ export default function WarframeBuilderPage() {
                     </div>
                   </div>
 
-                  {/* Aura Slot */}
-                  <div className="mb-2">
-                    <span className="text-[10px] font-semibold text-purple-400 tracking-wider mb-1 block">AURA</span>
-                    {(() => {
-                      const equipped = equippedMods.find((m) => m.slotIndex === AURA_SLOT);
-                      const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                      return (
-                        <ModSlotCard
-                          mod={mod}
-                          rank={equipped?.rank ?? 0}
-                          slotIndex={AURA_SLOT}
-                          label="Aura"
-                          slotPolarity={slotPolarities[AURA_SLOT]}
-                          equippedModIds={equippedModIds}
-                          onAdd={() => handleOpenModPicker(AURA_SLOT)}
-                          onRemove={() => handleRemoveMod(AURA_SLOT)}
-                          onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[AURA_SLOT] = p; else delete next[AURA_SLOT]; return next; })}
-                        />
-                      );
-                    })()}
+                  {/* Aura + Exilus — top row (matches in-game warframe mod layout) */}
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <div>
+                      <span className="text-[10px] font-semibold text-purple-400 tracking-wider mb-1 block">AURA</span>
+                      {(() => {
+                        const equipped = equippedMods.find((m) => m.slotIndex === AURA_SLOT);
+                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                        return (
+                          <ModSlotCard
+                            mod={mod}
+                            rank={equipped?.rank ?? 0}
+                            slotIndex={AURA_SLOT}
+                            label="Aura"
+                            slotPolarity={slotPolarities[AURA_SLOT]}
+                            equippedModIds={equippedModIds}
+                            onAdd={() => handleOpenModPicker(AURA_SLOT)}
+                            onRemove={() => handleRemoveMod(AURA_SLOT)}
+                            onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[AURA_SLOT] = p; else delete next[AURA_SLOT]; return next; })}
+                          />
+                        );
+                      })()}
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-semibold text-cyan-400 tracking-wider mb-1 block">EXILUS</span>
+                      {(() => {
+                        const equipped = equippedMods.find((m) => m.slotIndex === EXILUS_SLOT);
+                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                        return (
+                          <ModSlotCard
+                            mod={mod}
+                            rank={equipped?.rank ?? 0}
+                            slotIndex={EXILUS_SLOT}
+                            label="Exilus"
+                            slotPolarity={slotPolarities[EXILUS_SLOT]}
+                            equippedModIds={equippedModIds}
+                            onAdd={() => handleOpenModPicker(EXILUS_SLOT)}
+                            onRemove={() => handleRemoveMod(EXILUS_SLOT)}
+                            onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[EXILUS_SLOT] = p; else delete next[EXILUS_SLOT]; return next; })}
+                          />
+                        );
+                      })()}
+                    </div>
                   </div>
 
                   {/* Build Importer */}
@@ -1196,7 +1218,7 @@ export default function WarframeBuilderPage() {
                     </div>
                   )}
                   {/* Regular Mod Slots (1-8) */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {Array.from({ length: 8 }, (_, i) => {
                       const slotIdx = i + 1;
                       const equipped = equippedMods.find((m) => m.slotIndex === slotIdx);
@@ -1215,28 +1237,6 @@ export default function WarframeBuilderPage() {
                         />
                       );
                     })}
-                  </div>
-
-                  {/* Exilus Slot */}
-                  <div>
-                    <span className="text-[10px] font-semibold text-cyan-400 tracking-wider mb-1 block">EXILUS</span>
-                    {(() => {
-                      const equipped = equippedMods.find((m) => m.slotIndex === EXILUS_SLOT);
-                      const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                      return (
-                        <ModSlotCard
-                          mod={mod}
-                          rank={equipped?.rank ?? 0}
-                          slotIndex={EXILUS_SLOT}
-                          label="Exilus"
-                          slotPolarity={slotPolarities[EXILUS_SLOT]}
-                          equippedModIds={equippedModIds}
-                          onAdd={() => handleOpenModPicker(EXILUS_SLOT)}
-                          onRemove={() => handleRemoveMod(EXILUS_SLOT)}
-                          onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[EXILUS_SLOT] = p; else delete next[EXILUS_SLOT]; return next; })}
-                        />
-                      );
-                    })()}
                   </div>
                 </div>
 
