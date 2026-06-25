@@ -230,10 +230,43 @@ export const RAILJACK_MOD_KEYWORDS = [
   "munitions vortex", "particle ram", "tether", "blackout pulse",
   "void hole", "form up", "recall", "command link", "overseer",
   "flow burn", "intruder stasis", "death blossom", "firestorm",
-  "forward artillery",
+  "forward artillery", "omni revolite", "revolite", "homing missile",
+  "phoenix blaze", "ion burn",
 ];
 
-export function isRailjackMod(description: string): boolean {
-  const lower = description.toLowerCase();
-  return RAILJACK_MOD_KEYWORDS.some((kw) => lower.includes(kw));
+/** Plexus mods whose descriptions omit Railjack keywords (match by id). */
+export const RAILJACK_MOD_IDS = new Set([
+  "seeker_volley",
+  "shatter_burst",
+  "munitions_vortex",
+  "revo_reducer",
+  "ion_burn",
+  "particle_ram",
+  "phoenix_blaze",
+  "blackout_pulse",
+  "void_hole",
+  "tether",
+  "flow_burn",
+  "intruder_stasis",
+  "death_blossom",
+  "void_cloak",
+  "fire_suppression",
+  "form_up",
+  "battle_stations",
+  "squad_renew",
+  "firestorm",
+  "forward_artillery",
+]);
+
+export interface RailjackModRef {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export function isRailjackMod(mod: RailjackModRef): boolean {
+  if (RAILJACK_MOD_IDS.has(mod.id)) return true;
+  const desc = mod.description.toLowerCase();
+  const name = mod.name.toLowerCase();
+  return RAILJACK_MOD_KEYWORDS.some((kw) => desc.includes(kw) || name.includes(kw));
 }

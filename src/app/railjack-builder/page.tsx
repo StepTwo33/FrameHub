@@ -71,7 +71,7 @@ export default function RailjackBuilderPage() {
 
   // Railjack mods from the "general" category
   const railjackMods = useMemo(() => {
-    return allMods.filter((m) => m.category === "general" && isRailjackMod(m.description));
+    return allMods.filter((m) => m.category === "general" && isRailjackMod(m));
   }, []);
 
   // Capacity

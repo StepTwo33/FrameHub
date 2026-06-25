@@ -3820,25 +3820,38 @@ export const allWarframes: Warframe[] = [
     "armor": 105,
     "energy": 175,
     "sprintSpeed": 1.1,
-    "description": "Nyx seizes control of a target's mind, compelling them to fight for the Tenno cause. Controlled enemies have increased Radiation Status Chance. When Nyx shoots the controlled enemy, a percentage of that damage is transferred to the target.",
-    "passive": "Nyx gains +|CRITICAL|% Critical Chance on Primary and Secondary weapons per Confused enemy within Affinity Range, up to +|MAX|%.",
+    "description": "Psychic attacks make Nyx a dangerous foe. She reaches into enemy consciousness to provide crowd control and turn their attacks back on them.",
+    "passive": "Nyx gains +40% Critical Chance on Primary and Secondary weapons per Confused enemy within Affinity Range, up to +200%.",
     "abilities": [
       {
         "name": "Mind Control",
         "energyCost": 25,
         "description": "Nyx seizes control of a target's mind, compelling them to fight for the Tenno cause. Controlled enemies have increased Radiation Status Chance. When Nyx shoots the controlled enemy, a percentage of that damage is transferred to the target.",
-        "range": 50,
-        "duration": 30,
-        "castTime": 0.5
+        "range": 60,
+        "duration": 60,
+        "castTime": 0.5,
+        "miscStats": {
+          "Stun duration": "3 s",
+          "Radiation status": "100% on controlled target",
+          "Initial damage bonus": "750%",
+          "Max targets": "1"
+        }
       },
       {
         "name": "Psychic Bolts",
         "energyCost": 50,
-        "description": "Nyx unleashes a volley of psychic bolts that track and strike nearby enemies with telekinetic precision. When enemies are slain, additional bolts scatter to new targets. Striking an enemy with a bolt temporarily removes their defenses.",
-        "damage": 200,
+        "description": "Nyx unleashes a volley of psychic bolts that track and strike nearby enemies with telekinetic precision. When enemies are slain, additional bolts scatter to new targets. Striking foes weakens their defenses and transfers a portion to Nyx.",
         "range": 60,
+        "duration": 11,
         "castTime": 0.4,
-        "damageType": "Puncture"
+        "miscStats": {
+          "Bolts": "3–6",
+          "Bolts on kill": "2",
+          "Defense strip": "20–80%",
+          "Armor steal": "25 per hit (cap 1,000)",
+          "Shield steal": "75 per hit",
+          "Overguard steal": "500 per hit (cap 7,500)"
+        }
       },
       {
         "name": "Chaos",
@@ -3847,17 +3860,26 @@ export const allWarframes: Warframe[] = [
         "range": 25,
         "duration": 25,
         "radius": 25,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": {
+          "Radiation stacks": "10 (max)"
+        }
       },
       {
         "name": "Absorb",
-        "energyCost": 25,
-        "description": "Nyx draws in and contains the damage dealt to her and the damage confused enemies deal to each other then converts it into a devastating radial blast. Following the blast, she expels an aura that grants her and nearby allies incoming damage reduction.",
-        "damage": 1000,
-        "range": 20,
+        "energyCost": 75,
+        "description": "Nyx draws in and contains damage dealt to her and damage confused enemies deal to each other, then converts it into a devastating radial blast. Following the blast, she gains brief invulnerability and a Weapon Damage bonus proportional to absorbed damage.",
+        "damage": 1500,
+        "range": 50,
         "radius": 15,
         "castTime": 0.8,
-        "damageType": "Magnetic"
+        "damageType": "Magnetic",
+        "miscStats": {
+          "Min blast damage": "800–1,500",
+          "Max blast radius": "50 m",
+          "Weapon damage cap": "400%",
+          "Invuln duration cap": "6 s"
+        }
       }
     ]
   },
@@ -3869,25 +3891,38 @@ export const allWarframes: Warframe[] = [
     "armor": 135,
     "energy": 175,
     "sprintSpeed": 1.125,
-    "description": "Nyx seizes control of a target's mind, compelling them to fight for the Tenno cause. Controlled enemies have increased Radiation Status Chance. When Nyx shoots the controlled enemy, a percentage of that damage is transferred to the target.",
-    "passive": "Nyx gains +|CRITICAL|% Critical Chance on Primary and Secondary weapons per Confused enemy within Affinity Range, up to +|MAX|%.",
+    "description": "Infiltrate the minds of your enemies with Nyx Prime. Featuring altered mod polarities for greater customization.",
+    "passive": "Nyx gains +40% Critical Chance on Primary and Secondary weapons per Confused enemy within Affinity Range, up to +200%.",
     "abilities": [
       {
         "name": "Mind Control",
         "energyCost": 25,
         "description": "Nyx seizes control of a target's mind, compelling them to fight for the Tenno cause. Controlled enemies have increased Radiation Status Chance. When Nyx shoots the controlled enemy, a percentage of that damage is transferred to the target.",
-        "range": 50,
-        "duration": 30,
-        "castTime": 0.5
+        "range": 60,
+        "duration": 60,
+        "castTime": 0.5,
+        "miscStats": {
+          "Stun duration": "3 s",
+          "Radiation status": "100% on controlled target",
+          "Initial damage bonus": "750%",
+          "Max targets": "1"
+        }
       },
       {
         "name": "Psychic Bolts",
         "energyCost": 50,
-        "description": "Nyx unleashes a volley of psychic bolts that track and strike nearby enemies with telekinetic precision. When enemies are slain, additional bolts scatter to new targets. Striking an enemy with a bolt temporarily removes their defenses.",
-        "damage": 200,
+        "description": "Nyx unleashes a volley of psychic bolts that track and strike nearby enemies with telekinetic precision. When enemies are slain, additional bolts scatter to new targets. Striking foes weakens their defenses and transfers a portion to Nyx.",
         "range": 60,
+        "duration": 11,
         "castTime": 0.4,
-        "damageType": "Puncture"
+        "miscStats": {
+          "Bolts": "3–6",
+          "Bolts on kill": "2",
+          "Defense strip": "20–80%",
+          "Armor steal": "25 per hit (cap 1,000)",
+          "Shield steal": "75 per hit",
+          "Overguard steal": "500 per hit (cap 7,500)"
+        }
       },
       {
         "name": "Chaos",
@@ -3896,17 +3931,26 @@ export const allWarframes: Warframe[] = [
         "range": 25,
         "duration": 25,
         "radius": 25,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": {
+          "Radiation stacks": "10 (max)"
+        }
       },
       {
         "name": "Absorb",
-        "energyCost": 25,
-        "description": "Nyx draws in and contains the damage dealt to her and the damage confused enemies deal to each other then converts it into a devastating radial blast. Following the blast, she expels an aura that grants her and nearby allies incoming damage reduction.",
-        "damage": 1000,
-        "range": 20,
+        "energyCost": 75,
+        "description": "Nyx draws in and contains damage dealt to her and damage confused enemies deal to each other, then converts it into a devastating radial blast. Following the blast, she gains brief invulnerability and a Weapon Damage bonus proportional to absorbed damage.",
+        "damage": 1500,
+        "range": 50,
         "radius": 15,
         "castTime": 0.8,
-        "damageType": "Magnetic"
+        "damageType": "Magnetic",
+        "miscStats": {
+          "Min blast damage": "800–1,500",
+          "Max blast radius": "50 m",
+          "Weapon damage cap": "400%",
+          "Invuln duration cap": "6 s"
+        }
       }
     ]
   },

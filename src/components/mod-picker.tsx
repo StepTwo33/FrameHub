@@ -240,7 +240,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0">
+      <DialogContent className="max-w-2xl max-h-[85vh] min-h-0 flex flex-col overflow-hidden p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle>
             {isArcaneBrowse
@@ -392,8 +392,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
             </div>
           </div>
         ) : (
-          <>
-            <div className="px-6 pb-3">
+          <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+            <div className="px-6 pb-3 shrink-0">
               {arcaneCatalog && arcaneCatalog.length > 0 && (
                 <div className="flex gap-1 mb-3 p-1 rounded-lg bg-secondary/40">
                   <button
@@ -434,7 +434,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
+            <div
+              className="flex-1 overflow-y-auto overscroll-contain px-6 pb-6 min-h-0"
+              role="listbox"
+              aria-label={isArcaneBrowse ? "Arcane list" : "Mod list"}
+            >
               <div className="space-y-1">
                 {isArcaneBrowse ? filteredArcanes.map((arcane) => {
                   const isEquipped = equippedArcaneIds.includes(arcane.id);
@@ -513,7 +517,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 })}
               </div>
             </div>
-          </>
+          </div>
         )}
       </DialogContent>
     </Dialog>
