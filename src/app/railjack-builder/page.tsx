@@ -7,7 +7,7 @@ import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import {
   reactors, shieldArrays, engines, plating,
-  turrets, ordnance,
+  allTurrets, ordnance,
   railjackBaseStats, isRailjackMod,
   RailjackComponent, RailjackArmament,
   railjackPresets, uranusProximaMissions,
@@ -191,7 +191,7 @@ export default function RailjackBuilderPage() {
     setSelectedShield(shieldArrays.find((s) => s.id === d.shieldId) ?? null);
     setSelectedEngine(engines.find((e) => e.id === d.engineId) ?? null);
     setSelectedPlating(plating.find((p) => p.id === d.platingId) ?? null);
-    setSelectedTurret(turrets.find((t) => t.id === d.turretId) ?? null);
+    setSelectedTurret(findRailjackArmament(d.turretId ?? "") ?? null);
     setSelectedOrdnance(ordnance.find((o) => o.id === d.ordnanceId) ?? null);
     setIntegratedMods(restoreMods(d.integratedMods));
     setBattleMods(restoreMods(d.battleMods));
@@ -450,8 +450,8 @@ export default function RailjackBuilderPage() {
                     <Crosshair className="h-3.5 w-3.5 text-red-400" />
                     <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">TURRETS</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-[200px] overflow-y-auto">
-                    {turrets.map((t) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-[280px] overflow-y-auto">
+                    {allTurrets.map((t) => (
                       <button
                         key={t.id}
                         onClick={() => { beginNewRailjackDraft(); setSelectedTurret(t); }}
