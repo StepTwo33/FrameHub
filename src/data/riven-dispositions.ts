@@ -186,6 +186,7 @@ export const rivenDispositions: Record<string, number> = {
   "Glaive Prime": 0.6,
   "Gram Prime": 0.6,
   "Gunsen": 1.4,
+  "Haalvu": 0.5,
   "Halikar": 1.35,
   "Hate": 1.0,
   "Heliocor": 1.3,

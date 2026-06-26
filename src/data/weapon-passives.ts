@@ -82,6 +82,8 @@ const WIKI_PASSIVES: Record<string, string> = {
   shedu: "Emptying the magazine emits a 20m pulse that staggers with guaranteed Impact and strips Sentient / Shadow Stalker adaptations. +30% movement speed while aiming.",
   stahlta: "Primary fire has an independent extra chance to proc Radiation (separate from normal status chance).",
   synapse: "Deals +20% bonus damage on headshots.",
+  haalvu:
+    "Alt-fire splits the weapon into 8 rifles, tracking up to 4 targets at once while consuming more ammo per shot.",
   fulmin: "Silent semi-auto; full-auto emits a close-range shockwave.",
   phenmor: "Alternate fire charges a gauge that empowers primary fire.",
   laetum: "Alternate fire charges shots that build Overcharge for explosive rounds.",

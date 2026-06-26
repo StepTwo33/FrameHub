@@ -571,6 +571,33 @@ export const customWeapons: Weapon[] = [
     isIncarnon: false,
     hasRivenSlot: true,
   },
+
+  // ── TENNOCON 2026 (Upcoming) ───────────────────────────────────────────
+  // Source: https://wiki.warframe.com/w/Haalvu
+  // Sentient multi-barreled rifle; TennoCon 2026 Twitch drop (MR 8).
+
+  {
+    id: "haalvu",
+    name: "Haalvu",
+    category: "primary",
+    damage: 90,
+    impact: 23.4,
+    puncture: 23.4,
+    slash: 43.2,
+    fireRate: 15,
+    criticalChance: 0.22,
+    criticalMultiplier: 2.2,
+    statusChance: 0.22,
+    magazine: 200,
+    reloadTime: 13.83,
+    multishot: 1,
+    triggerType: "Auto",
+    modSlots: 8,
+    hasPrimaryArcaneSlot: false,
+    hasSecondaryArcaneSlot: false,
+    isIncarnon: false,
+    hasRivenSlot: true,
+  },
 ];
 
 // Custom companions go here when needed
