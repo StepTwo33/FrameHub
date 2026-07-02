@@ -25,6 +25,7 @@ import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, Fold
 import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
+import { ArchonShardSlot } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
 import { formatAbilityDescription } from "@/lib/ability-text";
@@ -43,6 +44,9 @@ import {
   getDualFormConfig,
   getDualFormAbilities,
   serializeDualFormBuilds,
+  EMPTY_EQUIPPED_SHARDS,
+  EMPTY_ARCANE_IDS,
+  DEFAULT_ARCANE_RANKS,
   type DualFormBuildSlice,
 } from "@/lib/dual-form-warframes";
 import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
@@ -271,11 +275,14 @@ export default function WarframeBuilderPage() {
   const currentFormSnapshot = useCallback((): DualFormBuildSlice => ({
     mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
     slotPolarities: { ...slotPolarities },
-  }), [equippedMods, slotPolarities]);
+    shards: equippedShards,
+    arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
+    arcaneRanks: [...equippedArcaneRanks],
+  }), [equippedMods, slotPolarities, equippedShards, equippedArcanes, equippedArcaneRanks]);
 
   const buildWarframePayload = useCallback((): Pick<
     WarframeBuildData,
-    "mods" | "slotPolarities" | "dualFormBuilds"
+    "mods" | "slotPolarities" | "shards" | "arcaneIds" | "arcaneRanks" | "dualFormBuilds"
   > => {
     if (!selectedWarframe) return { mods: [], slotPolarities: {} };
     if (!dualFormConfig) {
@@ -292,23 +299,30 @@ export default function WarframeBuilderPage() {
     (newFormId: string) => {
       if (!dualFormConfig || newFormId === activeDualFormId) return;
       const merged = { ...dualFormBuilds, [activeDualFormId]: currentFormSnapshot() };
-      const next = merged[newFormId] ?? { mods: [], slotPolarities: {} };
+      const next = merged[newFormId] ?? {
+        mods: [],
+        slotPolarities: {},
+        shards: [...EMPTY_EQUIPPED_SHARDS],
+        arcaneIds: [...EMPTY_ARCANE_IDS],
+        arcaneRanks: [...DEFAULT_ARCANE_RANKS],
+      };
       setDualFormBuilds(merged);
       setActiveDualFormId(newFormId);
       setEquippedMods(modSlotsToEquipped(next.mods));
       setSlotPolarities(next.slotPolarities);
+      setEquippedShards(next.shards ?? [...EMPTY_EQUIPPED_SHARDS]);
+      setEquippedArcanes(resolveSavedArcaneSlots(next.arcaneIds, 2));
+      setEquippedArcaneRanks(next.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     },
     [dualFormConfig, activeDualFormId, dualFormBuilds, currentFormSnapshot, modSlotsToEquipped],
   );
 
   const buildWarframeData = useCallback((): WarframeBuildData | null => {
     if (!selectedWarframe) return null;
-    const modPayload = buildWarframePayload();
+    const payload = buildWarframePayload();
     return {
       warframeId: selectedWarframe.id,
-      ...modPayload,
-      shards: equippedShards,
-      arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
+      ...payload,
       hasOrokinReactor: hasOrokinReactor,
       isMR30,
       helminthSlot,
@@ -316,7 +330,7 @@ export default function WarframeBuilderPage() {
       exaltedMods: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       exaltedSlotPolarities,
     };
-  }, [selectedWarframe, buildWarframePayload, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities]);
+  }, [selectedWarframe, buildWarframePayload, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities]);
 
   const applyLoadedBuild = useCallback((build: SavedBuild, options?: { silent?: boolean }) => {
     const d = build.data as WarframeBuildData;
@@ -331,20 +345,24 @@ export default function WarframeBuilderPage() {
       }
       setDualFormBuilds(nonDefault);
       setActiveDualFormId(config.defaultFormId);
-      setEquippedMods(modSlotsToEquipped(states[config.defaultFormId].mods));
-      setSlotPolarities(states[config.defaultFormId].slotPolarities);
+      const defaultState = states[config.defaultFormId];
+      setEquippedMods(modSlotsToEquipped(defaultState.mods));
+      setSlotPolarities(defaultState.slotPolarities);
+      setEquippedShards(defaultState.shards ?? [...EMPTY_EQUIPPED_SHARDS]);
+      setEquippedArcanes(resolveSavedArcaneSlots(defaultState.arcaneIds, 2));
+      setEquippedArcaneRanks(defaultState.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     } else {
       setDualFormBuilds({});
       setActiveDualFormId("sirius");
       setEquippedMods(modSlotsToEquipped(d.mods));
       setSlotPolarities(d.slotPolarities || {});
+      setEquippedShards(d.shards || [...EMPTY_EQUIPPED_SHARDS]);
+      setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
+      setEquippedArcaneRanks(d.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     }
     setSelectedWarframe(wf);
-    setEquippedShards(d.shards || [null, null, null, null, null]);
-    setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
     setHasOrokinReactor(d.hasOrokinReactor);
     setIsMR30(d.isMR30);
-    if (!config) setSlotPolarities(d.slotPolarities || {});
     setExaltedMods((d.exaltedMods || []).map((m) => {
       const mod = modsMap.get(m.modId);
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
@@ -921,8 +939,7 @@ export default function WarframeBuilderPage() {
                         onChange={handleDualFormSwitch}
                       />
                       <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Sirius and Orion share one warframe slot — arcanes, shards, and helminth apply to both.
-                        Mod configs are saved separately per form; weapons and companion stay on your loadout.
+                        Sirius and Orion share one loadout slot. Mods, arcanes, and shards are saved per form; Helminth applies to both.
                       </p>
                     </div>
                   )}
@@ -1030,36 +1047,15 @@ export default function WarframeBuilderPage() {
                   <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
                     ARCHON SHARDS
                   </h2>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex flex-wrap gap-1.5">
                     {equippedShards.map((shard, i) => (
-                      <div key={i}>
-                        {shard ? (
-                          <button
-                            onClick={() => handleRemoveShard(i)}
-                            className="relative w-16 h-20 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition-all hover:opacity-80"
-                            style={{
-                              borderColor: shardColors[shard.shardColor] || "#888",
-                              backgroundColor: `${shardColors[shard.shardColor]}15`,
-                            }}
-                          >
-                            <Diamond className="h-5 w-5" style={{ color: shardColors[shard.shardColor] }} />
-                            <span className="text-[9px] font-bold capitalize" style={{ color: shardColors[shard.shardColor] }}>
-                              {shard.shardColor}
-                            </span>
-                            <span className="text-[8px] text-muted-foreground">
-                              {shard.shardTier === 2 ? "TAU" : "STD"}
-                            </span>
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleOpenShardPicker(i)}
-                            className="w-16 h-20 rounded-lg border border-dashed border-border flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-purple-500/50 hover:text-purple-400 transition-all"
-                          >
-                            <Diamond className="h-4 w-4" />
-                            <span className="text-[9px]">Shard {i + 1}</span>
-                          </button>
-                        )}
-                      </div>
+                      <ArchonShardSlot
+                        key={i}
+                        shard={shard}
+                        slotIndex={i}
+                        onEquip={() => handleOpenShardPicker(i)}
+                        onRemove={() => handleRemoveShard(i)}
+                      />
                     ))}
                   </div>
                 </div>

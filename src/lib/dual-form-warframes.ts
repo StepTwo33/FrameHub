@@ -1,5 +1,9 @@
-import type { Ability, ModSlot } from "@/lib/types";
+import type { Ability, ModSlot, EquippedArchonShard } from "@/lib/types";
 import type { WarframeBuildData } from "@/lib/build-storage";
+
+export const EMPTY_EQUIPPED_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
+export const EMPTY_ARCANE_IDS: (string | null)[] = [null, null];
+export const DEFAULT_ARCANE_RANKS = [5, 5] as const;
 
 export interface DualFormDef {
   id: string;
@@ -68,6 +72,9 @@ export function isDualFormWarframe(warframeId: string): boolean {
 export interface DualFormBuildSlice {
   mods: ModSlot[];
   slotPolarities: Record<number, string>;
+  shards?: (EquippedArchonShard | null)[];
+  arcaneIds?: (string | null)[];
+  arcaneRanks?: number[];
 }
 
 export function emptyDualFormBuilds(warframeId: string): Record<string, DualFormBuildSlice> | undefined {
@@ -76,7 +83,13 @@ export function emptyDualFormBuilds(warframeId: string): Record<string, DualForm
   const builds: Record<string, DualFormBuildSlice> = {};
   for (const form of config.forms) {
     if (form.id === config.defaultFormId) continue;
-    builds[form.id] = { mods: [], slotPolarities: {} };
+    builds[form.id] = {
+      mods: [],
+      slotPolarities: {},
+      shards: [...EMPTY_EQUIPPED_SHARDS],
+      arcaneIds: [...EMPTY_ARCANE_IDS],
+      arcaneRanks: [...DEFAULT_ARCANE_RANKS],
+    };
   }
   return builds;
 }
@@ -91,12 +104,18 @@ export function dualFormStatesFromBuild(d: WarframeBuildData): Record<string, Du
       states[form.id] = {
         mods: d.mods ?? [],
         slotPolarities: d.slotPolarities ?? {},
+        shards: d.shards?.length === 5 ? d.shards : [...EMPTY_EQUIPPED_SHARDS],
+        arcaneIds: d.arcaneIds ?? [...EMPTY_ARCANE_IDS],
+        arcaneRanks: d.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS],
       };
     } else {
       const slice = d.dualFormBuilds?.[form.id];
       states[form.id] = {
         mods: slice?.mods ?? [],
         slotPolarities: slice?.slotPolarities ?? {},
+        shards: slice?.shards?.length === 5 ? slice.shards : [...EMPTY_EQUIPPED_SHARDS],
+        arcaneIds: slice?.arcaneIds ?? [...EMPTY_ARCANE_IDS],
+        arcaneRanks: slice?.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS],
       };
     }
   }
@@ -107,25 +126,55 @@ export function dualFormStatesFromBuild(d: WarframeBuildData): Record<string, Du
 export function serializeDualFormBuilds(
   warframeId: string,
   formStates: Record<string, DualFormBuildSlice>,
-): Pick<WarframeBuildData, "mods" | "slotPolarities" | "dualFormBuilds"> {
+): Pick<WarframeBuildData, "mods" | "slotPolarities" | "shards" | "arcaneIds" | "arcaneRanks" | "dualFormBuilds"> {
   const config = getDualFormConfig(warframeId);
   if (!config) {
-    const only = formStates.sirius ?? Object.values(formStates)[0] ?? { mods: [], slotPolarities: {} };
-    return { mods: only.mods, slotPolarities: only.slotPolarities };
+    const only = formStates.sirius ?? Object.values(formStates)[0] ?? {
+      mods: [],
+      slotPolarities: {},
+      shards: [...EMPTY_EQUIPPED_SHARDS],
+      arcaneIds: [...EMPTY_ARCANE_IDS],
+      arcaneRanks: [...DEFAULT_ARCANE_RANKS],
+    };
+    return {
+      mods: only.mods,
+      slotPolarities: only.slotPolarities,
+      shards: only.shards ?? [...EMPTY_EQUIPPED_SHARDS],
+      arcaneIds: only.arcaneIds ?? [...EMPTY_ARCANE_IDS],
+      arcaneRanks: only.arcaneRanks,
+    };
   }
-  const defaultState = formStates[config.defaultFormId] ?? { mods: [], slotPolarities: {} };
+  const defaultState = formStates[config.defaultFormId] ?? {
+    mods: [],
+    slotPolarities: {},
+    shards: [...EMPTY_EQUIPPED_SHARDS],
+    arcaneIds: [...EMPTY_ARCANE_IDS],
+    arcaneRanks: [...DEFAULT_ARCANE_RANKS],
+  };
   const dualFormBuilds: Record<string, DualFormBuildSlice> = {};
   for (const form of config.forms) {
     if (form.id === config.defaultFormId) continue;
-    const slice = formStates[form.id] ?? { mods: [], slotPolarities: {} };
+    const slice = formStates[form.id] ?? {
+      mods: [],
+      slotPolarities: {},
+      shards: [...EMPTY_EQUIPPED_SHARDS],
+      arcaneIds: [...EMPTY_ARCANE_IDS],
+      arcaneRanks: [...DEFAULT_ARCANE_RANKS],
+    };
     dualFormBuilds[form.id] = {
       mods: slice.mods,
       slotPolarities: slice.slotPolarities,
+      shards: slice.shards ?? [...EMPTY_EQUIPPED_SHARDS],
+      arcaneIds: slice.arcaneIds ?? [...EMPTY_ARCANE_IDS],
+      arcaneRanks: slice.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS],
     };
   }
   return {
     mods: defaultState.mods,
     slotPolarities: defaultState.slotPolarities,
+    shards: defaultState.shards ?? [...EMPTY_EQUIPPED_SHARDS],
+    arcaneIds: defaultState.arcaneIds ?? [...EMPTY_ARCANE_IDS],
+    arcaneRanks: defaultState.arcaneRanks,
     dualFormBuilds,
   };
 }

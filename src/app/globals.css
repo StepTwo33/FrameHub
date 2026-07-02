@@ -369,7 +369,8 @@
     radial-gradient(ellipse 45% 35% at 0% 100%, color-mix(in oklch, var(--primary) 5%, transparent), transparent 50%);
 }
 
-.page-ambient > *:not(.page-ambient-ignore) {
+.page-ambient > main,
+.page-ambient > footer {
   position: relative;
   z-index: 1;
 }

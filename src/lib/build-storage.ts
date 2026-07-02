@@ -126,6 +126,7 @@ export interface WarframeBuildData {
   mods: ModSlot[];
   shards: (EquippedArchonShard | null)[];
   arcaneIds: (string | null)[];
+  arcaneRanks?: number[];
   hasOrokinReactor: boolean;
   isMR30: boolean;
   slotPolarities: Record<number, string>;
@@ -133,8 +134,14 @@ export interface WarframeBuildData {
   helminthAbilityId?: string | null;
   exaltedMods?: ModSlot[];
   exaltedSlotPolarities?: Record<number, string>;
-  /** Non-default form mod configs for dual-form warframes (e.g. Orion on Sirius & Orion). */
-  dualFormBuilds?: Record<string, { mods: ModSlot[]; slotPolarities?: Record<number, string> }>;
+  /** Non-default form configs for dual-form warframes (e.g. Orion on Sirius & Orion). */
+  dualFormBuilds?: Record<string, {
+    mods: ModSlot[];
+    slotPolarities?: Record<number, string>;
+    shards?: (EquippedArchonShard | null)[];
+    arcaneIds?: (string | null)[];
+    arcaneRanks?: number[];
+  }>;
 }
 
 // Companion build data

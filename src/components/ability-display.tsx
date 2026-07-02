@@ -353,6 +353,287 @@ export function AbilityStatsBlock({
 
   if (!hasAny) return null;
 
+  const rows: React.ReactNode[] = [];
+
+  if (ability.damage != null && ability.damage > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="damage"
+        compact={compact}
+        label="Damage"
+        baseValue={ability.damage.toFixed(0)}
+        modifiedValue={(ability.damage * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.damagePerSecond != null && ability.damagePerSecond > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="dps"
+        compact={compact}
+        label="Damage/s"
+        baseValue={ability.damagePerSecond.toFixed(0)}
+        modifiedValue={(ability.damagePerSecond * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.directDamage != null && ability.directDamage > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="direct"
+        compact={compact}
+        label="Direct dmg"
+        baseValue={ability.directDamage.toFixed(0)}
+        modifiedValue={(ability.directDamage * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.aoeDamage != null && ability.aoeDamage > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="aoe"
+        compact={compact}
+        label="AoE dmg"
+        baseValue={ability.aoeDamage.toFixed(0)}
+        modifiedValue={(ability.aoeDamage * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (scaledBuff) {
+    rows.push(
+      <AbilityStatRow
+        key="buff"
+        compact={compact}
+        label="Dmg Buff"
+        baseValue={(abilityPercentFraction(ability.damageBuff!) * 100).toFixed(0)}
+        modifiedValue={(scaledBuff.value * 100).toFixed(0)}
+        unit="%"
+        isModified={scaledBuff.modified}
+        isPositive={str >= 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.range != null) {
+    rows.push(
+      <AbilityStatRow
+        key="range"
+        compact={compact}
+        label="Range"
+        baseValue={ability.range.toFixed(1)}
+        modifiedValue={(ability.range * rng).toFixed(1)}
+        unit="m"
+        isModified={rng !== 1}
+        isPositive={rng > 1}
+        scaleHint="range"
+      />,
+    );
+  }
+  if (ability.duration != null) {
+    rows.push(
+      <AbilityStatRow
+        key="duration"
+        compact={compact}
+        label="Duration"
+        baseValue={ability.duration.toFixed(1)}
+        modifiedValue={(ability.duration * dur).toFixed(1)}
+        unit="s"
+        isModified={dur !== 1}
+        isPositive={dur > 1}
+        scaleHint="duration"
+      />,
+    );
+  }
+  if (ability.radius != null) {
+    rows.push(
+      <AbilityStatRow
+        key="radius"
+        compact={compact}
+        label="Radius"
+        baseValue={ability.radius.toFixed(1)}
+        modifiedValue={(ability.radius * rng).toFixed(1)}
+        unit="m"
+        isModified={rng !== 1}
+        isPositive={rng > 1}
+        scaleHint="range"
+      />,
+    );
+  }
+  if (ability.chainRange != null && ability.chainRange > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="chain-range"
+        compact={compact}
+        label="Chain range"
+        baseValue={ability.chainRange.toFixed(1)}
+        modifiedValue={(ability.chainRange * rng).toFixed(1)}
+        unit="m"
+        isModified={rng !== 1}
+        isPositive={rng > 1}
+        scaleHint="range"
+      />,
+    );
+  }
+  if (ability.chainLinks != null && ability.chainLinks > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="chain-links"
+        compact={compact}
+        label="Chain links"
+        baseValue={String(ability.chainLinks)}
+        modifiedValue={String(ability.chainLinks)}
+        isModified={false}
+        isPositive
+      />,
+    );
+  }
+  if (ability.maxTargets != null && ability.maxTargets > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="max-targets"
+        compact={compact}
+        label="Max targets"
+        baseValue={String(ability.maxTargets)}
+        modifiedValue={String(ability.maxTargets)}
+        isModified={false}
+        isPositive
+      />,
+    );
+  }
+  if (ability.health != null && ability.health > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="health"
+        compact={compact}
+        label="Health"
+        baseValue={ability.health.toFixed(0)}
+        modifiedValue={(ability.health * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.armor != null && ability.armor > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="armor"
+        compact={compact}
+        label="Armor"
+        baseValue={ability.armor.toFixed(0)}
+        modifiedValue={(ability.armor * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.shield != null && ability.shield > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="shield"
+        compact={compact}
+        label="Shield"
+        baseValue={ability.shield.toFixed(0)}
+        modifiedValue={(ability.shield * str).toFixed(0)}
+        isModified={str !== 1}
+        isPositive={str > 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (scaledDr) {
+    rows.push(
+      <AbilityStatRow
+        key="dr"
+        compact={compact}
+        label="Dmg Reduction"
+        baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
+        modifiedValue={(scaledDr.value * 100).toFixed(0)}
+        unit="%"
+        isModified={scaledDr.modified}
+        isPositive={str >= 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.statusChance != null && ability.statusChance > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="status"
+        compact={compact}
+        label="Status"
+        baseValue={(ability.statusChance * 100).toFixed(0)}
+        modifiedValue={Math.min(100, ability.statusChance * str * 100).toFixed(0)}
+        unit="%"
+        isModified={str !== 1}
+        isPositive={str >= 1}
+        scaleHint="strength"
+      />,
+    );
+  }
+  if (ability.castTime != null && ability.castTime > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="cast"
+        compact={compact}
+        label="Cast Time"
+        baseValue={ability.castTime.toFixed(1)}
+        modifiedValue={ability.castTime.toFixed(1)}
+        unit="s"
+        isModified={false}
+        isPositive
+      />,
+    );
+  }
+  if (ability.cooldown != null && ability.cooldown > 0) {
+    rows.push(
+      <AbilityStatRow
+        key="cooldown"
+        compact={compact}
+        label="Cooldown"
+        baseValue={ability.cooldown.toFixed(1)}
+        modifiedValue={ability.cooldown.toFixed(1)}
+        unit="s"
+        isModified={false}
+        isPositive
+      />,
+    );
+  }
+  for (const line of scaledMisc) {
+    rows.push(
+      <AbilityStatRow
+        key={line.label}
+        compact={compact}
+        label={line.label}
+        baseValue={line.base}
+        modifiedValue={line.scaled}
+        isModified={line.modified}
+        isPositive={line.positive ?? true}
+        scaleHint={line.scaleAttr}
+      />,
+    );
+  }
+  if (ability.miscStats?.channeled === true) {
+    rows.push(
+      <div key="channeled" className="px-1.5 py-0.5 text-[10px] font-medium text-violet-400">
+        Channeled
+      </div>,
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -360,248 +641,7 @@ export function AbilityStatsBlock({
         compact && "p-1",
       )}
     >
-      {hasDamage && (
-        <AbilityStatSection title="Damage">
-          {ability.damage != null && ability.damage > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Damage"
-            baseValue={ability.damage.toFixed(0)}
-            modifiedValue={(ability.damage * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Damage/s"
-            baseValue={ability.damagePerSecond.toFixed(0)}
-            modifiedValue={(ability.damagePerSecond * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.directDamage != null && ability.directDamage > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Direct dmg"
-            baseValue={ability.directDamage.toFixed(0)}
-            modifiedValue={(ability.directDamage * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.aoeDamage != null && ability.aoeDamage > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="AoE dmg"
-            baseValue={ability.aoeDamage.toFixed(0)}
-            modifiedValue={(ability.aoeDamage * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {scaledBuff && (
-          <AbilityStatRow
-            compact={compact}
-            label="Dmg Buff"
-            baseValue={(abilityPercentFraction(ability.damageBuff!) * 100).toFixed(0)}
-            modifiedValue={(scaledBuff.value * 100).toFixed(0)}
-            unit="%"
-            isModified={scaledBuff.modified}
-            isPositive={str >= 1}
-            scaleHint="strength"
-          />
-        )}
-        </AbilityStatSection>
-      )}
-
-      {hasDimensions && (
-        <AbilityStatSection title="Dimensions">
-          {ability.range != null && (
-          <AbilityStatRow
-            compact={compact}
-            label="Range"
-            baseValue={ability.range.toFixed(1)}
-            modifiedValue={(ability.range * rng).toFixed(1)}
-            unit="m"
-            isModified={rng !== 1}
-            isPositive={rng > 1}
-            scaleHint="range"
-          />
-        )}
-        {ability.duration != null && (
-          <AbilityStatRow
-            compact={compact}
-            label="Duration"
-            baseValue={ability.duration.toFixed(1)}
-            modifiedValue={(ability.duration * dur).toFixed(1)}
-            unit="s"
-            isModified={dur !== 1}
-            isPositive={dur > 1}
-            scaleHint="duration"
-          />
-        )}
-        {ability.radius != null && (
-          <AbilityStatRow
-            compact={compact}
-            label="Radius"
-            baseValue={ability.radius.toFixed(1)}
-            modifiedValue={(ability.radius * rng).toFixed(1)}
-            unit="m"
-            isModified={rng !== 1}
-            isPositive={rng > 1}
-            scaleHint="range"
-          />
-        )}
-        {ability.chainRange != null && ability.chainRange > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Chain range"
-            baseValue={ability.chainRange.toFixed(1)}
-            modifiedValue={(ability.chainRange * rng).toFixed(1)}
-            unit="m"
-            isModified={rng !== 1}
-            isPositive={rng > 1}
-            scaleHint="range"
-          />
-        )}
-        {ability.chainLinks != null && ability.chainLinks > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Chain links"
-            baseValue={String(ability.chainLinks)}
-            modifiedValue={String(ability.chainLinks)}
-            isModified={false}
-            isPositive
-          />
-        )}
-        {ability.maxTargets != null && ability.maxTargets > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Max targets"
-            baseValue={String(ability.maxTargets)}
-            modifiedValue={String(ability.maxTargets)}
-            isModified={false}
-            isPositive
-          />
-        )}
-        </AbilityStatSection>
-      )}
-
-      {hasDefense && (
-        <AbilityStatSection title="Defense & Effects">
-          {ability.health != null && ability.health > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Health"
-            baseValue={ability.health.toFixed(0)}
-            modifiedValue={(ability.health * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.armor != null && ability.armor > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Armor"
-            baseValue={ability.armor.toFixed(0)}
-            modifiedValue={(ability.armor * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.shield != null && ability.shield > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Shield"
-            baseValue={ability.shield.toFixed(0)}
-            modifiedValue={(ability.shield * str).toFixed(0)}
-            isModified={str !== 1}
-            isPositive={str > 1}
-            scaleHint="strength"
-          />
-        )}
-        {scaledDr && (
-          <AbilityStatRow
-            compact={compact}
-            label="Dmg Reduction"
-            baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
-            modifiedValue={(scaledDr.value * 100).toFixed(0)}
-            unit="%"
-            isModified={scaledDr.modified}
-            isPositive={str >= 1}
-            scaleHint="strength"
-          />
-        )}
-        {ability.statusChance != null && ability.statusChance > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Status"
-            baseValue={(ability.statusChance * 100).toFixed(0)}
-            modifiedValue={Math.min(100, ability.statusChance * str * 100).toFixed(0)}
-            unit="%"
-            isModified={str !== 1}
-            isPositive={str >= 1}
-            scaleHint="strength"
-          />
-        )}
-        </AbilityStatSection>
-      )}
-
-      {hasTiming && (
-        <AbilityStatSection title="Timing">
-          {ability.castTime != null && ability.castTime > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Cast Time"
-            baseValue={ability.castTime.toFixed(1)}
-            modifiedValue={ability.castTime.toFixed(1)}
-            unit="s"
-            isModified={false}
-            isPositive
-          />
-        )}
-        {ability.cooldown != null && ability.cooldown > 0 && (
-          <AbilityStatRow
-            compact={compact}
-            label="Cooldown"
-            baseValue={ability.cooldown.toFixed(1)}
-            modifiedValue={ability.cooldown.toFixed(1)}
-            unit="s"
-            isModified={false}
-            isPositive
-          />
-        )}
-        </AbilityStatSection>
-      )}
-
-      {scaledMisc.length > 0 && (
-        <AbilityStatSection title="Ability Details">
-          {scaledMisc.map((line) => (
-            <AbilityStatRow
-              key={line.label}
-              compact={compact}
-              label={line.label}
-              baseValue={line.base}
-              modifiedValue={line.scaled}
-              isModified={line.modified}
-              isPositive={line.positive ?? true}
-              scaleHint={line.scaleAttr}
-            />
-          ))}
-          {ability.miscStats?.channeled === true && (
-            <div className="px-1.5 py-0.5 text-[10px] font-medium text-violet-400">Channeled</div>
-          )}
-        </AbilityStatSection>
-      )}
+      {rows}
     </div>
   );
 }
