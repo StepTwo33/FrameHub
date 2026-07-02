@@ -18,9 +18,8 @@ import { getDualFormAbilities, getDualFormConfig } from "@/lib/dual-form-warfram
 import {
   scaleAbilityMiscStats,
   scaledAbilityEnergyCost,
-  scaledDamageReduction,
-  scaledDamageBuff,
-  getAbilityDrCap,
+  scaledAbilityDamageReduction,
+  scaledAbilityDamageBuff,
 } from "@/lib/ability-misc-stats";
 
 const ELEMENT_COLORS: Record<string, string> = {
@@ -681,6 +680,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
                 ability={entry.ability}
                 stats={stats}
                 formLabel={entry.formLabel}
+                warframeId={warframe?.id}
               />
             );
           })}
@@ -818,18 +818,26 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
 }
 
 
-function AbilityPreview({ ability, stats, formLabel }: {
-  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string;
+function AbilityPreview({ ability, stats, formLabel, warframeId }: {
+  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string; warframeId?: string;
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
   const eff = stats.abilityEfficiency;
   const rng = stats.abilityRange;
+  const display = { warframeId, abilityName: ability.name };
 
   const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
   const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
     : [];
+
+  const scaledDr = ability.damageReduction != null && ability.damageReduction > 0
+    ? scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats)
+    : null;
+  const scaledBuff = ability.damageBuff != null && ability.damageBuff > 0
+    ? scaledAbilityDamageBuff(ability.damageBuff, str, display)
+    : null;
 
   const desc = formatAbilityDescription(ability.description);
   return (
@@ -880,19 +888,19 @@ function AbilityPreview({ ability, stats, formLabel }: {
             DPS: <span className="text-foreground font-mono">{(ability.damagePerSecond * str).toFixed(0)}/s</span>
           </div>
         )}
-        {ability.damageBuff != null && ability.damageBuff > 0 && (
+        {scaledBuff && (
           <div className="text-[10px] text-muted-foreground">
             Damage Buff:{" "}
             <span className="text-orange-400 font-mono">
-              +{(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}%
+              +{(scaledBuff.value * 100).toFixed(0)}%
             </span>
           </div>
         )}
-        {ability.damageReduction != null && ability.damageReduction > 0 && (
+        {scaledDr && (
           <div className="text-[10px] text-muted-foreground">
             DR:{" "}
             <span className="text-cyan-400 font-mono">
-              {(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}%
+              {(scaledDr.value * 100).toFixed(0)}%
             </span>
           </div>
         )}
@@ -987,9 +995,11 @@ function HelminthAbilityPreview({ ability, stats }: {
   const eff = stats.abilityEfficiency;
   const rng = stats.abilityRange;
 
+  const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
+
   const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
   const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
     : [];
   const desc = formatAbilityDescription(ability.description);
 
@@ -1011,22 +1021,28 @@ function HelminthAbilityPreview({ ability, stats }: {
             Damage: <span className="text-foreground font-mono">{(ability.damage * str).toFixed(0)}</span>
           </div>
         )}
-        {ability.damageBuff != null && ability.damageBuff > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Damage Buff:{" "}
-            <span className="text-orange-400 font-mono">
-              +{(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}%
-            </span>
-          </div>
-        )}
-        {ability.damageReduction != null && ability.damageReduction > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            DR:{" "}
-            <span className="text-cyan-400 font-mono">
-              {(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}%
-            </span>
-          </div>
-        )}
+        {ability.damageBuff != null && ability.damageBuff > 0 && (() => {
+          const buff = scaledAbilityDamageBuff(ability.damageBuff, str, display);
+          return (
+            <div className="text-[10px] text-muted-foreground">
+              Damage Buff:{" "}
+              <span className="text-orange-400 font-mono">
+                +{(buff.value * 100).toFixed(0)}%
+              </span>
+            </div>
+          );
+        })()}
+        {ability.damageReduction != null && ability.damageReduction > 0 && (() => {
+          const dr = scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats);
+          return (
+            <div className="text-[10px] text-muted-foreground">
+              DR:{" "}
+              <span className="text-cyan-400 font-mono">
+                {(dr.value * 100).toFixed(0)}%
+              </span>
+            </div>
+          );
+        })()}
         {ability.duration != null && ability.duration > 0 && (
           <div className="text-[10px] text-muted-foreground">
             Duration: <span className="text-foreground font-mono">{(ability.duration * dur).toFixed(1)}s</span>

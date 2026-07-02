@@ -1,9 +1,21 @@
 import type { Ability } from "@/lib/types";
+import {
+  getVerifiedFieldScaling,
+  getVerifiedMiscScaling,
+  type AbilityScaleAttribute,
+  type VerifiedStatScaling,
+} from "@/lib/ability-scaling-registry";
 
 export interface AbilityScaleContext {
   strength: number;
   duration: number;
   range: number;
+}
+
+export interface AbilityDisplayContext {
+  warframeId?: string;
+  abilityName: string;
+  helminth?: boolean;
 }
 
 export interface ScaledMiscStatLine {
@@ -31,7 +43,7 @@ const LABELS: Record<string, string> = {
   reviveCooldown: "Revive Cooldown",
   criticalChanceBonus: "Crit Chance Bonus",
   maxConstellationStars: "Max Stars",
-  durationExtension: "Duration per Kill",
+  durationExtension: "Duration Extension",
   slowPercent: "Slow",
   lifeStealPercent: "Life Steal",
   defenseReduction: "Defense Reduction",
@@ -59,6 +71,7 @@ const LABELS: Record<string, string> = {
   mutationStackChance: "Mutation Chance",
   mutationStackCost: "Mutation Cost",
   statusCleanse: "Status Cleanse",
+  statusChance: "Status Chance",
   healthMultiplier: "Health Multiplier",
   damageMultiplier: "Damage Multiplier",
   markDamageMultiplier: "Mark Damage Mult.",
@@ -87,8 +100,8 @@ function parseRangePercent(value: string): { min: number; max: number } | null {
   return { min: parseFloat(match[1]) / 100, max: parseFloat(match[2]) / 100 };
 }
 
-function parseRangeNumbers(value: string): { min: number; max: number } | null {
-  const match = value.match(/^([\d.]+)\s*[–-]\s*([\d.]+)$/);
+function parseRangePerSecond(value: string): { min: number; max: number } | null {
+  const match = value.match(/^([\d.]+)\s*[–-]\s*([\d.]+)\/s$/);
   if (!match) return null;
   return { min: parseFloat(match[1]), max: parseFloat(match[2]) };
 }
@@ -117,39 +130,6 @@ function parseMeters(value: unknown): number | null {
   return null;
 }
 
-function isRadiusLikeKey(key: string): boolean {
-  return /radius|range/i.test(key) && !/drain|duration|cooldown|revive/i.test(key);
-}
-
-function isPercentRangeKey(key: string): boolean {
-  return /strip|reduction|bonus/i.test(key) && !/multiplier|growth/i.test(key);
-}
-
-const FRACTION_BUFF_KEYS = new Set([
-  "speedBuff",
-  "reloadBuff",
-  "gunDamage",
-  "meleeDamage",
-  "strengthBonus",
-]);
-
-const MULTIPLIER_KEYS = new Set([
-  "damageBonus",
-  "damageMultiplier",
-  "healthMultiplier",
-  "markDamageMultiplier",
-  "armorMultiplier",
-  "damageGrowth",
-  "critDamageBonus",
-  "electricDamageBonus",
-]);
-
-function parseRangePerSecond(value: string): { min: number; max: number } | null {
-  const match = value.match(/^([\d.]+)\s*[–-]\s*([\d.]+)\/s$/);
-  if (!match) return null;
-  return { min: parseFloat(match[1]), max: parseFloat(match[2]) };
-}
-
 function parseSeconds(value: unknown): number | null {
   if (typeof value === "number") return value;
   if (typeof value === "string") {
@@ -172,325 +152,211 @@ function fmtPct(fraction: number): string {
   return `${(fraction * 100).toFixed(0)}%`;
 }
 
-function drCapFrom(miscStats: Record<string, unknown>): number {
-  const cap = miscStats.drCap;
-  if (typeof cap === "number") return cap <= 1 ? cap : cap / 100;
-  return 0.9;
+function scaleMultiplier(ctx: AbilityScaleContext, attr: AbilityScaleAttribute): number {
+  if (attr === "strength") return ctx.strength;
+  if (attr === "duration") return ctx.duration;
+  return ctx.range;
 }
 
-/** DR cap from ability misc metadata (default 90%). */
-export function getAbilityDrCap(miscStats?: Record<string, unknown>): number {
-  if (!miscStats) return 0.9;
-  return drCapFrom(miscStats);
+function resolveCap(
+  rule: VerifiedStatScaling,
+  miscStats: Record<string, unknown>,
+): number | undefined {
+  if (rule.useSiblingDrCap) {
+    const cap = miscStats.drCap;
+    if (typeof cap === "number") return cap <= 1 ? cap : cap / 100;
+  }
+  if (rule.useSiblingSlowCap) {
+    const cap = miscStats.slowCap;
+    if (typeof cap === "number") return cap <= 1 ? cap : cap / 100;
+  }
+  return rule.cap;
 }
 
-/** Scale misc ability stats with STR / DUR / RNG and apply known caps. */
+function applyCap(value: number, cap: number | undefined): number {
+  return cap != null ? Math.min(value, cap) : value;
+}
+
+function formatBaseValue(key: string, value: unknown): string {
+  if (typeof value === "boolean") return String(value);
+  if (key === "arc") {
+    const deg = parseDegrees(value);
+    if (deg != null) return `${deg.toFixed(1)}°`;
+  }
+  const meters = parseMeters(value);
+  if (meters != null && (key.includes("adius") || key.includes("ange") || key === "width" || key === "arc")) {
+    return `${meters.toFixed(1)}m`;
+  }
+  const seconds = parseSeconds(value);
+  if (seconds != null) return `${seconds.toFixed(1)}s`;
+  const pct = parsePercentValue(value);
+  if (pct != null) return fmtPct(pct);
+  if (typeof value === "string") {
+    const range = parseRangePercent(value);
+    if (range) return `${fmtPct(range.min)}–${fmtPct(range.max)}`;
+    const perSec = parseRangePerSecond(value);
+    if (perSec) return `${perSec.min}–${perSec.max}/s`;
+    const single = parseSinglePerSecond(value);
+    if (single != null) return `${single}/s`;
+    return value;
+  }
+  if (typeof value === "number") {
+    if (value > 1 && value <= 10 && (key.endsWith("Bonus") || key.endsWith("Multiplier") || key === "damageBonus")) {
+      return `${(value * 100).toFixed(0)}%`;
+    }
+    return Number.isInteger(value) ? String(value) : value.toFixed(2);
+  }
+  return String(value);
+}
+
+function scaleVerifiedValue(
+  key: string,
+  value: unknown,
+  rule: VerifiedStatScaling,
+  ctx: AbilityScaleContext,
+  miscStats: Record<string, unknown>,
+): { scaled: string; modified: boolean; positive: boolean } | null {
+  const mult = scaleMultiplier(ctx, rule.scale);
+  const cap = resolveCap(rule, miscStats);
+
+  if (key === "arc") {
+    const base = parseDegrees(value);
+    if (base == null) return null;
+    const scaled = applyCap(base * mult, cap);
+    return {
+      scaled: `${scaled.toFixed(1)}°`,
+      modified: mult !== 1,
+      positive: mult >= 1,
+    };
+  }
+
+  const meters = parseMeters(value);
+  if (meters != null && (key.includes("adius") || key.includes("ange") || key === "width" || key === "stunRadius" || key === "enemyLinkRange" || key === "explosionRadius" || key === "splashRadius" || key === "decoyRadius")) {
+    const scaled = applyCap(meters * mult, cap);
+    return {
+      scaled: `${scaled.toFixed(1)}m`,
+      modified: mult !== 1,
+      positive: mult >= 1,
+    };
+  }
+
+  const seconds = parseSeconds(value);
+  if (seconds != null) {
+    const scaled = applyCap(seconds * mult, cap);
+    return {
+      scaled: `${scaled.toFixed(1)}s`,
+      modified: mult !== 1,
+      positive: mult >= 1,
+    };
+  }
+
+  if (typeof value === "string" && key === "damageReduction") {
+    const range = parseRangePercent(value);
+    if (range) {
+      const minScaled = applyCap(range.min * mult, cap);
+      const maxScaled = applyCap(range.max * mult, cap);
+      return {
+        scaled: `${fmtPct(minScaled)}–${fmtPct(maxScaled)}`,
+        modified: mult !== 1,
+        positive: mult >= 1,
+      };
+    }
+  }
+
+  if (typeof value === "string" && key === "healthRegen") {
+    const range = parseRangePerSecond(value);
+    if (range) {
+      return {
+        scaled: `${Math.round(range.min * mult)}–${Math.round(range.max * mult)}/s`,
+        modified: mult !== 1,
+        positive: mult >= 1,
+      };
+    }
+    const single = parseSinglePerSecond(value);
+    if (single != null) {
+      return {
+        scaled: `${Math.round(single * mult)}/s`,
+        modified: mult !== 1,
+        positive: mult >= 1,
+      };
+    }
+  }
+
+  const pct = parsePercentValue(value);
+  if (pct != null) {
+    const scaled = applyCap(pct * mult, cap);
+    return {
+      scaled: fmtPct(scaled),
+      modified: Math.abs(scaled - pct) > 0.001,
+      positive: scaled >= pct,
+    };
+  }
+
+  const num = parseNumeric(value);
+  if (num != null) {
+    let scaledNum: number;
+    if (key === "javelins" || key === "maggots") {
+      scaledNum = Math.max(1, Math.round(num * mult));
+    } else if (key.endsWith("Multiplier") || key === "damageBonus" || key === "damageGrowth") {
+      scaledNum = applyCap(num * mult, cap);
+      if (num <= 1) {
+        return {
+          scaled: fmtPct(scaledNum),
+          modified: mult !== 1,
+          positive: mult >= 1,
+        };
+      }
+      return {
+        scaled: `${(scaledNum * 100).toFixed(0)}%`,
+        modified: mult !== 1,
+        positive: mult >= 1,
+      };
+    } else {
+      scaledNum = applyCap(num * mult, cap);
+    }
+    return {
+      scaled: String(Math.round(scaledNum)),
+      modified: Math.round(scaledNum) !== Math.round(num),
+      positive: scaledNum >= num,
+    };
+  }
+
+  return null;
+}
+
+/** Scale misc stats only where verified in the scaling registry. */
 export function scaleAbilityMiscStats(
   miscStats: Record<string, unknown>,
   ctx: AbilityScaleContext,
+  display?: AbilityDisplayContext,
 ): ScaledMiscStatLine[] {
-  const { strength: str, duration: dur, range: rng } = ctx;
-  const drCap = drCapFrom(miscStats);
   const lines: ScaledMiscStatLine[] = [];
 
   for (const [key, value] of Object.entries(miscStats)) {
     if (SKIP_KEYS.has(key)) continue;
 
-    if (key === "statusChance" || key === "strengthBonus" || FRACTION_BUFF_KEYS.has(key)) {
-      const base = parsePercentValue(value);
-      if (base != null) {
-        const cap = key === "speedBuff" || key === "reloadBuff" ? 1 : key === "statusChance" ? 1 : undefined;
-        const scaled = cap != null ? Math.min(base * str, cap) : base * str;
-        lines.push({
-          label: humanizeKey(key),
-          base: fmtPct(base),
-          scaled: fmtPct(scaled),
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
+    const base = formatBaseValue(key, value);
+    const rule = display
+      ? getVerifiedMiscScaling(display.warframeId, display.abilityName, key, display.helminth)
+      : null;
 
-    if (MULTIPLIER_KEYS.has(key) && typeof value === "number") {
-      const scaled = value * str;
+    if (!rule) {
       lines.push({
         label: humanizeKey(key),
-        base: value <= 1 ? fmtPct(value) : `${(value * 100).toFixed(0)}%`,
-        scaled: value <= 1 ? fmtPct(scaled) : `${(scaled * 100).toFixed(0)}%`,
-        modified: str !== 1,
-        positive: str >= 1,
-      });
-      continue;
-    }
-
-    if (key === "armorCap" && typeof value === "number") {
-      const scaled = value * str;
-      lines.push({
-        label: humanizeKey(key),
-        base: String(Math.round(value)),
-        scaled: String(Math.round(scaled)),
-        modified: str !== 1,
-        positive: str >= 1,
-      });
-      continue;
-    }
-
-    if (key === "healPerMeter" && typeof value === "number") {
-      const scaled = value * str;
-      lines.push({
-        label: humanizeKey(key),
-        base: fmtPct(value),
-        scaled: fmtPct(scaled),
-        modified: str !== 1,
-        positive: str >= 1,
-      });
-      continue;
-    }
-
-    if (key === "width" || isRadiusLikeKey(key)) {
-      const base = parseMeters(value);
-      if (base != null) {
-        const scaled = base * rng;
-        lines.push({
-          label: humanizeKey(key),
-          base: `${base.toFixed(1)}m`,
-          scaled: `${scaled.toFixed(1)}m`,
-          modified: rng !== 1,
-          positive: rng >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (typeof value === "string" && isPercentRangeKey(key)) {
-      const range = parseRangePercent(value);
-      if (range) {
-        const minScaled = Math.min(range.min * str, 1);
-        const maxScaled = Math.min(range.max * str, 1);
-        lines.push({
-          label: humanizeKey(key),
-          base: `${fmtPct(range.min)}–${fmtPct(range.max)}`,
-          scaled: `${fmtPct(minScaled)}–${fmtPct(maxScaled)}`,
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (typeof value === "string") {
-      const numRange = parseRangeNumbers(value);
-      if (numRange && /bolt|target|enemy/i.test(key)) {
-        const minScaled = Math.max(1, Math.round(numRange.min * str));
-        const maxScaled = Math.max(1, Math.round(numRange.max * str));
-        lines.push({
-          label: humanizeKey(key),
-          base: `${numRange.min}–${numRange.max}`,
-          scaled: `${minScaled}–${maxScaled}`,
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (key === "shieldStrip" || key === "armorStrip" || key === "defenseReduction") {
-      const base = parsePercentValue(value);
-      if (base != null) {
-        const scaled = Math.min(base * str, 1);
-        lines.push({
-          label: humanizeKey(key),
-          base: fmtPct(base),
-          scaled: fmtPct(scaled),
-          modified: Math.abs(scaled - base) > 0.001,
-          positive: scaled >= base,
-        });
-        continue;
-      }
-    }
-
-    if (key === "arc") {
-      const base = parseDegrees(value);
-      if (base != null) {
-        const scaled = base * rng;
-        lines.push({
-          label: "Arc",
-          base: `${base.toFixed(1)}°`,
-          scaled: `${scaled.toFixed(1)}°`,
-          modified: rng !== 1,
-          positive: rng >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (
-      (key === "minRadius" || key === "maxRadius" || key === "decoyRadius" || key === "splashRadius" || key === "stunRadius" || key === "explosionRadius" || key === "enemyLinkRange") &&
-      typeof value === "number"
-    ) {
-      const scaled = value * rng;
-      lines.push({
-        label: humanizeKey(key),
-        base: `${value.toFixed(1)}m`,
-        scaled: `${scaled.toFixed(1)}m`,
-        modified: rng !== 1,
-        positive: rng >= 1,
-      });
-      continue;
-    }
-
-    if (
-      (key === "decoyDamage" || key === "shieldsPerKill" || key === "energyRegen" || key === "healthPerHit" || key === "energyRefundPerHit") &&
-      (typeof value === "number" || typeof value === "string")
-    ) {
-      const base = parseNumeric(value);
-      if (base != null) {
-        const scaled = base * str;
-        lines.push({
-          label: humanizeKey(key),
-          base: String(Math.round(base)),
-          scaled: String(Math.round(scaled)),
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (key === "decoyDuration" || key === "armorDuration") {
-      const base = parseSeconds(value);
-      if (base != null) {
-        const scaled = base * dur;
-        lines.push({
-          label: humanizeKey(key),
-          base: `${base.toFixed(1)}s`,
-          scaled: `${scaled.toFixed(1)}s`,
-          modified: dur !== 1,
-          positive: dur >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (key === "damageReduction" && typeof value === "string") {
-      const range = parseRangePercent(value);
-      if (range) {
-        const minScaled = Math.min(range.min * str, drCap);
-        const maxScaled = Math.min(range.max * str, drCap);
-        lines.push({
-          label: "Damage Reduction",
-          base: `${fmtPct(range.min)}–${fmtPct(range.max)}`,
-          scaled: `${fmtPct(minScaled)}–${fmtPct(maxScaled)}`,
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (key === "healthRegen" && typeof value === "string") {
-      const range = parseRangePerSecond(value);
-      if (range) {
-        lines.push({
-          label: "Health Regen",
-          base: `${range.min}–${range.max}/s`,
-          scaled: `${Math.round(range.min * str)}–${Math.round(range.max * str)}/s`,
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-      const single = parseSinglePerSecond(value);
-      if (single != null) {
-        lines.push({
-          label: "Health Regen",
-          base: `${single}/s`,
-          scaled: `${Math.round(single * str)}/s`,
-          modified: str !== 1,
-          positive: str >= 1,
-        });
-        continue;
-      }
-    }
-
-    if (key === "slowPercent" && typeof value === "number") {
-      const cap = typeof miscStats.slowCap === "number"
-        ? (miscStats.slowCap <= 1 ? miscStats.slowCap : miscStats.slowCap / 100)
-        : 0.95;
-      const scaled = Math.min(value * str, cap);
-      lines.push({
-        label: "Slow",
-        base: fmtPct(value),
-        scaled: fmtPct(scaled),
-        modified: str !== 1,
-        positive: str >= 1,
-      });
-      continue;
-    }
-
-    if (key === "lifeStealPercent" && typeof value === "number") {
-      lines.push({
-        label: "Life Steal",
-        base: fmtPct(value),
-        scaled: fmtPct(value * str),
-        modified: str !== 1,
-        positive: str >= 1,
-      });
-      continue;
-    }
-
-    if ((key === "javelins" || key === "maggots") && typeof value === "number") {
-      const scaled = Math.max(1, Math.round(value * str));
-      lines.push({
-        label: humanizeKey(key),
-        base: String(value),
-        scaled: String(scaled),
-        modified: scaled !== value,
-        positive: scaled >= value,
-      });
-      continue;
-    }
-
-    if (typeof value === "boolean") {
-      lines.push({
-        label: humanizeKey(key),
-        base: String(value),
-        scaled: String(value),
+        base,
+        scaled: base,
         modified: false,
       });
       continue;
     }
 
-    if (
-      key === "criticalChanceBonus" ||
-      key === "durationExtension" ||
-      key === "maxConstellationStars" ||
-      key === "reviveCooldown" ||
-      key === "decoyCooldown" ||
-      key === "statusCleanse" ||
-      key === "mutationStackChance" ||
-      key === "energyDrain" ||
-      key === "mutationStackCost"
-    ) {
-      lines.push({
-        label: humanizeKey(key),
-        base: String(value),
-        scaled: String(value),
-        modified: false,
-      });
-      continue;
-    }
-
+    const result = scaleVerifiedValue(key, value, rule, ctx, miscStats);
     lines.push({
       label: humanizeKey(key),
-      base: typeof value === "number"
-        ? (Number.isInteger(value) ? String(value) : value.toFixed(2))
-        : String(value),
-      scaled: typeof value === "number"
-        ? (Number.isInteger(value) ? String(value) : value.toFixed(2))
-        : String(value),
-      modified: false,
+      base,
+      scaled: result?.scaled ?? base,
+      modified: result?.modified ?? false,
+      positive: result?.positive ?? true,
     });
   }
 
@@ -508,12 +374,62 @@ export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
 }
 
-export function scaledDamageReduction(base: number, strength: number, cap = 0.9): number {
-  return Math.min(abilityPercentFraction(base) * strength, cap);
+export function scaledDamageReduction(
+  base: number,
+  strength: number,
+  cap?: number,
+): number {
+  const fraction = abilityPercentFraction(base) * strength;
+  return cap != null ? Math.min(fraction, cap) : fraction;
 }
 
 export function scaledDamageBuff(base: number, strength: number): number {
   return abilityPercentFraction(base) * strength;
+}
+
+/** Scale top-level DR only when verified for this ability. */
+export function scaledAbilityDamageReduction(
+  base: number,
+  strength: number,
+  display: AbilityDisplayContext,
+  miscStats?: Record<string, unknown>,
+): { value: number; modified: boolean } {
+  const rule = getVerifiedFieldScaling(display.warframeId, display.abilityName, "damageReduction");
+  if (!rule) {
+    return { value: abilityPercentFraction(base), modified: false };
+  }
+  const cap = rule.useSiblingDrCap && miscStats
+    ? resolveCap(rule, miscStats)
+    : rule.cap;
+  return {
+    value: scaledDamageReduction(base, strength, cap),
+    modified: strength !== 1,
+  };
+}
+
+/** Scale top-level damage buff only when verified for this ability. */
+export function scaledAbilityDamageBuff(
+  base: number,
+  strength: number,
+  display: AbilityDisplayContext,
+): { value: number; modified: boolean } {
+  const rule = getVerifiedFieldScaling(display.warframeId, display.abilityName, "damageBuff");
+  if (!rule) {
+    return { value: abilityPercentFraction(base), modified: false };
+  }
+  const cap = rule.cap;
+  const scaled = abilityPercentFraction(base) * strength;
+  return {
+    value: cap != null ? Math.min(scaled, cap) : scaled,
+    modified: strength !== 1,
+  };
+}
+
+/** @deprecated Use scaledAbilityDamageReduction — returns cap only when drCap is set on the ability. */
+export function getAbilityDrCap(miscStats?: Record<string, unknown>): number | null {
+  if (!miscStats || miscStats.drCap == null) return null;
+  const cap = miscStats.drCap;
+  return typeof cap === "number" ? (cap <= 1 ? cap : cap / 100) : null;
 }
 
 export function abilityHasScaledMisc(miscStats?: Record<string, unknown>): boolean {

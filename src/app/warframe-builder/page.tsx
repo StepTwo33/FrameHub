@@ -41,10 +41,9 @@ import {
 import {
   scaleAbilityMiscStats,
   scaledAbilityEnergyCost,
-  scaledDamageReduction,
-  scaledDamageBuff,
+  scaledAbilityDamageReduction,
+  scaledAbilityDamageBuff,
   abilityPercentFraction,
-  getAbilityDrCap,
 } from "@/lib/ability-misc-stats";
 
 const shardColors: Record<string, string> = {
@@ -147,24 +146,33 @@ function AbilityStatRow({ label, baseValue, modifiedValue, unit, isModified, isP
 }
 
 // Full ability card with all stats
-function AbilityCard({ ability, index, stats, gameSlot, formLabel }: {
+function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }: {
   ability: Ability;
   index: number;
   stats: WarframeCalculatedStats | null;
   gameSlot?: number;
   formLabel?: string;
+  warframeId?: string;
 }) {
   const str = stats?.abilityStrength ?? 1;
   const dur = stats?.abilityDuration ?? 1;
   const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
+  const display = { warframeId, abilityName: ability.name };
 
   const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
 
   const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
     : [];
+
+  const scaledDr = ability.damageReduction != null && ability.damageReduction > 0
+    ? scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats)
+    : null;
+  const scaledBuff = ability.damageBuff != null && ability.damageBuff > 0
+    ? scaledAbilityDamageBuff(ability.damageBuff, str, display)
+    : null;
   const hasAnyStats =
     (ability.damage != null && ability.damage > 0) ||
     (ability.directDamage != null && ability.directDamage > 0) ||
@@ -347,23 +355,23 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel }: {
               isPositive={str > 1}
             />
           )}
-          {ability.damageReduction != null && ability.damageReduction > 0 && (
+          {scaledDr && (
             <AbilityStatRow
               label="Dmg Reduction"
-              baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
-              modifiedValue={(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}
+              baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
+              modifiedValue={(scaledDr.value * 100).toFixed(0)}
               unit="%"
-              isModified={str !== 1}
+              isModified={scaledDr.modified}
               isPositive={str >= 1}
             />
           )}
-          {ability.damageBuff != null && ability.damageBuff > 0 && (
+          {scaledBuff && (
             <AbilityStatRow
               label="Dmg Buff"
-              baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
-              modifiedValue={(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}
+              baseValue={(abilityPercentFraction(ability.damageBuff!) * 100).toFixed(0)}
+              modifiedValue={(scaledBuff.value * 100).toFixed(0)}
               unit="%"
-              isModified={str !== 1}
+              isModified={scaledBuff.modified}
               isPositive={str >= 1}
             />
           )}
@@ -421,8 +429,10 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
   const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
 
+  const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
+
   const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
     : [];
   const hasAnyStats =
     (ability.damage != null && ability.damage > 0) ||
@@ -453,26 +463,32 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
           {ability.damage != null && ability.damage > 0 && (
             <AbilityStatRow label="Damage" baseValue={ability.damage.toFixed(0)} modifiedValue={(ability.damage * str).toFixed(0)} isModified={str !== 1} isPositive={str > 1} />
           )}
-          {ability.damageBuff != null && ability.damageBuff > 0 && (
-            <AbilityStatRow
-              label="Dmg Buff"
-              baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
-              modifiedValue={(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}
-              unit="%"
-              isModified={str !== 1}
-              isPositive={str >= 1}
-            />
-          )}
-          {ability.damageReduction != null && ability.damageReduction > 0 && (
-            <AbilityStatRow
-              label="Dmg Reduction"
-              baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
-              modifiedValue={(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}
-              unit="%"
-              isModified={str !== 1}
-              isPositive={str >= 1}
-            />
-          )}
+          {ability.damageBuff != null && ability.damageBuff > 0 && (() => {
+            const buff = scaledAbilityDamageBuff(ability.damageBuff, str, display);
+            return (
+              <AbilityStatRow
+                label="Dmg Buff"
+                baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
+                modifiedValue={(buff.value * 100).toFixed(0)}
+                unit="%"
+                isModified={buff.modified}
+                isPositive={str >= 1}
+              />
+            );
+          })()}
+          {ability.damageReduction != null && ability.damageReduction > 0 && (() => {
+            const dr = scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats);
+            return (
+              <AbilityStatRow
+                label="Dmg Reduction"
+                baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
+                modifiedValue={(dr.value * 100).toFixed(0)}
+                unit="%"
+                isModified={dr.modified}
+                isPositive={str >= 1}
+              />
+            );
+          })()}
           {ability.duration != null && (
             <AbilityStatRow label="Duration" baseValue={ability.duration.toFixed(1)} modifiedValue={(ability.duration * dur).toFixed(1)} unit="s" isModified={dur !== 1} isPositive={dur > 1} />
           )}
@@ -1409,6 +1425,7 @@ export default function WarframeBuilderPage() {
                                 gameSlot={entry.gameSlot}
                                 formLabel={entry.formLabel}
                                 stats={calculatedStats}
+                                warframeId={selectedWarframe.id}
                               />
                             )}
                             {!isHelminthed && (
