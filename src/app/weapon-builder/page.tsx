@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 
@@ -131,7 +131,10 @@ export default function WeaponBuilderPage() {
       setBuildDescription("");
       if (shared.progenitorElement) setProgenitorElement(shared.progenitorElement);
       if (shared.progenitorBonusPercent != null) setProgenitorBonusPercent(shared.progenitorBonusPercent);
-      window.history.replaceState({}, "", window.location.pathname);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("build");
+      const qs = url.searchParams.toString();
+      window.history.replaceState({}, "", qs ? `${url.pathname}?${qs}` : url.pathname);
     });
   }, [allWeapons]);
 
@@ -155,7 +158,7 @@ export default function WeaponBuilderPage() {
     };
   }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, weaponCalcOptions, selectedEvolutions]);
 
-  const applyLoadedBuild = useCallback((build: SavedBuild) => {
+  const applyLoadedBuild = useCallback((build: SavedBuild, options?: { silent?: boolean }) => {
     const d = build.data as WeaponBuildData;
     const weapon = allWeapons.find((w) => w.id === d.weaponId);
     if (!weapon) { toast.error("Weapon not found"); return; }
@@ -188,7 +191,9 @@ export default function WeaponBuilderPage() {
     setSelectedEvolutions(d.incarnonEvolutions ?? {});
     setShowSavedBuilds(false);
     setShowWeaponList(false);
-    toast.info("Build loaded", { description: build.name });
+    if (!options?.silent) {
+      toast.info("Build loaded", { description: build.name });
+    }
   }, [allWeapons]);
 
   const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
@@ -222,30 +227,21 @@ export default function WeaponBuilderPage() {
   }, [buildWeaponData, selectedWeapon, currentBuildId]);
 
   const handleLoadCommunityBuild = useCallback(async (buildId: string) => {
-    try {
-      const res = await fetch(`/api/builds/${buildId}`);
-      if (!res.ok) { toast.error("Could not load build"); return; }
-      const remote = await res.json();
-      applyLoadedBuild({
-        id: remote.id,
-        name: remote.name,
-        description: remote.description,
-        isPublic: remote.isPublic,
-        type: "weapon",
-        createdAt: remote.createdAt,
-        updatedAt: remote.updatedAt,
-        data: remote.data,
-      });
-    } catch {
+    const build = await fetchCloudBuild(buildId);
+    if (!build) {
       toast.error("Could not load build");
+      return;
     }
+    setCloudBuildInUrl(buildId);
+    markCloudBuildLoaded(buildId);
+    applyLoadedBuild(build);
   }, [applyLoadedBuild]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     applyLoadedBuild(build);
   }, [applyLoadedBuild]);
 
-  useCloudBuildFromUrl("weapon", applyLoadedBuild);
+  useCloudBuildFromUrl("weapon", (build) => applyLoadedBuild(build, { silent: true }));
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
@@ -520,7 +516,10 @@ export default function WeaponBuilderPage() {
             <div className="mb-6 space-y-3">
               <div className="flex items-center gap-3 flex-wrap">
                 <button
-                  onClick={() => setShowWeaponList(true)}
+                  onClick={() => {
+                    clearCloudBuildInUrl();
+                    setShowWeaponList(true);
+                  }}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   ← Change

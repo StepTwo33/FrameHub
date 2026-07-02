@@ -29,7 +29,7 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
 import { DualFormTabs } from "@/components/dual-form-tabs";
 import {
   dualFormStatesFromBuild,
@@ -578,7 +578,7 @@ export default function WarframeBuilderPage() {
     };
   }, [selectedWarframe, buildWarframePayload, equippedShards, equippedArcanes, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities]);
 
-  const applyLoadedBuild = useCallback((build: SavedBuild) => {
+  const applyLoadedBuild = useCallback((build: SavedBuild, options?: { silent?: boolean }) => {
     const d = build.data as WarframeBuildData;
     const wf = allWarframes.find((w) => w.id === d.warframeId);
     if (!wf) { toast.error("Warframe not found"); return; }
@@ -625,7 +625,9 @@ export default function WarframeBuilderPage() {
     setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     setShowWarframeList(false);
-    toast.info("Build loaded", { description: build.name });
+    if (!options?.silent) {
+      toast.info("Build loaded", { description: build.name });
+    }
   }, [modSlotsToEquipped]);
 
   const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
@@ -659,30 +661,21 @@ export default function WarframeBuilderPage() {
   }, [buildWarframeData, selectedWarframe, currentBuildId]);
 
   const handleLoadCommunityBuild = useCallback(async (buildId: string) => {
-    try {
-      const res = await fetch(`/api/builds/${buildId}`);
-      if (!res.ok) { toast.error("Could not load build"); return; }
-      const remote = await res.json();
-      applyLoadedBuild({
-        id: remote.id,
-        name: remote.name,
-        description: remote.description,
-        isPublic: remote.isPublic,
-        type: "warframe",
-        createdAt: remote.createdAt,
-        updatedAt: remote.updatedAt,
-        data: remote.data,
-      });
-    } catch {
+    const build = await fetchCloudBuild(buildId);
+    if (!build) {
       toast.error("Could not load build");
+      return;
     }
+    setCloudBuildInUrl(buildId);
+    markCloudBuildLoaded(buildId);
+    applyLoadedBuild(build);
   }, [applyLoadedBuild]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     applyLoadedBuild(build);
   }, [applyLoadedBuild]);
 
-  useCloudBuildFromUrl("warframe", applyLoadedBuild);
+  useCloudBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
@@ -1048,7 +1041,10 @@ export default function WarframeBuilderPage() {
             <div className="mb-6 space-y-3">
               <div className="flex items-center gap-3 flex-wrap">
                 <button
-                  onClick={() => setShowWarframeList(true)}
+                  onClick={() => {
+                    clearCloudBuildInUrl();
+                    setShowWarframeList(true);
+                  }}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   ← Change
