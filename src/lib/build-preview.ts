@@ -74,10 +74,10 @@ export function summarizeBuildPreview(type: string, data: unknown): BuildPreview
 
   switch (type) {
     case "warframe": {
-      const wf = warframesMap.get(String(d.warframeId ?? ""));
-      const modChips = modChipsFromSlots(d.mods as ModSlot[]);
-      const arcaneChips = arcaneChipsFromIds(d.arcaneIds as (string | null)[]);
-      const wb = d as WarframeBuildData;
+      const wb = data as WarframeBuildData;
+      const wf = warframesMap.get(String(wb.warframeId ?? ""));
+      const modChips = modChipsFromSlots(wb.mods);
+      const arcaneChips = arcaneChipsFromIds(wb.arcaneIds);
       if (wb.dualFormBuilds && Object.keys(wb.dualFormBuilds).length > 0) {
         extraLines.push(dualFormModCountSummary(wb));
       }
