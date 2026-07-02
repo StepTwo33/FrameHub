@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma, type PrismaTransactionClient } from "@/lib/prisma";
 
 // POST /api/builds/[id]/vote — toggle upvote (auth required, public builds only)
 export async function POST(
@@ -37,7 +37,7 @@ export async function POST(
   });
 
   if (existing) {
-    const updated = await prisma.$transaction(async (tx) => {
+    const updated = await prisma.$transaction(async (tx: PrismaTransactionClient) => {
       await tx.buildVote.delete({ where: { id: existing.id } });
       return tx.build.update({
         where: { id },
@@ -51,7 +51,7 @@ export async function POST(
     });
   }
 
-  const updated = await prisma.$transaction(async (tx) => {
+  const updated = await prisma.$transaction(async (tx: PrismaTransactionClient) => {
     await tx.buildVote.create({
       data: { userId: session.user.id, buildId: id },
     });
