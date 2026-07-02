@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
@@ -244,8 +244,7 @@ export default function RailjackBuilderPage() {
   }, [beginNewRailjackDraft]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
+    <PageShell>
       <main className="container mx-auto px-4 py-8">
         {/* Title bar */}
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
@@ -670,6 +669,6 @@ export default function RailjackBuilderPage() {
         showDescription={false}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
@@ -191,8 +191,7 @@ export default function ArchwingBuilderPage() {
   }, [selectedWeapon]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
+    <PageShell>
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h1 className="text-xl sm:text-3xl font-bold">Archwing & Necramech Builder</h1>
@@ -560,6 +559,6 @@ export default function ArchwingBuilderPage() {
         showDescription={false}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

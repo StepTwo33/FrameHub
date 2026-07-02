@@ -15,12 +15,11 @@ import {
   computeAdaptationSurvivability,
 } from "@/lib/calculator";
 import { getDualFormAbilities, getDualFormConfig } from "@/lib/dual-form-warframes";
+import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
 import {
-  scaleAbilityMiscStats,
-  scaledAbilityEnergyCost,
-  scaledAbilityDamageReduction,
-  scaledAbilityDamageBuff,
-} from "@/lib/ability-misc-stats";
+  AbilityPreviewShell,
+  AbilityStatsBlock,
+} from "@/components/ability-display";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -503,6 +502,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
           key: `${entry.abilityIndex}-${activeDualFormId}`,
           ability: entry.ability,
           slotIndex: entry.gameSlot - 1,
+          gameSlot: entry.gameSlot,
           formLabel: entry.formLabel,
         }));
       }
@@ -511,6 +511,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
       key: String(i),
       ability,
       slotIndex: i,
+      gameSlot: i + 1,
       formLabel: undefined as string | undefined,
     }));
   }, [warframe, activeDualFormId]);
@@ -670,6 +671,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
           }
           defaultOpen
         >
+          <div className="space-y-2">
           {abilityPreviewEntries.map((entry) => {
             if (helminthSlot === entry.slotIndex && helminthAbility) {
               return <HelminthAbilityPreview key={entry.key} ability={helminthAbility} stats={stats} />;
@@ -681,9 +683,11 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
                 stats={stats}
                 formLabel={entry.formLabel}
                 warframeId={warframe?.id}
+                slot={entry.gameSlot}
               />
             );
           })}
+          </div>
         </CollapsibleSection>
       )}
 
@@ -818,272 +822,50 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
 }
 
 
-function AbilityPreview({ ability, stats, formLabel, warframeId }: {
-  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string; warframeId?: string;
+function AbilityPreview({ ability, stats, formLabel, warframeId, slot }: {
+  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string; warframeId?: string; slot?: number;
 }) {
-  const str = stats.abilityStrength;
-  const dur = stats.abilityDuration;
   const eff = stats.abilityEfficiency;
-  const rng = stats.abilityRange;
   const display = { warframeId, abilityName: ability.name };
-
-  const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
-  const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
-    : [];
-
-  const scaledDr = ability.damageReduction != null && ability.damageReduction > 0
-    ? scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats)
-    : null;
-  const scaledBuff = ability.damageBuff != null && ability.damageBuff > 0
-    ? scaledAbilityDamageBuff(ability.damageBuff, str, display)
-    : null;
-
+  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const desc = formatAbilityDescription(ability.description);
+
   return (
-    <div className="py-1.5 border-b border-border/30 last:border-0">
-      <div className="flex justify-between items-center gap-2">
-        <span className="text-xs font-medium min-w-0">
-          {ability.name}
-          {formLabel && (
-            <span className="ml-1.5 text-[9px] font-normal text-primary/70">{formLabel}</span>
-          )}
-        </span>
-        <span className="text-[10px] text-yellow-400 font-mono shrink-0">{modifiedCost} energy</span>
-      </div>
-      {desc.length > 0 && (
-        <p className="text-[9px] text-muted-foreground/90 mt-1 leading-snug">{desc}</p>
-      )}
-      {ability.damageType != null && String(ability.damageType).length > 0 && (
-        <div className="text-[10px] text-muted-foreground mt-1">
-          Damage type:{" "}
-          <span className="text-sky-300/90 font-medium">{ability.damageType}</span>
-        </div>
-      )}
-      {ability.subAbilities != null && ability.subAbilities.length > 0 && (
-        <ul className="list-disc list-inside text-[9px] text-muted-foreground mt-1 space-y-0.5 leading-snug">
-          {ability.subAbilities.map((line, i) => (
-            <li key={i}>{line}</li>
-          ))}
-        </ul>
-      )}
-      <div className="mt-0.5 space-y-0">
-        {ability.damage != null && ability.damage > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Damage: <span className="text-foreground font-mono">{(ability.damage * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.directDamage != null && ability.directDamage > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Direct Damage: <span className="text-foreground font-mono">{(ability.directDamage * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.aoeDamage != null && ability.aoeDamage > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            AoE Damage: <span className="text-foreground font-mono">{(ability.aoeDamage * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            DPS: <span className="text-foreground font-mono">{(ability.damagePerSecond * str).toFixed(0)}/s</span>
-          </div>
-        )}
-        {scaledBuff && (
-          <div className="text-[10px] text-muted-foreground">
-            Damage Buff:{" "}
-            <span className="text-orange-400 font-mono">
-              +{(scaledBuff.value * 100).toFixed(0)}%
-            </span>
-          </div>
-        )}
-        {scaledDr && (
-          <div className="text-[10px] text-muted-foreground">
-            DR:{" "}
-            <span className="text-cyan-400 font-mono">
-              {(scaledDr.value * 100).toFixed(0)}%
-            </span>
-          </div>
-        )}
-        {ability.duration != null && ability.duration > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Duration: <span className="text-foreground font-mono">{(ability.duration * dur).toFixed(1)}s</span>
-          </div>
-        )}
-        {ability.range != null && ability.range > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Range: <span className="text-foreground font-mono">{(ability.range * rng).toFixed(1)}m</span>
-          </div>
-        )}
-        {ability.radius != null && ability.radius > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Radius: <span className="text-foreground font-mono">{(ability.radius * rng).toFixed(1)}m</span>
-          </div>
-        )}
-        {ability.health != null && ability.health > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Health: <span className="text-foreground font-mono">{(ability.health * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.armor != null && ability.armor > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Armor: <span className="text-foreground font-mono">{(ability.armor * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.shield != null && ability.shield > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Shield: <span className="text-foreground font-mono">{(ability.shield * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.statusChance != null && ability.statusChance > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Status:{" "}
-            <span className="text-foreground font-mono">
-              {Math.min(100, ability.statusChance * str * 100).toFixed(0)}%
-            </span>
-          </div>
-        )}
-        {ability.castTime != null && ability.castTime > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Cast: <span className="text-foreground font-mono">{ability.castTime.toFixed(1)}s</span>
-          </div>
-        )}
-        {ability.cooldown != null && ability.cooldown > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Cooldown: <span className="text-foreground font-mono">{ability.cooldown.toFixed(1)}s</span>
-          </div>
-        )}
-        {ability.chainRange != null && ability.chainRange > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Chain range: <span className="text-foreground font-mono">{(ability.chainRange * rng).toFixed(1)}m</span>
-          </div>
-        )}
-        {ability.chainLinks != null && ability.chainLinks > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Chain links: <span className="text-foreground font-mono">{ability.chainLinks}</span>
-          </div>
-        )}
-        {ability.maxTargets != null && ability.maxTargets > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Max targets: <span className="text-foreground font-mono">{ability.maxTargets}</span>
-          </div>
-        )}
-        {scaledMisc.length > 0 && (
-          <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
-            {scaledMisc.map((line) => (
-              <div key={line.label} className="text-[9px] text-muted-foreground">
-                <span className="text-amber-400/90">{line.label}:</span>{" "}
-                <span className="text-foreground font-mono">
-                  {line.modified ? line.scaled : line.base}
-                </span>
-                {line.modified && (
-                  <span className="text-muted-foreground/60 ml-1">({line.base})</span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+    <AbilityPreviewShell
+      slot={slot}
+      title={ability.name}
+      formLabel={formLabel}
+      energyCost={ability.energyCost}
+      effectiveCost={effectiveCost}
+      description={desc}
+      damageType={ability.damageType}
+      subAbilities={ability.subAbilities}
+      className="mb-2"
+    >
+      <AbilityStatsBlock ability={ability} stats={stats} display={display} compact />
+    </AbilityPreviewShell>
   );
 }
 
 function HelminthAbilityPreview({ ability, stats }: {
   ability: HelminthAbility; stats: WarframeCalculatedStats;
 }) {
-  const str = stats.abilityStrength;
-  const dur = stats.abilityDuration;
   const eff = stats.abilityEfficiency;
-  const rng = stats.abilityRange;
-
   const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
-
-  const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
-  const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
-    : [];
+  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const desc = formatAbilityDescription(ability.description);
 
   return (
-    <div className="py-1.5 border-b border-green-500/20 last:border-0">
-      <div className="flex justify-between items-center">
-        <span className="text-xs font-medium text-green-400">{ability.name}</span>
-        <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
-      </div>
-      <div className="text-[9px] text-green-400/60 mb-0.5">
-        {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
-      </div>
-      {desc.length > 0 && (
-        <p className="text-[9px] text-muted-foreground/90 mt-1 leading-snug">{desc}</p>
-      )}
-      <div className="mt-0.5 space-y-0">
-        {ability.damage != null && ability.damage > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Damage: <span className="text-foreground font-mono">{(ability.damage * str).toFixed(0)}</span>
-          </div>
-        )}
-        {ability.damageBuff != null && ability.damageBuff > 0 && (() => {
-          const buff = scaledAbilityDamageBuff(ability.damageBuff, str, display);
-          return (
-            <div className="text-[10px] text-muted-foreground">
-              Damage Buff:{" "}
-              <span className="text-orange-400 font-mono">
-                +{(buff.value * 100).toFixed(0)}%
-              </span>
-            </div>
-          );
-        })()}
-        {ability.damageReduction != null && ability.damageReduction > 0 && (() => {
-          const dr = scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats);
-          return (
-            <div className="text-[10px] text-muted-foreground">
-              DR:{" "}
-              <span className="text-cyan-400 font-mono">
-                {(dr.value * 100).toFixed(0)}%
-              </span>
-            </div>
-          );
-        })()}
-        {ability.duration != null && ability.duration > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Duration: <span className="text-foreground font-mono">{(ability.duration * dur).toFixed(1)}s</span>
-          </div>
-        )}
-        {ability.range != null && ability.range > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Range: <span className="text-foreground font-mono">{(ability.range * rng).toFixed(1)}m</span>
-          </div>
-        )}
-        {ability.radius != null && ability.radius > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Radius: <span className="text-foreground font-mono">{(ability.radius * rng).toFixed(1)}m</span>
-          </div>
-        )}
-        {ability.castTime != null && ability.castTime > 0 && (
-          <div className="text-[10px] text-muted-foreground">
-            Cast: <span className="text-foreground font-mono">{ability.castTime.toFixed(1)}s</span>
-          </div>
-        )}
-        {scaledMisc.length > 0 && (
-          <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
-            {scaledMisc.map((line) => (
-              <div key={line.label} className="text-[9px] text-muted-foreground">
-                <span className="text-green-400/90">{line.label}:</span>{" "}
-                <span className="text-foreground font-mono">
-                  {line.modified ? line.scaled : line.base}
-                </span>
-                {line.modified && (
-                  <span className="text-muted-foreground/60 ml-1">({line.base})</span>
-                )}
-              </div>
-            ))}
-            {ability.miscStats?.channeled === true && (
-              <div className="text-[9px] text-muted-foreground">
-                <span className="text-green-400/90">Channeled</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+    <AbilityPreviewShell
+      variant="helminth"
+      title={ability.name}
+      energyCost={ability.energyCost}
+      effectiveCost={effectiveCost}
+      subtitle={ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
+      description={desc}
+      className="mb-2"
+    >
+      <AbilityStatsBlock ability={ability} stats={stats} display={display} compact />
+    </AbilityPreviewShell>
   );
 }

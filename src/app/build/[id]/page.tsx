@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cookies, headers } from 'next/headers';
-import { Header } from '@/components/header';
+import { PageShell, ContentPanel } from '@/components/page-shell';
 import { buildOpenUrl } from '@/lib/build-url';
 import { BuildPageVote } from '@/components/build-page-vote';
 import Image from 'next/image';
@@ -64,11 +64,9 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
     const builderUrl = buildOpenUrl(build.type, build.id);
 
     return (
-        <div className="min-h-screen flex flex-col bg-background">
-            <Header />
-
+        <PageShell>
             <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+                <ContentPanel className="p-8">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-8">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
@@ -112,8 +110,8 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
                             <p className="text-sm text-muted-foreground italic">No description provided by the author.</p>
                         )}
                     </div>
-                </div>
+                </ContentPanel>
             </main>
-        </div>
+        </PageShell>
     );
 }

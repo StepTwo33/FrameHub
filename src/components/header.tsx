@@ -131,7 +131,8 @@ export function Header() {
   const isAdmin = user?.role === "admin" || user?.role === "moderator";
 
   return (
-    <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-black/10 backdrop-blur-xl transition-colors duration-300">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight shrink-0">
           <span className="text-primary">Frame</span>

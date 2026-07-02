@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { UserPlus, Mail, Lock, Eye, EyeOff, User, Loader2 } from "lucide-react";
 
 export default function SignUpPage() {
@@ -69,9 +69,8 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="min-h-screen">
-            <Header />
-            <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+        <PageShell>
+            <div className="container mx-auto flex flex-1 items-center justify-center px-4 py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
                 <div className="w-full max-w-md">
                     {/* Header */}
                     <div className="text-center mb-8">
@@ -250,6 +249,6 @@ export default function SignUpPage() {
                     </a>
                 </div>
             </div>
-        </div>
+        </PageShell>
     );
 }

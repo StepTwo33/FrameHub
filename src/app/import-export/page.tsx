@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell, PageMain, PageHero } from "@/components/page-shell";
 import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/build-storage";
 import { getLoadouts, saveLoadout, generateId } from "@/lib/loadouts";
 import type { SavedBuild } from "@/lib/build-storage";
@@ -269,34 +269,36 @@ export default function ImportExportPage() {
     : builds;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="max-w-3xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <h1 className="text-2xl font-bold">Share Builds</h1>
-            <div className="flex gap-1 ml-auto">
+    <PageShell>
+      <PageMain maxWidth="md">
+        <PageHero
+          icon={Link2}
+          accent="primary"
+          title="Share Builds"
+          description="Export build codes to share with friends, or import builds from a code or URL."
+          actions={
+            <div className="flex gap-1">
               <button
                 onClick={() => setMode("export")}
                 className={cn(
-                  "px-3 py-1.5 text-sm rounded-lg border transition-colors",
-                  mode === "export" ? "bg-primary border-primary text-primary-foreground" : "border-border text-muted-foreground hover:text-foreground"
+                  "rounded-lg border px-3 py-1.5 text-sm transition-all",
+                  mode === "export" ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border/70 text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Download className="h-3.5 w-3.5 inline mr-1.5" />Share
+                <Download className="mr-1.5 inline h-3.5 w-3.5" />Share
               </button>
               <button
                 onClick={() => setMode("import")}
                 className={cn(
-                  "px-3 py-1.5 text-sm rounded-lg border transition-colors",
-                  mode === "import" ? "bg-primary border-primary text-primary-foreground" : "border-border text-muted-foreground hover:text-foreground"
+                  "rounded-lg border px-3 py-1.5 text-sm transition-all",
+                  mode === "import" ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border/70 text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Upload className="h-3.5 w-3.5 inline mr-1.5" />Import
+                <Upload className="mr-1.5 inline h-3.5 w-3.5" />Import
               </button>
             </div>
-          </div>
+          }
+        />
 
           {/* ── EXPORT / SHARE MODE ─────────────────────────────── */}
           {mode === "export" && (
@@ -474,8 +476,7 @@ export default function ImportExportPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }

@@ -349,3 +349,27 @@
     @apply bg-background text-foreground transition-colors duration-300;
   }
 }
+
+/* ── Site-wide ambient background ─────────────────────────────── */
+.page-ambient {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--background);
+}
+
+.page-ambient::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -15%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 65%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, color-mix(in oklch, var(--primary) 7%, transparent), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 0% 100%, color-mix(in oklch, var(--primary) 5%, transparent), transparent 50%);
+}
+
+.page-ambient > *:not(.page-ambient-ignore) {
+  position: relative;
+  z-index: 1;
+}

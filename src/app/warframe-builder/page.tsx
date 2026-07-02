@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
+import {
+  ItemPickerScreen,
+  ItemPickerRow,
+  BuilderItemHeader,
+  BuilderActionBar,
+  BuilderActionGroup,
+} from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
@@ -14,7 +21,7 @@ import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStat
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
+import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
 import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
@@ -38,13 +45,16 @@ import {
   serializeDualFormBuilds,
   type DualFormBuildSlice,
 } from "@/lib/dual-form-warframes";
+import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
 import {
-  scaleAbilityMiscStats,
-  scaledAbilityEnergyCost,
-  scaledAbilityDamageReduction,
-  scaledAbilityDamageBuff,
-  abilityPercentFraction,
-} from "@/lib/ability-misc-stats";
+  AbilityCardShell,
+  AbilitySlotBadge,
+  AbilityFormBadge,
+  AbilityEnergyChip,
+  AbilityDamageTypeChip,
+  AbilityStatsBlock,
+  AbilitiesSectionHeader,
+} from "@/components/ability-display";
 
 const shardColors: Record<string, string> = {
   crimson: "#E74C3C",
@@ -118,33 +128,6 @@ function getSlotType(index: number): SlotType {
   return "regular";
 }
 
-// Ability stat row with base → modified display
-function AbilityStatRow({ label, baseValue, modifiedValue, unit, isModified, isPositive }: {
-  label: string;
-  baseValue: string;
-  modifiedValue: string;
-  unit?: string;
-  isModified: boolean;
-  isPositive: boolean;
-}) {
-  return (
-    <div className="flex items-center gap-1.5 py-0.5">
-      <span className="text-[11px] text-muted-foreground w-20 shrink-0">{label}</span>
-      {isModified ? (
-        <>
-          <span className="text-[11px] text-muted-foreground/50 line-through">{baseValue}{unit}</span>
-          <span className="text-[11px] mx-0.5 text-muted-foreground">→</span>
-          <span className={cn("text-[11px] font-bold", isPositive ? "text-green-400" : "text-red-400")}>
-            {modifiedValue}{unit}
-          </span>
-        </>
-      ) : (
-        <span className="text-[11px]">{modifiedValue}{unit}</span>
-      )}
-    </div>
-  );
-}
-
 // Full ability card with all stats
 function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }: {
   ability: Ability;
@@ -154,80 +137,32 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
   formLabel?: string;
   warframeId?: string;
 }) {
-  const str = stats?.abilityStrength ?? 1;
-  const dur = stats?.abilityDuration ?? 1;
-  const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
   const display = { warframeId, abilityName: ability.name };
-
   const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
-
-  const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
-    : [];
-
-  const scaledDr = ability.damageReduction != null && ability.damageReduction > 0
-    ? scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats)
-    : null;
-  const scaledBuff = ability.damageBuff != null && ability.damageBuff > 0
-    ? scaledAbilityDamageBuff(ability.damageBuff, str, display)
-    : null;
-  const hasAnyStats =
-    (ability.damage != null && ability.damage > 0) ||
-    (ability.directDamage != null && ability.directDamage > 0) ||
-    (ability.aoeDamage != null && ability.aoeDamage > 0) ||
-    (ability.damagePerSecond != null && ability.damagePerSecond > 0) ||
-    ability.range != null ||
-    ability.duration != null ||
-    ability.radius != null ||
-    (ability.health != null && ability.health > 0) ||
-    (ability.armor != null && ability.armor > 0) ||
-    (ability.shield != null && ability.shield > 0) ||
-    (ability.damageReduction != null && ability.damageReduction > 0) ||
-    (ability.damageBuff != null && ability.damageBuff > 0) ||
-    ability.statusChance != null ||
-    (ability.castTime != null && ability.castTime > 0) ||
-    (ability.cooldown != null && ability.cooldown > 0) ||
-    (ability.subAbilities != null && ability.subAbilities.length > 0) ||
-    ability.chainRange != null ||
-    ability.chainLinks != null ||
-    ability.maxTargets != null ||
-    scaledMisc.length > 0;
-
   const slotNum = gameSlot ?? index + 1;
 
   return (
-    <div className="border border-border rounded-lg p-4 bg-card">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-xs font-bold text-muted-foreground w-5 h-5 rounded bg-secondary flex items-center justify-center shrink-0">
-            {slotNum}
-          </span>
+    <AbilityCardShell slot={slotNum}>
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-2.5">
+          <AbilitySlotBadge slot={slotNum} />
           <div className="min-w-0">
-            <span className="text-sm font-semibold">{ability.name}</span>
-            {formLabel && (
-              <span className="ml-2 text-[10px] font-medium text-primary/80">{formLabel}</span>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-base font-semibold leading-tight tracking-tight">{ability.name}</h3>
+              {formLabel && <AbilityFormBadge label={formLabel} />}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Zap className="h-3 w-3 text-blue-400" />
-          <span className={cn("text-xs font-mono", costModified ? "text-green-400 font-bold" : "text-blue-400")}>
-            {costModified ? `${effectiveCost.toFixed(0)}` : ability.energyCost}
-          </span>
-          {costModified && (
-            <span className="text-[10px] text-muted-foreground/50 line-through">{ability.energyCost}</span>
-          )}
-        </div>
+        <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
       </div>
 
-      <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
+      <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
         {formatAbilityDescription(ability.description)}
       </p>
 
       {ability.subAbilities != null && ability.subAbilities.length > 0 && (
-        <ul className="list-disc list-inside text-[11px] text-muted-foreground space-y-1 mb-2 leading-relaxed">
+        <ul className="mb-3 list-inside list-disc space-y-1 text-[11px] leading-relaxed text-muted-foreground">
           {ability.subAbilities.map((line, i) => (
             <li key={i}>{line}</li>
           ))}
@@ -235,185 +170,13 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
       )}
 
       {ability.damageType && (
-        <span className="inline-block text-[10px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-2">
-          {ability.damageType}
-        </span>
-      )}
-
-      {(ability.chainRange != null || ability.chainLinks != null || ability.maxTargets != null) && (
-        <div className="flex flex-wrap gap-2 mb-2 text-[10px] text-muted-foreground">
-          {ability.chainRange != null && ability.chainRange > 0 && (
-            <span title="Chain range (scaled by Range)">
-              Chain range: <span className="font-mono text-foreground">{(ability.chainRange * rng).toFixed(1)}m</span>
-            </span>
-          )}
-          {ability.chainLinks != null && ability.chainLinks > 0 && (
-            <span>
-              Chain links: <span className="font-mono text-foreground">{ability.chainLinks}</span>
-            </span>
-          )}
-          {ability.maxTargets != null && ability.maxTargets > 0 && (
-            <span>
-              Max targets: <span className="font-mono text-foreground">{ability.maxTargets}</span>
-            </span>
-          )}
+        <div className="mb-3">
+          <AbilityDamageTypeChip type={ability.damageType} />
         </div>
       )}
 
-      {hasAnyStats && (
-        <div className="border-t border-border pt-2 mt-1 space-y-0">
-          {ability.damage != null && ability.damage > 0 && (
-            <AbilityStatRow
-              label="Damage"
-              baseValue={ability.damage.toFixed(0)}
-              modifiedValue={(ability.damage * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.damagePerSecond != null && ability.damagePerSecond > 0 && (
-            <AbilityStatRow
-              label="Damage/s"
-              baseValue={ability.damagePerSecond.toFixed(0)}
-              modifiedValue={(ability.damagePerSecond * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.directDamage != null && ability.directDamage > 0 && (
-            <AbilityStatRow
-              label="Direct dmg"
-              baseValue={ability.directDamage.toFixed(0)}
-              modifiedValue={(ability.directDamage * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.aoeDamage != null && ability.aoeDamage > 0 && (
-            <AbilityStatRow
-              label="AoE dmg"
-              baseValue={ability.aoeDamage.toFixed(0)}
-              modifiedValue={(ability.aoeDamage * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.range != null && (
-            <AbilityStatRow
-              label="Range"
-              baseValue={ability.range.toFixed(1)}
-              modifiedValue={(ability.range * rng).toFixed(1)}
-              unit="m"
-              isModified={rng !== 1}
-              isPositive={rng > 1}
-            />
-          )}
-          {ability.duration != null && (
-            <AbilityStatRow
-              label="Duration"
-              baseValue={ability.duration.toFixed(1)}
-              modifiedValue={(ability.duration * dur).toFixed(1)}
-              unit="s"
-              isModified={dur !== 1}
-              isPositive={dur > 1}
-            />
-          )}
-          {ability.radius != null && (
-            <AbilityStatRow
-              label="Radius"
-              baseValue={ability.radius.toFixed(1)}
-              modifiedValue={(ability.radius * rng).toFixed(1)}
-              unit="m"
-              isModified={rng !== 1}
-              isPositive={rng > 1}
-            />
-          )}
-          {ability.health != null && ability.health > 0 && (
-            <AbilityStatRow
-              label="Health"
-              baseValue={ability.health.toFixed(0)}
-              modifiedValue={(ability.health * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.armor != null && ability.armor > 0 && (
-            <AbilityStatRow
-              label="Armor"
-              baseValue={ability.armor.toFixed(0)}
-              modifiedValue={(ability.armor * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {ability.shield != null && ability.shield > 0 && (
-            <AbilityStatRow
-              label="Shield"
-              baseValue={ability.shield.toFixed(0)}
-              modifiedValue={(ability.shield * str).toFixed(0)}
-              isModified={str !== 1}
-              isPositive={str > 1}
-            />
-          )}
-          {scaledDr && (
-            <AbilityStatRow
-              label="Dmg Reduction"
-              baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
-              modifiedValue={(scaledDr.value * 100).toFixed(0)}
-              unit="%"
-              isModified={scaledDr.modified}
-              isPositive={str >= 1}
-            />
-          )}
-          {scaledBuff && (
-            <AbilityStatRow
-              label="Dmg Buff"
-              baseValue={(abilityPercentFraction(ability.damageBuff!) * 100).toFixed(0)}
-              modifiedValue={(scaledBuff.value * 100).toFixed(0)}
-              unit="%"
-              isModified={scaledBuff.modified}
-              isPositive={str >= 1}
-            />
-          )}
-          {ability.statusChance != null && ability.statusChance > 0 && (
-            <AbilityStatRow
-              label="Status"
-              baseValue={(ability.statusChance * 100).toFixed(0)}
-              modifiedValue={Math.min(100, ability.statusChance * str * 100).toFixed(0)}
-              unit="%"
-              isModified={str !== 1}
-              isPositive={str >= 1}
-            />
-          )}
-          {ability.castTime != null && ability.castTime > 0 && (
-            <div className="flex items-center gap-1.5 py-0.5">
-              <span className="text-[11px] text-muted-foreground w-20 shrink-0">Cast Time</span>
-              <span className="text-[11px]">{ability.castTime.toFixed(1)}s</span>
-            </div>
-          )}
-          {ability.cooldown != null && ability.cooldown > 0 && (
-            <div className="flex items-center gap-1.5 py-0.5">
-              <span className="text-[11px] text-muted-foreground w-20 shrink-0">Cooldown</span>
-              <span className="text-[11px]">{ability.cooldown.toFixed(1)}s</span>
-            </div>
-          )}
-          {scaledMisc.length > 0 && (
-            <div className="pt-1 mt-1 border-t border-border/40 space-y-0.5">
-              {scaledMisc.map((line) => (
-                <AbilityStatRow
-                  key={line.label}
-                  label={line.label}
-                  baseValue={line.base}
-                  modifiedValue={line.scaled}
-                  isModified={line.modified}
-                  isPositive={line.positive ?? true}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+      <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+    </AbilityCardShell>
   );
 }
 
@@ -422,102 +185,34 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
   stats: WarframeCalculatedStats | null;
   onRemove: () => void;
 }) {
-  const str = stats?.abilityStrength ?? 1;
-  const dur = stats?.abilityDuration ?? 1;
-  const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
   const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
-
   const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
 
-  const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
-    : [];
-  const hasAnyStats =
-    (ability.damage != null && ability.damage > 0) ||
-    ability.range != null ||
-    ability.duration != null ||
-    ability.radius != null ||
-    (ability.damageBuff != null && ability.damageBuff > 0) ||
-    (ability.damageReduction != null && ability.damageReduction > 0) ||
-    scaledMisc.length > 0;
-
   return (
-    <div className="border border-green-500/30 rounded-xl p-3 bg-green-500/5">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-bold text-green-400">{ability.name}</span>
-        <button onClick={onRemove} className="text-[10px] text-red-400 hover:text-red-300">✕</button>
-      </div>
-      <p className="text-[10px] text-muted-foreground leading-relaxed">{formatAbilityDescription(ability.description)}</p>
-      <div className="flex items-center gap-2 mt-1.5">
-        <span className={cn("text-[9px] font-mono", costModified ? "text-green-400" : "text-green-400/70")}>
-          ⚡ {costModified ? effectiveCost.toFixed(0) : ability.energyCost}
-        </span>
-        <span className="text-[9px] text-green-400/70">
-          {ability.sourceWarframe ? `from ${ability.sourceWarframe}` : "Helminth"}
-        </span>
-      </div>
-      {hasAnyStats && (
-        <div className="border-t border-green-500/20 pt-2 mt-2 space-y-0">
-          {ability.damage != null && ability.damage > 0 && (
-            <AbilityStatRow label="Damage" baseValue={ability.damage.toFixed(0)} modifiedValue={(ability.damage * str).toFixed(0)} isModified={str !== 1} isPositive={str > 1} />
-          )}
-          {ability.damageBuff != null && ability.damageBuff > 0 && (() => {
-            const buff = scaledAbilityDamageBuff(ability.damageBuff, str, display);
-            return (
-              <AbilityStatRow
-                label="Dmg Buff"
-                baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
-                modifiedValue={(buff.value * 100).toFixed(0)}
-                unit="%"
-                isModified={buff.modified}
-                isPositive={str >= 1}
-              />
-            );
-          })()}
-          {ability.damageReduction != null && ability.damageReduction > 0 && (() => {
-            const dr = scaledAbilityDamageReduction(ability.damageReduction, str, display, ability.miscStats);
-            return (
-              <AbilityStatRow
-                label="Dmg Reduction"
-                baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
-                modifiedValue={(dr.value * 100).toFixed(0)}
-                unit="%"
-                isModified={dr.modified}
-                isPositive={str >= 1}
-              />
-            );
-          })()}
-          {ability.duration != null && (
-            <AbilityStatRow label="Duration" baseValue={ability.duration.toFixed(1)} modifiedValue={(ability.duration * dur).toFixed(1)} unit="s" isModified={dur !== 1} isPositive={dur > 1} />
-          )}
-          {ability.range != null && (
-            <AbilityStatRow label="Range" baseValue={ability.range.toFixed(1)} modifiedValue={(ability.range * rng).toFixed(1)} unit="m" isModified={rng !== 1} isPositive={rng > 1} />
-          )}
-          {ability.radius != null && (
-            <AbilityStatRow label="Radius" baseValue={ability.radius.toFixed(1)} modifiedValue={(ability.radius * rng).toFixed(1)} unit="m" isModified={rng !== 1} isPositive={rng > 1} />
-          )}
-          {scaledMisc.length > 0 && (
-            <div className="pt-1 mt-1 border-t border-green-500/20 space-y-0.5">
-              {scaledMisc.map((line) => (
-                <AbilityStatRow
-                  key={line.label}
-                  label={line.label}
-                  baseValue={line.base}
-                  modifiedValue={line.scaled}
-                  isModified={line.modified}
-                  isPositive={line.positive ?? true}
-                />
-              ))}
-            </div>
-          )}
-          {ability.miscStats?.channeled === true && (
-            <div className="text-[10px] text-green-400/80 pt-0.5">Channeled</div>
-          )}
+    <AbilityCardShell slot={1} variant="helminth">
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-emerald-400">{ability.name}</h3>
+          <p className="mt-0.5 text-[10px] text-emerald-400/60">
+            {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
+          </p>
         </div>
-      )}
-    </div>
+        <div className="flex items-center gap-2">
+          <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
+          <button
+            onClick={onRemove}
+            className="rounded-md px-1.5 py-0.5 text-[10px] text-rose-400 ring-1 ring-rose-500/30 transition-colors hover:bg-rose-500/10"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+      <p className="mb-3 text-[11px] leading-relaxed text-muted-foreground">
+        {formatAbilityDescription(ability.description)}
+      </p>
+      <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+    </AbilityCardShell>
   );
 }
 
@@ -1063,70 +758,69 @@ export default function WarframeBuilderPage() {
   const equippedModIds = equippedMods.map((m) => m.modId);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
 
       <main className="flex-1 container mx-auto px-4 py-6">
         {showWarframeList || !selectedWarframe ? (
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Select a Warframe</h1>
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search warframes..."
-                value={warframeSearch}
-                onChange={(e) => setWarframeSearch(e.target.value)}
-                className="pl-9"
+          <ItemPickerScreen
+            icon={Shield}
+            accent="purple"
+            title="Warframe Builder"
+            description="Choose a warframe to configure mods, archon shards, Helminth abilities, and arcanes."
+            count={filteredWarframes.length}
+            search={warframeSearch}
+            onSearchChange={setWarframeSearch}
+            searchPlaceholder="Search warframes..."
+          >
+            {filteredWarframes.map((wf) => (
+              <ItemPickerRow
+                key={wf.id}
+                accent="purple"
+                onClick={() => handleSelectWarframe(wf)}
+                image={
+                  <GameAssetImage
+                    src={getWarframeImage(wf.name)}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-9 w-9 object-contain"
+                    hideOnError
+                  />
+                }
+                title={wf.name}
+                meta={
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                    <span>HP {wf.health}</span>
+                    <span>SH {wf.shield}</span>
+                    <span>AR {wf.armor}</span>
+                    <span>EN {wf.energy}</span>
+                    <span>SPD {wf.sprintSpeed}</span>
+                  </div>
+                }
               />
-            </div>
-            <p className="text-xs text-muted-foreground mb-3">{filteredWarframes.length} warframes</p>
-            <ScrollArea className="h-[60vh]">
-              <div className="space-y-1 pr-4">
-                {filteredWarframes.map((wf) => (
-                  <button
-                    key={wf.id}
-                    onClick={() => handleSelectWarframe(wf)}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <GameAssetImage src={getWarframeImage(wf.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-sm">{wf.name}</span>
-                        </div>
-                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                          <span>HP {wf.health}</span>
-                          <span>SH {wf.shield}</span>
-                          <span>AR {wf.armor}</span>
-                          <span>EN {wf.energy}</span>
-                          <span>SPD {wf.sprintSpeed}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
+            ))}
+          </ItemPickerScreen>
         ) : (
           <div>
-            <div className="mb-6 space-y-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <button
-                  onClick={() => {
-                    clearCloudBuildInUrl();
-                    setShowWarframeList(true);
-                  }}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  ← Change
-                </button>
-                <GameAssetImage src={getWarframeImage(selectedWarframe.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
-                <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWarframe.name}</h1>
-              </div>
-              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
-                {/* primary actions */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+            <BuilderItemHeader
+              onChange={() => {
+                clearCloudBuildInUrl();
+                setShowWarframeList(true);
+              }}
+              image={
+                <GameAssetImage
+                  src={getWarframeImage(selectedWarframe.name)}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="hidden h-10 w-10 rounded-lg object-contain sm:block"
+                  hideOnError
+                />
+              }
+              title={selectedWarframe.name}
+            >
+              <BuilderActionBar>
+                <BuilderActionGroup>
                   <button
                     onClick={() => {
                       setSaveDialogDefaultPublic(buildIsPublic);
@@ -1166,10 +860,9 @@ export default function WarframeBuilderPage() {
                     {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
                     <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
-                {/* build modifiers */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                <BuilderActionGroup>
                   <button
                     onClick={() => setIsMR30(!isMR30)}
                     className={cn(
@@ -1194,19 +887,18 @@ export default function WarframeBuilderPage() {
                     <Zap className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Reactor</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
                 <div className="flex-1" />
 
-                {/* meta */}
                 <a
                   href={`/report-issue?type=warframe&name=${encodeURIComponent(selectedWarframe.name)}&id=${encodeURIComponent(selectedWarframe.id)}`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 px-3 py-1.5 text-xs font-medium text-amber-400/70 transition-colors hover:bg-amber-500/5 hover:text-amber-400"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
-              </div>
-            </div>
+              </BuilderActionBar>
+            </BuilderItemHeader>
 
             <div className="mb-6">
               <CommunityBuildsPanel
@@ -1398,15 +1090,14 @@ export default function WarframeBuilderPage() {
                 {/* Abilities + Helminth */}
                 {abilityDisplayEntries.length > 0 && (
                   <div>
-                    <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
-                      ABILITIES
-                      {dualFormConfig && (
-                        <span className="text-primary/80 font-normal">
-                          {" "}— {dualFormConfig.forms.find((f) => f.id === activeDualFormId)?.label ?? ""}
-                        </span>
-                      )}
-                    </h2>
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    <AbilitiesSectionHeader
+                      formLabel={
+                        dualFormConfig
+                          ? dualFormConfig.forms.find((f) => f.id === activeDualFormId)?.label
+                          : undefined
+                      }
+                    />
+                    <div className="grid gap-4 sm:grid-cols-2">
                       {abilityDisplayEntries.map((entry) => {
                         const slotIndex = entry.gameSlot - 1;
                         const isHelminthed = helminthSlot === slotIndex && helminthAbility;
@@ -1431,10 +1122,10 @@ export default function WarframeBuilderPage() {
                             {!isHelminthed && (
                               <button
                                 onClick={() => { setHelminthPickerSlot(slotIndex); setHelminthPickerOpen(true); setHelminthSearch(""); }}
-                                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                                className="absolute bottom-3 right-3 rounded-lg bg-emerald-500/15 p-1.5 text-emerald-400 opacity-0 ring-1 ring-emerald-500/30 transition-all hover:bg-emerald-500/25 group-hover:opacity-100"
                                 title="Replace with Helminth ability"
                               >
-                                <RefreshCw className="h-3 w-3" />
+                                <RefreshCw className="h-3.5 w-3.5" />
                               </button>
                             )}
                           </div>
@@ -1697,6 +1388,6 @@ export default function WarframeBuilderPage() {
         defaultIsPublic={saveDialogDefaultPublic}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

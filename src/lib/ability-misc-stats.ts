@@ -24,6 +24,8 @@ export interface ScaledMiscStatLine {
   scaled: string;
   modified: boolean;
   positive?: boolean;
+  /** When wiki-verified scaling applies, which stat drives it. */
+  scaleAttr?: AbilityScaleAttribute;
 }
 
 const SKIP_KEYS = new Set(["drCap", "slowCap", "channeled", "maxDuration"]);
@@ -357,6 +359,7 @@ export function scaleAbilityMiscStats(
       scaled: result?.scaled ?? base,
       modified: result?.modified ?? false,
       positive: result?.positive ?? true,
+      scaleAttr: rule.scale,
     });
   }
 

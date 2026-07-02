@@ -1,12 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Header } from "@/components/header";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PublicBuildRow } from "@/components/public-build-row";
+import {
+  PageShell,
+  PageMain,
+  PageHero,
+  FilterChip,
+  ContentPanel,
+  EmptyState,
+} from "@/components/page-shell";
 import { Search, Loader2, Users, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { PublicBuildSummary } from "@/lib/build-types";
 import { allWeapons } from "@/data/weapons";
 import { allWarframes } from "@/data/warframes";
@@ -106,134 +112,112 @@ export default function DiscoverPage() {
   }, [fetchBuilds]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6 max-w-3xl">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Users className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">Discover Builds</h1>
+    <PageShell>
+      <PageMain maxWidth="md">
+        <PageHero
+          icon={Users}
+          accent="primary"
+          title="Discover Builds"
+          description="Browse community builds shared by other Tenno. Search by name or filter to a specific weapon or warframe."
+        />
+
+        <ContentPanel className="mb-6 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {(["recent", "popular"] as const).map((s) => (
+              <FilterChip key={s} active={sort === s} onClick={() => setSort(s)}>
+                {s === "recent" ? "Most Recent" : "Top Rated"}
+              </FilterChip>
+            ))}
           </div>
-          <p className="text-sm text-muted-foreground">
-            Browse community builds shared by other Tenno. Search by name or filter to a specific weapon or warframe.
-          </p>
-        </div>
 
-        <div className="flex gap-2 mb-4">
-          {(["recent", "popular"] as const).map((s) => (
-            <button
-              key={s}
-              type="button"
-              onClick={() => setSort(s)}
-              className={cn(
-                "px-4 py-1.5 text-xs rounded-full border transition-colors font-medium",
-                sort === s
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {s === "recent" ? "Most Recent" : "Top Rated"}
-            </button>
-          ))}
-        </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search build names and descriptions…"
+              className="border-border/60 bg-background/50 pl-9"
+            />
+          </div>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search build names and descriptions…"
-            className="pl-9"
-          />
-        </div>
-
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={itemFilter ? itemFilter.name : itemSearch}
-            onChange={(e) => {
-              setItemSearch(e.target.value);
-              setItemFilter(null);
-              setShowItemSuggestions(true);
-            }}
-            onFocus={() => setShowItemSuggestions(true)}
-            placeholder="Filter by weapon or warframe…"
-            className="pl-9 pr-9"
-          />
-          {(itemFilter || itemSearch) && (
-            <button
-              type="button"
-              onClick={() => {
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={itemFilter ? itemFilter.name : itemSearch}
+              onChange={(e) => {
+                setItemSearch(e.target.value);
                 setItemFilter(null);
-                setItemSearch("");
-                setShowItemSuggestions(false);
+                setShowItemSuggestions(true);
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-          {showItemSuggestions && itemSuggestions.length > 0 && !itemFilter && (
-            <div className="absolute z-20 top-full left-0 right-0 mt-1 rounded-lg border border-border bg-card shadow-lg overflow-hidden">
-              {itemSuggestions.map((item) => (
-                <button
-                  key={`${item.type}-${item.id}`}
-                  type="button"
-                  onClick={() => {
-                    setItemFilter(item);
-                    setItemSearch("");
-                    setShowItemSuggestions(false);
-                  }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-secondary/70 transition-colors flex justify-between"
-                >
-                  <span>{item.name}</span>
-                  <span className="text-xs text-muted-foreground capitalize">{item.type}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+              onFocus={() => setShowItemSuggestions(true)}
+              placeholder="Filter by weapon or warframe…"
+              className="border-border/60 bg-background/50 pl-9 pr-9"
+            />
+            {(itemFilter || itemSearch) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setItemFilter(null);
+                  setItemSearch("");
+                  setShowItemSuggestions(false);
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+            {showItemSuggestions && itemSuggestions.length > 0 && !itemFilter && (
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-xl backdrop-blur-md">
+                {itemSuggestions.map((item) => (
+                  <button
+                    key={`${item.type}-${item.id}`}
+                    type="button"
+                    onClick={() => {
+                      setItemFilter(item);
+                      setItemSearch("");
+                      setShowItemSuggestions(false);
+                    }}
+                    className="flex w-full justify-between px-3 py-2.5 text-left text-sm transition-colors hover:bg-primary/5"
+                  >
+                    <span>{item.name}</span>
+                    <span className="text-xs capitalize text-muted-foreground">{item.type}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {BUILD_TYPES.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setTypeFilter(t.id)}
-              className={cn(
-                "px-3 py-1.5 text-xs rounded-lg border transition-all",
-                typeFilter === t.id
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-border text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+          <div className="flex flex-wrap gap-2">
+            {BUILD_TYPES.map((t) => (
+              <FilterChip key={t.id} active={typeFilter === t.id} onClick={() => setTypeFilter(t.id)}>
+                {t.label}
+              </FilterChip>
+            ))}
+          </div>
+        </ContentPanel>
 
         {loading ? (
           <div className="flex items-center justify-center py-24 text-muted-foreground">
-            <Loader2 className="h-6 w-6 animate-spin" />
+            <Loader2 className="h-7 w-7 animate-spin text-primary" />
           </div>
         ) : builds.length === 0 ? (
-          <div className="text-center py-24 rounded-xl border border-dashed border-border bg-card/30">
-            <Users className="h-10 w-10 text-muted-foreground/40 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold mb-2">No community builds yet</h2>
-            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              Save a build in any builder and check &quot;List in Community Builds&quot; to share it here.
-            </p>
-          </div>
+          <EmptyState
+            icon={Users}
+            title="No community builds yet"
+            description='Save a build in any builder and check "List in Community Builds" to share it here.'
+          />
         ) : (
           <>
             <ScrollArea className="max-h-[calc(100vh-22rem)]">
-              <div className="space-y-2 pr-3">
+              <div className="space-y-3 pr-3">
                 {builds.map((build) => {
                   const itemName = resolveItemName(build.type, build.itemId);
                   return (
                     <div key={build.id}>
                       {itemName && (
-                        <div className="text-[10px] text-muted-foreground mb-1 px-1">{itemName}</div>
+                        <div className="mb-1.5 px-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                          {itemName}
+                        </div>
                       )}
                       <PublicBuildRow build={build} />
                     </div>
@@ -242,12 +226,12 @@ export default function DiscoverPage() {
               </div>
             </ScrollArea>
             {nextCursor && (
-              <div className="mt-4 flex justify-center">
+              <div className="mt-6 flex justify-center">
                 <button
                   type="button"
                   disabled={loadingMore}
                   onClick={() => fetchBuilds(nextCursor, true)}
-                  className="px-4 py-2 text-sm rounded-lg border border-border hover:border-primary/40 transition-colors disabled:opacity-50"
+                  className="rounded-lg border border-border/70 bg-card/50 px-5 py-2.5 text-sm font-medium transition-all hover:border-primary/40 hover:bg-primary/5 disabled:opacity-50"
                 >
                   {loadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : "Load more"}
                 </button>
@@ -255,7 +239,7 @@ export default function DiscoverPage() {
             )}
           </>
         )}
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }

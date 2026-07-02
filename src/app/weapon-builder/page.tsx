@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
+import {
+  ItemPickerScreen,
+  ItemPickerFilter,
+  ItemPickerRow,
+  BuilderItemHeader,
+  BuilderActionBar,
+  BuilderActionGroup,
+} from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, type SlotType } from "@/components/mod-picker";
@@ -21,7 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload } from "lucide-react";
+import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Crosshair } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
@@ -438,101 +446,95 @@ export default function WeaponBuilderPage() {
   const totalModSlots = hasWeaponExilusSlot ? numSlots + 1 : numSlots;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
 
       <main className="flex-1 container mx-auto px-4 py-6">
         {showWeaponList || !selectedWeapon ? (
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Select a Weapon</h1>
-
-            <div className="flex gap-2 mb-4 flex-wrap">
-              {Object.entries(categoryLabels).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setWeaponCategory(key)}
-                  className={cn(
-                    "px-3 py-1.5 text-sm rounded-lg border transition-colors",
-                    weaponCategory === key
-                      ? "bg-blue-600 border-blue-600 text-white"
-                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search weapons..."
-                value={weaponSearch}
-                onChange={(e) => setWeaponSearch(e.target.value)}
-                className="pl-9"
+          <ItemPickerScreen
+            icon={Crosshair}
+            accent="blue"
+            title="Weapon Builder"
+            description="Choose a weapon to configure mods, arcanes, rivens, and Incarnon evolutions."
+            count={filteredWeapons.length}
+            search={weaponSearch}
+            onSearchChange={setWeaponSearch}
+            searchPlaceholder="Search weapons..."
+            filters={Object.entries(categoryLabels).map(([key, label]) => (
+              <ItemPickerFilter
+                key={key}
+                active={weaponCategory === key}
+                onClick={() => setWeaponCategory(key)}
+              >
+                {label}
+              </ItemPickerFilter>
+            ))}
+          >
+            {filteredWeapons.map((weapon) => (
+              <ItemPickerRow
+                key={weapon.id}
+                accent="blue"
+                onClick={() => handleSelectWeapon(weapon)}
+                image={
+                  <GameAssetImage
+                    src={getWeaponImage(weapon.name, { category: weapon.category })}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-9 w-9 object-contain"
+                    hideOnError
+                  />
+                }
+                title={
+                  <>
+                    {weapon.name}
+                    {incarnonDataMap.has(weapon.id) && <Flame className="ml-1 inline h-3 w-3 text-orange-400" />}
+                  </>
+                }
+                badge={
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {categoryLabels[weapon.category] || weapon.category}
+                  </span>
+                }
+                meta={
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                    {weapon.category === "tektolyst" ? (
+                      <span>Tektolyst Artifact — {weapon.focusSchool || "Focus"} School</span>
+                    ) : (
+                      <>
+                        <span>DMG {weapon.damage}</span>
+                        <span>CC {(weapon.criticalChance * 100).toFixed(0)}%</span>
+                        <span>CM {weapon.criticalMultiplier.toFixed(1)}x</span>
+                        <span>SC {(weapon.statusChance * 100).toFixed(0)}%</span>
+                        <span>FR {weapon.fireRate.toFixed(1)}</span>
+                      </>
+                    )}
+                  </div>
+                }
               />
-            </div>
-
-            <p className="text-xs text-muted-foreground mb-3">{filteredWeapons.length} weapons</p>
-
-            <ScrollArea className="h-[60vh]">
-              <div className="space-y-1 pr-4">
-                {filteredWeapons.map((weapon) => (
-                  <button
-                    key={weapon.id}
-                    onClick={() => handleSelectWeapon(weapon)}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <GameAssetImage src={getWeaponImage(weapon.name, { category: weapon.category })} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-sm">
-                            {weapon.name}
-                            {incarnonDataMap.has(weapon.id) && <Flame className="inline h-3 w-3 text-orange-400 ml-1" />}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{categoryLabels[weapon.category] || weapon.category}</span>
-                        </div>
-                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                          {weapon.category === "tektolyst" ? (
-                            <span>Tektolyst Artifact — {weapon.focusSchool || "Focus"} School</span>
-                          ) : (<>
-                            <span>DMG {weapon.damage}</span>
-                            <span>CC {(weapon.criticalChance * 100).toFixed(0)}%</span>
-                            <span>CM {weapon.criticalMultiplier.toFixed(1)}x</span>
-                            <span>SC {(weapon.statusChance * 100).toFixed(0)}%</span>
-                            <span>FR {weapon.fireRate.toFixed(1)}</span>
-                          </>)}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
+            ))}
+          </ItemPickerScreen>
         ) : (
           <div>
-            <div className="mb-6 space-y-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <button
-                  onClick={() => {
-                    clearCloudBuildInUrl();
-                    setShowWeaponList(true);
-                  }}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  ← Change
-                </button>
-                <GameAssetImage src={getWeaponImage(selectedWeapon.name, { category: selectedWeapon.category })} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
-                <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedWeapon.name}</h1>
-                <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">
-                  {selectedWeapon.category} • {selectedWeapon.triggerType}
-                </span>
-              </div>
-              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
-                {/* primary actions */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+            <BuilderItemHeader
+              onChange={() => {
+                clearCloudBuildInUrl();
+                setShowWeaponList(true);
+              }}
+              image={
+                <GameAssetImage
+                  src={getWeaponImage(selectedWeapon.name, { category: selectedWeapon.category })}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="hidden h-10 w-10 rounded-lg object-contain sm:block"
+                  hideOnError
+                />
+              }
+              title={selectedWeapon.name}
+              subtitle={`${selectedWeapon.category} • ${selectedWeapon.triggerType}`}
+            >
+              <BuilderActionBar>
+                <BuilderActionGroup>
                   <button
                     onClick={() => {
                       setSaveDialogDefaultPublic(buildIsPublic);
@@ -576,10 +578,9 @@ export default function WeaponBuilderPage() {
                     {shareCopied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
                     <span className="hidden sm:inline">{shareCopied ? "Copied!" : "Share"}</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
-                {/* build modifiers */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                <BuilderActionGroup>
                   <button
                     onClick={() => setIsMR30(!isMR30)}
                     className={cn(
@@ -604,7 +605,7 @@ export default function WeaponBuilderPage() {
                     <Zap className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Catalyst</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
                 {selectedWeapon && weaponSupportsProgenitor(selectedWeapon) && (
                   <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.06]">
@@ -651,8 +652,8 @@ export default function WeaponBuilderPage() {
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
-              </div>
-            </div>
+              </BuilderActionBar>
+            </BuilderItemHeader>
 
             <div className="mb-6">
               <CommunityBuildsPanel
@@ -1007,6 +1008,6 @@ export default function WeaponBuilderPage() {
         defaultIsPublic={saveDialogDefaultPublic}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

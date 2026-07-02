@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Header } from "@/components/header";
+import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
 import { getLoadouts, saveLoadout, deleteLoadout, generateId } from "@/lib/loadouts";
 import { getSavedBuilds, SavedBuild, WarframeBuildData, WeaponBuildData, CompanionBuildData, ModularBuildData } from "@/lib/build-storage";
 import { Loadout, EquippedArchonShard } from "@/lib/types";
@@ -32,6 +32,7 @@ import {
   Library,
   Sparkles,
   Wrench,
+  FolderOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
@@ -549,69 +550,63 @@ export default function LoadoutsPage() {
   const showModularTab = pickerSlot === "primary" || pickerSlot === "secondary" || pickerSlot === "melee";
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">Loadouts</h1>
-              <p className="text-sm text-muted-foreground mt-1 max-w-xl">
-                Group a warframe, weapons (including kitguns, zaws, and amps from the{" "}
-                <span className="text-foreground/90 font-medium">Modular</span> tab), and a companion.{" "}
-                <span className="text-foreground/90 font-medium">My saved builds</span> pulls full setups; catalog starts
-                empty.
-              </p>
-            </div>
+    <PageShell>
+      <PageMain maxWidth="lg">
+        <PageHero
+          icon={FolderOpen}
+          accent="green"
+          title="Loadouts"
+          description="Group a warframe, weapons (including kitguns, zaws, and amps from the Modular tab), and a companion into one kit."
+          actions={
             <button
               type="button"
               onClick={handleCreate}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
               New loadout
             </button>
-          </div>
+          }
+        />
 
-          <div className="flex gap-2 rounded-xl border border-border bg-card/40 p-3 mb-6 text-xs text-muted-foreground">
-            <Info className="h-4 w-4 shrink-0 text-primary/80 mt-0.5" />
-            <div className="space-y-1.5 leading-relaxed">
+        <ContentPanel className="mb-6">
+          <div className="flex gap-2 text-xs leading-relaxed text-muted-foreground">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary/80" />
+            <div className="space-y-1.5">
               <p>
-                <span className="text-foreground font-medium">1.</span> Save builds in Warframe / Weapon / Companion
+                <span className="font-medium text-foreground">1.</span> Save builds in Warframe / Weapon / Companion
                 builders (Load button lists them here).
               </p>
               <p>
-                <span className="text-foreground font-medium">2.</span> Weapon slots also have a <strong>Modular</strong>{" "}
-                tab for saved kitgun / zaw / amp builds (replaces that slot; configure parts in Modular Builder).
+                <span className="font-medium text-foreground">2.</span> Weapon slots also have a <strong>Modular</strong>{" "}
+                tab for saved kitgun / zaw / amp builds.
               </p>
               <p>
-                <span className="text-foreground font-medium">3.</span> Loadouts stay on this device (separate from
-                cloud profile builds). Use Import/Export to back them up.
+                <span className="font-medium text-foreground">3.</span> Loadouts stay on this device. Use Import/Export to back them up.
               </p>
             </div>
           </div>
+        </ContentPanel>
 
-          {loadouts.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-border rounded-xl bg-card/20">
-              <Sparkles className="h-10 w-10 text-primary/40 mx-auto mb-4" />
-              <p className="text-muted-foreground mb-2 font-medium">No loadouts yet</p>
-              <p className="text-sm text-muted-foreground/80 mb-8 max-w-md mx-auto">
-                Create one, then attach saved builds from your builders for a full kit in one place.
-              </p>
-              <button
-                type="button"
-                onClick={handleCreate}
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Create first loadout
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {loadouts.map((loadout) => (
-                <div key={loadout.id} className="border border-border rounded-xl p-5 bg-card/60 backdrop-blur-sm shadow-sm">
+        {loadouts.length === 0 ? (
+          <EmptyState
+            icon={Sparkles}
+            title="No loadouts yet"
+            description="Create one, then attach saved builds from your builders for a full kit in one place."
+          >
+            <button
+              type="button"
+              onClick={handleCreate}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4" />
+              Create first loadout
+            </button>
+          </EmptyState>
+        ) : (
+          <div className="space-y-4">
+            {loadouts.map((loadout) => (
+              <ContentPanel key={loadout.id} className="p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     {editingId === loadout.id ? (
                       <div className="flex items-center gap-2 flex-1 flex-wrap">
@@ -763,12 +758,11 @@ export default function LoadoutsPage() {
                   </div>
 
                   <LoadoutDamagePanel loadout={loadout} />
-                </div>
+                </ContentPanel>
               ))}
             </div>
           )}
-        </div>
-      </main>
+      </PageMain>
 
       <Dialog
         open={pickerOpen}
@@ -956,6 +950,6 @@ export default function LoadoutsPage() {
           </Tabs>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageShell>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AvatarImage } from "@/components/game-asset-image";
@@ -286,20 +286,18 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen">
-        <Header />
+      <PageShell>
         <div className="container mx-auto px-4 py-16 text-center">
-          <div className="w-12 h-12 rounded-full bg-muted animate-pulse mx-auto" />
+          <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-muted" />
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="container mx-auto px-4 py-16 text-center max-w-md">
+      <PageShell>
+        <div className="container mx-auto max-w-md px-4 py-16 text-center">
           <LogIn className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Sign in to view your profile</h1>
           <p className="text-muted-foreground text-sm mb-6">
@@ -312,7 +310,7 @@ export default function ProfilePage() {
             <LogIn className="h-4 w-4" /> Sign in
           </a>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -320,9 +318,8 @@ export default function ProfilePage() {
   const publicProfileHref = user.username ? `/u/${user.username}` : null;
 
   return (
-    <div className="min-h-screen animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <Header />
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <PageShell>
+      <div className="container mx-auto max-w-4xl px-4 py-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
         {/* Save message toast */}
         {saveMessage && (
           <div className={cn(
@@ -847,6 +844,6 @@ export default function ProfilePage() {
           )}
         </>)}
       </div>
-    </div>
+    </PageShell>
   );
 }

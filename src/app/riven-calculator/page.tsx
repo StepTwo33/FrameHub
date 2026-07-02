@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell, PageMain, PageHero, FilterChip } from "@/components/page-shell";
 import { allWeapons } from "@/data/weapons";
 import { getDisposition } from "@/data/riven-dispositions";
 import {
@@ -95,32 +95,26 @@ export default function RivenCalculatorPage() {
   }, [selectedWeaponType, disposition, graderPositives]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
-            <h1 className="text-2xl font-bold">
-              <Sparkles className="h-5 w-5 inline mr-2 text-purple-400" />
-              Riven Grader
-            </h1>
-          </div>
+    <PageShell>
+      <PageMain maxWidth="lg" className="py-6">
+        <PageHero
+          icon={Sparkles}
+          accent="purple"
+          title="Riven Grader"
+          description="Grade riven mods against disposition-scaled stat pools with tier rankings."
+        />
 
-          {/* Weapon Type Selection */}
-          <div className="flex gap-2 mb-4 flex-wrap">
-            {weaponTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => { setSelectedWeaponType(type); setSelectedWeapon(null); }}
-                className={cn(
-                  "px-3 py-1.5 text-sm rounded-lg border transition-colors",
-                  selectedWeaponType === type ? "bg-purple-600 border-purple-600 text-white" : "border-border text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {weaponTypes.map((type) => (
+            <FilterChip
+              key={type}
+              active={selectedWeaponType === type}
+              onClick={() => { setSelectedWeaponType(type); setSelectedWeapon(null); }}
+            >
+              {type}
+            </FilterChip>
+          ))}
+        </div>
 
           {/* Weapon Search & Selection */}
           {selectedWeaponType && (
@@ -298,9 +292,8 @@ export default function RivenCalculatorPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }
 

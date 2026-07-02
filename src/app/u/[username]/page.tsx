@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Header } from "@/components/header";
+import { PageShell, PageMain, ContentPanel } from "@/components/page-shell";
 import { prisma } from "@/lib/prisma";
 import { ThumbsUp, ChevronRight } from "lucide-react";
 
@@ -51,10 +51,9 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="container mx-auto px-4 py-8 max-w-3xl">
-        <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
+    <PageShell>
+      <PageMain maxWidth="md">
+        <ContentPanel className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {user.image ? (
               <Image src={user.image} alt="" width={80} height={80} className="w-20 h-20 rounded-full border-2 border-border object-cover" />
@@ -90,7 +89,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
               </span>
             )}
           </div>
-        </div>
+        </ContentPanel>
 
         <div className="mt-8">
           <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">
@@ -133,7 +132,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
@@ -306,8 +306,7 @@ export default function ModularBuilderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
+    <PageShell>
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h1 className="text-xl sm:text-3xl font-bold">Modular Builder</h1>
@@ -888,6 +887,6 @@ export default function ModularBuilderPage() {
         showDescription={false}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

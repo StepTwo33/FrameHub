@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { modsMap } from "@/data/mods";
 import { cn } from "@/lib/utils";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
@@ -85,8 +85,7 @@ export default function FormaPlannerPage() {
   }, [slots]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold mb-6">Forma Planner</h1>
@@ -234,6 +233,6 @@ export default function FormaPlannerPage() {
           )}
         </div>
       </main>
-    </div>
+    </PageShell>
   );
 }

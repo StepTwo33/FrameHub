@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import {
   DataOverride, getOverrides, deleteOverride,
   exportOverrides, importOverrides, OverrideCategory,
@@ -320,8 +320,7 @@ export default function ReportIssuePage() {
   const openCount = reports.filter((r) => r.status === "open").length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           {/* Tab Toggle */}
@@ -726,6 +725,6 @@ export default function ReportIssuePage() {
           </p>
         </div>
       </main>
-    </div>
+    </PageShell>
   );
 }

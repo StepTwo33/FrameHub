@@ -1,11 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Header } from "@/components/header";
 import { allMods } from "@/data/mods";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Flag } from "lucide-react";
+import {
+  PageShell,
+  PageMain,
+  PageHero,
+  FilterChip,
+  ContentPanel,
+  PanelHeading,
+} from "@/components/page-shell";
+import { Search, Flag, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = ["All", "Primary", "Secondary", "Melee", "Warframe", "Augment", "Companion", "Archwing"];
@@ -59,84 +66,85 @@ export default function ModBrowserPage() {
   }, [searchQuery, selectedCategory, selectedPolarity, selectedRarity]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">Mod Browser</h1>
+    <PageShell>
+      <PageMain maxWidth="lg">
+        <PageHero
+          icon={BookOpen}
+          accent="indigo"
+          title="Mod Browser"
+          description="Browse all mods with filters for category, polarity, and rarity. Click a mod to expand full stats."
+        />
 
-          {/* Search */}
+        <ContentPanel className="mb-4">
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search mods by name or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="border-border/60 bg-background/50 pl-9"
             />
           </div>
 
-          {/* Filters */}
-          <div className="space-y-2 mb-4">
-            <div className="flex gap-1.5 flex-wrap">
-              <span className="text-xs text-muted-foreground py-1.5 w-16 hidden sm:inline">Category</span>
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={cn(
-                    "px-2.5 py-1 text-xs rounded-lg border transition-colors",
-                    selectedCategory === cat
-                      ? "bg-blue-600 border-blue-600 text-white"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
+          <div className="space-y-3">
+            <div>
+              <PanelHeading>Category</PanelHeading>
+              <div className="flex flex-wrap gap-2">
+                {CATEGORIES.map((cat) => (
+                  <FilterChip
+                    key={cat}
+                    active={selectedCategory === cat}
+                    onClick={() => setSelectedCategory(cat)}
+                  >
+                    {cat}
+                  </FilterChip>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-1.5 flex-wrap">
-              <span className="text-xs text-muted-foreground py-1.5 w-16 hidden sm:inline">Polarity</span>
-              {POLARITIES.map((pol) => (
-                <button
-                  key={pol}
-                  onClick={() => setSelectedPolarity(pol)}
-                  className={cn(
-                    "px-2.5 py-1 text-xs rounded-lg border capitalize transition-colors",
-                    selectedPolarity === pol
-                      ? "bg-blue-600 border-blue-600 text-white"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                  style={selectedPolarity === pol && pol !== "All" ? { backgroundColor: POLARITY_COLORS[pol], borderColor: POLARITY_COLORS[pol] } : undefined}
-                >
-                  {pol}
-                </button>
-              ))}
+            <div>
+              <PanelHeading>Polarity</PanelHeading>
+              <div className="flex flex-wrap gap-2">
+                {POLARITIES.map((pol) => (
+                  <FilterChip
+                    key={pol}
+                    active={selectedPolarity === pol}
+                    onClick={() => setSelectedPolarity(pol)}
+                    style={
+                      selectedPolarity === pol && pol !== "All"
+                        ? { backgroundColor: POLARITY_COLORS[pol], borderColor: POLARITY_COLORS[pol], color: "white" }
+                        : undefined
+                    }
+                    className="capitalize"
+                  >
+                    {pol}
+                  </FilterChip>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-1.5 flex-wrap">
-              <span className="text-xs text-muted-foreground py-1.5 w-16 hidden sm:inline">Rarity</span>
-              {RARITIES.map((rar) => (
-                <button
-                  key={rar}
-                  onClick={() => setSelectedRarity(rar)}
-                  className={cn(
-                    "px-2.5 py-1 text-xs rounded-lg border transition-colors",
-                    selectedRarity === rar
-                      ? "bg-blue-600 border-blue-600 text-white"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {rar}
-                </button>
-              ))}
+            <div>
+              <PanelHeading>Rarity</PanelHeading>
+              <div className="flex flex-wrap gap-2">
+                {RARITIES.map((rar) => (
+                  <FilterChip
+                    key={rar}
+                    active={selectedRarity === rar}
+                    onClick={() => setSelectedRarity(rar)}
+                  >
+                    {rar}
+                  </FilterChip>
+                ))}
+              </div>
             </div>
           </div>
+        </ContentPanel>
 
-          <p className="text-xs text-muted-foreground mb-3">{filteredMods.length} mods found</p>
+        <p className="mb-3 text-xs text-muted-foreground">
+          <span className="font-mono font-medium text-foreground">{filteredMods.length}</span> mods found
+        </p>
 
-          {/* Mod List */}
+        <ContentPanel padding={false}>
           <ScrollArea className="h-[60vh]">
-            <div className="space-y-1 pr-4">
+            <div className="space-y-1 p-2 pr-4">
               {filteredMods.map((mod) => (
                 <div key={mod.id}>
                   <button
@@ -204,8 +212,8 @@ export default function ModBrowserPage() {
               ))}
             </div>
           </ScrollArea>
-        </div>
-      </main>
-    </div>
+        </ContentPanel>
+      </PageMain>
+    </PageShell>
   );
 }

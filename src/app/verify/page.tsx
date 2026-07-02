@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { MailCheck, Loader2, RefreshCw } from "lucide-react";
 
 function VerifyForm() {
@@ -18,23 +18,20 @@ function VerifyForm() {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
-        // Auto-focus first input
         inputRefs.current[0]?.focus();
     }, []);
 
     const handleChange = (index: number, value: string) => {
-        if (!/^\d*$/.test(value)) return; // Only digits
+        if (!/^\d*$/.test(value)) return;
 
         const newCode = [...code];
-        newCode[index] = value.slice(-1); // Only keep last char
+        newCode[index] = value.slice(-1);
         setCode(newCode);
 
-        // Auto-advance to next input
         if (value && index < 5) {
             inputRefs.current[index + 1]?.focus();
         }
 
-        // Auto-submit when all 6 digits entered
         if (newCode.every((d) => d !== "")) {
             handleSubmit(newCode.join(""));
         }
@@ -121,34 +118,30 @@ function VerifyForm() {
 
     if (!email) {
         return (
-            <div className="min-h-screen">
-                <Header />
+            <PageShell>
                 <div className="container mx-auto px-4 py-16 text-center">
                     <p className="text-muted-foreground">No email address provided.</p>
                 </div>
-            </div>
+            </PageShell>
         );
     }
 
     return (
-        <div className="min-h-screen">
-            <Header />
-            <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+        <PageShell>
+            <div className="container mx-auto flex items-center justify-center px-4 py-16">
                 <div className="w-full max-w-md text-center">
-                    {/* Header */}
                     <div className="mb-8">
-                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
+                        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
                             <MailCheck className="h-7 w-7 text-primary" />
                         </div>
                         <h1 className="text-2xl font-bold">Verify your email</h1>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="mt-1 text-sm text-muted-foreground">
                             We sent a 6-digit code to{" "}
-                            <span className="text-foreground font-medium">{email}</span>
+                            <span className="font-medium text-foreground">{email}</span>
                         </p>
                     </div>
 
-                    {/* Code Input */}
-                    <div className="flex gap-2 justify-center mb-6" onPaste={handlePaste}>
+                    <div className="mb-6 flex justify-center gap-2" onPaste={handlePaste}>
                         {code.map((digit, i) => (
                             <input
                                 key={i}
@@ -159,19 +152,19 @@ function VerifyForm() {
                                 value={digit}
                                 onChange={(e) => handleChange(i, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(i, e)}
-                                className="w-12 h-14 text-center text-lg font-bold rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                                className="h-14 w-12 rounded-lg border border-border bg-background text-center text-lg font-bold transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                             />
                         ))}
                     </div>
 
                     {error && (
-                        <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs mb-4">
+                        <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive">
                             {error}
                         </div>
                     )}
 
                     {resent && (
-                        <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs mb-4">
+                        <div className="mb-4 rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-xs text-green-400">
                             A new code has been sent to your email
                         </div>
                     )}
@@ -179,7 +172,7 @@ function VerifyForm() {
                     <button
                         onClick={() => handleSubmit()}
                         disabled={loading || code.some((d) => !d)}
-                        className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 mb-4"
+                        className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {loading ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -192,7 +185,7 @@ function VerifyForm() {
                     <button
                         onClick={handleResend}
                         disabled={resending}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 mx-auto"
+                        className="mx-auto flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
                     >
                         {resending ? (
                             <Loader2 className="h-3 w-3 animate-spin" />
@@ -202,24 +195,23 @@ function VerifyForm() {
                         {resending ? "Sending..." : "Resend code"}
                     </button>
 
-                    <p className="text-[10px] text-muted-foreground/50 mt-6">
+                    <p className="mt-6 text-[10px] text-muted-foreground/50">
                         Code expires in 10 minutes. Check your inbox and spam folder.
                     </p>
                 </div>
             </div>
-        </div>
+        </PageShell>
     );
 }
 
 export default function VerifyPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen">
-                <Header />
+            <PageShell>
                 <div className="container mx-auto px-4 py-16 text-center">
-                    <div className="w-12 h-12 rounded-full bg-muted animate-pulse mx-auto" />
+                    <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-muted" />
                 </div>
-            </div>
+            </PageShell>
         }>
             <VerifyForm />
         </Suspense>

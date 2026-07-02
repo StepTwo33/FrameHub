@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { LogIn, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function SignInPage() {
@@ -46,9 +46,8 @@ export default function SignInPage() {
     };
 
     return (
-        <div className="min-h-screen animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <Header />
-            <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+        <PageShell>
+            <div className="container mx-auto flex flex-1 items-center justify-center px-4 py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
                 <div className="w-full max-w-md p-8 sm:p-10 bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl relative overflow-hidden">
                     {/* Decorative Background Blob */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -z-10" />
@@ -170,6 +169,6 @@ export default function SignInPage() {
                     </a>
                 </div>
             </div>
-        </div>
+        </PageShell>
     );
 }

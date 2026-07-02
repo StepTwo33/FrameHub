@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Header } from "@/components/header";
+import { PageShell, PageMain, PageHero, FilterChip, ContentPanel, EmptyState } from "@/components/page-shell";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { useWeapons } from "@/lib/use-data";
 import { allMods, modsMap } from "@/data/mods";
@@ -159,7 +159,7 @@ function BuildCompareTab() {
             <div key={side} className="space-y-4">
               {/* Weapon Selector */}
               {weaponPickerOpen === side ? (
-                <div className="border border-border rounded-xl p-4 bg-card">
+                <ContentPanel>
                   <div className="flex items-center gap-2 mb-3">
                     <Search className="h-4 w-4 text-muted-foreground" />
                     <Input
@@ -188,7 +188,7 @@ function BuildCompareTab() {
                       ))}
                     </div>
                   </ScrollArea>
-                </div>
+                </ContentPanel>
               ) : (
                 <button
                   onClick={() => setWeaponPickerOpen(side)}
@@ -269,8 +269,8 @@ function BuildCompareTab() {
 
       {/* Side-by-side comparison table */}
       {builds[0].stats && builds[1].stats && (
-        <div className="mt-8 border border-border rounded-xl p-4 sm:p-6 bg-card">
-          <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">COMPARISON</h2>
+        <ContentPanel className="mt-8">
+          <h2 className="mb-4 text-sm font-semibold tracking-wider text-muted-foreground">COMPARISON</h2>
           <div className="space-y-1">
             <CompareRow label="Total Damage" a={builds[0].stats.totalDamage} b={builds[1].stats.totalDamage} format={(v) => v.toFixed(1)} />
             <CompareRow label="Critical Chance" a={builds[0].stats.criticalChance * 100} b={builds[1].stats.criticalChance * 100} format={(v) => `${v.toFixed(1)}%`} />
@@ -281,7 +281,7 @@ function BuildCompareTab() {
             <CompareRow label="Burst DPS" a={builds[0].stats.burstDps} b={builds[1].stats.burstDps} />
             <CompareRow label="Sustained DPS" a={builds[0].stats.sustainedDps} b={builds[1].stats.sustainedDps} />
           </div>
-        </div>
+        </ContentPanel>
       )}
 
       <ModPicker
@@ -368,8 +368,8 @@ function SlotSection({ slot, a, b }: {
     ]);
 
     return (
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+      <ContentPanel padding={false} className="overflow-hidden">
+        <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted/30 hover:text-foreground">
           {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
           <span className={meta.color}>{meta.icon}</span>
           {meta.label}
@@ -395,7 +395,7 @@ function SlotSection({ slot, a, b }: {
               : renderWarframeCompare(wA?.name ?? "–", wA?.stats, wB?.name ?? "–", wB?.stats)}
           </div>
         )}
-      </div>
+      </ContentPanel>
     );
   }
 
@@ -404,8 +404,8 @@ function SlotSection({ slot, a, b }: {
     const cB = b.companion;
     if (!cA && !cB) return null;
     return (
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+      <ContentPanel padding={false} className="overflow-hidden">
+        <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted/30 hover:text-foreground">
           {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
           <span className={meta.color}>{meta.icon}</span>
           {meta.label}
@@ -430,7 +430,7 @@ function SlotSection({ slot, a, b }: {
             <CompareRow label="Weapon DPS" a={cA?.weapon ? sustainedDps(cA.weapon) : null} b={cB?.weapon ? sustainedDps(cB.weapon) : null} />
           </div>
         )}
-      </div>
+      </ContentPanel>
     );
   }
 
@@ -442,8 +442,8 @@ function SlotSection({ slot, a, b }: {
   const sB = wB?.stats ?? null;
 
   return (
-    <div className="border border-border rounded-xl bg-card overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+    <ContentPanel padding={false} className="overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted/30 hover:text-foreground">
         {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
         <span className={meta.color}>{meta.icon}</span>
         {meta.label}
@@ -474,7 +474,7 @@ function SlotSection({ slot, a, b }: {
           <CompareRow label="Sustained DPS" a={sA?.sustainedDps ?? null} b={sB?.sustainedDps ?? null} />
         </div>
       )}
-    </div>
+    </ContentPanel>
   );
 }
 
@@ -515,10 +515,13 @@ function LoadoutCompareTab() {
 
   if (loadouts.length < 2) {
     return (
-      <div className="text-center py-20 border border-dashed border-border rounded-xl">
-        <p className="text-muted-foreground mb-2">You need at least 2 saved loadouts to compare.</p>
-        <a href="/loadouts" className="text-sm text-primary hover:underline">Go to Loadouts →</a>
-      </div>
+      <EmptyState
+        icon={Trophy}
+        title="Need more loadouts"
+        description="You need at least 2 saved loadouts to compare them side by side."
+      >
+        <a href="/loadouts" className="text-sm font-medium text-primary hover:underline">Go to Loadouts →</a>
+      </EmptyState>
     );
   }
 
@@ -559,13 +562,13 @@ function LoadoutCompareTab() {
 
       {/* Aggregate Summary */}
       {aggregate && (
-        <div className="border border-primary/30 rounded-xl p-4 bg-primary/5 mb-6">
-          <h2 className="text-xs font-semibold tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+        <ContentPanel className="mb-6 border-primary/30 bg-primary/5">
+          <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground">
             <Trophy className="h-3.5 w-3.5 text-primary" /> AGGREGATE
           </h2>
           <CompareRow label="Total Sustained DPS" a={aggregate.totalDpsA} b={aggregate.totalDpsB} format={(v) => fmtDamageNum(v)} />
           <CompareRow label="Warframe EHP" a={aggregate.ehpA} b={aggregate.ehpB} />
-        </div>
+        </ContentPanel>
       )}
 
       {/* Per-Slot Comparisons */}
@@ -586,44 +589,28 @@ export default function ComparePage() {
   const [tab, setTab] = useState<CompareTab>("build");
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="flex items-center gap-3 mb-6">
-          <ArrowLeftRight className="h-6 w-6 text-primary" />
-          <h1 className="text-lg sm:text-2xl font-bold">Compare</h1>
-        </div>
+    <PageShell>
+      <PageMain maxWidth="xl">
+        <PageHero
+          icon={ArrowLeftRight}
+          accent="teal"
+          title="Compare"
+          description="Pit two weapon builds or full loadouts against each other side by side."
+        />
 
-        {/* Tab switcher */}
-        <div className="flex gap-2 mb-6">
-          <button
-            onClick={() => setTab("build")}
-            className={cn(
-              "px-4 py-2 rounded-lg text-sm font-medium border transition-all",
-              tab === "build"
-                ? "bg-primary/10 border-primary/50 text-primary"
-                : "border-border text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <Swords className="h-3.5 w-3.5 inline mr-1.5" />
+        <div className="mb-6 flex flex-wrap gap-2">
+          <FilterChip active={tab === "build"} onClick={() => setTab("build")}>
+            <Swords className="mr-1.5 inline h-3.5 w-3.5" />
             Build vs Build
-          </button>
-          <button
-            onClick={() => setTab("loadout")}
-            className={cn(
-              "px-4 py-2 rounded-lg text-sm font-medium border transition-all",
-              tab === "loadout"
-                ? "bg-primary/10 border-primary/50 text-primary"
-                : "border-border text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <Shield className="h-3.5 w-3.5 inline mr-1.5" />
+          </FilterChip>
+          <FilterChip active={tab === "loadout"} onClick={() => setTab("loadout")}>
+            <Shield className="mr-1.5 inline h-3.5 w-3.5" />
             Loadout vs Loadout
-          </button>
+          </FilterChip>
         </div>
 
         {tab === "build" ? <BuildCompareTab /> : <LoadoutCompareTab />}
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }

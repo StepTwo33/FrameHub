@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
 import { AvatarImage } from "@/components/game-asset-image";
 import {
@@ -129,31 +129,28 @@ export default function AdminReportsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen">
-        <Header />
+      <PageShell>
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="w-10 h-10 rounded-full bg-muted animate-pulse mx-auto" />
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   if (!authorized) {
     return (
-      <div className="min-h-screen">
-        <Header />
+      <PageShell>
         <div className="container mx-auto px-4 py-16 text-center max-w-md">
           <Shield className="h-12 w-12 text-destructive mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
           <p className="text-muted-foreground text-sm">This page is restricted to administrators and moderators.</p>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   return (
-    <div className="min-h-screen">
-      <Header />
+    <PageShell>
       <div className="container mx-auto px-4 py-6 max-w-5xl">
         {/* Page Header */}
         <div className="flex items-center gap-3 mb-6">
@@ -457,7 +454,7 @@ export default function AdminReportsPage() {
           })}
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
 

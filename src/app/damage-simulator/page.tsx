@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
 import { Crosshair, Shield, Heart, Flame, Plus, X, ChevronDown, ChevronRight, Zap } from "lucide-react";
 import {
@@ -289,8 +289,7 @@ export default function DamageSimulatorPage() {
   const unusedTypes = DAMAGE_TYPES.filter((t) => !(t.key in dmgTypes));
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-lg sm:text-2xl font-bold mb-6 flex items-center gap-2">
@@ -557,6 +556,6 @@ export default function DamageSimulatorPage() {
           </div>
         </div>
       </main>
-    </div>
+    </PageShell>
   );
 }

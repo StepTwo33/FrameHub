@@ -1,23 +1,41 @@
-import Link from "next/link";
-import { Crosshair, Shield, Dog, FolderOpen, Dice5, BookOpen, Wrench, Target, GitCompareArrows, Rocket, Hammer, Landmark, ExternalLink, Github } from "lucide-react";
-import { Header } from "@/components/header";
+import {
+  Crosshair,
+  Shield,
+  Dog,
+  FolderOpen,
+  Dice5,
+  BookOpen,
+  Wrench,
+  Target,
+  GitCompareArrows,
+  Rocket,
+  Hammer,
+  Landmark,
+  ExternalLink,
+  Github,
+  Users,
+} from "lucide-react";
+import {
+  PageShell,
+  PageMain,
+  FeatureCard,
+  CalloutBanner,
+} from "@/components/page-shell";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-
-      <main className="flex-1 container mx-auto px-4 py-8 sm:py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4">
-            Build. Calculate. <span className="text-blue-400">Dominate.</span>
+    <PageShell>
+      <PageMain maxWidth="xl" className="py-8 sm:py-16">
+        <div className="mx-auto mb-10 max-w-3xl text-center sm:mb-16">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
+            Build. Calculate. <span className="text-primary">Dominate.</span>
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground">
+          <p className="text-base text-muted-foreground sm:text-lg">
             Plan and optimize your Warframe builds with real-time stat calculations, mod stacking, and DPS analysis.
           </p>
-          <div className="mt-6 mx-auto max-w-xl rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3 text-left sm:text-center">
-            <p className="text-sm text-foreground/90 leading-relaxed">
+          <CalloutBanner accent="emerald" className="mx-auto mt-6 max-w-xl">
+            <p className="text-sm leading-relaxed text-foreground/90">
               <span className="font-medium text-emerald-400">Frame Hub is open source.</span>{" "}
               Contribute, report bugs, or fork the project on GitHub.
             </p>
@@ -25,226 +43,124 @@ export default function Home() {
               href={FRAME_HUB_GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
             >
               <Github className="h-4 w-4" />
               StepTwo33/FrameHub
               <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
             </a>
-          </div>
+          </CalloutBanner>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
-          <Link href="/weapon-builder" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-blue-500/50 hover:bg-blue-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-blue-500/10">
-                  <Crosshair className="h-5 w-5 text-blue-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-blue-400 transition-colors">Weapon Builder</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Configure mods for 630 weapons with real-time DPS, crit, and status calculations.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">630 Weapons</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Orokin Catalyst</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/warframe-builder" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-purple-500/50 hover:bg-purple-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Shield className="h-5 w-5 text-purple-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-purple-400 transition-colors">Warframe Builder</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Mod your Warframe, install Archon Shards, and see ability stats and survivability.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">116 Warframes</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Archon Shards</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/companion-builder" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-cyan-500/50 hover:bg-cyan-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-cyan-500/10">
-                  <Dog className="h-5 w-5 text-cyan-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-cyan-400 transition-colors">Companion Builder</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Build sentinels, kubrows, kavats, MOAs, and more with companion-specific mods.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">41 Companions</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">75 Mods</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/riven-calculator" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-amber-500/50 hover:bg-amber-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-amber-500/10">
-                  <Dice5 className="h-5 w-5 text-amber-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-amber-400 transition-colors">Riven Calculator</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Generate, grade, and evaluate riven mods with disposition-adjusted stat ranges.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">596 Dispositions</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Grade System</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/mod-browser" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-indigo-500/50 hover:bg-indigo-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-indigo-500/10">
-                  <BookOpen className="h-5 w-5 text-indigo-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-indigo-400 transition-colors">Mod Browser</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Browse all 1629 mods with filters for category, polarity, and rarity.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">1629 Mods</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Full Stats</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/forma-planner" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-yellow-500/50 hover:bg-yellow-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-yellow-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-yellow-500/10">
-                  <Wrench className="h-5 w-5 text-yellow-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-yellow-400 transition-colors">Forma Planner</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Plan polarity placements, calculate capacity costs, and get forma suggestions.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Polarity Matching</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Auto Suggest</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/damage-simulator" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-red-500/50 hover:bg-red-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-red-500/10">
-                  <Target className="h-5 w-5 text-red-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-red-400 transition-colors">Damage Simulator</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Simulate damage against enemies with level scaling, armor, and elemental combos.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">15 Enemies</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Elemental Reference</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/loadouts" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-green-500/50 hover:bg-green-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-green-500/10">
-                  <FolderOpen className="h-5 w-5 text-green-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-green-400 transition-colors">Loadout Manager</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Save and manage complete loadouts with warframe, weapons, and companion builds.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Local Storage</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Import/Export</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/modular-builder" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-orange-500/50 hover:bg-orange-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-orange-500/10">
-                  <Hammer className="h-5 w-5 text-orange-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-orange-400 transition-colors">Modular Builder</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Assemble and mod Kitguns, Zaws, and Amps from individual components with stat preview.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Kitguns</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Zaws</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Amps</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/railjack-builder" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-rose-500/50 hover:bg-rose-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-rose-500/10">
-                  <Rocket className="h-5 w-5 text-rose-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-rose-400 transition-colors">Railjack Builder</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Configure ship components, armaments, and Plexus mods for your Railjack.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Components</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Plexus Mods</span>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/compare" className="group h-full">
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-teal-500/50 hover:bg-teal-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-teal-500/10">
-                  <GitCompareArrows className="h-5 w-5 text-teal-400" />
-                </div>
-                <h2 className="text-lg font-semibold group-hover:text-teal-400 transition-colors">Build Compare</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">Compare two weapon builds side-by-side or pit full loadouts against each other.</p>
-              <div className="mt-3 flex gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Build vs Build</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">Loadout vs Loadout</span>
-              </div>
-            </div>
-          </Link>
-
-          <a
+        <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard
+            href="/weapon-builder"
+            title="Weapon Builder"
+            description="Configure mods for 630 weapons with real-time DPS, crit, and status calculations."
+            icon={Crosshair}
+            accent="blue"
+            badges={["630 Weapons", "Orokin Catalyst"]}
+          />
+          <FeatureCard
+            href="/warframe-builder"
+            title="Warframe Builder"
+            description="Mod your Warframe, install Archon Shards, and see ability stats and survivability."
+            icon={Shield}
+            accent="purple"
+            badges={["116 Warframes", "Archon Shards"]}
+          />
+          <FeatureCard
+            href="/companion-builder"
+            title="Companion Builder"
+            description="Build sentinels, kubrows, kavats, MOAs, and more with companion-specific mods."
+            icon={Dog}
+            accent="cyan"
+            badges={["41 Companions", "75 Mods"]}
+          />
+          <FeatureCard
+            href="/riven-calculator"
+            title="Riven Calculator"
+            description="Generate, grade, and evaluate riven mods with disposition-adjusted stat ranges."
+            icon={Dice5}
+            accent="amber"
+            badges={["596 Dispositions", "Grade System"]}
+          />
+          <FeatureCard
+            href="/mod-browser"
+            title="Mod Browser"
+            description="Browse all 1629 mods with filters for category, polarity, and rarity."
+            icon={BookOpen}
+            accent="indigo"
+            badges={["1629 Mods", "Full Stats"]}
+          />
+          <FeatureCard
+            href="/forma-planner"
+            title="Forma Planner"
+            description="Plan polarity placements, calculate capacity costs, and get forma suggestions."
+            icon={Wrench}
+            accent="yellow"
+            badges={["Polarity Matching", "Auto Suggest"]}
+          />
+          <FeatureCard
+            href="/damage-simulator"
+            title="Damage Simulator"
+            description="Simulate damage against enemies with level scaling, armor, and elemental combos."
+            icon={Target}
+            accent="red"
+            badges={["15 Enemies", "Elemental Reference"]}
+          />
+          <FeatureCard
+            href="/loadouts"
+            title="Loadout Manager"
+            description="Save and manage complete loadouts with warframe, weapons, and companion builds."
+            icon={FolderOpen}
+            accent="green"
+            badges={["Local Storage", "Import/Export"]}
+          />
+          <FeatureCard
+            href="/discover"
+            title="Discover Builds"
+            description="Browse community builds shared by other Tenno. Upvote, filter, and load shared loadouts."
+            icon={Users}
+            accent="primary"
+            badges={["Community", "Upvotes"]}
+          />
+          <FeatureCard
+            href="/modular-builder"
+            title="Modular Builder"
+            description="Assemble and mod Kitguns, Zaws, and Amps from individual components with stat preview."
+            icon={Hammer}
+            accent="orange"
+            badges={["Kitguns", "Zaws", "Amps"]}
+          />
+          <FeatureCard
+            href="/railjack-builder"
+            title="Railjack Builder"
+            description="Configure ship components, armaments, and Plexus mods for your Railjack."
+            icon={Rocket}
+            accent="rose"
+            badges={["Components", "Plexus Mods"]}
+          />
+          <FeatureCard
+            href="/compare"
+            title="Build Compare"
+            description="Compare two weapon builds side-by-side or pit full loadouts against each other."
+            icon={GitCompareArrows}
+            accent="teal"
+            badges={["Build vs Build", "Loadout vs Loadout"]}
+          />
+          <FeatureCard
             href="https://buff0000n.github.io/dojocad/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group h-full"
-          >
-            <div className="border border-border/60 rounded-xl p-6 bg-card/50 backdrop-blur-sm hover:border-slate-400/50 hover:bg-slate-500/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-500/10 transition-all duration-300 h-full flex flex-col">
-              <div className="flex items-start gap-3 mb-2">
-                <div className="p-2 rounded-lg bg-slate-500/10 shrink-0">
-                  <Landmark className="h-5 w-5 text-slate-300" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-semibold group-hover:text-slate-200 transition-colors">DojoCAD</h2>
-                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" aria-hidden />
-                  </div>
-                  <p className="text-[11px] text-slate-400/95 font-medium mt-0.5">
-                    By <span className="text-slate-300">buff0000n</span> — thanks for building this for the community.
-                  </p>
-                </div>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1">
-                Plan clan dojo layouts: room placement, capacity, and multi-floor design. Opens their site in a new tab; not part of Frame Hub.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <span className="text-xs bg-secondary px-2 py-1 rounded">DojoCAD</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">buff0000n</span>
-                <span className="text-xs bg-secondary px-2 py-1 rounded">External</span>
-              </div>
-            </div>
-          </a>
+            external
+            title="DojoCAD"
+            description="Plan clan dojo layouts: room placement, capacity, and multi-floor design. Opens their site in a new tab."
+            icon={Landmark}
+            accent="slate"
+            subtitle="By buff0000n — thanks for building this for the community."
+            badges={["DojoCAD", "External"]}
+          />
         </div>
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }

@@ -1,17 +1,15 @@
 "use client";
 
-import { Header } from "@/components/header";
+import { PageShell, PageMain, PageHero, ProsePanel } from "@/components/page-shell";
+import { AlertTriangle } from "lucide-react";
 
 export default function DisclaimerPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-10">
-        <div className="max-w-3xl mx-auto prose prose-invert prose-sm">
-          <h1 className="text-3xl font-bold mb-6">Disclaimer</h1>
-          <p className="text-xs text-muted-foreground mb-8">Last updated: February 15, 2026</p>
-
-          <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
+    <PageShell>
+      <PageMain maxWidth="md">
+        <PageHero icon={AlertTriangle} accent="amber" title="Disclaimer" description="Last updated: February 15, 2026" />
+        <ProsePanel>
+          <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
             <section>
               <h2 className="text-lg font-semibold text-foreground mb-2">Fan-Made Tool</h2>
               <p>
@@ -71,8 +69,8 @@ export default function DisclaimerPage() {
               </p>
             </section>
           </div>
-        </div>
-      </main>
-    </div>
+        </ProsePanel>
+      </PageMain>
+    </PageShell>
   );
 }

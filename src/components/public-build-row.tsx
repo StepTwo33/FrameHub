@@ -105,8 +105,9 @@ export function PublicBuildRow({ build, showVote = true, onLoad, compact = false
   return (
     <div
       className={cn(
-        "flex items-stretch rounded-lg border border-border bg-card overflow-hidden transition-colors hover:border-primary/35 group",
-        compact && "text-sm"
+        "group flex items-stretch overflow-hidden rounded-xl border border-border/60 bg-card/60 backdrop-blur-sm transition-all duration-200",
+        "hover:border-primary/40 hover:shadow-md hover:shadow-primary/5",
+        compact && "text-sm",
       )}
     >
       <Link

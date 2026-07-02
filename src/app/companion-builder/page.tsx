@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/components/header";
+import { PageShell } from "@/components/page-shell";
+import {
+  ItemPickerScreen,
+  ItemPickerFilter,
+  ItemPickerRow,
+  BuilderItemHeader,
+  BuilderActionBar,
+  BuilderActionGroup,
+} from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
@@ -466,91 +474,84 @@ export default function CompanionBuilderPage() {
     : equippedMods.map((m) => m.modId);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <PageShell>
 
       <main className="flex-1 container mx-auto px-4 py-6">
         {showCompanionList || !selectedCompanion ? (
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Select a Companion</h1>
-
-            <div className="flex gap-2 mb-4 flex-wrap">
-              {Object.entries(companionTypeLabels).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setCompanionType(key)}
-                  className={cn(
-                    "px-3 py-1.5 text-sm rounded-lg border transition-colors",
-                    companionType === key
-                      ? "bg-cyan-600 border-cyan-600 text-white"
-                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search companions..."
-                value={companionSearch}
-                onChange={(e) => setCompanionSearch(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-
-            <p className="text-xs text-muted-foreground mb-3">{filteredCompanions.length} companions</p>
-
-            <ScrollArea className="h-[60vh]">
-              <div className="space-y-1 pr-4">
-                {filteredCompanions.map((comp) => (
-                  <button
-                    key={comp.id}
-                    onClick={() => handleSelectCompanion(comp)}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <GameAssetImage src={getCompanionImage(comp.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 shrink-0" hideOnError />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
-                          <span className="font-medium text-sm">{comp.name}</span>
-                          <span className="text-xs text-muted-foreground capitalize ml-auto">{comp.type}</span>
-                        </div>
-                        <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                          <span>HP {comp.health}</span>
-                          <span>SH {comp.shield}</span>
-                          <span>AR {comp.armor}</span>
-                        </div>
-                        {comp.description && (
-                          <p className="text-xs text-muted-foreground/70 mt-1 truncate">{comp.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
+          <ItemPickerScreen
+            icon={Dog}
+            accent="cyan"
+            title="Companion Builder"
+            description="Choose a sentinel, kubrow, kavat, MOA, or other companion to configure."
+            count={filteredCompanions.length}
+            search={companionSearch}
+            onSearchChange={setCompanionSearch}
+            searchPlaceholder="Search companions..."
+            filters={Object.entries(companionTypeLabels).map(([key, label]) => (
+              <ItemPickerFilter
+                key={key}
+                active={companionType === key}
+                onClick={() => setCompanionType(key)}
+              >
+                {label}
+              </ItemPickerFilter>
+            ))}
+          >
+            {filteredCompanions.map((comp) => (
+              <ItemPickerRow
+                key={comp.id}
+                accent="cyan"
+                onClick={() => handleSelectCompanion(comp)}
+                image={
+                  <GameAssetImage
+                    src={getCompanionImage(comp.name)}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-9 w-9 object-contain"
+                    hideOnError
+                  />
+                }
+                title={
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="text-cyan-400">{getCompanionIcon(comp.type)}</span>
+                    {comp.name}
+                  </span>
+                }
+                badge={<span className="text-xs capitalize text-muted-foreground">{comp.type}</span>}
+                meta={
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                    <span>HP {comp.health}</span>
+                    <span>SH {comp.shield}</span>
+                    <span>AR {comp.armor}</span>
+                  </div>
+                }
+              >
+                {comp.description && (
+                  <p className="mt-1 truncate text-xs text-muted-foreground/70">{comp.description}</p>
+                )}
+              </ItemPickerRow>
+            ))}
+          </ItemPickerScreen>
         ) : (
           <div>
-            <div className="mb-6 space-y-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <button
-                  onClick={() => setShowCompanionList(true)}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  ← Change
-                </button>
-                <GameAssetImage src={getCompanionImage(selectedCompanion.name)} alt="" width={40} height={40} className="w-10 h-10 rounded object-contain bg-muted/20 hidden sm:block" hideOnError />
-                <h1 className="text-lg sm:text-2xl font-bold truncate">{selectedCompanion.name}</h1>
-                <span className="text-xs sm:text-sm text-muted-foreground capitalize hidden sm:inline">{selectedCompanion.type}</span>
-              </div>
-              <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
-                {/* primary actions */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+            <BuilderItemHeader
+              onChange={() => setShowCompanionList(true)}
+              image={
+                <GameAssetImage
+                  src={getCompanionImage(selectedCompanion.name)}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="hidden h-10 w-10 rounded-lg object-contain sm:block"
+                  hideOnError
+                />
+              }
+              title={selectedCompanion.name}
+              subtitle={selectedCompanion.type}
+            >
+              <BuilderActionBar>
+                <BuilderActionGroup>
                   <button
                     onClick={() => setSaveDialogOpen(true)}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium"
@@ -561,10 +562,9 @@ export default function CompanionBuilderPage() {
                   <button onClick={() => { setSavedBuilds(getSavedBuilds("companion")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10 transition-all font-medium" title="Load Build">
                     <FolderOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Load</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
-                {/* build modifiers */}
-                <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
+                <BuilderActionGroup>
                   <button
                     onClick={() => setIsMR30(!isMR30)}
                     className={cn(
@@ -589,19 +589,18 @@ export default function CompanionBuilderPage() {
                     <Zap className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Reactor</span>
                   </button>
-                </div>
+                </BuilderActionGroup>
 
                 <div className="flex-1" />
 
-                {/* meta */}
                 <a
                   href={`/report-issue?type=companion&name=${encodeURIComponent(selectedCompanion.name)}&id=${encodeURIComponent(selectedCompanion.id)}`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 px-3 py-1.5 text-xs font-medium text-amber-400/70 transition-colors hover:bg-amber-500/5 hover:text-amber-400"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
-              </div>
-            </div>
+              </BuilderActionBar>
+            </BuilderItemHeader>
 
             <div className="mb-6">
               <textarea
@@ -851,6 +850,6 @@ export default function CompanionBuilderPage() {
         defaultIsPublic={buildIsPublic}
         onSave={handleSaveBuildConfirm}
       />
-    </div>
+    </PageShell>
   );
 }

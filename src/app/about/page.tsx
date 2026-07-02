@@ -1,145 +1,135 @@
 "use client";
 
-import { Header } from "@/components/header";
 import Link from "next/link";
-import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github } from "lucide-react";
+import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github, Info } from "lucide-react";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
+import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-10">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">
-            About <span className="text-primary">Frame</span><span className="text-muted-foreground">Hub</span>
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            A Warframe build planner and theorycrafting toolkit.
-          </p>
+    <PageShell>
+      <PageMain maxWidth="md">
+        <PageHero
+          icon={Info}
+          accent="primary"
+          title="About"
+          highlight="Frame Hub"
+          description="A Warframe build planner and theorycrafting toolkit."
+        />
 
-          <div className="space-y-8">
-            <section>
-              <h2 className="text-xl font-semibold mb-3">What is Frame Hub?</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Frame Hub is a free build planner for Digital Extremes&apos; Warframe.
-                It lets you theorycraft weapon, warframe, companion, archwing, and modular weapon builds
-                with real-time stat calculations, elemental combo resolution, damage simulation, and
-                time-to-kill estimates against every enemy faction.
-              </p>
-            </section>
+        <div className="space-y-6">
+          <ContentPanel>
+            <h2 className="mb-3 text-lg font-semibold">What is Frame Hub?</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Frame Hub is a free build planner for Digital Extremes&apos; Warframe.
+              It lets you theorycraft weapon, warframe, companion, archwing, and modular weapon builds
+              with real-time stat calculations, elemental combo resolution, damage simulation, and
+              time-to-kill estimates against every enemy faction.
+            </p>
+          </ContentPanel>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3">Features</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { icon: Swords, title: "Weapon Builder", desc: "Full mod, arcane, riven, and Incarnon support with burst/sustained DPS, status proc breakdowns, and elemental combo resolution." },
-                  { icon: Shield, title: "Warframe Builder", desc: "Mod slots, archon shards, Helminth abilities, ability scaling preview, augment detection, and survivability stats." },
-                  { icon: BarChart3, title: "Damage Simulator", desc: "Post-Update 32 enemy scaling, per-faction TTK with Viral/Corrosive status effects, DoT accounting, and armor DR." },
-                  { icon: Wrench, title: "Modular & Companion", desc: "Zaw, Kitgun, MOA, and companion builders with category-specific mod pools and riven support." },
-                  { icon: Users, title: "Build Sharing", desc: "Save builds locally or to the cloud, generate shareable URLs, and compare builds side by side." },
-                  { icon: Bug, title: "Riven Grader", desc: "Grade your rivens against disposition-scaled stat pools with tier rankings and reroll cost reference." },
-                ].map((f) => (
-                  <div key={f.title} className="border border-border rounded-lg p-4 bg-card">
-                    <div className="flex items-center gap-2 mb-2">
+          <ContentPanel>
+            <h2 className="mb-4 text-lg font-semibold">Features</h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                { icon: Swords, title: "Weapon Builder", desc: "Full mod, arcane, riven, and Incarnon support with burst/sustained DPS, status proc breakdowns, and elemental combo resolution." },
+                { icon: Shield, title: "Warframe Builder", desc: "Mod slots, archon shards, Helminth abilities, ability scaling preview, augment detection, and survivability stats." },
+                { icon: BarChart3, title: "Damage Simulator", desc: "Post-Update 32 enemy scaling, per-faction TTK with Viral/Corrosive status effects, DoT accounting, and armor DR." },
+                { icon: Wrench, title: "Modular & Companion", desc: "Zaw, Kitgun, MOA, and companion builders with category-specific mod pools and riven support." },
+                { icon: Users, title: "Build Sharing", desc: "Save builds locally or to the cloud, generate shareable URLs, and compare builds side by side." },
+                { icon: Bug, title: "Riven Grader", desc: "Grade your rivens against disposition-scaled stat pools with tier rankings and reroll cost reference." },
+              ].map((f) => (
+                <div
+                  key={f.title}
+                  className="rounded-lg border border-border/50 bg-background/40 p-4 transition-colors hover:border-primary/30"
+                >
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="rounded-md bg-primary/10 p-1.5">
                       <f.icon className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-semibold">{f.title}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+                    <span className="text-sm font-semibold">{f.title}</span>
                   </div>
-                ))}
-              </div>
-            </section>
+                  <p className="text-xs leading-relaxed text-muted-foreground">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </ContentPanel>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Github className="h-5 w-5 text-primary" />
-                Open Source
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                Frame Hub is open source under the MIT license. You can browse the code, file issues, suggest features, or contribute pull requests on GitHub.
-              </p>
-              <a
-                href={FRAME_HUB_GITHUB_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-              >
-                <Github className="h-4 w-4" />
-                github.com/StepTwo33/FrameHub
-              </a>
-            </section>
+          <ContentPanel>
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+              <Github className="h-5 w-5 text-primary" />
+              Open Source
+            </h2>
+            <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+              Frame Hub is open source under the MIT license. You can browse the code, file issues, suggest features, or contribute pull requests on GitHub.
+            </p>
+            <a
+              href={FRAME_HUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+            >
+              <Github className="h-4 w-4" />
+              github.com/StepTwo33/FrameHub
+            </a>
+          </ContentPanel>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3">Data Sources</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                All weapon stats, mod values, warframe abilities, arcane effects, and enemy data are sourced from the{" "}
-                <a href="https://wiki.warframe.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                  Official Warframe Wiki
-                </a>{" "}
-                and verified against in-game values. Frame Hub is not affiliated with or endorsed by Digital Extremes.
-              </p>
-            </section>
+          <ContentPanel>
+            <h2 className="mb-3 text-lg font-semibold">Data Sources</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              All weapon stats, mod values, warframe abilities, arcane effects, and enemy data are sourced from the{" "}
+              <a href="https://wiki.warframe.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                Official Warframe Wiki
+              </a>{" "}
+              and verified against in-game values. Frame Hub is not affiliated with or endorsed by Digital Extremes.
+            </p>
+          </ContentPanel>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3">Feedback</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Found incorrect data or a missing entry? Use the{" "}
-                <Link href="/report-issue" className="text-amber-400 hover:underline">Report Issue</Link>{" "}
-                page. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
-              </p>
-            </section>
+          <ContentPanel>
+            <h2 className="mb-3 text-lg font-semibold">Feedback</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Found incorrect data or a missing entry? Use the{" "}
+              <Link href="/report-issue" className="text-amber-400 hover:underline">Report Issue</Link>{" "}
+              page. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
+            </p>
+          </ContentPanel>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                Contributors
-              </h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                Frame Hub is made possible by the following contributors:
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  {
-                    name: "Step-Bro_Prime",
-                    role: "Lead Developer",
-                    profileUrl: "https://www.reddit.com/user/Step-Bro_Prime/",
-                  },
-                  {
-                    name: "Axel Shade",
-                    role: "Data & Design",
-                    profileUrl: "https://www.reddit.com/user/Axel_Shade/",
-                  },
-                ].map((c) => (
-                  <a
-                    key={c.name}
-                    href={c.profileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 border border-border rounded-lg p-3 bg-card hover:border-primary/40 transition-colors group"
-                  >
-                    <div className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary text-sm font-bold shrink-0">
-                      {c.name.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold truncate group-hover:text-primary transition-colors">{c.name}</div>
-                      <div className="text-xs text-muted-foreground truncate">{c.role}</div>
-                    </div>
-                    <User className="h-3.5 w-3.5 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
-                ))}
-              </div>
-            </section>
+          <ContentPanel>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+              <Users className="h-5 w-5 text-primary" />
+              Contributors
+            </h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                { name: "Step-Bro_Prime", role: "Lead Developer", profileUrl: "https://www.reddit.com/user/Step-Bro_Prime/" },
+                { name: "Axel Shade", role: "Data & Design", profileUrl: "https://www.reddit.com/user/Axel_Shade/" },
+              ].map((c) => (
+                <a
+                  key={c.name}
+                  href={c.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-lg border border-border/50 bg-background/40 p-3 transition-all hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    {c.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-semibold transition-colors group-hover:text-primary">{c.name}</div>
+                    <div className="truncate text-xs text-muted-foreground">{c.role}</div>
+                  </div>
+                  <User className="ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                </a>
+              ))}
+            </div>
+          </ContentPanel>
 
-            <section className="border-t border-border pt-6 text-xs text-muted-foreground">
-              <p>
-                Warframe and the Warframe logo are registered trademarks of Digital Extremes Ltd.
-                Frame Hub is a fan-made tool and is not affiliated with, endorsed, or sponsored by Digital Extremes.
-              </p>
-            </section>
-          </div>
+          <p className="text-center text-xs text-muted-foreground/70">
+            Warframe and the Warframe logo are registered trademarks of Digital Extremes Ltd.
+            Frame Hub is a fan-made tool and is not affiliated with, endorsed, or sponsored by Digital Extremes.
+          </p>
         </div>
-      </main>
-    </div>
+      </PageMain>
+    </PageShell>
   );
 }
