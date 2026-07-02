@@ -15,7 +15,7 @@ import { ModPicker, SlotType } from "@/components/mod-picker";
 import { allWarframes } from "@/data/warframes";
 import { allMods, modsMap } from "@/data/mods";
 import { allArchonShards } from "@/data/archon-shards";
-import { calculateWarframeBuild, calculateWeaponBuild, applyArcaneToWarframe } from "@/lib/calculator";
+import { calculateWarframeBuild, calculateWeaponBuild, applyWarframeShardsAndArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
 import { Input } from "@/components/ui/input";
@@ -529,114 +529,8 @@ export default function WarframeBuilderPage() {
       slotIndex: m.slotIndex,
     }));
     const stats = calculateWarframeBuild(selectedWarframe, modSlots, modsMap);
-
-    // Apply archon shard bonuses
-    for (const shard of equippedShards) {
-      if (!shard) continue;
-      const bonusKey = shard.selectedBonus;
-      const bonusValue = shard.bonusValue;
-      switch (bonusKey) {
-        // Flat bonuses (Azure health/shield/energy, Topaz armor)
-        case "health":
-          stats.flatHealthBonus += bonusValue;
-          break;
-        case "shield":
-          stats.flatShieldBonus += bonusValue;
-          break;
-        case "armor":
-          stats.flatArmorBonus += bonusValue;
-          break;
-        case "energyMax":
-          stats.flatEnergyBonus += bonusValue;
-          break;
-        // Percentage bonuses (Crimson, Violet)
-        case "abilityStrength":
-          stats.abilityStrength += bonusValue / 100;
-          break;
-        case "abilityDuration":
-          stats.abilityDuration += bonusValue / 100;
-          break;
-        case "abilityEfficiency":
-          stats.abilityEfficiency += bonusValue / 100;
-          break;
-        case "abilityRange":
-          stats.abilityRange += bonusValue / 100;
-          break;
-        // Amber
-        case "sprintSpeed":
-          stats.sprintSpeedBonus += bonusValue / 100;
-          break;
-        case "castingSpeed":
-          stats.castingSpeedBonus += bonusValue;
-          break;
-        case "parkourVelocity":
-          stats.parkourVelocityBonus += bonusValue;
-          break;
-        case "startingEnergy":
-        case "healthOrbEffectiveness":
-        case "energyOrbEffectiveness":
-          break;
-        // Azure
-        case "healthRegen":
-          stats.healthRegenPerSec += bonusValue;
-          break;
-        // Crimson weapon bonuses (display only on warframe, applied via weapon builder)
-        case "meleeCritDamage":
-        case "meleeCritDamageEnergy":
-          stats.meleeCritDamageBonus += bonusValue;
-          break;
-        case "primaryStatusChance":
-          stats.primaryShardBonus += bonusValue;
-          break;
-        case "secondaryCritChance":
-          stats.secondaryShardBonus += bonusValue;
-          break;
-        // Violet
-        case "abilityDamageElectricity":
-        case "abilityDamageRadiation":
-        case "abilityDamageCorrosion":
-          break;
-        case "primaryElectricityDamage":
-        case "orbConversion":
-          break;
-        // Topaz (all conditional/on-kill)
-        case "blastKillHealth":
-        case "blastKillShields":
-        case "heatKillSecondaryCrit":
-          break;
-        // Emerald (conditional)
-        case "toxinStatusDamage":
-          stats.statusDurationBonus += bonusValue;
-          break;
-        case "toxinHealthRecovery":
-        case "corrosionMaxStacks":
-          break;
-      }
-    }
-
-    // Apply warframe arcanes
-    for (let i = 0; i < equippedArcanes.length; i++) {
-      const arcane = equippedArcanes[i];
-      if (arcane) applyArcaneToWarframe(stats, arcane, 1, equippedArcaneRanks[i] ?? arcane.maxRank);
-    }
-
-    // Recalculate derived stats after shard + arcane bonuses (flat shards add after percentage scaling)
-    stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus;
-    stats.totalShield = stats.baseShield * (1 + stats.shieldBonus) + stats.flatShieldBonus;
-    stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus) + stats.flatArmorBonus;
-    stats.totalEnergy = stats.baseEnergy * (1 + stats.energyBonus + stats.flowBonus) + stats.flatEnergyBonus;
-    stats.totalSprint = stats.baseSprint * (1 + stats.sprintSpeedBonus);
-    if (stats.shieldsNullifiedByPersistence) {
-      stats.totalShield = 0;
-    }
-    if (stats.persistenceDamageCapPerSecond != null) {
-      stats.persistenceActive = stats.totalArmor >= 700;
-    }
-    const armorDR = stats.totalArmor / (stats.totalArmor + 300);
-    stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
-    stats.damageReduction = armorDR * 100;
-
-    return stats;
+    // Shards + arcanes + derived-total recompute shared with loadout stats
+    return applyWarframeShardsAndArcanes(stats, equippedShards, equippedArcanes, equippedArcaneRanks);
   }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, equippedArcaneRanks]);
 
   const abilityDisplayEntries = useMemo(() => {

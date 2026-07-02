@@ -10,6 +10,7 @@ import { resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import { weaponFromModularData } from "@/lib/modular-resolve";
 import {
+  applyWarframeShardsAndArcanes,
   calculateWarframeBuild,
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
@@ -296,17 +297,33 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   if (loadout.warframeBuild) {
     const wf = warframesMap.get(loadout.warframeBuild.warframeId);
     if (wf) {
+      // `arcaneRanks` isn't declared on Loadout["warframeBuild"] but survives the
+      // save round-trip (payload spread from WarframeBuildData).
+      const wb = loadout.warframeBuild as NonNullable<Loadout["warframeBuild"]> &
+        Pick<WarframeBuildData, "arcaneRanks">;
+      const shards = wb.shards;
       const dualConfig = getDualFormConfig(loadout.warframeBuild.warframeId);
       if (dualConfig) {
         const formStats = dualConfig.forms.map((form) => {
-          const mods =
-            form.id === dualConfig.defaultFormId
-              ? loadout.warframeBuild!.mods || []
-              : loadout.warframeBuild!.dualFormBuilds?.[form.id]?.mods || [];
+          const isDefault = form.id === dualConfig.defaultFormId;
+          const slice = isDefault ? undefined : wb.dualFormBuilds?.[form.id];
+          const mods = isDefault ? wb.mods || [] : slice?.mods || [];
+          // Arcanes are per-form; archon shards are shared across forms.
+          const sliceWithArcanes = slice as
+            | (typeof slice & Pick<WarframeBuildData, "arcaneIds" | "arcaneRanks">)
+            | undefined;
+          const arcaneIds = isDefault ? wb.arcaneIds : sliceWithArcanes?.arcaneIds;
+          const arcaneRanks = isDefault ? wb.arcaneRanks : sliceWithArcanes?.arcaneRanks;
+          const stats = calculateWarframeBuild(wf, mods, modsMap, setLinkage);
           return {
             id: form.id,
             label: form.label,
-            stats: calculateWarframeBuild(wf, mods, modsMap, setLinkage),
+            stats: applyWarframeShardsAndArcanes(
+              stats,
+              shards,
+              resolveSavedArcaneSlots(arcaneIds, 2),
+              arcaneRanks,
+            ),
           };
         });
         result.warframe = {
@@ -315,7 +332,12 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
           forms: formStats,
         };
       } else {
-        const stats = calculateWarframeBuild(wf, loadout.warframeBuild.mods || [], modsMap, setLinkage);
+        const stats = applyWarframeShardsAndArcanes(
+          calculateWarframeBuild(wf, wb.mods || [], modsMap, setLinkage),
+          shards,
+          resolveSavedArcaneSlots(wb.arcaneIds, 2),
+          wb.arcaneRanks,
+        );
         result.warframe = { name: wf.name, stats };
       }
 
