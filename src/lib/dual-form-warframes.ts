@@ -1,4 +1,4 @@
-import type { ModSlot } from "@/lib/types";
+import type { Ability, ModSlot } from "@/lib/types";
 import type { WarframeBuildData } from "@/lib/build-storage";
 
 export interface DualFormDef {
@@ -24,6 +24,38 @@ export const DUAL_FORM_WARFRAMES: Record<string, DualFormWarframeConfig> = {
     ],
   },
 };
+
+/** Indices into `warframe.abilities` per form (slot 4 = shared ultimate). */
+const DUAL_FORM_ABILITY_INDICES: Record<string, Record<string, number[]>> = {
+  sirius_orion: {
+    sirius: [0, 2, 4, 6],
+    orion: [1, 3, 5, 6],
+  },
+};
+
+export interface DualFormAbilityEntry {
+  gameSlot: number;
+  abilityIndex: number;
+  ability: Ability;
+  formLabel?: string;
+}
+
+export function getDualFormAbilities(
+  warframeId: string,
+  formId: string,
+  abilities: Ability[],
+): DualFormAbilityEntry[] | null {
+  const config = getDualFormConfig(warframeId);
+  const indices = DUAL_FORM_ABILITY_INDICES[warframeId]?.[formId];
+  if (!config || !indices) return null;
+  const formLabel = config.forms.find((f) => f.id === formId)?.label;
+  return indices.map((abilityIndex, i) => ({
+    gameSlot: i + 1,
+    abilityIndex,
+    ability: abilities[abilityIndex],
+    formLabel: i < 3 ? formLabel : undefined,
+  }));
+}
 
 export function getDualFormConfig(warframeId: string): DualFormWarframeConfig | null {
   return DUAL_FORM_WARFRAMES[warframeId] ?? null;

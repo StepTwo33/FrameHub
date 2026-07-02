@@ -81,6 +81,103 @@ function getMeleeEvolutions(): IncarnonEvolution[] {
   ];
 }
 
+// Update 43 genesis weapons use weapon-specific evolution perks (wiki-verified).
+const WEAPON_SPECIFIC_EVOLUTION_IDS = new Set([
+  "felarx", "innodem", "laetum", "phenmor", "praedos", "onos", "ruvox", "thalys",
+  "vectis_incarnon", "stug_incarnon", "ballistica_incarnon", "destreza_incarnon", "obex_incarnon",
+]);
+
+function getVectisIncarnonEvolutions(): IncarnonEvolution[] {
+  return [
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire while unscoped to transform.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Inciting Incident", description: "On Headshot: +100% Ammo Efficiency for 4s.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Lone Enforcer", description: "+75 Base Damage (+150 Vectis Prime) and +25% Multishot when no enemies are within range.", statChanges: { damage: 0.75, multishot: 0.25 } },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Marksman's Hand", description: "+60% Zoom while Aiming.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Silent Running", description: "100% Noise Reduction.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Deadhead", description: "On Headshot Kill: +100% Damage for 8s.", statChanges: { damage: 1.0 } },
+    { tier: 4, slot: 1, name: "Critical Parallel", description: "+Critical Chance and +0.5x Critical Damage.", statChanges: { criticalChance: 0.2, criticalMultiplier: 0.5 } },
+    { tier: 4, slot: 2, name: "Survivor's Edge", description: "+30% of Critical Chance as Status Chance, up to +40%.", statChanges: {} },
+    { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
+    { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Rapacious Cruelty", description: "+50% Critical Chance, -50% Status Chance.", statChanges: { criticalChance: 0.5, statusChance: -0.5 } },
+  ];
+}
+
+function getStugIncarnonEvolutions(): IncarnonEvolution[] {
+  return [
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct hits charge Incarnon Transmutation. Alt-fire to unleash bouncing corrosive blobs.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Blazing Barrel", description: "+175 Base Damage and +5% Status Chance.", statChanges: { damage: 1.75, statusChance: 0.05 } },
+    { tier: 2, slot: 1, name: "Overcharge Blast", description: "+300 Base Damage and +50% Critical Damage.", statChanges: { damage: 3.0, criticalMultiplier: 0.5 } },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+80% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Resonant Restore", description: "+10 Magazine Capacity.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Survivor's Edge", description: "+15% Critical Chance and +15% Status Chance.", statChanges: { criticalChance: 0.15, statusChance: 0.15 } },
+    { tier: 4, slot: 1, name: "Deathtrap Trigger", description: "+25% Critical Chance and +1.5x Critical Damage.", statChanges: { criticalChance: 0.25, criticalMultiplier: 1.5 } },
+    { tier: 4, slot: 2, name: "Elemental Dominance", description: "+20% Status Chance. Doubles in Incarnon Form.", statChanges: { statusChance: 0.2 } },
+    { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
+    { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Rapacious Cruelty", description: "+50% Critical Chance, -50% Status Chance.", statChanges: { criticalChance: 0.5, statusChance: -0.5 } },
+  ];
+}
+
+function getBallisticaIncarnonEvolutions(): IncarnonEvolution[] {
+  return [
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire for cross-shaped Slash projectiles.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Headcracker", description: "On Punch Through Hit: +7.5% Critical Chance for 3s. Stacks up to 10x.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Prolific Perforation", description: "On Punch Through Hit: +10% Critical Chance for 3s. Stacks up to 8x.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+80% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Void's Guidance", description: "+40% Accuracy, -40% Recoil.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status per projectile and in Incarnon Form.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Survivor's Edge", description: "+30% of Critical Chance as Status Chance, up to +40%.", statChanges: {} },
+    { tier: 4, slot: 2, name: "Critical Parallel", description: "+Critical Chance and +0.5x Critical Damage.", statChanges: { criticalChance: 0.2, criticalMultiplier: 0.5 } },
+    { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
+    { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Rapacious Cruelty", description: "+50% Critical Chance, -50% Status Chance.", statChanges: { criticalChance: 0.5, statusChance: -0.5 } },
+  ];
+}
+
+function getDestrezaIncarnonEvolutions(): IncarnonEvolution[] {
+  return [
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo then Heavy Attack. Lasts 180 seconds.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Weighted Impetus", description: "+100% Heavy Attack Wind Up Speed.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Piercing Stature", description: "On Puncture proc: +20% Status Chance for 6s. Stacks 5x.", statChanges: {} },
+    { tier: 2, slot: 2, name: "Orokin Reach", description: "+1.2m Range.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Overhand", description: "+30% Heavy Attack Damage.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Adept Reflexes", description: "+20 Initial Combo.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Swift Transformation", description: "+50% Incarnon Transmutation Buildup.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Absolute Dominion", description: "+Status Chance.", statChanges: { statusChance: 0.25 } },
+    { tier: 4, slot: 1, name: "Critical Forte", description: "+Critical Damage in Incarnon Form.", statChanges: { criticalMultiplier: 0.35 } },
+    { tier: 4, slot: 2, name: "Decisive Stature", description: "+25% Attack Speed, +35% Heavy Attack Speed.", statChanges: { fireRate: 0.25 } },
+    { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
+    { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Rapacious Cruelty", description: "+50% Critical Chance, -50% Status Chance.", statChanges: { criticalChance: 0.5, statusChance: -0.5 } },
+  ];
+}
+
+function getObexIncarnonEvolutions(): IncarnonEvolution[] {
+  return [
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo then Heavy Attack. Finishers deal radial damage. Lasts 180 seconds.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Balanced Stagger", description: "20% chance to stun on Neutral Combo hits, opening finishers.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Armored Finisher", description: "With Armor over 450: +80% Finisher Damage.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Rapid Conclusion", description: "On Finisher Kill: +2.5% Parkour Velocity. Stacks up to 16x.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Standoff", description: "Combo timer pauses when weapon is holstered.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Orokin Reach", description: "+1.2m Range.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Absolute Dominion", description: "+Status Chance.", statChanges: { statusChance: 0.25 } },
+    { tier: 4, slot: 1, name: "Subtle Force", description: "+10% Damage.", statChanges: { damage: 0.1 } },
+    { tier: 4, slot: 2, name: "Critical Coefficient", description: "+0.6x Critical Damage.", statChanges: { criticalMultiplier: 0.6 } },
+    { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
+    { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Rapacious Cruelty", description: "+50% Critical Chance, -50% Status Chance.", statChanges: { criticalChance: 0.5, statusChance: -0.5 } },
+  ];
+}
+
+function resolveIncarnonEvolutions(data: IncarnonWeaponData, isMelee: boolean): IncarnonEvolution[] {
+  if (WEAPON_SPECIFIC_EVOLUTION_IDS.has(data.weaponId)) return data.evolutions;
+  return isMelee ? getMeleeEvolutions() : getRangedEvolutions();
+}
+
 export const INCARNON_WEAPON_IDS = new Set([
   "ack_and_brunt",
   "ack_brunt_incarnon",
@@ -1342,17 +1439,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Vectis", damage: 225.0, fireRate: 1.5, criticalChance: 0.25, criticalMultiplier: 2.0, statusChance: 0.3, triggerType: "Sniper", magazine: 1, reloadTime: 1.0 },
       { name: "Vectis Incarnon", damage: 450.0, fireRate: 1.5, criticalChance: 0.35, criticalMultiplier: 2.5, statusChance: 0.45, triggerType: "Semi", magazine: 30, reloadTime: 1.0, specialMechanics: { evolutionMode: "Slowing projectiles explode on headshots", modeSwitch: "Alt-fire while unscoped; weakpoint hits charge gauge" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform while unscoped.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
-      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: getVectisIncarnonEvolutions(),
   },
   // Stug Incarnon (genesis_secondary) — Update 43
   {
@@ -1365,17 +1452,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Stug", damage: 79.0, fireRate: 4.0, criticalChance: 0.05, criticalMultiplier: 1.5, statusChance: 0.0, triggerType: "Charge", magazine: 20, reloadTime: 2.0 },
       { name: "Stug Incarnon", damage: 158.0, fireRate: 4.0, criticalChance: 0.15, criticalMultiplier: 2.0, statusChance: 0.25, triggerType: "Auto", magazine: 34, reloadTime: 2.0, specialMechanics: { evolutionMode: "Chaotic maelstrom of bouncing corrosive blobs", modeSwitch: "Direct hits charge gauge; alt-fire to transform" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
-      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: getStugIncarnonEvolutions(),
   },
   // Ballistica Incarnon (genesis_secondary) — Update 43
   {
@@ -1388,17 +1465,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Ballistica", damage: 100.0, fireRate: 3.33, criticalChance: 0.025, criticalMultiplier: 1.5, statusChance: 0.1, triggerType: "Burst", magazine: 16, reloadTime: 2.0 },
       { name: "Ballistica Incarnon", damage: 200.0, fireRate: 3.33, criticalChance: 0.12, criticalMultiplier: 2.0, statusChance: 0.28, triggerType: "Burst", magazine: 16, reloadTime: 2.0, specialMechanics: { evolutionMode: "Cross-shaped projectiles high in Slash Damage", modeSwitch: "Weakpoint hits charge gauge; alt-fire to transform" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
-      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: getBallisticaIncarnonEvolutions(),
   },
   // Destreza Incarnon (genesis_melee) — Update 43
   {
@@ -1411,17 +1478,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Destreza", damage: 158.0, fireRate: 1.0, criticalChance: 0.28, criticalMultiplier: 2.0, statusChance: 0.14, triggerType: "Melee" },
       { name: "Destreza Incarnon", damage: 316.0, fireRate: 1.0, criticalChance: 0.38, criticalMultiplier: 2.5, statusChance: 0.28, triggerType: "Melee", specialMechanics: { evolutionMode: "Ghostly rapiers fly forth on Heavy Attacks; Heavy kills grant Puncture Damage", modeSwitch: "Build 6x combo then Heavy Attack; lasts 180s" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Build 6x Melee Combo then Heavy Attack to transform. Lasts 180 seconds.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Rupture Strike", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 2, slot: 1, name: "Critical Strike", description: "+20% Critical Chance.", statChanges: { criticalChance: 0.2 } },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Extended Strike", description: "+1.5m Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Finishing Touch", description: "+150% Finisher Damage.", statChanges: {} },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: getDestrezaIncarnonEvolutions(),
   },
   // Obex Incarnon (genesis_melee) — Update 43
   {
@@ -1434,17 +1491,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Obex", damage: 120.0, fireRate: 1.0, criticalChance: 0.25, criticalMultiplier: 2.0, statusChance: 0.1, triggerType: "Melee" },
       { name: "Obex Incarnon", damage: 240.0, fireRate: 1.0, criticalChance: 0.35, criticalMultiplier: 2.5, statusChance: 0.22, triggerType: "Melee", specialMechanics: { evolutionMode: "Large radial attack for each Finisher strike", modeSwitch: "Build 6x combo then Heavy Attack; lasts 180s" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Build 6x Melee Combo then Heavy Attack to transform. Lasts 180 seconds.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Rupture Strike", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 2, slot: 1, name: "Critical Strike", description: "+20% Critical Chance.", statChanges: { criticalChance: 0.2 } },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Extended Strike", description: "+1.5m Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Finishing Touch", description: "+150% Finisher Damage.", statChanges: {} },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +2500% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 25.0 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: getObexIncarnonEvolutions(),
   },
 ];
 
@@ -1468,14 +1515,14 @@ const MELEE_INCARNON_IDS = new Set([
 ]);
 
 // Quick lookup: weapon ID → incarnon data
-// Overrides evolutions with correct 3-option pools based on weapon type
+// Genesis weapons use shared pools; native and Update 43 weapons keep weapon-specific perks.
 export const incarnonDataMap = new Map<string, IncarnonWeaponData>();
 for (const data of incarnonWeaponData) {
   const isMelee = MELEE_INCARNON_IDS.has(data.weaponId) ||
     data.forms.some((f) => f.triggerType === "Melee");
   const correctedData: IncarnonWeaponData = {
     ...data,
-    evolutions: isMelee ? getMeleeEvolutions() : getRangedEvolutions(),
+    evolutions: resolveIncarnonEvolutions(data, isMelee),
   };
   incarnonDataMap.set(correctedData.weaponId, correctedData);
   if (correctedData.variants) {

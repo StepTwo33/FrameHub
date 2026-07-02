@@ -4836,8 +4836,12 @@ export const allWarframes: Warframe[] = [
         "name": "Event Horizon",
         "energyCost": 50,
         "description": "Orion forms a drifting black hole, trapping enemies within its gravity. Enemies killed within the black hole empower it. (HOLD) Swap to Sirius and cast Light's Sanctuary.",
+        "damage": 750,
+        "duration": 18,
+        "radius": 6,
         "castTime": 0.7,
-        "miscStats": { "durationExtension": "+5s per kill in radius" }
+        "damageType": "Heat",
+        "miscStats": { "explosionRadius": 12, "durationExtension": "+5s per ability hit" }
       },
       {
         "name": "Celestial Clash",

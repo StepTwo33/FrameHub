@@ -470,18 +470,20 @@ def convert_weapons():
                 'paris', 'mk1_paris', 'paris_prime',
                 'soma', 'soma_prime', 'strun', 'mk1_strun', 'strun_prime', 'strun_wraith',
                 'sybaris', 'dex_sybaris', 'sybaris_prime', 'torid',
+                'vectis', 'vectis_prime',
                 # Genesis Secondary
-                'angstrum', 'prisma_angstrum', 'atomos', 'bronco', 'bronco_prime',
+                'angstrum', 'prisma_angstrum', 'atomos', 'ballistica', 'ballistica_prime', 'rakta_ballistica',
+                'bronco', 'bronco_prime',
                 'cestra', 'despair', 'dual_toxocyst', 'furis', 'mk1_furis',
                 'gammacor', 'synoid_gammacor', 'kunai', 'mk1_kunai',
                 'lato', 'lato_prime', 'lato_vandal', 'lex', 'lex_prime',
-                'sicarus', 'sicarus_prime', 'vasto', 'vasto_prime',
+                'sicarus', 'sicarus_prime', 'stug', 'vasto', 'vasto_prime',
                 'zylok', 'zylok_prime',
                 # Genesis Melee
                 'ack_and_brunt', 'anku', 'bo', 'mk1_bo', 'bo_prime',
-                'ceramic_dagger', 'dual_ichor', 'furax', 'mk1_furax', 'furax_wraith',
+                'ceramic_dagger', 'destreza', 'destreza_prime', 'dual_ichor', 'furax', 'mk1_furax', 'furax_wraith',
                 'hate', 'magistar', 'sancti_magistar', 'nami_solo',
-                'okina', 'okina_prime', 'sibear', 'skana', 'skana_prime', 'prisma_skana',
+                'obex', 'prisma_obex', 'okina', 'okina_prime', 'sibear', 'skana', 'skana_prime', 'prisma_skana',
             }
             if wid in INCARNON_WEAPON_IDS:
                 weapon['isIncarnon'] = True

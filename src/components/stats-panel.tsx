@@ -14,6 +14,14 @@ import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,
 } from "@/lib/calculator";
+import { getDualFormAbilities, getDualFormConfig } from "@/lib/dual-form-warframes";
+import {
+  scaleAbilityMiscStats,
+  scaledAbilityEnergyCost,
+  scaledDamageReduction,
+  scaledDamageBuff,
+  getAbilityDrCap,
+} from "@/lib/ability-misc-stats";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -459,13 +467,14 @@ function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) 
   );
 }
 
-export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility, equippedShards, equippedArcanes, arcaneRanks }: {
+export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility, equippedShards, equippedArcanes, arcaneRanks, activeDualFormId }: {
   stats: WarframeCalculatedStats | null; warframe?: Warframe | null;
   equippedMods?: EquippedMod[]; allMods?: Map<string, Mod>;
   helminthSlot?: number | null; helminthAbility?: HelminthAbility | null;
   equippedShards?: (EquippedArchonShard | null)[];
   equippedArcanes?: (Mod | null)[];
   arcaneRanks?: number[];
+  activeDualFormId?: string;
 }) {
   const shardLines = useMemo(
     () => buildShardBonusLines(equippedShards ?? []),
@@ -485,6 +494,27 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
       })
       .filter(Boolean);
   }, [equippedArcanes, arcaneRanks, stats]);
+
+  const abilityPreviewEntries = useMemo(() => {
+    if (!warframe?.abilities?.length) return [];
+    if (activeDualFormId) {
+      const entries = getDualFormAbilities(warframe.id, activeDualFormId, warframe.abilities);
+      if (entries) {
+        return entries.map((entry) => ({
+          key: `${entry.abilityIndex}-${activeDualFormId}`,
+          ability: entry.ability,
+          slotIndex: entry.gameSlot - 1,
+          formLabel: entry.formLabel,
+        }));
+      }
+    }
+    return warframe.abilities.map((ability, i) => ({
+      key: String(i),
+      ability,
+      slotIndex: i,
+      formLabel: undefined as string | undefined,
+    }));
+  }, [warframe, activeDualFormId]);
 
   if (!stats) {
     return (
@@ -632,13 +662,27 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
       )}
 
       {/* Ability Preview */}
-      {warframe && warframe.abilities && warframe.abilities.length > 0 && (
-        <CollapsibleSection title="ABILITIES" defaultOpen>
-          {warframe.abilities.map((ability, i) => {
-            if (helminthSlot === i && helminthAbility) {
-              return <HelminthAbilityPreview key={i} ability={helminthAbility} stats={stats} />;
+      {abilityPreviewEntries.length > 0 && (
+        <CollapsibleSection
+          title={
+            activeDualFormId
+              ? `ABILITIES — ${getDualFormConfig(warframe?.id ?? "")?.forms.find((f) => f.id === activeDualFormId)?.label ?? ""}`
+              : "ABILITIES"
+          }
+          defaultOpen
+        >
+          {abilityPreviewEntries.map((entry) => {
+            if (helminthSlot === entry.slotIndex && helminthAbility) {
+              return <HelminthAbilityPreview key={entry.key} ability={helminthAbility} stats={stats} />;
             }
-            return <AbilityPreview key={i} ability={ability} stats={stats} />;
+            return (
+              <AbilityPreview
+                key={entry.key}
+                ability={entry.ability}
+                stats={stats}
+                formLabel={entry.formLabel}
+              />
+            );
           })}
         </CollapsibleSection>
       )}
@@ -773,28 +817,31 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
   );
 }
 
-function fmtAbilityMisc(v: unknown): string {
-  if (typeof v === "number") return Number.isInteger(v) ? String(v) : v.toFixed(2);
-  return String(v);
-}
 
-function AbilityPreview({ ability, stats }: {
-  ability: Ability; stats: WarframeCalculatedStats;
+function AbilityPreview({ ability, stats, formLabel }: {
+  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string;
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
-  const eff = Math.max(0.25, stats.abilityEfficiency);
+  const eff = stats.abilityEfficiency;
   const rng = stats.abilityRange;
 
-  const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
-  const miscEntries = ability.miscStats ? Object.entries(ability.miscStats) : [];
+  const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
+  const scaledMisc = ability.miscStats
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    : [];
 
   const desc = formatAbilityDescription(ability.description);
   return (
     <div className="py-1.5 border-b border-border/30 last:border-0">
-      <div className="flex justify-between items-center">
-        <span className="text-xs font-medium">{ability.name}</span>
-        <span className="text-[10px] text-yellow-400 font-mono">{modifiedCost} energy</span>
+      <div className="flex justify-between items-center gap-2">
+        <span className="text-xs font-medium min-w-0">
+          {ability.name}
+          {formLabel && (
+            <span className="ml-1.5 text-[9px] font-normal text-primary/70">{formLabel}</span>
+          )}
+        </span>
+        <span className="text-[10px] text-yellow-400 font-mono shrink-0">{modifiedCost} energy</span>
       </div>
       {desc.length > 0 && (
         <p className="text-[9px] text-muted-foreground/90 mt-1 leading-snug">{desc}</p>
@@ -835,12 +882,18 @@ function AbilityPreview({ ability, stats }: {
         )}
         {ability.damageBuff != null && ability.damageBuff > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            Damage Buff: <span className="text-orange-400 font-mono">+{(ability.damageBuff * str * 100).toFixed(0)}%</span>
+            Damage Buff:{" "}
+            <span className="text-orange-400 font-mono">
+              +{(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}%
+            </span>
           </div>
         )}
         {ability.damageReduction != null && ability.damageReduction > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            DR: <span className="text-cyan-400 font-mono">{Math.min(ability.damageReduction * str * 100, 90).toFixed(0)}%</span>
+            DR:{" "}
+            <span className="text-cyan-400 font-mono">
+              {(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}%
+            </span>
           </div>
         )}
         {ability.duration != null && ability.duration > 0 && (
@@ -906,12 +959,17 @@ function AbilityPreview({ ability, stats }: {
             Max targets: <span className="text-foreground font-mono">{ability.maxTargets}</span>
           </div>
         )}
-        {miscEntries.length > 0 && (
+        {scaledMisc.length > 0 && (
           <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
-            {miscEntries.map(([k, v]) => (
-              <div key={k} className="text-[9px] text-muted-foreground">
-                <span className="text-amber-400/90">{k}:</span>{" "}
-                <span className="text-foreground font-mono">{fmtAbilityMisc(v)}</span>
+            {scaledMisc.map((line) => (
+              <div key={line.label} className="text-[9px] text-muted-foreground">
+                <span className="text-amber-400/90">{line.label}:</span>{" "}
+                <span className="text-foreground font-mono">
+                  {line.modified ? line.scaled : line.base}
+                </span>
+                {line.modified && (
+                  <span className="text-muted-foreground/60 ml-1">({line.base})</span>
+                )}
               </div>
             ))}
           </div>
@@ -926,20 +984,14 @@ function HelminthAbilityPreview({ ability, stats }: {
 }) {
   const str = stats.abilityStrength;
   const dur = stats.abilityDuration;
-  const eff = Math.max(0.25, stats.abilityEfficiency);
+  const eff = stats.abilityEfficiency;
   const rng = stats.abilityRange;
 
-  const modifiedCost = Math.max(1, Math.round(ability.energyCost * (2 - eff)));
-  const miscEntries = ability.miscStats ? Object.entries(ability.miscStats) : [];
+  const modifiedCost = Math.round(scaledAbilityEnergyCost(ability.energyCost, eff));
+  const scaledMisc = ability.miscStats
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    : [];
   const desc = formatAbilityDescription(ability.description);
-
-  const scaledMisc = (key: string, v: unknown): string => {
-    if (typeof v !== "number") return fmtAbilityMisc(v);
-    if (key === "slowPercent") return `${Math.min((v * str), Number(ability.miscStats?.slowCap ?? 95)).toFixed(0)}%`;
-    if (key === "lifeStealPercent") return `${(v * str).toFixed(1)}%`;
-    if (key === "minRadius" || key === "maxRadius") return `${(v * rng).toFixed(1)}m`;
-    return fmtAbilityMisc(v);
-  };
 
   return (
     <div className="py-1.5 border-b border-green-500/20 last:border-0">
@@ -961,12 +1013,18 @@ function HelminthAbilityPreview({ ability, stats }: {
         )}
         {ability.damageBuff != null && ability.damageBuff > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            Damage Buff: <span className="text-orange-400 font-mono">+{(ability.damageBuff * str * 100).toFixed(0)}%</span>
+            Damage Buff:{" "}
+            <span className="text-orange-400 font-mono">
+              +{(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}%
+            </span>
           </div>
         )}
         {ability.damageReduction != null && ability.damageReduction > 0 && (
           <div className="text-[10px] text-muted-foreground">
-            DR: <span className="text-cyan-400 font-mono">{Math.min(ability.damageReduction * str * 100, 75).toFixed(0)}%</span>
+            DR:{" "}
+            <span className="text-cyan-400 font-mono">
+              {(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}%
+            </span>
           </div>
         )}
         {ability.duration != null && ability.duration > 0 && (
@@ -989,22 +1047,19 @@ function HelminthAbilityPreview({ ability, stats }: {
             Cast: <span className="text-foreground font-mono">{ability.castTime.toFixed(1)}s</span>
           </div>
         )}
-        {miscEntries.length > 0 && (
+        {scaledMisc.length > 0 && (
           <div className="pt-0.5 mt-0.5 border-t border-border/30 space-y-0.5">
-            {miscEntries.map(([k, v]) => {
-              if (k === "slowCap" || k === "channeled") return null;
-              const label = k === "slowPercent" ? "Slow"
-                : k === "lifeStealPercent" ? "Life Steal"
-                : k === "minRadius" ? "Min Radius"
-                : k === "maxRadius" ? "Max Radius"
-                : k;
-              return (
-                <div key={k} className="text-[9px] text-muted-foreground">
-                  <span className="text-green-400/90">{label}:</span>{" "}
-                  <span className="text-foreground font-mono">{scaledMisc(k, v)}</span>
-                </div>
-              );
-            })}
+            {scaledMisc.map((line) => (
+              <div key={line.label} className="text-[9px] text-muted-foreground">
+                <span className="text-green-400/90">{line.label}:</span>{" "}
+                <span className="text-foreground font-mono">
+                  {line.modified ? line.scaled : line.base}
+                </span>
+                {line.modified && (
+                  <span className="text-muted-foreground/60 ml-1">({line.base})</span>
+                )}
+              </div>
+            ))}
             {ability.miscStats?.channeled === true && (
               <div className="text-[9px] text-muted-foreground">
                 <span className="text-green-400/90">Channeled</span>

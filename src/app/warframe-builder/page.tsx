@@ -34,9 +34,18 @@ import { DualFormTabs } from "@/components/dual-form-tabs";
 import {
   dualFormStatesFromBuild,
   getDualFormConfig,
+  getDualFormAbilities,
   serializeDualFormBuilds,
   type DualFormBuildSlice,
 } from "@/lib/dual-form-warframes";
+import {
+  scaleAbilityMiscStats,
+  scaledAbilityEnergyCost,
+  scaledDamageReduction,
+  scaledDamageBuff,
+  abilityPercentFraction,
+  getAbilityDrCap,
+} from "@/lib/ability-misc-stats";
 
 const shardColors: Record<string, string> = {
   crimson: "#E74C3C",
@@ -138,22 +147,24 @@ function AbilityStatRow({ label, baseValue, modifiedValue, unit, isModified, isP
 }
 
 // Full ability card with all stats
-function AbilityCard({ ability, index, stats }: {
+function AbilityCard({ ability, index, stats, gameSlot, formLabel }: {
   ability: Ability;
   index: number;
   stats: WarframeCalculatedStats | null;
+  gameSlot?: number;
+  formLabel?: string;
 }) {
   const str = stats?.abilityStrength ?? 1;
   const dur = stats?.abilityDuration ?? 1;
   const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
 
-  // Energy cost: cost = baseCost × (2 - efficiency), capped at 175% eff (min 25% cost)
-  const clampedEff = Math.min(Math.max(eff, 0), 1.75);
-  const effectiveCost = Math.max(ability.energyCost * 0.25, ability.energyCost * (2 - clampedEff));
+  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
 
-  const miscKeys = ability.miscStats ? Object.keys(ability.miscStats) : [];
+  const scaledMisc = ability.miscStats
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
+    : [];
   const hasAnyStats =
     (ability.damage != null && ability.damage > 0) ||
     (ability.directDamage != null && ability.directDamage > 0) ||
@@ -174,21 +185,23 @@ function AbilityCard({ ability, index, stats }: {
     ability.chainRange != null ||
     ability.chainLinks != null ||
     ability.maxTargets != null ||
-    miscKeys.length > 0;
+    scaledMisc.length > 0;
 
-  const fmtMiscVal = (v: unknown): string => {
-    if (typeof v === "number") return Number.isInteger(v) ? String(v) : v.toFixed(2);
-    return String(v);
-  };
+  const slotNum = gameSlot ?? index + 1;
 
   return (
     <div className="border border-border rounded-lg p-4 bg-card">
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-muted-foreground w-5 h-5 rounded bg-secondary flex items-center justify-center">
-            {index + 1}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-xs font-bold text-muted-foreground w-5 h-5 rounded bg-secondary flex items-center justify-center shrink-0">
+            {slotNum}
           </span>
-          <span className="text-sm font-semibold">{ability.name}</span>
+          <div className="min-w-0">
+            <span className="text-sm font-semibold">{ability.name}</span>
+            {formLabel && (
+              <span className="ml-2 text-[10px] font-medium text-primary/80">{formLabel}</span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-1.5">
           <Zap className="h-3 w-3 text-blue-400" />
@@ -337,31 +350,31 @@ function AbilityCard({ ability, index, stats }: {
           {ability.damageReduction != null && ability.damageReduction > 0 && (
             <AbilityStatRow
               label="Dmg Reduction"
-              baseValue={ability.damageReduction.toFixed(0)}
-              modifiedValue={(ability.damageReduction * str).toFixed(0)}
+              baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
+              modifiedValue={(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}
               unit="%"
               isModified={str !== 1}
-              isPositive={str > 1}
+              isPositive={str >= 1}
             />
           )}
           {ability.damageBuff != null && ability.damageBuff > 0 && (
             <AbilityStatRow
               label="Dmg Buff"
-              baseValue={ability.damageBuff.toFixed(0)}
-              modifiedValue={(ability.damageBuff * str).toFixed(0)}
+              baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
+              modifiedValue={(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}
               unit="%"
               isModified={str !== 1}
-              isPositive={str > 1}
+              isPositive={str >= 1}
             />
           )}
           {ability.statusChance != null && ability.statusChance > 0 && (
             <AbilityStatRow
               label="Status"
               baseValue={(ability.statusChance * 100).toFixed(0)}
-              modifiedValue={(ability.statusChance * str * 100).toFixed(0)}
+              modifiedValue={Math.min(100, ability.statusChance * str * 100).toFixed(0)}
               unit="%"
               isModified={str !== 1}
-              isPositive={str > 1}
+              isPositive={str >= 1}
             />
           )}
           {ability.castTime != null && ability.castTime > 0 && (
@@ -376,14 +389,17 @@ function AbilityCard({ ability, index, stats }: {
               <span className="text-[11px]">{ability.cooldown.toFixed(1)}s</span>
             </div>
           )}
-          {miscKeys.length > 0 && (
+          {scaledMisc.length > 0 && (
             <div className="pt-1 mt-1 border-t border-border/40 space-y-0.5">
-              <span className="text-[10px] font-semibold text-muted-foreground tracking-wide">OTHER</span>
-              {miscKeys.map((k) => (
-                <div key={k} className="flex items-baseline gap-1.5 py-0.5">
-                  <span className="text-[11px] text-muted-foreground w-24 shrink-0 leading-tight">{k}</span>
-                  <span className="text-[11px] font-mono text-foreground">{fmtMiscVal(ability.miscStats![k])}</span>
-                </div>
+              {scaledMisc.map((line) => (
+                <AbilityStatRow
+                  key={line.label}
+                  label={line.label}
+                  baseValue={line.base}
+                  modifiedValue={line.scaled}
+                  isModified={line.modified}
+                  isPositive={line.positive ?? true}
+                />
               ))}
             </div>
           )}
@@ -402,12 +418,11 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
   const dur = stats?.abilityDuration ?? 1;
   const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
-  const clampedEff = Math.min(Math.max(eff, 0), 1.75);
-  const effectiveCost = Math.max(ability.energyCost * 0.25, ability.energyCost * (2 - clampedEff));
+  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
   const costModified = Math.abs(effectiveCost - ability.energyCost) > 0.5;
 
-  const miscKeys = ability.miscStats
-    ? Object.keys(ability.miscStats).filter((k) => k !== "slowCap" && k !== "channeled")
+  const scaledMisc = ability.miscStats
+    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng })
     : [];
   const hasAnyStats =
     (ability.damage != null && ability.damage > 0) ||
@@ -416,18 +431,7 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
     ability.radius != null ||
     (ability.damageBuff != null && ability.damageBuff > 0) ||
     (ability.damageReduction != null && ability.damageReduction > 0) ||
-    miscKeys.length > 0;
-
-  const fmtMisc = (k: string, v: unknown): string => {
-    if (typeof v !== "number") return String(v);
-    if (k === "slowPercent") return `${Math.min(v * str, Number(ability.miscStats?.slowCap ?? 95)).toFixed(0)}%`;
-    if (k === "lifeStealPercent") return `${(v * str).toFixed(1)}%`;
-    if (k === "minRadius" || k === "maxRadius") return `${(v * rng).toFixed(1)}m`;
-    return Number.isInteger(v) ? String(v) : v.toFixed(2);
-  };
-
-  const miscLabel = (k: string) =>
-    k === "slowPercent" ? "Slow" : k === "lifeStealPercent" ? "Life Steal" : k === "minRadius" ? "Min Radius" : k === "maxRadius" ? "Max Radius" : k;
+    scaledMisc.length > 0;
 
   return (
     <div className="border border-green-500/30 rounded-xl p-3 bg-green-500/5">
@@ -450,7 +454,24 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
             <AbilityStatRow label="Damage" baseValue={ability.damage.toFixed(0)} modifiedValue={(ability.damage * str).toFixed(0)} isModified={str !== 1} isPositive={str > 1} />
           )}
           {ability.damageBuff != null && ability.damageBuff > 0 && (
-            <AbilityStatRow label="Dmg Buff" baseValue={(ability.damageBuff * 100).toFixed(0)} modifiedValue={(ability.damageBuff * str * 100).toFixed(0)} unit="%" isModified={str !== 1} isPositive={str > 1} />
+            <AbilityStatRow
+              label="Dmg Buff"
+              baseValue={(abilityPercentFraction(ability.damageBuff) * 100).toFixed(0)}
+              modifiedValue={(scaledDamageBuff(ability.damageBuff, str) * 100).toFixed(0)}
+              unit="%"
+              isModified={str !== 1}
+              isPositive={str >= 1}
+            />
+          )}
+          {ability.damageReduction != null && ability.damageReduction > 0 && (
+            <AbilityStatRow
+              label="Dmg Reduction"
+              baseValue={(abilityPercentFraction(ability.damageReduction) * 100).toFixed(0)}
+              modifiedValue={(scaledDamageReduction(ability.damageReduction, str, getAbilityDrCap(ability.miscStats)) * 100).toFixed(0)}
+              unit="%"
+              isModified={str !== 1}
+              isPositive={str >= 1}
+            />
           )}
           {ability.duration != null && (
             <AbilityStatRow label="Duration" baseValue={ability.duration.toFixed(1)} modifiedValue={(ability.duration * dur).toFixed(1)} unit="s" isModified={dur !== 1} isPositive={dur > 1} />
@@ -461,12 +482,20 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
           {ability.radius != null && (
             <AbilityStatRow label="Radius" baseValue={ability.radius.toFixed(1)} modifiedValue={(ability.radius * rng).toFixed(1)} unit="m" isModified={rng !== 1} isPositive={rng > 1} />
           )}
-          {miscKeys.map((k) => (
-            <div key={k} className="flex items-baseline gap-1.5 py-0.5">
-              <span className="text-[11px] text-muted-foreground w-24 shrink-0">{miscLabel(k)}</span>
-              <span className="text-[11px] font-mono text-foreground">{fmtMisc(k, ability.miscStats![k])}</span>
+          {scaledMisc.length > 0 && (
+            <div className="pt-1 mt-1 border-t border-green-500/20 space-y-0.5">
+              {scaledMisc.map((line) => (
+                <AbilityStatRow
+                  key={line.label}
+                  label={line.label}
+                  baseValue={line.base}
+                  modifiedValue={line.scaled}
+                  isModified={line.modified}
+                  isPositive={line.positive ?? true}
+                />
+              ))}
             </div>
-          ))}
+          )}
           {ability.miscStats?.channeled === true && (
             <div className="text-[10px] text-green-400/80 pt-0.5">Channeled</div>
           )}
@@ -834,6 +863,33 @@ export default function WarframeBuilderPage() {
 
     return stats;
   }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, equippedArcaneRanks]);
+
+  const abilityDisplayEntries = useMemo(() => {
+    if (!selectedWarframe) return [];
+    if (dualFormConfig) {
+      const entries = getDualFormAbilities(
+        selectedWarframe.id,
+        activeDualFormId,
+        selectedWarframe.abilities,
+      );
+      if (entries) {
+        return entries.map((entry) => ({
+          key: `${entry.abilityIndex}-${activeDualFormId}`,
+          ability: entry.ability,
+          abilityIndex: entry.abilityIndex,
+          gameSlot: entry.gameSlot,
+          formLabel: entry.formLabel,
+        }));
+      }
+    }
+    return selectedWarframe.abilities.map((ability, i) => ({
+      key: String(i),
+      ability,
+      abilityIndex: i,
+      gameSlot: i + 1,
+      formLabel: undefined as string | undefined,
+    }));
+  }, [selectedWarframe, dualFormConfig, activeDualFormId]);
 
   // Calculate capacity
   const baseCapacity = (hasOrokinReactor ? 60 : 30) + (isMR30 ? 10 : 0);
@@ -1324,16 +1380,22 @@ export default function WarframeBuilderPage() {
                 </div>
 
                 {/* Abilities + Helminth */}
-                {selectedWarframe.abilities.length > 0 && (
+                {abilityDisplayEntries.length > 0 && (
                   <div>
                     <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
                       ABILITIES
+                      {dualFormConfig && (
+                        <span className="text-primary/80 font-normal">
+                          {" "}— {dualFormConfig.forms.find((f) => f.id === activeDualFormId)?.label ?? ""}
+                        </span>
+                      )}
                     </h2>
                     <div className="grid sm:grid-cols-2 gap-3">
-                      {selectedWarframe.abilities.map((ability, i) => {
-                        const isHelminthed = helminthSlot === i && helminthAbility;
+                      {abilityDisplayEntries.map((entry) => {
+                        const slotIndex = entry.gameSlot - 1;
+                        const isHelminthed = helminthSlot === slotIndex && helminthAbility;
                         return (
-                          <div key={i} className="relative group">
+                          <div key={entry.key} className="relative group">
                             {isHelminthed ? (
                               <HelminthAbilityCard
                                 ability={helminthAbility}
@@ -1341,11 +1403,17 @@ export default function WarframeBuilderPage() {
                                 onRemove={() => { setHelminthSlot(null); setHelminthAbility(null); }}
                               />
                             ) : (
-                              <AbilityCard ability={ability} index={i} stats={calculatedStats} />
+                              <AbilityCard
+                                ability={entry.ability}
+                                index={entry.abilityIndex}
+                                gameSlot={entry.gameSlot}
+                                formLabel={entry.formLabel}
+                                stats={calculatedStats}
+                              />
                             )}
                             {!isHelminthed && (
                               <button
-                                onClick={() => { setHelminthPickerSlot(i); setHelminthPickerOpen(true); setHelminthSearch(""); }}
+                                onClick={() => { setHelminthPickerSlot(slotIndex); setHelminthPickerOpen(true); setHelminthSearch(""); }}
                                 className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded bg-green-500/10 text-green-400 hover:bg-green-500/20"
                                 title="Replace with Helminth ability"
                               >
@@ -1382,6 +1450,7 @@ export default function WarframeBuilderPage() {
                   equippedShards={equippedShards}
                   equippedArcanes={equippedArcanes}
                   arcaneRanks={equippedArcaneRanks}
+                  activeDualFormId={dualFormConfig ? activeDualFormId : undefined}
                 />
 
                 {/* Exalted Weapon Section */}

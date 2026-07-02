@@ -1032,7 +1032,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -2207,7 +2207,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -2713,7 +2713,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -7236,7 +7236,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {
@@ -9327,7 +9327,7 @@ export const allWeapons: Weapon[] = [
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
     "hasSecondaryArcaneSlot": false,
-    "isIncarnon": false,
+    "isIncarnon": true,
     "hasRivenSlot": true
   },
   {

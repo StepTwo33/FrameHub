@@ -1,6 +1,6 @@
 /**
- * Fetch missing item images from the Warframe Wiki (warframe.fandom.com)
- * Uses the MediaWiki API to resolve image URLs, then downloads them.
+ * Fetch missing item images from the Warframe Wiki.
+ * Tries wiki.warframe.com first, then warframe.fandom.com as fallback.
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -8,7 +8,9 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const WIKI_API = "https://warframe.fandom.com/api.php";
+const OFFICIAL_WIKI_API = "https://wiki.warframe.com/api.php";
+const FANDOM_WIKI_API = "https://warframe.fandom.com/api.php";
+const WIKI_HEADERS = { "User-Agent": "FrameHub/1.0 (https://frame-hub.com)" };
 const DELAY_MS = 300; // polite delay between requests
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -49,7 +51,7 @@ function getMissing(names, category) {
   return names.filter((n) => !existingNormalized.has(imageStem(n)));
 }
 
-async function queryWikiImageUrl(fileTitle) {
+async function queryWikiApi(apiBase, fileTitle) {
   const params = new URLSearchParams({
     action: "query",
     titles: `File:${fileTitle}`,
@@ -57,7 +59,8 @@ async function queryWikiImageUrl(fileTitle) {
     iiprop: "url",
     format: "json",
   });
-  const resp = await fetch(`${WIKI_API}?${params}`);
+  const resp = await fetch(`${apiBase}?${params}`, { headers: WIKI_HEADERS });
+  if (!resp.ok) return null;
   const data = await resp.json();
   const pages = data?.query?.pages;
   if (!pages) return null;
@@ -67,6 +70,13 @@ async function queryWikiImageUrl(fileTitle) {
     if (url) return url;
   }
   return null;
+}
+
+async function queryWikiImageUrl(fileTitle) {
+  return (
+    (await queryWikiApi(OFFICIAL_WIKI_API, fileTitle)) ??
+    (await queryWikiApi(FANDOM_WIKI_API, fileTitle))
+  );
 }
 
 async function downloadImage(url, destPath) {
@@ -158,7 +168,10 @@ async function main() {
 
   // Gather missing items
   const wfNames = extractNames("src/data/warframes.ts", true);
-  const weaponNames = extractNames("src/data/weapons.ts");
+  const weaponNames = [...new Set([
+    ...extractNames("src/data/weapons.ts"),
+    ...extractNames("src/data/custom-items.ts"),
+  ])];
   const compNames = extractNames("src/data/companions.ts");
 
   const missingWf = getMissing(wfNames, "warframes");
