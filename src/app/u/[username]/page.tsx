@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PageShell, PageMain, ContentPanel } from "@/components/page-shell";
 import { prisma } from "@/lib/prisma";
+import { buildOpenUrl } from "@/lib/build-url";
 import { ThumbsUp, ChevronRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -104,7 +105,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
               {publicBuilds.map((build) => (
                 <Link
                   key={build.id}
-                  href={`/build/${build.id}`}
+                  href={buildOpenUrl(build.type, build.id)}
                   className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card hover:border-primary/35 transition-colors group"
                 >
                   <div className="flex-1 min-w-0">

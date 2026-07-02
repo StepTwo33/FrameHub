@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buildOpenUrl } from "@/lib/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
 
 interface ProfileUser {
@@ -794,7 +795,7 @@ export default function ProfilePage() {
                     className="flex items-stretch rounded-lg border border-border bg-card overflow-hidden transition-colors hover:border-primary/35 group"
                   >
                     <Link
-                      href={`/build/${build.id}`}
+                      href={buildOpenUrl(build.type, build.id)}
                       className="flex flex-1 items-center gap-3 p-4 min-w-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-inset"
                     >
                       <div className={`p-2 rounded-lg bg-white/5 shrink-0 ${colorClass.split(" ")[0]}`}>
@@ -817,7 +818,7 @@ export default function ProfilePage() {
                           {build.type} • {new Date(build.updatedAt).toLocaleDateString()} {new Date(build.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                           {(build.upvoteCount ?? 0) > 0 && ` • ${build.upvoteCount} upvotes`}
                         </div>
-                        <div className="text-[10px] text-primary/80 mt-1">Open build page</div>
+                        <div className="text-[10px] text-primary/80 mt-1">Open in builder</div>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 self-center" aria-hidden />
                     </Link>

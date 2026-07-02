@@ -7,11 +7,11 @@ import {
   FolderOpen,
   Dice5,
   BookOpen,
-  Wrench,
   Target,
   GitCompareArrows,
   Rocket,
   Hammer,
+  Plane,
   Landmark,
   ExternalLink,
   Github,
@@ -96,12 +96,12 @@ export default function Home() {
             badges={["1629 Mods", "Full Stats"]}
           />
           <FeatureCard
-            href="/forma-planner"
-            title="Forma Planner"
-            description="Plan polarity placements, calculate capacity costs, and get forma suggestions."
-            icon={Wrench}
+            href="/archwing-builder"
+            title="Archwing Builder"
+            description="Mod Archwing frames and Necramechs with real-time stat preview and capacity tracking."
+            icon={Plane}
             accent="yellow"
-            badges={["Polarity Matching", "Auto Suggest"]}
+            badges={["Archwing", "Necramech"]}
           />
           <FeatureCard
             href="/damage-simulator"

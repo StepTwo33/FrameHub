@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThumbsUp, Loader2, ExternalLink, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buildOpenUrl } from "@/lib/build-url";
 import type { PublicBuildSummary } from "@/lib/build-types";
 
 interface BuildVoteButtonProps {
@@ -111,7 +112,7 @@ export function PublicBuildRow({ build, showVote = true, onLoad, compact = false
       )}
     >
       <Link
-        href={`/build/${build.id}`}
+        href={buildOpenUrl(build.type, build.id)}
         className="flex flex-1 items-center gap-3 p-3 sm:p-4 min-w-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-inset"
       >
         <div className="flex-1 min-w-0">

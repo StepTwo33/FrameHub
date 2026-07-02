@@ -35,7 +35,6 @@ const NAV_GROUPS = [
     links: [
       { href: "/mod-browser", label: "Mod Browser", desc: "Search all mods" },
       { href: "/riven-calculator", label: "Riven Calculator", desc: "Riven stat ranges" },
-      { href: "/forma-planner", label: "Forma Planner", desc: "Plan your forma" },
       { href: "/damage-simulator", label: "Damage Simulator", desc: "Simulate damage output" },
     ],
   },
