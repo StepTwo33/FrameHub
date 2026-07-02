@@ -18,9 +18,9 @@ export function Footer() {
   return (
     <footer className="relative z-[1] mt-auto border-t border-border/60 bg-card/40 backdrop-blur-md">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-          <div className="text-center sm:text-left">
+      <div className="container mx-auto max-w-4xl px-4 py-6">
+        <div className="flex flex-col gap-4">
+          <div>
             <Link href="/" className="inline-flex items-center gap-2 transition-opacity hover:opacity-90">
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-primary">Frame</span>
@@ -30,12 +30,12 @@ export function Footer() {
             <p className="mt-1 text-xs text-muted-foreground">
               Fan-made Warframe build planner
             </p>
-            <p className="mt-2 flex items-center justify-center gap-1 text-[10px] text-muted-foreground/70 sm:justify-start">
+            <p className="mt-1.5 flex items-center gap-1 text-[10px] text-muted-foreground/70">
               Built for the community <Heart className="h-3 w-3 text-rose-400/80" />
             </p>
           </div>
 
-          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
             {FOOTER_LINKS.map((link) =>
               "external" in link ? (
                 <a
@@ -61,10 +61,10 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-6 border-t border-border/40 pt-5 text-center text-[10px] leading-relaxed text-muted-foreground/60">
+        <p className="mt-5 border-t border-border/40 pt-4 text-[10px] leading-relaxed text-muted-foreground/60">
           Warframe and the Warframe logo are registered trademarks of Digital Extremes Ltd.
           Frame Hub is not affiliated with Digital Extremes.
-        </div>
+        </p>
       </div>
     </footer>
   );

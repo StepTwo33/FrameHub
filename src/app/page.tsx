@@ -12,7 +12,6 @@ import {
   Rocket,
   Hammer,
   Plane,
-  Landmark,
   ExternalLink,
   Github,
   Users,
@@ -151,17 +150,21 @@ export default function Home() {
             accent="teal"
             badges={["Build vs Build", "Loadout vs Loadout"]}
           />
-          <FeatureCard
-            href="https://buff0000n.github.io/dojocad/"
-            external
-            title="DojoCAD"
-            description="Plan clan dojo layouts: room placement, capacity, and multi-floor design. Opens their site in a new tab."
-            icon={Landmark}
-            accent="slate"
-            subtitle="By buff0000n — thanks for building this for the community."
-            badges={["DojoCAD", "External"]}
-          />
         </div>
+
+        <p className="mx-auto mt-10 max-w-5xl border-t border-border/30 pt-6 text-center text-xs leading-relaxed text-muted-foreground/80">
+          Community shout-out:{" "}
+          <a
+            href="https://buff0000n.github.io/dojocad/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            DojoCAD
+            <ExternalLink className="h-3 w-3 opacity-50" aria-hidden />
+          </a>
+          {" "}by buff0000n — clan dojo layout planning. Thanks for building this for the community.
+        </p>
       </PageMain>
     </PageShell>
   );
