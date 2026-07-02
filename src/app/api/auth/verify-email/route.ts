@@ -33,6 +33,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Per-account limit so a spoofed client IP can't brute-force the 6-digit code.
+        const accountRl = checkRateLimit(`verify-account:${email.toLowerCase()}`, 10, 15 * 60 * 1000);
+        if (accountRl.limited) {
+            return NextResponse.json(
+                { error: "Too many verification attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
+
         const valid = await validateVerificationToken(email, code);
         if (!valid) {
             return NextResponse.json(

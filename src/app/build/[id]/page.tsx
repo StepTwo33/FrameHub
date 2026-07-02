@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { PageShell, ContentPanel } from "@/components/page-shell";
 import { BuildPreviewSummary } from "@/components/build-preview-summary";
 import { buildOpenUrl } from "@/lib/build-url";
 import { summarizeBuildPreview } from "@/lib/build-preview";
 import { BuildPageVote } from "@/components/build-page-vote";
+import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+import { safeParseBuildJson } from "@/lib/build-types";
 import Image from "next/image";
 
 interface SharedBuild {
@@ -26,22 +28,38 @@ interface SharedBuild {
   };
 }
 
+/** Read the build straight from the DB — no self-fetch, so no reliance on client-controlled Host headers. */
 async function getBuild(id: string): Promise<SharedBuild | null> {
-  const headerList = await headers();
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
-  let protocol = headerList.get("x-forwarded-proto");
-  if (!protocol) {
-    protocol = host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https";
-  }
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.getAll().map((c) => `${c.name}=${c.value}`).join("; ");
-  const url = `${protocol}://${host}/api/builds/${id}`;
-  const res = await fetch(url, {
-    cache: "no-store",
-    headers: cookieHeader ? { cookie: cookieHeader } : {},
+  const build = await prisma.build.findUnique({
+    where: { id },
+    include: { user: { select: { username: true, name: true, image: true } } },
   });
-  if (!res.ok) return null;
-  return res.json();
+  if (!build) return null;
+
+  if (!build.isPublic) {
+    const session = await getSession();
+    if (session?.user?.id !== build.userId) return null;
+  }
+
+  const parsed = safeParseBuildJson(build.data);
+  if (parsed === null) return null;
+
+  return {
+    id: build.id,
+    name: build.name,
+    description: build.description,
+    isPublic: build.isPublic,
+    type: build.type,
+    upvoteCount: build.upvoteCount,
+    data: parsed,
+    createdAt: build.createdAt.getTime(),
+    updatedAt: build.updatedAt.getTime(),
+    author: {
+      username: build.user.username || build.user.name || "Anonymous",
+      profileSlug: build.user.username,
+      image: build.user.image ?? undefined,
+    },
+  };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {

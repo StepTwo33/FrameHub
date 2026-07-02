@@ -79,22 +79,32 @@ export async function generateUniqueUsername(seed: string): Promise<string> {
 
 // --------------- Password Hashing (PBKDF2) ---------------
 
-const PBKDF2_ITERATIONS = 100_000;
+/**
+ * Iteration count for newly created hashes. Older hashes stored the iteration
+ * count implicitly (see LEGACY_PBKDF2_ITERATIONS); we now encode it in the hash
+ * (`salt:key:iterations`) so this can be raised without locking out existing users.
+ */
+const PBKDF2_ITERATIONS = 600_000;
+/** Hashes written before iterations were encoded used this fixed count. */
+const LEGACY_PBKDF2_ITERATIONS = 100_000;
 const SALT_LENGTH = 16;
 const KEY_LENGTH = 32;
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = crypto.randomBytes(SALT_LENGTH);
   const key = crypto.pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, KEY_LENGTH, "sha256");
-  return `${salt.toString("hex")}:${key.toString("hex")}`;
+  return `${salt.toString("hex")}:${key.toString("hex")}:${PBKDF2_ITERATIONS}`;
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  const [saltHex, keyHex] = hash.split(":");
+  const [saltHex, keyHex, iterationsRaw] = hash.split(":");
   if (!saltHex || !keyHex) return false;
+  const iterations = iterationsRaw ? Number.parseInt(iterationsRaw, 10) : LEGACY_PBKDF2_ITERATIONS;
+  if (!Number.isFinite(iterations) || iterations <= 0) return false;
   const salt = Buffer.from(saltHex, "hex");
   const expectedKey = Buffer.from(keyHex, "hex");
-  const actualKey = crypto.pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, KEY_LENGTH, "sha256");
+  const actualKey = crypto.pbkdf2Sync(password, salt, iterations, KEY_LENGTH, "sha256");
+  if (actualKey.length !== expectedKey.length) return false;
   return crypto.timingSafeEqual(expectedKey, actualKey);
 }
 

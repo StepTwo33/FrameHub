@@ -34,6 +34,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Per-account limit so a spoofed client IP can't enable password brute force.
+        const accountRl = checkRateLimit(`login-account:${email.toLowerCase()}`, 10, 15 * 60 * 1000);
+        if (accountRl.limited) {
+            return NextResponse.json(
+                { error: "Too many login attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
+
         // ---------- Find user ----------
         const user = await findUserByEmail(email);
         if (!user || !user.passwordHash) {

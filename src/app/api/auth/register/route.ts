@@ -47,6 +47,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Per-email limit so a spoofed client IP can't spam a target inbox with signups.
+        const emailRl = checkRateLimit(`register-email:${email.toLowerCase()}`, 3, 60 * 60 * 1000);
+        if (emailRl.limited) {
+            return NextResponse.json(
+                { error: "Too many registration attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
+
         if (password.length < 8) {
             return NextResponse.json(
                 { error: "Password must be at least 8 characters" },

@@ -31,6 +31,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Per-account limit so a spoofed client IP can't spam a target inbox with codes.
+        const accountRl = checkRateLimit(`resend-account:${email.toLowerCase()}`, 3, 15 * 60 * 1000);
+        if (accountRl.limited) {
+            return NextResponse.json(
+                { error: "Too many attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
+
         const user = await findUserByEmail(email);
         if (!user) {
             // Don't reveal whether the email exists

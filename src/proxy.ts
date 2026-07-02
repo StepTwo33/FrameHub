@@ -21,12 +21,52 @@ function isDeniedPath(pathname: string): boolean {
   return false;
 }
 
-/** Next.js 16+ convention (replaces `middleware`). Early 404 for common exploit probes. */
+/**
+ * Build a nonce-based Content-Security-Policy.
+ *
+ * - `script-src` uses a per-request nonce (Next injects it into its own inline
+ *   bootstrap scripts) instead of `'unsafe-inline'`, so injected inline scripts
+ *   are blocked. `'wasm-unsafe-eval'` + `blob:` + the tesseract.js CDN hosts keep
+ *   the client-side OCR importer working.
+ * - `style-src` keeps `'unsafe-inline'` because Next/Tailwind/Radix inject styles.
+ * - `img-src` allows Google avatar hosts (also listed in next.config remotePatterns).
+ */
+function buildCsp(nonce: string, isProd: boolean): string {
+  const directives = [
+    `default-src 'self'`,
+    `base-uri 'self'`,
+    `object-src 'none'`,
+    `frame-ancestors 'self'`,
+    `form-action 'self'`,
+    `img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com`,
+    `font-src 'self' data:`,
+    `style-src 'self' 'unsafe-inline'`,
+    `script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net https://unpkg.com`,
+    `worker-src 'self' blob:`,
+    `connect-src 'self' blob: data: https://cdn.jsdelivr.net https://unpkg.com https://tessdata.projectnaptha.com`,
+    `manifest-src 'self'`,
+  ];
+  if (isProd) directives.push("upgrade-insecure-requests");
+  return directives.join("; ");
+}
+
+/** Next.js 16+ convention (replaces `middleware`). Early 404 for common exploit probes + CSP. */
 export function proxy(request: NextRequest) {
   if (isDeniedPath(request.nextUrl.pathname)) {
     return new NextResponse(null, { status: 404 });
   }
-  return NextResponse.next();
+
+  const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
+  const csp = buildCsp(nonce, process.env.NODE_ENV === "production");
+
+  // Forward the nonce (and CSP) on the request so Next can nonce its own inline scripts.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.headers.set("Content-Security-Policy", csp);
+  return response;
 }
 
 export const config = {
