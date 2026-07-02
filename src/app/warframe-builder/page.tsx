@@ -29,6 +29,7 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 import { DualFormTabs } from "@/components/dual-form-tabs";
 import {
   dualFormStatesFromBuild,
@@ -680,6 +681,8 @@ export default function WarframeBuilderPage() {
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     applyLoadedBuild(build);
   }, [applyLoadedBuild]);
+
+  useCloudBuildFromUrl("warframe", applyLoadedBuild);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

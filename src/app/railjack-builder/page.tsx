@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 
 type PlexusTab = "integrated" | "battle" | "tactical";
@@ -213,6 +214,8 @@ export default function RailjackBuilderPage() {
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
   }, []);
+
+  useCloudBuildFromUrl("railjack", handleLoadBuild);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

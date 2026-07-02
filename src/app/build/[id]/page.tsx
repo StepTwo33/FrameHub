@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cookies, headers } from 'next/headers';
 import { Header } from '@/components/header';
-import { buildShareUrl, ShareableBuild } from '@/lib/build-url';
+import { buildOpenUrl } from '@/lib/build-url';
 import { BuildPageVote } from '@/components/build-page-vote';
 import Image from 'next/image';
 
@@ -61,77 +61,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
         notFound();
     }
 
-    // Construct the old-style URL param so the builder can load the mods/arcanes layout
-    let shareable: ShareableBuild | null = null;
-
-    if (build.type === 'weapon') {
-        const d = build.data as {
-            weaponId: string;
-            mods: { modId: string; rank: number }[];
-            arcaneIds?: (string | null)[];
-        };
-        shareable = {
-            type: 'weapon',
-            itemId: d.weaponId,
-            mods: d.mods.map((m) => ({ id: m.modId, rank: m.rank })),
-            arcanes: (d.arcaneIds ?? []).filter((id): id is string => Boolean(id)),
-        };
-    } else if (build.type === 'warframe') {
-        const d = build.data as {
-            warframeId: string;
-            mods: { modId: string; rank: number }[];
-            shards?: { shardId: string; selectedBonus: string }[] | null;
-        };
-        shareable = {
-            type: 'warframe',
-            itemId: d.warframeId,
-            mods: d.mods.map((m) => ({ id: m.modId, rank: m.rank })),
-            shards: d.shards?.filter(Boolean).map((s) => ({ id: s.shardId, bonus: s.selectedBonus })) || [],
-        };
-    } else if (build.type === 'companion') {
-        const d = build.data as {
-            companionId: string;
-            mods: { modId: string; rank: number }[];
-        };
-        shareable = {
-            type: 'companion',
-            itemId: d.companionId,
-            mods: d.mods.map((m) => ({ id: m.modId, rank: m.rank })),
-        };
-    } else if (build.type === 'modular') {
-        const d = build.data as {
-            mods?: { modId: string; rank: number; slotIndex?: number }[];
-            modularType?: string;
-            parts?: Record<string, string>;
-            hasOrokinCatalyst?: boolean;
-            isMR30?: boolean;
-            slotPolarities?: Record<string, string>;
-            arcaneIds?: (string | null)[];
-        };
-        const pol: Record<string, string> = {};
-        if (d.slotPolarities && typeof d.slotPolarities === 'object') {
-            for (const [k, v] of Object.entries(d.slotPolarities)) {
-                if (typeof v === 'string') pol[String(k)] = v;
-            }
-        }
-        shareable = {
-            type: 'modular',
-            itemId: '',
-            mods: (d.mods ?? []).map((m) => ({
-                id: m.modId,
-                rank: m.rank,
-                slotIndex: m.slotIndex,
-            })),
-            modularType: d.modularType,
-            parts: d.parts || {},
-            hasOrokinCatalyst: Boolean(d.hasOrokinCatalyst),
-            isMR30: Boolean(d.isMR30),
-            slotPolarities: Object.keys(pol).length ? pol : undefined,
-            arcanes: (d.arcaneIds ?? []).map((id) => id || ""),
-        };
-    }
-
-    const builderUrl = shareable ? buildShareUrl(shareable) : '#';
+    const builderUrl = buildOpenUrl(build.type, build.id);
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
@@ -166,7 +96,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
                             buildId={build.id}
                             initialUpvoteCount={build.upvoteCount ?? 0}
                             isPublic={build.isPublic}
-                            builderUrl={shareable ? builderUrl : undefined}
+                            builderUrl={builderUrl !== "#" ? builderUrl : undefined}
                         />
                     </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Header } from "@/components/header";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 
 type BuilderMode = "archwing" | "necramech";
 
@@ -95,7 +96,7 @@ export default function ArchwingBuilderPage() {
     }
   };
 
-  const handleLoadBuild = (build: SavedBuild) => {
+  const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as ArchwingBuildData;
     setMode(d.mode as BuilderMode);
     const restoreMods = (slots: { modId: string; rank: number; slotIndex: number }[]) =>
@@ -122,7 +123,9 @@ export default function ArchwingBuilderPage() {
     setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
-  };
+  }, []);
+
+  useCloudBuildFromUrl("archwing", handleLoadBuild);
 
   const handleDeleteBuild = (id: string) => {
     deleteBuild(id);

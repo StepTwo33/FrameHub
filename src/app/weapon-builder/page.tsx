@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 
@@ -243,6 +244,8 @@ export default function WeaponBuilderPage() {
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     applyLoadedBuild(build);
   }, [applyLoadedBuild]);
+
+  useCloudBuildFromUrl("weapon", applyLoadedBuild);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

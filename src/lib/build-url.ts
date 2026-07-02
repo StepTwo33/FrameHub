@@ -60,3 +60,19 @@ export function extractBuildFromUrl(searchParams: URLSearchParams): ShareableBui
   if (!param) return null;
   return decodeBuild(param);
 }
+
+const BUILDER_PATHS: Record<string, string> = {
+  weapon: "/weapon-builder",
+  warframe: "/warframe-builder",
+  companion: "/companion-builder",
+  modular: "/modular-builder",
+  archwing: "/archwing-builder",
+  railjack: "/railjack-builder",
+};
+
+/** Link from `/build/[id]` into the correct builder with full cloud build data. */
+export function buildOpenUrl(type: string, buildId: string): string {
+  const path = BUILDER_PATHS[type];
+  if (!path) return "#";
+  return `${path}?buildId=${encodeURIComponent(buildId)}`;
+}

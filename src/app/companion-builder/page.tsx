@@ -51,6 +51,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
 
 import { getCompanionWeapons } from "@/lib/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: Record<string, number> | null) {
   let dmgMult = 1;
   let critChance = weapon.criticalChance;
@@ -286,6 +287,8 @@ export default function CompanionBuilderPage() {
     setShowCompanionList(false);
     toast.info("Build loaded", { description: build.name });
   }, [allCompanions]);
+
+  useCloudBuildFromUrl("companion", handleLoadBuild);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

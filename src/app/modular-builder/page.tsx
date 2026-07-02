@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Header } from "@/components/header";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { extractBuildFromUrl } from "@/lib/build-url";
 import { allArcanes } from "@/data/arcanes";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 
 function resolveArcaneMod(id: string): Mod | null {
   return modsMap.get(id) ?? allArcanes.find((m) => m.id === id) ?? null;
@@ -251,7 +252,7 @@ export default function ModularBuilderPage() {
     }
   };
 
-  const handleLoadBuild = (build: SavedBuild) => {
+  const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as ModularBuildData;
     setModularType(d.modularType as ModularType);
     if (d.modularType === "kitgun") {
@@ -284,7 +285,9 @@ export default function ModularBuilderPage() {
     setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
-  };
+  }, []);
+
+  useCloudBuildFromUrl("modular", handleLoadBuild);
 
   const handleDeleteBuild = (id: string) => {
     deleteBuild(id);
