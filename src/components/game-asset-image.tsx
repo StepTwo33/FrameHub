@@ -14,13 +14,19 @@ type GameAssetImageProps = {
   className?: string;
   /** Hide broken thumbnails (missing /public file) */
   hideOnError?: boolean;
+  onError?: React.ReactEventHandler<HTMLImageElement>;
 };
 
 /**
  * Local /public item art (mods, weapons, frames, …).
  * Uses a native img element so missing PNGs skip next/image optimization (which logs "received null" on 404/empty bodies).
  */
-export function GameAssetImage({ src, alt, width, height, className, hideOnError }: GameAssetImageProps) {
+export function GameAssetImage({ src, alt, width, height, className, hideOnError, onError }: GameAssetImageProps) {
+  const handleError: React.ReactEventHandler<HTMLImageElement> = (e) => {
+    if (hideOnError) hideOnImageError(e);
+    onError?.(e);
+  };
+
   return (
     <img
       src={src}
@@ -28,7 +34,7 @@ export function GameAssetImage({ src, alt, width, height, className, hideOnError
       width={width}
       height={height}
       className={className}
-      onError={hideOnError ? hideOnImageError : undefined}
+      onError={hideOnError || onError ? handleError : undefined}
       loading="lazy"
       decoding="async"
     />

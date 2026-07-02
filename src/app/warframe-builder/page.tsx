@@ -21,11 +21,11 @@ import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStat
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Diamond, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
+import { Search, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
 import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
-import { ArchonShardSlot } from "@/components/archon-shard-slot";
+import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
 import { formatAbilityDescription } from "@/lib/ability-text";
@@ -60,15 +60,6 @@ import {
 } from "@/components/ability-display";
 
 const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
-
-const shardColors: Record<string, string> = {
-  crimson: "#E74C3C",
-  azure: "#3498DB",
-  amber: "#F39C12",
-  violet: "#9B59B6",
-  topaz: "#E67E22",
-  emerald: "#2ECC71",
-};
 
 const bonusLabels: Record<string, string> = {
   // Crimson
@@ -1272,7 +1263,7 @@ export default function WarframeBuilderPage() {
                     onClick={() => setSelectedShardForBonus(shard)}
                     className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all flex items-center gap-3"
                   >
-                    <Diamond className="h-5 w-5 shrink-0" style={{ color: shardColors[shard.color] }} />
+                    <ArchonShardIcon color={shard.color} tier={shard.tier} className="shrink-0" />
                     <div>
                       <span className="text-sm font-medium">{shard.name}</span>
                       <p className="text-xs text-muted-foreground mt-0.5">{shard.description}</p>
