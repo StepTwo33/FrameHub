@@ -72,8 +72,8 @@ export function isDualFormWarframe(warframeId: string): boolean {
 export interface DualFormBuildSlice {
   mods: ModSlot[];
   slotPolarities: Record<number, string>;
-  shards?: (EquippedArchonShard | null)[];
-  arcaneIds?: (string | null)[];
+  shards: (EquippedArchonShard | null)[];
+  arcaneIds: (string | null)[];
   arcaneRanks?: number[];
 }
 
