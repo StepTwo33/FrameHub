@@ -4830,7 +4830,7 @@ export const allWarframes: Warframe[] = [
         "duration": 25,
         "radius": 10,
         "castTime": 0.6,
-        "miscStats": { "minRadius": 5, "maxRadius": 10, "healthRegen": "10-40/s", "damageReduction": "15-45%", "reviveCooldown": "60s" }
+        "miscStats": { "minRadius": 5, "maxRadius": 10, "healthRegen": "10-40/s", "damageReduction": "15-45%", "reviveCooldown": "60s", "drCap": 0.75 }
       },
       {
         "name": "Event Horizon",
