@@ -37,7 +37,7 @@ export function Footer() {
 
           <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
             {FOOTER_LINKS.map((link) =>
-              link.external ? (
+              "external" in link ? (
                 <a
                   key={link.href}
                   href={link.href}
