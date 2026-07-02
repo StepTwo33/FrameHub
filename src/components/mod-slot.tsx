@@ -36,25 +36,50 @@ interface ModSlotProps {
 
 function FormaPolarizeButton({
   active,
+  slotPolarity,
   onClick,
 }: {
   active: boolean;
+  slotPolarity?: string;
   onClick: (e: MouseEvent) => void;
 }) {
+  const polarized = Boolean(slotPolarity);
+  const polarityLabel = slotPolarity ? polarityNames[slotPolarity] || slotPolarity : null;
+
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        "absolute bottom-1.5 right-1.5 z-10 flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-semibold leading-none transition-all shadow-sm",
-        active
-          ? "border-yellow-400 bg-yellow-500/25 text-yellow-300 ring-1 ring-yellow-400/40"
-          : "border-yellow-500/50 bg-yellow-500/15 text-yellow-400 hover:bg-yellow-500/25 hover:border-yellow-400/70"
+        "absolute bottom-1.5 right-1.5 z-10 flex items-center justify-center rounded-md border transition-all shadow-sm",
+        polarized
+          ? cn(
+              "p-1 min-w-[28px] min-h-[28px]",
+              active
+                ? "border-primary/60 bg-primary/15 ring-1 ring-primary/40"
+                : "border-border/80 bg-card/90 hover:border-primary/40 hover:bg-secondary/80"
+            )
+          : cn(
+              "gap-1 px-1.5 py-0.5 text-[10px] font-semibold leading-none",
+              active
+                ? "border-yellow-400 bg-yellow-500/25 text-yellow-300 ring-1 ring-yellow-400/40"
+                : "border-yellow-500/50 bg-yellow-500/15 text-yellow-400 hover:bg-yellow-500/25 hover:border-yellow-400/70"
+            )
       )}
-      title="Forma — polarize this slot to match a mod and halve its drain"
+      title={
+        polarized
+          ? `Slot polarized as ${polarityLabel} — click to change`
+          : "Forma — polarize this slot to match a mod and halve its drain"
+      }
     >
-      <span className="text-[11px] leading-none" aria-hidden>⬡</span>
-      <span>Forma</span>
+      {polarized && slotPolarity ? (
+        <PolarityIcon polarity={slotPolarity} size={18} />
+      ) : (
+        <>
+          <span className="text-[11px] leading-none" aria-hidden>⬡</span>
+          <span>Forma</span>
+        </>
+      )}
     </button>
   );
 }
@@ -119,9 +144,6 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
           onClick={onAdd}
           className="w-full min-h-24 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-solid hover:border-primary border-primary/40 hover:text-primary hover:bg-primary/5 transition-all group"
         >
-          {slotPolarity && (
-            <PolarityIcon polarity={slotPolarity} size={14} />
-          )}
           <div className="flex items-center gap-1">
             <Plus className="h-3 w-3" />
             <span className="text-xs">{label || `Slot ${slotIndex + 1}`}</span>
@@ -130,6 +152,7 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
         {onPolarize && (
           <FormaPolarizeButton
             active={showPolarityPicker}
+            slotPolarity={slotPolarity}
             onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
           />
         )}
@@ -174,6 +197,7 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
       {onPolarize && (
         <FormaPolarizeButton
           active={showPolarityPicker}
+          slotPolarity={slotPolarity}
           onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
         />
       )}
@@ -188,7 +212,6 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5">
-            {slotPolarity && <PolarityIcon polarity={slotPolarity} size={12} />}
             <PolarityIcon polarity={mod.polarity} size={14} />
             <span className="text-[13px] font-semibold truncate leading-tight">{mod.name}</span>
           </div>
