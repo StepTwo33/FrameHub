@@ -26,6 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 import { extractBuildFromUrl } from "@/lib/build-url";
 import { allArcanes } from "@/data/arcanes";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 
 function resolveArcaneMod(id: string): Mod | null {
   return modsMap.get(id) ?? allArcanes.find((m) => m.id === id) ?? null;
@@ -141,6 +142,8 @@ export default function ModularBuilderPage() {
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
+  const [buildIsPublic, setBuildIsPublic] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   // Load build from ?build= share link (e.g. from /build/[id] page)
   useEffect(() => {
@@ -195,7 +198,7 @@ export default function ModularBuilderPage() {
     });
   }, []);
 
-  const handleSaveBuild = async () => {
+  const buildModularData = (): ModularBuildData => {
     const parts: Record<string, string> = {};
     if (modularType === "kitgun") {
       if (kitgunChamber) parts.chamber = kitgunChamber.id;
@@ -210,7 +213,7 @@ export default function ModularBuilderPage() {
       if (ampScaffold) parts.scaffold = ampScaffold.id;
       if (ampBrace) parts.brace = ampBrace.id;
     }
-    const data: ModularBuildData = {
+    return {
       modularType,
       parts,
       mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
@@ -219,9 +222,14 @@ export default function ModularBuilderPage() {
       isMR30,
       slotPolarities,
     };
+  };
+
+  const handleSaveBuildConfirm = async ({ name, isPublic }: SaveBuildDialogValues) => {
+    const data = buildModularData();
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
-      name: buildName || `${modularType} Build`,
+      name,
+      isPublic,
       type: "modular",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -229,11 +237,15 @@ export default function ModularBuilderPage() {
     };
     saveBuild(build);
     setCurrentBuildId(build.id);
+    setBuildName(name);
+    setBuildIsPublic(isPublic);
     setSavedBuilds(getSavedBuilds("modular"));
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
-      toast.success("Build saved", { description: `${build.name} saved to your account` });
+      setCurrentBuildId(cloudResult.id);
+      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+      toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
@@ -269,6 +281,7 @@ export default function ModularBuilderPage() {
     ]);
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
   };
@@ -296,7 +309,7 @@ export default function ModularBuilderPage() {
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h1 className="text-xl sm:text-3xl font-bold">Modular Builder</h1>
           <div className="flex items-center gap-2">
-            <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
+            <button onClick={() => setSaveDialogOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
               <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
             </button>
             <button onClick={() => { setSavedBuilds(getSavedBuilds("modular")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
@@ -863,6 +876,15 @@ export default function ModularBuilderPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        defaultName={buildName || `${modularType} Build`}
+        defaultIsPublic={buildIsPublic}
+        showDescription={false}
+        onSave={handleSaveBuildConfirm}
+      />
     </div>
   );
 }

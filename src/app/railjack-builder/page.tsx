@@ -19,6 +19,7 @@ import { Save, FolderOpen, Trash2, Crosshair, Shield, Zap, Gauge, ChevronRight }
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 
 type PlexusTab = "integrated" | "battle" | "tactical";
@@ -56,6 +57,8 @@ export default function RailjackBuilderPage() {
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
+  const [buildIsPublic, setBuildIsPublic] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   // Component pickers
   const [showComponentPicker, setShowComponentPicker] = useState<string | null>(null);
@@ -147,7 +150,7 @@ export default function RailjackBuilderPage() {
   }, [selectedPlating, selectedShield, selectedEngine, selectedReactor, integratedMods]);
 
   // Save
-  const handleSaveBuild = useCallback(async () => {
+  const handleSaveBuildConfirm = useCallback(async ({ name, isPublic }: SaveBuildDialogValues) => {
     const data: RailjackBuildData = {
       reactorId: selectedReactor?.id,
       shieldId: selectedShield?.id,
@@ -164,7 +167,8 @@ export default function RailjackBuilderPage() {
     };
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
-      name: buildName || "Railjack Build",
+      name,
+      isPublic,
       type: "railjack",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -172,15 +176,19 @@ export default function RailjackBuilderPage() {
     };
     saveBuild(build);
     setCurrentBuildId(build.id);
+    setBuildName(name);
+    setBuildIsPublic(isPublic);
     setSavedBuilds(getSavedBuilds("railjack"));
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
-      toast.success("Build saved", { description: `${build.name} saved to your account` });
+      setCurrentBuildId(cloudResult.id);
+      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+      toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, selectedTurret, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, buildName, currentBuildId]);
+  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, selectedTurret, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as RailjackBuildData;
@@ -201,6 +209,7 @@ export default function RailjackBuilderPage() {
     setTacticalPolarities(d.tacticalPolarities || {});
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
   }, []);
@@ -246,7 +255,7 @@ export default function RailjackBuilderPage() {
               placeholder="Build name..."
               className="px-3 py-1.5 text-xs rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground w-40"
             />
-            <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
+            <button onClick={() => setSaveDialogOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
               <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
             </button>
             <button onClick={() => { setSavedBuilds(getSavedBuilds("railjack")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
@@ -649,6 +658,15 @@ export default function RailjackBuilderPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        defaultName={buildName || "Railjack Build"}
+        defaultIsPublic={buildIsPublic}
+        showDescription={false}
+        onSave={handleSaveBuildConfirm}
+      />
     </div>
   );
 }

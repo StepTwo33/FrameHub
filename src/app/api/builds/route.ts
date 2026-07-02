@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { isAllowedBuildType, safeParseBuildJson } from "@/lib/build-types";
+import { extractBuildItemId, isAllowedBuildType, safeParseBuildJson } from "@/lib/build-types";
 
 const BUILD_NAME_MAX = 200;
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json(
-    builds.map((b: { id: string; name: string; description: string; isPublic: boolean; type: string; data: string; createdAt: Date; updatedAt: Date }) => {
+    builds.map((b) => {
       const data = safeParseBuildJson(b.data);
       return {
         id: b.id,
@@ -34,6 +34,8 @@ export async function GET(req: NextRequest) {
         description: b.description,
         isPublic: b.isPublic,
         type: b.type,
+        itemId: b.itemId,
+        upvoteCount: b.upvoteCount,
         data: data ?? {},
         createdAt: b.createdAt.getTime(),
         updatedAt: b.updatedAt.getTime(),
@@ -77,6 +79,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid build type" }, { status: 400 });
   }
 
+  const itemId = extractBuildItemId(type, data);
+
   // Upsert: update if id exists and belongs to user, otherwise create
   if (id) {
     const existing = await prisma.build.findFirst({
@@ -88,8 +92,9 @@ export async function POST(req: NextRequest) {
         data: {
           name: String(name).trim(),
           description: typeof description === "string" ? description.slice(0, 2000) : "",
-          isPublic: isPublic ?? false,
-          data: JSON.stringify(data)
+          isPublic: typeof isPublic === "boolean" ? isPublic : existing.isPublic,
+          itemId,
+          data: JSON.stringify(data),
         },
       });
       return NextResponse.json({
@@ -98,6 +103,8 @@ export async function POST(req: NextRequest) {
         description: updated.description,
         isPublic: updated.isPublic,
         type: updated.type,
+        itemId: updated.itemId,
+        upvoteCount: updated.upvoteCount,
         data: JSON.parse(updated.data),
         createdAt: updated.createdAt.getTime(),
         updatedAt: updated.updatedAt.getTime(),
@@ -112,6 +119,7 @@ export async function POST(req: NextRequest) {
       description: typeof description === "string" ? description.slice(0, 2000) : "",
       isPublic: isPublic ?? false,
       type,
+      itemId,
       data: JSON.stringify(data),
     },
   });
@@ -122,6 +130,8 @@ export async function POST(req: NextRequest) {
     description: build.description,
     isPublic: build.isPublic,
     type: build.type,
+    itemId: build.itemId,
+    upvoteCount: build.upvoteCount,
     data: JSON.parse(build.data),
     createdAt: build.createdAt.getTime(),
     updatedAt: build.updatedAt.getTime(),

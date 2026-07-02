@@ -34,6 +34,8 @@ import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 
 const categoryLabels: Record<string, string> = {
   all: "All",
@@ -89,6 +91,9 @@ export default function WeaponBuilderPage() {
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("weapon"));
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
+  const [buildIsPublic, setBuildIsPublic] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [saveDialogDefaultPublic, setSaveDialogDefaultPublic] = useState(false);
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
@@ -129,9 +134,9 @@ export default function WeaponBuilderPage() {
     });
   }, [allWeapons]);
 
-  const handleSaveBuild = useCallback(async () => {
-    if (!selectedWeapon) return;
-    const data: WeaponBuildData = {
+  const buildWeaponData = useCallback((): WeaponBuildData | null => {
+    if (!selectedWeapon) return null;
+    return {
       weaponId: selectedWeapon.id,
       mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       stanceModId: stanceMod?.id,
@@ -147,29 +152,9 @@ export default function WeaponBuilderPage() {
         : {}),
       ...(Object.keys(selectedEvolutions).length > 0 ? { incarnonEvolutions: selectedEvolutions } : {}),
     };
-    const build: SavedBuild = {
-      id: currentBuildId || generateBuildId(),
-      name: buildName || `${selectedWeapon.name} Build`,
-      description: buildDescription || "",
-      type: "weapon",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      data,
-    };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
-    setSavedBuilds(getSavedBuilds("weapon"));
+  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, weaponCalcOptions, selectedEvolutions]);
 
-    // Also save to cloud if logged in
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      toast.success("Build saved", { description: `${build.name} saved to your account` });
-    } else {
-      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
-    }
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions, selectedEvolutions]);
-
-  const handleLoadBuild = useCallback((build: SavedBuild) => {
+  const applyLoadedBuild = useCallback((build: SavedBuild) => {
     const d = build.data as WeaponBuildData;
     const weapon = allWeapons.find((w) => w.id === d.weaponId);
     if (!weapon) { toast.error("Weapon not found"); return; }
@@ -198,11 +183,66 @@ export default function WeaponBuilderPage() {
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
+    setBuildIsPublic(build.isPublic ?? false);
     setSelectedEvolutions(d.incarnonEvolutions ?? {});
     setShowSavedBuilds(false);
     setShowWeaponList(false);
     toast.info("Build loaded", { description: build.name });
   }, [allWeapons]);
+
+  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+    const data = buildWeaponData();
+    if (!data || !selectedWeapon) return;
+    const build: SavedBuild = {
+      id: currentBuildId || generateBuildId(),
+      name,
+      description,
+      isPublic,
+      type: "weapon",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      data,
+    };
+    saveBuild(build);
+    setCurrentBuildId(build.id);
+    setBuildName(name);
+    setBuildDescription(description);
+    setBuildIsPublic(isPublic);
+    setSavedBuilds(getSavedBuilds("weapon"));
+
+    const cloudResult = await saveCloudBuild(build);
+    if (cloudResult) {
+      setCurrentBuildId(cloudResult.id);
+      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+      toast.success("Build saved", { description: `${name} saved to your account` });
+    } else {
+      toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
+    }
+  }, [buildWeaponData, selectedWeapon, currentBuildId]);
+
+  const handleLoadCommunityBuild = useCallback(async (buildId: string) => {
+    try {
+      const res = await fetch(`/api/builds/${buildId}`);
+      if (!res.ok) { toast.error("Could not load build"); return; }
+      const remote = await res.json();
+      applyLoadedBuild({
+        id: remote.id,
+        name: remote.name,
+        description: remote.description,
+        isPublic: remote.isPublic,
+        type: "weapon",
+        createdAt: remote.createdAt,
+        updatedAt: remote.updatedAt,
+        data: remote.data,
+      });
+    } catch {
+      toast.error("Could not load build");
+    }
+  }, [applyLoadedBuild]);
+
+  const handleLoadBuild = useCallback((build: SavedBuild) => {
+    applyLoadedBuild(build);
+  }, [applyLoadedBuild]);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
@@ -215,8 +255,7 @@ export default function WeaponBuilderPage() {
   const handleShareBuild = useCallback(async () => {
     if (!selectedWeapon) return;
 
-    // Fallback shareable object for offline/unauthenticated sharing
-    const build: ShareableBuild = {
+    const fallbackShareable: ShareableBuild = {
       type: "weapon",
       itemId: selectedWeapon.id,
       mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
@@ -230,63 +269,28 @@ export default function WeaponBuilderPage() {
       ...(Object.keys(selectedEvolutions).length > 0 ? { incarnonEvolutions: selectedEvolutions } : {}),
     };
 
-    try {
-      // First try to save the build publicly to the server
-      const data: WeaponBuildData = {
-        weaponId: selectedWeapon.id,
-        mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
-        stanceModId: stanceMod?.id,
-        arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
-        hasOrokinCatalyst,
-        isMR30,
-        slotPolarities,
-        ...(weaponCalcOptions?.progenitorElement != null
-          ? {
-              progenitorElement: weaponCalcOptions.progenitorElement,
-              progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
-            }
-          : {}),
-      };
-
-      const payload = {
-        id: currentBuildId || generateBuildId(),
-        name: buildName || `${selectedWeapon.name} Build`,
-        description: buildDescription || "",
-        isPublic: true,
-        type: "weapon",
-        data,
-      };
-
-      const res = await fetch("/api/builds", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        const saved = await res.json();
-        setCurrentBuildId(saved.id);
-        const url = `${window.location.origin}/build/${saved.id}`;
-        await navigator.clipboard.writeText(url);
-        setShareCopied(true);
-        setTimeout(() => setShareCopied(false), 2000);
-        toast.success("Share link copied!", { description: "Link copied to clipboard" });
-        return;
-      }
-    } catch (e) {
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to share publicly, falling back to local URL logic", e);
-      }
-    }
-
-    // Fallback to local base64 sharing
-    const url = window.location.origin + buildShareUrl(build);
-    navigator.clipboard.writeText(url).then(() => {
+    if (buildIsPublic && currentBuildId) {
+      const url = `${window.location.origin}/build/${currentBuildId}`;
+      await navigator.clipboard.writeText(url);
       setShareCopied(true);
       setTimeout(() => setShareCopied(false), 2000);
       toast.success("Share link copied!", { description: "Link copied to clipboard" });
-    });
-  }, [selectedWeapon, equippedMods, stanceMod, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, buildName, buildDescription, currentBuildId, weaponCalcOptions]);
+      return;
+    }
+
+    if (!buildIsPublic) {
+      setSaveDialogDefaultPublic(true);
+      setSaveDialogOpen(true);
+      toast.info("Enable community listing to share", { description: "Check \"List in Community Builds\" when saving, then copy the link." });
+      return;
+    }
+
+    const url = window.location.origin + buildShareUrl(fallbackShareable);
+    await navigator.clipboard.writeText(url);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+    toast.success("Share link copied!", { description: "Link copied to clipboard" });
+  }, [selectedWeapon, equippedMods, equippedArcanes, weaponCalcOptions, selectedEvolutions, buildIsPublic, currentBuildId]);
 
   const filteredWeapons = useMemo(() => {
     const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
@@ -528,7 +532,10 @@ export default function WeaponBuilderPage() {
                 {/* primary actions */}
                 <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
                   <button
-                    onClick={handleSaveBuild}
+                    onClick={() => {
+                      setSaveDialogDefaultPublic(buildIsPublic);
+                      setSaveDialogOpen(true);
+                    }}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium"
                     title="Save Build"
                   >
@@ -643,6 +650,15 @@ export default function WeaponBuilderPage() {
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
                 </a>
               </div>
+            </div>
+
+            <div className="mb-6">
+              <CommunityBuildsPanel
+                type="weapon"
+                itemId={selectedWeapon.id}
+                itemName={selectedWeapon.name}
+                onLoadBuild={handleLoadCommunityBuild}
+              />
             </div>
 
             <div className="grid lg:grid-cols-[1fr_320px] gap-6">
@@ -980,6 +996,15 @@ export default function WeaponBuilderPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        defaultName={buildName || (selectedWeapon ? `${selectedWeapon.name} Build` : "Weapon Build")}
+        defaultDescription={buildDescription}
+        defaultIsPublic={saveDialogDefaultPublic}
+        onSave={handleSaveBuildConfirm}
+      />
     </div>
   );
 }

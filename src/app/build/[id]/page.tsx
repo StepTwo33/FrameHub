@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import { cookies, headers } from 'next/headers';
 import { Header } from '@/components/header';
 import { buildShareUrl, ShareableBuild } from '@/lib/build-url';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { BuildPageVote } from '@/components/build-page-vote';
 import Image from 'next/image';
 
 // Simple interface for the expected API response
@@ -14,6 +13,7 @@ interface SharedBuild {
     description: string;
     isPublic: boolean;
     type: string;
+    upvoteCount: number;
     data: unknown;
     createdAt: number;
     updatedAt: number;
@@ -162,13 +162,12 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
                             </div>
                         </div>
 
-                        {shareable && (
-                            <Button asChild className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white shadow hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                                <Link href={builderUrl}>
-                                    Open in Builder
-                                </Link>
-                            </Button>
-                        )}
+                        <BuildPageVote
+                            buildId={build.id}
+                            initialUpvoteCount={build.upvoteCount ?? 0}
+                            isPublic={build.isPublic}
+                            builderUrl={shareable ? builderUrl : undefined}
+                        />
                     </div>
 
                     <div className="w-full h-px bg-border mb-8" />

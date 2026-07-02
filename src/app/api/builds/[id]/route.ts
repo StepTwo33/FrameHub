@@ -66,11 +66,14 @@ export async function GET(
     description: build.description,
     isPublic: build.isPublic,
     type: build.type,
+    itemId: build.itemId,
+    upvoteCount: build.upvoteCount,
     data: parsed,
     createdAt: build.createdAt.getTime(),
     updatedAt: build.updatedAt.getTime(),
     author: {
       username: build.user.username || build.user.name || "Anonymous",
+      profileSlug: build.user.username,
       image: build.user.image,
     }
   });

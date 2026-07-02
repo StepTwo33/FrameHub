@@ -16,6 +16,7 @@ import { Star, Zap, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 
 type BuilderMode = "archwing" | "necramech";
 
@@ -51,10 +52,12 @@ export default function ArchwingBuilderPage() {
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
+  const [buildIsPublic, setBuildIsPublic] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   useState(() => { setSavedBuilds(getSavedBuilds("archwing")); });
 
-  const handleSaveBuild = async () => {
+  const handleSaveBuildConfirm = async ({ name, isPublic }: SaveBuildDialogValues) => {
     const data: ArchwingBuildData = {
       mode,
       frameId: mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name,
@@ -67,10 +70,10 @@ export default function ArchwingBuilderPage() {
       framePolarities: mode === "archwing" ? archwingPolarities : necramechPolarities,
       weaponPolarities,
     };
-    const frameName = mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name;
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
-      name: buildName || `${frameName ?? mode} Build`,
+      name,
+      isPublic,
       type: "archwing",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -78,11 +81,15 @@ export default function ArchwingBuilderPage() {
     };
     saveBuild(build);
     setCurrentBuildId(build.id);
+    setBuildName(name);
+    setBuildIsPublic(isPublic);
     setSavedBuilds(getSavedBuilds("archwing"));
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
-      toast.success("Build saved", { description: `${build.name} saved to your account` });
+      setCurrentBuildId(cloudResult.id);
+      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+      toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
@@ -112,6 +119,7 @@ export default function ArchwingBuilderPage() {
     setWeaponPolarities(d.weaponPolarities || {});
     setCurrentBuildId(build.id);
     setBuildName(build.name);
+    setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     toast.info("Build loaded", { description: build.name });
   };
@@ -186,7 +194,7 @@ export default function ArchwingBuilderPage() {
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h1 className="text-xl sm:text-3xl font-bold">Archwing & Necramech Builder</h1>
           <div className="flex items-center gap-2">
-            <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
+            <button onClick={() => setSaveDialogOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-green-400 hover:border-green-500/50 transition-all" title="Save Build">
               <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
             </button>
             <button onClick={() => { setSavedBuilds(getSavedBuilds("archwing")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 transition-all" title="Load Build">
@@ -540,6 +548,15 @@ export default function ArchwingBuilderPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        defaultName={buildName || `${(mode === "archwing" ? selectedArchwing?.name : selectedNecramech?.name) ?? mode} Build`}
+        defaultIsPublic={buildIsPublic}
+        showDescription={false}
+        onSave={handleSaveBuildConfirm}
+      />
     </div>
   );
 }

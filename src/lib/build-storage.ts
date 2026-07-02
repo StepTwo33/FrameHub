@@ -23,6 +23,7 @@ export interface SavedBuild {
   id: string;
   name: string;
   description?: string;
+  isPublic?: boolean;
   type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
   createdAt: number;
   updatedAt: number;

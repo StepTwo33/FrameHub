@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github } from "lucide-react";
+import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { ThemePicker } from "@/components/theme-picker";
 import { AvatarImage } from "@/components/game-asset-image";
@@ -140,7 +140,17 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          {NAV_GROUPS.map((group) => (
+          <NavDropdown key={NAV_GROUPS[0].label} group={NAV_GROUPS[0]} />
+
+          <Link
+            href="/discover"
+            className="flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium text-primary hover:text-primary/90 transition-colors rounded-lg hover:bg-primary/10"
+          >
+            <Users className="h-3.5 w-3.5" />
+            Discover
+          </Link>
+
+          {NAV_GROUPS.slice(1).map((group) => (
             <NavDropdown key={group.label} group={group} />
           ))}
 
@@ -241,6 +251,15 @@ export function Header() {
       {/* Mobile nav drawer */}
       {mobileOpen && (
         <nav className="lg:hidden border-t border-border bg-card px-4 py-3 space-y-1 max-h-[70vh] overflow-y-auto">
+          <Link
+            href="/discover"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
+          >
+            <Users className="h-4 w-4" />
+            Discover
+          </Link>
+
           {NAV_GROUPS.map((group) => {
             const Icon = group.icon;
             const isExpanded = mobileExpanded === group.label;

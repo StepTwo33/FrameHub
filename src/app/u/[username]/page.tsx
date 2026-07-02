@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { prisma } from "@/lib/prisma";
+import { ThumbsUp, ChevronRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   const user = await prisma.user.findUnique({
     where: { username: normalized },
     select: {
+      id: true,
       name: true,
       username: true,
       image: true,
@@ -27,6 +30,20 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   });
 
   if (!user) notFound();
+
+  const publicBuilds = await prisma.build.findMany({
+    where: { userId: user.id, isPublic: true },
+    orderBy: { updatedAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      type: true,
+      upvoteCount: true,
+      updatedAt: true,
+    },
+    take: 50,
+  });
 
   const joined = new Date(user.createdAt).toLocaleDateString("en-US", {
     month: "long",
@@ -60,8 +77,8 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
             </div>
 
             <div className="text-center shrink-0">
-              <div className="text-2xl font-bold">{user._count.builds}</div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Builds</div>
+              <div className="text-2xl font-bold">{publicBuilds.length}</div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Public Builds</div>
             </div>
           </div>
 
@@ -73,6 +90,48 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
               </span>
             )}
           </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">
+            COMMUNITY BUILDS
+          </h2>
+          {publicBuilds.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-12 rounded-xl border border-dashed border-border">
+              No public builds yet.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {publicBuilds.map((build) => (
+                <Link
+                  key={build.id}
+                  href={`/build/${build.id}`}
+                  className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card hover:border-primary/35 transition-colors group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm truncate group-hover:text-primary transition-colors">
+                      {build.name}
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-2">
+                      <span className="capitalize">{build.type}</span>
+                      <span>•</span>
+                      <span>{new Date(build.updatedAt).toLocaleDateString()}</span>
+                      {build.upvoteCount > 0 && (
+                        <>
+                          <span>•</span>
+                          <span className="inline-flex items-center gap-0.5">
+                            <ThumbsUp className="h-3 w-3" />
+                            {build.upvoteCount}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0" />
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -22,7 +22,10 @@ interface ProfileUser {
 interface CloudBuild {
   id: string;
   name: string;
+  description?: string;
   type: string;
+  isPublic?: boolean;
+  upvoteCount?: number;
   data: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
@@ -45,6 +48,7 @@ const typeIcons: Record<string, typeof Crosshair> = {
   companion: Dog,
   modular: Wrench,
   archwing: Plane,
+  railjack: Crosshair,
 };
 
 const typeColors: Record<string, string> = {
@@ -53,6 +57,7 @@ const typeColors: Record<string, string> = {
   companion: "text-cyan-400 border-cyan-500/30",
   modular: "text-orange-400 border-orange-500/30",
   archwing: "text-teal-400 border-teal-500/30",
+  railjack: "text-rose-400 border-rose-500/30",
 };
 
 export default function ProfilePage() {
@@ -244,6 +249,35 @@ export default function ProfilePage() {
     const res = await fetch(`/api/builds/${id}`, { method: "DELETE" });
     if (res.ok) {
       setBuilds((prev) => prev.filter((b) => b.id !== id));
+    }
+  };
+
+  const handleTogglePublic = async (build: CloudBuild) => {
+    const nextPublic = !build.isPublic;
+    const res = await fetch("/api/builds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: build.id,
+        name: build.name,
+        description: build.description ?? "",
+        isPublic: nextPublic,
+        type: build.type,
+        data: build.data,
+      }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setBuilds((prev) =>
+        prev.map((b) =>
+          b.id === build.id
+            ? { ...b, isPublic: updated.isPublic, upvoteCount: updated.upvoteCount }
+            : b
+        )
+      );
+      showMessage("success", nextPublic ? "Build listed in Community Builds" : "Build removed from community listing");
+    } else {
+      showMessage("error", "Could not update visibility");
     }
   };
 
@@ -710,7 +744,7 @@ export default function ProfilePage() {
             >
               All ({builds.length})
             </button>
-            {["weapon", "warframe", "companion", "modular", "archwing"].map((t) => {
+            {["weapon", "warframe", "companion", "modular", "archwing", "railjack"].map((t) => {
               const Icon = typeIcons[t] ?? Crosshair;
               return (
                 <button
@@ -770,14 +804,34 @@ export default function ProfilePage() {
                         <Icon className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm truncate group-hover:text-primary transition-colors">{build.name}</div>
+                        <div className="font-medium text-sm truncate group-hover:text-primary transition-colors flex items-center gap-2">
+                          {build.name}
+                          {build.isPublic ? (
+                            <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">
+                              Public
+                            </span>
+                          ) : (
+                            <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border shrink-0">
+                              Private
+                            </span>
+                          )}
+                        </div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           {build.type} • {new Date(build.updatedAt).toLocaleDateString()} {new Date(build.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {(build.upvoteCount ?? 0) > 0 && ` • ${build.upvoteCount} upvotes`}
                         </div>
                         <div className="text-[10px] text-primary/80 mt-1">Open build page</div>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 self-center" aria-hidden />
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleTogglePublic(build)}
+                      title={build.isPublic ? "Remove from community listing" : "List in Community Builds"}
+                      className="px-3 shrink-0 border-l border-border flex items-center justify-center hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors text-[10px] font-medium"
+                    >
+                      {build.isPublic ? "Unlist" : "List"}
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(build.id)}

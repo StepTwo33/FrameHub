@@ -50,6 +50,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   builds        Build[]
+  buildVotes    BuildVote[]
   reports       Report[]
 }
 
@@ -81,18 +82,36 @@ model Report {
 }
 
 model Build {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   userId      String
   name        String
-  description String   @default("")
-  isPublic    Boolean  @default(false)
-  type        String   // 'weapon' | 'warframe' | 'companion' | 'modular' | 'archwing'
-  data        String   // JSON string of build data
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String      @default("")
+  isPublic    Boolean     @default(false)
+  type        String      // 'weapon' | 'warframe' | 'companion' | 'modular' | 'archwing' | 'railjack'
+  itemId      String      @default("")
+  upvoteCount Int         @default(0)
+  data        String      // JSON string of build data
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  votes       BuildVote[]
 
   @@index([userId])
   @@index([userId, type])
   @@index([isPublic])
+  @@index([isPublic, type, updatedAt])
+  @@index([isPublic, type, upvoteCount])
+  @@index([isPublic, itemId])
+}
+
+model BuildVote {
+  id        String   @id @default(cuid())
+  userId    String
+  buildId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  build     Build    @relation(fields: [buildId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, buildId])
+  @@index([buildId])
 }

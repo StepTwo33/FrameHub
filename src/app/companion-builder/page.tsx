@@ -50,6 +50,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
 }
 
 import { getCompanionWeapons } from "@/lib/companion-weapons";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: Record<string, number> | null) {
   let dmgMult = 1;
   let critChance = weapon.criticalChance;
@@ -213,6 +214,8 @@ export default function CompanionBuilderPage() {
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
+  const [buildIsPublic, setBuildIsPublic] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   // Weapon state
   const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
   const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
@@ -221,7 +224,7 @@ export default function CompanionBuilderPage() {
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
 
-  const handleSaveBuild = useCallback(async () => {
+  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
     if (!selectedCompanion) return;
     const data: CompanionBuildData = {
       companionId: selectedCompanion.id,
@@ -234,8 +237,9 @@ export default function CompanionBuilderPage() {
     };
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
-      name: buildName || `${selectedCompanion.name} Build`,
-      description: buildDescription || "",
+      name,
+      description,
+      isPublic,
       type: "companion",
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -243,15 +247,20 @@ export default function CompanionBuilderPage() {
     };
     saveBuild(build);
     setCurrentBuildId(build.id);
+    setBuildName(name);
+    setBuildDescription(description);
+    setBuildIsPublic(isPublic);
     setSavedBuilds(getSavedBuilds("companion"));
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
-      toast.success("Build saved", { description: `${build.name} saved to your account` });
+      setCurrentBuildId(cloudResult.id);
+      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+      toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, buildName, buildDescription, currentBuildId]);
+  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as CompanionBuildData;
@@ -272,6 +281,7 @@ export default function CompanionBuilderPage() {
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
+    setBuildIsPublic(build.isPublic ?? false);
     setShowSavedBuilds(false);
     setShowCompanionList(false);
     toast.info("Build loaded", { description: build.name });
@@ -538,7 +548,11 @@ export default function CompanionBuilderPage() {
               <div className="flex items-center gap-4 flex-wrap mt-2 mb-4">
                 {/* primary actions */}
                 <div className="flex items-center gap-1.5 p-1 bg-card border border-border rounded-lg shadow-sm">
-                  <button onClick={handleSaveBuild} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium" title="Save Build">
+                  <button
+                    onClick={() => setSaveDialogOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10 transition-all font-medium"
+                    title="Save Build"
+                  >
                     <Save className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Save</span>
                   </button>
                   <button onClick={() => { setSavedBuilds(getSavedBuilds("companion")); setShowSavedBuilds(true); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10 transition-all font-medium" title="Load Build">
@@ -825,6 +839,15 @@ export default function CompanionBuilderPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        defaultName={buildName || (selectedCompanion ? `${selectedCompanion.name} Build` : "Companion Build")}
+        defaultDescription={buildDescription}
+        defaultIsPublic={buildIsPublic}
+        onSave={handleSaveBuildConfirm}
+      />
     </div>
   );
 }
