@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { Mod, getRivenStatsForCategory } from "@/lib/types";
 import { X, Plus, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,74 @@ interface ModSlotProps {
   equippedModIds?: string[];
 }
 
+function FormaPolarizeButton({
+  active,
+  onClick,
+}: {
+  active: boolean;
+  onClick: (e: MouseEvent) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "absolute bottom-1.5 right-1.5 z-10 flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-semibold leading-none transition-all shadow-sm",
+        active
+          ? "border-yellow-400 bg-yellow-500/25 text-yellow-300 ring-1 ring-yellow-400/40"
+          : "border-yellow-500/50 bg-yellow-500/15 text-yellow-400 hover:bg-yellow-500/25 hover:border-yellow-400/70"
+      )}
+      title="Forma — polarize this slot to match a mod and halve its drain"
+    >
+      <span className="text-[11px] leading-none" aria-hidden>⬡</span>
+      <span>Forma</span>
+    </button>
+  );
+}
+
+function PolarityPicker({
+  slotPolarity,
+  onPolarize,
+  onClose,
+}: {
+  slotPolarity?: string;
+  onPolarize: (polarity: string | null) => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-card border border-yellow-500/30 rounded-lg p-2 shadow-lg shadow-black/30">
+      <p className="text-[10px] font-medium text-yellow-400/90 mb-1.5 px-0.5">
+        Forma — pick slot polarity
+      </p>
+      <div className="grid grid-cols-4 gap-1">
+        {ALL_POLARITIES.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => { onPolarize(p); onClose(); }}
+            className={cn(
+              "flex items-center justify-center p-1.5 rounded border transition-all",
+              slotPolarity === p ? "border-yellow-500/60 bg-yellow-500/15" : "border-border hover:border-yellow-500/40"
+            )}
+            title={polarityNames[p] || p}
+          >
+            <PolarityIcon polarity={p} size={14} />
+          </button>
+        ))}
+      </div>
+      {slotPolarity && (
+        <button
+          type="button"
+          onClick={() => { onPolarize(null); onClose(); }}
+          className="w-full mt-1.5 text-[10px] text-red-400 hover:text-red-300 py-1"
+        >
+          Remove polarity
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds }: ModSlotProps) {
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
@@ -60,40 +128,17 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
           </div>
         </button>
         {onPolarize && (
-          <button
+          <FormaPolarizeButton
+            active={showPolarityPicker}
             onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
-            className="absolute bottom-1 right-1 p-0.5 rounded text-[9px] text-muted-foreground hover:text-foreground transition-colors"
-            title="Set polarity"
-          >
-            ◆
-          </button>
+          />
         )}
         {showPolarityPicker && onPolarize && (
-          <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-card border border-border rounded-lg p-2 shadow-lg">
-            <div className="grid grid-cols-4 gap-1">
-              {ALL_POLARITIES.map((p) => (
-                <button
-                  key={p}
-                  onClick={() => { onPolarize(p); setShowPolarityPicker(false); }}
-                  className={cn(
-                    "flex items-center justify-center p-1.5 rounded border transition-all",
-                    slotPolarity === p ? "border-blue-500/50 bg-blue-500/10" : "border-border hover:border-blue-500/30"
-                  )}
-                  title={polarityNames[p] || p}
-                >
-                  <PolarityIcon polarity={p} size={14} />
-                </button>
-              ))}
-            </div>
-            {slotPolarity && (
-              <button
-                onClick={() => { onPolarize(null); setShowPolarityPicker(false); }}
-                className="w-full mt-1 text-[10px] text-red-400 hover:text-red-300 py-1"
-              >
-                Remove Polarity
-              </button>
-            )}
-          </div>
+          <PolarityPicker
+            slotPolarity={slotPolarity}
+            onPolarize={onPolarize}
+            onClose={() => setShowPolarityPicker(false)}
+          />
         )}
       </div>
     );
@@ -127,13 +172,10 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
         <X className="h-3 w-3" />
       </button>
       {onPolarize && (
-        <button
+        <FormaPolarizeButton
+          active={showPolarityPicker}
           onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
-          className="absolute bottom-1.5 right-1.5 p-0.5 rounded text-[9px] text-muted-foreground hover:text-foreground transition-colors z-10"
-          title="Set polarity"
-        >
-          ◆
-        </button>
+        />
       )}
       <div className="flex items-start gap-2.5">
         <GameAssetImage
@@ -186,31 +228,11 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
         </div>
       </div>
       {showPolarityPicker && onPolarize && (
-        <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-card border border-border rounded-lg p-2 shadow-lg">
-          <div className="grid grid-cols-4 gap-1">
-            {ALL_POLARITIES.map((p) => (
-              <button
-                key={p}
-                onClick={() => { onPolarize(p); setShowPolarityPicker(false); }}
-                className={cn(
-                  "flex items-center justify-center p-1.5 rounded border transition-all",
-                  slotPolarity === p ? "border-blue-500/50 bg-blue-500/10" : "border-border hover:border-blue-500/30"
-                )}
-                title={polarityNames[p] || p}
-              >
-                <PolarityIcon polarity={p} size={14} />
-              </button>
-            ))}
-          </div>
-          {slotPolarity && (
-            <button
-              onClick={() => { onPolarize(null); setShowPolarityPicker(false); }}
-              className="w-full mt-1 text-[10px] text-red-400 hover:text-red-300 py-1"
-            >
-              Remove Polarity
-            </button>
-          )}
-        </div>
+        <PolarityPicker
+          slotPolarity={slotPolarity}
+          onPolarize={onPolarize}
+          onClose={() => setShowPolarityPicker(false)}
+        />
       )}
     </div>
   );
