@@ -140,8 +140,6 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          <NavDropdown key={NAV_GROUPS[0].label} group={NAV_GROUPS[0]} />
-
           <Link
             href="/discover"
             className="flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium text-primary hover:text-primary/90 transition-colors rounded-lg hover:bg-primary/10"
@@ -150,7 +148,7 @@ export function Header() {
             Discover
           </Link>
 
-          {NAV_GROUPS.slice(1).map((group) => (
+          {NAV_GROUPS.map((group) => (
             <NavDropdown key={group.label} group={group} />
           ))}
 
