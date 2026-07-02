@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
@@ -64,7 +64,7 @@ export default function RailjackBuilderPage() {
   // Component pickers
   const [showComponentPicker, setShowComponentPicker] = useState<string | null>(null);
 
-  useState(() => { setSavedBuilds(getSavedBuilds("railjack")); });
+  useEffect(() => { setSavedBuilds(getSavedBuilds("railjack")); }, []);
 
   // Current mods/polarities based on active tab
   const currentMods = plexusTab === "integrated" ? integratedMods : plexusTab === "battle" ? battleMods : tacticalMods;
@@ -183,6 +183,12 @@ export default function RailjackBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("railjack"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });

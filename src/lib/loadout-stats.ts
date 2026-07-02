@@ -158,7 +158,7 @@ function calculateCompanionBodyStats(
   for (const em of equippedMods) {
     const mod = modsMap.get(em.modId);
     if (!mod) continue;
-    const multiplier = Math.min(em.rank, mod.maxRank) + 1;
+    const multiplier = Math.min(Math.max(em.rank ?? 0, 0), mod.maxRank) + 1;
     for (const [statName, value] of Object.entries(mod.stats)) {
       const modValue = (value * multiplier) / 100;
       switch (statName) {

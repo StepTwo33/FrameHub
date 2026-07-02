@@ -197,7 +197,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
       // Get the original type to cast properly
       const original = itemData?.[key];
       const originalType = inferType(original);
-      if (originalType === "number" || JSON_FIELDS.has(key) ? false : typeof original === "number") {
+      if ((originalType === "number" || typeof original === "number") && !JSON_FIELDS.has(key)) {
         const num = Number(rawValue);
         if (!isNaN(num)) { fields[key] = num; continue; }
       }

@@ -135,16 +135,20 @@ export function BuildImporter({ modCategory, numSlots, onImport, onClose }: Buil
     setIsProcessing(true);
     setOcrError(null);
     setMatches([]);
+    let worker: { terminate: () => Promise<unknown> } | null = null;
+    let url: string | null = null;
     try {
       const { createWorker } = await import("tesseract.js");
-      const worker = await createWorker("eng");
+      const ocrWorker = await createWorker("eng");
+      worker = ocrWorker;
       // Preprocess: create a canvas with high contrast
       const img = new Image();
-      const url = URL.createObjectURL(file);
+      const objectUrl = URL.createObjectURL(file);
+      url = objectUrl;
       await new Promise<void>((resolve, reject) => {
         img.onload = () => resolve();
         img.onerror = reject;
-        img.src = url;
+        img.src = objectUrl;
       });
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
@@ -161,9 +165,7 @@ export function BuildImporter({ modCategory, numSlots, onImport, onClose }: Buil
       }
       ctx.putImageData(imageData, 0, 0);
 
-      const { data: result } = await worker.recognize(canvas);
-      await worker.terminate();
-      URL.revokeObjectURL(url);
+      const { data: result } = await ocrWorker.recognize(canvas);
 
       // Extract potential mod names from OCR text
       const lines = result.text.split("\n").map((l: string) => l.trim()).filter((l: string) => l.length > 3);
@@ -179,6 +181,10 @@ export function BuildImporter({ modCategory, numSlots, onImport, onClose }: Buil
       }
       setOcrError("Failed to process image. Please try again.");
     } finally {
+      if (worker) {
+        try { await worker.terminate(); } catch { /* already terminated */ }
+      }
+      if (url) URL.revokeObjectURL(url);
       setIsProcessing(false);
     }
   }, [modCategory]);
@@ -355,6 +361,8 @@ export function BuildImporter({ modCategory, numSlots, onImport, onClose }: Buil
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) handleScreenshot(file);
+              // Allow re-selecting the same file after a failure
+              e.target.value = "";
             }}
           />
           {ocrError && (

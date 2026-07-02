@@ -157,14 +157,38 @@ export function summarizeBuildPreview(type: string, data: unknown): BuildPreview
         modSummary: count === 0 ? "No mods equipped" : `${count} mod${count === 1 ? "" : "s"}`,
       };
     }
-    case "archwing":
-    case "railjack": {
-      const modChips = modChipsFromSlots(d.mods as ModSlot[]);
+    case "archwing": {
+      const modChips = modChipsFromSlots(d.frameMods as ModSlot[] | undefined);
+      const weaponChips = modChipsFromSlots(d.weaponMods as ModSlot[] | undefined);
+      if (weaponChips.length > 0) {
+        extraLines.push(`Weapon: ${weaponChips.length} mod${weaponChips.length === 1 ? "" : "s"}`);
+      }
       const count = modChips.length;
       return {
-        itemName: type === "archwing" ? "Archwing / Necramech" : "Railjack",
+        itemName: "Archwing / Necramech",
         itemImage: null,
-        typeLabel: type === "archwing" ? "Archwing" : "Railjack",
+        typeLabel: "Archwing",
+        modChips,
+        arcaneChips: [],
+        extraLines,
+        modSummary: count === 0 ? "No mods equipped" : `${count} mod${count === 1 ? "" : "s"}`,
+      };
+    }
+    case "railjack": {
+      const modChips = modChipsFromSlots(d.integratedMods as ModSlot[] | undefined);
+      const battleChips = modChipsFromSlots(d.battleMods as ModSlot[] | undefined);
+      const tacticalChips = modChipsFromSlots(d.tacticalMods as ModSlot[] | undefined);
+      if (battleChips.length > 0) {
+        extraLines.push(`Battle: ${battleChips.length} mod${battleChips.length === 1 ? "" : "s"}`);
+      }
+      if (tacticalChips.length > 0) {
+        extraLines.push(`Tactical: ${tacticalChips.length} mod${tacticalChips.length === 1 ? "" : "s"}`);
+      }
+      const count = modChips.length;
+      return {
+        itemName: "Railjack",
+        itemImage: null,
+        typeLabel: "Railjack",
         modChips,
         arcaneChips: [],
         extraLines,

@@ -47,7 +47,11 @@ export function saveLoadout(loadout: Loadout): void {
   } else {
     loadouts.push({ ...loadout, createdAt: Date.now(), updatedAt: Date.now() });
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(loadouts));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(loadouts));
+  } catch (err) {
+    console.warn("Failed to save loadouts to localStorage", err);
+  }
 }
 
 export function deleteLoadout(id: string): void {

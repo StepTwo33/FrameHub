@@ -45,6 +45,14 @@ export function checkRateLimit(
 }
 
 /**
+ * Clear a rate-limit key (e.g. after a successful login so legitimate
+ * sign-in/sign-out cycles don't count toward lockout).
+ */
+export function clearRateLimit(key: string): void {
+  store.delete(key);
+}
+
+/**
  * Extract client IP from request headers (Cloudflare / proxy aware).
  */
 export function getClientIp(headers: Headers): string {

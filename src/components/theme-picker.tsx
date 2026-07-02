@@ -70,12 +70,11 @@ export function ThemePicker() {
     setOpen(false);
   }, []);
 
-  const toggleMode = useCallback(() => {
-    const next = mode === "dark" ? "light" : "dark";
+  const selectMode = useCallback((next: "dark" | "light") => {
     setMode(next);
     applyMode(next);
     localStorage.setItem("framehub_mode", next);
-  }, [mode]);
+  }, []);
 
   const currentTheme = THEMES.find((t) => t.id === current) || THEMES[0];
 
@@ -100,7 +99,7 @@ export function ThemePicker() {
             <span className="text-[10px] font-semibold tracking-wider text-muted-foreground block mb-2">APPEARANCE</span>
             <div className="flex rounded-lg border border-border overflow-hidden">
               <button
-                onClick={toggleMode}
+                onClick={() => selectMode("light")}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors",
                   mode === "light"
@@ -111,7 +110,7 @@ export function ThemePicker() {
                 <Sun className="h-3.5 w-3.5" /> Light
               </button>
               <button
-                onClick={toggleMode}
+                onClick={() => selectMode("dark")}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors",
                   mode === "dark"

@@ -238,6 +238,7 @@ export default function CompanionBuilderPage() {
     const data: CompanionBuildData = {
       companionId: selectedCompanion.id,
       mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      weaponId: selectedWeapon?.id,
       weaponMods: weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       arcaneIds: [],
       hasReactor,
@@ -263,13 +264,19 @@ export default function CompanionBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("companion"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedCompanion, equippedMods, weaponMods, hasReactor, isMR30, slotPolarities, currentBuildId]);
+  }, [selectedCompanion, equippedMods, selectedWeapon, weaponMods, hasReactor, isMR30, slotPolarities, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as CompanionBuildData;
@@ -280,6 +287,11 @@ export default function CompanionBuilderPage() {
       const mod = modsMap.get(m.modId);
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
+    if (d.weaponId) {
+      // Restore the companion weapon so the weapon-mod grid shows the saved mods
+      const weapon = getCompanionWeapons(comp, allWeapons).find((w) => w.id === d.weaponId) ?? null;
+      setSelectedWeapon(weapon);
+    }
     setWeaponMods((d.weaponMods || []).map((m) => {
       const mod = modsMap.get(m.modId);
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
@@ -294,7 +306,7 @@ export default function CompanionBuilderPage() {
     setShowSavedBuilds(false);
     setShowCompanionList(false);
     toast.info("Build loaded", { description: build.name });
-  }, [allCompanions]);
+  }, [allCompanions, allWeapons]);
 
   useCloudBuildFromUrl("companion", handleLoadBuild);
 

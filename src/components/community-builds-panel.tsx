@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PublicBuildSummary } from "@/lib/build-types";
@@ -26,8 +26,10 @@ export function CommunityBuildsPanel({
   const [builds, setBuilds] = useState<(PublicBuildSummary & { voted?: boolean })[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const requestIdRef = useRef(0);
 
   const fetchBuilds = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -39,12 +41,20 @@ export function CommunityBuildsPanel({
       const res = await fetch(`/api/builds/public?${params}`);
       if (!res.ok) return;
       const data = await res.json();
+      if (requestId !== requestIdRef.current) return; // stale response
       setBuilds(data.builds ?? []);
       setLoaded(true);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, [type, itemId, sort]);
+
+  // Reset when the selected item changes so we refetch for the new item
+  useEffect(() => {
+    requestIdRef.current++;
+    setBuilds([]);
+    setLoaded(false);
+  }, [type, itemId]);
 
   useEffect(() => {
     if (expanded && !loaded) {

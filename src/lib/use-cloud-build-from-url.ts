@@ -61,6 +61,9 @@ export function useCloudBuildFromUrl(
       return;
     }
     if (loadedIdRef.current === buildId) return;
+    // Mark as attempted up-front so failures aren't retried (and toasts aren't
+    // duplicated) by StrictMode's double mount
+    loadedIdRef.current = buildId;
 
     const build = await fetchCloudBuild(buildId);
     if (!build) {
@@ -72,7 +75,6 @@ export function useCloudBuildFromUrl(
       return;
     }
 
-    loadedIdRef.current = buildId;
     onLoadRef.current(build);
   }, [expectedType]);
 

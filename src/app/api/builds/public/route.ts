@@ -68,33 +68,40 @@ export async function GET(req: NextRequest) {
     ];
   }
 
+  // `id` tie-breaker keeps cursor pagination stable when sort keys collide.
   const orderBy =
     sort === "popular"
-      ? [{ upvoteCount: "desc" as const }, { updatedAt: "desc" as const }]
-      : [{ updatedAt: "desc" as const }];
+      ? [{ upvoteCount: "desc" as const }, { updatedAt: "desc" as const }, { id: "desc" as const }]
+      : [{ updatedAt: "desc" as const }, { id: "desc" as const }];
 
-  const builds = await prisma.build.findMany({
-    where,
-    orderBy,
-    take: limit + 1,
-    ...(cursor
-      ? {
-          cursor: { id: cursor },
-          skip: 1,
-        }
-      : {}),
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      type: true,
-      itemId: true,
-      upvoteCount: true,
-      createdAt: true,
-      updatedAt: true,
-      user: { select: { username: true, name: true, image: true } },
-    },
-  });
+  let builds;
+  try {
+    builds = await prisma.build.findMany({
+      where,
+      orderBy,
+      take: limit + 1,
+      ...(cursor
+        ? {
+            cursor: { id: cursor },
+            skip: 1,
+          }
+        : {}),
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        type: true,
+        itemId: true,
+        upvoteCount: true,
+        createdAt: true,
+        updatedAt: true,
+        user: { select: { username: true, name: true, image: true } },
+      },
+    });
+  } catch {
+    // Cursor build may have been deleted/unpublished since the previous page.
+    return NextResponse.json({ builds: [], nextCursor: null });
+  }
 
   const hasMore = builds.length > limit;
   const page = hasMore ? builds.slice(0, limit) : builds;

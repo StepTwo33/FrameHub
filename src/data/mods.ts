@@ -14377,18 +14377,6 @@ export const allMods: Mod[] = [
     "rarity": "common"
   },
   {
-    "id": "bloodthirst",
-    "name": "Bloodthirst",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 3,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {},
-    "description": "100 health stolen each hit per stack of <DT_SLASH_COLOR>Slash.",
-    "rarity": "common"
-  },
-  {
     "id": "botanist",
     "name": "Botanist",
     "polarity": "penjaga",
@@ -14502,20 +14490,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.0 Damage.",
     "rarity": "common"
-  },
-  {
-    "id": "cull_the_weak",
-    "name": "Cull The Weak",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "damage": 40
-    },
-    "description": "+60% Melee Damage per Status Type affecting the target, Non-Critical hits deal +240% damage",
-    "rarity": "uncommon"
   },
   {
     "id": "detect_vulnerability",
@@ -14903,20 +14877,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "precision_conditioning",
-    "name": "Precision Conditioning",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 10,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "damage": 35
-    },
-    "description": "+385% Melee Damage, Convert all base Physical Damage to <DT_SLASH_COLOR>Slash Damage",
-    "rarity": "uncommon"
-  },
-  {
     "id": "proboscis",
     "name": "Proboscis",
     "polarity": "penjaga",
@@ -14938,20 +14898,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "18% chance to double Credit pickups",
-    "rarity": "rare"
-  },
-  {
-    "id": "radon_claws",
-    "name": "Radon Claws",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 3,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "criticalMultiplier": 20
-    },
-    "description": "+60% <DT_RADIATION_COLOR>Radiation, +80% Critical Damage",
     "rarity": "rare"
   },
   {
@@ -16547,18 +16493,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "da_ren",
-    "name": "Da-Ren",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+300 Operator Shields, +30 bonus for each <UNAIRU_CLEAN>Unairu School Mod",
-    "rarity": "uncommon"
-  },
-  {
     "id": "deadly_efficiency",
     "name": "Deadly Efficiency",
     "polarity": "madurai",
@@ -16787,18 +16721,6 @@ export const allMods: Mod[] = [
     "rarity": "common"
   },
   {
-    "id": "empazu_shol",
-    "name": "Empazu-Shol",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "+12% Tauron Strike Initial Charge., +2% bonus for each Mod from a unique School",
-    "rarity": "rare"
-  },
-  {
     "id": "enduring_tides",
     "name": "Enduring Tides",
     "polarity": "vazarin",
@@ -16835,18 +16757,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "esti_vel_ikha",
-    "name": "Esti Vel-Ikha",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "Increases maximum Void Sling distance by +30%., +10% Void Sling radius for each Mod from a unique School",
-    "rarity": "rare"
-  },
-  {
     "id": "eternal_gaze",
     "name": "Eternal Gaze",
     "polarity": "madurai",
@@ -16857,18 +16767,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Increase Energy Regeneration Rate for Amps and Void Beam by 60%.",
     "rarity": "rare"
-  },
-  {
-    "id": "evir_ti",
-    "name": "Evir-Ti",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 3,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+60% Operator Jump Height",
-    "rarity": "common"
   },
   {
     "id": "executing_dash",
@@ -17399,18 +17297,6 @@ export const allMods: Mod[] = [
     "rarity": "common"
   },
   {
-    "id": "hayan_dabor",
-    "name": "Hayan-Dabor",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+60% Amp Multishot",
-    "rarity": "common"
-  },
-  {
     "id": "hit_and_run",
     "name": "Hit And Run",
     "polarity": "universal",
@@ -17421,18 +17307,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "+60% Parkour Speed after a Mercy for 15s",
     "rarity": "uncommon"
-  },
-  {
-    "id": "hok_kaal",
-    "name": "Hok-Kaal",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)",
-    "rarity": "common"
   },
   {
     "id": "hollowed_bullets",
@@ -17676,20 +17550,6 @@ export const allMods: Mod[] = [
     "rarity": "common"
   },
   {
-    "id": "kaal_zidi",
-    "name": "Kaal-Zidi",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {
-      "sprintSpeed": 0.8333
-    },
-    "description": "+30% Void Mode efficiency, +5% Movement Speed in Void Mode for each <NARAMON_CLEAN>Naramon School Mod",
-    "rarity": "uncommon"
-  },
-  {
     "id": "keep_clean",
     "name": "Keep-Clean",
     "polarity": "universal",
@@ -17788,18 +17648,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
-  },
-  {
-    "id": "lashta_vak",
-    "name": "Lashta-Vak",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "Void Sling emits a pulse that breaks Containers within 12 m, +2m bonus for each Mod from a unique School",
-    "rarity": "rare"
   },
   {
     "id": "last_gasp",
@@ -17929,18 +17777,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Summon forth Lorak from the Void and conjure its ruinous spells, calling forth a beam of energy from within. Enemies pierced by the beam have a 100% chance to drop Energy Orbs if killed within 10s.",
     "rarity": "rare"
-  },
-  {
-    "id": "lorun_tash",
-    "name": "Lorun-Tash",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 3,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+400 Operator Armor",
-    "rarity": "common"
   },
   {
     "id": "mad_stack",
@@ -18208,30 +18044,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Increases Affinity Radius by 25m.",
     "rarity": "common"
-  },
-  {
-    "id": "metem_erun",
-    "name": "Metem-Erun",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "Increase Operator Sprint Speed by +30%, +5% bonus for each Mod from a unique School",
-    "rarity": "rare"
-  },
-  {
-    "id": "metem_hakh",
-    "name": "Metem-Hakh",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+30% Operator Health & Shields, +15% bonus for each Mod from a unique School",
-    "rarity": "rare"
   },
   {
     "id": "meteor_crash",
@@ -18815,18 +18627,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "omn_evi",
-    "name": "Omn-Evi",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+60% Amp Critical Chance, +10% Amp Critical Damage for each <ZENURIK_CLEAN>Zenurik School Mod",
     "rarity": "uncommon"
   },
   {
@@ -19946,18 +19746,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "sey_taph",
-    "name": "Sey-Taph",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+30% Void Sling Efficiency",
-    "rarity": "common"
-  },
-  {
     "id": "shadow_harvest",
     "name": "Shadow Harvest",
     "polarity": "naramon",
@@ -20112,18 +19900,6 @@ export const allMods: Mod[] = [
     },
     "description": "+90% <DT_SLASH_COLOR>Slash",
     "rarity": "common"
-  },
-  {
-    "id": "sil_tabol",
-    "name": "Sil-Tabol",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+60% Amp Status Chance, +15% Status Damage for each <VAZARIN_CLEAN>Vazarin School Mod",
-    "rarity": "uncommon"
   },
   {
     "id": "silent_battery",
@@ -20482,18 +20258,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "talsek_an",
-    "name": "Talsek-An",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "Gain knockdown immunity. When knockdown is blocked, enter Void Mode for 3s (cooldown 7.5s)",
-    "rarity": "common"
-  },
-  {
     "id": "teksetmod",
     "name": "Teksetmod",
     "polarity": "naramon",
@@ -20676,32 +20440,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "ubri_kaneph",
-    "name": "Ubri-Kaneph",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damage": 10
-    },
-    "description": "+60% Damage to Amps, +10% bonus for each Mod from a unique School",
-    "rarity": "rare"
-  },
-  {
-    "id": "ulashta_shol",
-    "name": "Ulashta-Shol",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 3,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "-60% Transference Static duration",
-    "rarity": "common"
-  },
-  {
     "id": "umbrasetmod",
     "name": "Umbrasetmod",
     "polarity": "naramon",
@@ -20845,30 +20583,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "",
-    "rarity": "common"
-  },
-  {
-    "id": "vik_anam",
-    "name": "Vik-Anam",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+30% Maximum Amp Energy, +5% Amp Energy Regen Rate for each <MADURAI_CLEAN>Madurai School Mod",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "vikla_safor",
-    "name": "Vikla-Safor",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+30% Amp Fire Rate, +30% Amp Ammo Efficiency",
     "rarity": "common"
   },
   {
@@ -21194,18 +20908,6 @@ export const allMods: Mod[] = [
     "stats": {},
     "description": "Its heralds are the stars it fells  The sky and Earth aflame",
     "rarity": "rare"
-  },
-  {
-    "id": "yar_dal",
-    "name": "Yar Dal",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "+300 Operator Health",
-    "rarity": "common"
   },
   {
     "id": "zaw_riven_mod",

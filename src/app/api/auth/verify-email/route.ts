@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
     validateVerificationToken,
-    findUserByEmail,
+    findUserByEmailInsensitive,
     createSession,
     SESSION_COOKIE,
     framehubSessionCookieOptions,
@@ -42,20 +42,21 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const valid = await validateVerificationToken(email, code);
-        if (!valid) {
+        // Look up the user first (case-insensitive) so token validation and the
+        // emailVerified update both use the email stored on the user row.
+        const user = await findUserByEmailInsensitive(email);
+        if (!user) {
             return NextResponse.json(
                 { error: "Invalid or expired verification code" },
                 { status: 400 }
             );
         }
 
-        // Auto-login after verification
-        const user = await findUserByEmail(email);
-        if (!user) {
+        const valid = await validateVerificationToken(user.email!, code);
+        if (!valid) {
             return NextResponse.json(
-                { error: "User not found" },
-                { status: 404 }
+                { error: "Invalid or expired verification code" },
+                { status: 400 }
             );
         }
 

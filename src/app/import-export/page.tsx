@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PageShell, PageMain, PageHero } from "@/components/page-shell";
 import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/build-storage";
 import { getLoadouts, saveLoadout, generateId } from "@/lib/loadouts";
@@ -145,19 +145,6 @@ export default function ImportExportPage() {
     });
   }, [selected]);
 
-  // Auto-import from URL code param
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code) {
-      setMode("import");
-      setImportCode(code);
-      // Clean URL
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
-
   const handleCopyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareLink);
@@ -177,10 +164,10 @@ export default function ImportExportPage() {
     } catch { /* fallback */ }
   }, [selected]);
 
-  const handleImport = useCallback(() => {
+  const handleImport = useCallback((codeOverride?: string) => {
     setImportError(null);
     setImportSuccess(null);
-    const code = importCode.trim();
+    const code = (codeOverride ?? importCode).trim();
     if (!code) {
       setImportError("Please paste a share code or link.");
       return;
@@ -256,6 +243,25 @@ export default function ImportExportPage() {
     }
     setImportCode("");
   }, [importCode]);
+
+  // Auto-import from URL code param
+  const autoImportedRef = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || autoImportedRef.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      autoImportedRef.current = true;
+      setMode("import");
+      setImportCode(code);
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      // Only auto-trigger the import when the code actually decodes
+      if (decompressFromShare(code)) {
+        handleImport(code);
+      }
+    }
+  }, [handleImport]);
 
   const handlePaste = useCallback(async () => {
     try {
@@ -437,7 +443,7 @@ export default function ImportExportPage() {
                     </button>
                   )}
                   <button
-                    onClick={handleImport}
+                    onClick={() => handleImport()}
                     disabled={!importCode.trim()}
                     className="flex items-center gap-1.5 px-4 py-2 text-xs rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-colors ml-auto font-medium disabled:opacity-50"
                   >

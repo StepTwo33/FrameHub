@@ -10,10 +10,10 @@ export async function GET() {
     return NextResponse.json({ user: null });
   }
 
-  // Refresh key fields from DB so role/username changes are immediate
+  // Refresh key fields from DB so role/username/verification changes are immediate
   const dbUser = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { role: true, username: true, name: true, image: true },
+    select: { role: true, username: true, name: true, image: true, emailVerified: true },
   });
 
   if (!dbUser) {
@@ -21,6 +21,11 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    user: { ...session.user, ...dbUser },
+    user: {
+      ...session.user,
+      ...dbUser,
+      // DB stores a DateTime | null; the client expects the JWT's boolean shape.
+      emailVerified: !!dbUser.emailVerified,
+    },
   });
 }

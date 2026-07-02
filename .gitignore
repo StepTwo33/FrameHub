@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+*.kate-swp
 tmp-wiki*.json
 
 # debug

@@ -100,6 +100,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(report, { status: 201 });
   } catch (e) {
     logServerError("POST /api/reports", e);
-    return NextResponse.json({ error: "Failed to create report" }, { status: 400 });
+    return NextResponse.json({ error: "Failed to create report" }, { status: 500 });
   }
 }

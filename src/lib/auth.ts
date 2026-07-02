@@ -224,6 +224,21 @@ export async function findUserByEmail(email: string) {
   return prisma.user.findUnique({ where: { email }, select: AUTH_USER_SELECT });
 }
 
+/**
+ * Case-insensitive email lookup. SQLite unique columns are case-sensitive, so
+ * existing rows may be stored with mixed casing; try the exact string first,
+ * then the lowercased form. Callers should use the returned `user.email` for
+ * any follow-up queries so they stay consistent with the stored row.
+ */
+export async function findUserByEmailInsensitive(email: string) {
+  const trimmed = email.trim();
+  const exact = await prisma.user.findUnique({ where: { email: trimmed }, select: AUTH_USER_SELECT });
+  if (exact) return exact;
+  const lower = trimmed.toLowerCase();
+  if (lower === trimmed) return null;
+  return prisma.user.findUnique({ where: { email: lower }, select: AUTH_USER_SELECT });
+}
+
 // --------------- Session (JWT) ---------------
 
 export async function createSession(user: Session["user"]): Promise<string> {

@@ -122,14 +122,15 @@ export function scaleShield(base: number, level: number): number {
 }
 
 // ── Crit averaging (yellow / orange / red) ────────────────────────────
+// Warframe crit tier damage: tier × (cm − 1) + 1 (yellow = cm, orange = 2(cm−1)+1, …)
 export function avgCritMult(cc: number, cm: number): number {
   if (cc <= 0) return 1.0;
   if (cc <= 1.0) return 1.0 + cc * (cm - 1.0);
-  if (cc <= 2.0) { const o = cc - 1; return (1 - o) * cm + o * 2 * cm; }
-  if (cc <= 3.0) { const r = cc - 2; return (1 - r) * 2 * cm + r * 3 * cm; }
   const tier = Math.floor(cc);
   const rem = cc - tier;
-  return (1 - rem) * tier * cm + rem * (tier + 1) * cm;
+  const currentTierDmg = tier * (cm - 1.0) + 1.0;
+  const nextTierDmg = (tier + 1) * (cm - 1.0) + 1.0;
+  return (1 - rem) * currentTierDmg + rem * nextTierDmg;
 }
 
 // ── Main TTK interface & calculator ───────────────────────────────────
@@ -171,8 +172,17 @@ export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: nu
   };
   if (totalRaw <= 0) return zero;
 
-  // Status procs per second
-  const procsPerSec = stats.fireRate * stats.statusChance * stats.multishot;
+  // Status procs per second — arsenal-style per-shot chance aggregated across
+  // pellets (setStatusChancePerShot in calculator.ts), with a local fallback.
+  // Clamp inputs so riven curses can't produce negative proc rates.
+  const multishot = Math.max(0, stats.multishot);
+  const statusChance = Math.min(1, Math.max(0, stats.statusChance));
+  const statusChancePerShot = stats.statusChancePerShot != null
+    ? Math.min(1, Math.max(0, stats.statusChancePerShot))
+    : multishot > 1.0001
+      ? 1 - Math.pow(1 - statusChance, multishot)
+      : statusChance;
+  const procsPerSec = Math.max(0, stats.fireRate) * statusChancePerShot;
 
   // Corrosive armor strip: 26% per stack (multiplicative), max 10 stacks
   // Estimate average stacks during a ~3s engagement window
@@ -231,27 +241,29 @@ export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: nu
     dotDps += slashPPS * dpsPerProc * (1 + slashHM) * viralMult;
   }
 
-  // Heat DoT: 50% base per tick, 6 ticks over 6s, doesn't bypass armor
+  // Heat DoT: 50% base per tick, 7 ticks over 6s, doesn't bypass armor
   const heatDmg = dmgTypes.find((d) => d.type === "heat");
   if (heatDmg && procsPerSec > 0) {
     const heatPPS = procsPerSec * (heatDmg.value / totalRaw);
     const tickDmg = totalRaw * 0.5;
+    const dpsPerProc = tickDmg * (7 / 6); // sustained DPS per active proc
     const heatHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "heat");
-    dotDps += heatPPS * tickDmg * (1 + heatHM) * (1 - armorDR);
+    dotDps += heatPPS * dpsPerProc * (1 + heatHM) * (1 - armorDR);
   }
 
-  // Toxin DoT: 50% base per tick, 8 ticks over 8s, bypasses shields
+  // Toxin DoT: 50% base per tick, 7 ticks over 6s, bypasses shields
   const toxinDmg = dmgTypes.find((d) => d.type === "toxin");
   if (toxinDmg && procsPerSec > 0) {
     const toxinPPS = procsPerSec * (toxinDmg.value / totalRaw);
     const tickDmg = totalRaw * 0.5;
+    const dpsPerProc = tickDmg * (7 / 6); // sustained DPS per active proc
     const toxinHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "toxin");
-    dotDps += toxinPPS * tickDmg * (1 + toxinHM) * (1 - armorDR);
+    dotDps += toxinPPS * dpsPerProc * (1 + toxinHM) * (1 - armorDR);
   }
 
   // Shot-level calculations
   const acm = avgCritMult(stats.criticalChance, stats.criticalMultiplier);
-  const rawPerShot = totalRaw * stats.multishot * acm;
+  const rawPerShot = totalRaw * multishot * acm;
   const shieldPerShot = rawPerShot * shieldRatio;
   const healthPerShot = rawPerShot * healthRatio;
 

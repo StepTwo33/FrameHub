@@ -81,11 +81,16 @@ export async function POST(req: NextRequest) {
 
   const itemId = extractBuildItemId(type, data);
 
-  // Upsert: update if id exists and belongs to user, otherwise create
+  // Upsert: update if id exists and belongs to user; reject if it belongs to
+  // someone else (silently creating a copy caused repeated duplicates); fall
+  // through to create only when the id no longer exists (e.g. deleted build).
   if (id) {
-    const existing = await prisma.build.findFirst({
-      where: { id, userId: session.user.id },
+    const existing = await prisma.build.findUnique({
+      where: { id },
     });
+    if (existing && existing.userId !== session.user.id) {
+      return NextResponse.json({ error: "You do not own this build" }, { status: 403 });
+    }
     if (existing) {
       const updated = await prisma.build.update({
         where: { id },

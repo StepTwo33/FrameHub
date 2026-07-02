@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ThumbsUp, Loader2, ExternalLink, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
@@ -103,6 +104,7 @@ interface PublicBuildRowProps {
 }
 
 export function PublicBuildRow({ build, showVote = true, onLoad, compact = false }: PublicBuildRowProps) {
+  const router = useRouter();
   return (
     <div
       className={cn(
@@ -122,13 +124,26 @@ export function PublicBuildRow({ build, showVote = true, onLoad, compact = false
           )}
           <div className="text-[10px] text-muted-foreground mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
             {build.author.profileSlug ? (
-              <Link
-                href={`/u/${build.author.profileSlug}`}
-                onClick={(e) => e.stopPropagation()}
-                className="hover:text-primary transition-colors"
+              // Not a <Link>: nesting an anchor inside the row's anchor is invalid HTML
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(`/u/${build.author.profileSlug}`);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(`/u/${build.author.profileSlug}`);
+                  }
+                }}
+                className="hover:text-primary transition-colors cursor-pointer"
               >
                 @{build.author.username}
-              </Link>
+              </span>
             ) : (
               <span>@{build.author.username}</span>
             )}

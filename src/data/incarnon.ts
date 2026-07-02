@@ -179,7 +179,7 @@ function resolveIncarnonEvolutions(data: IncarnonWeaponData, isMelee: boolean): 
 }
 
 export const INCARNON_WEAPON_IDS = new Set([
-  "ack_and_brunt",
+  "ack_&_brunt",
   "ack_brunt_incarnon",
   "angstrum",
   "angstrum_incarnon",
@@ -229,9 +229,9 @@ export const INCARNON_WEAPON_IDS = new Set([
   "dual_toxocyst",
   "dual_toxocyst_incarnon",
   "felarx",
-  "furax",
+  "furia",
   "furax_incarnon",
-  "furax_wraith",
+  "furia_wraith",
   "furis",
   "furis_incarnon",
   "gammacor",
@@ -1204,7 +1204,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
     weaponName: "Ack & Brunt Incarnon",
     challenge: "Block 1000 damage",
     category: "genesis_melee",
-    variants: ["ack_and_brunt"],
+    variants: ["ack_&_brunt"],
     forms: [
       { name: "Ack & Brunt", damage: 230.0, fireRate: 0.833, criticalChance: 0.1, criticalMultiplier: 2.0, statusChance: 0.25, triggerType: "Melee" },
       { name: "Ack & Brunt Incarnon", damage: 460.0, fireRate: 0.833, criticalChance: 0.22, criticalMultiplier: 2.5, statusChance: 0.4, triggerType: "Melee", specialMechanics: { evolutionMode: "Shield throw with void explosion on return", modeSwitch: "Block damage builds evolution" } },
@@ -1296,7 +1296,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
     weaponName: "Furax Incarnon",
     challenge: "Kill 100 enemies with Ground Finishers",
     category: "genesis_melee",
-    variants: ["furax", "mk1_furax", "furax_wraith"],
+    variants: ["furia", "mk1_furax", "furia_wraith"],
     forms: [
       { name: "Furax", damage: 130.0, fireRate: 1.0, criticalChance: 0.2, criticalMultiplier: 2.0, statusChance: 0.1, triggerType: "Melee" },
       { name: "Furax Incarnon", damage: 260.0, fireRate: 1.0, criticalChance: 0.32, criticalMultiplier: 2.5, statusChance: 0.22, triggerType: "Melee", specialMechanics: { evolutionMode: "Void-charged uppercut with knockback wave", modeSwitch: "Ground finisher kills" } },
@@ -1498,13 +1498,13 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
 // Melee weapon IDs (for determining evolution pool)
 const MELEE_INCARNON_IDS = new Set([
   "innodem", "praedos", "ruvox",
-  "ack_brunt_incarnon", "ack_and_brunt",
+  "ack_brunt_incarnon", "ack_&_brunt",
   "anku_incarnon", "anku",
   "bo_incarnon", "bo", "bo_prime", "mk1_bo",
   "ceramic_dagger_incarnon", "ceramic_dagger",
   "destreza_incarnon", "destreza", "destreza_prime",
   "dual_ichor_incarnon", "dual_ichor",
-  "furax_incarnon", "furax", "furax_wraith", "mk1_furax",
+  "furax_incarnon", "furia", "furia_wraith", "mk1_furax",
   "hate_incarnon", "hate",
   "magistar_incarnon", "magistar", "sancti_magistar",
   "nami_solo_incarnon", "nami_solo",

@@ -120,7 +120,7 @@ export function Header() {
     const refresh = () => {
       fetch("/api/auth/session")
         .then((r) => r.json())
-        .then((data) => { if (data.user) setUser(data.user); })
+        .then((data) => { setUser(data.user ?? null); })
         .catch(() => {});
     };
     window.addEventListener("framehub-profile-updated", refresh);

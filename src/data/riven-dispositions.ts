@@ -428,7 +428,7 @@ export const rivenDispositions: Record<string, number> = {
   "Spectra Vandal": 1.4,
   "Spira": 1.4,
   "Stubba": 1.4,
-  "Talons": 1.4,
+  "Valkyr Talons": 1.4,
   "Tenet Diplos": 0.8,
   "Tenet Plinx": 0.6,
   "Tenet Spirex": 1.0,
@@ -602,10 +602,7 @@ export const rivenDispositions: Record<string, number> = {
   "Veritux": 0.6,
   "Vulcax": 1.0,
   "Venato": 1.2,
-  "Venato Prime": 0.6,
-  "min": 0.0,
-  "max": 0.0,
-  "chance": 100.0
+  "Venato Prime": 0.6
 };
 
 export function getDisposition(weaponName: string): number {

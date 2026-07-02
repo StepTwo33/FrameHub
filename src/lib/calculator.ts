@@ -72,14 +72,15 @@ function findCombo(a: string, b: string): string | null {
 const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: string }> = {
   impact:      { duration: 1, ticks: 1, desc: 'Stagger' },
   puncture:    { duration: 6, ticks: 1, desc: '-30% damage dealt' },
-  slash:       { duration: 6, ticks: 6, desc: 'Bleed (True damage, bypasses armor)' },
-  heat:        { duration: 6, ticks: 6, desc: 'Ignite (50% base damage/tick, panic)' },
+  // DoTs tick immediately plus once per second for 6s = 7 ticks over 6s
+  slash:       { duration: 6, ticks: 7, desc: 'Bleed (True damage, bypasses armor)' },
+  heat:        { duration: 6, ticks: 7, desc: 'Ignite (50% base damage/tick, panic)' },
   cold:        { duration: 6, ticks: 1, desc: '-50% movement/fire rate' },
-  toxin:       { duration: 6, ticks: 6, desc: 'Poison (bypasses shields)' },
+  toxin:       { duration: 6, ticks: 7, desc: 'Poison (bypasses shields)' },
   electricity: { duration: 6, ticks: 1, desc: 'Chain stun to nearby enemies' },
   blast:       { duration: 6, ticks: 1, desc: 'Detonate: 30% base dmg/stack after 1.5s, AoE at 10 stacks' },
   corrosive:   { duration: 8, ticks: 1, desc: '-26% armor per stack (max 10)' },
-  gas:         { duration: 6, ticks: 6, desc: 'Toxin AoE cloud' },
+  gas:         { duration: 6, ticks: 7, desc: 'Toxin AoE cloud' },
   magnetic:    { duration: 6, ticks: 1, desc: '-75% shields, +100% shield damage' },
   radiation:   { duration: 12, ticks: 1, desc: 'Confusion (friendly fire)' },
   viral:       { duration: 6, ticks: 1, desc: '+100% health damage per stack (max 10)' },
@@ -126,10 +127,10 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
 // Not modeled in DPS: Augur shield sustain from casts, Hunter proc timing, Mecha explosion burst.
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
-// Sacrificial set bonus: [0.25, 0.50]
+// Sacrificial full set bonus: +75% when both mods equipped
 function getSacrificialSetBonus(sacCount: number): number {
   if (sacCount < 2) return 0;
-  return 0.50; // Only 2 mods exist, so max is index 1
+  return 0.75;
 }
 
 // Gladiator set: +10% CC per combo multiplier per set mod equipped
@@ -199,6 +200,8 @@ export function calculateWeaponBuild(
   simParams?: SimulationParams,
   calcOptions?: WeaponCalculationOptions,
   linkage?: SetBonusLinkage,
+  /** Riven stat fractions (1.2 = +120%); crit/status apply relative to the modded stat, unlike flat incarnon changes. */
+  rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
@@ -432,14 +435,27 @@ export function calculateWeaponBuild(
   const elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
   stats.totalDamage = physicalDmg + elementalDmg;
 
-  // Apply Incarnon evolution stat changes
-  if (incarnonStatChanges) {
-    for (const [stat, value] of Object.entries(incarnonStatChanges)) {
+  // Apply Incarnon evolution / riven stat changes.
+  // relativeCritStatus: riven crit/status/critMult bonuses are relative fractions on
+  // the base stat (they join the mod bonus pool); apply them multiplicatively like
+  // 'damage'. Incarnon crit/status changes are flat absolute adds (e.g. Devouring
+  // Attrition criticalMultiplier: 2.5 = +2.5x crit damage), so they keep +=.
+  const applyStatChanges = (changes: Record<string, number>, relativeCritStatus: boolean) => {
+    for (const [stat, value] of Object.entries(changes)) {
       switch (stat) {
         case 'damage': stats.totalDamage *= (1 + value); stats.impact *= (1 + value); stats.puncture *= (1 + value); stats.slash *= (1 + value); break;
-        case 'criticalChance': stats.criticalChance += value; break;
-        case 'criticalMultiplier': stats.criticalMultiplier += value; break;
-        case 'statusChance': stats.statusChance += value; break;
+        case 'criticalChance':
+          if (relativeCritStatus) stats.criticalChance *= (1 + value);
+          else stats.criticalChance += value;
+          break;
+        case 'criticalMultiplier':
+          if (relativeCritStatus) stats.criticalMultiplier *= (1 + value);
+          else stats.criticalMultiplier += value;
+          break;
+        case 'statusChance':
+          if (relativeCritStatus) stats.statusChance *= (1 + value);
+          else stats.statusChance += value;
+          break;
         case 'fireRate': stats.fireRate *= (1 + value); break;
         case 'multishot': stats.multishot += value; break;
         case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
@@ -471,7 +487,9 @@ export function calculateWeaponBuild(
     const physDmg2 = stats.impact + stats.puncture + stats.slash;
     const eleDmg2 = stats.elements.reduce((sum, e) => sum + e.value, 0);
     stats.totalDamage = physDmg2 + eleDmg2;
-  }
+  };
+  if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
+  if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
 
   // Tek 4-set: +60% damage vs marked enemies (primary-style weapons; optional sim)
   const tekPieces = linkage
@@ -519,7 +537,9 @@ export function calculateWeaponBuild(
       stats.statusChance *= (1 + weepingWoundsValue * (stats.comboMultiplier - 1));
     }
 
-    stats.heavyAttackDamage = stats.totalDamage * stats.heavyAttackComboMultiplier;
+    // Heavy attacks can crit: fold in the average crit multiplier
+    stats.heavyAttackDamage = stats.totalDamage * stats.heavyAttackComboMultiplier
+      * avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
   }
 
   // Vigilante: +5% per equipped set mod to upgrade primary crit tier (not secondaries / melee)
@@ -703,63 +723,72 @@ function setStatusChancePerShot(stats: CalculatedStats, baseWeapon: Weapon): voi
   }
 }
 
+/**
+ * Weapon arcanes carry no explicit stacking flag in the data. Stacking on-kill
+ * arcanes (Merciless, Deadhead, …) describe their cap ("max 12", "Stacks up to 10x");
+ * parse it and clamp the simulated stack count. Static rank-based arcanes (no stack
+ * language, e.g. Virtuos Strike) apply their value once — weapon builds don't store
+ * arcane ranks, matching how applyArcaneToWarframe is called with stacks = 1.
+ */
+function effectiveWeaponArcaneStacks(arcane: Mod, simStacks: number): number {
+  if (simStacks <= 0) return 0;
+  const desc = arcane.description.toLowerCase();
+  if (!desc.includes('stack')) return 1;
+  const capMatch = desc.match(/max(?:imum)? (\d+)|stacks? up to (\d+)x/);
+  const cap = capMatch ? parseInt(capMatch[1] ?? capMatch[2], 10) : arcane.maxRank + 1;
+  return Math.min(simStacks, cap);
+}
+
 // Apply arcane stats to weapon
 // stacks: number of active stacks (1 = base effect, higher = scaled)
-export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks: number = 1): void {
+// baseWeapon: crit/status arcane bonuses are relative to the weapon's BASE stat
+// (they join the additive mod pool), not flat adds onto the modded stat.
+export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks: number = 1, baseWeapon?: Weapon): void {
   if (stacks <= 0) return;
+  const baseCritChance = baseWeapon?.criticalChance ?? stats.criticalChance;
+  const baseCritMult = baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
+  const baseStatusChance = baseWeapon?.statusChance ?? stats.statusChance;
+  const applyDamage = (scaled: number) => {
+    stats.totalDamage *= (1 + scaled);
+    stats.impact *= (1 + scaled);
+    stats.puncture *= (1 + scaled);
+    stats.slash *= (1 + scaled);
+    for (const e of stats.elements) e.value *= (1 + scaled);
+    for (const e of stats.rawElements) e.value *= (1 + scaled);
+  };
   for (const [stat, value] of Object.entries(arcane.stats)) {
     const scaled = (value * stacks) / 100;
     switch (stat) {
       case 'criticalChance':
-        stats.criticalChance += scaled;
+      case 'ampCritChance':
+        stats.criticalChance += baseCritChance * scaled;
         break;
       case 'criticalMultiplier':
-        stats.criticalMultiplier += scaled;
+      case 'ampCritDamage':
+        stats.criticalMultiplier += baseCritMult * scaled;
         break;
       case 'fireRate':
-        stats.fireRate *= (1 + scaled);
-        break;
-      case 'damage':
-        stats.totalDamage *= (1 + scaled);
-        stats.impact *= (1 + scaled);
-        stats.puncture *= (1 + scaled);
-        stats.slash *= (1 + scaled);
-        break;
-      case 'multishot':
-        stats.multishot += scaled;
-        break;
-      case 'statusChance':
-        stats.statusChance += scaled;
-        break;
-      case 'reloadSpeed':
-        if (scaled > 0) stats.reloadTime /= (1 + scaled);
-        break;
-      case 'ampDamage':
-        stats.totalDamage *= (1 + scaled);
-        stats.impact *= (1 + scaled);
-        stats.puncture *= (1 + scaled);
-        stats.slash *= (1 + scaled);
-        break;
-      case 'ampHeatDamage':
-        // Heat-only bonus; not folded into single-type amp DPS here
-        break;
-      case 'ampCritChance':
-        stats.criticalChance += scaled;
-        break;
-      case 'ampCritDamage':
-        stats.criticalMultiplier += scaled;
-        break;
       case 'ampFireRate':
         stats.fireRate *= (1 + scaled);
         break;
+      case 'damage':
+      case 'ampDamage':
+        applyDamage(scaled);
+        break;
+      case 'multishot':
       case 'ampMultishot':
         stats.multishot += scaled;
         break;
+      case 'statusChance':
       case 'ampStatusChance':
-        stats.statusChance += scaled;
+        stats.statusChance += baseStatusChance * scaled;
         break;
+      case 'reloadSpeed':
       case 'ampReload':
         if (scaled > 0) stats.reloadTime /= (1 + scaled);
+        break;
+      case 'ampHeatDamage':
+        // Heat-only bonus; not folded into single-type amp DPS here
         break;
       case 'ampRange':
         // Flat meters per rank; not modeled on CalculatedStats
@@ -849,11 +878,12 @@ export function calculateWeaponBuildWithArcanes(
   simParams?: SimulationParams,
   calcOptions?: WeaponCalculationOptions,
   linkage?: SetBonusLinkage,
+  rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
-  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions, linkage);
+  const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions, linkage, rivenStatChanges);
   for (const arcane of arcanes) {
-    applyArcaneToWeapon(stats, arcane, sim.arcaneStacks);
+    applyArcaneToWeapon(stats, arcane, effectiveWeaponArcaneStacks(arcane, sim.arcaneStacks), baseWeapon);
   }
   setStatusChancePerShot(stats, baseWeapon);
   stats.burstDps = calculateBurstDps(stats);

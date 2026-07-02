@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import {
   ItemPickerScreen,
@@ -30,7 +30,7 @@ import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
 import { formatAbilityDescription } from "@/lib/ability-text";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
-import { buildShareUrl, ShareableBuild } from "@/lib/build-url";
+import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
@@ -264,6 +264,50 @@ export default function WarframeBuilderPage() {
     });
   }, []);
 
+  // Load build from URL ?build= param (hash share links)
+  useEffect(() => {
+    queueMicrotask(() => {
+      const params = new URLSearchParams(window.location.search);
+      const shared = extractBuildFromUrl(params);
+      if (!shared || shared.type !== "warframe") return;
+      const wf = allWarframes.find((w) => w.id === shared.itemId);
+      if (!wf) return;
+      setSelectedWarframe(wf);
+      setShowWarframeList(false);
+      setEquippedMods(shared.mods.map((m, i) => {
+        const mod = modsMap.get(m.id);
+        return { modId: m.id, modName: mod?.name ?? "", rank: m.rank, slotIndex: m.slotIndex ?? i, polarity: mod?.polarity, drain: mod?.drain };
+      }));
+      if (shared.arcanes) {
+        setEquippedArcanes(resolveSavedArcaneSlots(shared.arcanes.map((id) => id || null), 2));
+      }
+      if (shared.shards && shared.shards.length > 0) {
+        const restored: (EquippedArchonShard | null)[] = [...EMPTY_SHARDS];
+        shared.shards.forEach((s, i) => {
+          if (i >= restored.length) return;
+          const def = allArchonShards.find((sh) => sh.id === s.id);
+          if (!def) return;
+          restored[i] = {
+            shardId: def.id,
+            shardColor: def.color,
+            shardTier: def.tier,
+            selectedBonus: s.bonus,
+            bonusValue: def.statBonuses[s.bonus] ?? 0,
+            slotIndex: i,
+          };
+        });
+        setEquippedShards(restored);
+      }
+      setCurrentBuildId(null);
+      setBuildName(`${wf.name} Build`);
+      setBuildDescription("");
+      const url = new URL(window.location.href);
+      url.searchParams.delete("build");
+      const qs = url.searchParams.toString();
+      window.history.replaceState({}, "", qs ? `${url.pathname}?${qs}` : url.pathname);
+    });
+  }, []);
+
   const currentFormSlice = useCallback((): DualFormBuildSlice => ({
     mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
     slotPolarities: { ...slotPolarities },
@@ -406,6 +450,12 @@ export default function WarframeBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("warframe"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });
@@ -742,7 +792,8 @@ export default function WarframeBuilderPage() {
     const fallbackShareable: ShareableBuild = {
       type: "warframe",
       itemId: selectedWarframe.id,
-      mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
+      mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      arcanes: equippedArcanes.map((a) => a?.id ?? ""),
       shards: equippedShards.filter((s): s is EquippedArchonShard => s !== null).map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
     };
 
@@ -767,7 +818,7 @@ export default function WarframeBuilderPage() {
     setShareCopied(true);
     setTimeout(() => setShareCopied(false), 2000);
     toast.success("Share link copied!", { description: "Link copied to clipboard" });
-  }, [selectedWarframe, equippedMods, equippedShards, buildIsPublic, currentBuildId]);
+  }, [selectedWarframe, equippedMods, equippedArcanes, equippedShards, buildIsPublic, currentBuildId]);
 
   const equippedModIds = equippedMods.map((m) => m.modId);
 

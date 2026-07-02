@@ -244,6 +244,12 @@ export default function ModularBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("modular"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });

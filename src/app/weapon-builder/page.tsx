@@ -139,6 +139,11 @@ export default function WeaponBuilderPage() {
       setBuildDescription("");
       if (shared.progenitorElement) setProgenitorElement(shared.progenitorElement);
       if (shared.progenitorBonusPercent != null) setProgenitorBonusPercent(shared.progenitorBonusPercent);
+      if (shared.hasOrokinCatalyst != null) setHasOrokinCatalyst(shared.hasOrokinCatalyst);
+      if (shared.isMR30 != null) setIsMR30(shared.isMR30);
+      if (shared.slotPolarities) setSlotPolarities(shared.slotPolarities);
+      const sharedIncarnon = (shared as ShareableBuild & { incarnonEvolutions?: Record<number, number> }).incarnonEvolutions;
+      if (sharedIncarnon) setSelectedEvolutions(sharedIncarnon);
       const url = new URL(window.location.href);
       url.searchParams.delete("build");
       const qs = url.searchParams.toString();
@@ -226,6 +231,12 @@ export default function WeaponBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("weapon"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });
@@ -267,6 +278,9 @@ export default function WeaponBuilderPage() {
       itemId: selectedWeapon.id,
       mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
       arcanes: equippedArcanes.map((a) => a?.id ?? ""),
+      hasOrokinCatalyst,
+      isMR30,
+      slotPolarities: slotPolarities as Record<string, string>,
       ...(weaponCalcOptions?.progenitorElement != null
         ? {
             progenitorElement: weaponCalcOptions.progenitorElement,
@@ -297,7 +311,7 @@ export default function WeaponBuilderPage() {
     setShareCopied(true);
     setTimeout(() => setShareCopied(false), 2000);
     toast.success("Share link copied!", { description: "Link copied to clipboard" });
-  }, [selectedWeapon, equippedMods, equippedArcanes, weaponCalcOptions, selectedEvolutions, buildIsPublic, currentBuildId]);
+  }, [selectedWeapon, equippedMods, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, weaponCalcOptions, selectedEvolutions, buildIsPublic, currentBuildId]);
 
   const filteredWeapons = useMemo(() => {
     const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
@@ -332,13 +346,9 @@ export default function WeaponBuilderPage() {
     return Object.keys(merged).length > 0 ? merged : undefined;
   }, [incarnonData, selectedEvolutions]);
 
-  // Merge incarnon + riven stat changes into one record
-  const allExtraStatChanges = useMemo<Record<string, number> | undefined>(() => {
+  // Gather riven stat changes from any slot that has a riven equipped (applied multiplicatively by the calculator)
+  const rivenStatChanges = useMemo<Record<string, number> | undefined>(() => {
     const merged: Record<string, number> = {};
-    if (incarnonStatChanges) {
-      for (const [k, v] of Object.entries(incarnonStatChanges)) merged[k] = (merged[k] ?? 0) + v;
-    }
-    // Gather riven stats from any slot that has a riven equipped
     for (const [slotStr, stats] of Object.entries(rivenStatsMap)) {
       const slotIdx = Number(slotStr);
       const equipped = equippedMods.find((m) => m.slotIndex === slotIdx);
@@ -347,7 +357,7 @@ export default function WeaponBuilderPage() {
       }
     }
     return Object.keys(merged).length > 0 ? merged : undefined;
-  }, [incarnonStatChanges, rivenStatsMap, equippedMods]);
+  }, [rivenStatsMap, equippedMods]);
 
   const calculatedStats = useMemo<CalculatedStats | null>(() => {
     if (!selectedWeapon) return null;
@@ -358,10 +368,10 @@ export default function WeaponBuilderPage() {
     }));
     const activeArcanes = equippedArcanes.filter((a): a is Mod => a !== null);
     if (activeArcanes.length > 0) {
-      return calculateWeaponBuildWithArcanes(selectedWeapon, modSlots, modsMap, activeArcanes, allExtraStatChanges, simParams, weaponCalcOptions);
+      return calculateWeaponBuildWithArcanes(selectedWeapon, modSlots, modsMap, activeArcanes, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
     }
-    return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, allExtraStatChanges, simParams, weaponCalcOptions);
-  }, [selectedWeapon, equippedMods, equippedArcanes, allExtraStatChanges, simParams, weaponCalcOptions]);
+    return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
+  }, [selectedWeapon, equippedMods, equippedArcanes, incarnonStatChanges, rivenStatChanges, simParams, weaponCalcOptions]);
 
   const baseStats = useMemo<CalculatedStats | null>(() => {
     if (!selectedWeapon) return null;

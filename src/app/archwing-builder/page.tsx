@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
@@ -56,7 +56,7 @@ export default function ArchwingBuilderPage() {
   const [buildIsPublic, setBuildIsPublic] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
-  useState(() => { setSavedBuilds(getSavedBuilds("archwing")); });
+  useEffect(() => { setSavedBuilds(getSavedBuilds("archwing")); }, []);
 
   const handleSaveBuildConfirm = async ({ name, isPublic }: SaveBuildDialogValues) => {
     const data: ArchwingBuildData = {
@@ -88,6 +88,12 @@ export default function ArchwingBuilderPage() {
 
     const cloudResult = await saveCloudBuild(build);
     if (cloudResult) {
+      if (cloudResult.id !== build.id) {
+        // Server assigned a new id — replace the local copy so we don't keep a duplicate
+        deleteBuild(build.id);
+        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
+        setSavedBuilds(getSavedBuilds("archwing"));
+      }
       setCurrentBuildId(cloudResult.id);
       setBuildIsPublic(cloudResult.isPublic ?? isPublic);
       toast.success("Build saved", { description: `${name} saved to your account` });

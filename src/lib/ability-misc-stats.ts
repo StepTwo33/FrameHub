@@ -366,9 +366,10 @@ export function scaleAbilityMiscStats(
   return lines;
 }
 
-/** Effective energy cost with 175% efficiency floor (matches in-game builder cards). */
+/** Effective energy cost with 175% efficiency cap (matches in-game builder cards).
+ * Negative efficiency (e.g. Overextended without Streamline) pushes costs above 2× base. */
 export function scaledAbilityEnergyCost(baseCost: number, efficiency: number): number {
-  const clampedEff = Math.min(Math.max(efficiency, 0), 1.75);
+  const clampedEff = Math.min(efficiency, 1.75);
   return Math.max(baseCost * 0.25, baseCost * (2 - clampedEff));
 }
 

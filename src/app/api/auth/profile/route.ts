@@ -137,6 +137,11 @@ export async function PATCH(req: NextRequest) {
 
     return response;
   } catch (e) {
+    // Check-then-update can race a concurrent username claim; surface the
+    // unique-constraint violation as a conflict rather than a 500.
+    if ((e as { code?: string })?.code === "P2002") {
+      return NextResponse.json({ error: "Username is already taken" }, { status: 409 });
+    }
     logServerError("PATCH /api/auth/profile", e);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }

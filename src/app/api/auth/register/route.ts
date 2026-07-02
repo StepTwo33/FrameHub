@@ -39,8 +39,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        const rawEmail = email.trim();
+        const normalizedEmail = rawEmail.toLowerCase();
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(normalizedEmail)) {
             return NextResponse.json(
                 { error: "Invalid email address" },
                 { status: 400 }
@@ -48,7 +51,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Per-email limit so a spoofed client IP can't spam a target inbox with signups.
-        const emailRl = checkRateLimit(`register-email:${email.toLowerCase()}`, 3, 60 * 60 * 1000);
+        const emailRl = checkRateLimit(`register-email:${normalizedEmail}`, 3, 60 * 60 * 1000);
         if (emailRl.limited) {
             return NextResponse.json(
                 { error: "Too many registration attempts. Please try again later." },
@@ -64,7 +67,11 @@ export async function POST(req: NextRequest) {
         }
 
         // ---------- Check for existing user ----------
-        const existing = await findUserByEmail(email);
+        // Check both the raw and lowercased form: SQLite unique is case-sensitive,
+        // so older accounts may exist under a mixed-case email.
+        const existing =
+            (await findUserByEmail(rawEmail)) ??
+            (rawEmail !== normalizedEmail ? await findUserByEmail(normalizedEmail) : null);
         if (existing) {
             if (!existing.passwordHash) {
                 return NextResponse.json(
@@ -80,10 +87,10 @@ export async function POST(req: NextRequest) {
 
         // ---------- Create user ----------
         const passwordHash = await hashPassword(password);
-        const username = await generateUniqueUsername(name?.trim() || email.split("@")[0] || "tenno");
-        await prisma.user.create({
+        const username = await generateUniqueUsername(name?.trim() || normalizedEmail.split("@")[0] || "tenno");
+        const createdUser = await prisma.user.create({
             data: {
-                email,
+                email: normalizedEmail,
                 name: name?.trim() || null,
                 username,
                 passwordHash,
@@ -92,9 +99,25 @@ export async function POST(req: NextRequest) {
         });
 
         // ---------- Verification code ----------
-        const code = generateVerificationCode();
-        await storeVerificationToken(email, code);
-        await sendVerificationEmail(email, code);
+        // If we can't deliver the verification email, roll back the account so
+        // the user isn't stranded (exists but can never verify or re-register).
+        try {
+            const code = generateVerificationCode();
+            await storeVerificationToken(normalizedEmail, code);
+            await sendVerificationEmail(normalizedEmail, code);
+        } catch (emailError) {
+            logServerError("Registration verification email failed", emailError);
+            try {
+                await prisma.verificationToken.deleteMany({ where: { identifier: normalizedEmail } });
+                await prisma.user.delete({ where: { id: createdUser.id } });
+            } catch (cleanupError) {
+                logServerError("Registration rollback failed", cleanupError);
+            }
+            return NextResponse.json(
+                { error: "Could not send verification email. Please try again." },
+                { status: 500 }
+            );
+        }
 
         return NextResponse.json({ success: true, message: "Account created. Check your email for a verification code." });
     } catch (error) {

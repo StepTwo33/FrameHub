@@ -222,6 +222,7 @@ export default function ProfilePage() {
       if (res.ok) {
         setUser((prev) => prev ? { ...prev, image: data.image } : prev);
         showMessage("success", "Avatar updated");
+        notifyProfileUpdated();
       } else {
         showMessage("error", data.error || "Failed to upload avatar");
       }
@@ -229,7 +230,7 @@ export default function ProfilePage() {
       showMessage("error", "Something went wrong");
     }
     setAvatarUploading(false);
-  }, [showMessage]);
+  }, [showMessage, notifyProfileUpdated]);
 
   const handleRemoveAvatar = useCallback(async () => {
     setAvatarUploading(true);
@@ -238,12 +239,13 @@ export default function ProfilePage() {
       if (res.ok) {
         setUser((prev) => prev ? { ...prev, image: null } : prev);
         showMessage("success", "Avatar removed");
+        notifyProfileUpdated();
       }
     } catch {
       showMessage("error", "Something went wrong");
     }
     setAvatarUploading(false);
-  }, [showMessage]);
+  }, [showMessage, notifyProfileUpdated]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this build?")) return;

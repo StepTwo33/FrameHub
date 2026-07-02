@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-    findUserByEmail,
+    findUserByEmailInsensitive,
     generateVerificationCode,
     storeVerificationToken,
 } from "@/lib/auth";
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const user = await findUserByEmail(email);
+        const user = await findUserByEmailInsensitive(email);
         if (!user) {
             // Don't reveal whether the email exists
             return NextResponse.json({ success: true, message: "If an account exists, a new code has been sent." });
@@ -53,9 +53,10 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Use the stored email so the token identifier matches the user row.
         const code = generateVerificationCode();
-        await storeVerificationToken(email, code);
-        await sendVerificationEmail(email, code);
+        await storeVerificationToken(user.email!, code);
+        await sendVerificationEmail(user.email!, code);
 
         return NextResponse.json({ success: true, message: "A new verification code has been sent." });
     } catch (error) {

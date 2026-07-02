@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import {
   SavedBuild,
@@ -24,11 +24,15 @@ export function useBuilds(type: SavedBuild["type"]) {
 
   const [builds, setBuilds] = useState<SavedBuild[]>([]);
   const [loading, setLoading] = useState(false);
+  const requestIdRef = useRef(0);
 
   const refresh = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     if (isLoggedIn) {
       const cloud = await getCloudBuilds(type);
+      // Ignore stale responses (login state/type changed or unmounted)
+      if (requestId !== requestIdRef.current) return;
       setBuilds(cloud);
     } else {
       setBuilds(getSavedBuilds(type));
@@ -41,6 +45,10 @@ export function useBuilds(type: SavedBuild["type"]) {
     queueMicrotask(() => {
       void refresh();
     });
+    // Invalidate in-flight requests on unmount / dependency change
+    return () => {
+      requestIdRef.current++;
+    };
   }, [refresh]);
 
   const save = useCallback(

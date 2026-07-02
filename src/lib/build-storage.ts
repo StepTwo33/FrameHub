@@ -56,7 +56,11 @@ export function saveBuild(build: SavedBuild): void {
   } else {
     builds.push({ ...build, createdAt: Date.now(), updatedAt: Date.now() });
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(builds));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(builds));
+  } catch (err) {
+    console.warn("Failed to save builds to localStorage", err);
+  }
 }
 
 export function deleteBuild(id: string): void {
@@ -147,6 +151,7 @@ export interface WarframeBuildData {
 export interface CompanionBuildData {
   companionId: string;
   mods: ModSlot[];
+  weaponId?: string;
   weaponMods: ModSlot[];
   arcaneIds: (string | null)[];
   hasReactor: boolean;

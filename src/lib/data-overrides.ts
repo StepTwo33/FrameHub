@@ -36,7 +36,11 @@ export function saveOverride(override: DataOverride): void {
   } else {
     overrides.push(override);
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+  } catch (err) {
+    console.warn("Failed to save data overrides to localStorage", err);
+  }
 }
 
 export function deleteOverride(id: string): void {

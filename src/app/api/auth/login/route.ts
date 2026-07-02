@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-    findUserByEmail,
+    findUserByEmailInsensitive,
     verifyPassword,
     createSession,
     SESSION_COOKIE,
     framehubSessionCookieOptions,
 } from "@/lib/auth";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkRateLimit, clearRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { logServerError } from "@/lib/log-server-error";
 import { readJsonBodyLimited } from "@/lib/read-json-body";
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         }
 
         // ---------- Find user ----------
-        const user = await findUserByEmail(email);
+        const user = await findUserByEmailInsensitive(email);
         if (!user || !user.passwordHash) {
             return NextResponse.json(
                 { error: "Invalid email or password" },
@@ -84,6 +84,10 @@ export async function POST(req: NextRequest) {
 
         const response = NextResponse.json({ success: true });
         response.cookies.set(SESSION_COOKIE, token, framehubSessionCookieOptions(origin));
+
+        // Successful logins shouldn't count toward lockout (repeat sign-ins, shared NAT IPs).
+        clearRateLimit(`login:${ip}`);
+        clearRateLimit(`login-account:${email.toLowerCase()}`);
 
         return response;
     } catch (error) {
