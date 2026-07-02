@@ -284,7 +284,14 @@ export default function WarframeBuilderPage() {
     WarframeBuildData,
     "mods" | "slotPolarities" | "shards" | "arcaneIds" | "arcaneRanks" | "dualFormBuilds"
   > => {
-    if (!selectedWarframe) return { mods: [], slotPolarities: {} };
+    if (!selectedWarframe) {
+      return {
+        mods: [],
+        slotPolarities: {},
+        shards: [...EMPTY_EQUIPPED_SHARDS],
+        arcaneIds: [...EMPTY_ARCANE_IDS],
+      };
+    }
     if (!dualFormConfig) {
       return currentFormSnapshot();
     }
