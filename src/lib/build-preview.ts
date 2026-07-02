@@ -26,23 +26,23 @@ export interface BuildPreviewData {
 }
 
 function modChipsFromSlots(mods: ModSlot[] | undefined): BuildPreviewChip[] {
-  return (mods ?? [])
-    .map((m) => {
-      const mod = modsMap.get(m.modId);
-      if (!mod) return null;
-      return { label: mod.name, sublabel: m.rank > 0 ? `R${m.rank}` : undefined };
-    })
-    .filter((chip): chip is BuildPreviewChip => chip !== null);
+  const chips: BuildPreviewChip[] = [];
+  for (const m of mods ?? []) {
+    const mod = modsMap.get(m.modId);
+    if (!mod) continue;
+    chips.push(m.rank > 0 ? { label: mod.name, sublabel: `R${m.rank}` } : { label: mod.name });
+  }
+  return chips;
 }
 
 function arcaneChipsFromIds(ids: (string | null)[] | undefined): BuildPreviewChip[] {
-  return (ids ?? [])
-    .map((id) => {
-      if (!id) return null;
-      const arcane = resolveArcaneById(id);
-      return arcane ? { label: arcane.name } : { label: id };
-    })
-    .filter((chip): chip is BuildPreviewChip => chip !== null);
+  const chips: BuildPreviewChip[] = [];
+  for (const id of ids ?? []) {
+    if (!id) continue;
+    const arcane = resolveArcaneById(id);
+    chips.push({ label: arcane?.name ?? id });
+  }
+  return chips;
 }
 
 function shardSummary(shards: (EquippedArchonShard | null)[] | undefined): string | null {
