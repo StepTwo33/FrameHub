@@ -44,7 +44,6 @@ import {
   getDualFormConfig,
   getDualFormAbilities,
   serializeDualFormBuilds,
-  EMPTY_EQUIPPED_SHARDS,
   EMPTY_ARCANE_IDS,
   DEFAULT_ARCANE_RANKS,
   type DualFormBuildSlice,
@@ -59,6 +58,8 @@ import {
   AbilityStatsBlock,
   AbilitiesSectionHeader,
 } from "@/components/ability-display";
+
+const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
 
 const shardColors: Record<string, string> = {
   crimson: "#E74C3C",
@@ -272,44 +273,43 @@ export default function WarframeBuilderPage() {
     });
   }, []);
 
-  const currentFormSnapshot = useCallback((): DualFormBuildSlice => ({
+  const currentFormSlice = useCallback((): DualFormBuildSlice => ({
     mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
     slotPolarities: { ...slotPolarities },
-    shards: equippedShards,
     arcaneIds: equippedArcanes.map((a) => a?.id ?? null),
     arcaneRanks: [...equippedArcaneRanks],
-  }), [equippedMods, slotPolarities, equippedShards, equippedArcanes, equippedArcaneRanks]);
+  }), [equippedMods, slotPolarities, equippedArcanes, equippedArcaneRanks]);
 
   const buildWarframePayload = useCallback((): Pick<
     WarframeBuildData,
     "mods" | "slotPolarities" | "shards" | "arcaneIds" | "arcaneRanks" | "dualFormBuilds"
   > => {
+    const shards = equippedShards;
     if (!selectedWarframe) {
       return {
         mods: [],
         slotPolarities: {},
-        shards: [...EMPTY_EQUIPPED_SHARDS],
+        shards: [...EMPTY_SHARDS],
         arcaneIds: [...EMPTY_ARCANE_IDS],
       };
     }
     if (!dualFormConfig) {
-      return currentFormSnapshot();
+      return { ...currentFormSlice(), shards };
     }
     const formStates = {
       ...dualFormBuilds,
-      [activeDualFormId]: currentFormSnapshot(),
+      [activeDualFormId]: currentFormSlice(),
     };
-    return serializeDualFormBuilds(selectedWarframe.id, formStates);
-  }, [selectedWarframe, dualFormConfig, dualFormBuilds, activeDualFormId, currentFormSnapshot]);
+    return { ...serializeDualFormBuilds(selectedWarframe.id, formStates), shards };
+  }, [selectedWarframe, dualFormConfig, dualFormBuilds, activeDualFormId, currentFormSlice, equippedShards]);
 
   const handleDualFormSwitch = useCallback(
     (newFormId: string) => {
       if (!dualFormConfig || newFormId === activeDualFormId) return;
-      const merged = { ...dualFormBuilds, [activeDualFormId]: currentFormSnapshot() };
+      const merged = { ...dualFormBuilds, [activeDualFormId]: currentFormSlice() };
       const next = merged[newFormId] ?? {
         mods: [],
         slotPolarities: {},
-        shards: [...EMPTY_EQUIPPED_SHARDS],
         arcaneIds: [...EMPTY_ARCANE_IDS],
         arcaneRanks: [...DEFAULT_ARCANE_RANKS],
       };
@@ -317,11 +317,10 @@ export default function WarframeBuilderPage() {
       setActiveDualFormId(newFormId);
       setEquippedMods(modSlotsToEquipped(next.mods));
       setSlotPolarities(next.slotPolarities);
-      setEquippedShards(next.shards ?? [...EMPTY_EQUIPPED_SHARDS]);
       setEquippedArcanes(resolveSavedArcaneSlots(next.arcaneIds, 2));
       setEquippedArcaneRanks(next.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     },
-    [dualFormConfig, activeDualFormId, dualFormBuilds, currentFormSnapshot, modSlotsToEquipped],
+    [dualFormConfig, activeDualFormId, dualFormBuilds, currentFormSlice, modSlotsToEquipped],
   );
 
   const buildWarframeData = useCallback((): WarframeBuildData | null => {
@@ -355,7 +354,6 @@ export default function WarframeBuilderPage() {
       const defaultState = states[config.defaultFormId];
       setEquippedMods(modSlotsToEquipped(defaultState.mods));
       setSlotPolarities(defaultState.slotPolarities);
-      setEquippedShards(defaultState.shards ?? [...EMPTY_EQUIPPED_SHARDS]);
       setEquippedArcanes(resolveSavedArcaneSlots(defaultState.arcaneIds, 2));
       setEquippedArcaneRanks(defaultState.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     } else {
@@ -363,10 +361,10 @@ export default function WarframeBuilderPage() {
       setActiveDualFormId("sirius");
       setEquippedMods(modSlotsToEquipped(d.mods));
       setSlotPolarities(d.slotPolarities || {});
-      setEquippedShards(d.shards || [...EMPTY_EQUIPPED_SHARDS]);
       setEquippedArcanes(resolveSavedArcaneSlots(d.arcaneIds, 2));
       setEquippedArcaneRanks(d.arcaneRanks ?? [...DEFAULT_ARCANE_RANKS]);
     }
+    setEquippedShards(d.shards?.length === 5 ? d.shards : [...EMPTY_SHARDS]);
     setSelectedWarframe(wf);
     setHasOrokinReactor(d.hasOrokinReactor);
     setIsMR30(d.isMR30);
@@ -946,7 +944,7 @@ export default function WarframeBuilderPage() {
                         onChange={handleDualFormSwitch}
                       />
                       <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Sirius and Orion share one loadout slot. Mods, arcanes, and shards are saved per form; Helminth applies to both.
+                        Sirius and Orion share one loadout slot. Mods and arcanes are saved per form; archon shards and Helminth apply to both.
                       </p>
                     </div>
                   )}
@@ -1051,10 +1049,15 @@ export default function WarframeBuilderPage() {
 
                 {/* Archon Shards */}
                 <div>
-                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3">
+                  <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-1">
                     ARCHON SHARDS
                   </h2>
-                  <div className="flex flex-wrap gap-1.5">
+                  {dualFormConfig && (
+                    <p className="mb-2 text-[10px] text-muted-foreground">
+                      One shard set for Sirius &amp; Orion — switching forms keeps these equipped.
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-2">
                     {equippedShards.map((shard, i) => (
                       <ArchonShardSlot
                         key={i}

@@ -138,7 +138,6 @@ export interface WarframeBuildData {
   dualFormBuilds?: Record<string, {
     mods: ModSlot[];
     slotPolarities?: Record<number, string>;
-    shards?: (EquippedArchonShard | null)[];
     arcaneIds?: (string | null)[];
     arcaneRanks?: number[];
   }>;

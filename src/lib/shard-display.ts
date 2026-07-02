@@ -12,41 +12,22 @@ export const SHARD_SHORT_NAMES: Record<string, string> = {
   emerald: "Emer",
 };
 
-export function getArchonShardImage(color: string, tier: number): string {
-  const wiki: Record<string, { standard: string; tau: string }> = {
-    crimson: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/0/0e/CrimsonArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/a/a1/TauforgedCrimsonArchonShard.png",
-    },
-    azure: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/4/4e/AzureArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/8/8a/TauforgedAzureArchonShard.png",
-    },
-    amber: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/6/6e/AmberArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/1/1f/TauforgedAmberArchonShard.png",
-    },
-    violet: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/2/2e/VioletArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/5/5a/TauforgedVioletArchonShard.png",
-    },
-    topaz: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/9/9e/TopazArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/3/3e/TauforgedTopazArchonShard.png",
-    },
-    emerald: {
-      standard: "https://static.wikia.nocookie.net/warframe/images/e/e0/EmeraldArchonShard.png",
-      tau: "https://static.wikia.nocookie.net/warframe/images/7/7e/TauforgedEmeraldArchonShard.png",
-    },
-  };
-  const entry = wiki[color];
-  if (!entry) return `/images/shards/${color}.png`;
-  return tier === 2 ? entry.tau : entry.standard;
+export const SHARD_COLORS: Record<string, string> = {
+  crimson: "#E74C3C",
+  azure: "#3498DB",
+  amber: "#F39C12",
+  violet: "#9B59B6",
+  topaz: "#E67E22",
+  emerald: "#2ECC71",
+};
+
+export function getShardColorName(color: string): string {
+  return color.charAt(0).toUpperCase() + color.slice(1);
 }
 
 export function getShardShortLabel(color: string, tier: number): string {
-  const short = SHARD_SHORT_NAMES[color] ?? color.slice(0, 4);
-  return tier === 2 ? `${short} τ` : short;
+  const name = getShardColorName(color);
+  return tier === 2 ? `${name} Tau` : name;
 }
 
 export const SHARD_BONUS_LABELS: Record<string, string> = {
