@@ -5,6 +5,7 @@ import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-s
 import { Heart } from "lucide-react";
 
 const BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/StepTwo";
+const CASH_APP_URL = "https://cash.app/$TennoReborn";
 
 export default function SupportPage() {
   return (
@@ -54,14 +55,28 @@ export default function SupportPage() {
 
             <div>
               <h2 className="mb-3 text-sm font-semibold text-foreground">Cash App</h2>
-              <Image
-                src="/images/support/cashapp-qr.png"
-                alt="Cash App QR code — scan to send a tip"
-                width={240}
-                height={240}
-                className="mx-auto rounded-xl border border-border bg-white p-3 shadow-sm"
-              />
-              <p className="mt-3 text-xs text-muted-foreground">Scan with the Cash App</p>
+              <a
+                href={CASH_APP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block transition-opacity hover:opacity-90"
+              >
+                <Image
+                  src="/images/support/cashapp-qr.png"
+                  alt="Cash App QR code — scan to send a tip to $TennoReborn"
+                  width={240}
+                  height={240}
+                  className="mx-auto rounded-xl border border-border bg-white p-3 shadow-sm"
+                />
+              </a>
+              <a
+                href={CASH_APP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-block text-xs text-primary hover:underline"
+              >
+                cash.app/$TennoReborn
+              </a>
             </div>
           </div>
 
