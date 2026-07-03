@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { PageShell, PageMain, PageHero } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
-import { Ban, Search, Shield, UserX, RotateCcw, Users } from "lucide-react";
+import { Ban, Search, Shield, Heart, RotateCcw, Users } from "lucide-react";
 
 interface AdminUser {
   id: string;
@@ -14,6 +14,7 @@ interface AdminUser {
   role: string;
   bannedAt: string | null;
   banReason: string | null;
+  supporterAt: string | null;
   createdAt: string;
   _count: { builds: number };
 }
@@ -142,6 +143,7 @@ export default function AdminUsersPage() {
           ) : (
             users.map((user) => {
               const banned = Boolean(user.bannedAt);
+              const isSupporter = Boolean(user.supporterAt);
               return (
                 <div
                   key={user.id}
@@ -165,6 +167,11 @@ export default function AdminUsersPage() {
                         {banned && (
                           <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-400">
                             Banned
+                          </span>
+                        )}
+                        {isSupporter && (
+                          <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-rose-400">
+                            Supporter
                           </span>
                         )}
                       </div>
@@ -200,16 +207,39 @@ export default function AdminUsersPage() {
                         </button>
                       )}
                       {isFullAdmin && (
-                        <select
-                          value={user.role}
-                          disabled={actionLoading === user.id}
-                          onChange={(e) => runAction(user.id, "setRole", { role: e.target.value })}
-                          className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
-                        >
-                          <option value="user">user</option>
-                          <option value="moderator">moderator</option>
-                          <option value="admin">admin</option>
-                        </select>
+                        <>
+                          {isSupporter ? (
+                            <button
+                              type="button"
+                              disabled={actionLoading === user.id}
+                              onClick={() => runAction(user.id, "revokeSupporter")}
+                              className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-secondary/60"
+                            >
+                              <Heart className="h-3.5 w-3.5" />
+                              Revoke Supporter
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled={actionLoading === user.id}
+                              onClick={() => runAction(user.id, "grantSupporter")}
+                              className="inline-flex items-center gap-1 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
+                            >
+                              <Heart className="h-3.5 w-3.5" />
+                              Grant Supporter
+                            </button>
+                          )}
+                          <select
+                            value={user.role}
+                            disabled={actionLoading === user.id}
+                            onChange={(e) => runAction(user.id, "setRole", { role: e.target.value })}
+                            className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
+                          >
+                            <option value="user">user</option>
+                            <option value="moderator">moderator</option>
+                            <option value="admin">admin</option>
+                          </select>
+                        </>
                       )}
                     </div>
                   </div>

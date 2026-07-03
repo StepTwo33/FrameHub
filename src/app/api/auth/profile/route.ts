@@ -26,6 +26,8 @@ export async function GET() {
       image: true,
       bio: true,
       role: true,
+      emailVerified: true,
+      supporterAt: true,
       createdAt: true,
       _count: { select: { builds: true, reports: true } },
     },

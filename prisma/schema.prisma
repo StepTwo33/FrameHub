@@ -48,12 +48,29 @@ model User {
   role          String    @default("user") // user | moderator | admin
   bannedAt      DateTime?
   banReason     String?
+  supporterAt   DateTime?
   createdAt     DateTime  @default(now())
   accounts      Account[]
   sessions      Session[]
   builds        Build[]
   buildVotes    BuildVote[]
   reports       Report[]
+  donationEvents DonationEvent[]
+}
+
+model DonationEvent {
+  id             String   @id @default(cuid())
+  externalId     String   @unique
+  provider       String   @default("buymeacoffee")
+  supporterEmail String
+  userId         String?
+  amount         String?
+  eventType      String
+  createdAt      DateTime @default(now())
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([supporterEmail])
 }
 
 model VerificationToken {

@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
       role: true,
       bannedAt: true,
       banReason: true,
+      supporterAt: true,
       createdAt: true,
       _count: { select: { builds: true } },
     },

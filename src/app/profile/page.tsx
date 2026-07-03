@@ -7,6 +7,7 @@ import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, 
 import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
+import { SupporterBadge } from "@/components/supporter-badge";
 
 interface ProfileUser {
   id: string;
@@ -16,6 +17,7 @@ interface ProfileUser {
   image: string | null;
   bio: string | null;
   role: string;
+  supporterAt: string | null;
   createdAt: string;
   _count: { builds: number; reports: number };
 }
@@ -392,6 +394,7 @@ export default function ProfilePage() {
                     {user.role}
                   </span>
                 )}
+                {user.supporterAt && <SupporterBadge />}
               </div>
               {publicProfileHref ? (
                 <Link href={publicProfileHref} className="text-xs text-primary hover:underline mb-2 inline-block">

@@ -5,6 +5,8 @@ import { PageShell, PageMain, ContentPanel } from "@/components/page-shell";
 import { prisma } from "@/lib/prisma";
 import { buildOpenUrl } from "@/lib/build-url";
 import { ThumbsUp, ChevronRight } from "lucide-react";
+import { SupporterBadge } from "@/components/supporter-badge";
+import { isSupporter } from "@/lib/supporter";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +27,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
       image: true,
       bio: true,
       role: true,
+      supporterAt: true,
       bannedAt: true,
       createdAt: true,
       _count: { select: { builds: true } },
@@ -68,7 +71,10 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
             )}
 
             <div className="flex-1 text-center sm:text-left">
-              <h1 className="text-2xl font-bold">{user.name ?? user.username ?? "Tenno"}</h1>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h1 className="text-2xl font-bold">{user.name ?? user.username ?? "Tenno"}</h1>
+                {isSupporter(user) && <SupporterBadge />}
+              </div>
               {user.username && <p className="text-primary text-sm mt-1">@{user.username}</p>}
               {user.bio ? (
                 <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{user.bio}</p>

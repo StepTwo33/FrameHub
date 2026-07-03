@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { banUser, unbanUser, verifyAdmin, verifyFullAdmin } from "@/lib/admin";
+import { grantSupporter, revokeSupporter } from "@/lib/supporter";
 import { prisma } from "@/lib/prisma";
 import { logServerError } from "@/lib/log-server-error";
 
@@ -29,7 +30,7 @@ export async function PATCH(
 
   const target = await prisma.user.findUnique({
     where: { id },
-    select: { id: true, role: true, email: true, username: true, name: true, bannedAt: true, banReason: true, createdAt: true },
+    select: { id: true, role: true, email: true, username: true, name: true, bannedAt: true, banReason: true, supporterAt: true, createdAt: true },
   });
   if (!target) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -50,6 +51,18 @@ export async function PATCH(
         return NextResponse.json({ error: "Invalid role" }, { status: 400 });
       }
       await prisma.user.update({ where: { id }, data: { role } });
+    } else if (body.action === "grantSupporter") {
+      const { isAdmin: isFullAdmin } = await verifyFullAdmin();
+      if (!isFullAdmin) {
+        return NextResponse.json({ error: "Only admins can grant supporter badges." }, { status: 403 });
+      }
+      await grantSupporter(id);
+    } else if (body.action === "revokeSupporter") {
+      const { isAdmin: isFullAdmin } = await verifyFullAdmin();
+      if (!isFullAdmin) {
+        return NextResponse.json({ error: "Only admins can revoke supporter badges." }, { status: 403 });
+      }
+      await revokeSupporter(id);
     } else {
       return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     }
@@ -64,6 +77,7 @@ export async function PATCH(
         role: true,
         bannedAt: true,
         banReason: true,
+        supporterAt: true,
         createdAt: true,
         _count: { select: { builds: true } },
       },

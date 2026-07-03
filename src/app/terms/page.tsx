@@ -74,8 +74,10 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-foreground mb-2">7. Donations</h2>
               <p>
-                Frame Hub may offer optional ways to send voluntary donations through third-party services (for example Buy Me a Coffee or Cash App). Donations are gifts,
-                not payment for goods or services, and do not unlock features, status, or support entitlements on the site.
+                Frame Hub may offer optional voluntary donations through Buy Me a Coffee. Donations are gifts,
+                not payment for goods or services. Verified donations using the same email as your Frame Hub account
+                may earn a cosmetic Supporter badge on your public profile. The badge does not unlock features,
+                priority support, or moderation privileges.
               </p>
             </section>
 

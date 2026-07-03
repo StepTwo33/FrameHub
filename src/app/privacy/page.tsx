@@ -68,8 +68,10 @@ export default function PrivacyPage() {
               <p>
                 Frame Hub uses Google OAuth and optional email/password authentication. Google sign-in is subject to
                 Google&apos;s Privacy Policy and Terms of Service. We only receive the profile information
-                you authorize Google to share with us. Optional donation links are handled by the
-                payment provider under their own terms and privacy policies; we do not receive your payment credentials.
+                you authorize Google to share with us. Optional donations through Buy Me a Coffee are handled by
+                Buy Me a Coffee under their own terms and privacy policies; we do not receive your payment credentials.
+                If your donation email matches your verified Frame Hub account, we may display a cosmetic Supporter
+                badge on your profile.
               </p>
             </section>
 
