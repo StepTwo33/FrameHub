@@ -66,7 +66,10 @@ export default function AdminReportsPage() {
     fetch("/api/reports")
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data)) setReports(data);
+        if (Array.isArray(data)) {
+          setReports(data);
+          window.dispatchEvent(new CustomEvent("framehub-reports-updated"));
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));

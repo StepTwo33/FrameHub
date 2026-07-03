@@ -103,11 +103,25 @@ function NavDropdown({ group }: { group: typeof NAV_GROUPS[number] }) {
   );
 }
 
+function AdminOpenReportsBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
+  const label = count > 99 ? "99+" : String(count);
+  return (
+    <span
+      className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white shadow-sm shadow-red-500/40"
+      aria-label={`${count} open reports`}
+    >
+      {label}
+    </span>
+  );
+}
+
 export function Header() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [openReportCount, setOpenReportCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/auth/session")
@@ -128,6 +142,37 @@ export function Header() {
   }, []);
 
   const isAdmin = user?.role === "admin" || user?.role === "moderator";
+
+  useEffect(() => {
+    if (!isAdmin) {
+      setOpenReportCount(0);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchOpenReportCount = () => {
+      fetch("/api/admin/reports/summary")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data: { open?: number } | null) => {
+          if (!cancelled && data && typeof data.open === "number") {
+            setOpenReportCount(data.open);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchOpenReportCount();
+    const interval = setInterval(fetchOpenReportCount, 60_000);
+    window.addEventListener("focus", fetchOpenReportCount);
+    window.addEventListener("framehub-reports-updated", fetchOpenReportCount);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+      window.removeEventListener("focus", fetchOpenReportCount);
+      window.removeEventListener("framehub-reports-updated", fetchOpenReportCount);
+    };
+  }, [isAdmin]);
 
   return (
     <header className="page-ambient-ignore sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-black/10 backdrop-blur-xl transition-colors duration-300">
@@ -173,10 +218,11 @@ export function Header() {
           {isAdmin && (
             <Link
               href="/admin/reports"
-              className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-400/70 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/5"
+              className="relative flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-400/70 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/5"
             >
               <Shield className="h-3.5 w-3.5" />
               Admin
+              <AdminOpenReportsBadge count={openReportCount} />
             </Link>
           )}
 
@@ -321,6 +367,7 @@ export function Header() {
               >
                 <Shield className="h-4 w-4" />
                 Admin Reports
+                <AdminOpenReportsBadge count={openReportCount} />
               </Link>
             )}
             <a
