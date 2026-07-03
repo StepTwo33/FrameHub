@@ -1,5 +1,5 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponRadialAttack } from './types';
 import {
   VIGILANTE_MOD_IDS,
   UMBRAL_MOD_IDS,
@@ -189,6 +189,32 @@ function getHeavyAttackComboMultiplier(comboCount: number, weaponId?: string): n
   if (comboCount < 200) return 10.0;
   if (comboCount < 220) return 11.0;
   return 12.0;
+}
+
+const RADIAL_DAMAGE_KEYS = [
+  'impact', 'puncture', 'slash', 'heat', 'cold', 'toxin', 'electricity',
+  'radiation', 'viral', 'corrosive', 'blast', 'gas', 'magnetic',
+] as const;
+
+function scaleRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
+  const attacks = baseWeapon.radialAttacks;
+  if (!attacks?.length || !baseWeapon.damage) return;
+
+  const mult = stats.totalDamage / baseWeapon.damage;
+  stats.radialAttacks = attacks.map((attack) => {
+    const scaled: WeaponRadialAttack = {
+      name: attack.name,
+      radius: attack.radius,
+      totalDamage: attack.totalDamage * mult,
+    };
+    if (attack.falloffReduction != null) scaled.falloffReduction = attack.falloffReduction;
+    if (attack.explosionDelay != null) scaled.explosionDelay = attack.explosionDelay;
+    for (const key of RADIAL_DAMAGE_KEYS) {
+      const val = attack[key];
+      if (val != null && val > 0) scaled[key] = val * mult;
+    }
+    return scaled;
+  });
 }
 
 // ── Main Weapon Calculator ──────────────────────────────────────────────
@@ -558,6 +584,8 @@ export function calculateWeaponBuild(
   stats.sustainedDps = calculateSustainedDps(stats);
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
+
+  scaleRadialAttacks(baseWeapon, stats);
 
   return stats;
 }
@@ -1011,6 +1039,7 @@ export function calculateWeaponBuildWithArcanes(
   setStatusChancePerShot(stats, baseWeapon);
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
+  scaleRadialAttacks(baseWeapon, stats);
   return stats;
 }
 

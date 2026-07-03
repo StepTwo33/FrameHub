@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
 import { SupporterBadge } from "@/components/supporter-badge";
+import { RoleBadge } from "@/components/role-badge";
 
 interface ProfileUser {
   id: string;
@@ -386,14 +387,8 @@ export default function ProfilePage() {
                 >
                   <Pencil className="h-3.5 w-3.5" />
                 </button>
-                {user.role !== "user" && (
-                  <span className={cn(
-                    "text-[10px] px-1.5 py-0.5 rounded-full font-semibold uppercase",
-                    user.role === "admin" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-400"
-                  )}>
-                    {user.role}
-                  </span>
-                )}
+                {user.role === "admin" && <RoleBadge role="admin" />}
+                {user.role === "moderator" && <RoleBadge role="moderator" />}
                 {user.supporterAt && <SupporterBadge />}
               </div>
               {publicProfileHref ? (

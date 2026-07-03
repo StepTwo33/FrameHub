@@ -37,6 +37,11 @@ const ELEMENT_COLORS: Record<string, string> = {
   slash: "text-red-300",
 };
 
+const RADIAL_DAMAGE_KEYS = [
+  "impact", "puncture", "slash", "heat", "cold", "toxin", "electricity",
+  "radiation", "viral", "corrosive", "blast", "gas", "magnetic",
+] as const;
+
 const ELEMENT_LABELS: Record<string, string> = {
   heat: "Heat", cold: "Cold", toxin: "Toxin", electricity: "Electricity",
   blast: "Blast", corrosive: "Corrosive", gas: "Gas", magnetic: "Magnetic",
@@ -285,6 +290,43 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           </>
         )}
       </CollapsibleSection>
+
+      {stats.radialAttacks && stats.radialAttacks.length > 0 && (
+        <CollapsibleSection title="RADIAL ATTACK" defaultOpen>
+          {stats.radialAttacks.map((attack, idx) => (
+            <div key={`${attack.name}-${idx}`} className={idx > 0 ? "mt-2 pt-2 border-t border-border/50" : ""}>
+              {stats.radialAttacks!.length > 1 && (
+                <div className="text-[10px] font-medium text-muted-foreground mb-1">{attack.name}</div>
+              )}
+              <StatRow label="Total Damage" value={attack.totalDamage.toFixed(1)} highlighted />
+              {RADIAL_DAMAGE_KEYS.map((key) => {
+                const val = attack[key];
+                if (val == null || val <= 0) return null;
+                const label = ELEMENT_LABELS[key] || key.charAt(0).toUpperCase() + key.slice(1);
+                return (
+                  <StatRow
+                    key={key}
+                    label={label}
+                    value={val.toFixed(1)}
+                    color={ELEMENT_COLORS[key]}
+                  />
+                );
+              })}
+              <StatRow label="Radius" value={`${attack.radius.toFixed(1)}m`} />
+              {attack.explosionDelay != null && attack.explosionDelay > 0 && (
+                <StatRow label="Delay" value={`${attack.explosionDelay.toFixed(1)}s`} />
+              )}
+              {attack.falloffReduction != null && attack.falloffReduction > 0 && (
+                <StatRow
+                  label="Falloff"
+                  value={`${(attack.falloffReduction * 100).toFixed(0)}%`}
+                  tooltip="Damage reduction at the edge of the blast radius (center = full damage)."
+                />
+              )}
+            </div>
+          ))}
+        </CollapsibleSection>
+      )}
 
       {/* Core Stats */}
       <CollapsibleSection title="CORE" defaultOpen>

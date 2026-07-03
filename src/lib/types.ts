@@ -65,6 +65,31 @@ export interface Weapon {
   kitgunChamberCategory?: "projectile_shotgun" | "projectile_rifle" | "hitscan_auto" | "beam";
   /** Codex-style passive (merged from data/weapon-passives when present). */
   passive?: string;
+  /** AoE / radial attacks (merged from data/weapon-radial-attacks when present). */
+  radialAttacks?: WeaponRadialAttack[];
+}
+
+/** Secondary AoE profile (explosion, slam radial, cube blast, etc.). */
+export interface WeaponRadialAttack {
+  name: string;
+  totalDamage: number;
+  impact?: number;
+  puncture?: number;
+  slash?: number;
+  heat?: number;
+  cold?: number;
+  toxin?: number;
+  electricity?: number;
+  radiation?: number;
+  viral?: number;
+  corrosive?: number;
+  blast?: number;
+  gas?: number;
+  magnetic?: number;
+  radius: number;
+  /** Damage reduction at max radius (0.5 = 50% falloff from center to edge). */
+  falloffReduction?: number;
+  explosionDelay?: number;
 }
 
 export interface Warframe {
@@ -272,6 +297,8 @@ export interface CalculatedStats {
   tekSetVsMarkedDamageMultiplier?: number;
   /** Cross-slot set detection (optional). */
   setBonusSummary?: SetBonusSummaryLine[];
+  /** Mod-scaled radial / AoE attacks when the weapon has them. */
+  radialAttacks?: WeaponRadialAttack[];
 }
 
 export interface WarframeCalculatedStats {

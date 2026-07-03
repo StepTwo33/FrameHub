@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { buildOpenUrl } from "@/lib/build-url";
 import { ThumbsUp, ChevronRight } from "lucide-react";
 import { SupporterBadge } from "@/components/supporter-badge";
+import { RoleBadge } from "@/components/role-badge";
 import { isSupporter } from "@/lib/supporter";
 
 export const dynamic = "force-dynamic";
@@ -73,6 +74,8 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                 <h1 className="text-2xl font-bold">{user.name ?? user.username ?? "Tenno"}</h1>
+                {user.role === "admin" && <RoleBadge role="admin" />}
+                {user.role === "moderator" && <RoleBadge role="moderator" />}
                 {isSupporter(user) && <SupporterBadge />}
               </div>
               {user.username && <p className="text-primary text-sm mt-1">@{user.username}</p>}
@@ -89,13 +92,8 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
             </div>
           </div>
 
-          <div className="mt-5 pt-5 border-t border-border text-xs text-muted-foreground flex items-center justify-between">
+          <div className="mt-5 pt-5 border-t border-border text-xs text-muted-foreground">
             <span>Joined {joined}</span>
-            {user.role !== "user" && (
-              <span className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 uppercase text-[10px] font-semibold">
-                {user.role}
-              </span>
-            )}
           </div>
         </ContentPanel>
 

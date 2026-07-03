@@ -1,5 +1,5 @@
 import { modsMap } from "@/data/mods";
-import { WEAPON_PASSIVES } from "@/data/weapon-passives";
+import { enrichWeapon } from "@/lib/weapon-enrich";
 import { warframesMap } from "@/data/warframes";
 import { weaponsMap, allWeapons as allWeaponsData } from "@/data/weapons";
 import { companionsMap } from "@/data/companions";
@@ -97,9 +97,7 @@ export interface CalcLoadoutStatsOptions {
 }
 
 function weaponWithPassive(w: Weapon): Weapon {
-  if (w.passive) return w;
-  const p = WEAPON_PASSIVES[w.id];
-  return p ? { ...w, passive: p } : w;
+  return enrichWeapon(w);
 }
 
 export function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {

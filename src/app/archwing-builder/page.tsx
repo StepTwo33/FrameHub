@@ -6,6 +6,7 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { allWeapons as allWeaponsData } from "@/data/weapons";
+import { enrichWeapon } from "@/lib/weapon-enrich";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
@@ -117,7 +118,8 @@ export default function ArchwingBuilderPage() {
       setNecramechPolarities(d.framePolarities || {});
     }
     if (d.weaponId) {
-      setSelectedWeapon(allWeaponsData.find((w) => w.id === d.weaponId) ?? null);
+      const found = allWeaponsData.find((w) => w.id === d.weaponId);
+      setSelectedWeapon(found ? enrichWeapon(found) : null);
       setWeaponMods(restoreMods(d.weaponMods));
     }
     setHasReactor(d.hasReactor);
@@ -142,7 +144,9 @@ export default function ArchwingBuilderPage() {
 
   // Filter archguns/archmelee from weapon data
   const archWeapons = useMemo(() => {
-    return allWeaponsData.filter((w: Weapon) => w.category === "archgun" || w.category === "archmelee");
+    return allWeaponsData
+      .filter((w: Weapon) => w.category === "archgun" || w.category === "archmelee")
+      .map(enrichWeapon);
   }, []);
 
   // Weapon stats
