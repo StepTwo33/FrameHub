@@ -68,7 +68,7 @@ export default function PrivacyPage() {
               <p>
                 Frame Hub uses Google OAuth and optional email/password authentication. Google sign-in is subject to
                 Google&apos;s Privacy Policy and Terms of Service. We only receive the profile information
-                you authorize Google to share with us. Optional donation links (such as PayPal) are handled by the
+                you authorize Google to share with us. Optional donation links are handled by the
                 payment provider under their own terms and privacy policies; we do not receive your payment credentials.
               </p>
             </section>

@@ -74,7 +74,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-foreground mb-2">7. Donations</h2>
               <p>
-                Frame Hub may offer an optional way to send voluntary donations (for example via PayPal). Donations are gifts,
+                Frame Hub may offer optional ways to send voluntary donations through third-party services (for example Buy Me a Coffee or Cash App). Donations are gifts,
                 not payment for goods or services, and do not unlock features, status, or support entitlements on the site.
               </p>
             </section>
