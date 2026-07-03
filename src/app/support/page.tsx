@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
 import { Heart } from "lucide-react";
