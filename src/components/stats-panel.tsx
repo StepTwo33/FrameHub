@@ -552,6 +552,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         <StatRow label="Armor" value={stats.totalArmor.toFixed(0)} />
         <StatRow label="Energy" value={stats.totalEnergy.toFixed(0)} />
         <StatRow label="Sprint Speed" value={stats.totalSprint.toFixed(2)} />
+        {stats.parkourVelocityBonus > 0 && (
+          <StatRow label="Parkour Velocity" value={`+${(stats.parkourVelocityBonus * 100).toFixed(0)}%`} color="text-cyan-400" />
+        )}
         {stats.healthRegenPerSec > 0 && (
           <StatRow label="Health Regen" value={`${stats.healthRegenPerSec.toFixed(1)}/s`} color="text-green-400" />
         )}

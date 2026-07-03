@@ -101,26 +101,43 @@ export default function AboutPage() {
             </h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
-                { name: "Step-Bro_Prime", role: "Lead Developer", profileUrl: "https://github.com/StepTwo33" },
+                { name: "Step-Bro_Prime", role: "Lead Developer", profileUrl: "/u/steptwo" },
                 { name: "Axel Shade", role: "Data & Design" },
               ].map((c) =>
                 c.profileUrl ? (
-                  <a
-                    key={c.name}
-                    href={c.profileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-3 rounded-lg border border-border/50 bg-background/40 p-3 transition-all hover:border-primary/40 hover:bg-primary/5"
-                  >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                      {c.name.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold transition-colors group-hover:text-primary">{c.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{c.role}</div>
-                    </div>
-                    <User className="ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                  </a>
+                  c.profileUrl.startsWith("/") ? (
+                    <Link
+                      key={c.name}
+                      href={c.profileUrl}
+                      className="group flex items-center gap-3 rounded-lg border border-border/50 bg-background/40 p-3 transition-all hover:border-primary/40 hover:bg-primary/5"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                        {c.name.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-semibold transition-colors group-hover:text-primary">{c.name}</div>
+                        <div className="truncate text-xs text-muted-foreground">{c.role}</div>
+                      </div>
+                      <User className="ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                    </Link>
+                  ) : (
+                    <a
+                      key={c.name}
+                      href={c.profileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 rounded-lg border border-border/50 bg-background/40 p-3 transition-all hover:border-primary/40 hover:bg-primary/5"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                        {c.name.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-semibold transition-colors group-hover:text-primary">{c.name}</div>
+                        <div className="truncate text-xs text-muted-foreground">{c.role}</div>
+                      </div>
+                      <User className="ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                    </a>
+                  )
                 ) : (
                   <div
                     key={c.name}

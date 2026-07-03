@@ -43,14 +43,14 @@ const AURA_MODS = new Set([
   "aura_pistol_amplification", "dead_eye", "aura_infested_impedance", "loot_detector",
   "aura_shield_disruption", "aura_speed_holster", "aura_sprint_boost", "stand_united",
   "growing_power", "brief_respite", "aerodynamic", "power_donation_r5",
-  "combat_discipline", "shepherd", "coaction_drift",
+  "combat_discipline", "shepherd",
 ]);
 
 // Known exilus mod IDs (movement, utility, drift mods — matched to actual data)
 const EXILUS_MODS = new Set([
   "rush_r3", "maglev", "master_thief", "intruder",
   "enemy_sense_r3", "vigilante_pursuit", "animal_instinct",
-  "aura_cunning_drift", "endurance_drift", "power_drift", "speed_drift",
+  "aura_cunning_drift", "endurance_drift", "power_drift", "speed_drift", "coaction_drift",
   "lightning_dash", "firewalker", "ice_spring", "toxic_flight", "battering_maneuver",
   "handspring_r10", "sure_footed_r5",
   "constitution", "aviator", "agility_drift",
@@ -167,7 +167,9 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     if (slotType === "aura") {
       categoryMods = categoryMods.filter((m) => AURA_MODS.has(m.id));
     } else if (slotType === "exilus") {
-      categoryMods = categoryMods.filter((m) => EXILUS_MODS.has(m.id));
+      categoryMods = categoryMods.filter(
+        (m) => EXILUS_MODS.has(m.id) || (m.category === "augment" && m.polarity === "exilus"),
+      );
     }
 
     // Filter augments to matching warframe (+ universal; primes/umbra base ids; Umbra polarity = any frame)

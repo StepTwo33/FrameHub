@@ -3471,7 +3471,7 @@ export const allMods: Mod[] = [
   {
     "id": "augment_octavia_conductor",
     "name": "Conductor",
-    "polarity": "zenurik",
+    "polarity": "exilus",
     "drain": 6,
     "maxRank": 3,
     "category": "augment",
@@ -11909,6 +11909,7 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
+      "energyMax": 1.67,
       "parkourVelocity": 2
     },
     "description": "+10% Energy Max, +12% Parkour Velocity",

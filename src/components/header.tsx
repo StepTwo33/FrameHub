@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users } from "lucide-react";
+import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users, Heart } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { ThemePicker } from "@/components/theme-picker";
 import { AvatarImage } from "@/components/game-asset-image";
@@ -155,6 +155,14 @@ export function Header() {
           <span className="w-px h-5 bg-border mx-2" />
 
           <Link
+            href="/support"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-rose-400 hover:text-rose-300 transition-colors rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15"
+          >
+            <Heart className="h-3.5 w-3.5" />
+            Support
+          </Link>
+
+          <Link
             href="/report-issue"
             className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-amber-400/70 hover:text-amber-400 transition-colors rounded-lg hover:bg-amber-500/5"
           >
@@ -289,6 +297,14 @@ export function Header() {
             );
           })}
           <div className="border-t border-border pt-1 mt-1">
+            <Link
+              href="/support"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+            >
+              <Heart className="h-4 w-4" />
+              Support
+            </Link>
             <Link
               href="/report-issue"
               onClick={() => setMobileOpen(false)}

@@ -703,6 +703,9 @@ function applyWarframeMod(stats: WarframeCalculatedStats, statName: string, valu
     case 'flowEnergyMax':
       stats.flowBonus += value;
       break;
+    case 'parkourVelocity':
+      stats.parkourVelocityBonus += value;
+      break;
   }
 }
 

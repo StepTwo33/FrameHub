@@ -1277,7 +1277,15 @@ export default function WarframeBuilderPage() {
           open={exaltedModPickerOpen}
           onClose={() => setExaltedModPickerOpen(false)}
           mods={allMods}
-          category={exaltedWeapon.category === "melee" ? "melee" : "primary"}
+          category={
+            exaltedWeapon.category === "melee" || exaltedWeapon.category === "archmelee"
+              ? "melee"
+              : exaltedWeapon.category === "secondary" ||
+                  exaltedWeapon.category === "pistol" ||
+                  exaltedWeapon.category === "dual_pistols"
+                ? "secondary"
+                : "primary"
+          }
           equippedModIds={exaltedMods.map((m) => m.modId)}
           onSelect={(mod, rank) => {
             setExaltedMods((prev) => {
