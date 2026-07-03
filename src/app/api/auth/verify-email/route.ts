@@ -3,6 +3,7 @@ import {
     validateVerificationToken,
     findUserByEmailInsensitive,
     createSession,
+    buildSessionUser,
     SESSION_COOKIE,
     framehubSessionCookieOptions,
 } from "@/lib/auth";
@@ -60,15 +61,8 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const token = await createSession({
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email!,
-            image: user.image,
-            emailVerified: true,
-            role: user.role,
-        });
+        const sessionUser = await buildSessionUser({ ...user, emailVerified: new Date() });
+        const token = await createSession(sessionUser);
 
         const origin = getPublicOrigin(req);
 

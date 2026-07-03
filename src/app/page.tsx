@@ -13,16 +13,13 @@ import {
   Hammer,
   Plane,
   ExternalLink,
-  Github,
   Users,
 } from "lucide-react";
 import {
   PageShell,
   PageMain,
   FeatureCard,
-  CalloutBanner,
 } from "@/components/page-shell";
-import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 export default function Home() {
   return (
@@ -35,22 +32,6 @@ export default function Home() {
           <p className="text-base text-muted-foreground sm:text-lg">
             Plan and optimize your Warframe builds with real-time stat calculations, mod stacking, and DPS analysis.
           </p>
-          <CalloutBanner accent="emerald" className="mx-auto mt-6 max-w-xl">
-            <p className="text-sm leading-relaxed text-foreground/90">
-              <span className="font-medium text-emerald-400">Frame Hub is open source.</span>{" "}
-              Contribute, report bugs, or fork the project on GitHub.
-            </p>
-            <a
-              href={FRAME_HUB_GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
-            >
-              <Github className="h-4 w-4" />
-              StepTwo33/FrameHub
-              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
-            </a>
-          </CalloutBanner>
         </div>
 
         <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2 lg:grid-cols-3">

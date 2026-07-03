@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { isUserBanned, syncBootstrapAdminRole } from "@/lib/admin";
 import crypto from "crypto";
 
 const SESSION_COOKIE = "framehub_session";
@@ -32,6 +33,7 @@ const AUTH_USER_SELECT = {
   emailVerified: true,
   role: true,
   passwordHash: true,
+  bannedAt: true,
 } as const;
 
 const USERNAME_MIN_LENGTH = 3;
@@ -75,6 +77,34 @@ export async function generateUniqueUsername(seed: string): Promise<string> {
   }
 
   return candidate;
+}
+
+type AuthUserRow = {
+  id: string;
+  name: string | null;
+  username: string | null;
+  email: string | null;
+  image: string | null;
+  emailVerified: Date | null;
+  role: string;
+  bannedAt?: Date | null;
+};
+
+/** Sync env-based admin role and map a DB user row to JWT session payload. */
+export async function buildSessionUser(
+  user: AuthUserRow,
+  emailVerifiedOverride?: boolean,
+): Promise<Session["user"]> {
+  const role = await syncBootstrapAdminRole(user.id, user.email, user.role);
+  return {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    email: user.email!,
+    image: user.image,
+    emailVerified: !!(user.emailVerified || emailVerifiedOverride),
+    role,
+  };
 }
 
 // --------------- Password Hashing (PBKDF2) ---------------
@@ -209,15 +239,11 @@ export async function findOrCreateUser(
     }
   }
 
-  return {
-    id: user.id,
-    name: user.name,
-    username: user.username,
-    email: user.email!,
-    image: user.image,
-    emailVerified: !!(user.emailVerified || data.emailVerified),
-    role: user.role,
-  };
+  if (isUserBanned(user)) {
+    throw new Error("ACCOUNT_BANNED");
+  }
+
+  return buildSessionUser(user, data.emailVerified);
 }
 
 export async function findUserByEmail(email: string) {

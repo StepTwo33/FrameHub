@@ -31,13 +31,18 @@ export async function GET(req: NextRequest) {
   }
 
   // Persist to DB and link Google account
-  const user = await findOrCreateUser(googleUser.email, {
-    name: googleUser.name,
-    image: googleUser.image,
-    emailVerified: true,
-    provider: "google",
-    providerAccountId: googleUser.id,
-  });
+  let user;
+  try {
+    user = await findOrCreateUser(googleUser.email, {
+      name: googleUser.name,
+      image: googleUser.image,
+      emailVerified: true,
+      provider: "google",
+      providerAccountId: googleUser.id,
+    });
+  } catch {
+    return NextResponse.redirect(new URL("/?error=account_suspended", origin));
+  }
 
   const token = await createSession(user);
   const response = NextResponse.redirect(new URL("/", origin));

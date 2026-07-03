@@ -25,12 +25,13 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
       image: true,
       bio: true,
       role: true,
+      bannedAt: true,
       createdAt: true,
       _count: { select: { builds: true } },
     },
   });
 
-  if (!user) notFound();
+  if (!user || user.bannedAt) notFound();
 
   const publicBuilds = await prisma.build.findMany({
     where: { userId: user.id, isPublic: true },

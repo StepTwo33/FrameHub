@@ -3,9 +3,11 @@ import {
     findUserByEmailInsensitive,
     verifyPassword,
     createSession,
+    buildSessionUser,
     SESSION_COOKIE,
     framehubSessionCookieOptions,
 } from "@/lib/auth";
+import { isUserBanned } from "@/lib/admin";
 import { checkRateLimit, clearRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getPublicOrigin } from "@/lib/public-origin";
 import { logServerError } from "@/lib/log-server-error";
@@ -69,16 +71,16 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        if (isUserBanned(user)) {
+            return NextResponse.json(
+                { error: "This account has been suspended. Contact support if you believe this is a mistake." },
+                { status: 403 }
+            );
+        }
+
         // ---------- Create session ----------
-        const token = await createSession({
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email!,
-            image: user.image,
-            emailVerified: true,
-            role: user.role,
-        });
+        const sessionUser = await buildSessionUser(user);
+        const token = await createSession(sessionUser);
 
         const origin = getPublicOrigin(req);
 

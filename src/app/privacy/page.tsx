@@ -11,7 +11,7 @@ export default function PrivacyPage() {
           icon={Shield}
           accent="primary"
           title="Privacy Policy"
-          description="Last updated: February 15, 2026"
+          description="Last updated: July 2, 2026"
         />
         <ProsePanel>
           <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
@@ -19,8 +19,9 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-foreground">1. Information We Collect</h2>
               <p>Frame Hub collects minimal data necessary to operate the Service:</p>
               <ul className="mt-2 list-inside list-disc space-y-1">
-                <li><strong>Account Data:</strong> If you sign in via Google OAuth, we receive your name, email address, and profile picture from Google. We do not receive or store your Google password.</li>
+                <li><strong>Account Data:</strong> If you sign in via Google OAuth or email/password, we store your name, email address, and profile picture (when provided). Passwords are stored as one-way hashes, not plain text.</li>
                 <li><strong>Build Data:</strong> Weapon, warframe, and companion builds you save to the cloud are stored in our database, linked to your account.</li>
+                <li><strong>Public Profile Data:</strong> If you set a username, bio, or publish builds, that information may be visible to other users. Your email address is not displayed on public profile pages.</li>
                 <li><strong>Local Storage:</strong> If you use Frame Hub without signing in, builds are stored in your browser&apos;s local storage. We do not have access to this data.</li>
               </ul>
             </section>
@@ -30,7 +31,8 @@ export default function PrivacyPage() {
               <ul className="list-inside list-disc space-y-1">
                 <li>To authenticate your identity and provide account features</li>
                 <li>To store and retrieve your saved builds</li>
-                <li>To display your profile information (name, avatar) within the app</li>
+                <li>To display your profile information (name, avatar, username, bio) within the app and on public profile pages where applicable</li>
+                <li>To enforce community standards, including moderation actions such as hiding public content or banning accounts that violate our Terms</li>
               </ul>
               <p className="mt-2">We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
             </section>
@@ -64,9 +66,10 @@ export default function PrivacyPage() {
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">6. Third-Party Services</h2>
               <p>
-                Frame Hub uses Google OAuth for authentication. Your use of Google sign-in is subject to
-                Google&apos;s own Privacy Policy and Terms of Service. We only receive the profile information
-                you authorize Google to share with us.
+                Frame Hub uses Google OAuth and optional email/password authentication. Google sign-in is subject to
+                Google&apos;s Privacy Policy and Terms of Service. We only receive the profile information
+                you authorize Google to share with us. Optional donation links (such as PayPal) are handled by the
+                payment provider under their own terms and privacy policies; we do not receive your payment credentials.
               </p>
             </section>
 

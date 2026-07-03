@@ -34,7 +34,13 @@ export async function GET(req: NextRequest) {
   const reports = await prisma.report.findMany({
     where,
     orderBy: { createdAt: "desc" },
-    include: { user: { select: { name: true, email: true, image: true } } },
+    include: {
+      user: {
+        select: isAdmin
+          ? { name: true, email: true, image: true }
+          : { name: true, image: true },
+      },
+    },
   });
 
   return NextResponse.json(reports);

@@ -7,7 +7,7 @@ export default function DisclaimerPage() {
   return (
     <PageShell>
       <PageMain maxWidth="md">
-        <PageHero icon={AlertTriangle} accent="amber" title="Disclaimer" description="Last updated: February 15, 2026" />
+        <PageHero icon={AlertTriangle} accent="amber" title="Disclaimer" description="Last updated: July 2, 2026" />
         <ProsePanel>
           <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
             <section>
@@ -55,6 +55,14 @@ export default function DisclaimerPage() {
                 Warframe&reg;, the Warframe logo, and all associated game content are registered trademarks
                 and copyrights of Digital Extremes Ltd. Use of these names and images on Frame Hub is for
                 identification and informational purposes only and does not imply endorsement.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-semibold text-foreground mb-2">Community Content</h2>
+              <p>
+                User-submitted build names, descriptions, and profile bios are provided by community members.
+                Frame Hub does not endorse user-generated content and may remove or restrict content that violates our Terms.
               </p>
             </section>
 

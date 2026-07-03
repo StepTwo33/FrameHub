@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = { isPublic: true };
+  const where: any = { isPublic: true, user: { bannedAt: null } };
   if (type) where.type = type;
   if (itemId) where.itemId = itemId;
   if (userId) where.userId = userId;
