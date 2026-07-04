@@ -51,7 +51,45 @@ export function cropTransformToSourceRect(
   };
 }
 
+/** Load an image with EXIF orientation applied so canvas crop matches the preview. */
 export async function loadImageElement(src: string): Promise<HTMLImageElement> {
+  if (typeof createImageBitmap !== "undefined") {
+    try {
+      const response = await fetch(src);
+      const blob = await response.blob();
+      const bitmap = await createImageBitmap(blob, { imageOrientation: "from-image" });
+      const canvas = document.createElement("canvas");
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas not supported");
+      ctx.drawImage(bitmap, 0, 0);
+      bitmap.close();
+
+      const orientedBlob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error("Failed to orient image"))),
+          "image/png",
+        );
+      });
+      const url = URL.createObjectURL(orientedBlob);
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          resolve(img);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Failed to load image"));
+        };
+        img.src = url;
+      });
+    } catch {
+      // Fall back to direct load below.
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -78,6 +116,8 @@ export async function renderCroppedAvatarBlob(
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas not supported");
 
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, outputSize, outputSize);
   ctx.drawImage(image, x, y, size, size, 0, 0, outputSize, outputSize);
 
   return new Promise((resolve, reject) => {

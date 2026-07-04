@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { resolveAvatarSrc } from "@/lib/avatar-url";
 
 const hideOnImageError: React.ReactEventHandler<HTMLImageElement> = (e) => {
   (e.target as HTMLImageElement).style.display = "none";
@@ -51,16 +52,17 @@ type AvatarImageProps = {
 /** Avatars: OAuth URLs use next/image; same-origin uploads skip the optimizer (API routes + cache-bust query strings break it). */
 export function AvatarImage({ src, alt, size, className }: AvatarImageProps) {
   const isRemote = src.startsWith("http://") || src.startsWith("https://");
+  const resolvedSrc = isRemote ? src : resolveAvatarSrc(src);
 
   if (isRemote) {
     return (
-      <Image src={src} alt={alt} width={size} height={size} className={className} sizes={`${size}px`} />
+      <Image src={resolvedSrc} alt={alt} width={size} height={size} className={className} sizes={`${size}px`} />
     );
   }
 
   return (
     <img
-      src={src}
+      src={resolvedSrc}
       alt={alt}
       width={size}
       height={size}

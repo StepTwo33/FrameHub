@@ -165,7 +165,7 @@ export function AvatarCropDialog({
         >
           {image && (
             <img
-              src={imageSrc ?? undefined}
+              src={image.src}
               alt=""
               draggable={false}
               className="absolute left-1/2 top-1/2 max-w-none"
