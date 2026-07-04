@@ -50,6 +50,11 @@ import { allArcanes } from "@/data/arcanes";
 import { allArchonShards } from "@/data/archon-shards";
 import { ARCANE_EFFECTS } from "@/data/arcane-effects";
 import { archwings, necramechs } from "@/data/archwing";
+import {
+  getArcaneCatalogStatPickerOptions,
+  getModStatPickerOptions,
+  getShardStatPickerOptions,
+} from "@/lib/override-stat-catalog";
 
 const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   weapon: "Weapons",
@@ -226,7 +231,6 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
   const [showDropdown, setShowDropdown] = useState(false);
   const [note, setNote] = useState(prefill?.note ?? "");
   const [fieldOverrides, setFieldOverrides] = useState<Record<string, string>>({});
-  const [newStatKey, setNewStatKey] = useState("");
   const [effectLines, setEffectLines] = useState<ArcaneEffectLineDraft[]>([]);
   const [radialAttacks, setRadialAttacks] = useState<RadialAttackDraft[]>([]);
   const [abilities, setAbilities] = useState<AbilityDraft[]>([]);
@@ -367,12 +371,18 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     handleFieldChange(path, String(current));
   };
 
-  const handleAddStatKey = (recordField: string) => {
-    const key = newStatKey.trim();
-    if (!key) return;
-    handleFieldChange(`${recordField}.${key}`, fieldOverrides[`${recordField}.${key}`] ?? "0");
-    setNewStatKey("");
+  const handleAddStatKey = (recordField: string, key: string) => {
+    const trimmed = key.trim();
+    if (!trimmed) return;
+    handleFieldChange(`${recordField}.${trimmed}`, fieldOverrides[`${recordField}.${trimmed}`] ?? "0");
   };
+
+  const statPickerOptions = useMemo(() => {
+    if (category === "mod") return getModStatPickerOptions();
+    if (category === "arcane") return getArcaneCatalogStatPickerOptions();
+    if (category === "archon_shard") return getShardStatPickerOptions();
+    return [];
+  }, [category]);
 
   const buildFields = (): Record<string, unknown> => {
     const flat: Record<string, unknown> = {};
@@ -727,9 +737,8 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
               onChange={handleFieldChange}
               onFocusField={seedFieldOnFocus}
               isFieldChanged={isFieldChanged}
-              onAddKey={() => handleAddStatKey(recordField)}
-              newKeyValue={newStatKey}
-              onNewKeyChange={setNewStatKey}
+              onAddKey={(key) => handleAddStatKey(recordField, key)}
+              statOptions={statPickerOptions}
             />
           ))}
 

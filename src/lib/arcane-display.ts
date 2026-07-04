@@ -118,6 +118,11 @@ export function getArcaneStatLabel(stat: string): string {
   );
 }
 
+/** All arcane effect stat keys with human labels in the catalog. */
+export function getKnownArcaneStatKeys(): string[] {
+  return Object.keys(STAT_LABELS);
+}
+
 const PASSIVE_TRIGGERS = new Set<ArcaneTrigger>(["passive"]);
 
 function isProcStat(stat: string, trigger: ArcaneTrigger): boolean {

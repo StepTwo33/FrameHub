@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatOverrideFieldLabel } from "@/lib/override-schemas";
@@ -13,6 +14,10 @@ import {
 } from "@/lib/weapon-radial-utils";
 import type { WeaponRadialAttack } from "@/lib/types";
 import type { ArcaneEffectLineDraft } from "@/lib/arcane-effect-drafts";
+import { getArcaneEffectStatPickerOptions } from "@/lib/override-stat-catalog";
+import { StatKeyAddRow, StatKeyPicker } from "@/components/stat-key-picker";
+import { getModStatLabel } from "@/lib/override-stat-catalog";
+import type { StatPickerOption } from "@/lib/override-stat-catalog";
 
 export type { ArcaneEffectLineDraft };
 
@@ -20,10 +25,12 @@ export function ArcaneEffectsEditor({
   lines,
   maxRank = 5,
   onChange,
+  statOptions = getArcaneEffectStatPickerOptions(),
 }: {
   lines: ArcaneEffectLineDraft[];
   maxRank?: number;
   onChange: (lines: ArcaneEffectLineDraft[]) => void;
+  statOptions?: StatPickerOption[];
 }) {
   const update = (index: number, patch: Partial<ArcaneEffectLineDraft>) => {
     onChange(lines.map((line, i) => (i === index ? { ...line, ...patch } : line)));
@@ -75,15 +82,12 @@ export function ArcaneEffectsEditor({
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             <label className="block text-[11px] sm:col-span-2">
-              <span className="text-muted-foreground">Effect</span>
-              <p className="mt-0.5 text-sm font-medium text-foreground">
-                {line.stat ? getArcaneStatLabel(line.stat) : "New effect line"}
-              </p>
-              <input
+              <span className="text-muted-foreground">Effect stat</span>
+              <StatKeyPicker
                 value={line.stat}
-                onChange={(e) => update(index, { stat: e.target.value })}
-                placeholder="Internal key, e.g. ammoEfficiency"
-                className="mt-1 h-8 w-full rounded border border-border bg-background px-2 font-mono text-xs text-muted-foreground"
+                onChange={(stat) => update(index, { stat })}
+                options={statOptions}
+                placeholder="Choose effect stat…"
               />
             </label>
             {line.constantAtAllRanks ? (
@@ -312,9 +316,8 @@ export function StatRowsEditor({
   onFocusField,
   isFieldChanged,
   onAddKey,
-  newKeyValue,
-  onNewKeyChange,
   helperText,
+  statOptions = [],
 }: {
   title: string;
   rows: { key: string; path: string; value: unknown }[];
@@ -322,11 +325,14 @@ export function StatRowsEditor({
   onChange: (path: string, value: string) => void;
   onFocusField?: (path: string, current: unknown) => void;
   isFieldChanged?: (path: string, current: unknown) => boolean;
-  onAddKey: () => void;
-  newKeyValue: string;
-  onNewKeyChange: (v: string) => void;
+  onAddKey: (key: string) => void;
   helperText?: string;
+  statOptions?: StatPickerOption[];
 }) {
+  const labelForKey = (key: string) =>
+    statOptions.find((o) => o.value === key)?.label ?? getModStatLabel(key);
+
+  const usedKeys = useMemo(() => new Set(rows.map((r) => r.key)), [rows]);
   return (
     <div>
       <p className="mb-1 text-xs font-medium text-foreground">{title}</p>
@@ -354,7 +360,7 @@ export function StatRowsEditor({
                     isChanged && "bg-purple-500/5",
                   )}
                 >
-                  <span className="text-sm">{formatOverrideFieldLabel(key)}</span>
+                  <span className="text-sm">{labelForKey(key)}</span>
                   <span className="hidden text-sm text-muted-foreground sm:block">{String(value ?? "—")}</span>
                   <input
                     type="number"
@@ -374,21 +380,9 @@ export function StatRowsEditor({
           </div>
         </div>
       )}
-      <div className="mt-2 flex gap-2">
-        <input
-          value={newKeyValue}
-          onChange={(e) => onNewKeyChange(e.target.value)}
-          placeholder="Add stat name (e.g. damage)"
-          className="h-8 flex-1 rounded border border-border bg-background px-2 text-sm"
-        />
-        <button
-          type="button"
-          onClick={onAddKey}
-          className="flex items-center gap-1 rounded-lg border border-border px-3 text-xs hover:bg-muted/50"
-        >
-          <Plus className="h-3.5 w-3.5" /> Add stat
-        </button>
-      </div>
+      {statOptions.length > 0 && (
+        <StatKeyAddRow options={statOptions} usedKeys={usedKeys} onAdd={onAddKey} />
+      )}
     </div>
   );
 }
