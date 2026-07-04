@@ -226,7 +226,8 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
   }, [itemData, selectedItemId, category]);
 
   useEffect(() => {
-    if (!prefill?.fields || Object.keys(prefill.fields).length === 0) return;
+    const prefillFields = prefill?.fields;
+    if (!prefillFields || Object.keys(prefillFields).length === 0) return;
     queueMicrotask(() => {
       const flat: Record<string, string> = {};
       const walk = (obj: Record<string, unknown>, prefix = "") => {
@@ -245,7 +246,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
           }
         }
       };
-      walk(prefill.fields);
+      walk(prefillFields);
       setFieldOverrides(flat);
     });
   }, [prefill?.fields, nestedRecordFields]);
