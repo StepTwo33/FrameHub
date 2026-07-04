@@ -589,13 +589,15 @@ def main() -> None:
                 {"stat": "removeShields", "maxValue": 1, "flat": True, "stacking": False},
             ]
 
-        out[fid] = {
+        entry: dict = {
             "name": data["name"],
             "trigger": trigger,
             "maxRank": data["maxRank"],
-            "stackCap": stack_cap,
             "effects": effects,
         }
+        if stack_cap is not None:
+            entry["stackCap"] = stack_cap
+        out[fid] = entry
 
     lines = [
         "/**",

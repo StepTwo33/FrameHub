@@ -42,7 +42,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Akimbo Slip Shot",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -56,7 +55,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Acceleration",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "fireRate",
@@ -82,7 +80,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Aegis",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "shieldRegenChance",
@@ -102,7 +99,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Agility",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "parkourVelocity",
@@ -128,7 +124,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Arachne",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "wallLatchDamage",
@@ -142,7 +137,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Avenger",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -162,7 +156,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Awakening",
     "trigger": "onReload",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damageOnRevive",
@@ -176,7 +169,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Barrier",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "shieldRestoreChance",
@@ -190,7 +182,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Battery",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "energyPerArmor",
@@ -204,7 +195,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Bellicose",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrengthPerHealth",
@@ -230,7 +220,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Blade Charger",
     "trigger": "onKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeDamageBonus",
@@ -244,7 +233,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Blessing",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 50,
     "effects": [
       {
         "stat": "healthFlat",
@@ -252,13 +240,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 50
   },
   "arcane_bodyguard": {
     "name": "Arcane Bodyguard",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "companionHeal",
@@ -272,7 +260,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Camisado",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -286,7 +273,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Circumvent",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "armorSteal",
@@ -300,7 +286,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Concentration",
     "trigger": "onAbilityCast",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityDuration",
@@ -314,7 +299,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Consequence",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "parkourVelocity",
@@ -328,7 +312,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Crepuscular",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -348,7 +331,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Deflection",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reflectDamage",
@@ -362,7 +344,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Double Back",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 3,
     "effects": [
       {
         "stat": "damageReduction",
@@ -370,13 +351,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 3
   },
   "arcane_energize": {
     "name": "Arcane Energize",
     "trigger": "onPickup",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "energyOrbBonus",
@@ -396,7 +377,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Eruption",
     "trigger": "onPickup",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "knockdownChance",
@@ -410,7 +390,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Escapist",
     "trigger": "onKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "escapistStackCap",
@@ -430,7 +409,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Expertise",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrengthToShield",
@@ -444,7 +422,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Fury",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeDamageBonus",
@@ -464,7 +441,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Grace",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -484,7 +460,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Guardian",
     "trigger": "onDamaged",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "armorBonusChance",
@@ -516,7 +491,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Healing",
     "trigger": "onStatus",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusResistance",
@@ -536,7 +510,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Hot Shot",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -550,7 +523,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Ice",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusResistance",
@@ -564,7 +536,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Ice Storm",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 20,
     "effects": [
       {
         "stat": "abilityDuration",
@@ -578,13 +549,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 20
   },
   "arcane_impetus": {
     "name": "Arcane Impetus",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityEfficiency",
@@ -598,7 +569,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Intention",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healthFlat",
@@ -612,7 +582,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Momentum",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reloadSpeedChance",
@@ -632,7 +601,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Nullifier",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusResistance",
@@ -652,7 +620,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Persistence",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "persistenceDamageCapPerSecond",
@@ -672,7 +639,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Phantasm",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "dodgeSpeed",
@@ -686,7 +652,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Pistoleer",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -700,7 +665,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Power Ramp",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -714,7 +678,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Precision",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "headshotDamage",
@@ -728,7 +691,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Primary Charger",
     "trigger": "onMeleeKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "holsterDamage",
@@ -748,7 +710,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Pulse",
     "trigger": "onPickup",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healthFromOrbs",
@@ -768,7 +729,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Rage",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "holsterDamage",
@@ -788,7 +748,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Reaper",
     "trigger": "onMeleeKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healthRegenPerSec",
@@ -808,7 +767,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Resistance",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusResistance",
@@ -822,7 +780,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Rise",
     "trigger": "onReload",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "holsterDamage",
@@ -836,7 +793,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Steadfast",
     "trigger": "onAbilityCast",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "freeAbilityCastChance",
@@ -850,7 +806,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Sculptor",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityEfficiency",
@@ -864,7 +819,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Strike",
     "trigger": "onHit",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "attackSpeed",
@@ -890,7 +844,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Tanker",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "flatArmorBonus",
@@ -910,7 +863,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Tempo",
     "trigger": "onKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "fireRate",
@@ -930,7 +882,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Trickery",
     "trigger": "onFinisher",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "invisibilityChance",
@@ -950,7 +901,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Truculence",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "overguardThreshold",
@@ -970,7 +920,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Ultimatum",
     "trigger": "onFinisher",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "finisherDamage",
@@ -984,7 +933,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Universal Fallout",
     "trigger": "onStatus",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "universalOrbChance",
@@ -998,7 +946,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Velocity",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "fireRate",
@@ -1018,7 +965,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Victory",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "headshotHealthRegen",
@@ -1032,7 +978,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Arcane Warmth",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "coldResistance",
@@ -1046,7 +991,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Cascadia Accuracy",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -1060,7 +1004,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Cascadia Empowered",
     "trigger": "onStatus",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "bonusDamageOnStatus",
@@ -1074,7 +1017,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Cascadia Flare",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 480,
     "effects": [
       {
         "stat": "damage",
@@ -1082,13 +1024,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 480
   },
   "cascadia_overcharge": {
     "name": "Cascadia Overcharge",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -1102,7 +1044,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Conjunction Voltage",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 40,
     "effects": [
       {
         "stat": "multishot",
@@ -1110,13 +1051,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 40
   },
   "emergence_dissipate": {
     "name": "Emergence Dissipate",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "dissipateRadius",
@@ -1136,7 +1077,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Emergence Renewed",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "energyRegen",
@@ -1150,7 +1090,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Emergence Savior",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "lethalInvulnDuration",
@@ -1170,7 +1109,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Eternal Eradicate",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampDamage",
@@ -1184,7 +1122,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Eternal Logistics",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -1198,7 +1135,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Eternal Onslaught",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -1212,7 +1148,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Brave",
     "trigger": "stacks",
     "maxRank": 3,
-    "stackCap": 3,
     "effects": [
       {
         "stat": "energyRegen",
@@ -1220,13 +1155,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 3
   },
   "exodia_contagion": {
     "name": "Exodia Contagion",
     "trigger": "onMovement",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "projectileOnAimGlide",
@@ -1240,7 +1175,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Epidemic",
     "trigger": "onMovement",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "shockwaveOnSlam",
@@ -1254,7 +1188,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Force",
     "trigger": "onStatus",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusProcChance",
@@ -1274,7 +1207,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Hunt",
     "trigger": "onMovement",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "pullChance",
@@ -1294,7 +1226,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Might",
     "trigger": "onFinisher",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "lifeStealChance",
@@ -1314,7 +1245,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Triumph",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeComboChance",
@@ -1328,7 +1258,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Exodia Valor",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeComboChance",
@@ -1342,7 +1271,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Fractalized Reset",
     "trigger": "onAbilityCast",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reloadSpeed",
@@ -1356,7 +1284,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Longbow Sharpshot",
     "trigger": "onHeadshot",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damage",
@@ -1370,7 +1297,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Accelerant",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "fireRate",
@@ -1390,7 +1316,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Aggress",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalMultiplier",
@@ -1404,7 +1329,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Anomaly",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "voidPullRadius",
@@ -1418,7 +1342,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Cadence",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "voidSprintSpeed",
@@ -1432,7 +1355,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Cloud",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "voidModeSpeed",
@@ -1446,7 +1368,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Destruct",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "enemyResistanceReduction",
@@ -1460,7 +1381,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Drive",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reloadSpeed",
@@ -1480,7 +1400,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Elevate",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healthFromOrbs",
@@ -1500,7 +1419,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Firewall",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damageReduction",
@@ -1520,7 +1438,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Glitch",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "transferenceStaticNegate",
@@ -1534,7 +1451,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Husk",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "operatorArmor",
@@ -1548,7 +1464,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Lockdown",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "voidTrapDuration",
@@ -1562,7 +1477,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Melt",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damage",
@@ -1582,7 +1496,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Nourish",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "operatorEnergyToWarframe",
@@ -1596,7 +1509,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Overload",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damage",
@@ -1616,7 +1528,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Repair",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "operatorToWarframeHeal",
@@ -1630,7 +1541,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Replenish",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "operatorHealthRegen",
@@ -1644,7 +1554,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Revert",
     "trigger": "onVoidSling",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "revertWindow",
@@ -1664,7 +1573,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Magus Vigor",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "operatorHealth",
@@ -1678,7 +1586,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Afflictions",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "statusStackBonus",
@@ -1692,7 +1599,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Animosity",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -1712,7 +1618,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Assimilation",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeHeavyDamage",
@@ -1726,7 +1631,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Careen",
     "trigger": "onMovement",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeDamageBonus",
@@ -1740,7 +1644,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Crescendo",
     "trigger": "onFinisher",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeComboInitial",
@@ -1754,7 +1657,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Doughty",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "critPerPunctureTen",
@@ -1768,7 +1670,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Duplicate",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "duplicateAttackChance",
@@ -1782,7 +1683,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Exposure",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 240,
     "effects": [
       {
         "stat": "meleeDamageBonus",
@@ -1790,13 +1690,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 240
   },
   "melee_fortification": {
     "name": "Melee Fortification",
     "trigger": "onMeleeKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "flatArmorBonus",
@@ -1810,7 +1710,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Influence",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "elementalProcChance",
@@ -1824,7 +1723,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Retaliation",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "meleeDamagePerShield",
@@ -1838,7 +1736,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Melee Vortex",
     "trigger": "onKill",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "pullChance",
@@ -1858,7 +1755,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Molt Augmented",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 250,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -1866,13 +1762,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 250
   },
   "molt_efficiency": {
     "name": "Molt Efficiency",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityDuration",
@@ -1886,7 +1782,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Molt Reconstruct",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "healPerEnergySpent",
@@ -1900,7 +1795,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Molt Vigor",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -1914,7 +1808,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Pax Bolt",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "kitgunTether",
@@ -1928,7 +1821,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Pax Charge",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "kitgunRecharge",
@@ -1942,7 +1834,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Pax Seeker",
     "trigger": "onHeadshot",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "kitgunHoming",
@@ -1956,7 +1847,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Pax Soar",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "kitgunProjectileSpeed",
@@ -1970,7 +1860,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Blight",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 40,
     "effects": [
       {
         "stat": "multishot",
@@ -1978,13 +1867,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 40
   },
   "primary_bulwark": {
     "name": "Primary Bulwark",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damagePerArmorOver",
@@ -2004,7 +1893,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Compression",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -2018,7 +1906,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Crux",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 10,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -2026,13 +1913,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 10
   },
   "arcane_primary_deadhead": {
     "name": "Primary Deadhead",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 3,
     "effects": [
       {
         "stat": "damage",
@@ -2052,13 +1939,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 3
   },
   "primary_debilitate": {
     "name": "Primary Debilitate",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "debilitateStackThreshold",
@@ -2072,7 +1959,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Dexterity",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 6,
     "effects": [
       {
         "stat": "damage",
@@ -2086,13 +1972,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": true,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 6
   },
   "primary_exhilarate": {
     "name": "Primary Exhilarate",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 3,
     "effects": [
       {
         "stat": "energyRegen",
@@ -2100,13 +1986,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 3
   },
   "primary_frostbite": {
     "name": "Primary Frostbite",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 40,
     "effects": [
       {
         "stat": "multishot",
@@ -2114,13 +2000,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 40
   },
   "arcane_primary_merciless": {
     "name": "Primary Merciless",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 12,
     "effects": [
       {
         "stat": "reloadSpeed",
@@ -2134,13 +2020,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 12
   },
   "primary_obstruct": {
     "name": "Primary Obstruct",
     "trigger": "onStatus",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "weaponJamRadius",
@@ -2160,7 +2046,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Overcharge",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "multishot",
@@ -2174,7 +2059,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Primary Plated Round",
     "trigger": "onReload",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reloadDamageRamp",
@@ -2188,7 +2072,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Residual Boils",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "toxinPoolDuration",
@@ -2202,7 +2085,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Residual Malodor",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "gasCloudDuration",
@@ -2216,7 +2098,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Residual Shock",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "electricZoneDuration",
@@ -2230,7 +2111,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Residual Viremia",
     "trigger": "conditional",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "bonusDamageOnStatus",
@@ -2244,7 +2124,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Cryogenic",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "coldStacksApplied",
@@ -2258,7 +2137,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Deadhead",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 3,
     "effects": [
       {
         "stat": "damage",
@@ -2278,13 +2156,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 3
   },
   "arcane_secondary_dexterity": {
     "name": "Secondary Dexterity",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 6,
     "effects": [
       {
         "stat": "damage",
@@ -2298,13 +2176,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": true,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 6
   },
   "secondary_encumber": {
     "name": "Secondary Encumber",
     "trigger": "onStatus",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "secondaryStatusProc",
@@ -2318,7 +2196,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Enervate",
     "trigger": "onHit",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -2332,7 +2209,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Fortifier",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "overguardDamage",
@@ -2346,7 +2222,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Irradiate",
     "trigger": "onHit",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "procDamageMultiplier",
@@ -2360,7 +2235,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Kinship",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalChance",
@@ -2374,7 +2248,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Merciless",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 12,
     "effects": [
       {
         "stat": "reloadSpeed",
@@ -2388,13 +2261,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": true
       }
-    ]
+    ],
+    "stackCap": 12
   },
   "secondary_outburst": {
     "name": "Secondary Outburst",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "criticalMultiplier",
@@ -2408,7 +2281,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Shiver",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damageTakenBonus",
@@ -2422,7 +2294,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Secondary Surge",
     "trigger": "onAbilityCast",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damagePerEnergy",
@@ -2436,7 +2307,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Shotgun Vendetta",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "reloadSpeed",
@@ -2450,7 +2320,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Theorem Contagion",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "vulnerability",
@@ -2464,7 +2333,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Theorem Demulcent",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "damage",
@@ -2478,7 +2346,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Theorem Infection",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "companionDamageRamp",
@@ -2492,7 +2359,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Forge",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampHeatDamage",
@@ -2506,7 +2372,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Fury",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampCritDamage",
@@ -2520,7 +2385,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Ghost",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampStatusChance",
@@ -2534,7 +2398,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Null",
     "trigger": "onKill",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "energyRegen",
@@ -2548,7 +2411,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Shadow",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampReload",
@@ -2562,7 +2424,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Spike",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampMultishot",
@@ -2576,7 +2437,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Strike",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampCritChance",
@@ -2590,7 +2450,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Surge",
     "trigger": "onHit",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "voidConversion",
@@ -2610,7 +2469,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Tempo",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampFireRate",
@@ -2624,7 +2482,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Virtuos Trojan",
     "trigger": "passive",
     "maxRank": 3,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampDamage",
@@ -2638,7 +2495,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Zid-An Asheir",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": 50,
     "effects": [
       {
         "stat": "statusChancePerHit",
@@ -2652,13 +2508,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
         "flat": false,
         "stacking": false
       }
-    ]
+    ],
+    "stackCap": 50
   },
   "zid_an_haras": {
     "name": "Zid-An Haras",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ammoEfficiency",
@@ -2672,7 +2528,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Zid-An Osbok",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "ampCritDamage",
@@ -2686,7 +2541,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Zid-An Sek-Eel",
     "trigger": "passive",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "invisibilityDuration",
@@ -2706,7 +2560,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "name": "Zid-An Uskos",
     "trigger": "conditional",
     "maxRank": 5,
-    "stackCap": null,
     "effects": [
       {
         "stat": "secondaryHeatDamage",
