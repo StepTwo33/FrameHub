@@ -77,6 +77,7 @@ export default function ReportIssuePage() {
   const [showOverrideForm, setShowOverrideForm] = useState(false);
   const [ovrExpandedId, setOvrExpandedId] = useState<string | null>(null);
   const [overridePrefill, setOverridePrefill] = useState<{
+    existingOverrideId?: string;
     category?: OverrideCategory;
     itemId?: string;
     note?: string;
