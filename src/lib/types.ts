@@ -299,6 +299,8 @@ export interface CalculatedStats {
   setBonusSummary?: SetBonusSummaryLine[];
   /** Mod-scaled radial / AoE attacks when the weapon has them. */
   radialAttacks?: WeaponRadialAttack[];
+  /** Accumulated arcane stat values for display / future modeling. */
+  arcaneBonuses?: Record<string, number>;
 }
 
 export interface WarframeCalculatedStats {
@@ -357,6 +359,8 @@ export interface WarframeCalculatedStats {
   persistenceDamageCapPerSecond?: number;
   /** True when Persistence is equipped and armor ≥ 700. */
   persistenceActive?: boolean;
+  /** Accumulated arcane stat values for display / future modeling. */
+  arcaneBonuses?: Record<string, number>;
 }
 
 export interface Companion {

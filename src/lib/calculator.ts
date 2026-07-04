@@ -1,6 +1,13 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponRadialAttack } from './types';
 import {
+  applyArcaneToWarframeFromMod,
+  applyArcaneToWeaponFromMod,
+  effectiveArcaneStacks,
+  getArcaneEffectDef,
+} from './arcane-calculator';
+export { getPersistenceDamageCap, PERSISTENCE_DAMAGE_CAP_BY_RANK } from './arcane-utils';
+import {
   VIGILANTE_MOD_IDS,
   UMBRAL_MOD_IDS,
   weaponSupportsPrimaryStyleSets,
@@ -755,13 +762,11 @@ function setStatusChancePerShot(stats: CalculatedStats, baseWeapon: Weapon): voi
 }
 
 /**
- * Weapon arcanes carry no explicit stacking flag in the data. Stacking on-kill
- * arcanes (Merciless, Deadhead, …) describe their cap ("max 12", "Stacks up to 10x");
- * parse it and clamp the simulated stack count. Static rank-based arcanes (no stack
- * language, e.g. Virtuos Strike) apply their value once — weapon builds don't store
- * arcane ranks, matching how applyArcaneToWarframe is called with stacks = 1.
+ * Weapon arcanes: stacking arcanes use sim stack count; static arcanes apply once when sim > 0.
  */
 function effectiveWeaponArcaneStacks(arcane: Mod, simStacks: number): number {
+  const def = getArcaneEffectDef(arcane.id);
+  if (def) return effectiveArcaneStacks(def, simStacks, true);
   if (simStacks <= 0) return 0;
   const desc = arcane.description.toLowerCase();
   if (!desc.includes('stack')) return 1;
@@ -770,133 +775,24 @@ function effectiveWeaponArcaneStacks(arcane: Mod, simStacks: number): number {
   return Math.min(simStacks, cap);
 }
 
-// Apply arcane stats to weapon
-// stacks: number of active stacks (1 = base effect, higher = scaled)
-// baseWeapon: crit/status arcane bonuses are relative to the weapon's BASE stat
-// (they join the additive mod pool), not flat adds onto the modded stat.
+// Apply arcane stats to weapon — reads from ARCANE_EFFECTS (generated wiki data).
 export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks: number = 1, baseWeapon?: Weapon): void {
-  if (stacks <= 0) return;
-  const baseCritChance = baseWeapon?.criticalChance ?? stats.criticalChance;
-  const baseCritMult = baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
-  const baseStatusChance = baseWeapon?.statusChance ?? stats.statusChance;
-  const applyDamage = (scaled: number) => {
-    stats.totalDamage *= (1 + scaled);
-    stats.impact *= (1 + scaled);
-    stats.puncture *= (1 + scaled);
-    stats.slash *= (1 + scaled);
-    for (const e of stats.elements) e.value *= (1 + scaled);
-    for (const e of stats.rawElements) e.value *= (1 + scaled);
-  };
-  for (const [stat, value] of Object.entries(arcane.stats)) {
-    const scaled = (value * stacks) / 100;
-    switch (stat) {
-      case 'criticalChance':
-      case 'ampCritChance':
-        stats.criticalChance += baseCritChance * scaled;
-        break;
-      case 'criticalMultiplier':
-      case 'ampCritDamage':
-        stats.criticalMultiplier += baseCritMult * scaled;
-        break;
-      case 'fireRate':
-      case 'ampFireRate':
-        stats.fireRate *= (1 + scaled);
-        break;
-      case 'damage':
-      case 'ampDamage':
-        applyDamage(scaled);
-        break;
-      case 'multishot':
-      case 'ampMultishot':
-        stats.multishot += scaled;
-        break;
-      case 'statusChance':
-      case 'ampStatusChance':
-        stats.statusChance += baseStatusChance * scaled;
-        break;
-      case 'reloadSpeed':
-      case 'ampReload':
-        if (scaled > 0) stats.reloadTime /= (1 + scaled);
-        break;
-      case 'ampHeatDamage':
-        // Heat-only bonus; not folded into single-type amp DPS here
-        break;
-      case 'ampRange':
-        // Flat meters per rank; not modeled on CalculatedStats
-        break;
-    }
-  }
+  applyArcaneToWeaponFromMod(stats, arcane, stacks, baseWeapon);
 }
 
-/** Arcane Persistence damage/s cap by rank (wiki: ranks 0–5). */
-export const PERSISTENCE_DAMAGE_CAP_BY_RANK = [750, 700, 650, 600, 550, 500] as const;
-
-export function getPersistenceDamageCap(rank: number, maxRank = 5): number {
-  const r = Math.min(Math.max(rank, 0), maxRank);
-  return PERSISTENCE_DAMAGE_CAP_BY_RANK[r] ?? PERSISTENCE_DAMAGE_CAP_BY_RANK[PERSISTENCE_DAMAGE_CAP_BY_RANK.length - 1];
-}
-
-// Apply arcane stats to warframe
+// Apply arcane stats to warframe — reads from ARCANE_EFFECTS (generated wiki data).
 export function applyArcaneToWarframe(
   stats: WarframeCalculatedStats,
   arcane: Mod,
   stacks: number = 1,
   rank?: number,
 ): void {
-  if (stacks <= 0) return;
-
-  if (arcane.id === "arcane_persistence") {
-    const capRank = rank ?? arcane.maxRank;
-    stats.persistenceDamageCapPerSecond = getPersistenceDamageCap(capRank, arcane.maxRank);
-    stats.shieldsNullifiedByPersistence = true;
-    return;
-  }
-
-  for (const [stat, value] of Object.entries(arcane.stats)) {
-    const scaled = (value * stacks) / 100;
-    switch (stat) {
-      case "persistenceDamageCapPerSecond":
-      case "removeShields":
-        break;
-      case 'energyOrbBonus':
-      case 'allyEnergy':
-      case 'healthRegen':
-      case 'healthRegenChance':
-      case 'healthRegenAmount':
-      case 'armorBonusChance':
-      case 'shieldRegenChance':
-      case 'shieldRegenAmount':
-      case 'meleeDamageChance':
-      case 'attackSpeedChance':
-      case 'critChanceOnDamaged':
-      case 'fireRateOnCrit':
-        // Trigger-chance or non-calculable stats — not tracked in base stats
-        break;
-      case 'armorBonusAmount':
-      case 'armor':
-        stats.armorBonus += scaled;
-        break;
-      case 'abilityStrength':
-        stats.abilityStrength += scaled;
-        break;
-      case 'flowEnergyMax':
-        stats.flowBonus += scaled;
-        break;
-      case 'health':
-        stats.healthBonus += scaled;
-        break;
-      case 'shield':
-        stats.shieldBonus += scaled;
-        break;
-      case 'energy':
-        stats.energyBonus += scaled;
-        break;
-      case 'sprintSpeedBonus':
-      case 'sprintSpeed':
-        stats.sprintSpeedBonus += scaled;
-        break;
-    }
-  }
+  const ctx = {
+    totalHealth: stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus,
+    totalShield: stats.baseShield * (1 + stats.shieldBonus) + stats.flatShieldBonus,
+    totalArmor: stats.baseArmor * (1 + stats.armorBonus) + stats.flatArmorBonus,
+  };
+  applyArcaneToWarframeFromMod(stats, arcane, stacks, rank, ctx);
 }
 
 /**
