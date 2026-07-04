@@ -31,8 +31,13 @@ import {
   AbilityDraft,
   ArcaneEffectLineDraft,
   ArcaneEffectsEditor,
+  RadialAttackDraft,
+  RadialAttacksEditor,
   StatRowsEditor,
+  draftToRadialAttack,
+  toRadialAttackDrafts,
 } from "@/components/override-field-editors";
+import { getEffectiveWeapons } from "@/lib/use-data";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
@@ -74,7 +79,10 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let items: any[];
   switch (category) {
-    case "weapon": items = allWeapons; break;
+    case "weapon": {
+      const weapon = getEffectiveWeapons().find((w) => w.id === id);
+      return weapon ? (weapon as unknown as Record<string, unknown>) : null;
+    }
     case "mod": {
       const mod = applyModOverrides(allMods).find((m) => m.id === id);
       return mod ? (mod as unknown as Record<string, unknown>) : null;
@@ -201,6 +209,11 @@ function effectsChanged(original: unknown, draft: ArcaneEffectLineDraft[]): bool
   return JSON.stringify(toEffectDrafts(original)) !== JSON.stringify(draft);
 }
 
+function radialAttacksChanged(original: unknown, draft: RadialAttackDraft[]): boolean {
+  const origDrafts = toRadialAttackDrafts(original);
+  return JSON.stringify(origDrafts) !== JSON.stringify(draft);
+}
+
 function abilitiesChanged(original: unknown, draft: AbilityDraft[]): boolean {
   return JSON.stringify(toAbilityDrafts(original)) !== JSON.stringify(draft);
 }
@@ -228,8 +241,13 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
   const [fieldOverrides, setFieldOverrides] = useState<Record<string, string>>({});
   const [newStatKey, setNewStatKey] = useState("");
   const [effectLines, setEffectLines] = useState<ArcaneEffectLineDraft[]>([]);
+  const [radialAttacks, setRadialAttacks] = useState<RadialAttackDraft[]>([]);
   const [abilities, setAbilities] = useState<AbilityDraft[]>([]);
-  const [structuredTouched, setStructuredTouched] = useState({ effects: false, abilities: false });
+  const [structuredTouched, setStructuredTouched] = useState({
+    effects: false,
+    abilities: false,
+    radialAttacks: false,
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const nestedRecordFields = useMemo(() => getNestedRecordFields(category), [category]);
@@ -283,7 +301,8 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     queueMicrotask(() => {
       setEffectLines(toEffectDrafts(itemData.effects));
       setAbilities(toAbilityDrafts(itemData.abilities));
-      setStructuredTouched({ effects: false, abilities: false });
+      setRadialAttacks(toRadialAttackDrafts(itemData.radialAttacks));
+      setStructuredTouched({ effects: false, abilities: false, radialAttacks: false });
     });
   }, [itemData, selectedItemId, category]);
 
@@ -303,6 +322,9 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
           } else if (key === "abilities" && Array.isArray(value)) {
             setAbilities(toAbilityDrafts(value));
             setStructuredTouched((s) => ({ ...s, abilities: true }));
+          } else if (key === "radialAttacks" && Array.isArray(value)) {
+            setRadialAttacks(toRadialAttackDrafts(value));
+            setStructuredTouched((s) => ({ ...s, radialAttacks: true }));
           } else if (typeof value !== "object" || value === null) {
             flat[path] = String(value);
           }
@@ -326,7 +348,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
   const resetEditorState = () => {
     setFieldOverrides({});
     setNewStatKey("");
-    setStructuredTouched({ effects: false, abilities: false });
+    setStructuredTouched({ effects: false, abilities: false, radialAttacks: false });
   };
 
   const handleCategoryChange = (cat: OverrideCategory) => {
@@ -389,6 +411,14 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     }
     if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {
       fields.abilities = abilities;
+    }
+    if (
+      structuredFields.has("radialAttacks")
+      && (structuredTouched.radialAttacks || radialAttacksChanged(itemData?.radialAttacks, radialAttacks))
+    ) {
+      fields.radialAttacks = radialAttacks
+        .map(draftToRadialAttack)
+        .filter((a): a is NonNullable<typeof a> => a != null);
     }
     return fields;
   };
@@ -476,7 +506,8 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
   }, [fieldOverrides, itemData]);
   const structuredChangeCount =
     (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) ? 1 : 0)
-    + (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities)) ? 1 : 0);
+    + (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities)) ? 1 : 0)
+    + (structuredFields.has("radialAttacks") && (structuredTouched.radialAttacks || radialAttacksChanged(itemData?.radialAttacks, radialAttacks)) ? 1 : 0);
   const changedCount = scalarChangeCount + structuredChangeCount;
 
   const isFieldChanged = (path: string, current: unknown) => {
@@ -697,6 +728,16 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
               onChange={(draft) => {
                 setAbilities(draft);
                 setStructuredTouched((s) => ({ ...s, abilities: true }));
+              }}
+            />
+          )}
+
+          {structuredFields.has("radialAttacks") && (
+            <RadialAttacksEditor
+              attacks={radialAttacks}
+              onChange={(draft) => {
+                setRadialAttacks(draft);
+                setStructuredTouched((s) => ({ ...s, radialAttacks: true }));
               }}
             />
           )}

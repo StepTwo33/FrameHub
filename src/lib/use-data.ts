@@ -46,6 +46,15 @@ export function useWeapons(): Weapon[] {
   return weapons;
 }
 
+/** Enriched weapons with localStorage overrides applied (for editors / static lookups). */
+export function getEffectiveWeapons(): Weapon[] {
+  const overrides = getOverrides();
+  if (overrides.some((o) => o.targetType === "weapon")) {
+    return applyWeaponOverrides(mergedWeapons);
+  }
+  return mergedWeapons;
+}
+
 export function useMods(): { mods: Mod[]; modsMap: Map<string, Mod> } {
   const [mods, setMods] = useState<Mod[]>(allMods);
   const [map, setMap] = useState<Map<string, Mod>>(baseModsMap);

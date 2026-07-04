@@ -12,6 +12,7 @@ export const STRUCTURED_OVERRIDE_FIELDS: Partial<Record<OverrideCategory, string
   warframe: ["abilities"],
   arcane: ["effects"],
   arcane_effect: ["effects"],
+  weapon: ["radialAttacks"],
 };
 
 /** When saving arcane catalog fixes, effect fields go to arcane_effect overrides. */
@@ -21,7 +22,6 @@ export const ARCANE_EFFECT_FIELD_KEYS = new Set(["effects", "trigger", "stackCap
 export const HIDDEN_OVERRIDE_FIELDS = new Set([
   "id",
   "incarnonEvolutions",
-  "radialAttacks",
 ]);
 
 /** Long text fields use a textarea instead of a single-line input. */
@@ -115,6 +115,7 @@ export const FIELD_LABELS: Record<string, string> = {
   statBonuses: "Shard stat options",
   effects: "Effect stat values",
   abilities: "Abilities",
+  radialAttacks: "Radial / AoE attacks",
 };
 
 export const ADD_ITEM_TEMPLATES: Partial<Record<OverrideCategory, Record<string, unknown>>> = {

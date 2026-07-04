@@ -1,4 +1,5 @@
 import type { Weapon } from "@/lib/types";
+import { getWeaponRadialAttacks, weaponHasRadialAttacks } from "@/lib/weapon-radial-utils";
 
 /** Modular part categories — hidden from codex weapon browse (same as weapon builder). */
 export const CODEX_HIDDEN_WEAPON_CATEGORIES = new Set([
@@ -67,10 +68,14 @@ export function filterCodexWeapons(
   weapons: Weapon[],
   category: string,
   searchQuery: string,
+  opts?: { aoeOnly?: boolean },
 ): Weapon[] {
   let list = weapons.filter((w) => !CODEX_HIDDEN_WEAPON_CATEGORIES.has(w.category));
   if (category !== "all") {
     list = list.filter((w) => w.category === category);
+  }
+  if (opts?.aoeOnly) {
+    list = list.filter((w) => weaponHasRadialAttacks(w));
   }
   if (searchQuery.trim()) {
     list = list.filter((w) =>
@@ -81,6 +86,7 @@ export function filterCodexWeapons(
         w.triggerType,
         w.passive,
         w.abilityName,
+        ...getWeaponRadialAttacks(w).map((a) => a.name),
       ]),
     );
   }

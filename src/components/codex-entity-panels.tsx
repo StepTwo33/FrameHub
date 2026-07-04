@@ -12,6 +12,11 @@ import {
   pct,
   weaponElementEntries,
 } from "@/lib/codex-catalog";
+import {
+  getWeaponRadialAttacks,
+  radialAttackDamageTags,
+  weaponHasRadialAttacks,
+} from "@/lib/weapon-radial-utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
@@ -134,12 +139,23 @@ export function CodexWeaponRow({
         />
       }
       title={weapon.name}
-      subtitle={`${formatWeaponCategory(weapon.category)} · ${pct(weapon.criticalChance)} crit`}
+      subtitle={`${formatWeaponCategory(weapon.category)} · ${pct(weapon.criticalChance)} crit${
+        weaponHasRadialAttacks(weapon) ? " · AoE" : ""
+      }`}
       badge={
-        weapon.isIncarnon ? (
-          <Badge variant="outline" className="shrink-0 text-[9px] border-amber-500/30 text-amber-300">
-            Incarnon
-          </Badge>
+        weapon.isIncarnon || weaponHasRadialAttacks(weapon) ? (
+          <div className="flex shrink-0 flex-col items-end gap-0.5">
+            {weaponHasRadialAttacks(weapon) && (
+              <Badge variant="outline" className="text-[9px] border-orange-500/30 text-orange-300">
+                AoE
+              </Badge>
+            )}
+            {weapon.isIncarnon && (
+              <Badge variant="outline" className="text-[9px] border-amber-500/30 text-amber-300">
+                Incarnon
+              </Badge>
+            )}
+          </div>
         ) : undefined
       }
     />
@@ -271,6 +287,7 @@ function StatGrid({ items, compact }: { items: { label: string; value: string }[
 
 export function WeaponDetailPanel({ weapon, compact }: { weapon: Weapon; compact?: boolean }) {
   const elements = weaponElementEntries(weapon);
+  const radialAttacks = getWeaponRadialAttacks(weapon);
 
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
@@ -298,6 +315,11 @@ export function WeaponDetailPanel({ weapon, compact }: { weapon: Weapon; compact
             {weapon.isExalted && (
               <Badge variant="outline" className="text-[10px] border-purple-500/30 text-purple-300">
                 Exalted
+              </Badge>
+            )}
+            {radialAttacks.length > 0 && (
+              <Badge variant="outline" className="text-[10px] border-orange-500/30 text-orange-300">
+                AoE ×{radialAttacks.length}
               </Badge>
             )}
           </div>
@@ -338,6 +360,38 @@ export function WeaponDetailPanel({ weapon, compact }: { weapon: Weapon; compact
           <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
             {weapon.passive}
           </p>
+        </div>
+      )}
+
+      {radialAttacks.length > 0 && (
+        <div>
+          <PanelHeading>Radial / AoE attacks</PanelHeading>
+          <div className={cn("space-y-2", compact ? "max-h-40" : "max-h-52", "overflow-y-auto")}>
+            {radialAttacks.map((attack, idx) => (
+              <div key={`${attack.name}-${idx}`} className="rounded border border-border/60 p-2 text-xs">
+                <p className="font-medium">{attack.name}</p>
+                <div className="mt-1 grid grid-cols-2 gap-1 font-mono text-[10px] text-muted-foreground">
+                  <span>Total: {Math.round(attack.totalDamage)}</span>
+                  <span>Radius: {attack.radius.toFixed(1)}m</span>
+                  {attack.falloffReduction != null && attack.falloffReduction > 0 && (
+                    <span>Falloff: {(attack.falloffReduction * 100).toFixed(0)}%</span>
+                  )}
+                  {attack.explosionDelay != null && attack.explosionDelay > 0 && (
+                    <span>Delay: {attack.explosionDelay.toFixed(1)}s</span>
+                  )}
+                </div>
+                {radialAttackDamageTags(attack).length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {radialAttackDamageTags(attack).map((tag) => (
+                      <span key={tag} className="rounded bg-muted px-1 py-0.5 font-mono text-[10px] capitalize">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

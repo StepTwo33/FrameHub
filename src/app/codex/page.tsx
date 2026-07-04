@@ -23,9 +23,11 @@ import {
 import {
   CODEX_WEAPON_CATEGORY_FILTERS,
   CODEX_COMPANION_TYPE_FILTERS,
+  CODEX_HIDDEN_WEAPON_CATEGORIES,
   filterCodexWeapons,
   matchesCodexSearch,
 } from "@/lib/codex-catalog";
+import { weaponHasRadialAttacks } from "@/lib/weapon-radial-utils";
 import {
   matchesModBrowserCategory,
   modBrowserCategoryLabel,
@@ -90,6 +92,7 @@ function CodexPageContent() {
   const weaponCategory = section === "weapons" ? categoryParam : "all";
   const companionType = section === "companions" ? categoryParam : "all";
   const arcaneSlot = searchParams.get("slot") || "all";
+  const weaponAoeOnly = searchParams.get("aoe") === "1";
   const selectedId = searchParams.get("id");
 
   const { mods } = useMods();
@@ -126,6 +129,7 @@ function CodexPageContent() {
       section: s,
       category: CODEX_CATEGORY_SECTIONS.has(s) ? "all" : null,
       slot: s === "arcanes" ? "all" : null,
+      aoe: s === "weapons" ? null : null,
       id: null,
     });
   };
@@ -201,8 +205,13 @@ function CodexPageContent() {
   }, [shards, searchQuery]);
 
   const filteredWeapons = useMemo(
-    () => filterCodexWeapons(weapons, weaponCategory, searchQuery),
-    [weapons, weaponCategory, searchQuery],
+    () => filterCodexWeapons(weapons, weaponCategory, searchQuery, { aoeOnly: weaponAoeOnly }),
+    [weapons, weaponCategory, searchQuery, weaponAoeOnly],
+  );
+
+  const weaponAoeCount = useMemo(
+    () => weapons.filter((w) => !CODEX_HIDDEN_WEAPON_CATEGORIES.has(w.category) && weaponHasRadialAttacks(w)).length,
+    [weapons],
   );
 
   const filteredWarframes = useMemo(() => {
@@ -402,6 +411,35 @@ function CodexPageContent() {
                   </button>
                 ))}
               </nav>
+              <div className="mt-3 border-t border-border pt-2">
+                <PanelHeading>AoE filter</PanelHeading>
+                <nav className="mt-2 space-y-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setParams({ aoe: null, id: null })}
+                    className={cn(
+                      "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
+                      !weaponAoeOnly
+                        ? "bg-blue-500/15 font-medium text-blue-300"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                    )}
+                  >
+                    All weapons
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setParams({ aoe: "1", id: null })}
+                    className={cn(
+                      "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
+                      weaponAoeOnly
+                        ? "bg-orange-500/15 font-medium text-orange-300"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                    )}
+                  >
+                    Has radial / AoE ({weaponAoeCount})
+                  </button>
+                </nav>
+              </div>
             </ContentPanel>
           )}
 
