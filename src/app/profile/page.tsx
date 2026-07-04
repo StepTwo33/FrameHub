@@ -7,6 +7,7 @@ import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, 
 import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
+import { AvatarCropDialog } from "@/components/avatar-crop-dialog";
 import { SupporterBadge } from "@/components/supporter-badge";
 import { RoleBadge } from "@/components/role-badge";
 
@@ -83,7 +84,10 @@ export default function ProfilePage() {
   const [bioInput, setBioInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarCropOpen, setAvatarCropOpen] = useState(false);
+  const [avatarCropSrc, setAvatarCropSrc] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const avatarCropSrcRef = useRef<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -235,6 +239,23 @@ export default function ProfilePage() {
     setAvatarUploading(false);
   }, [showMessage, notifyProfileUpdated]);
 
+  const closeAvatarCrop = useCallback(() => {
+    setAvatarCropOpen(false);
+    if (avatarCropSrcRef.current) {
+      URL.revokeObjectURL(avatarCropSrcRef.current);
+      avatarCropSrcRef.current = null;
+    }
+    setAvatarCropSrc(null);
+  }, []);
+
+  const handlePickAvatarFile = useCallback((file: File) => {
+    if (avatarCropSrcRef.current) URL.revokeObjectURL(avatarCropSrcRef.current);
+    const url = URL.createObjectURL(file);
+    avatarCropSrcRef.current = url;
+    setAvatarCropSrc(url);
+    setAvatarCropOpen(true);
+  }, []);
+
   const handleRemoveAvatar = useCallback(async () => {
     setAvatarUploading(true);
     try {
@@ -369,7 +390,7 @@ export default function ProfilePage() {
                 className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) handleAvatarUpload(file);
+                  if (file) handlePickAvatarFile(file);
                   e.target.value = "";
                 }}
               />
@@ -845,6 +866,17 @@ export default function ProfilePage() {
           )}
         </>)}
       </div>
+
+      <AvatarCropDialog
+        open={avatarCropOpen}
+        imageSrc={avatarCropSrc}
+        onOpenChange={(open) => {
+          if (!open) closeAvatarCrop();
+          else setAvatarCropOpen(true);
+        }}
+        onConfirm={handleAvatarUpload}
+        uploading={avatarUploading}
+      />
     </PageShell>
   );
 }
