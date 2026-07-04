@@ -51,6 +51,8 @@ const STAT_LABELS: Record<string, string> = {
   attackSpeedBonus: "Attack Speed",
   critChanceOnDamaged: "Crit Chance",
   fireRateOnCrit: "Fire Rate",
+  fireRateOnCritChance: "Proc Chance",
+  buffDuration: "Duration",
   fireRateOnHeadshot: "Fire Rate",
   fireRate: "Fire Rate",
   criticalChance: "Crit Chance",
@@ -200,7 +202,9 @@ function buildLinesFromDef(
     if (line.stat === "removeShields" || line.stat === "persistenceDamageCapPerSecond") continue;
     if (line.stat === "abilityStrengthPerHealthStep") continue;
 
-    const scaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank);
+    const scaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank, {
+      constantAtAllRanks: line.constantAtAllRanks,
+    });
     const label = STAT_LABELS[line.stat] ?? line.stat;
     const value = fmtStatValue(line.stat, scaled, line.flat);
     const proc = isProcStat(line.stat, def.trigger);

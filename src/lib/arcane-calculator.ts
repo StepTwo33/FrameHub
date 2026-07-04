@@ -48,7 +48,9 @@ function resolveEffectValue(
   rank: number,
   stacks: number,
 ): number {
-  const rankScaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank);
+  const rankScaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank, {
+    constantAtAllRanks: line.constantAtAllRanks,
+  });
   const stackMult =
     def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
   return rankScaled * stackMult;

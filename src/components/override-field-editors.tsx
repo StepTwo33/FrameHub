@@ -10,6 +10,7 @@ export interface ArcaneEffectLineDraft {
   maxValue: number;
   flat: boolean;
   stacking: boolean;
+  constantAtAllRanks: boolean;
 }
 
 export function ArcaneEffectsEditor({
@@ -26,7 +27,7 @@ export function ArcaneEffectsEditor({
   };
 
   const addLine = () => {
-    onChange([...lines, { stat: "", maxValue: 0, flat: false, stacking: false }]);
+    onChange([...lines, { stat: "", maxValue: 0, flat: false, stacking: false, constantAtAllRanks: false }]);
   };
 
   const removeLine = (index: number) => {
@@ -37,7 +38,7 @@ export function ArcaneEffectsEditor({
     <div className="space-y-2">
       <p className="text-xs font-medium text-foreground">Arcane effect values (used in builds)</p>
       <p className="text-[11px] text-muted-foreground">
-        Max value is at max rank (R{maxRank}). Values scale linearly from R0 — compare against in-game at each rank.
+        Max value is at max rank (R{maxRank}) unless &quot;Same at all ranks&quot; is checked. Values scale linearly from R0 for scaling stats.
       </p>
       {lines.length === 0 && (
         <p className="text-xs text-muted-foreground italic">No effect lines yet.</p>
@@ -78,7 +79,9 @@ export function ArcaneEffectsEditor({
             <label className="block text-[11px] sm:col-span-2">
               <span className="text-muted-foreground">Preview @ R0 (scaled)</span>
               <p className="mt-0.5 font-mono text-sm text-muted-foreground">
-                {scaleArcaneEffectValue(line.maxValue, 0, maxRank)}
+                {scaleArcaneEffectValue(line.maxValue, 0, maxRank, {
+                  constantAtAllRanks: line.constantAtAllRanks,
+                })}
                 {line.flat ? "" : "%"}
               </p>
             </label>
@@ -91,6 +94,14 @@ export function ArcaneEffectsEditor({
                 onChange={(e) => update(index, { flat: e.target.checked })}
               />
               Flat value (not %)
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={line.constantAtAllRanks}
+                onChange={(e) => update(index, { constantAtAllRanks: e.target.checked })}
+              />
+              Same at all ranks (proc chance, duration, etc.)
             </label>
             <label className="flex items-center gap-2">
               <input

@@ -628,6 +628,7 @@ def main() -> None:
         "  maxValue: number;",
         "  flat?: boolean;",
         "  stacking?: boolean;",
+        "  constantAtAllRanks?: boolean;",
         "}",
         "",
         "export interface ArcaneEffectDef {",

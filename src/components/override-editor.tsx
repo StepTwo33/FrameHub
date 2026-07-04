@@ -176,6 +176,7 @@ function toEffectDrafts(raw: unknown): ArcaneEffectLineDraft[] {
       maxValue: Number(o.maxValue ?? 0),
       flat: Boolean(o.flat),
       stacking: Boolean(o.stacking),
+      constantAtAllRanks: Boolean(o.constantAtAllRanks),
     };
   });
 }
@@ -378,11 +379,12 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     if (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines))) {
       fields.effects = effectLines
         .filter((l) => l.stat.trim())
-        .map(({ stat, maxValue, flat, stacking }) => ({
+        .map(({ stat, maxValue, flat, stacking, constantAtAllRanks }) => ({
           stat,
           maxValue,
           ...(flat ? { flat: true } : {}),
           ...(stacking ? { stacking: true } : {}),
+          ...(constantAtAllRanks ? { constantAtAllRanks: true } : {}),
         }));
     }
     if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {

@@ -26,6 +26,8 @@ export interface ArcaneEffectLine {
   maxValue: number;
   flat?: boolean;
   stacking?: boolean;
+  /** Value does not scale with arcane rank (proc chance, duration, etc.). */
+  constantAtAllRanks?: boolean;
 }
 
 export interface ArcaneEffectDef {
@@ -57,22 +59,24 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "maxRank": 5,
     "effects": [
       {
+        "stat": "fireRateOnCritChance",
+        "maxValue": 30.0,
+        "flat": false,
+        "stacking": false,
+        "constantAtAllRanks": true
+      },
+      {
         "stat": "fireRate",
         "maxValue": 90.0,
         "flat": false,
         "stacking": false
       },
       {
-        "stat": "holsterDamage",
-        "maxValue": 90.0,
-        "flat": false,
-        "stacking": false
-      },
-      {
-        "stat": "fireRateOnCrit",
-        "maxValue": 5.0,
-        "flat": false,
-        "stacking": false
+        "stat": "buffDuration",
+        "maxValue": 9.0,
+        "flat": true,
+        "stacking": false,
+        "constantAtAllRanks": true
       }
     ]
   },

@@ -970,7 +970,11 @@ function ArcaneDetailPanel({
             {effects.effects.map((line) => (
               <div key={line.stat} className="flex justify-between font-mono text-[10px]">
                 <span className="truncate pr-2">{line.stat}</span>
-                <span className="shrink-0">{scaleArcaneEffectValue(line.maxValue, rank, effects.maxRank)}</span>
+                <span className="shrink-0">
+                  {scaleArcaneEffectValue(line.maxValue, rank, effects.maxRank, {
+                    constantAtAllRanks: line.constantAtAllRanks,
+                  })}
+                </span>
               </div>
             ))}
           </div>

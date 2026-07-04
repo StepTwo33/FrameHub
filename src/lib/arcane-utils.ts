@@ -6,8 +6,19 @@ export function getPersistenceDamageCap(rank: number, maxRank = 5): number {
   return PERSISTENCE_DAMAGE_CAP_BY_RANK[r] ?? PERSISTENCE_DAMAGE_CAP_BY_RANK[PERSISTENCE_DAMAGE_CAP_BY_RANK.length - 1];
 }
 
-/** Scale arcane stat values linearly from rank 0 → max rank. */
-export function scaleArcaneEffectValue(maxValue: number, rank: number, maxRank: number): number {
+export interface ArcaneEffectScaleOpts {
+  /** When true, value is the same at every arcane rank (e.g. proc chance, duration). */
+  constantAtAllRanks?: boolean;
+}
+
+/** Scale arcane stat values linearly from rank 0 → max rank unless constantAtAllRanks. */
+export function scaleArcaneEffectValue(
+  maxValue: number,
+  rank: number,
+  maxRank: number,
+  opts?: ArcaneEffectScaleOpts,
+): number {
+  if (opts?.constantAtAllRanks) return maxValue;
   if (maxRank <= 0) return maxValue;
   return maxValue * ((rank + 1) / (maxRank + 1));
 }
