@@ -4012,14 +4012,15 @@ export const allMods: Mod[] = [
     "id": "augment_chroma_afterburn",
     "name": "Afterburn",
     "polarity": "zenurik",
-    "drain": 200,
+    "drain": 6,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
     "stats": {
-      "leaveTrail": 100
+      "damagePerSecondActive": 25,
+      "totalDamageCap": 200
     },
-    "description": "Spectral Scream leaves fire trail per rank",
+    "description": "Spectral Scream Augment: On deactivation, launches a single elemental attack. +25 damage per second active per rank, +100 damage cap per rank (500 max at R3).",
     "rarity": "rare",
     "warframeId": "chroma"
   },
@@ -15041,14 +15042,16 @@ export const allMods: Mod[] = [
     "id": "afterburner",
     "name": "Afterburner",
     "polarity": "zenurik",
-    "drain": 200,
+    "drain": 6,
     "maxRank": 3,
     "category": "augment",
-    "subCategory": "",
-    "stats": {},
-    "description": "Core Vent Augment: <DT_EXPLOSION_COLOR>Blast Damage ignites exhaust fumes for 12s. Enemies passing through the flames take 500 <DT_FIRE_COLOR>Heat Damage.",
-    "rarity": "rare",
-    "warframeId": "chroma"
+    "subCategory": "archwing",
+    "stats": {
+      "igniteDuration": 12,
+      "heatDamage": 500
+    },
+    "description": "Core Vent Augment: Blast damage ignites exhaust fumes for 12s. Enemies passing through the flames take 500 Heat damage at max rank.",
+    "rarity": "rare"
   },
   {
     "id": "argon_plating",
