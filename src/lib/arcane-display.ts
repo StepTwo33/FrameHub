@@ -228,9 +228,10 @@ export function getArcaneDisplayInfo(
   arcane: Mod,
   rank: number,
   context?: { totalArmor?: number; persistenceActive?: boolean },
+  effectsMap: Record<string, ArcaneEffectDef> = ARCANE_EFFECTS,
 ): ArcaneDisplayInfo {
   const cleanDesc = arcane.description.replace(/<[^>]+>/g, "").replace(/\\ /g, " ").trim();
-  const def = ARCANE_EFFECTS[arcane.id];
+  const def = effectsMap[arcane.id];
 
   if (def && def.effects.length > 0) {
     const { applied, conditional } = buildLinesFromDef(def, rank, context, arcane.id);
@@ -248,7 +249,7 @@ export function getArcaneDisplayInfo(
   const applied: ArcaneEffectLine[] = [];
   const conditional: ArcaneEffectLine[] = [];
 
-  for (const [key, maxVal] of Object.entries(arcane.stats)) {
+  for (const [key, maxVal] of Object.entries(arcane.stats ?? {})) {
     const scaled = scaleArcaneEffectValue(maxVal, rank, arcane.maxRank);
     const label = STAT_LABELS[key] ?? key;
     const value = fmtStatValue(key, scaled);
@@ -259,7 +260,7 @@ export function getArcaneDisplayInfo(
     }
   }
 
-  if (Object.keys(arcane.stats).length === 0) {
+  if (Object.keys(arcane.stats ?? {}).length === 0) {
     conditional.push({
       label: "Effect",
       value: cleanDesc.length > 120 ? `${cleanDesc.slice(0, 117)}…` : cleanDesc,

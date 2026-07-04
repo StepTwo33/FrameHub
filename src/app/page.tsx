@@ -68,12 +68,12 @@ export default function Home() {
             badges={["596 Dispositions", "Grade System"]}
           />
           <FeatureCard
-            href="/mod-browser"
-            title="Mod Browser"
-            description="Browse all 1629 mods with filters for category, polarity, and rarity."
+            href="/codex?section=mods&category=aura"
+            title="Codex"
+            description="Browse mods, arcanes, and archon shards — verify drain, effects, and data coverage."
             icon={BookOpen}
             accent="indigo"
-            badges={["1629 Mods", "Full Stats"]}
+            badges={["Mods", "Arcanes", "Shards"]}
           />
           <FeatureCard
             href="/archwing-builder"

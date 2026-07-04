@@ -1,6 +1,6 @@
-import { ARCANE_EFFECTS, ArcaneTrigger } from "@/data/arcane-effects";
-import { applyCustomArcaneToWarframe, applyCustomArcaneToWeapon } from "@/lib/arcane-handlers";
-import { Mod, CalculatedStats, WarframeCalculatedStats } from "@/lib/types";
+import { ARCANE_EFFECTS, ArcaneEffectDef, ArcaneTrigger } from "@/data/arcane-effects";
+import { WARFRAME_CUSTOM_ARCANE_IDS, WEAPON_CUSTOM_ARCANE_IDS } from "@/lib/arcane-handlers";
+import { Mod } from "@/lib/types";
 
 export type ArcaneSlotCategory =
   | "warframe"
@@ -58,22 +58,18 @@ export function getArcaneWikiUrl(name: string): string {
 }
 
 function detectCustomHandler(arcaneId: string): "weapon" | "warframe" | null {
-  const def = ARCANE_EFFECTS[arcaneId];
-  if (!def) return null;
-
-  const ctx = { def, arcaneId, rank: def.maxRank, stacks: 1 };
-  const weaponStats = { arcaneBonuses: {} } as CalculatedStats;
-  if (applyCustomArcaneToWeapon(weaponStats, ctx)) return "weapon";
-
-  const warframeStats = { arcaneBonuses: {} } as WarframeCalculatedStats;
-  if (applyCustomArcaneToWarframe(warframeStats, ctx)) return "warframe";
-
+  if (WEAPON_CUSTOM_ARCANE_IDS.has(arcaneId)) return "weapon";
+  if (WARFRAME_CUSTOM_ARCANE_IDS.has(arcaneId)) return "warframe";
   return null;
 }
 
-export function getArcaneCoverageInfo(arcane: Mod): ArcaneCoverageInfo {
-  const def = ARCANE_EFFECTS[arcane.id];
-  const legacyStatCount = Object.keys(arcane.stats).length;
+export function getArcaneCoverageInfo(
+  arcane: Mod,
+  effectsMap: Record<string, ArcaneEffectDef> = ARCANE_EFFECTS,
+): ArcaneCoverageInfo {
+  const def = effectsMap[arcane.id];
+  const legacyStats = arcane.stats ?? {};
+  const legacyStatCount = Object.keys(legacyStats).length;
   const issues: string[] = [];
 
   if (!def) {
@@ -89,7 +85,7 @@ export function getArcaneCoverageInfo(arcane: Mod): ArcaneCoverageInfo {
   }
 
   if (legacyStatCount > 0 && def && def.effects.length > 0) {
-    for (const [key, val] of Object.entries(arcane.stats)) {
+    for (const [key, val] of Object.entries(legacyStats)) {
       const line = def.effects.find((e) => e.stat === key);
       if (line && Math.abs(line.maxValue - val * (arcane.maxRank + 1)) > 0.05) {
         issues.push(`Legacy stat "${key}" differs from effect def`);

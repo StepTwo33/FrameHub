@@ -16,6 +16,7 @@ import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
 import { allArcanes } from "@/data/arcanes";
 import { allArchonShards } from "@/data/archon-shards";
+import { ARCANE_EFFECTS } from "@/data/arcane-effects";
 import { archwings, necramechs } from "@/data/archwing";
 
 // Category display labels
@@ -25,6 +26,7 @@ const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   warframe: "Warframes",
   companion: "Companions",
   arcane: "Arcanes",
+  arcane_effect: "Arcane Effects",
   archon_shard: "Archon Shards",
   archwing: "Archwings",
   necramech: "Necramechs",
@@ -34,7 +36,7 @@ const CATEGORY_LABELS: Record<OverrideCategory, string> = {
 const SKIP_FIELDS = new Set(["id", "abilities", "incarnonEvolutions"]);
 
 // Fields that should be shown as JSON sub-editor
-const JSON_FIELDS = new Set(["stats", "statBonuses", "miscStats"]);
+const JSON_FIELDS = new Set(["stats", "statBonuses", "miscStats", "effects"]);
 
 function getAllItems(category: OverrideCategory): { id: string; name: string }[] {
   switch (category) {
@@ -43,6 +45,8 @@ function getAllItems(category: OverrideCategory): { id: string; name: string }[]
     case "warframe": return allWarframes.map((w) => ({ id: w.id, name: w.name }));
     case "companion": return allCompanions.map((c) => ({ id: c.id, name: c.name }));
     case "arcane": return allArcanes.map((a) => ({ id: a.id, name: a.name }));
+    case "arcane_effect":
+      return Object.entries(ARCANE_EFFECTS).map(([id, def]) => ({ id, name: def.name }));
     case "archon_shard": return allArchonShards.map((s) => ({ id: s.id, name: s.name }));
     case "archwing": return archwings.map((a) => ({ id: a.id, name: a.name }));
     case "necramech": return necramechs.map((n) => ({ id: n.id, name: n.name }));
@@ -59,6 +63,10 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
     case "warframe": items = allWarframes; break;
     case "companion": items = allCompanions; break;
     case "arcane": items = allArcanes; break;
+    case "arcane_effect": {
+      const def = ARCANE_EFFECTS[id];
+      return def ? (def as unknown as Record<string, unknown>) : null;
+    }
     case "archon_shard": items = allArchonShards; break;
     case "archwing": items = archwings; break;
     case "necramech": items = necramechs; break;

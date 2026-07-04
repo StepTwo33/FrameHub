@@ -30,7 +30,7 @@ function scaledLine(def: ArcaneEffectDef, line: ArcaneEffectLine | undefined, ra
 }
 
 function findEffect(def: ArcaneEffectDef, stat: string): ArcaneEffectLine | undefined {
-  return def.effects.find((e) => e.stat === stat);
+  return (def.effects ?? []).find((e) => e.stat === stat);
 }
 
 function applyWeaponDamageMult(stats: CalculatedStats, pct: number): void {
@@ -39,9 +39,63 @@ function applyWeaponDamageMult(stats: CalculatedStats, pct: number): void {
   stats.impact *= 1 + scaled;
   stats.puncture *= 1 + scaled;
   stats.slash *= 1 + scaled;
-  for (const e of stats.elements) e.value *= 1 + scaled;
-  for (const e of stats.rawElements) e.value *= 1 + scaled;
+  for (const e of stats.elements ?? []) e.value *= 1 + scaled;
+  for (const e of stats.rawElements ?? []) e.value *= 1 + scaled;
 }
+
+/** Arcane IDs handled by applyCustomArcaneToWeapon (for coverage detection without full stats). */
+export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
+  "arcane_primary_merciless",
+  "arcane_secondary_merciless",
+  "arcane_primary_deadhead",
+  "arcane_secondary_deadhead",
+  "arcane_primary_dexterity",
+  "arcane_secondary_dexterity",
+  "primary_overcharge",
+  "melee_exposure",
+  "cascadia_flare",
+  "secondary_surge",
+  "zid_an_uskos",
+  "primary_plated_round",
+  "exodia_brave",
+  "exodia_force",
+  "exodia_hunt",
+  "exodia_might",
+  "exodia_contagion",
+  "exodia_epidemic",
+  "exodia_triumph",
+  "exodia_valor",
+]);
+
+/** Arcane IDs handled by applyCustomArcaneToWarframe (for coverage detection without full stats). */
+export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
+  "arcane_persistence",
+  "arcane_battery",
+  "arcane_bellicose",
+  "arcane_expertise",
+  "arcane_energize",
+  "arcane_crepuscular",
+  "arcane_eruption",
+  "arcane_escapist",
+  "arcane_steadfast",
+  "arcane_truculence",
+  "emergence_dissipate",
+  "emergence_savior",
+  "magus_destruct",
+  "magus_glitch",
+  "magus_repair",
+  "magus_revert",
+  "magus_cadence",
+  "magus_cloud",
+  "molt_reconstruct",
+  "theorem_contagion",
+  "theorem_infection",
+  "zid_an_asheir",
+  "zid_an_sek_eel",
+  "melee_vortex",
+  "primary_debilitate",
+  "primary_obstruct",
+]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
 function applyStackingDamageHandler(
@@ -57,7 +111,7 @@ function applyStackingDamageHandler(
     if (reload > 0) stats.reloadTime /= 1 + reload / 100;
   }
   trackBonus(stats, opts?.bonusKey ?? "stackingDamageStacks", stacks);
-  for (const line of def.effects) {
+  for (const line of def.effects ?? []) {
     if (line.stat === "damage" || line.stat === "reloadSpeed") continue;
     trackBonus(stats, line.stat, scaledLine(def, line, rank, stacks));
   }
@@ -69,7 +123,7 @@ function trackAllEffects(
   rank: number,
   stacks: number,
 ): void {
-  for (const line of def.effects) {
+  for (const line of def.effects ?? []) {
     trackBonus(stats, line.stat, scaledLine(def, line, rank, stacks));
   }
 }

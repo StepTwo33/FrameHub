@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import {
   DataOverride, getOverrides, deleteOverride,
-  exportOverrides, importOverrides, OverrideCategory,
+  exportOverrides, importOverrides, OverrideCategory, OVERRIDE_CATEGORIES,
 } from "@/lib/data-overrides";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
@@ -118,6 +118,10 @@ export default function ReportIssuePage() {
       const qType = params.get("type");
       const qName = params.get("name");
       const qId = params.get("id");
+      const qTab = params.get("tab");
+      const qOverrideCat = params.get("overrideCategory");
+      const qOverrideId = params.get("overrideId");
+      if (qTab === "overrides") setActiveTab("overrides");
       if (qType && ITEM_TYPES.includes(qType as ItemType)) {
         setFormType(qType as ItemType);
       }
@@ -126,6 +130,15 @@ export default function ReportIssuePage() {
         setShowForm(true);
       }
       if (qId) setFormItemId(qId);
+      if (qOverrideCat && qOverrideId && OVERRIDE_CATEGORIES.includes(qOverrideCat as OverrideCategory)) {
+        setActiveTab("overrides");
+        setOverridePrefill({
+          category: qOverrideCat as OverrideCategory,
+          itemId: qOverrideId,
+          action: "modify",
+        });
+        setShowOverrideForm(true);
+      }
     });
   }, []);
 

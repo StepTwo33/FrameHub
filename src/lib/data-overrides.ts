@@ -2,7 +2,7 @@ import { Weapon, Mod, Companion, Warframe, ArchonShard } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
 
 export const OVERRIDE_CATEGORIES = [
-  "weapon", "mod", "warframe", "companion", "arcane", "archon_shard", "archwing", "necramech",
+  "weapon", "mod", "warframe", "companion", "arcane", "arcane_effect", "archon_shard", "archwing", "necramech",
 ] as const;
 export type OverrideCategory = (typeof OVERRIDE_CATEGORIES)[number];
 

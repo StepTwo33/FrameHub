@@ -1,7 +1,9 @@
 import { Mod } from "@/lib/types";
+import { isAuraMod } from "@/lib/aura-mods";
 
 export type ModBrowserCategoryId =
   | "all"
+  | "aura"
   | "primary"
   | "secondary"
   | "melee"
@@ -16,6 +18,7 @@ export type ModBrowserCategoryId =
 
 export const MOD_BROWSER_CATEGORIES: { id: ModBrowserCategoryId; label: string }[] = [
   { id: "all", label: "All" },
+  { id: "aura", label: "Aura" },
   { id: "primary", label: "Primary" },
   { id: "secondary", label: "Secondary" },
   { id: "melee", label: "Melee" },
@@ -63,6 +66,8 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
   if (category === "all") return true;
 
   switch (category) {
+    case "aura":
+      return isAuraMod(mod);
     case "primary":
       return ["primary", "rifle", "shotgun", "bow", "launcher"].includes(mod.category);
     case "secondary":
@@ -92,6 +97,7 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
 }
 
 export function modBrowserCategoryLabel(mod: Mod): string {
+  if (isAuraMod(mod)) return "Aura";
   if (mod.category === "kdrive" || isKDriveMod(mod)) return "K-Drive";
   if (mod.category === "archgun") return "Archgun";
   if (mod.category === "necramech") return "Necramech";

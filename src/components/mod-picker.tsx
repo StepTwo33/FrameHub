@@ -36,15 +36,8 @@ const rarityColors: Record<string, string> = {
   legendary: "bg-white/10 text-white border-white/30",
 };
 
-// Known aura mod IDs (matched to actual data)
-const AURA_MODS = new Set([
-  "aura_steel_charge", "aura_energy_siphon", "aura_corrosive_projection", "aura_rejuvenation",
-  "aura_enemy_radar", "aura_physique", "aura_rifle_amplification", "aura_shotgun_amplification",
-  "aura_pistol_amplification", "dead_eye", "aura_infested_impedance", "loot_detector",
-  "aura_shield_disruption", "aura_speed_holster", "aura_sprint_boost", "stand_united",
-  "growing_power", "brief_respite", "aerodynamic", "power_donation_r5",
-  "combat_discipline", "shepherd",
-]);
+import { Mod } from "@/lib/types";
+import { isAuraMod } from "@/lib/aura-mods";
 
 // Known exilus mod IDs (movement, utility, drift mods — matched to actual data)
 const EXILUS_MODS = new Set([
@@ -165,7 +158,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
     // Filter by slot type
     if (slotType === "aura") {
-      categoryMods = categoryMods.filter((m) => AURA_MODS.has(m.id));
+      categoryMods = categoryMods.filter(isAuraMod);
     } else if (slotType === "exilus") {
       categoryMods = categoryMods.filter(
         (m) => EXILUS_MODS.has(m.id) || (m.category === "augment" && m.polarity === "exilus"),

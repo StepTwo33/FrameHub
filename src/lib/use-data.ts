@@ -5,13 +5,19 @@ import { allWeapons } from "@/data/weapons";
 import { customWeapons } from "@/data/custom-items";
 import { allMods, modsMap as baseModsMap } from "@/data/mods";
 import { allCompanions } from "@/data/companions";
-import { Weapon, Mod, Companion } from "@/lib/types";
+import { allArcanes } from "@/data/arcanes";
+import { allArchonShards } from "@/data/archon-shards";
+import { ARCANE_EFFECTS, ArcaneEffectDef } from "@/data/arcane-effects";
+import { Weapon, Mod, Companion, ArchonShard } from "@/lib/types";
 import {
   applyWeaponOverrides,
   applyModOverrides,
   applyCompanionOverrides,
+  applyArcaneOverrides,
+  applyArchonShardOverrides,
   getOverrides,
 } from "@/lib/data-overrides";
+import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 
 // Merge base weapons + custom-items.ts (wiki-verified additions)
@@ -61,4 +67,43 @@ export function useCompanions(): Companion[] {
     });
   }, []);
   return companions;
+}
+
+export function useArcanes(): Mod[] {
+  const [arcanes, setArcanes] = useState<Mod[]>(allArcanes);
+  useEffect(() => {
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "arcane")) {
+        setArcanes(applyArcaneOverrides(allArcanes));
+      }
+    });
+  }, []);
+  return arcanes;
+}
+
+export function useArchonShards(): ArchonShard[] {
+  const [shards, setShards] = useState<ArchonShard[]>(allArchonShards);
+  useEffect(() => {
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "archon_shard")) {
+        setShards(applyArchonShardOverrides(allArchonShards));
+      }
+    });
+  }, []);
+  return shards;
+}
+
+export function useArcaneEffects(): Record<string, ArcaneEffectDef> {
+  const [effects, setEffects] = useState<Record<string, ArcaneEffectDef>>(ARCANE_EFFECTS);
+  useEffect(() => {
+    queueMicrotask(() => {
+      const overrides = getOverrides();
+      if (overrides.some((o) => o.targetType === "arcane_effect")) {
+        setEffects(applyArcaneEffectOverrides());
+      }
+    });
+  }, []);
+  return effects;
 }
