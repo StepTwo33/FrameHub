@@ -1,5 +1,6 @@
 import { Weapon, Mod, Companion, Warframe, ArchonShard } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
+import { deepMergeOverrideFields } from "@/lib/override-merge";
 
 export const OVERRIDE_CATEGORIES = [
   "weapon", "mod", "warframe", "companion", "arcane", "arcane_effect", "archon_shard", "archwing", "necramech",
@@ -71,168 +72,80 @@ export function importOverrides(json: string): number {
   }
 }
 
-// Apply overrides to a weapon array
-export function applyWeaponOverrides(weapons: Weapon[]): Weapon[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "weapon");
-  if (overrides.length === 0) return weapons;
+export function getOverrideForTarget(
+  targetType: OverrideCategory,
+  targetId: string,
+): DataOverride | undefined {
+  return getOverrides().find((o) => o.targetType === targetType && o.targetId === targetId);
+}
 
-  let result = [...weapons];
+function applyModify<T extends object>(item: T, fields: Record<string, unknown>): T {
+  return deepMergeOverrideFields(item, fields);
+}
+
+function applyOverridesToList<T extends { id: string }>(
+  items: T[],
+  overrides: DataOverride[],
+): T[] {
+  if (overrides.length === 0) return items;
+
+  let result = [...items];
 
   for (const ovr of overrides) {
     if (ovr.action === "remove") {
-      result = result.filter((w) => w.id !== ovr.targetId);
+      result = result.filter((item) => item.id !== ovr.targetId);
     } else if (ovr.action === "modify") {
-      const idx = result.findIndex((w) => w.id === ovr.targetId);
+      const idx = result.findIndex((item) => item.id === ovr.targetId);
       if (idx >= 0) {
-        result[idx] = { ...result[idx], ...ovr.fields } as Weapon;
+        result[idx] = applyModify(result[idx], ovr.fields);
       }
     } else if (ovr.action === "add") {
-      if (!result.find((w) => w.id === ovr.targetId)) {
-        result.push(ovr.fields as unknown as Weapon);
+      if (!result.find((item) => item.id === ovr.targetId)) {
+        result.push({ id: ovr.targetId, ...ovr.fields } as T);
       }
     }
   }
 
   return result;
+}
+
+// Apply overrides to a weapon array
+export function applyWeaponOverrides(weapons: Weapon[]): Weapon[] {
+  return applyOverridesToList(weapons, getOverrides().filter((o) => o.targetType === "weapon"));
 }
 
 // Apply overrides to a mod array
 export function applyModOverrides(mods: Mod[]): Mod[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "mod");
-  if (overrides.length === 0) return mods;
-
-  let result = [...mods];
-
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((m) => m.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((m) => m.id === ovr.targetId);
-      if (idx >= 0) {
-        result[idx] = { ...result[idx], ...ovr.fields } as Mod;
-      }
-    } else if (ovr.action === "add") {
-      if (!result.find((m) => m.id === ovr.targetId)) {
-        result.push(ovr.fields as unknown as Mod);
-      }
-    }
-  }
-
-  return result;
+  return applyOverridesToList(mods, getOverrides().filter((o) => o.targetType === "mod"));
 }
 
 // Apply overrides to a companion array
 export function applyCompanionOverrides(companions: Companion[]): Companion[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "companion");
-  if (overrides.length === 0) return companions;
-
-  let result = [...companions];
-
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((c) => c.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((c) => c.id === ovr.targetId);
-      if (idx >= 0) {
-        result[idx] = { ...result[idx], ...ovr.fields } as Companion;
-      }
-    } else if (ovr.action === "add") {
-      if (!result.find((c) => c.id === ovr.targetId)) {
-        result.push(ovr.fields as unknown as Companion);
-      }
-    }
-  }
-
-  return result;
+  return applyOverridesToList(companions, getOverrides().filter((o) => o.targetType === "companion"));
 }
 
 // Apply overrides to a warframe array
 export function applyWarframeOverrides(warframes: Warframe[]): Warframe[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "warframe");
-  if (overrides.length === 0) return warframes;
-  let result = [...warframes];
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((w) => w.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((w) => w.id === ovr.targetId);
-      if (idx >= 0) result[idx] = { ...result[idx], ...ovr.fields } as Warframe;
-    } else if (ovr.action === "add") {
-      if (!result.find((w) => w.id === ovr.targetId)) result.push(ovr.fields as unknown as Warframe);
-    }
-  }
-  return result;
+  return applyOverridesToList(warframes, getOverrides().filter((o) => o.targetType === "warframe"));
 }
 
 // Apply overrides to an arcane array (uses Mod type)
 export function applyArcaneOverrides(arcanes: Mod[]): Mod[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "arcane");
-  if (overrides.length === 0) return arcanes;
-  let result = [...arcanes];
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((a) => a.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((a) => a.id === ovr.targetId);
-      if (idx >= 0) result[idx] = { ...result[idx], ...ovr.fields } as Mod;
-    } else if (ovr.action === "add") {
-      if (!result.find((a) => a.id === ovr.targetId)) result.push(ovr.fields as unknown as Mod);
-    }
-  }
-  return result;
+  return applyOverridesToList(arcanes, getOverrides().filter((o) => o.targetType === "arcane"));
 }
 
 // Apply overrides to archon shards
 export function applyArchonShardOverrides(shards: ArchonShard[]): ArchonShard[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "archon_shard");
-  if (overrides.length === 0) return shards;
-  let result = [...shards];
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((s) => s.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((s) => s.id === ovr.targetId);
-      if (idx >= 0) result[idx] = { ...result[idx], ...ovr.fields } as ArchonShard;
-    } else if (ovr.action === "add") {
-      if (!result.find((s) => s.id === ovr.targetId)) result.push(ovr.fields as unknown as ArchonShard);
-    }
-  }
-  return result;
+  return applyOverridesToList(shards, getOverrides().filter((o) => o.targetType === "archon_shard"));
 }
 
 // Apply overrides to archwings
 export function applyArchwingOverrides(archwings: Archwing[]): Archwing[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "archwing");
-  if (overrides.length === 0) return archwings;
-  let result = [...archwings];
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((a) => a.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((a) => a.id === ovr.targetId);
-      if (idx >= 0) result[idx] = { ...result[idx], ...ovr.fields } as Archwing;
-    } else if (ovr.action === "add") {
-      if (!result.find((a) => a.id === ovr.targetId)) result.push(ovr.fields as unknown as Archwing);
-    }
-  }
-  return result;
+  return applyOverridesToList(archwings, getOverrides().filter((o) => o.targetType === "archwing"));
 }
 
 // Apply overrides to necramechs
 export function applyNecramechOverrides(mechs: Necramech[]): Necramech[] {
-  const overrides = getOverrides().filter((o) => o.targetType === "necramech");
-  if (overrides.length === 0) return mechs;
-  let result = [...mechs];
-  for (const ovr of overrides) {
-    if (ovr.action === "remove") {
-      result = result.filter((n) => n.id !== ovr.targetId);
-    } else if (ovr.action === "modify") {
-      const idx = result.findIndex((n) => n.id === ovr.targetId);
-      if (idx >= 0) result[idx] = { ...result[idx], ...ovr.fields } as Necramech;
-    } else if (ovr.action === "add") {
-      if (!result.find((n) => n.id === ovr.targetId)) result.push(ovr.fields as unknown as Necramech);
-    }
-  }
-  return result;
+  return applyOverridesToList(mechs, getOverrides().filter((o) => o.targetType === "necramech"));
 }
 

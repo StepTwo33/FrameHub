@@ -1,5 +1,6 @@
 import { ARCANE_EFFECTS, ArcaneEffectDef } from "@/data/arcane-effects";
 import { getOverrides } from "@/lib/data-overrides";
+import { deepMergeOverrideFields } from "@/lib/override-merge";
 
 /** Merge localStorage arcane_effect overrides onto static ARCANE_EFFECTS. Client-only. */
 export function applyArcaneEffectOverrides(
@@ -19,7 +20,7 @@ export function applyArcaneEffectOverrides(
     if (ovr.action === "add") {
       result[ovr.targetId] = ovr.fields as unknown as ArcaneEffectDef;
     } else if (ovr.action === "modify" && existing) {
-      result[ovr.targetId] = { ...existing, ...ovr.fields } as ArcaneEffectDef;
+      result[ovr.targetId] = deepMergeOverrideFields(existing, ovr.fields as Partial<ArcaneEffectDef>);
     } else if (ovr.action === "modify" && !existing) {
       result[ovr.targetId] = ovr.fields as unknown as ArcaneEffectDef;
     }

@@ -10,6 +10,24 @@ import {
   generateOverrideId,
   saveOverride,
 } from "@/lib/data-overrides";
+import {
+  ADD_ITEM_TEMPLATES,
+  HIDDEN_OVERRIDE_FIELDS,
+  TEXTAREA_FIELDS,
+  formatOverrideFieldLabel,
+  getNestedRecordFields,
+  getStructuredOverrideFields,
+  getSelectOptions,
+  sortFieldsForCategory,
+} from "@/lib/override-schemas";
+import { buildNestedPatch, flattenRecordFields } from "@/lib/override-merge";
+import {
+  AbilitiesEditor,
+  AbilityDraft,
+  ArcaneEffectLineDraft,
+  ArcaneEffectsEditor,
+  StatRowsEditor,
+} from "@/components/override-field-editors";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
@@ -19,7 +37,6 @@ import { allArchonShards } from "@/data/archon-shards";
 import { ARCANE_EFFECTS } from "@/data/arcane-effects";
 import { archwings, necramechs } from "@/data/archwing";
 
-// Category display labels
 const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   weapon: "Weapons",
   mod: "Mods",
@@ -31,12 +48,6 @@ const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   archwing: "Archwings",
   necramech: "Necramechs",
 };
-
-// Fields to skip in the editor (internal/computed/complex)
-const SKIP_FIELDS = new Set(["id", "abilities", "incarnonEvolutions"]);
-
-// Fields that should be shown as JSON sub-editor
-const JSON_FIELDS = new Set(["stats", "statBonuses", "miscStats", "effects"]);
 
 function getAllItems(category: OverrideCategory): { id: string; name: string }[] {
   switch (category) {
@@ -75,24 +86,68 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
   return items.find((i) => i.id === id) ?? null;
 }
 
-function formatFieldLabel(key: string): string {
-  return key
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (s) => s.toUpperCase())
-    .replace(/_/g, " ");
+function inferInputType(key: string, value: unknown): "number" | "boolean" | "text" | "textarea" | "select" {
+  if (getSelectOptions(key)) return "select";
+  if (TEXTAREA_FIELDS.has(key)) return "textarea";
+  if (typeof value === "boolean") return "boolean";
+  if (typeof value === "number") return "number";
+  return "text";
 }
 
-function inferType(value: unknown): "string" | "number" | "boolean" | "json" {
-  if (typeof value === "number") return "number";
-  if (typeof value === "boolean") return "boolean";
-  if (typeof value === "object" && value !== null) return "json";
-  return "string";
+function parseScalarValue(raw: string, original: unknown): unknown {
+  if (raw === "") return undefined;
+  if (typeof original === "number" || /^-?\d+(\.\d+)?$/.test(raw.trim())) {
+    const num = Number(raw);
+    if (!Number.isNaN(num)) return num;
+  }
+  if (typeof original === "boolean" || raw === "true" || raw === "false") {
+    return raw === "true";
+  }
+  return raw;
+}
+
+function toEffectDrafts(raw: unknown): ArcaneEffectLineDraft[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((line) => {
+    const o = line as Record<string, unknown>;
+    return {
+      stat: String(o.stat ?? ""),
+      maxValue: Number(o.maxValue ?? 0),
+      flat: Boolean(o.flat),
+      stacking: Boolean(o.stacking),
+    };
+  });
+}
+
+function toAbilityDrafts(raw: unknown): AbilityDraft[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((ab) => {
+    const o = ab as Record<string, unknown>;
+    return {
+      name: String(o.name ?? ""),
+      energyCost: Number(o.energyCost ?? 0),
+      description: String(o.description ?? ""),
+      damage: o.damage != null ? Number(o.damage) : undefined,
+      range: o.range != null ? Number(o.range) : undefined,
+      duration: o.duration != null ? Number(o.duration) : undefined,
+      radius: o.radius != null ? Number(o.radius) : undefined,
+    };
+  });
+}
+
+function effectsChanged(original: unknown, draft: ArcaneEffectLineDraft[]): boolean {
+  return JSON.stringify(toEffectDrafts(original)) !== JSON.stringify(draft);
+}
+
+function abilitiesChanged(original: unknown, draft: AbilityDraft[]): boolean {
+  return JSON.stringify(toAbilityDrafts(original)) !== JSON.stringify(draft);
 }
 
 interface OverrideEditorProps {
   onSave: () => void;
   onCancel: () => void;
   prefill?: {
+    existingOverrideId?: string;
     category?: OverrideCategory;
     itemId?: string;
     note?: string;
@@ -102,62 +157,99 @@ interface OverrideEditorProps {
 }
 
 export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProps) {
-  const [category, setCategory] = useState<OverrideCategory>(prefill?.category ?? "weapon");
+  const [category, setCategory] = useState<OverrideCategory>(prefill?.category ?? "mod");
   const [action, setAction] = useState<"modify" | "add" | "remove">(prefill?.action ?? "modify");
   const [selectedItemId, setSelectedItemId] = useState<string>(prefill?.itemId ?? "");
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [note, setNote] = useState(prefill?.note ?? "");
-  // Field overrides: key -> new value as string
   const [fieldOverrides, setFieldOverrides] = useState<Record<string, string>>({});
+  const [newStatKey, setNewStatKey] = useState("");
+  const [effectLines, setEffectLines] = useState<ArcaneEffectLineDraft[]>([]);
+  const [abilities, setAbilities] = useState<AbilityDraft[]>([]);
+  const [structuredTouched, setStructuredTouched] = useState({ effects: false, abilities: false });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Get items for current category
+  const nestedRecordFields = useMemo(() => getNestedRecordFields(category), [category]);
+  const structuredFields = useMemo(() => new Set(getStructuredOverrideFields(category)), [category]);
+
   const items = useMemo(() => getAllItems(category), [category]);
 
-  // Filter items by search
   const filteredItems = useMemo(() => {
     if (!searchQuery.trim()) return items;
     const q = searchQuery.toLowerCase();
     return items.filter((i) => i.name.toLowerCase().includes(q) || i.id.toLowerCase().includes(q));
   }, [items, searchQuery]);
 
-  // Get selected item data
   const itemData = useMemo(() => {
+    if (action === "add") return ADD_ITEM_TEMPLATES[category] ?? null;
     if (!selectedItemId) return null;
     return getItemData(category, selectedItemId);
-  }, [category, selectedItemId]);
+  }, [category, selectedItemId, action]);
 
-  // Get editable fields from item data
-  const editableFields = useMemo(() => {
+  const scalarFields = useMemo(() => {
     if (!itemData) return [];
-    return Object.entries(itemData)
-      .filter(([key]) => !SKIP_FIELDS.has(key))
-      .map(([key, value]) => ({
-        key,
-        currentValue: value,
-        type: JSON_FIELDS.has(key) ? "json" as const : inferType(value),
-      }));
-  }, [itemData]);
+    const nested = new Set(nestedRecordFields);
+    const keys = Object.entries(itemData)
+      .filter(([key, value]) => {
+        if (HIDDEN_OVERRIDE_FIELDS.has(key) || nested.has(key) || structuredFields.has(key)) return false;
+        if (Array.isArray(value) || (typeof value === "object" && value !== null)) return false;
+        return true;
+      })
+      .map(([key]) => key);
+    return sortFieldsForCategory(category, keys).map((key) => ({
+      key,
+      currentValue: itemData[key],
+      inputType: inferInputType(key, itemData[key]),
+    }));
+  }, [itemData, nestedRecordFields, structuredFields, category]);
 
-  // Pre-fill field overrides from prefill prop
+  const nestedStatRows = useMemo(() => {
+    if (!itemData) return [];
+    const rows: { recordField: string; key: string; path: string; value: unknown }[] = [];
+    for (const recordField of nestedRecordFields) {
+      const record = itemData[recordField] as Record<string, unknown> | undefined;
+      for (const row of flattenRecordFields(recordField, record)) {
+        rows.push({ recordField, ...row });
+      }
+    }
+    return rows;
+  }, [itemData, nestedRecordFields]);
+
   useEffect(() => {
-    if (prefill?.fields && Object.keys(prefill.fields).length > 0) {
-      queueMicrotask(() => {
-        const overrides: Record<string, string> = {};
-        for (const [key, value] of Object.entries(prefill.fields!)) {
-          if (typeof value === "object") {
-            overrides[key] = JSON.stringify(value, null, 2);
-          } else {
-            overrides[key] = String(value);
+    if (!itemData) return;
+    queueMicrotask(() => {
+      setEffectLines(toEffectDrafts(itemData.effects));
+      setAbilities(toAbilityDrafts(itemData.abilities));
+      setStructuredTouched({ effects: false, abilities: false });
+    });
+  }, [itemData, selectedItemId, category]);
+
+  useEffect(() => {
+    if (!prefill?.fields || Object.keys(prefill.fields).length === 0) return;
+    queueMicrotask(() => {
+      const flat: Record<string, string> = {};
+      const walk = (obj: Record<string, unknown>, prefix = "") => {
+        for (const [key, value] of Object.entries(obj)) {
+          const path = prefix ? `${prefix}.${key}` : key;
+          if (nestedRecordFields.includes(prefix ? prefix.split(".")[0] : key) && typeof value === "object" && value !== null && !Array.isArray(value)) {
+            walk(value as Record<string, unknown>, path);
+          } else if (key === "effects" && Array.isArray(value)) {
+            setEffectLines(toEffectDrafts(value));
+            setStructuredTouched((s) => ({ ...s, effects: true }));
+          } else if (key === "abilities" && Array.isArray(value)) {
+            setAbilities(toAbilityDrafts(value));
+            setStructuredTouched((s) => ({ ...s, abilities: true }));
+          } else if (typeof value !== "object" || value === null) {
+            flat[path] = String(value);
           }
         }
-        setFieldOverrides(overrides);
-      });
-    }
-  }, [prefill?.fields]);
+      };
+      walk(prefill.fields);
+      setFieldOverrides(flat);
+    });
+  }, [prefill?.fields, nestedRecordFields]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -168,119 +260,155 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // Reset selection when category changes
+  const resetEditorState = () => {
+    setFieldOverrides({});
+    setNewStatKey("");
+    setStructuredTouched({ effects: false, abilities: false });
+  };
+
   const handleCategoryChange = (cat: OverrideCategory) => {
     setCategory(cat);
     setSelectedItemId("");
     setSearchQuery("");
-    setFieldOverrides({});
+    resetEditorState();
   };
 
   const handleSelectItem = (id: string) => {
     setSelectedItemId(id);
     setShowDropdown(false);
     setSearchQuery("");
-    setFieldOverrides({});
+    if (!prefill?.existingOverrideId) resetEditorState();
   };
 
-  const handleFieldChange = (key: string, value: string) => {
+  const handleFieldChange = (path: string, value: string) => {
     setFieldOverrides((prev) => {
       const next = { ...prev };
-      if (value === "") {
-        delete next[key];
-      } else {
-        next[key] = value;
-      }
+      if (value === "") delete next[path];
+      else next[path] = value;
       return next;
     });
   };
 
-  const handleSave = () => {
-    if (!selectedItemId.trim()) return;
+  const handleAddStatKey = (recordField: string) => {
+    const key = newStatKey.trim();
+    if (!key) return;
+    handleFieldChange(`${recordField}.${key}`, fieldOverrides[`${recordField}.${key}`] ?? "0");
+    setNewStatKey("");
+  };
 
-    // Build fields from overrides
-    const fields: Record<string, unknown> = {};
-    for (const [key, rawValue] of Object.entries(fieldOverrides)) {
+  const buildFields = (): Record<string, unknown> => {
+    const flat: Record<string, unknown> = {};
+    for (const [path, rawValue] of Object.entries(fieldOverrides)) {
       if (rawValue === "") continue;
-      // Get the original type to cast properly
-      const original = itemData?.[key];
-      const originalType = inferType(original);
-      if ((originalType === "number" || typeof original === "number") && !JSON_FIELDS.has(key)) {
-        const num = Number(rawValue);
-        if (!isNaN(num)) { fields[key] = num; continue; }
+      const parts = path.split(".");
+      let original: unknown = itemData;
+      for (const part of parts) {
+        original = (original as Record<string, unknown> | null)?.[part];
       }
-      if (originalType === "boolean") {
-        fields[key] = rawValue === "true";
-        continue;
-      }
-      if (originalType === "json" || JSON_FIELDS.has(key)) {
-        try { fields[key] = JSON.parse(rawValue); continue; } catch { /* treat as string */ }
-      }
-      fields[key] = rawValue;
+      flat[path] = parseScalarValue(rawValue, original);
     }
+    const fields = buildNestedPatch(flat);
 
-    if (action !== "remove" && Object.keys(fields).length === 0) {
-      alert("No fields changed. Modify at least one value.");
+    if (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines))) {
+      fields.effects = effectLines
+        .filter((l) => l.stat.trim())
+        .map(({ stat, maxValue, flat, stacking }) => ({
+          stat,
+          maxValue,
+          ...(flat ? { flat: true } : {}),
+          ...(stacking ? { stacking: true } : {}),
+        }));
+    }
+    if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {
+      fields.abilities = abilities;
+    }
+    return fields;
+  };
+
+  const handleSave = () => {
+    const targetId = action === "add" ? selectedItemId.trim() : selectedItemId;
+    if (!targetId?.trim()) {
+      alert("Please select an item first.");
       return;
     }
 
-    const ovr: DataOverride = {
-      id: generateOverrideId(),
+    let fields: Record<string, unknown> = {};
+    if (action !== "remove") {
+      fields = buildFields();
+      if (Object.keys(fields).length === 0) {
+        alert("Change at least one field before saving.");
+        return;
+      }
+    }
+
+    saveOverride({
+      id: prefill?.existingOverrideId ?? generateOverrideId(),
       targetType: category,
-      targetId: selectedItemId,
+      targetId: targetId.trim(),
       action,
       fields,
       note: note.trim(),
       timestamp: Date.now(),
-    };
-    saveOverride(ovr);
+    });
     onSave();
   };
 
   const selectedItemName = items.find((i) => i.id === selectedItemId)?.name ?? "";
-  const changedCount = Object.keys(fieldOverrides).filter((k) => fieldOverrides[k] !== "").length;
+  const scalarChangeCount = Object.keys(fieldOverrides).length;
+  const structuredChangeCount = (structuredTouched.effects ? 1 : 0) + (structuredTouched.abilities ? 1 : 0);
+  const changedCount = scalarChangeCount + structuredChangeCount;
+  const canEditFields = Boolean(selectedItemId && action !== "remove") || action === "add";
 
   return (
-    <div className="border border-purple-500/30 rounded-xl p-5 bg-card mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-purple-400">
-          {action === "remove" ? "REMOVE ITEM" : action === "add" ? "ADD NEW ITEM" : "MODIFY ITEM DATA"}
-        </h2>
-        <button onClick={onCancel} className="text-muted-foreground hover:text-foreground">
+    <div className="mb-6 rounded-xl border border-purple-500/30 bg-card p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-sm font-semibold text-purple-400">
+            {prefill?.existingOverrideId ? "Edit data fix" : action === "remove" ? "Hide item from site" : action === "add" ? "Add new item" : "Fix item data"}
+          </h2>
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
+            Pick an item, change only what&apos;s wrong, then save. Leave fields blank to keep current values.
+          </p>
+        </div>
+        <button type="button" onClick={onCancel} className="text-muted-foreground hover:text-foreground">
           <X className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Action selector */}
       <div className="mb-4">
-        <label className="text-xs text-muted-foreground mb-1.5 block">Action</label>
-        <div className="flex gap-1.5">
-          {(["modify", "add", "remove"] as const).map((a) => (
+        <label className="mb-1.5 block text-xs text-muted-foreground">What do you want to do?</label>
+        <div className="flex flex-wrap gap-1.5">
+          {([
+            { id: "modify" as const, label: "Fix existing data" },
+            { id: "add" as const, label: "Add new item" },
+            { id: "remove" as const, label: "Hide item" },
+          ]).map(({ id, label }) => (
             <button
-              key={a}
-              onClick={() => setAction(a)}
+              key={id}
+              type="button"
+              onClick={() => setAction(id)}
               className={cn(
-                "px-3 py-1.5 text-xs rounded-lg border capitalize transition-colors",
-                action === a ? "bg-purple-600 border-purple-600 text-white" : "border-border text-muted-foreground hover:text-foreground"
+                "rounded-lg border px-3 py-1.5 text-xs transition-colors",
+                action === id ? "border-purple-600 bg-purple-600 text-white" : "border-border text-muted-foreground hover:text-foreground",
               )}
             >
-              {a}
+              {label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Category selector */}
       <div className="mb-4">
-        <label className="text-xs text-muted-foreground mb-1.5 block">Category</label>
-        <div className="flex gap-1.5 flex-wrap">
+        <label className="mb-1.5 block text-xs text-muted-foreground">Item type</label>
+        <div className="flex flex-wrap gap-1.5">
           {OVERRIDE_CATEGORIES.map((cat) => (
             <button
               key={cat}
+              type="button"
               onClick={() => handleCategoryChange(cat)}
               className={cn(
-                "px-2.5 py-1.5 text-xs rounded-lg border transition-colors",
-                category === cat ? "bg-purple-600 border-purple-600 text-white" : "border-border text-muted-foreground hover:text-foreground"
+                "rounded-lg border px-2.5 py-1.5 text-xs transition-colors",
+                category === cat ? "border-purple-600 bg-purple-600 text-white" : "border-border text-muted-foreground hover:text-foreground",
               )}
             >
               {CATEGORY_LABELS[cat]}
@@ -289,178 +417,184 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
         </div>
       </div>
 
-      {/* Item picker */}
-      <div className="mb-4" ref={dropdownRef}>
-        <label className="text-xs text-muted-foreground mb-1.5 block">
-          Select Item ({items.length} available)
-        </label>
-        <div className="relative">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full h-9 px-3 flex items-center justify-between bg-background border border-border rounded-lg text-sm hover:border-purple-500/50 transition-colors"
-          >
-            <span className={selectedItemName ? "text-foreground" : "text-muted-foreground"}>
-              {selectedItemName || "Choose an item..."}
-            </span>
-            <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", showDropdown && "rotate-180")} />
-          </button>
+      {action === "add" && (
+        <div className="mb-4">
+          <label className="mb-1.5 block text-xs text-muted-foreground">New item ID (internal name, no spaces)</label>
+          <input
+            value={selectedItemId}
+            onChange={(e) => setSelectedItemId(e.target.value)}
+            placeholder="e.g. augment_hildryn_pillage"
+            className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-purple-500/50 focus:outline-none"
+          />
+        </div>
+      )}
 
-          {showDropdown && (
-            <div className="absolute z-50 mt-1 w-full bg-card border border-border rounded-lg shadow-lg overflow-hidden">
-              <div className="p-2 border-b border-border">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <input
-                    autoFocus
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    className="w-full h-8 pl-8 pr-3 bg-background border border-border rounded-md text-sm focus:outline-none focus:border-purple-500/50"
-                  />
+      {action !== "add" && (
+        <div className="mb-4" ref={dropdownRef}>
+          <label className="mb-1.5 block text-xs text-muted-foreground">Find item</label>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex h-9 w-full items-center justify-between rounded-lg border border-border bg-background px-3 text-sm hover:border-purple-500/50"
+            >
+              <span className={selectedItemName ? "text-foreground" : "text-muted-foreground"}>
+                {selectedItemName || "Search and select..."}
+              </span>
+              <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", showDropdown && "rotate-180")} />
+            </button>
+            {showDropdown && (
+              <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+                <div className="border-b border-border p-2">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      autoFocus
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Type to search..."
+                      className="h-8 w-full rounded-md border border-border bg-background pl-8 pr-3 text-sm focus:border-purple-500/50 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="max-h-60 overflow-y-auto">
+                  {filteredItems.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleSelectItem(item.id)}
+                      className={cn(
+                        "flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted/50",
+                        selectedItemId === item.id && "bg-purple-500/10 text-purple-400",
+                      )}
+                    >
+                      <span className="truncate">{item.name}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="max-h-60 overflow-y-auto">
-                {filteredItems.length === 0 && (
-                  <div className="p-3 text-xs text-muted-foreground text-center">No items found</div>
-                )}
-                {filteredItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleSelectItem(item.id)}
-                    className={cn(
-                      "w-full text-left px-3 py-2 text-sm hover:bg-muted/50 transition-colors flex items-center justify-between",
-                      selectedItemId === item.id && "bg-purple-500/10 text-purple-400"
-                    )}
-                  >
-                    <span className="truncate">{item.name}</span>
-                    <span className="text-[10px] text-muted-foreground font-mono ml-2 flex-shrink-0">{item.id}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Field editor */}
-      {selectedItemId && action !== "remove" && editableFields.length > 0 && (
-        <div className="mb-4">
-          <label className="text-xs text-muted-foreground mb-1.5 block">
-            Fields — edit values to override ({changedCount} changed)
-          </label>
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="grid grid-cols-[1fr_1fr_1fr] text-[10px] font-semibold text-muted-foreground uppercase tracking-wider bg-muted/30 px-3 py-1.5">
-              <span>Field</span>
-              <span>Current Value</span>
-              <span>New Value</span>
-            </div>
-            <div className="divide-y divide-border max-h-[400px] overflow-y-auto">
-              {editableFields.map(({ key, currentValue, type }) => {
-                const currentStr = type === "json"
-                  ? JSON.stringify(currentValue, null, 2)
-                  : String(currentValue ?? "");
-                const overrideValue = fieldOverrides[key] ?? "";
-                const isChanged = overrideValue !== "";
-                return (
-                  <div
-                    key={key}
-                    className={cn(
-                      "grid grid-cols-[1fr_1fr_1fr] items-start px-3 py-2 gap-2",
-                      isChanged && "bg-purple-500/5"
-                    )}
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-xs font-medium">{formatFieldLabel(key)}</span>
-                      <span className="text-[10px] text-muted-foreground font-mono">{key}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground font-mono break-all">
-                      {type === "json" ? (
-                        <pre className="text-[10px] whitespace-pre-wrap max-h-20 overflow-y-auto">{currentStr}</pre>
-                      ) : type === "boolean" ? (
-                        <span className={cn(currentValue ? "text-green-400" : "text-red-400")}>
-                          {String(currentValue)}
-                        </span>
-                      ) : (
-                        <span>{currentStr}</span>
-                      )}
-                    </div>
-                    <div>
-                      {type === "boolean" ? (
-                        <select
-                          value={overrideValue}
-                          onChange={(e) => handleFieldChange(key, e.target.value)}
-                          className={cn(
-                            "w-full h-7 px-2 bg-background border rounded text-xs",
-                            isChanged ? "border-purple-500 text-purple-300" : "border-border text-muted-foreground"
-                          )}
-                        >
-                          <option value="">No change</option>
-                          <option value="true">true</option>
-                          <option value="false">false</option>
-                        </select>
-                      ) : type === "json" ? (
-                        <textarea
-                          value={overrideValue}
-                          onChange={(e) => handleFieldChange(key, e.target.value)}
-                          placeholder="No change"
-                          className={cn(
-                            "w-full h-20 px-2 py-1 bg-background border rounded text-[10px] font-mono resize-none",
-                            isChanged ? "border-purple-500 text-purple-300" : "border-border"
-                          )}
-                        />
-                      ) : (
-                        <input
-                          type={type === "number" ? "number" : "text"}
-                          step={type === "number" ? "any" : undefined}
-                          value={overrideValue}
-                          onChange={(e) => handleFieldChange(key, e.target.value)}
-                          placeholder="No change"
-                          className={cn(
-                            "w-full h-7 px-2 bg-background border rounded text-xs",
-                            isChanged ? "border-purple-500 text-purple-300" : "border-border"
-                          )}
-                        />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Remove confirmation */}
+      {canEditFields && (
+        <div className="mb-4 space-y-5">
+          {scalarFields.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-medium text-foreground">Basic info</p>
+              {scalarFields.map(({ key, currentValue, inputType }) => {
+                const overrideValue = fieldOverrides[key] ?? "";
+                const selectOptions = getSelectOptions(key);
+                return (
+                  <label key={key} className="block text-[11px]">
+                    <span className="text-muted-foreground">{formatOverrideFieldLabel(key)}</span>
+                    {inputType === "select" && selectOptions ? (
+                      <select
+                        value={overrideValue}
+                        onChange={(e) => handleFieldChange(key, e.target.value)}
+                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                      >
+                        <option value="">Leave as-is ({String(currentValue ?? "—")})</option>
+                        {selectOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    ) : inputType === "textarea" ? (
+                      <textarea
+                        value={overrideValue}
+                        onChange={(e) => handleFieldChange(key, e.target.value)}
+                        placeholder={String(currentValue ?? "Leave as-is")}
+                        rows={3}
+                        className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-sm resize-y"
+                      />
+                    ) : inputType === "boolean" ? (
+                      <select
+                        value={overrideValue}
+                        onChange={(e) => handleFieldChange(key, e.target.value)}
+                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                      >
+                        <option value="">Leave as-is ({String(currentValue)})</option>
+                        <option value="true">Yes / True</option>
+                        <option value="false">No / False</option>
+                      </select>
+                    ) : (
+                      <input
+                        type={inputType === "number" ? "number" : "text"}
+                        step={inputType === "number" ? "any" : undefined}
+                        value={overrideValue}
+                        onChange={(e) => handleFieldChange(key, e.target.value)}
+                        placeholder={`Current: ${String(currentValue ?? "—")}`}
+                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                      />
+                    )}
+                  </label>
+                );
+              })}
+            </div>
+          )}
+
+          {nestedRecordFields.map((recordField) => (
+            <StatRowsEditor
+              key={recordField}
+              title={formatOverrideFieldLabel(recordField)}
+              rows={nestedStatRows.filter((r) => r.recordField === recordField)}
+              overrideValues={fieldOverrides}
+              onChange={handleFieldChange}
+              onAddKey={() => handleAddStatKey(recordField)}
+              newKeyValue={newStatKey}
+              onNewKeyChange={setNewStatKey}
+            />
+          ))}
+
+          {structuredFields.has("effects") && (
+            <ArcaneEffectsEditor
+              lines={effectLines}
+              onChange={(lines) => {
+                setEffectLines(lines);
+                setStructuredTouched((s) => ({ ...s, effects: true }));
+              }}
+            />
+          )}
+
+          {structuredFields.has("abilities") && abilities.length > 0 && (
+            <AbilitiesEditor
+              abilities={abilities}
+              onChange={(draft) => {
+                setAbilities(draft);
+                setStructuredTouched((s) => ({ ...s, abilities: true }));
+              }}
+            />
+          )}
+        </div>
+      )}
+
       {selectedItemId && action === "remove" && (
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
           <p className="text-sm text-red-400">
-            This will remove <strong>{selectedItemName}</strong> from the {category} data.
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            The item will be filtered out wherever it appears. This override can be deleted later to restore it.
+            <strong>{selectedItemName || selectedItemId}</strong> will be hidden on the site until this fix is removed.
           </p>
         </div>
       )}
 
-      {/* Note */}
       <div className="mb-4">
-        <label className="text-xs text-muted-foreground mb-1.5 block">Note (optional)</label>
+        <label className="mb-1.5 block text-xs text-muted-foreground">Note (why you&apos;re changing this)</label>
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Why this override exists..."
-          className="w-full h-8 px-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:border-purple-500/50"
+          placeholder="e.g. Wiki says drain should be -2 at rank 0"
+          className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-purple-500/50 focus:outline-none"
         />
       </div>
 
-      {/* Save */}
       <button
+        type="button"
         onClick={handleSave}
-        disabled={!selectedItemId}
-        className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+        disabled={action !== "add" && !selectedItemId}
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 py-2.5 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
       >
         <Save className="h-4 w-4" />
-        {action === "remove" ? "Save Remove Override" : `Save Override (${changedCount} field${changedCount === 1 ? "" : "s"})`}
+        {action === "remove" ? "Save hide" : prefill?.existingOverrideId ? "Update fix" : `Save fix${changedCount > 0 ? ` (${changedCount} change${changedCount === 1 ? "" : "s"})` : ""}`}
       </button>
     </div>
   );

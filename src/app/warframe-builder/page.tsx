@@ -12,9 +12,7 @@ import {
 import { ModSlotCard } from "@/components/mod-slot";
 import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
-import { allWarframes } from "@/data/warframes";
-import { allMods, modsMap } from "@/data/mods";
-import { allArchonShards } from "@/data/archon-shards";
+import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
 import { calculateWarframeBuild, calculateWeaponBuild, applyWarframeShardsAndArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost } from "@/lib/mod-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
@@ -22,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
-import { useWeapons } from "@/lib/use-data";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
 import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
@@ -213,6 +210,9 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
 }
 
 export default function WarframeBuilderPage() {
+  const allWarframes = useWarframes();
+  const { mods: allMods, modsMap } = useMods();
+  const allArchonShards = useArchonShards();
   const [selectedWarframe, setSelectedWarframe] = useState<Warframe | null>(null);
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
   const [equippedShards, setEquippedShards] = useState<(EquippedArchonShard | null)[]>([null, null, null, null, null]);

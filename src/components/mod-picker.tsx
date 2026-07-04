@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Mod, getRivenStatsForCategory } from "@/lib/types";
+import { isAuraMod } from "@/lib/aura-mods";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,9 +36,6 @@ const rarityColors: Record<string, string> = {
   rare: "bg-yellow-500/20 text-yellow-300 border-yellow-500/50",
   legendary: "bg-white/10 text-white border-white/30",
 };
-
-import { Mod } from "@/lib/types";
-import { isAuraMod } from "@/lib/aura-mods";
 
 // Known exilus mod IDs (movement, utility, drift mods — matched to actual data)
 const EXILUS_MODS = new Set([

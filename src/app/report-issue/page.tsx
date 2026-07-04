@@ -16,6 +16,7 @@ import {
   AlertTriangle, Search, Wrench, Edit3,
 } from "lucide-react";
 import { OverrideEditor } from "@/components/override-editor";
+import { formatOverrideFieldsSummary } from "@/lib/override-schemas";
 
 interface ApiReport {
   id: string;
@@ -303,7 +304,8 @@ export default function ReportIssuePage() {
   const handleCreateOverrideFromReport = useCallback((report: ApiReport) => {
     const typeMap: Record<string, OverrideCategory> = {
       weapon: "weapon", mod: "mod", companion: "companion", warframe: "warframe",
-      arcane: "arcane", archon_shard: "archon_shard", archwing: "archwing", necramech: "necramech",
+      arcane: "arcane", arcane_effect: "arcane_effect", archon_shard: "archon_shard",
+      archwing: "archwing", necramech: "necramech",
     };
     const issues = (() => { try { return JSON.parse(report.issues || "{}"); } catch { return {}; } })();
     const discrepancies: { stat: string; currentValue: string; expectedValue: string }[] =
@@ -314,8 +316,13 @@ export default function ReportIssuePage() {
     if (issues.doesNotExist) {
       action = "remove";
     } else if (discrepancies.length > 0) {
+      const cat = typeMap[report.itemType] ?? "weapon";
+      const statPrefix = cat === "mod" || cat === "arcane" ? "stats." : cat === "archon_shard" ? "statBonuses." : "";
       for (const d of discrepancies) {
-        if (d.stat && d.expectedValue) fields[d.stat] = d.expectedValue;
+        if (!d.stat || !d.expectedValue) continue;
+        const key = d.stat.includes(".") ? d.stat : statPrefix ? `${statPrefix}${d.stat}` : d.stat;
+        const num = Number(d.expectedValue);
+        fields[key] = Number.isNaN(num) ? d.expectedValue : num;
       }
     }
 
@@ -325,6 +332,19 @@ export default function ReportIssuePage() {
       note: `From report: ${report.itemName} - ${report.comment || "no comment"}`,
       action,
       fields,
+    });
+    setActiveTab("overrides");
+    setShowOverrideForm(true);
+  }, []);
+
+  const handleEditOverride = useCallback((ovr: DataOverride) => {
+    setOverridePrefill({
+      existingOverrideId: ovr.id,
+      category: ovr.targetType,
+      itemId: ovr.targetId,
+      note: ovr.note,
+      action: ovr.action,
+      fields: ovr.fields,
     });
     setActiveTab("overrides");
     setShowOverrideForm(true);
@@ -350,7 +370,7 @@ export default function ReportIssuePage() {
                   onClick={() => setActiveTab("overrides")}
                   className={cn("flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg transition-colors", activeTab === "overrides" ? "bg-purple-600 text-white" : "text-muted-foreground hover:text-foreground")}
                 >
-                  <Wrench className="h-4 w-4" /> Data Overrides {overrides.length > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20">{overrides.length}</span>}
+                  <Wrench className="h-4 w-4" /> Data Fixes {overrides.length > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20">{overrides.length}</span>}
                 </button>
               )}
             </div>
@@ -687,8 +707,7 @@ export default function ReportIssuePage() {
               <div className="text-center py-12 text-muted-foreground">
                 <Wrench className="h-8 w-8 mx-auto mb-3 opacity-50" />
                 <p className="text-sm">No data overrides yet.</p>
-                <p className="text-xs mt-1">Create overrides to fix stats, rename items, or add missing items.</p>
-                <p className="text-xs mt-1">You can also create fixes from the Reports tab.</p>
+                <p className="text-xs mt-1">Pick an item, change the fields that are wrong, and save — no coding required.</p>
               </div>
             )}
             {overrides.map((ovr) => {
@@ -711,9 +730,19 @@ export default function ReportIssuePage() {
                     <div className="border-t border-border p-3 space-y-3">
                       <div className="text-[10px] text-muted-foreground">Created: {new Date(ovr.timestamp).toLocaleString()}</div>
                       {Object.keys(ovr.fields).length > 0 && (
-                        <pre className="text-[10px] bg-background p-2 rounded border border-border overflow-x-auto font-mono">{JSON.stringify(ovr.fields, null, 2)}</pre>
+                        <ul className="space-y-0.5 text-xs text-foreground/90">
+                          {formatOverrideFieldsSummary(ovr.fields).map((line) => (
+                            <li key={line}>{line}</li>
+                          ))}
+                        </ul>
                       )}
                       <div className="flex gap-2 pt-2 border-t border-border">
+                        <button
+                          onClick={() => handleEditOverride(ovr)}
+                          className="flex items-center gap-1 px-2 py-1 text-[10px] rounded bg-purple-500/10 text-purple-400 hover:bg-purple-500/20"
+                        >
+                          <Wrench className="h-3 w-3" /> Edit
+                        </button>
                         <button onClick={() => handleDeleteOverride(ovr.id)} className="flex items-center gap-1 px-2 py-1 text-[10px] rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 ml-auto">
                           <Trash2 className="h-3 w-3" /> Delete
                         </button>
