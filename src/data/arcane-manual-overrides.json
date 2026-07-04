@@ -22,7 +22,46 @@
   "zid_an_sek_eel": [{"stat": "invisibilityDuration", "maxValue": 30, "flat": true, "stacking": false}, {"stat": "tauronChargeRate", "maxValue": 9, "flat": false, "stacking": false}],
   "zid_an_uskos": [{"stat": "secondaryHeatDamage", "maxValue": 2.4, "flat": false, "stacking": true}],
   "secondary_cryogenic": [{"stat": "coldStacksApplied", "maxValue": 3, "flat": true, "stacking": false}],
-  "exodia_brave": [{"stat": "energyRegen", "maxValue": 5, "flat": false, "stacking": true}],
+  "exodia_brave": {
+    "replace": true,
+    "trigger": "stacks",
+    "stackCap": 3,
+    "effects": [{"stat": "energyRegen", "maxValue": 5, "flat": false, "stacking": true}]
+  },
+  "exodia_force": {
+    "replace": true,
+    "trigger": "onStatus",
+    "effects": [
+      {"stat": "statusProcChance", "maxValue": 50, "flat": false, "stacking": false},
+      {"stat": "procDamageMultiplier", "maxValue": 200, "flat": false, "stacking": false}
+    ]
+  },
+  "exodia_hunt": {
+    "replace": true,
+    "trigger": "onMovement",
+    "effects": [
+      {"stat": "pullChance", "maxValue": 50, "flat": false, "stacking": false},
+      {"stat": "pullRadius", "maxValue": 12, "flat": true, "stacking": false}
+    ]
+  },
+  "exodia_might": {
+    "replace": true,
+    "trigger": "onFinisher",
+    "effects": [
+      {"stat": "lifeStealChance", "maxValue": 50, "flat": false, "stacking": false},
+      {"stat": "lifeSteal", "maxValue": 30, "flat": false, "stacking": false}
+    ]
+  },
+  "exodia_triumph": {
+    "replace": true,
+    "trigger": "passive",
+    "effects": [{"stat": "meleeComboChance", "maxValue": 50, "flat": false, "stacking": false}]
+  },
+  "exodia_valor": {
+    "replace": true,
+    "trigger": "conditional",
+    "effects": [{"stat": "meleeComboChance", "maxValue": 200, "flat": false, "stacking": false}]
+  },
   "magus_destruct": [{"stat": "enemyResistanceReduction", "maxValue": 65, "flat": false, "stacking": false}],
   "magus_glitch": [{"stat": "transferenceStaticNegate", "maxValue": 102, "flat": false, "stacking": false}],
   "magus_repair": [{"stat": "operatorToWarframeHeal", "maxValue": 25, "flat": false, "stacking": false}],
@@ -36,6 +75,44 @@
     {"stat": "damage", "maxValue": 30, "flat": false, "stacking": true},
     {"stat": "reloadSpeed", "maxValue": 30, "flat": false, "stacking": true}
   ],
+  "arcane_primary_deadhead": {
+    "replace": true,
+    "trigger": "stacks",
+    "stackCap": 3,
+    "effects": [
+      {"stat": "damage", "maxValue": 120, "flat": false, "stacking": true},
+      {"stat": "headshotMultiplier", "maxValue": 30, "flat": false, "stacking": false},
+      {"stat": "recoilReduction", "maxValue": 50, "flat": false, "stacking": false}
+    ]
+  },
+  "arcane_secondary_deadhead": {
+    "replace": true,
+    "trigger": "stacks",
+    "stackCap": 3,
+    "effects": [
+      {"stat": "damage", "maxValue": 120, "flat": false, "stacking": true},
+      {"stat": "headshotMultiplier", "maxValue": 30, "flat": false, "stacking": false},
+      {"stat": "recoilReduction", "maxValue": 50, "flat": false, "stacking": false}
+    ]
+  },
+  "arcane_primary_dexterity": {
+    "replace": true,
+    "trigger": "stacks",
+    "stackCap": 6,
+    "effects": [
+      {"stat": "damage", "maxValue": 60, "flat": false, "stacking": true},
+      {"stat": "comboDuration", "maxValue": 7.5, "flat": true, "stacking": false}
+    ]
+  },
+  "arcane_secondary_dexterity": {
+    "replace": true,
+    "trigger": "stacks",
+    "stackCap": 6,
+    "effects": [
+      {"stat": "damage", "maxValue": 60, "flat": false, "stacking": true},
+      {"stat": "comboDuration", "maxValue": 7.5, "flat": true, "stacking": false}
+    ]
+  },
   "arcane_crepuscular": {
     "replace": true,
     "trigger": "conditional",
@@ -154,14 +231,6 @@
     "replace": true,
     "trigger": "onMovement",
     "effects": [{"stat": "shockwaveOnSlam", "maxValue": 1, "flat": true, "stacking": false}]
-  },
-  "exodia_hunt": {
-    "replace": true,
-    "trigger": "onFinisher",
-    "effects": [
-      {"stat": "pullChance", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "pullRadius", "maxValue": 12, "flat": true, "stacking": false}
-    ]
   },
   "magus_revert": {
     "replace": true,

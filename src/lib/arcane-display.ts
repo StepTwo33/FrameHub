@@ -100,7 +100,14 @@ const STAT_LABELS: Record<string, string> = {
   weaponJamCooldown: "Weapon Jam Cooldown",
   statusChancePerHit: "Status Chance per Hit",
   tauronStrikeCharge: "Tauron Strike Charge",
-  headshotHealthRegen: "Headshot Health Regen",
+  meleeComboChance: "Combo Count Chance",
+  comboDuration: "Combo Duration",
+  recoilReduction: "Recoil Reduction",
+  headshotMultiplier: "Headshot Multiplier",
+  statusProcChance: "Status Proc Chance",
+  lifeStealChance: "Life Steal Chance",
+  lifeSteal: "Life Steal",
+  energyRegen: "Energy Regen/s",
 };
 
 const PASSIVE_TRIGGERS = new Set<ArcaneTrigger>(["passive"]);

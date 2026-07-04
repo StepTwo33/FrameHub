@@ -3,6 +3,7 @@ import { shouldApplyEffectToBuild } from "@/lib/arcane-apply-policy";
 import {
   applyCustomArcaneToWarframe,
   applyCustomArcaneToWeapon,
+  WarframeArcaneContext,
 } from "@/lib/arcane-handlers";
 import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { CalculatedStats, Mod, WarframeCalculatedStats, Weapon } from "@/lib/types";
@@ -31,11 +32,7 @@ export function effectiveArcaneStacks(
   return def.stackCap ?? 1;
 }
 
-export interface WarframeArcaneContext {
-  totalHealth: number;
-  totalShield: number;
-  totalArmor: number;
-}
+export type { WarframeArcaneContext } from "@/lib/arcane-handlers";
 
 function ensureArcaneBonuses(stats: { arcaneBonuses?: Record<string, number> }): Record<string, number> {
   if (!stats.arcaneBonuses) stats.arcaneBonuses = {};

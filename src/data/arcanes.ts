@@ -128,7 +128,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "On Heavy Attack Kill:\ +5 Energy Rate for 4s. Stacks up to 3x.",
     rarity: "rare",
@@ -140,7 +140,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "After a Bullet Jump or Double Jump:\ Melee while Aim Gliding launches a projectile that explodes on impact",
     rarity: "legendary",
@@ -152,7 +152,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "After a Bullet Jump or Double Jump:\ Slam emits a shockwave forwards that suspends enemies in the air for a short period",
     rarity: "legendary",
@@ -164,7 +164,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "On Status Effect:\ 50% chance to deal 200% Weapon Damage to enemies within 6m.",
     rarity: "rare",
@@ -176,7 +176,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "On Ground Slam:\ 50% chance to pull enemies within 12m into melee range.",
     rarity: "rare",
@@ -188,7 +188,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "On Finisher Kill:\ 50% chance for +30% Life Steal for 8s",
     rarity: "rare",
@@ -200,7 +200,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "+50% Additional Combo Count Chance",
     rarity: "uncommon",
@@ -212,7 +212,7 @@ export const allArcanes: Mod[] = [
     drain: 0,
     maxRank: 3,
     category: "arcane",
-    subCategory: "exodia",
+    subCategory: "zaw",
     stats: {},
     description: "+200% Additional Combo Count Chance on Lifted enemies",
     rarity: "uncommon",
@@ -2002,5 +2002,7 @@ export const secondaryArcanes = allArcanes.filter(a => a.subCategory === 'second
 export const meleeArcanes = allArcanes.filter(a => a.subCategory === 'melee');
 export const kitgunArcanes = allArcanes.filter(a => a.subCategory === 'kitgun' || a.subCategory === 'residual');
 export const ampArcanes = allArcanes.filter(a => a.subCategory === 'amp');
-export const exodiaArcanes = allArcanes.filter(a => a.subCategory === 'exodia');
+/** Exodia arcanes — Zaw-only slot (2nd melee arcane on modular Zaws). */
+export const exodiaArcanes = allArcanes.filter(a => a.subCategory === 'zaw');
+export const zawArcanes = exodiaArcanes;
 export const tektolystArcanes = allArcanes.filter(a => a.subCategory === 'tektolyst');

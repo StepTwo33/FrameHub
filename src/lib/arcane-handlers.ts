@@ -1,6 +1,12 @@
-import { ArcaneEffectDef } from "@/data/arcane-effects";
+import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
+
+export interface WarframeArcaneContext {
+  totalHealth: number;
+  totalShield: number;
+  totalArmor: number;
+}
 
 export interface ArcaneHandlerContext {
   def: ArcaneEffectDef;
@@ -16,6 +22,17 @@ function trackBonus(stats: { arcaneBonuses?: Record<string, number> }, stat: str
   stats.arcaneBonuses[stat] = (stats.arcaneBonuses[stat] ?? 0) + value;
 }
 
+function scaledLine(def: ArcaneEffectDef, line: ArcaneEffectLine | undefined, rank: number, stacks: number): number {
+  if (!line) return 0;
+  const rankScaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank);
+  const stackMult = def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
+  return rankScaled * stackMult;
+}
+
+function findEffect(def: ArcaneEffectDef, stat: string): ArcaneEffectLine | undefined {
+  return def.effects.find((e) => e.stat === stat);
+}
+
 function applyWeaponDamageMult(stats: CalculatedStats, pct: number): void {
   const scaled = pct / 100;
   stats.totalDamage *= 1 + scaled;
@@ -26,83 +43,112 @@ function applyWeaponDamageMult(stats: CalculatedStats, pct: number): void {
   for (const e of stats.rawElements) e.value *= 1 + scaled;
 }
 
-/** Per-arcane handlers — each models that arcane's actual in-game behavior. */
+/** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
+function applyStackingDamageHandler(
+  stats: CalculatedStats,
+  ctx: ArcaneHandlerContext,
+  opts?: { reload?: boolean; bonusKey?: string },
+): void {
+  const { def, rank, stacks } = ctx;
+  const dmg = scaledLine(def, findEffect(def, "damage"), rank, stacks);
+  if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+  if (opts?.reload) {
+    const reload = scaledLine(def, findEffect(def, "reloadSpeed"), rank, stacks);
+    if (reload > 0) stats.reloadTime /= 1 + reload / 100;
+  }
+  trackBonus(stats, opts?.bonusKey ?? "stackingDamageStacks", stacks);
+  for (const line of def.effects) {
+    if (line.stat === "damage" || line.stat === "reloadSpeed") continue;
+    trackBonus(stats, line.stat, scaledLine(def, line, rank, stacks));
+  }
+}
+
+function trackAllEffects(
+  stats: { arcaneBonuses?: Record<string, number> },
+  def: ArcaneEffectDef,
+  rank: number,
+  stacks: number,
+): void {
+  for (const line of def.effects) {
+    trackBonus(stats, line.stat, scaledLine(def, line, rank, stacks));
+  }
+}
+
+/** Per-arcane weapon handlers — Zaw/Exodia, primary, secondary, melee. */
 export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHandlerContext): boolean {
-  const { arcaneId, def, rank, stacks, baseWeapon } = ctx;
+  const { arcaneId, def, rank, stacks } = ctx;
   if (stacks <= 0) return true;
 
   switch (arcaneId) {
     case "arcane_primary_merciless":
-    case "arcane_secondary_merciless": {
-      // +damage and +reload per stack, capped at stackCap.
-      const dmg = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "damage")?.maxValue ?? 30,
-        rank,
-        def.maxRank,
-      );
-      const reload = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "reloadSpeed")?.maxValue ?? 30,
-        rank,
-        def.maxRank,
-      );
-      applyWeaponDamageMult(stats, dmg * stacks);
-      if (reload > 0) stats.reloadTime /= 1 + (reload * stacks) / 100;
-      trackBonus(stats, "mercilessStacks", stacks);
+    case "arcane_secondary_merciless":
+      applyStackingDamageHandler(stats, ctx, { reload: true, bonusKey: "mercilessStacks" });
       return true;
-    }
+
+    case "arcane_primary_deadhead":
+    case "arcane_secondary_deadhead":
+      applyStackingDamageHandler(stats, ctx, { bonusKey: "deadheadStacks" });
+      return true;
+
+    case "arcane_primary_dexterity":
+    case "arcane_secondary_dexterity":
+      applyStackingDamageHandler(stats, ctx, { bonusKey: "dexterityStacks" });
+      return true;
+
     case "primary_overcharge": {
-      const ms = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "multishot")?.maxValue ?? 350,
-        rank,
-        def.maxRank,
-      );
+      const ms = scaledLine(def, findEffect(def, "multishot"), rank, stacks);
       stats.multishot += ms / 100;
+      trackBonus(stats, "multishot", ms);
       return true;
     }
+
     case "melee_exposure": {
-      const bonus = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "meleeDamageBonus")?.maxValue ?? 240,
-        rank,
-        def.maxRank,
-      );
-      // Melee-only damage vs status-affected; tracked separately, not primary weapon DPS.
-      trackBonus(stats, "meleeDamageBonus", bonus * stacks);
+      const bonus = scaledLine(def, findEffect(def, "meleeDamageBonus"), rank, stacks);
+      trackBonus(stats, "meleeDamageBonus", bonus);
       return true;
     }
-    case "cascadia_flare": {
-      const dmg = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "damage")?.maxValue ?? 480,
-        rank,
-        def.maxRank,
-      );
-      applyWeaponDamageMult(stats, dmg * stacks);
-      trackBonus(stats, "cascadiaFlareStacks", stacks);
+
+    case "cascadia_flare":
+      applyStackingDamageHandler(stats, ctx, { bonusKey: "cascadiaFlareStacks" });
       return true;
-    }
+
     case "secondary_surge": {
-      // Scales with current energy — cannot know without loadout link; display only.
-      const pct = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "damagePerEnergy")?.maxValue ?? 800,
-        rank,
-        def.maxRank,
-      );
-      trackBonus(stats, "damagePerEnergy", pct);
+      trackBonus(stats, "damagePerEnergy", scaledLine(def, findEffect(def, "damagePerEnergy"), rank, stacks));
       return true;
     }
+
     case "zid_an_uskos": {
-      const heat = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "secondaryHeatDamage")?.maxValue ?? 2.4,
-        rank,
-        def.maxRank,
-      );
-      trackBonus(stats, "secondaryHeatDamage", heat * stacks);
+      trackBonus(stats, "secondaryHeatDamage", scaledLine(def, findEffect(def, "secondaryHeatDamage"), rank, stacks));
       return true;
     }
+
+    case "primary_plated_round": {
+      trackBonus(stats, "reloadDamageRamp", scaledLine(def, findEffect(def, "reloadDamageRamp"), rank, stacks));
+      return true;
+    }
+
+    case "exodia_brave": {
+      trackBonus(stats, "energyRegen", scaledLine(def, findEffect(def, "energyRegen"), rank, stacks));
+      trackBonus(stats, "exodiaBraveStacks", stacks);
+      return true;
+    }
+
+    case "exodia_force":
+    case "exodia_hunt":
+    case "exodia_might":
+    case "exodia_contagion":
+    case "exodia_epidemic":
+    case "exodia_triumph":
+    case "exodia_valor":
+      trackAllEffects(stats, def, rank, stacks);
+      return true;
+
     default:
       return false;
   }
 }
 
+/** Per-arcane warframe handlers. */
 export function applyCustomArcaneToWarframe(
   stats: WarframeCalculatedStats,
   ctx: ArcaneHandlerContext,
@@ -120,64 +166,66 @@ export function applyCustomArcaneToWarframe(
       stats.shieldsNullifiedByPersistence = true;
       return true;
     }
+
     case "arcane_battery": {
-      const perArmor = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "energyPerArmor")?.maxValue ?? 0.3,
-        rank,
-        def.maxRank,
-      );
+      const perArmor = scaledLine(def, findEffect(def, "energyPerArmor"), rank, stacks);
       stats.flatEnergyBonus += perArmor * wfCtx.totalArmor;
       trackBonus(stats, "energyPerArmor", perArmor);
       return true;
     }
+
     case "arcane_bellicose": {
-      const perStep = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "abilityStrengthPerHealth")?.maxValue ?? 6,
-        rank,
-        def.maxRank,
-      );
-      const step =
-        def.effects.find((e) => e.stat === "abilityStrengthPerHealthStep")?.maxValue ?? 250;
+      const perStep = scaledLine(def, findEffect(def, "abilityStrengthPerHealth"), rank, stacks);
+      const step = findEffect(def, "abilityStrengthPerHealthStep")?.maxValue ?? 250;
       const steps = step > 0 ? Math.floor(wfCtx.totalHealth / step) : 0;
       stats.abilityStrength += (steps * perStep) / 100;
       trackBonus(stats, "abilityStrengthPerHealth", steps * perStep);
       return true;
     }
+
     case "arcane_expertise": {
-      const ratio = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "abilityStrengthToShield")?.maxValue ?? 100,
-        rank,
-        def.maxRank,
-      );
+      const ratio = scaledLine(def, findEffect(def, "abilityStrengthToShield"), rank, stacks);
       stats.abilityStrength += (wfCtx.totalShield * ratio) / 100 / 100;
       trackBonus(stats, "abilityStrengthToShield", ratio);
       return true;
     }
+
     case "arcane_energize": {
-      // On orb pickup burst — does not increase max energy pool.
-      const energy = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "energyOrbBonus")?.maxValue ?? 150,
-        rank,
-        def.maxRank,
-      );
-      const ally = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "allyEnergy")?.maxValue ?? 30,
-        rank,
-        def.maxRank,
-      );
-      trackBonus(stats, "energyOrbBonus", energy);
-      trackBonus(stats, "allyEnergy", ally);
+      trackBonus(stats, "energyOrbBonus", scaledLine(def, findEffect(def, "energyOrbBonus"), rank, stacks));
+      trackBonus(stats, "allyEnergy", scaledLine(def, findEffect(def, "allyEnergy"), rank, stacks));
       return true;
     }
-    case "exodia_brave": {
-      const regen = scaleArcaneEffectValue(
-        def.effects.find((e) => e.stat === "energyRegen")?.maxValue ?? 5,
-        rank,
-        def.maxRank,
-      );
-      trackBonus(stats, "energyRegen", regen * stacks);
+
+    case "arcane_crepuscular": {
+      // While invisible — tracked for panel; not applied to passive totals without sim toggle.
+      trackBonus(stats, "abilityStrength", scaledLine(def, findEffect(def, "abilityStrength"), rank, stacks));
+      trackBonus(stats, "criticalMultiplier", scaledLine(def, findEffect(def, "criticalMultiplier"), rank, stacks));
       return true;
     }
+
+    case "arcane_eruption":
+    case "arcane_escapist":
+    case "arcane_steadfast":
+    case "arcane_truculence":
+    case "emergence_dissipate":
+    case "emergence_savior":
+    case "magus_destruct":
+    case "magus_glitch":
+    case "magus_repair":
+    case "magus_revert":
+    case "magus_cadence":
+    case "magus_cloud":
+    case "molt_reconstruct":
+    case "theorem_contagion":
+    case "theorem_infection":
+    case "zid_an_asheir":
+    case "zid_an_sek_eel":
+    case "melee_vortex":
+    case "primary_debilitate":
+    case "primary_obstruct":
+      trackAllEffects(stats, def, rank, stacks);
+      return true;
+
     default:
       return false;
   }

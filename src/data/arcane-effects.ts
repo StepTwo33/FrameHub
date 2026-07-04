@@ -1257,8 +1257,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": null,
     "effects": [
       {
+        "stat": "statusProcChance",
+        "maxValue": 50,
+        "flat": false,
+        "stacking": false
+      },
+      {
         "stat": "procDamageMultiplier",
-        "maxValue": 200.0,
+        "maxValue": 200,
         "flat": false,
         "stacking": false
       }
@@ -1266,7 +1272,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
   },
   "exodia_hunt": {
     "name": "Exodia Hunt",
-    "trigger": "onFinisher",
+    "trigger": "onMovement",
     "maxRank": 3,
     "stackCap": null,
     "effects": [
@@ -1291,8 +1297,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": null,
     "effects": [
       {
+        "stat": "lifeStealChance",
+        "maxValue": 50,
+        "flat": false,
+        "stacking": false
+      },
+      {
         "stat": "lifeSteal",
-        "maxValue": 30.0,
+        "maxValue": 30,
         "flat": false,
         "stacking": false
       }
@@ -1305,8 +1317,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": null,
     "effects": [
       {
-        "stat": "meleeComboGain",
-        "maxValue": 50.0,
+        "stat": "meleeComboChance",
+        "maxValue": 50,
         "flat": false,
         "stacking": false
       }
@@ -1314,13 +1326,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
   },
   "exodia_valor": {
     "name": "Exodia Valor",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 3,
     "stackCap": null,
     "effects": [
       {
-        "stat": "meleeComboGain",
-        "maxValue": 200.0,
+        "stat": "meleeComboChance",
+        "maxValue": 200,
         "flat": false,
         "stacking": false
       }
@@ -2023,16 +2035,22 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": 3,
     "effects": [
       {
-        "stat": "reloadSpeed",
-        "maxValue": 60.0,
+        "stat": "damage",
+        "maxValue": 120,
+        "flat": false,
+        "stacking": true
+      },
+      {
+        "stat": "headshotMultiplier",
+        "maxValue": 30,
         "flat": false,
         "stacking": false
       },
       {
-        "stat": "damage",
-        "maxValue": 120.0,
+        "stat": "recoilReduction",
+        "maxValue": 50,
         "flat": false,
-        "stacking": true
+        "stacking": false
       }
     ]
   },
@@ -2057,16 +2075,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": 6,
     "effects": [
       {
-        "stat": "holsterDamage",
-        "maxValue": 10.0,
+        "stat": "damage",
+        "maxValue": 60,
         "flat": false,
         "stacking": true
       },
       {
-        "stat": "holsterSpeed",
-        "maxValue": 10.0,
-        "flat": false,
-        "stacking": true
+        "stat": "comboDuration",
+        "maxValue": 7.5,
+        "flat": true,
+        "stacking": false
       }
     ]
   },
@@ -2243,16 +2261,22 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": 3,
     "effects": [
       {
-        "stat": "reloadSpeed",
-        "maxValue": 60.0,
+        "stat": "damage",
+        "maxValue": 120,
+        "flat": false,
+        "stacking": true
+      },
+      {
+        "stat": "headshotMultiplier",
+        "maxValue": 30,
         "flat": false,
         "stacking": false
       },
       {
-        "stat": "damage",
-        "maxValue": 120.0,
+        "stat": "recoilReduction",
+        "maxValue": 50,
         "flat": false,
-        "stacking": true
+        "stacking": false
       }
     ]
   },
@@ -2263,16 +2287,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "stackCap": 6,
     "effects": [
       {
-        "stat": "holsterDamage",
-        "maxValue": 10.0,
+        "stat": "damage",
+        "maxValue": 60,
         "flat": false,
         "stacking": true
       },
       {
-        "stat": "holsterSpeed",
-        "maxValue": 10.0,
-        "flat": false,
-        "stacking": true
+        "stat": "comboDuration",
+        "maxValue": 7.5,
+        "flat": true,
+        "stacking": false
       }
     ]
   },

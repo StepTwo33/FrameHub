@@ -11,9 +11,11 @@ export const WEAPON_BONUS_ONLY_STATS = new Set([
   "holsterDamage",
   "holsterSpeed",
   "headshotDamage",
+  "headshotMultiplier",
   "finisherDamage",
   "bonusDamageOnStatus",
   "procDamageMultiplier",
+  "statusProcChance",
   "damagePerEnergy",
   "damagePerArmorOver",
   "damagePerArmorThreshold",
@@ -27,6 +29,7 @@ export const WEAPON_BONUS_ONLY_STATS = new Set([
   "enemyResistanceReduction",
   "vulnerability",
   "lifeSteal",
+  "lifeStealChance",
   "kitgunTether",
   "kitgunRecharge",
   "kitgunHoming",
@@ -47,6 +50,15 @@ export const WEAPON_BONUS_ONLY_STATS = new Set([
   "attackSpeedOnKill",
   "ampHeatDamage",
   "ampRange",
+  "energyRegen",
+  "pullChance",
+  "pullRadius",
+  "projectileOnAimGlide",
+  "shockwaveOnSlam",
+  "meleeComboChance",
+  "comboDuration",
+  "recoilReduction",
+  "meleeDamageBonus",
 ]);
 
 /** Passive weapon arcanes may modify these core stats. */
@@ -121,6 +133,24 @@ export const WARFRAME_BONUS_ONLY_STATS = new Set([
   "reflectDamage",
   "attackSpeedBonus",
   "meleeDamageBonus",
+  "knockdownChance",
+  "escapistStackCap",
+  "invulnerabilityDuration",
+  "freeAbilityCastChance",
+  "overguardThreshold",
+  "radialAttackRadius",
+  "dissipateRadius",
+  "voidMoteEnergy",
+  "lethalInvulnDuration",
+  "lethalHealPercent",
+  "revertWindow",
+  "revertHeal",
+  "debilitateStackThreshold",
+  "weaponJamRadius",
+  "weaponJamCooldown",
+  "headshotHealthRegen",
+  "statusChancePerHit",
+  "tauronStrikeCharge",
 ]);
 
 /** Passive warframe arcanes may modify these core stats. */
@@ -143,7 +173,6 @@ export const WARFRAME_PASSIVE_BUILD_STATS = new Set([
   "healthRegen",
   "healthRegenAmount",
   "healthRegenPerSec",
-  "headshotHealthRegen",
   "energyRegen",
   "damageReduction",
   "voidModeDamageReduction",
@@ -160,19 +189,54 @@ export const WARFRAME_PASSIVE_BUILD_STATS = new Set([
 
 /** Arcane ids with custom apply logic — generic stat mapper is skipped. */
 export const ARCANE_CUSTOM_HANDLERS = new Set([
+  // Warframe
   "arcane_persistence",
   "arcane_expertise",
   "arcane_bellicose",
   "arcane_battery",
   "arcane_energize",
+  "arcane_crepuscular",
+  "arcane_eruption",
+  "arcane_escapist",
+  "arcane_steadfast",
+  "arcane_truculence",
+  "emergence_dissipate",
+  "emergence_savior",
+  "magus_destruct",
+  "magus_glitch",
+  "magus_repair",
+  "magus_revert",
+  "magus_cadence",
+  "magus_cloud",
+  "molt_reconstruct",
+  "theorem_contagion",
+  "theorem_infection",
+  "zid_an_asheir",
+  "zid_an_sek_eel",
+  "melee_vortex",
+  "primary_debilitate",
+  "primary_obstruct",
+  // Weapon
   "arcane_primary_merciless",
   "arcane_secondary_merciless",
+  "arcane_primary_deadhead",
+  "arcane_secondary_deadhead",
+  "arcane_primary_dexterity",
+  "arcane_secondary_dexterity",
   "primary_overcharge",
+  "primary_plated_round",
   "melee_exposure",
   "cascadia_flare",
-  "exodia_brave",
   "secondary_surge",
   "zid_an_uskos",
+  "exodia_brave",
+  "exodia_force",
+  "exodia_hunt",
+  "exodia_might",
+  "exodia_contagion",
+  "exodia_epidemic",
+  "exodia_triumph",
+  "exodia_valor",
 ]);
 
 export function shouldApplyEffectToBuild(
@@ -193,12 +257,10 @@ export function shouldApplyEffectToBuild(
     return buildStats.has(stat);
   }
 
-  // Stacking arcanes: apply to build when sim stacks are active (weapon) or at cap (warframe).
   if (trigger === "stacks") {
     return !bonusOnly.has(stat);
   }
 
-  // onKill, onDamaged, onPickup, conditional, etc. — never blanket-apply to core totals.
   return false;
 }
 
