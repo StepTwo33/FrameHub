@@ -69,7 +69,7 @@ function CodexPageContent() {
   const searchParams = useSearchParams();
 
   const section = parseCodexSection(searchParams.get("section"));
-  const modCategory = (searchParams.get("category") as ModBrowserCategoryId) || "aura";
+  const modCategory = (searchParams.get("category") as ModBrowserCategoryId) || "all";
   const arcaneSlot = searchParams.get("slot") || "all";
   const selectedId = searchParams.get("id");
 
@@ -100,7 +100,7 @@ function CodexPageContent() {
     setSearchQuery("");
     setParams({
       section: s,
-      category: s === "mods" ? "aura" : null,
+      category: s === "mods" ? "all" : null,
       slot: s === "arcanes" ? null : null,
       id: null,
     });
@@ -108,7 +108,9 @@ function CodexPageContent() {
 
   const filteredMods = useMemo(() => {
     let list = [...mods];
-    if (modCategory !== "all") {
+    const hasSearch = searchQuery.trim().length > 0;
+    // When searching, scan all mods — don't hide augments because Aura tab is selected.
+    if (!hasSearch && modCategory !== "all") {
       list = list.filter((m) => matchesModBrowserCategory(m, modCategory));
     }
     if (polarityFilter !== "All") {
@@ -472,17 +474,9 @@ function CodexModRow({
           {aura && " · Aura"}
         </p>
       </div>
-      <span className="font-mono text-[10px] text-muted-foreground">
-        {aura ? (
-          <>
-            {mod.drain}
-            <span className="text-muted-foreground/60"> → {maxCap}</span>
-          </>
-        ) : (
-          <>
-            {mod.drain}/{mod.maxRank}
-          </>
-        )}
+      <span className="font-mono text-[10px] text-muted-foreground" title="Capacity drain at R0 → max rank">
+        {mod.drain}
+        <span className="text-muted-foreground/60"> → {maxCap}</span>
       </span>
     </button>
   );
@@ -608,7 +602,7 @@ function ModDetailPanel({ mod, onClose }: { mod: Mod; onClose: () => void }) {
         </div>
         <div className="rounded border border-border/60 p-2">
           <p className="text-[10px] uppercase text-muted-foreground">
-            {aura ? "Max rank bonus" : "Max capacity"}
+            {aura ? "Max rank bonus" : `Max drain (R${mod.maxRank})`}
           </p>
           <p className="font-mono text-lg">{maxCap}</p>
         </div>
@@ -622,9 +616,13 @@ function ModDetailPanel({ mod, onClose }: { mod: Mod; onClose: () => void }) {
         </div>
       </div>
 
-      {aura && (
+      {aura ? (
         <p className="text-[10px] text-muted-foreground">
           Aura capacity: R0 = {mod.drain}, max rank R{mod.maxRank} = {maxCap} (adds matching polarity capacity).
+        </p>
+      ) : (
+        <p className="text-[10px] text-muted-foreground">
+          Capacity drain: R0 = {mod.drain}, max rank R{mod.maxRank} = {maxCap} (+1 per rank).
         </p>
       )}
 
