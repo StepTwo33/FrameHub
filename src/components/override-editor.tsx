@@ -338,7 +338,6 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
 
   const resetEditorState = () => {
     setFieldOverrides({});
-    setNewStatKey("");
     setStructuredTouched({ effects: false, abilities: false, radialAttacks: false });
   };
 
