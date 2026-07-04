@@ -1,6 +1,6 @@
 import { Mod } from "@/lib/types";
 import { ARCANE_EFFECTS, ArcaneEffectDef, ArcaneTrigger } from "@/data/arcane-effects";
-import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { getPersistenceDamageCap, scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 
 export interface ArcaneEffectLine {
   label: string;
@@ -111,6 +111,13 @@ const STAT_LABELS: Record<string, string> = {
   lifeSteal: "Life Steal",
 };
 
+export function getArcaneStatLabel(stat: string): string {
+  return (
+    STAT_LABELS[stat]
+    ?? stat.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim()
+  );
+}
+
 const PASSIVE_TRIGGERS = new Set<ArcaneTrigger>(["passive"]);
 
 function isProcStat(stat: string, trigger: ArcaneTrigger): boolean {
@@ -202,10 +209,8 @@ function buildLinesFromDef(
     if (line.stat === "removeShields" || line.stat === "persistenceDamageCapPerSecond") continue;
     if (line.stat === "abilityStrengthPerHealthStep") continue;
 
-    const scaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank, {
-      constantAtAllRanks: line.constantAtAllRanks,
-    });
-    const label = STAT_LABELS[line.stat] ?? line.stat;
+    const scaled = scaleArcaneEffectLine(line, rank, def.maxRank);
+    const label = getArcaneStatLabel(line.stat);
     const value = fmtStatValue(line.stat, scaled, line.flat);
     const proc = isProcStat(line.stat, def.trigger);
 
@@ -255,7 +260,7 @@ export function getArcaneDisplayInfo(
 
   for (const [key, maxVal] of Object.entries(arcane.stats ?? {})) {
     const scaled = scaleArcaneEffectValue(maxVal, rank, arcane.maxRank);
-    const label = STAT_LABELS[key] ?? key;
+    const label = getArcaneStatLabel(key);
     const value = fmtStatValue(key, scaled);
     if (key.endsWith("Chance")) {
       conditional.push({ label, value, note: "On proc" });

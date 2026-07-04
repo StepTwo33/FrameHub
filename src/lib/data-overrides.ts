@@ -39,6 +39,7 @@ export function saveOverride(override: DataOverride): void {
   }
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+    notifyDataOverridesUpdated();
   } catch (err) {
     console.warn("Failed to save data overrides to localStorage", err);
   }
@@ -47,6 +48,13 @@ export function saveOverride(override: DataOverride): void {
 export function deleteOverride(id: string): void {
   const overrides = getOverrides().filter((o) => o.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+  notifyDataOverridesUpdated();
+}
+
+export function notifyDataOverridesUpdated(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("framehub-data-overrides-updated"));
+  }
 }
 
 export function generateOverrideId(): string {

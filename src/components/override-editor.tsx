@@ -29,6 +29,7 @@ import {
   applyArcaneOverrides,
 } from "@/lib/data-overrides";
 import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
+import { toEffectDrafts, draftsToEffectsPayload } from "@/lib/arcane-effect-drafts";
 import {
   AbilitiesEditor,
   AbilityDraft,
@@ -172,20 +173,6 @@ function parseScalarValue(raw: string, original: unknown): unknown {
     return raw === "true";
   }
   return raw;
-}
-
-function toEffectDrafts(raw: unknown): ArcaneEffectLineDraft[] {
-  if (!Array.isArray(raw)) return [];
-  return raw.map((line) => {
-    const o = line as Record<string, unknown>;
-    return {
-      stat: String(o.stat ?? ""),
-      maxValue: Number(o.maxValue ?? 0),
-      flat: Boolean(o.flat),
-      stacking: Boolean(o.stacking),
-      constantAtAllRanks: Boolean(o.constantAtAllRanks),
-    };
-  });
 }
 
 function toAbilityDrafts(raw: unknown): AbilityDraft[] {
@@ -400,15 +387,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
 
     if (structuredFields.has("effects") || category === "arcane" || category === "arcane_effect") {
       if (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) {
-        fields.effects = effectLines
-          .filter((l) => l.stat.trim())
-          .map(({ stat, maxValue, flat, stacking, constantAtAllRanks }) => ({
-            stat,
-            maxValue,
-            ...(flat ? { flat: true } : {}),
-            ...(stacking ? { stacking: true } : {}),
-            ...(constantAtAllRanks ? { constantAtAllRanks: true } : {}),
-          }));
+        fields.effects = draftsToEffectsPayload(effectLines);
       }
     }
     if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {
@@ -661,10 +640,29 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
 
       {canEditFields && (
         <div className="mb-4 space-y-5">
+          {(category === "arcane" || category === "arcane_effect") && (
+            <>
+              {selectedItemName && (
+                <p className="rounded-lg border border-purple-500/20 bg-purple-500/5 px-3 py-2 text-[11px] text-muted-foreground">
+                  Edit the numbers below for <strong className="text-foreground">{selectedItemName}</strong>.
+                  Most arcanes only need <strong className="text-foreground">Effect base values</strong> — e.g. Ammo Efficiency for Akimbo Slip Shot.
+                </p>
+              )}
+              <ArcaneEffectsEditor
+                lines={effectLines}
+                maxRank={Number(itemData?.maxRank ?? 5)}
+                onChange={(lines) => {
+                  setEffectLines(lines);
+                  setStructuredTouched((s) => ({ ...s, effects: true }));
+                }}
+              />
+            </>
+          )}
+
           {scalarFields.length > 0 && (
             <div className="space-y-3">
               <p className="text-xs font-medium text-foreground">
-                {category === "mod" || category === "arcane" ? "Base values" : "Basic info"}
+                {category === "mod" || category === "arcane" ? "Other fields" : "Basic info"}
               </p>
               {scalarFields.map(({ key, currentValue, inputType }) => {
                 const overrideValue = fieldOverrides[key] ?? "";
@@ -734,17 +732,6 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
               onNewKeyChange={setNewStatKey}
             />
           ))}
-
-          {(category === "arcane" || category === "arcane_effect") && (
-            <ArcaneEffectsEditor
-              lines={effectLines}
-              maxRank={Number(itemData?.maxRank ?? 5)}
-              onChange={(lines) => {
-                setEffectLines(lines);
-                setStructuredTouched((s) => ({ ...s, effects: true }));
-              }}
-            />
-          )}
 
           {structuredFields.has("abilities") && abilities.length > 0 && (
             <AbilitiesEditor

@@ -1,5 +1,5 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
-import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 export interface WarframeArcaneContext {
@@ -24,9 +24,7 @@ function trackBonus(stats: { arcaneBonuses?: Record<string, number> }, stat: str
 
 function scaledLine(def: ArcaneEffectDef, line: ArcaneEffectLine | undefined, rank: number, stacks: number): number {
   if (!line) return 0;
-  const rankScaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank, {
-    constantAtAllRanks: line.constantAtAllRanks,
-  });
+  const rankScaled = scaleArcaneEffectLine(line, rank, def.maxRank);
   const stackMult = def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
   return rankScaled * stackMult;
 }

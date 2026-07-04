@@ -30,6 +30,7 @@ export function CodexActionLinks({
   overrideCategory,
   wikiUrl,
   returnTo,
+  editValuesLabel,
 }: {
   reportType: string;
   id: string;
@@ -37,6 +38,7 @@ export function CodexActionLinks({
   overrideCategory: string;
   wikiUrl?: string;
   returnTo?: string;
+  editValuesLabel?: string;
 }) {
   const reportHref = `/report-issue?type=${encodeURIComponent(reportType)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
   const overrideHref = `/report-issue?tab=overrides&overrideCategory=${encodeURIComponent(overrideCategory)}&overrideId=${encodeURIComponent(id)}`;
@@ -63,7 +65,7 @@ export function CodexActionLinks({
         href={returnTo ? appendReturnTo(overrideHref, returnTo) : overrideHref}
         className="inline-flex items-center gap-1 rounded border border-purple-500/30 px-2 py-1 text-[10px] text-purple-400/70 hover:bg-purple-500/5 hover:text-purple-400"
       >
-        <Wrench className="h-2.5 w-2.5" /> Override
+        <Wrench className="h-2.5 w-2.5" /> {editValuesLabel ?? "Override"}
       </a>
     </div>
   );

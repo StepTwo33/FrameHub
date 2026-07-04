@@ -7,7 +7,7 @@ import {
   applyCustomArcaneToWeapon,
   WarframeArcaneContext,
 } from "@/lib/arcane-handlers";
-import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
 import { CalculatedStats, Mod, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 /** Effective stack count for arcane effect scaling. */
@@ -48,9 +48,7 @@ function resolveEffectValue(
   rank: number,
   stacks: number,
 ): number {
-  const rankScaled = scaleArcaneEffectValue(line.maxValue, rank, def.maxRank, {
-    constantAtAllRanks: line.constantAtAllRanks,
-  });
+  const rankScaled = scaleArcaneEffectLine(line, rank, def.maxRank);
   const stackMult =
     def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
   return rankScaled * stackMult;

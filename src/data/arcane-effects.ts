@@ -24,6 +24,10 @@ export type ArcaneTrigger =
 export interface ArcaneEffectLine {
   stat: string;
   maxValue: number;
+  /** Value at rank 0. Linear scale to maxValue at maxRank when set. */
+  baseValue?: number;
+  /** Explicit per-rank values (R0 index 0). Overrides base/max interpolation. */
+  valuesByRank?: number[];
   flat?: boolean;
   stacking?: boolean;
   /** Value does not scale with arcane rank (proc chance, duration, etc.). */
@@ -47,6 +51,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> =
     "effects": [
       {
         "stat": "ammoEfficiency",
+        "baseValue": 15.0,
         "maxValue": 65.0,
         "flat": false,
         "stacking": false

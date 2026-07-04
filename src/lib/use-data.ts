@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { allWeapons } from "@/data/weapons";
 import { customWeapons } from "@/data/custom-items";
 import { allMods, modsMap as baseModsMap } from "@/data/mods";
@@ -25,6 +25,13 @@ import {
 } from "@/lib/data-overrides";
 import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
 import { enrichWeapon } from "@/lib/weapon-enrich";
+
+function useOverrideRefresh(reload: () => void) {
+  useEffect(() => {
+    window.addEventListener("framehub-data-overrides-updated", reload);
+    return () => window.removeEventListener("framehub-data-overrides-updated", reload);
+  }, [reload]);
+}
 
 // Merge base weapons + custom-items.ts (wiki-verified additions)
 const mergedWeapons: Weapon[] = (() => {
@@ -112,14 +119,13 @@ export function useArchonShards(): ArchonShard[] {
 
 export function useArcaneEffects(): Record<string, ArcaneEffectDef> {
   const [effects, setEffects] = useState<Record<string, ArcaneEffectDef>>(ARCANE_EFFECTS);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "arcane_effect")) {
-        setEffects(applyArcaneEffectOverrides());
-      }
-    });
+  const reload = useCallback(() => {
+    setEffects(applyArcaneEffectOverrides());
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return effects;
 }
 

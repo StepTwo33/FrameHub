@@ -8,6 +8,7 @@ import {
   Library,
   X,
   ArrowLeft,
+  Pencil,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +46,10 @@ import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
 import { getModImage, getArcaneImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
-import { scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { getArcaneStatLabel } from "@/lib/arcane-display";
+import { useStaffRole } from "@/lib/use-staff";
+import { ArcaneValuesDialog } from "@/components/arcane-values-dialog";
 import { useMods, useArcanes, useArchonShards, useArcaneEffects, useWeapons, useWarframes, useCompanions, useArchwings, useNecramechs } from "@/lib/use-data";
 import { Mod, ArchonShard } from "@/lib/types";
 import {
@@ -950,6 +954,9 @@ function ArcaneDetailPanel({
   compact?: boolean;
   returnTo?: string;
 }) {
+  const isStaff = useStaffRole();
+  const [editValuesOpen, setEditValuesOpen] = useState(false);
+
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -1039,20 +1046,49 @@ function ArcaneDetailPanel({
 
       {effects && effects.effects.length > 0 && (
         <div>
-          <PanelHeading>Effect lines</PanelHeading>
-          <div className={cn(compact ? "max-h-24" : "max-h-32", "overflow-y-auto")}>
-            {effects.effects.map((line) => (
-              <div key={line.stat} className="flex justify-between font-mono text-[10px]">
-                <span className="truncate pr-2">{line.stat}</span>
-                <span className="shrink-0">
-                  {scaleArcaneEffectValue(line.maxValue, rank, effects.maxRank, {
-                    constantAtAllRanks: line.constantAtAllRanks,
-                  })}
-                </span>
-              </div>
-            ))}
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <PanelHeading>Base values @ R{rank}</PanelHeading>
+            {isStaff && (
+              <button
+                type="button"
+                onClick={() => setEditValuesOpen(true)}
+                className="inline-flex items-center gap-1 rounded border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[10px] font-medium text-purple-300 hover:bg-purple-500/20"
+              >
+                <Pencil className="h-2.5 w-2.5" />
+                Edit values
+              </button>
+            )}
           </div>
+          <div className={cn(compact ? "max-h-24" : "max-h-32", "overflow-y-auto space-y-1")}>
+            {effects.effects.map((line) => {
+              const scaled = scaleArcaneEffectLine(line, rank, effects.maxRank);
+              const suffix = line.flat ? "" : "%";
+              const display = `${scaled > 0 && !line.flat ? "+" : ""}${Number.isInteger(scaled) ? scaled : scaled.toFixed(1)}${suffix}`;
+              return (
+                <div key={line.stat} className="flex justify-between gap-2 text-xs">
+                  <span className="truncate text-muted-foreground">{getArcaneStatLabel(line.stat)}</span>
+                  <span className="shrink-0 font-mono text-emerald-400">{display}</span>
+                </div>
+              );
+            })}
+          </div>
+          {!isStaff && (
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              These numbers drive builds. Staff can edit via the button above or Report Issue → Data Fixes.
+            </p>
+          )}
         </div>
+      )}
+
+      {isStaff && effects && (
+        <ArcaneValuesDialog
+          open={editValuesOpen}
+          onOpenChange={setEditValuesOpen}
+          arcaneId={arcane.id}
+          arcaneName={arcane.name}
+          effects={effects}
+          returnTo={returnTo}
+        />
       )}
 
       <CodexActionLinks
@@ -1060,6 +1096,7 @@ function ArcaneDetailPanel({
         id={arcane.id}
         name={arcane.name}
         overrideCategory="arcane"
+        editValuesLabel="Edit in Data Fixes"
         wikiUrl={getArcaneWikiUrl(arcane.name)}
         returnTo={returnTo}
       />

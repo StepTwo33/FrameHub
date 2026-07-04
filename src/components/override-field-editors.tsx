@@ -3,21 +3,18 @@
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatOverrideFieldLabel } from "@/lib/override-schemas";
-import { scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { arcaneEffectValuesByRank } from "@/lib/arcane-utils";
+import { draftToEffectLine } from "@/lib/arcane-effect-drafts";
+import { getArcaneStatLabel } from "@/lib/arcane-display";
 import {
   RADIAL_ELEMENT_OPTIONS,
   findPrimaryElementKey,
   type RadialDamageKey,
 } from "@/lib/weapon-radial-utils";
 import type { WeaponRadialAttack } from "@/lib/types";
+import type { ArcaneEffectLineDraft } from "@/lib/arcane-effect-drafts";
 
-export interface ArcaneEffectLineDraft {
-  stat: string;
-  maxValue: number;
-  flat: boolean;
-  stacking: boolean;
-  constantAtAllRanks: boolean;
-}
+export type { ArcaneEffectLineDraft };
 
 export function ArcaneEffectsEditor({
   lines,
@@ -40,12 +37,25 @@ export function ArcaneEffectsEditor({
     onChange(lines.filter((_, i) => i !== index));
   };
 
+  const togglePerRank = (index: number, enabled: boolean) => {
+    const line = lines[index]!;
+    if (enabled) {
+      const effectLine = draftToEffectLine(line);
+      const byRank = arcaneEffectValuesByRank(effectLine, maxRank);
+      update(index, { usePerRankValues: true, valuesByRank: byRank });
+    } else {
+      update(index, { usePerRankValues: false, valuesByRank: undefined });
+    }
+  };
+
+  const fmtVal = (n: number, flat: boolean) =>
+    `${Number.isInteger(n) ? n : n.toFixed(1)}${flat ? "" : "%"}`;
+
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-foreground">Build effect values</p>
+      <p className="text-xs font-medium text-foreground">Effect values by rank</p>
       <p className="text-[11px] text-muted-foreground">
-        These drive arcane math in builds. Max value is at max rank (R{maxRank}) unless &quot;Same at all ranks&quot; is checked.
-        Scaling stats increase linearly from R0. Click a value field to edit the current number.
+        Set unranked (R0) and max-rank values, or enter each rank manually. These drive build math.
       </p>
       {lines.length === 0 && (
         <p className="text-xs text-muted-foreground italic">No effect lines yet.</p>
@@ -64,37 +74,109 @@ export function ArcaneEffectsEditor({
             </button>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
-            <label className="block text-[11px]">
-              <span className="text-muted-foreground">Stat name</span>
+            <label className="block text-[11px] sm:col-span-2">
+              <span className="text-muted-foreground">Effect</span>
+              <p className="mt-0.5 text-sm font-medium text-foreground">
+                {line.stat ? getArcaneStatLabel(line.stat) : "New effect line"}
+              </p>
               <input
                 value={line.stat}
                 onChange={(e) => update(index, { stat: e.target.value })}
-                placeholder="e.g. abilityStrength"
-                className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
+                placeholder="Internal key, e.g. ammoEfficiency"
+                className="mt-1 h-8 w-full rounded border border-border bg-background px-2 font-mono text-xs text-muted-foreground"
               />
             </label>
-            <label className="block text-[11px]">
-              <span className="text-muted-foreground">Max @ R{maxRank}</span>
-              <input
-                type="number"
-                step="any"
-                value={line.maxValue}
-                onChange={(e) => update(index, { maxValue: Number(e.target.value) })}
-                onFocus={(e) => e.currentTarget.select()}
-                className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
-              />
-            </label>
-            <label className="block text-[11px] sm:col-span-2">
-              <span className="text-muted-foreground">Preview @ R0 (scaled)</span>
-              <p className="mt-0.5 font-mono text-sm text-muted-foreground">
-                {scaleArcaneEffectValue(line.maxValue, 0, maxRank, {
-                  constantAtAllRanks: line.constantAtAllRanks,
-                })}
-                {line.flat ? "" : "%"}
-              </p>
-            </label>
+            {line.constantAtAllRanks ? (
+              <label className="block text-[11px] sm:col-span-2">
+                <span className="text-muted-foreground">Value (all ranks)</span>
+                <input
+                  type="number"
+                  step="any"
+                  value={line.maxValue}
+                  onChange={(e) => update(index, { maxValue: Number(e.target.value) })}
+                  onFocus={(e) => e.currentTarget.select()}
+                  className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
+                />
+              </label>
+            ) : line.usePerRankValues ? (
+              <div className="sm:col-span-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
+                {Array.from({ length: maxRank + 1 }, (_, rank) => (
+                  <label key={rank} className="block text-[11px]">
+                    <span className="text-muted-foreground">R{rank}</span>
+                    <input
+                      type="number"
+                      step="any"
+                      value={line.valuesByRank?.[rank] ?? 0}
+                      onChange={(e) => {
+                        const next = [...(line.valuesByRank ?? Array(maxRank + 1).fill(0))];
+                        next[rank] = Number(e.target.value);
+                        update(index, {
+                          valuesByRank: next,
+                          maxValue: rank === maxRank ? Number(e.target.value) : line.maxValue,
+                          baseValue: rank === 0 ? Number(e.target.value) : line.baseValue,
+                        });
+                      }}
+                      onFocus={(e) => e.currentTarget.select()}
+                      className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
+                    />
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <>
+                <label className="block text-[11px]">
+                  <span className="text-muted-foreground">Unranked (R0)</span>
+                  <input
+                    type="number"
+                    step="any"
+                    value={line.baseValue ?? ""}
+                    placeholder="e.g. 15"
+                    onChange={(e) =>
+                      update(index, {
+                        baseValue: e.target.value === "" ? undefined : Number(e.target.value),
+                      })
+                    }
+                    onFocus={(e) => e.currentTarget.select()}
+                    className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
+                  />
+                </label>
+                <label className="block text-[11px]">
+                  <span className="text-muted-foreground">Max rank (R{maxRank})</span>
+                  <input
+                    type="number"
+                    step="any"
+                    value={line.maxValue}
+                    onChange={(e) => update(index, { maxValue: Number(e.target.value) })}
+                    onFocus={(e) => e.currentTarget.select()}
+                    className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
+                  />
+                </label>
+              </>
+            )}
+            {!line.constantAtAllRanks && (
+              <div className="sm:col-span-2 rounded-md border border-border/60 bg-background/50 px-2.5 py-2">
+                <p className="text-[10px] font-medium text-muted-foreground mb-1">Preview by rank</p>
+                <div className="flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-[10px]">
+                  {arcaneEffectValuesByRank(draftToEffectLine(line), maxRank).map((val, rank) => (
+                    <span key={rank}>
+                      R{rank}: {fmtVal(val, line.flat)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-4 text-[11px]">
+            {!line.constantAtAllRanks && (
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={Boolean(line.usePerRankValues)}
+                  onChange={(e) => togglePerRank(index, e.target.checked)}
+                />
+                Set each rank manually
+              </label>
+            )}
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"

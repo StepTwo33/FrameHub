@@ -1,4 +1,5 @@
 {
+  "akimbo_slip_shot": [{"stat": "ammoEfficiency", "baseValue": 15, "maxValue": 65, "flat": false, "stacking": false}],
   "arcane_acceleration": {
     "replace": true,
     "trigger": "conditional",
