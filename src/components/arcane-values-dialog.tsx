@@ -73,10 +73,8 @@ export function ArcaneValuesDialog({
     }
   };
 
-  const advancedHref = appendReturnTo(
-    `/report-issue?tab=overrides&overrideCategory=arcane&overrideId=${encodeURIComponent(arcaneId)}`,
-    returnTo,
-  );
+  const overrideBase = `/report-issue?tab=overrides&overrideCategory=arcane&overrideId=${encodeURIComponent(arcaneId)}`;
+  const advancedHref = returnTo ? appendReturnTo(overrideBase, returnTo) : overrideBase;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>
