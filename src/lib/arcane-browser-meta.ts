@@ -87,8 +87,9 @@ export function getArcaneCoverageInfo(
   if (legacyStatCount > 0 && def && def.effects.length > 0) {
     for (const [key, val] of Object.entries(legacyStats)) {
       const line = def.effects.find((e) => e.stat === key);
-      if (line && Math.abs(line.maxValue - val * (arcane.maxRank + 1)) > 0.05) {
-        issues.push(`Legacy stat "${key}" differs from effect def`);
+      // Legacy arcane.stats values are max-rank totals (not per-rank mod increments).
+      if (line && Math.abs(line.maxValue - val) > 0.05) {
+        issues.push(`Legacy stat "${key}" differs from effect def (${val} vs ${line.maxValue})`);
         break;
       }
     }
