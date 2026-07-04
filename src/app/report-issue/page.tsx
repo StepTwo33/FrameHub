@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { OverrideEditor } from "@/components/override-editor";
 import { formatOverrideFieldsSummary } from "@/lib/override-schemas";
+import { NavBack } from "@/components/nav-back";
+import { decodeReturnTo, returnLabel } from "@/lib/nav-return";
 
 interface ApiReport {
   id: string;
@@ -95,6 +97,7 @@ export default function ReportIssuePage() {
   const [formComment, setFormComment] = useState("");
   const [itemSearch, setItemSearch] = useState("");
   const [showItemPicker, setShowItemPicker] = useState(false);
+  const [returnTo, setReturnTo] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     fetch("/api/reports").then((r) => r.json()).then((data) => {
@@ -123,6 +126,8 @@ export default function ReportIssuePage() {
       const qTab = params.get("tab");
       const qOverrideCat = params.get("overrideCategory");
       const qOverrideId = params.get("overrideId");
+      const qReturnTo = decodeReturnTo(params.get("returnTo"));
+      if (qReturnTo) setReturnTo(qReturnTo);
       if (qTab === "overrides") setActiveTab("overrides");
       if (qType && ITEM_TYPES.includes(qType as ItemType)) {
         setFormType(qType as ItemType);
@@ -357,6 +362,9 @@ export default function ReportIssuePage() {
     <PageShell>
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
+          {returnTo && (
+            <NavBack href={returnTo} label={returnLabel(returnTo)} className="mb-4" />
+          )}
           {/* Tab Toggle */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
             <div className="flex gap-1">
@@ -699,6 +707,7 @@ export default function ReportIssuePage() {
               prefill={overridePrefill}
               onSave={handleOverrideSaved}
               onCancel={() => { setShowOverrideForm(false); setOverridePrefill(undefined); }}
+              backLink={returnTo ? { href: returnTo, label: returnLabel(returnTo) } : undefined}
             />
           )}
 

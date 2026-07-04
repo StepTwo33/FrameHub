@@ -52,25 +52,32 @@ export function useCloudBuildFromUrl(
 ) {
   const onLoadRef = useRef(onLoad);
   onLoadRef.current = onLoad;
-  const loadedIdRef = cloudBuildLoadedIdRef;
+  /** Per mount — avoids skipping load when remounting the same `?buildId=` after leaving the builder. */
+  const loadedInMountRef = useRef<string | null>(null);
 
   const syncFromUrl = useCallback(async () => {
     const buildId = new URLSearchParams(window.location.search).get("buildId");
     if (!buildId) {
-      loadedIdRef.current = null;
+      loadedInMountRef.current = null;
+      cloudBuildLoadedIdRef.current = null;
       return;
     }
-    if (loadedIdRef.current === buildId) return;
+    if (loadedInMountRef.current === buildId) return;
     // Mark as attempted up-front so failures aren't retried (and toasts aren't
     // duplicated) by StrictMode's double mount
-    loadedIdRef.current = buildId;
+    loadedInMountRef.current = buildId;
+    cloudBuildLoadedIdRef.current = buildId;
 
     const build = await fetchCloudBuild(buildId);
     if (!build) {
+      loadedInMountRef.current = null;
+      cloudBuildLoadedIdRef.current = null;
       toast.error("Could not load build");
       return;
     }
     if (build.type !== expectedType) {
+      loadedInMountRef.current = null;
+      cloudBuildLoadedIdRef.current = null;
       toast.error("This build belongs in a different builder");
       return;
     }
@@ -80,11 +87,16 @@ export function useCloudBuildFromUrl(
 
   useEffect(() => {
     queueMicrotask(() => { void syncFromUrl(); });
+    return () => {
+      loadedInMountRef.current = null;
+      cloudBuildLoadedIdRef.current = null;
+    };
   }, [syncFromUrl]);
 
   useEffect(() => {
     const onPopState = () => {
-      loadedIdRef.current = null;
+      loadedInMountRef.current = null;
+      cloudBuildLoadedIdRef.current = null;
       void syncFromUrl();
     };
     window.addEventListener("popstate", onPopState);

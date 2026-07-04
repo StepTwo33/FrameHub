@@ -1,4 +1,7 @@
 import { Mod } from "@/lib/types";
+import { modCapacityAtRank } from "@/lib/mod-capacity";
+
+export { modCapacityAtRank };
 
 /** Aura-slot mod IDs (negative drain auras + matching-polarity bonus mods). */
 export const AURA_MOD_IDS = new Set([
@@ -32,12 +35,6 @@ export const AURA_MOD_IDS = new Set([
 
 export function isAuraMod(mod: Mod): boolean {
   return AURA_MOD_IDS.has(mod.id);
-}
-
-/** Capacity cost at a given rank (R0 base drain from data, +1 per rank for normal mods). */
-export function modCapacityAtRank(baseDrain: number, rank: number): number {
-  if (baseDrain < 0) return baseDrain - rank;
-  return baseDrain + rank;
 }
 
 /** Max rank capacity cost shown in codex / mod browser. */

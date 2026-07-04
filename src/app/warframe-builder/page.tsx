@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import {
   ItemPickerScreen,
@@ -14,7 +15,7 @@ import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
 import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
 import { calculateWarframeBuild, calculateWeaponBuild, applyWarframeShardsAndArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,6 +26,7 @@ import { ArcaneSlotCard } from "@/components/arcane-picker";
 import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
+import { appendReturnTo } from "@/lib/nav-return";
 import { formatAbilityDescription } from "@/lib/ability-text";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
@@ -210,6 +212,13 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
 }
 
 export default function WarframeBuilderPage() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const builderReturnTo = useMemo(() => {
+    const q = searchParams.toString();
+    return q ? `${pathname}?${q}` : pathname;
+  }, [pathname, searchParams]);
+
   const allWarframes = useWarframes();
   const { mods: allMods, modsMap } = useMods();
   const allArchonShards = useArchonShards();
@@ -506,7 +515,7 @@ export default function WarframeBuilderPage() {
     return exaltedMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = exaltedSlotPolarities[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
@@ -567,11 +576,10 @@ export default function WarframeBuilderPage() {
     if (!auraMod) return 0;
     const mod = modsMap.get(auraMod.modId);
     if (!mod) return 0;
-    // Aura drain is stored as negative (e.g. -4 for Steel Charge).
-    // Capacity bonus = |drain| at max rank. drain + rank gives the scaled value.
-    // We negate it so it becomes a positive capacity bonus.
-    return Math.abs(mod.drain) + auraMod.rank;
-  }, [equippedMods]);
+    const drainAtRank = modCapacityAtRank(mod.drain, auraMod.rank);
+    const effectiveDrain = modSlotCapacityCost(drainAtRank, slotPolarities[AURA_SLOT], mod.polarity);
+    return Math.abs(effectiveDrain);
+  }, [equippedMods, slotPolarities]);
 
   const totalCapacity = baseCapacity + auraBonus;
 
@@ -581,7 +589,7 @@ export default function WarframeBuilderPage() {
       .reduce((sum, m) => {
         const mod = modsMap.get(m.modId);
         if (!mod) return sum;
-        const baseDrain = mod.drain + m.rank;
+        const baseDrain = modCapacityAtRank(mod.drain, m.rank);
         const slotPol = slotPolarities[m.slotIndex];
         return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
       }, 0);
@@ -851,7 +859,10 @@ export default function WarframeBuilderPage() {
                 <div className="flex-1" />
 
                 <a
-                  href={`/report-issue?type=warframe&name=${encodeURIComponent(selectedWarframe.name)}&id=${encodeURIComponent(selectedWarframe.id)}`}
+                  href={appendReturnTo(
+                    `/report-issue?type=warframe&name=${encodeURIComponent(selectedWarframe.name)}&id=${encodeURIComponent(selectedWarframe.id)}`,
+                    builderReturnTo,
+                  )}
                   className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 px-3 py-1.5 text-xs font-medium text-amber-400/70 transition-colors hover:bg-amber-500/5 hover:text-amber-400"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>

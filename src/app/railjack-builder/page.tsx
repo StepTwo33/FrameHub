@@ -21,7 +21,7 @@ import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, Ra
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 
 type PlexusTab = "integrated" | "battle" | "tactical";
 
@@ -83,7 +83,7 @@ export default function RailjackBuilderPage() {
     return currentMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = currentPolarities[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);

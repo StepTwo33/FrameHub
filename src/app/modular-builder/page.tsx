@@ -7,7 +7,7 @@ import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, ModularBuildData } from "@/lib/types";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
@@ -133,7 +133,7 @@ export default function ModularBuilderPage() {
     return equippedMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = slotPolarities[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);

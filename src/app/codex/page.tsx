@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Library,
   X,
+  ArrowLeft,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -122,6 +123,11 @@ function CodexPageContent() {
     },
     [router, searchParams],
   );
+
+  const codexReturnTo = useMemo(() => {
+    const q = searchParams.toString();
+    return q ? `/codex?${q}` : "/codex";
+  }, [searchParams]);
 
   const selectSection = (s: CodexSection) => {
     setSearchQuery("");
@@ -646,7 +652,7 @@ function CodexPageContent() {
 
       {(selectedMod || selectedArcane || selectedShard || selectedWeapon || selectedWarframe || selectedCompanion || selectedArchwing || selectedNecramech) && (
         <CodexDetailCard onClose={() => setParams({ id: null })}>
-          {selectedMod && <ModDetailPanel mod={selectedMod} compact />}
+          {selectedMod && <ModDetailPanel mod={selectedMod} compact returnTo={codexReturnTo} />}
           {selectedArcane && arcaneDisplay && (
             <ArcaneDetailPanel
               arcane={selectedArcane}
@@ -656,14 +662,15 @@ function CodexPageContent() {
               rank={arcaneRank}
               onRankChange={setPreviewRank}
               compact
+              returnTo={codexReturnTo}
             />
           )}
-          {selectedShard && <ShardDetailPanel shard={selectedShard} compact />}
-          {selectedWeapon && <WeaponDetailPanel weapon={selectedWeapon} compact />}
-          {selectedWarframe && <WarframeDetailPanel warframe={selectedWarframe} compact />}
-          {selectedCompanion && <CompanionDetailPanel companion={selectedCompanion} compact />}
-          {selectedArchwing && <ArchwingDetailPanel archwing={selectedArchwing} compact />}
-          {selectedNecramech && <NecramechDetailPanel necramech={selectedNecramech} compact />}
+          {selectedShard && <ShardDetailPanel shard={selectedShard} compact returnTo={codexReturnTo} />}
+          {selectedWeapon && <WeaponDetailPanel weapon={selectedWeapon} compact returnTo={codexReturnTo} />}
+          {selectedWarframe && <WarframeDetailPanel warframe={selectedWarframe} compact returnTo={codexReturnTo} />}
+          {selectedCompanion && <CompanionDetailPanel companion={selectedCompanion} compact returnTo={codexReturnTo} />}
+          {selectedArchwing && <ArchwingDetailPanel archwing={selectedArchwing} compact returnTo={codexReturnTo} />}
+          {selectedNecramech && <NecramechDetailPanel necramech={selectedNecramech} compact returnTo={codexReturnTo} />}
         </CodexDetailCard>
       )}
     </div>
@@ -685,9 +692,14 @@ function CodexDetailCard({ children, onClose }: { children: ReactNode; onClose: 
         )}
       >
         <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-3 py-1.5">
-          <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-            Selected
-          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          >
+            <ArrowLeft className="h-3 w-3" />
+            Back to list
+          </button>
           <button
             type="button"
             onClick={onClose}
@@ -824,7 +836,7 @@ function CodexShardRow({
   );
 }
 
-function ModDetailPanel({ mod, compact }: { mod: Mod; compact?: boolean }) {
+function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolean; returnTo?: string }) {
   const aura = isAuraMod(mod);
   const maxCap = modMaxCapacity(mod);
 
@@ -913,6 +925,7 @@ function ModDetailPanel({ mod, compact }: { mod: Mod; compact?: boolean }) {
         id={mod.id}
         name={mod.name}
         overrideCategory="mod"
+        returnTo={returnTo}
       />
     </div>
   );
@@ -926,6 +939,7 @@ function ArcaneDetailPanel({
   rank,
   onRankChange,
   compact,
+  returnTo,
 }: {
   arcane: Mod;
   display: ReturnType<typeof getArcaneDisplayInfo>;
@@ -934,6 +948,7 @@ function ArcaneDetailPanel({
   rank: number;
   onRankChange: (r: number) => void;
   compact?: boolean;
+  returnTo?: string;
 }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
@@ -1025,12 +1040,13 @@ function ArcaneDetailPanel({
         name={arcane.name}
         overrideCategory="arcane"
         wikiUrl={getArcaneWikiUrl(arcane.name)}
+        returnTo={returnTo}
       />
     </div>
   );
 }
 
-function ShardDetailPanel({ shard, compact }: { shard: ArchonShard; compact?: boolean }) {
+function ShardDetailPanel({ shard, compact, returnTo }: { shard: ArchonShard; compact?: boolean; returnTo?: string }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -1065,6 +1081,7 @@ function ShardDetailPanel({ shard, compact }: { shard: ArchonShard; compact?: bo
         id={shard.id}
         name={shard.name}
         overrideCategory="archon_shard"
+        returnTo={returnTo}
       />
     </div>
   );

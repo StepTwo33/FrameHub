@@ -8,6 +8,11 @@ import { PolarityIcon, polarityNames } from "@/components/polarity-icon";
 import { getModImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { UMBRAL_MOD_IDS, getUmbralSetBonusMultiplier } from "@/lib/set-bonuses";
+import {
+  getPolarityCapacityEffect,
+  modCapacityAtRank,
+  modSlotCapacityCost,
+} from "@/lib/mod-capacity";
 
 const rarityBorderColors: Record<string, string> = {
   common: "border-amber-900/50",
@@ -130,13 +135,6 @@ function PolarityPicker({
 export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds }: ModSlotProps) {
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
-  const polarityDrainMod = (modPol: string, slotPol?: string): number => {
-    if (!slotPol) return 0;
-    if (slotPol === "universal") return -1; // universal = halved for any mod
-    if (modPol === slotPol) return -1; // matching = halved
-    return 1; // mismatched = +25% penalty (simplified)
-  };
-
   if (!mod) {
     return (
       <div className="relative">
@@ -168,9 +166,9 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   }
 
   const borderColor = rarityBorderColors[mod.rarity] || "border-border";
-  const drainVal = mod.drain + rank;
-  const polMatch = polarityDrainMod(mod.polarity, slotPolarity);
-  const effectiveDrain = polMatch === -1 ? Math.ceil(drainVal / 2) : polMatch === 1 ? Math.ceil(drainVal * 1.25) : drainVal;
+  const drainAtRank = modCapacityAtRank(mod.drain, rank);
+  const effectiveDrain = modSlotCapacityCost(drainAtRank, slotPolarity, mod.polarity);
+  const polarityEffect = getPolarityCapacityEffect(slotPolarity, mod.polarity);
 
   const umbralCount = equippedModIds?.filter((id) => UMBRAL_MOD_IDS.includes(id as (typeof UMBRAL_MOD_IDS)[number])).length ?? 0;
   const umbralSetMult = getUmbralSetBonusMultiplier(mod.id, umbralCount);
@@ -239,7 +237,16 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
             <span className="text-[11px] text-muted-foreground font-medium">
               R{rank}/{mod.maxRank}
             </span>
-            <span className={cn("text-[11px] font-medium", polMatch === -1 ? "text-green-400" : polMatch === 1 ? "text-red-400" : "text-muted-foreground")}>
+            <span
+              className={cn(
+                "text-[11px] font-medium",
+                polarityEffect === "match"
+                  ? "text-green-400"
+                  : polarityEffect === "mismatch"
+                    ? "text-red-400"
+                    : "text-muted-foreground",
+              )}
+            >
               ⚡{effectiveDrain}
             </span>
             {mod.subCategory === "riven" && onEditRiven && (

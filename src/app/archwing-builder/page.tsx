@@ -9,7 +9,7 @@ import { allWeapons as allWeaponsData } from "@/data/weapons";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { Weapon, EquippedMod, CalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -164,7 +164,7 @@ export default function ArchwingBuilderPage() {
     return mods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = pols[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
@@ -174,7 +174,7 @@ export default function ArchwingBuilderPage() {
     return weaponMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = weaponPolarities[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);

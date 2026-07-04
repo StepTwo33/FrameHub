@@ -20,6 +20,7 @@ import {
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
+import { appendReturnTo } from "@/lib/nav-return";
 import { cn } from "@/lib/utils";
 
 export function CodexActionLinks({
@@ -28,13 +29,18 @@ export function CodexActionLinks({
   name,
   overrideCategory,
   wikiUrl,
+  returnTo,
 }: {
   reportType: string;
   id: string;
   name: string;
   overrideCategory: string;
   wikiUrl?: string;
+  returnTo?: string;
 }) {
+  const reportHref = `/report-issue?type=${encodeURIComponent(reportType)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+  const overrideHref = `/report-issue?tab=overrides&overrideCategory=${encodeURIComponent(overrideCategory)}&overrideId=${encodeURIComponent(id)}`;
+
   return (
     <div className="flex flex-wrap gap-2 border-t border-border pt-3">
       {wikiUrl && (
@@ -48,13 +54,13 @@ export function CodexActionLinks({
         </a>
       )}
       <a
-        href={`/report-issue?type=${encodeURIComponent(reportType)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`}
+        href={returnTo ? appendReturnTo(reportHref, returnTo) : reportHref}
         className="inline-flex items-center gap-1 rounded border border-amber-500/30 px-2 py-1 text-[10px] text-amber-400/70 hover:bg-amber-500/5 hover:text-amber-400"
       >
         <Flag className="h-2.5 w-2.5" /> Report
       </a>
       <a
-        href={`/report-issue?tab=overrides&overrideCategory=${encodeURIComponent(overrideCategory)}&overrideId=${encodeURIComponent(id)}`}
+        href={returnTo ? appendReturnTo(overrideHref, returnTo) : overrideHref}
         className="inline-flex items-center gap-1 rounded border border-purple-500/30 px-2 py-1 text-[10px] text-purple-400/70 hover:bg-purple-500/5 hover:text-purple-400"
       >
         <Wrench className="h-2.5 w-2.5" /> Override
@@ -285,7 +291,7 @@ function StatGrid({ items, compact }: { items: { label: string; value: string }[
   );
 }
 
-export function WeaponDetailPanel({ weapon, compact }: { weapon: Weapon; compact?: boolean }) {
+export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapon; compact?: boolean; returnTo?: string }) {
   const elements = weaponElementEntries(weapon);
   const radialAttacks = getWeaponRadialAttacks(weapon);
 
@@ -401,12 +407,13 @@ export function WeaponDetailPanel({ weapon, compact }: { weapon: Weapon; compact
         name={weapon.name}
         overrideCategory="weapon"
         wikiUrl={getCodexWikiUrl(weapon.name)}
+        returnTo={returnTo}
       />
     </div>
   );
 }
 
-export function WarframeDetailPanel({ warframe, compact }: { warframe: Warframe; compact?: boolean }) {
+export function WarframeDetailPanel({ warframe, compact, returnTo }: { warframe: Warframe; compact?: boolean; returnTo?: string }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -468,12 +475,13 @@ export function WarframeDetailPanel({ warframe, compact }: { warframe: Warframe;
         name={warframe.name}
         overrideCategory="warframe"
         wikiUrl={getCodexWikiUrl(warframe.name)}
+        returnTo={returnTo}
       />
     </div>
   );
 }
 
-export function CompanionDetailPanel({ companion, compact }: { companion: Companion; compact?: boolean }) {
+export function CompanionDetailPanel({ companion, compact, returnTo }: { companion: Companion; compact?: boolean; returnTo?: string }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -522,12 +530,13 @@ export function CompanionDetailPanel({ companion, compact }: { companion: Compan
         name={companion.name}
         overrideCategory="companion"
         wikiUrl={getCodexWikiUrl(companion.name)}
+        returnTo={returnTo}
       />
     </div>
   );
 }
 
-export function ArchwingDetailPanel({ archwing, compact }: { archwing: Archwing; compact?: boolean }) {
+export function ArchwingDetailPanel({ archwing, compact, returnTo }: { archwing: Archwing; compact?: boolean; returnTo?: string }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div>
@@ -556,12 +565,13 @@ export function ArchwingDetailPanel({ archwing, compact }: { archwing: Archwing;
         name={archwing.name}
         overrideCategory="archwing"
         wikiUrl={getCodexWikiUrl(archwing.name)}
+        returnTo={returnTo}
       />
     </div>
   );
 }
 
-export function NecramechDetailPanel({ necramech, compact }: { necramech: Necramech; compact?: boolean }) {
+export function NecramechDetailPanel({ necramech, compact, returnTo }: { necramech: Necramech; compact?: boolean; returnTo?: string }) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div>
@@ -589,6 +599,7 @@ export function NecramechDetailPanel({ necramech, compact }: { necramech: Necram
         name={necramech.name}
         overrideCategory="necramech"
         wikiUrl={getCodexWikiUrl(necramech.name)}
+        returnTo={returnTo}
       />
     </div>
   );

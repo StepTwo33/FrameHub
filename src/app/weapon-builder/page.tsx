@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import {
   ItemPickerScreen,
@@ -16,7 +17,7 @@ import { ModPicker, type SlotType } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import {
   weaponSupportsProgenitor,
@@ -36,6 +37,7 @@ import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { incarnonDataMap } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
+import { appendReturnTo } from "@/lib/nav-return";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
@@ -77,6 +79,13 @@ function getModCategory(weaponCategory: string): string {
 const WEAPON_EXILUS_SLOT_INDEX = 8;
 
 export default function WeaponBuilderPage() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const builderReturnTo = useMemo(() => {
+    const q = searchParams.toString();
+    return q ? `${pathname}?${q}` : pathname;
+  }, [pathname, searchParams]);
+
   const allWeapons = useWeapons();
   const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
@@ -657,7 +666,10 @@ export default function WeaponBuilderPage() {
 
                 {/* meta */}
                 <a
-                  href={`/report-issue?type=weapon&name=${encodeURIComponent(selectedWeapon.name)}&id=${encodeURIComponent(selectedWeapon.id)}`}
+                  href={appendReturnTo(
+                    `/report-issue?type=weapon&name=${encodeURIComponent(selectedWeapon.name)}&id=${encodeURIComponent(selectedWeapon.id)}`,
+                    builderReturnTo,
+                  )}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/30 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/5 transition-colors"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>
@@ -685,7 +697,7 @@ export default function WeaponBuilderPage() {
                     equippedMods.reduce((sum, m) => {
                       const mod = modsMap.get(m.modId);
                       if (!mod) return sum;
-                      const baseDrain = mod.drain + m.rank;
+                      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
                       const slotPol = slotPolarities[m.slotIndex];
                       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
                     }, 0) > ((hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0))
@@ -694,7 +706,7 @@ export default function WeaponBuilderPage() {
                     {equippedMods.reduce((sum, m) => {
                       const mod = modsMap.get(m.modId);
                       if (!mod) return sum;
-                      const baseDrain = mod.drain + m.rank;
+                      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
                       const slotPol = slotPolarities[m.slotIndex];
                       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
                     }, 0)} / {(hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0)}
@@ -751,7 +763,9 @@ export default function WeaponBuilderPage() {
                         </button>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">{stanceMod.name}</span>
-                          <span className="text-[10px] text-amber-400">+{stanceMod.drain} capacity</span>
+                          <span className="text-[10px] text-amber-400">
+                            +{Math.abs(modCapacityAtRank(stanceMod.drain, stanceMod.maxRank))} capacity
+                          </span>
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1 truncate">
                           {stanceMod.description.replace(/<[^>]+>/g, "").substring(0, 60)}

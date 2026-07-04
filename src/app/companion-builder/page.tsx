@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import {
   ItemPickerScreen,
@@ -21,10 +22,11 @@ import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, Folder
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { cn } from "@/lib/utils";
+import { appendReturnTo } from "@/lib/nav-return";
 import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 
 const companionTypeLabels: Record<string, string> = {
   all: "All",
@@ -206,6 +208,13 @@ function StatRow({ label, value, highlighted }: { label: string; value: string; 
 }
 
 export default function CompanionBuilderPage() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const builderReturnTo = useMemo(() => {
+    const q = searchParams.toString();
+    return q ? `${pathname}?${q}` : pathname;
+  }, [pathname, searchParams]);
+
   const allCompanions = useCompanions();
   const allWeapons = useWeapons();
   const [selectedCompanion, setSelectedCompanion] = useState<Companion | null>(null);
@@ -339,7 +348,7 @@ export default function CompanionBuilderPage() {
     return equippedMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      const baseDrain = mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
       const slotPol = slotPolarities[m.slotIndex];
       return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
@@ -606,7 +615,10 @@ export default function CompanionBuilderPage() {
                 <div className="flex-1" />
 
                 <a
-                  href={`/report-issue?type=companion&name=${encodeURIComponent(selectedCompanion.name)}&id=${encodeURIComponent(selectedCompanion.id)}`}
+                  href={appendReturnTo(
+                    `/report-issue?type=companion&name=${encodeURIComponent(selectedCompanion.name)}&id=${encodeURIComponent(selectedCompanion.id)}`,
+                    builderReturnTo,
+                  )}
                   className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 px-3 py-1.5 text-xs font-medium text-amber-400/70 transition-colors hover:bg-amber-500/5 hover:text-amber-400"
                 >
                   <Flag className="h-3 w-3" /> <span className="hidden sm:inline">Report</span>

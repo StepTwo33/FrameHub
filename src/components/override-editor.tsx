@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, ChevronDown, Save, X } from "lucide-react";
+import { Search, ChevronDown, Save, X, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   ADD_ITEM_TEMPLATES,
@@ -221,6 +222,7 @@ function abilitiesChanged(original: unknown, draft: AbilityDraft[]): boolean {
 interface OverrideEditorProps {
   onSave: () => void;
   onCancel: () => void;
+  backLink?: { href: string; label: string };
   prefill?: {
     existingOverrideId?: string;
     category?: OverrideCategory;
@@ -231,7 +233,7 @@ interface OverrideEditorProps {
   };
 }
 
-export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProps) {
+export function OverrideEditor({ onSave, onCancel, backLink, prefill }: OverrideEditorProps) {
   const [category, setCategory] = useState<OverrideCategory>(prefill?.category ?? "mod");
   const [action, setAction] = useState<"modify" | "add" | "remove">(prefill?.action ?? "modify");
   const [selectedItemId, setSelectedItemId] = useState<string>(prefill?.itemId ?? "");
@@ -519,8 +521,17 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
 
   return (
     <div className="mb-6 rounded-xl border border-purple-500/30 bg-card p-5">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          {backLink && (
+            <Link
+              href={backLink.href}
+              className="mb-2 inline-flex items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ArrowLeft className="h-3 w-3" />
+              {backLink.label}
+            </Link>
+          )}
           <h2 className="text-sm font-semibold text-purple-400">
             {prefill?.existingOverrideId ? "Edit data fix" : action === "remove" ? "Hide item from site" : action === "add" ? "Add new item" : "Fix item data"}
           </h2>
@@ -528,7 +539,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
             Pick an item, click a field to edit its current value, then save.
           </p>
         </div>
-        <button type="button" onClick={onCancel} className="text-muted-foreground hover:text-foreground">
+        <button type="button" onClick={onCancel} className="shrink-0 text-muted-foreground hover:text-foreground" aria-label="Close editor">
           <X className="h-4 w-4" />
         </button>
       </div>
