@@ -343,7 +343,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 10,
     "category": "rifle",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 14.0909,
       "slideSpeed": 5
@@ -986,7 +986,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 5,
     "category": "melee",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalMultiplier": 14.1667,
       "heavyWindUp": 10
@@ -1057,7 +1057,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 3,
     "category": "melee",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 10
     },
@@ -2782,7 +2782,7 @@ export const allMods: Mod[] = [
     "id": "augment_excalibur_furious_javelin",
     "name": "Furious Javelin",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 9,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2813,7 +2813,7 @@ export const allMods: Mod[] = [
     "name": "Surging Dash",
     "polarity": "zenurik",
     "drain": 6,
-    "maxRank": 5,
+    "maxRank": 3,
     "category": "augment",
     "subCategory": "",
     "stats": {
@@ -2827,7 +2827,7 @@ export const allMods: Mod[] = [
     "id": "augment_mag_fracturing_crush",
     "name": "Fracturing Crush",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 30,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2857,7 +2857,7 @@ export const allMods: Mod[] = [
     "id": "augment_mag_magnetized_discharge",
     "name": "Magnetized Discharge",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2887,7 +2887,7 @@ export const allMods: Mod[] = [
     "id": "augment_volt_shocking_speed",
     "name": "Shocking Speed",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2902,7 +2902,7 @@ export const allMods: Mod[] = [
     "id": "augment_volt_shock_trooper",
     "name": "Shock Trooper",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 28,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2962,7 +2962,7 @@ export const allMods: Mod[] = [
     "id": "augment_saryn_revealing_spores",
     "name": "Revealing Spores",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2977,7 +2977,7 @@ export const allMods: Mod[] = [
     "id": "augment_saryn_regenerative_molt",
     "name": "Regenerative Molt",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -2992,7 +2992,7 @@ export const allMods: Mod[] = [
     "id": "augment_saryn_contagion_cloud",
     "name": "Contagion Cloud",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 150,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3022,7 +3022,7 @@ export const allMods: Mod[] = [
     "id": "augment_saryn_venom_dose",
     "name": "Venom Dose",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 28,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3037,7 +3037,7 @@ export const allMods: Mod[] = [
     "id": "augment_rhino_ironclad_charge",
     "name": "Ironclad Charge",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 4,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3052,7 +3052,7 @@ export const allMods: Mod[] = [
     "id": "augment_rhino_iron_shrapnel",
     "name": "Iron Shrapnel",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 8,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3067,7 +3067,7 @@ export const allMods: Mod[] = [
     "id": "augment_rhino_piercing_roar",
     "name": "Piercing Roar",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3097,7 +3097,7 @@ export const allMods: Mod[] = [
     "id": "augment_nova_neutron_star",
     "name": "Neutron Star",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 4,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3127,7 +3127,7 @@ export const allMods: Mod[] = [
     "id": "augment_nova_escape_velocity",
     "name": "Escape Velocity",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 4,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3202,7 +3202,7 @@ export const allMods: Mod[] = [
     "id": "augment_trinity_pool_of_life",
     "name": "Pool of Life",
     "polarity": "naramon",
-    "drain": 6,
+    "drain": 100,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3232,7 +3232,7 @@ export const allMods: Mod[] = [
     "id": "augment_mesa_muzzle_flash",
     "name": "Muzzle Flash",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3292,7 +3292,7 @@ export const allMods: Mod[] = [
     "id": "augment_khora_accumulating_whipclaw",
     "name": "Accumulating Whipclaw",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3322,7 +3322,7 @@ export const allMods: Mod[] = [
     "id": "augment_khora_venari_bodyguard",
     "name": "Venari Bodyguard",
     "polarity": "vazarin",
-    "drain": 6,
+    "drain": 1,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3337,7 +3337,7 @@ export const allMods: Mod[] = [
     "id": "augment_ash_safeguard_switch",
     "name": "Safeguard Switch",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3346,13 +3346,13 @@ export const allMods: Mod[] = [
     },
     "description": "Teleport grants +2s invulnerability per rank",
     "rarity": "rare",
-    "warframeId": "ash"
+    "warframeId": "loki"
   },
   {
     "id": "augment_ash_rising_storm",
     "name": "Rising Storm",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3367,7 +3367,7 @@ export const allMods: Mod[] = [
     "id": "augment_ash_seeking_shuriken",
     "name": "Seeking Shuriken",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3382,7 +3382,7 @@ export const allMods: Mod[] = [
     "id": "augment_ash_smoke_shadow",
     "name": "Smoke Shadow",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3397,7 +3397,7 @@ export const allMods: Mod[] = [
     "id": "augment_ivar_piercing_navigator",
     "name": "Piercing Navigator",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 250,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3427,7 +3427,7 @@ export const allMods: Mod[] = [
     "id": "augment_ivar_concentrated_arrow",
     "name": "Concentrated Arrow",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3442,7 +3442,7 @@ export const allMods: Mod[] = [
     "id": "augment_ivar_empowered_quiver",
     "name": "Empowered Quiver",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 50,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3487,7 +3487,7 @@ export const allMods: Mod[] = [
     "id": "augment_ember_fireball_frenzy",
     "name": "Fireball Frenzy",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 28,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3516,7 +3516,7 @@ export const allMods: Mod[] = [
   {
     "id": "augment_ember_fire_fright",
     "name": "Fire Fright",
-    "polarity": "naramon",
+    "polarity": "{{pol|zenurik}}",
     "drain": 6,
     "maxRank": 3,
     "category": "augment",
@@ -3532,7 +3532,7 @@ export const allMods: Mod[] = [
     "id": "augment_ember_healing_flame",
     "name": "Healing Flame",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3562,7 +3562,7 @@ export const allMods: Mod[] = [
     "id": "augment_frost_freeze_force",
     "name": "Freeze Force",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 50,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3592,7 +3592,7 @@ export const allMods: Mod[] = [
     "id": "augment_frost_chilling_globe",
     "name": "Chilling Globe",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 10,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3607,7 +3607,7 @@ export const allMods: Mod[] = [
     "id": "augment_frost_icy_avalanche",
     "name": "Icy Avalanche",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 5,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3682,7 +3682,7 @@ export const allMods: Mod[] = [
     "id": "augment_nyx_mind_freak",
     "name": "Mind Freak",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 25,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3787,7 +3787,7 @@ export const allMods: Mod[] = [
     "id": "augment_banshee_resonating_quake",
     "name": "Resonating Quake",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 1,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3892,7 +3892,7 @@ export const allMods: Mod[] = [
     "id": "augment_nekros_shield_of_shadows",
     "name": "Shield of Shadows",
     "polarity": "vazarin",
-    "drain": 6,
+    "drain": 50,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3922,7 +3922,7 @@ export const allMods: Mod[] = [
     "id": "augment_hydroid_tidal_impunity",
     "name": "Tidal Impunity",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 15,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3937,7 +3937,7 @@ export const allMods: Mod[] = [
     "id": "augment_hydroid_curative_undertow",
     "name": "Curative Undertow",
     "polarity": "vazarin",
-    "drain": 6,
+    "drain": 15,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3967,7 +3967,7 @@ export const allMods: Mod[] = [
     "id": "augment_mirage_explosive_legerdemain",
     "name": "Explosive Legerdemain",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 50,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3982,7 +3982,7 @@ export const allMods: Mod[] = [
     "id": "augment_mirage_total_eclipse",
     "name": "Total Eclipse",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 8,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -3997,7 +3997,7 @@ export const allMods: Mod[] = [
     "id": "augment_mirage_hall_of_malevolence",
     "name": "Hall of Malevolence",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4012,7 +4012,7 @@ export const allMods: Mod[] = [
     "id": "augment_chroma_afterburn",
     "name": "Afterburn",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 200,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4057,7 +4057,7 @@ export const allMods: Mod[] = [
     "id": "augment_chroma_guided_effigy",
     "name": "Guided Effigy",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4117,7 +4117,7 @@ export const allMods: Mod[] = [
     "id": "augment_equinox_duality",
     "name": "Duality",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 100,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4132,7 +4132,7 @@ export const allMods: Mod[] = [
     "id": "augment_equinox_calm_frenzy",
     "name": "Calm & Frenzy",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 40,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4140,21 +4140,6 @@ export const allMods: Mod[] = [
       "castSpeed": 25
     },
     "description": "+25% Cast Speed per rank",
-    "rarity": "rare",
-    "warframeId": "equinox"
-  },
-  {
-    "id": "augment_equinox_pacifying_bolts",
-    "name": "Pacifying Bolts",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "damageReductionCap": 10
-    },
-    "description": "+10% Damage Reduction cap per rank",
     "rarity": "rare",
     "warframeId": "equinox"
   },
@@ -4177,7 +4162,7 @@ export const allMods: Mod[] = [
     "id": "augment_atlas_tectonic_fracture",
     "name": "Tectonic Fracture",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 70,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4222,7 +4207,7 @@ export const allMods: Mod[] = [
     "id": "augment_atlas_path_of_statues",
     "name": "Path of Statues",
     "polarity": "naramon",
-    "drain": 6,
+    "drain": 4,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4237,7 +4222,7 @@ export const allMods: Mod[] = [
     "id": "augment_wukong_celestial_stomp",
     "name": "Celestial Stomp",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 25,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4252,7 +4237,7 @@ export const allMods: Mod[] = [
     "id": "augment_wukong_enveloping_cloud",
     "name": "Enveloping Cloud",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 8,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4282,8 +4267,8 @@ export const allMods: Mod[] = [
     "id": "augment_titania_spellbound_harvest",
     "name": "Spellbound Harvest",
     "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
+    "drain": -14,
+    "maxRank": 50,
     "category": "augment",
     "subCategory": "",
     "stats": {
@@ -4297,7 +4282,7 @@ export const allMods: Mod[] = [
     "id": "augment_titania_razorwing_blitz",
     "name": "Razorwing Blitz",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4342,7 +4327,7 @@ export const allMods: Mod[] = [
     "id": "augment_nezha_reaping_chakram",
     "name": "Reaping Chakram",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 0,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4387,7 +4372,7 @@ export const allMods: Mod[] = [
     "id": "augment_inaros_elemental_sandstorm",
     "name": "Elemental Sandstorm",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 25,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4477,7 +4462,7 @@ export const allMods: Mod[] = [
     "id": "augment_baruuk_elusive_retribution",
     "name": "Elusive Retribution",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4507,7 +4492,7 @@ export const allMods: Mod[] = [
     "id": "augment_hildryn_balefire_surge",
     "name": "Balefire Surge",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 300,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4522,22 +4507,7 @@ export const allMods: Mod[] = [
     "id": "augment_hildryn_pillage_aug",
     "name": "Blazing Pillage",
     "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "heatDamage": 200
-    },
-    "description": "Pillage deals Heat damage per rank",
-    "rarity": "rare",
-    "warframeId": "hildryn"
-  },
-  {
-    "id": "augment_hildryn_blazing_pillage",
-    "name": "Blazing Pillage",
-    "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4642,7 +4612,7 @@ export const allMods: Mod[] = [
     "id": "augment_gauss_mach_crash",
     "name": "Mach Crash",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 3,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4657,7 +4627,7 @@ export const allMods: Mod[] = [
     "id": "augment_gauss_thermal_transfer",
     "name": "Thermal Transfer",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 18,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4702,7 +4672,7 @@ export const allMods: Mod[] = [
     "id": "augment_grendel_gourmand",
     "name": "Gourmand",
     "polarity": "vazarin",
-    "drain": 6,
+    "drain": 75,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4747,7 +4717,7 @@ export const allMods: Mod[] = [
     "id": "augment_yareli_surging_blades",
     "name": "Surging Blades",
     "polarity": "naramon",
-    "drain": 6,
+    "drain": 15,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -4876,7 +4846,7 @@ export const allMods: Mod[] = [
     },
     "description": "Health orbs grant +15 Armor per stack per rank",
     "rarity": "rare",
-    "warframeId": "universal"
+    "warframeId": "garuda"
   },
   {
     "id": "augment_universal_energy_conversion",
@@ -4891,7 +4861,7 @@ export const allMods: Mod[] = [
     },
     "description": "Energy orbs grant +9% Ability Strength per rank",
     "rarity": "rare",
-    "warframeId": "universal"
+    "warframeId": "citrine"
   },
   {
     "id": "augment_universal_shattering_impact",
@@ -4906,7 +4876,7 @@ export const allMods: Mod[] = [
     },
     "description": "-5 Armor per hit per rank",
     "rarity": "common",
-    "warframeId": "universal"
+    "warframeId": "valkyr"
   },
   {
     "id": "augur_message",
@@ -5405,7 +5375,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5419,7 +5389,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5433,7 +5403,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5447,7 +5417,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5461,7 +5431,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5475,7 +5445,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5489,7 +5459,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5503,7 +5473,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5517,7 +5487,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5531,7 +5501,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5545,7 +5515,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5559,7 +5529,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5573,7 +5543,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5587,7 +5557,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5601,7 +5571,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5615,7 +5585,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5629,7 +5599,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5643,7 +5613,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5657,7 +5627,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5671,7 +5641,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5685,7 +5655,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5699,7 +5669,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5713,7 +5683,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5727,7 +5697,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5741,7 +5711,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5755,7 +5725,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5766,10 +5736,10 @@ export const allMods: Mod[] = [
     "id": "stance_gleaming_talent",
     "name": "Gleaming Blight",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5783,7 +5753,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5797,7 +5767,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5811,7 +5781,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5825,7 +5795,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5839,7 +5809,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5853,7 +5823,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5867,7 +5837,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5881,7 +5851,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5895,7 +5865,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5909,7 +5879,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 10
     },
@@ -5923,7 +5893,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5937,7 +5907,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5951,7 +5921,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -5965,7 +5935,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 15
     },
@@ -5979,7 +5949,7 @@ export const allMods: Mod[] = [
     "drain": -2,
     "maxRank": 3,
     "category": "stance",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damageBonus": 20
     },
@@ -6098,8 +6068,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 6,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "punchThrough": 0.5
     },
@@ -6112,8 +6082,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 10,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "lifeSteal": 0.5
     },
@@ -6126,8 +6096,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 6,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "magazine": 7.5
     },
@@ -6302,10 +6272,10 @@ export const allMods: Mod[] = [
     "id": "bursting_mass",
     "name": "Bursting Mass",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 15,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "The infested mass accumulates 200% of the damage that goes through it and deals it in 15m radius when it expires. Secondary fire will manually detonate an existing mass.",
     "rarity": "rare"
@@ -6354,10 +6324,10 @@ export const allMods: Mod[] = [
     "id": "clip_delegation",
     "name": "Clip Delegation",
     "polarity": "vazarin",
-    "drain": 2,
+    "drain": 75,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "On Reload: Next Magazine has Status Chance and Multishot increased by 15% per shot landed with current Magazine. Max 15 stacks.",
     "rarity": "rare"
@@ -6442,10 +6412,10 @@ export const allMods: Mod[] = [
     "id": "deadly_sequence",
     "name": "Deadly Sequence",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 50
     },
@@ -6499,8 +6469,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'",
     "rarity": "rare"
@@ -6561,10 +6531,10 @@ export const allMods: Mod[] = [
     "id": "entropy_burst",
     "name": "Entropy Burst",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 5
     },
@@ -6589,8 +6559,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 50
     },
@@ -6660,8 +6630,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Status Chance fluctuates between +150% and +250% over 5s while the beam is fired.",
     "rarity": "rare"
@@ -6684,10 +6654,10 @@ export const allMods: Mod[] = [
     "id": "gilded_truth",
     "name": "Gilded Truth",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": 20
     },
@@ -6822,8 +6792,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Shots now bounce up to 6x and travel 30% further.",
     "rarity": "rare"
@@ -6832,10 +6802,10 @@ export const allMods: Mod[] = [
     "id": "lasting_purity",
     "name": "Lasting Purity",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "damage": 15
     },
@@ -6963,8 +6933,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "headshotDamage": 17.5,
       "damage": -7.5
@@ -6990,8 +6960,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 5
     },
@@ -7016,8 +6986,8 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 4,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1 'Justice'",
     "rarity": "rare"
@@ -7026,10 +6996,10 @@ export const allMods: Mod[] = [
     "id": "nightwatch_napalm",
     "name": "Nightwatch Napalm",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 1,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Rockets disperse napalm, inflicting 30% damage over 6s across 90% of the explosion area.",
     "rarity": "uncommon"
@@ -7054,8 +7024,8 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 2,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "criticalMultiplier": 15
     },
@@ -7430,10 +7400,10 @@ export const allMods: Mod[] = [
     "id": "scattered_justice",
     "name": "Scattered Justice",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "multishot": 50
     },
@@ -7495,10 +7465,10 @@ export const allMods: Mod[] = [
     "id": "shattering_justice",
     "name": "Shattering Justice",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 22.5
     },
@@ -7599,10 +7569,10 @@ export const allMods: Mod[] = [
     "id": "spring_loaded_broadhead",
     "name": "Spring-Loaded Broadhead",
     "polarity": "madurai",
-    "drain": 10,
+    "drain": 45,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Increase damage by +40%, if the target is over 15m away.",
     "rarity": "rare"
@@ -7694,10 +7664,10 @@ export const allMods: Mod[] = [
     "id": "tether_grenades",
     "name": "Tether Grenades",
     "polarity": "naramon",
-    "drain": 2,
+    "drain": 4,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Grenades tether up to 5 enemies from 9m away.",
     "rarity": "rare"
@@ -7706,10 +7676,10 @@ export const allMods: Mod[] = [
     "id": "thermagnetic_shells",
     "name": "Thermagnetic Shells",
     "polarity": "naramon",
-    "drain": 2,
+    "drain": 10,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Enemies explode on death, dealing 80 <DT_MAGNETIC_COLOR>Magnetic Damage (+40% Enemy Max Health) in a 6m radius.",
     "rarity": "rare"
@@ -7841,8 +7811,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 3,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Killing a flying enemy creates a lightning trap from their remains, lasting 8s, +1 'Sequence'",
     "rarity": "rare"
@@ -7851,10 +7821,10 @@ export const allMods: Mod[] = [
     "id": "wild_frenzy",
     "name": "Wild Frenzy",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 25,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": 66.6667
     },
@@ -8149,7 +8119,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "multishot": 18.3333
     },
@@ -8349,10 +8319,10 @@ export const allMods: Mod[] = [
     "id": "entropy_spike",
     "name": "Entropy Spike",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "+20% Chance to Explode (Use with Caution), +1 'Entropy'",
     "rarity": "rare"
@@ -8361,10 +8331,10 @@ export const allMods: Mod[] = [
     "id": "eroding_blight",
     "name": "Eroding Blight",
     "polarity": "vazarin",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "magazine": 50
     },
@@ -9068,10 +9038,10 @@ export const allMods: Mod[] = [
     "id": "sequence_burn",
     "name": "Sequence Burn",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "+20m Beam Range, +1 'Sequence'",
     "rarity": "rare"
@@ -9180,10 +9150,10 @@ export const allMods: Mod[] = [
     "id": "stinging_truth",
     "name": "Stinging Truth",
     "polarity": "vazarin",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "+40 Magazine Capacity, +1 'Truth'",
     "rarity": "rare"
@@ -9194,8 +9164,8 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 4,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "magazine": 50
     },
@@ -9278,10 +9248,10 @@ export const allMods: Mod[] = [
     "id": "toxic_sequence",
     "name": "Toxic Sequence",
     "polarity": "vazarin",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "statusDuration": 50
     },
@@ -9306,8 +9276,8 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 4,
     "maxRank": 3,
-    "category": "secondary",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "lifeSteal": 5
     },
@@ -9667,8 +9637,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 6,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "comboDuration": 2.5,
       "fireRate": 7.5
@@ -9682,8 +9652,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 6,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 31.1667,
       "reloadSpeed": 3.3333
@@ -9737,8 +9707,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Blocking absorbs 50% of incoming damage, stored as Extra Damage for the next charge attack., +1 'Truth'",
     "rarity": "rare"
@@ -9763,8 +9733,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "damage": 25
     },
@@ -9787,10 +9757,10 @@ export const allMods: Mod[] = [
     "id": "bright_purity",
     "name": "Bright Purity",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "damage": 25
     },
@@ -9946,13 +9916,14 @@ export const allMods: Mod[] = [
     "id": "electromagnetic_shielding",
     "name": "Electromagnetic Shielding",
     "polarity": "vazarin",
-    "drain": 4,
+    "drain": 2,
     "maxRank": 5,
-    "category": "melee",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "While blocking, redirect 50% of damage taken by allies within 12m to yourself.",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "warframeId": "trinity"
   },
   {
     "id": "enduring_affliction",
@@ -9984,10 +9955,10 @@ export const allMods: Mod[] = [
     "id": "entropy_detonation",
     "name": "Entropy Detonation",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 5,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max Health) <DT_EXPLOSION_COLOR>Blast Damage, in a +10m radius., +1 'Entropy'",
     "rarity": "rare"
@@ -9996,10 +9967,10 @@ export const allMods: Mod[] = [
     "id": "entropy_flight",
     "name": "Entropy Flight",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "projectileSpeed": 35
     },
@@ -10144,8 +10115,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "",
     "rarity": "uncommon"
@@ -10197,10 +10168,10 @@ export const allMods: Mod[] = [
     "id": "justice_blades",
     "name": "Justice Blades",
     "polarity": "naramon",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "damage": 25
     },
@@ -10550,8 +10521,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Heavy attacks now step through the rift to attack enemies up to 25m away",
     "rarity": "uncommon"
@@ -10668,8 +10639,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Heavy Attacks electrify nearby enemies for <DT_ELECTRICITY_COLOR>Electricity Damage equal to 80% of weapon damage.",
     "rarity": "rare"
@@ -10720,10 +10691,10 @@ export const allMods: Mod[] = [
     "id": "toxic_blight",
     "name": "Toxic Blight",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 0,
     "maxRank": 3,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "toxin": 25
     },
@@ -10833,8 +10804,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Enemies explode on death, dealing 300 <DT_EXPLOSION_COLOR>Blast Damage (+60% Enemy Max Health) in a 6m radius.",
     "rarity": "uncommon"
@@ -11156,11 +11127,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Passive Augment: Nidus gains an additional 300 max stacks of Mutation (500 total). Undying has a 30s cooldown.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nidus"
   },
   {
     "id": "adaptation",
@@ -11207,11 +11179,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Aegis Storm Augment: Balefire has an Alternate Fire during Aegis Storm. The blast deals 15% of Hildryn's Max Shield as additional damage.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "hildryn"
   },
   {
     "id": "aero_vantage",
@@ -11253,13 +11226,14 @@ export const allMods: Mod[] = [
     "id": "airburst_rounds",
     "name": "Airburst Rounds",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 5,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Airburst Augment: Each enemy hit by Airburst increases secondary damage by 40% for 14s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "zephyr"
   },
   {
     "id": "ambush",
@@ -11276,14 +11250,15 @@ export const allMods: Mod[] = [
   {
     "id": "anchored_glide",
     "name": "Anchored Glide",
-    "polarity": "zenurik",
+    "polarity": "exilus",
     "drain": 2,
     "maxRank": 5,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "zephyr"
   },
   {
     "id": "anti_flak_plating",
@@ -11315,11 +11290,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Antimatter Drop Augment: Creates a fully charged stationary orb that explodes after 6s or within enemy proximity.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nova"
   },
   {
     "id": "antitoxin",
@@ -11503,18 +11479,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "beguiling_lantern",
-    "name": "Beguiling Lantern",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Lantern Augment: Attracted enemies take 100% more Weapon Damage.",
-    "rarity": "rare"
-  },
-  {
     "id": "biting_frost",
     "name": "Biting Frost",
     "polarity": "zenurik",
@@ -11527,42 +11491,19 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "blazing_pillage",
-    "name": "Blazing Pillage",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Pillage Augment: Enemies affected by Haven will be set ablaze for 200 <DT_FIRE_COLOR>Heat Damage and restore 50 additional <SHIELD>Shields to Hildryn.",
-    "rarity": "rare"
-  },
-  {
-    "id": "blending_talons",
-    "name": "Blending Talons",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons gain 100% additional Combo Count Chance when hitting targets affected by <DT_SLASH_COLOR>Slash Status.",
-    "rarity": "rare"
-  },
-  {
     "id": "blinding_reave",
     "name": "Blinding Reave",
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "range": 10
     },
     "description": "Reave Augment: Reave gains +40% range and enemies are blinded by its fog for 10s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "revenant"
   },
   {
     "id": "brief_respite",
@@ -11636,11 +11577,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Cathode Grace Augment: Eliminating an enemy while Cathode Grace is active will release an additional discharge from Rotorswell with 200% Damage and extend its duration by the same amount.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "gyre"
   },
   {
     "id": "champions_blessing",
@@ -11672,11 +11614,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Coil Horizon Augment: Gyratory Sphere can be recalled. Enemies in its radius suffer 500 <DT_ELECTRICITY_COLOR> Electricity Damage and chain other enemies. Enemies pulled into detonation suffer additional discharges.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "gyre"
   },
   {
     "id": "combat_discipline",
@@ -11696,13 +11639,14 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "electricity": 18.75
     },
     "description": "Arcsphere Augment: Projectiles that pass through Arcsphere have guaranteed <DT_ELECTRICITY_COLOR>Electricity Status Effect and +75% <DT_ELECTRICITY_COLOR>Electricity Damage.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "gyre"
   },
   {
     "id": "constitution",
@@ -11748,11 +11692,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Sow Augment: Enemies killed while inflicted with Sow spread its effect in a 15m radius. Shadow's Death Harvest also inflicts Sow.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "sevagoth"
   },
   {
     "id": "dead_eye",
@@ -11772,11 +11717,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Decoy Augment: 50% of damage Loki takes is transferred to Decoy, and vice versa.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "loki"
   },
   {
     "id": "defiled_reckoning",
@@ -11784,23 +11730,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Reckoning Augment: Health Orbs become unusable by enemies for 10s.",
-    "rarity": "rare"
-  },
-  {
-    "id": "desiccations_curse",
-    "name": "Desiccation's Curse",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "oberon"
   },
   {
     "id": "diamond_skin",
@@ -11822,35 +11757,25 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Soul Punch Augment: Depletes up to 25 Energy from the target.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nekros"
   },
   {
     "id": "divine_retribution",
     "name": "Divine Retribution",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 14,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Divine Spears Augment: Status Effects spread to all speared enemies. Spear explosions scale by 1.5x of remaining <DT_SLASH_COLOR>Slash, <DT_POISON_COLOR>Toxin and <DT_FIRE_COLOR>Heat Status Effects. Base Radius is 14m.",
-    "rarity": "rare"
-  },
-  {
-    "id": "dread_ward",
-    "name": "Dread Ward",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Dread Mirror Augment: Become unkillable for 8s when Dread Mirror kills a target by ripping its life force.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nezha"
   },
   {
     "id": "emp_aura",
@@ -11874,18 +11799,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "Squad receives +60% Status Chance and Status Damage on Heavy Attacks, but lose <LOWER_IS_BETTER>90 Shields per hit.",
-    "rarity": "rare"
-  },
-  {
-    "id": "empowered_quiver",
-    "name": "Empowered Quiver",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Quiver Augment: Dashwire grants allies 100% Critical Damage. Cloak arrow has a 100% chance to prevent Status Effects.",
     "rarity": "rare"
   },
   {
@@ -11931,13 +11844,14 @@ export const allMods: Mod[] = [
     "id": "enraged",
     "name": "Enraged",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 15,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Hysteria Augment: Damage increased by 350%, Critical Chance increased by 350%. Hysteria lasts for 15s, and receives a matching cooldown.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "equilibrium",
@@ -11960,23 +11874,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Warcry Augment: While active, Warcry's duration is increased by 2s for each Melee Kill.",
-    "rarity": "rare"
-  },
-  {
-    "id": "exothermic",
-    "name": "Exothermic",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Inferno Augment: Enemies killed while under the effect of Inferno have a 15% chance to drop an energy orb.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "final_act",
@@ -12024,23 +11927,25 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "zephyr"
   },
   {
     "id": "fused_crucible",
     "name": "Fused Crucible",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 0,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Crucible Blast Augment: Becomes a channeled ability consuming <LOWER_IS_BETTER>20 <ENERGY> Energy/s that ramps up. While active Chyrinka Pillars trigger chain reactions and their duration is frozen. Mobility is greatly reduced.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "qorvex"
   },
   {
     "id": "gale_kick",
@@ -12060,11 +11965,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clouds that last 8s and inflict nearby enemies with <DT_GAS_COLOR> Gas Status Effect.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "grendel"
   },
   {
     "id": "gladiator_finesse",
@@ -12076,18 +11982,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "Drains Energy to stop Lethal Damage with 60% Efficiency.",
-    "rarity": "rare"
-  },
-  {
-    "id": "gourmand",
-    "name": "Gourmand",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Feast Augment: Instead of Energy, consumes <LOWER_IS_BETTER>200 Health on cast. Glutton grants an additional 150 Armor per enemy.",
     "rarity": "rare"
   },
   {
@@ -12106,25 +12000,14 @@ export const allMods: Mod[] = [
     "id": "guardian_armor",
     "name": "Guardian Armor",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHARE>Affinity Range take by 75%. Squad kills restore 5% of his Health over 3s and increases Vex Armor duration by 1s.",
-    "rarity": "rare"
-  },
-  {
-    "id": "hall_of_malevolence",
-    "name": "Hall Of Malevolence",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Hall of Mirrors Augment: The damage of your doppelgangers is increased by 5% every time you kill an enemy.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "chroma"
   },
   {
     "id": "hallowed_eruption",
@@ -12132,25 +12015,27 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Hallowed Ground Augment: Reactivate to deal all Remaining Damage and <DT_RADIATION_COLOR>Radiation Status.\\nPassive: +200% Hallowed Ground Duration.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "oberon"
   },
   {
     "id": "hallowed_reckoning",
     "name": "Hallowed Reckoning",
     "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
+    "drain": 150,
+    "maxRank": 250,
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "range": 10
     },
     "description": "Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected enemy grants bonus armor to allies and deals 300 damage per second to enemies.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "oberon"
   },
   {
     "id": "hastened_steps",
@@ -12209,7 +12094,7 @@ export const allMods: Mod[] = [
     "id": "hysterical_assault",
     "name": "Hysterical Assault",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -12217,7 +12102,7 @@ export const allMods: Mod[] = [
       "parkourVelocity": 12.5,
       "sprintSpeed": 12.5
     },
-    "description": "Hysteria Augment: Attack with Valkyr’s Talons to leap onto targeted enemies up to 50m away. Gain +50% Parkour Velocity and +50% Sprint Speed for 5s.",
+    "description": "Hysteria Augment: Attack with Valkyr\u2019s Talons to leap onto targeted enemies up to 50m away. Gain +50% Parkour Velocity and +50% Sprint Speed for 5s.",
     "rarity": "rare",
     "warframeId": "valkyr"
   },
@@ -12254,11 +12139,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Immolation Augment: Allies within Affinity range will receive 50% of Immolation's Damage Reduction.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "ember"
   },
   {
     "id": "insatiable",
@@ -12266,17 +12152,18 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Ravenous Augment: Nidus has a chance for additional Mutation stacks while in the infestation. The base 60% chance increases with power strength, and multiple stacks are possible above 100%.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nidus"
   },
   {
     "id": "intrepid_stand",
     "name": "Intrepid Stand",
     "polarity": "vazarin",
-    "drain": 6,
+    "drain": 15,
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
@@ -12307,11 +12194,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 4,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "titania"
   },
   {
     "id": "jades_judgment",
@@ -12329,13 +12217,14 @@ export const allMods: Mod[] = [
     "id": "jet_stream",
     "name": "Jet Stream",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 50,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "zephyr"
   },
   {
     "id": "jugulus_carapace",
@@ -12370,23 +12259,25 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Speed Augment: Running into an opponent increases the duration of Speed by 4s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "volt"
   },
   {
     "id": "larva_burst",
     "name": "Larva Burst",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Larva Augment: Reactivate Larva to detonate and deal 600 <DT_POISON_COLOR>Toxin Damage in an 8m radius. Applies one guaranteed Toxin proc per enemy grabbed.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nidus"
   },
   {
     "id": "lasting_covenant",
@@ -12394,11 +12285,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Covenant Augment: Headshot kills increase Critical Chance bonus duration by 3s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "harrow"
   },
   {
     "id": "lightning_dash",
@@ -12487,28 +12379,17 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "mesas_waltz",
-    "name": "Mesa's Waltz",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "",
-    "rarity": "rare"
-  },
-  {
     "id": "mesmer_shield",
     "name": "Mesmer Shield",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 2,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Mesmer Skin Augment: Revenant receives +50% Mesmer Skin Strength and allies within Affinity Range are granted a maximum of 5 charges.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "revenant"
   },
   {
     "id": "motus_signal",
@@ -12540,11 +12421,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Scarab Shell Augment: When Inaros takes fatal damage, he consumes Scarab Shell to heal with a brief invulnerability that ends with a deadly <DT_SLASH_COLOR>Slash Status Effect. Cooldown <LOWER_IS_BETTER>30s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "inaros"
   },
   {
     "id": "no_current_leap",
@@ -12564,11 +12446,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "koumei"
   },
   {
     "id": "overcharge_detectors",
@@ -12619,52 +12502,30 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "path_of_statues",
-    "name": "Path Of Statues",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Landslide Augment: Leave a trail for 12s that petrifies enemies for 6s.",
-    "rarity": "rare"
-  },
-  {
     "id": "peaceful_provocation",
     "name": "Peaceful Provocation",
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Pacify & Provoke Augment: Pacify converts damage done to allies into an aura that slows enemies by 40%. Provoke converts damage done to enemies into 15% extra Ability Strength.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "equinox"
   },
   {
     "id": "phoenix_renewal",
     "name": "Phoenix Renewal",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 5,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Renewal Augment: Taking fatal damage while under the effects of Renewal will instead Heal you or allies to 50% Health. This effect triggers only once for each ally every 60s.",
-    "rarity": "rare"
-  },
-  {
-    "id": "photon_repeater",
-    "name": "Photon Repeater",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Photon Strike Augment: If Photon Strike hits at least <LOWER_IS_BETTER>5 enemies, the next cast will cost no Energy and fire a second strike.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "oberon"
   },
   {
     "id": "piercing_step",
@@ -12693,18 +12554,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "pool_of_life",
-    "name": "Pool Of Life",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Well of Life Augment: On death, marked enemies will drop 4 Health Orbs with a 100% chance of dropping an Energy Orb.",
-    "rarity": "rare"
-  },
-  {
     "id": "power_drift",
     "name": "Power Drift",
     "polarity": "zenurik",
@@ -12724,8 +12573,8 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more Energy.",
     "rarity": "rare"
@@ -12750,10 +12599,10 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
-    "description": "Shroud of Dynar Augment: Increase an enemy’s Damage Vulnerability by 50%. Using Fang of Raksh on that enemy increases its spread radius by 150%.",
+    "description": "Shroud of Dynar Augment: Increase an enemy\u2019s Damage Vulnerability by 50%. Using Fang of Raksh on that enemy increases its spread radius by 150%.",
     "rarity": "rare"
   },
   {
@@ -12791,11 +12640,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Prism Augment: Prism follows above Mirage. Duration changed to 4s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "mirage"
   },
   {
     "id": "prismatic_companion",
@@ -12815,11 +12665,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Paralysis Augment: Affected enemies are pulled towards Valkyr and the stun duration is increased by 5s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "proton_pulse",
@@ -12851,13 +12702,14 @@ export const allMods: Mod[] = [
     "id": "purging_slash",
     "name": "Purging Slash",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 70,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Slash Dash Augment: Allies in the path of Slash Dash have 4 debuffs removed and 70% Shields restored.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "excalibur"
   },
   {
     "id": "purifying_flames",
@@ -12865,11 +12717,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Fire Blast Augment: Allies hit by the expanding ring of fire are cured of Status Effects and granted 4s of Status Immunity.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "ember"
   },
   {
     "id": "push_&_pull",
@@ -12877,11 +12730,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Metamorphosis Augment: Switching to Day-form staggers enemies within 6m and knocks them down when switching to Night-form.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "equinox"
   },
   {
     "id": "quick_charge",
@@ -12950,20 +12804,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "reactive_storm",
-    "name": "Reactive Storm",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {
-      "statusChance": 62.5
-    },
-    "description": "Serene Storm Augment: Desert Wind is granted +250% Status Chance and changes its damage type to match enemy weaknesses.",
-    "rarity": "rare"
-  },
-  {
     "id": "ready_steel",
     "name": "Ready Steel",
     "polarity": "vazarin",
@@ -12981,11 +12821,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Electric Shield Augment: Allies that pass through have 35% Shields restored.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "volt"
   },
   {
     "id": "recrystalize",
@@ -13031,11 +12872,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Dispensary Augment: Dispensary also creates pick ups that heal companions for 20% of their maximum health and reduce their incapacitation timer by 12 sec.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "protea"
   },
   {
     "id": "resilient_focus",
@@ -13127,13 +12969,14 @@ export const allMods: Mod[] = [
     "id": "rousing_plunder",
     "name": "Rousing Plunder",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 20,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Plunder Augment: Plunder gains 50% max <DT_CORROSIVE_COLOR>Corrosive Damage and Armor, and heals allies within Affinity range for 50 Health.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "hydroid"
   },
   {
     "id": "rubble_heap",
@@ -13141,11 +12984,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Passive Augment: When above 1400 Rubble, Landslide costs no Energy, deals 2x Damage, and travels 2x faster.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "atlas"
   },
   {
     "id": "sapping_reach",
@@ -13153,11 +12997,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Pull Augment: Steals up to 25 Energy from the target.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "mag"
   },
   {
     "id": "saxum_carapace",
@@ -13187,28 +13032,17 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "seeking_shuriken",
-    "name": "Seeking Shuriken",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Shuriken Augment: Hits expose weaknesses on enemies, reducing their Armor by 70% for 8s.",
-    "rarity": "rare"
-  },
-  {
     "id": "shadow_haze",
     "name": "Shadow Haze",
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Reap Augment: Increase Critical Chance by 50% on enemies inflicted with Death Harvest. A new Shadow emerges from those enemies when they perish. Limit of 3 Shadows.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "sevagoth"
   },
   {
     "id": "shattered_storm",
@@ -13216,11 +13050,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "gara"
   },
   {
     "id": "shepherd",
@@ -13235,28 +13070,17 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "shield_of_shadows",
-    "name": "Shield Of Shadows",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Shadows of the Dead Augment: Each Shadow within 50m take 6% of the Damage done to Nekros in his stead.",
-    "rarity": "rare"
-  },
-  {
     "id": "shield_overload",
     "name": "Shield Overload",
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Polarize Augment: Increases the time for the target's Shields to regenerate by 9s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "mag"
   },
   {
     "id": "shock_absorbers",
@@ -13268,18 +13092,6 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {},
     "description": "+30% Physical Damage Resistance",
-    "rarity": "rare"
-  },
-  {
-    "id": "shock_trooper",
-    "name": "Shock Trooper",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Shock Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_ELECTRICITY_COLOR>Electricity Damage to their attacks for 40s.",
     "rarity": "rare"
   },
   {
@@ -13300,47 +13112,38 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Radial Blind Augment: Blinded enemies are marked on the Minimap for 12s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "excalibur"
   },
   {
     "id": "singularity",
     "name": "Singularity",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 9,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Absorb Augment: Create a ring every 3s that drags in enemies at 15m/s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nyx"
   },
   {
     "id": "smite_infusion",
     "name": "Smite Infusion",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 28,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Smite Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_RADIATION_COLOR>Radiation Damage to their attacks for 40s.",
-    "rarity": "rare"
-  },
-  {
-    "id": "smoke_shadow",
-    "name": "Smoke Shadow",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Smoke Screen Augment: Conceals allies within 15m and grants 150% Critical Chance while invisible.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "oberon"
   },
   {
     "id": "sniper_scavenger",
@@ -13360,11 +13163,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Grave Spirit Augment: Immediately assume Spectral Form. 100% chance for weapons and abilities to apply Doom. Kills outside of Spectral Form decrease its cooldown by 1s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "dagath"
   },
   {
     "id": "stand_united",
@@ -13427,18 +13231,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "surging_blades",
-    "name": "Surging Blades",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Aquablades Augment: Activate Aquablades when the ability is in use or cooldown to throw one blade. Blades gain 10% damage when any Aquablade hits an enemy. No cost to throw with Merulina.",
-    "rarity": "rare"
-  },
-  {
     "id": "surplus_diverters",
     "name": "Surplus Diverters",
     "polarity": "madurai",
@@ -13468,13 +13260,14 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "parkourVelocity": 5
     },
     "description": "Rip Line Augment: Rip Lines has no Energy cost while Airborne., +20% Parkour Velocity",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "valkyr"
   },
   {
     "id": "tactical_retreat",
@@ -13494,47 +13287,51 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
-    "description": "Tail Wind Augment: Casting Tail Wind resets Zephyr’s bullet jump. Each enemy hit increases Tail Wind Damage by 100%. Damage resets upon being on the ground for 2s.",
-    "rarity": "rare"
+    "description": "Tail Wind Augment: Casting Tail Wind resets Zephyr\u2019s bullet jump. Each enemy hit increases Tail Wind Damage by 100%. Damage resets upon being on the ground for 2s.",
+    "rarity": "rare",
+    "warframeId": "zephyr"
   },
   {
     "id": "tear_gas",
     "name": "Tear Gas",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 1,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Smoke Screen Augment: Blinds enemies within 4m for 3s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "ash"
   },
   {
     "id": "teeming_virulence",
     "name": "Teeming Virulence",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 9,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 150% Primary Weapon Critical Chance for 15s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nidus"
   },
   {
     "id": "teleport_rush",
     "name": "Teleport Rush",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 12,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Teleport Augment: Using Teleport increases Parkour Velocity by 30% for 12s. Executing a target with Teleport extends Smoke Screen's duration by 5s. Teleport Mercy Kills fully refresh the duration.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "ash"
   },
   {
     "id": "tempered_bound",
@@ -13554,11 +13351,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Blaze Artillery Augment : When Temporal Anchor is activated, one existing Artillery unit will attach to Protea, halting its duration countdown. Max combo count is 20x.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "protea"
   },
   {
     "id": "temporal_erosion",
@@ -13566,11 +13364,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Temporal Anchor Augment: While Temporal Anchor is active, each strike of Grenade Fan and Blaze Artillery strips 10% Armor from enemies.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "protea"
   },
   {
     "id": "tesla_bank",
@@ -13578,11 +13377,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Tesla Nervos Augment: While a target has a Nervos attached, any damage dealt to it will be absorbed by the Nervos and channeled into a 8m burst of <DT_ELECTRICITY_COLOR>Electricity on death.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "vauban"
   },
   {
     "id": "tharros_lethality",
@@ -13624,13 +13424,14 @@ export const allMods: Mod[] = [
     "id": "titanic_rumbler",
     "name": "Titanic Rumbler",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 200,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Rumblers Augment: Create a single rumbler with 300% Health and 400% Damage.\\nReactivating will cause him to slam the floor and knockdown enemies in 15m.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "atlas"
   },
   {
     "id": "toxic_flight",
@@ -13664,11 +13465,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "voruna"
   },
   {
     "id": "undying_will",
@@ -13719,30 +13521,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "venari_bodyguard",
-    "name": "Venari Bodyguard",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Venari Augment: Venari dies in Khora's place. Recovery timer increased to 150s. Killing enemies decreases the timer by 4s.",
-    "rarity": "rare"
-  },
-  {
-    "id": "venom_dose",
-    "name": "Venom Dose",
-    "polarity": "zenurik",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {},
-    "description": "Spores Augment: Hold to cast will grant all allies within 15m an additional 100% <DT_CORROSIVE_COLOR>Corrosive Damage to their attacks for 40s.",
-    "rarity": "rare"
-  },
-  {
     "id": "venomous_rise",
     "name": "Venomous Rise",
     "polarity": "madurai",
@@ -13774,11 +13552,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Tempest Barrage Augment: Each projectile has a 100% chance of inflicting a <DT_VIRAL_COLOR>Viral Status Effect.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "hydroid"
   },
   {
     "id": "vital_systems_bypass",
@@ -13824,23 +13603,25 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Warding Halo Augment: 50% of the casting cost returned based on how much protection is left.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "nezha"
   },
   {
     "id": "warding_thurible",
     "name": "Warding Thurible",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 0,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Thurible Augment: Allies in range take 50% less Damage while channeling Thurible and grant 1.0 additional Energy charge whenever damaged.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "harrow"
   },
   {
     "id": "warm_coat",
@@ -13898,11 +13679,12 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Containment Wall Augment: Strip 50% of armor and shields from struck enemies. Hitting 5 or more enemies will restart the duration of any Chyrinka Pillars and empower them.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "qorvex"
   },
   {
     "id": "continuity_r3",
@@ -15259,13 +15041,14 @@ export const allMods: Mod[] = [
     "id": "afterburner",
     "name": "Afterburner",
     "polarity": "zenurik",
-    "drain": 6,
+    "drain": 200,
     "maxRank": 3,
-    "category": "archwing",
+    "category": "augment",
     "subCategory": "",
     "stats": {},
     "description": "Core Vent Augment: <DT_EXPLOSION_COLOR>Blast Damage ignites exhaust fumes for 12s. Enemies passing through the flames take 500 <DT_FIRE_COLOR>Heat Damage.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "chroma"
   },
   {
     "id": "argon_plating",
@@ -15301,8 +15084,8 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "archwing",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "archwing",
     "stats": {},
     "description": "Cosmic Crush Augment: The black hole saps the area of heat, freezing enemies in range. Enemies near the black hole are completely frozen for 5s.",
     "rarity": "rare"
@@ -15341,8 +15124,8 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "archwing",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "archwing",
     "stats": {},
     "description": "Energy Shell Augment: Energy Shell applies to allies within 140m.",
     "rarity": "rare"
@@ -15459,10 +15242,10 @@ export const allMods: Mod[] = [
     "id": "acid_shells",
     "name": "Acid Shells",
     "polarity": "madurai",
-    "drain": 4,
+    "drain": 7,
     "maxRank": 5,
-    "category": "general",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Enemies explode on death, dealing 450 <DT_CORROSIVE_COLOR>Corrosive Damage (+45% Enemy Max Health) in a 15m radius.",
     "rarity": "uncommon"
@@ -15498,7 +15281,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 5,
     "category": "general",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": 14.1667
     },
@@ -16257,7 +16040,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "engineSpeed": 4.25 },
+    "stats": {
+      "engineSpeed": 4.25
+    },
     "description": "+25.5% Railjack Speed",
     "rarity": "rare"
   },
@@ -16424,7 +16209,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": { "engineSpeed": 9.09 },
+    "stats": {
+      "engineSpeed": 9.09
+    },
     "description": "+100% Railjack Speed when no enemies within 3000m",
     "rarity": "uncommon"
   },
@@ -16675,8 +16462,8 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 25
     },
@@ -16995,8 +16782,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "augment",
+    "subCategory": "archwing",
     "stats": {},
     "description": "Flak now bounces up to 4x and travels 60% faster.",
     "rarity": "uncommon"
@@ -17033,7 +16820,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": { "artilleryDamage": 9.09 },
+    "stats": {
+      "artilleryDamage": 9.09
+    },
     "description": "+100% Forward Artillery Damage",
     "rarity": "rare"
   },
@@ -17369,7 +17158,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "turretDamage": 12.5 },
+    "stats": {
+      "turretDamage": 12.5
+    },
     "description": "+75% Turret Damage",
     "rarity": "common"
   },
@@ -17472,7 +17263,7 @@ export const allMods: Mod[] = [
     "category": "general",
     "subCategory": "",
     "stats": {},
-    "description": "Gain 15% Disinfection and gain 10,000 Höllars",
+    "description": "Gain 15% Disinfection and gain 10,000 H\u00f6llars",
     "rarity": "common"
   },
   {
@@ -17495,7 +17286,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "boostSpeed": 7.5 },
+    "stats": {
+      "boostSpeed": 7.5
+    },
     "description": "+45% Railjack Boost Speed",
     "rarity": "common"
   },
@@ -18674,7 +18467,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "ordnanceSpeed": 10 },
+    "stats": {
+      "ordnanceSpeed": 10
+    },
     "description": "+60% Ordnance Projectile Speed",
     "rarity": "rare"
   },
@@ -19008,7 +18803,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "turretCritChance": 8.333 },
+    "stats": {
+      "turretCritChance": 8.333
+    },
     "description": "+50% Turret Critical Chance",
     "rarity": "uncommon"
   },
@@ -19427,7 +19224,7 @@ export const allMods: Mod[] = [
     "category": "operator",
     "subCategory": "",
     "stats": {},
-    "description": "Warframe is invulnerable for 4s after Operator is downed. Tap <USE> as Operator falls to bring the Warframe to the Operator’s location.",
+    "description": "Warframe is invulnerable for 4s after Operator is downed. Tap <USE> as Operator falls to bring the Warframe to the Operator\u2019s location.",
     "rarity": "uncommon"
   },
   {
@@ -19691,7 +19488,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "general",
     "subCategory": "",
-    "stats": { "turretCritDamage": 8.333 },
+    "stats": {
+      "turretCritDamage": 8.333
+    },
     "description": "+50% Turret Critical Damage",
     "rarity": "uncommon"
   },
@@ -20436,7 +20235,10 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": { "turretRange": 2.3, "turretProjectileSpeed": 5 },
+    "stats": {
+      "turretRange": 2.3,
+      "turretProjectileSpeed": 5
+    },
     "description": "+25.3% Turret Range, +55% Turret Projectile Speed",
     "rarity": "rare"
   },
@@ -20846,7 +20648,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": { "ordnanceDamage": 9.09 },
+    "stats": {
+      "ordnanceDamage": 9.09
+    },
     "description": "+100% Ordnance Damage",
     "rarity": "uncommon"
   },
@@ -21164,18 +20968,6 @@ export const allMods: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "surging_dash_r5",
-    "name": "Surging Dash",
-    "polarity": "naramon",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "operator",
-    "subCategory": "",
-    "stats": {},
-    "description": "Creates a wave while dashing, increasing the Damage by 30% and the area of effect around the Operator by 12m.",
-    "rarity": "uncommon"
-  },
-  {
     "id": "tactical_pump_r3",
     "name": "Tactical Pump",
     "polarity": "naramon",
@@ -21259,29 +21051,370 @@ export const allMods: Mod[] = [
     "description": "+60% Shield Recharge, -30% Shield Recharge Delay",
     "rarity": "common"
   },
-  { "id": "da_ren", "name": "Da-Ren", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorShields": 50 }, "description": "+300 Operator Shields. +30 bonus for each Unairu School Mod", "rarity": "uncommon" },
-  { "id": "empazu_shol", "name": "Empazu-Shol", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "tauronCharge": 2 }, "description": "+12% Tauron Strike Initial Charge. +2% bonus for each Mod from a unique School", "rarity": "rare" },
-  { "id": "esti_vel_ikha", "name": "Esti Vel-Ikha", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingDistance": 5 }, "description": "+30% Void Sling distance. +10% Void Sling radius per unique School", "rarity": "rare" },
-  { "id": "evir_ti", "name": "Evir-Ti", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "operatorJumpHeight": 15 }, "description": "+60% Operator Jump Height", "rarity": "common" },
-  { "id": "hayan_dabor", "name": "Hayan-Dabor", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampMultishot": 10 }, "description": "+60% Amp Multishot", "rarity": "common" },
-  { "id": "hok_kaal", "name": "Hok-Kaal", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampBonusDamage": 0.5 }, "description": "After Void Mode, next Amp attack deals x3.0 bonus damage (cooldown 5s)", "rarity": "common" },
-  { "id": "kaal_zidi", "name": "Kaal-Zidi", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidModeEfficiency": 5 }, "description": "+30% Void Mode efficiency. +5% Movement Speed in Void Mode per Naramon Mod", "rarity": "uncommon" },
-  { "id": "lashta_vak", "name": "Lashta-Vak", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingPulse": 2 }, "description": "Void Sling breaks Containers within 12m. +2m per unique School Mod", "rarity": "rare" },
-  { "id": "lorun_tash", "name": "Lorun-Tash", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "operatorArmor": 100 }, "description": "+400 Operator Armor", "rarity": "common" },
-  { "id": "metem_erun", "name": "Metem-Erun", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorSprintSpeed": 5 }, "description": "+30% Operator Sprint Speed. +5% per unique School Mod", "rarity": "rare" },
-  { "id": "metem_hakh", "name": "Metem-Hakh", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorHealthShields": 5 }, "description": "+30% Operator Health & Shields. +15% per unique School Mod", "rarity": "rare" },
-  { "id": "omn_evi", "name": "Omn-Evi", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampCriticalChance": 10 }, "description": "+60% Amp Critical Chance. +10% Amp Crit Damage per Zenurik Mod", "rarity": "uncommon" },
-  { "id": "sey_taph", "name": "Sey-Taph", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "voidSlingEfficiency": 5 }, "description": "+30% Void Sling Efficiency", "rarity": "common" },
-  { "id": "sil_tabol", "name": "Sil-Tabol", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampStatusChance": 10 }, "description": "+60% Amp Status Chance. +15% Status Damage per Vazarin Mod", "rarity": "uncommon" },
-  { "id": "talsek_an", "name": "Talsek-An", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": {}, "description": "Knockdown immunity. When blocked, enter Void Mode for 3s (cooldown 7.5s)", "rarity": "common" },
-  { "id": "ubri_kaneph", "name": "Ubri-Kaneph", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampDamage": 10 }, "description": "+60% Damage to Amps. +10% per unique School Mod", "rarity": "rare" },
-  { "id": "ulashta_shol", "name": "Ulashta-Shol", "polarity": "universal", "drain": 0, "maxRank": 3, "category": "tektolyst", "stats": { "transferenceStaticDuration": -15 }, "description": "-60% Transference Static duration", "rarity": "common" },
-  { "id": "vik_anam", "name": "Vik-Anam", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampEnergy": 5 }, "description": "+30% Max Amp Energy. +5% Amp Energy Regen per Madurai Mod", "rarity": "uncommon" },
-  { "id": "vikla_safor", "name": "Vikla-Safor", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "ampFireRate": 5, "ampAmmoEfficiency": 5 }, "description": "+30% Amp Fire Rate. +30% Amp Ammo Efficiency", "rarity": "common" },
-  { "id": "yar_dal", "name": "Yar Dal", "polarity": "universal", "drain": 0, "maxRank": 5, "category": "tektolyst", "stats": { "operatorHealth": 50 }, "description": "+300 Operator Health", "rarity": "common" }
-
+  {
+    "id": "da_ren",
+    "name": "Da-Ren",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "operatorShields": 50
+    },
+    "description": "+300 Operator Shields. +30 bonus for each Unairu School Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "empazu_shol",
+    "name": "Empazu-Shol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "tauronCharge": 2
+    },
+    "description": "+12% Tauron Strike Initial Charge. +2% bonus for each Mod from a unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "esti_vel_ikha",
+    "name": "Esti Vel-Ikha",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "voidSlingDistance": 5
+    },
+    "description": "+30% Void Sling distance. +10% Void Sling radius per unique School",
+    "rarity": "rare"
+  },
+  {
+    "id": "evir_ti",
+    "name": "Evir-Ti",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "tektolyst",
+    "stats": {
+      "operatorJumpHeight": 15
+    },
+    "description": "+60% Operator Jump Height",
+    "rarity": "common"
+  },
+  {
+    "id": "hayan_dabor",
+    "name": "Hayan-Dabor",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampMultishot": 10
+    },
+    "description": "+60% Amp Multishot",
+    "rarity": "common"
+  },
+  {
+    "id": "hok_kaal",
+    "name": "Hok-Kaal",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampBonusDamage": 0.5
+    },
+    "description": "After Void Mode, next Amp attack deals x3.0 bonus damage (cooldown 5s)",
+    "rarity": "common"
+  },
+  {
+    "id": "kaal_zidi",
+    "name": "Kaal-Zidi",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "voidModeEfficiency": 5
+    },
+    "description": "+30% Void Mode efficiency. +5% Movement Speed in Void Mode per Naramon Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "lashta_vak",
+    "name": "Lashta-Vak",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "voidSlingPulse": 2
+    },
+    "description": "Void Sling breaks Containers within 12m. +2m per unique School Mod",
+    "rarity": "rare"
+  },
+  {
+    "id": "lorun_tash",
+    "name": "Lorun-Tash",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "tektolyst",
+    "stats": {
+      "operatorArmor": 100
+    },
+    "description": "+400 Operator Armor",
+    "rarity": "common"
+  },
+  {
+    "id": "metem_erun",
+    "name": "Metem-Erun",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "operatorSprintSpeed": 5
+    },
+    "description": "+30% Operator Sprint Speed. +5% per unique School Mod",
+    "rarity": "rare"
+  },
+  {
+    "id": "metem_hakh",
+    "name": "Metem-Hakh",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "operatorHealthShields": 5
+    },
+    "description": "+30% Operator Health & Shields. +15% per unique School Mod",
+    "rarity": "rare"
+  },
+  {
+    "id": "omn_evi",
+    "name": "Omn-Evi",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampCriticalChance": 10
+    },
+    "description": "+60% Amp Critical Chance. +10% Amp Crit Damage per Zenurik Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "sey_taph",
+    "name": "Sey-Taph",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "voidSlingEfficiency": 5
+    },
+    "description": "+30% Void Sling Efficiency",
+    "rarity": "common"
+  },
+  {
+    "id": "sil_tabol",
+    "name": "Sil-Tabol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampStatusChance": 10
+    },
+    "description": "+60% Amp Status Chance. +15% Status Damage per Vazarin Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "talsek_an",
+    "name": "Talsek-An",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {},
+    "description": "Knockdown immunity. When blocked, enter Void Mode for 3s (cooldown 7.5s)",
+    "rarity": "common"
+  },
+  {
+    "id": "ubri_kaneph",
+    "name": "Ubri-Kaneph",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampDamage": 10
+    },
+    "description": "+60% Damage to Amps. +10% per unique School Mod",
+    "rarity": "rare"
+  },
+  {
+    "id": "ulashta_shol",
+    "name": "Ulashta-Shol",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 3,
+    "category": "tektolyst",
+    "stats": {
+      "transferenceStaticDuration": -15
+    },
+    "description": "-60% Transference Static duration",
+    "rarity": "common"
+  },
+  {
+    "id": "vik_anam",
+    "name": "Vik-Anam",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampEnergy": 5
+    },
+    "description": "+30% Max Amp Energy. +5% Amp Energy Regen per Madurai Mod",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "vikla_safor",
+    "name": "Vikla-Safor",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "ampFireRate": 5,
+      "ampAmmoEfficiency": 5
+    },
+    "description": "+30% Amp Fire Rate. +30% Amp Ammo Efficiency",
+    "rarity": "common"
+  },
+  {
+    "id": "yar_dal",
+    "name": "Yar Dal",
+    "polarity": "universal",
+    "drain": 0,
+    "maxRank": 5,
+    "category": "tektolyst",
+    "stats": {
+      "operatorHealth": 50
+    },
+    "description": "+300 Operator Health",
+    "rarity": "common"
+  },
+  {
+    "id": "corroding_barrage",
+    "name": "Corroding Barrage",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Corroding Barrage augment.",
+    "rarity": "rare",
+    "warframeId": "hydroid"
+  },
+  {
+    "id": "divebomb_vortex",
+    "name": "Divebomb Vortex",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Divebomb Vortex augment.",
+    "rarity": "rare",
+    "warframeId": "zephyr"
+  },
+  {
+    "id": "enduring_bastille",
+    "name": "Enduring Bastille",
+    "polarity": "zenurik",
+    "drain": 50,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Enduring Bastille augment.",
+    "rarity": "rare",
+    "warframeId": "vauban"
+  },
+  {
+    "id": "fatal_teleport",
+    "name": "Fatal Teleport",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Fatal Teleport augment.",
+    "rarity": "rare",
+    "warframeId": "ash"
+  },
+  {
+    "id": "firequake",
+    "name": "Firequake",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Firequake augment.",
+    "rarity": "rare",
+    "warframeId": "ember"
+  },
+  {
+    "id": "iron_vault",
+    "name": "Iron Vault",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Iron Vault augment.",
+    "rarity": "rare",
+    "warframeId": "wukong"
+  },
+  {
+    "id": "perpetual_vortex",
+    "name": "Perpetual Vortex",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Perpetual Vortex augment.",
+    "rarity": "rare",
+    "warframeId": "vauban"
+  },
+  {
+    "id": "shield_transference",
+    "name": "Shield Transference",
+    "polarity": "zenurik",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "augment",
+    "subCategory": "",
+    "stats": {},
+    "description": "Shield Transference augment.",
+    "rarity": "rare",
+    "warframeId": "mag"
+  }
 ];
-
 export const modsMap = new Map<string, Mod>(allMods.map(m => [m.id, m]));
 
 /** Legacy duplicate augment ids → canonical mod (saved builds). */

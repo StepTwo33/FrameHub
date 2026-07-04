@@ -176,6 +176,9 @@ export default function ModBrowserPage() {
                       <span className="text-xs text-muted-foreground hidden sm:inline">{modBrowserCategoryLabel(mod)}</span>
                       <span className="text-xs font-mono text-muted-foreground">
                         {mod.drain}/{mod.maxRank}
+                        {mod.maxRank > 0 && (
+                          <span className="text-muted-foreground/70"> (max {mod.drain + mod.maxRank})</span>
+                        )}
                       </span>
                     </div>
                   </button>
@@ -183,10 +186,11 @@ export default function ModBrowserPage() {
                     <div className="ml-4 mt-1 mb-2 p-3 border border-border rounded-lg bg-card">
                       {mod.description && <p className="text-sm text-muted-foreground mb-2">{mod.description}</p>}
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
-                        <span><strong>Drain:</strong> {mod.drain}</span>
+                        <span><strong>Drain:</strong> {mod.drain} (max capacity {mod.drain + mod.maxRank} at R{mod.maxRank})</span>
                         <span><strong>Max Rank:</strong> {mod.maxRank}</span>
                         <span className="capitalize"><strong>Rarity:</strong> {mod.rarity}</span>
                         <span className="capitalize"><strong>Polarity:</strong> {mod.polarity}</span>
+                        {mod.warframeId && <span className="capitalize"><strong>Warframe:</strong> {mod.warframeId.replace(/_/g, " ")}</span>}
                         {mod.subCategory && <span className="capitalize"><strong>Sub:</strong> {mod.subCategory}</span>}
                       </div>
                       {Object.keys(mod.stats).length > 0 && (
