@@ -25,8 +25,8 @@ export function getShardColorName(color: string): string {
   return color.charAt(0).toUpperCase() + color.slice(1);
 }
 
-/** Official wiki asset filenames (https://wiki.warframe.com/images/…). */
-const SHARD_WIKI_FILES: Record<string, { standard: string; tau: string }> = {
+/** Local PNGs in /public/images/shards/ (sourced from wiki.warframe.com via API). */
+const SHARD_IMAGE_FILES: Record<string, { standard: string; tau: string }> = {
   crimson: { standard: "CrimsonArchonShard.png", tau: "TauforgedCrimsonArchonShard.png" },
   azure: { standard: "AzureArchonShard.png", tau: "TauforgedAzureArchonShard.png" },
   amber: { standard: "AmberArchonShard.png", tau: "TauforgedAmberArchonShard.png" },
@@ -35,13 +35,11 @@ const SHARD_WIKI_FILES: Record<string, { standard: string; tau: string }> = {
   emerald: { standard: "EmeraldArchonShard.png", tau: "TauforgedEmeraldArchonShard.png" },
 };
 
-const WIKI_SHARD_IMAGE_BASE = "https://wiki.warframe.com/images";
-
 export function getArchonShardImage(color: string, tier: number): string {
-  const entry = SHARD_WIKI_FILES[color];
+  const entry = SHARD_IMAGE_FILES[color];
   if (!entry) return "";
   const file = tier === 2 ? entry.tau : entry.standard;
-  return `${WIKI_SHARD_IMAGE_BASE}/${file}`;
+  return `/images/shards/${file}`;
 }
 
 export function getShardShortLabel(color: string, tier: number): string {
