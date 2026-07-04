@@ -34,6 +34,7 @@ const NAV_GROUPS = [
     icon: Wrench,
     links: [
       { href: "/mod-browser", label: "Mod Browser", desc: "Search all mods" },
+      { href: "/arcane-browser", label: "Arcane Browser", desc: "Verify arcane effects & handlers" },
       { href: "/riven-calculator", label: "Riven Calculator", desc: "Riven stat ranges" },
       { href: "/damage-simulator", label: "Damage Simulator", desc: "Simulate damage output" },
     ],
