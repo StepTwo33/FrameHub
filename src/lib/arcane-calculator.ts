@@ -1,4 +1,6 @@
-import { ARCANE_EFFECTS, ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
+import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
+import { getArcaneEffectDef } from "@/lib/arcane-effect-overrides";
+export { getArcaneEffectDef };
 import { shouldApplyEffectToBuild } from "@/lib/arcane-apply-policy";
 import {
   applyCustomArcaneToWarframe,
@@ -7,10 +9,6 @@ import {
 } from "@/lib/arcane-handlers";
 import { getPersistenceDamageCap, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { CalculatedStats, Mod, WarframeCalculatedStats, Weapon } from "@/lib/types";
-
-export function getArcaneEffectDef(arcaneId: string): ArcaneEffectDef | undefined {
-  return ARCANE_EFFECTS[arcaneId];
-}
 
 /** Effective stack count for arcane effect scaling. */
 export function effectiveArcaneStacks(

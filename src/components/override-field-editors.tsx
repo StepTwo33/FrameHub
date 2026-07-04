@@ -3,6 +3,7 @@
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatOverrideFieldLabel } from "@/lib/override-schemas";
+import { scaleArcaneEffectValue } from "@/lib/arcane-utils";
 
 export interface ArcaneEffectLineDraft {
   stat: string;
@@ -13,9 +14,11 @@ export interface ArcaneEffectLineDraft {
 
 export function ArcaneEffectsEditor({
   lines,
+  maxRank = 5,
   onChange,
 }: {
   lines: ArcaneEffectLineDraft[];
+  maxRank?: number;
   onChange: (lines: ArcaneEffectLineDraft[]) => void;
 }) {
   const update = (index: number, patch: Partial<ArcaneEffectLineDraft>) => {
@@ -32,9 +35,9 @@ export function ArcaneEffectsEditor({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-foreground">Arcane effect lines</p>
+      <p className="text-xs font-medium text-foreground">Arcane effect values (used in builds)</p>
       <p className="text-[11px] text-muted-foreground">
-        Each row is one stat the arcane applies. Max value is at max rank.
+        Max value is at max rank (R{maxRank}). Values scale linearly from R0 — compare against in-game at each rank.
       </p>
       {lines.length === 0 && (
         <p className="text-xs text-muted-foreground italic">No effect lines yet.</p>
@@ -63,7 +66,7 @@ export function ArcaneEffectsEditor({
               />
             </label>
             <label className="block text-[11px]">
-              <span className="text-muted-foreground">Max value @ max rank</span>
+              <span className="text-muted-foreground">Max @ R{maxRank}</span>
               <input
                 type="number"
                 step="any"
@@ -71,6 +74,13 @@ export function ArcaneEffectsEditor({
                 onChange={(e) => update(index, { maxValue: Number(e.target.value) })}
                 className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
               />
+            </label>
+            <label className="block text-[11px] sm:col-span-2">
+              <span className="text-muted-foreground">Preview @ R0 (scaled)</span>
+              <p className="mt-0.5 font-mono text-sm text-muted-foreground">
+                {scaleArcaneEffectValue(line.maxValue, 0, maxRank)}
+                {line.flat ? "" : "%"}
+              </p>
             </label>
           </div>
           <div className="flex flex-wrap gap-4 text-[11px]">
@@ -198,6 +208,8 @@ export function StatRowsEditor({
   rows,
   overrideValues,
   onChange,
+  onFocusField,
+  isFieldChanged,
   onAddKey,
   newKeyValue,
   onNewKeyChange,
@@ -206,6 +218,8 @@ export function StatRowsEditor({
   rows: { key: string; path: string; value: unknown }[];
   overrideValues: Record<string, string>;
   onChange: (path: string, value: string) => void;
+  onFocusField?: (path: string, current: unknown) => void;
+  isFieldChanged?: (path: string, current: unknown) => boolean;
   onAddKey: () => void;
   newKeyValue: string;
   onNewKeyChange: (v: string) => void;
@@ -214,7 +228,7 @@ export function StatRowsEditor({
     <div>
       <p className="mb-1 text-xs font-medium text-foreground">{title}</p>
       <p className="mb-2 text-[11px] text-muted-foreground">
-        Per-rank values from data — enter a new number only where the wiki differs.
+        Per-rank base from data — enter a new number only where in-game differs. Max in build = base × (max rank + 1).
       </p>
       {rows.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">No stats on this item.</p>
@@ -228,7 +242,7 @@ export function StatRowsEditor({
           <div className="max-h-64 divide-y divide-border overflow-y-auto">
             {rows.map(({ path, key, value }) => {
               const overrideValue = overrideValues[path] ?? "";
-              const isChanged = overrideValue !== "";
+              const isChanged = isFieldChanged?.(path, value) ?? overrideValue !== "";
               return (
                 <div
                   key={path}
@@ -244,7 +258,8 @@ export function StatRowsEditor({
                     step="any"
                     value={overrideValue}
                     onChange={(e) => onChange(path, e.target.value)}
-                    placeholder="Leave as-is"
+                    onFocus={() => onFocusField?.(path, value)}
+                    placeholder={String(value ?? "—")}
                     className={cn(
                       "h-8 w-full min-w-[100px] rounded border bg-background px-2 text-sm sm:min-w-0",
                       isChanged ? "border-purple-500" : "border-border",

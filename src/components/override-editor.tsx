@@ -4,14 +4,8 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { Search, ChevronDown, Save, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  DataOverride,
-  OverrideCategory,
-  OVERRIDE_CATEGORIES,
-  generateOverrideId,
-  saveOverride,
-} from "@/lib/data-overrides";
-import {
   ADD_ITEM_TEMPLATES,
+  ARCANE_EFFECT_FIELD_KEYS,
   HIDDEN_OVERRIDE_FIELDS,
   TEXTAREA_FIELDS,
   formatOverrideFieldLabel,
@@ -21,6 +15,17 @@ import {
   sortFieldsForCategory,
 } from "@/lib/override-schemas";
 import { buildNestedPatch, flattenRecordFields } from "@/lib/override-merge";
+import {
+  DataOverride,
+  OverrideCategory,
+  OVERRIDE_CATEGORIES,
+  generateOverrideId,
+  getOverrides,
+  saveOverride,
+  applyModOverrides,
+  applyArcaneOverrides,
+} from "@/lib/data-overrides";
+import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
 import {
   AbilitiesEditor,
   AbilityDraft,
@@ -42,8 +47,8 @@ const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   mod: "Mods",
   warframe: "Warframes",
   companion: "Companions",
-  arcane: "Arcanes",
-  arcane_effect: "Arcane Effects",
+  arcane: "Arcanes (catalog + effect values)",
+  arcane_effect: "Arcane effect values only",
   archon_shard: "Archon Shards",
   archwing: "Archwings",
   necramech: "Necramechs",
@@ -70,12 +75,29 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
   let items: any[];
   switch (category) {
     case "weapon": items = allWeapons; break;
-    case "mod": items = allMods; break;
+    case "mod": {
+      const mod = applyModOverrides(allMods).find((m) => m.id === id);
+      return mod ? (mod as unknown as Record<string, unknown>) : null;
+    }
     case "warframe": items = allWarframes; break;
     case "companion": items = allCompanions; break;
-    case "arcane": items = allArcanes; break;
+    case "arcane": {
+      const arcane = applyArcaneOverrides(allArcanes).find((a) => a.id === id);
+      if (!arcane) return null;
+      const effectDef = applyArcaneEffectOverrides()[id];
+      return {
+        ...(arcane as unknown as Record<string, unknown>),
+        ...(effectDef
+          ? {
+              trigger: effectDef.trigger,
+              stackCap: effectDef.stackCap,
+              effects: effectDef.effects,
+            }
+          : {}),
+      };
+    }
     case "arcane_effect": {
-      const def = ARCANE_EFFECTS[id];
+      const def = applyArcaneEffectOverrides()[id];
       return def ? (def as unknown as Record<string, unknown>) : null;
     }
     case "archon_shard": items = allArchonShards; break;
@@ -84,6 +106,45 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
     default: return null;
   }
   return items.find((i) => i.id === id) ?? null;
+}
+
+function findExistingOverrideId(
+  targetType: OverrideCategory,
+  targetId: string,
+): string | undefined {
+  return getOverrides().find(
+    (o) => o.action === "modify" && o.targetType === targetType && o.targetId === targetId,
+  )?.id;
+}
+
+function splitArcaneSaveFields(
+  fields: Record<string, unknown>,
+): { catalog: Record<string, unknown>; effectDef: Record<string, unknown> } {
+  const catalog: Record<string, unknown> = {};
+  const effectDef: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(fields)) {
+    if (ARCANE_EFFECT_FIELD_KEYS.has(key)) effectDef[key] = value;
+    else catalog[key] = value;
+  }
+  if (catalog.maxRank !== undefined) {
+    effectDef.maxRank = catalog.maxRank;
+  }
+  return { catalog, effectDef };
+}
+
+function valuesEqual(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (typeof a === "number" && typeof b === "number") return a === b;
+  return String(a ?? "") === String(b ?? "");
+}
+
+function getOriginalAtPath(itemData: Record<string, unknown> | null | undefined, path: string): unknown {
+  if (!itemData) return undefined;
+  let original: unknown = itemData;
+  for (const part of path.split(".")) {
+    original = (original as Record<string, unknown> | null)?.[part];
+  }
+  return original;
 }
 
 function inferInputType(key: string, value: unknown): "number" | "boolean" | "text" | "textarea" | "select" {
@@ -290,6 +351,12 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     });
   };
 
+  const seedFieldOnFocus = (path: string, current: unknown) => {
+    if (fieldOverrides[path] !== undefined) return;
+    if (current == null || current === "") return;
+    handleFieldChange(path, String(current));
+  };
+
   const handleAddStatKey = (recordField: string) => {
     const key = newStatKey.trim();
     if (!key) return;
@@ -301,12 +368,10 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
     const flat: Record<string, unknown> = {};
     for (const [path, rawValue] of Object.entries(fieldOverrides)) {
       if (rawValue === "") continue;
-      const parts = path.split(".");
-      let original: unknown = itemData;
-      for (const part of parts) {
-        original = (original as Record<string, unknown> | null)?.[part];
-      }
-      flat[path] = parseScalarValue(rawValue, original);
+      const original = getOriginalAtPath(itemData, path);
+      const parsed = parseScalarValue(rawValue, original);
+      if (valuesEqual(parsed, original)) continue;
+      flat[path] = parsed;
     }
     const fields = buildNestedPatch(flat);
 
@@ -333,31 +398,90 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
       return;
     }
 
-    let fields: Record<string, unknown> = {};
-    if (action !== "remove") {
-      fields = buildFields();
-      if (Object.keys(fields).length === 0) {
+    if (action === "remove") {
+      saveOverride({
+        id: prefill?.existingOverrideId ?? generateOverrideId(),
+        targetType: category,
+        targetId: targetId.trim(),
+        action,
+        fields: {},
+        note: note.trim(),
+        timestamp: Date.now(),
+      });
+      onSave();
+      return;
+    }
+
+    const fields = buildFields();
+    if (Object.keys(fields).length === 0) {
+      alert("Change at least one field before saving.");
+      return;
+    }
+
+    const timestamp = Date.now();
+    const trimmedNote = note.trim();
+    const trimmedId = targetId.trim();
+
+    const persist = (
+      targetType: OverrideCategory,
+      patch: Record<string, unknown>,
+      existingOverrideId?: string,
+    ) => {
+      saveOverride({
+        id: existingOverrideId ?? generateOverrideId(),
+        targetType,
+        targetId: trimmedId,
+        action: "modify",
+        fields: patch,
+        note: trimmedNote,
+        timestamp,
+      });
+    };
+
+    if (category === "arcane") {
+      const { catalog, effectDef } = splitArcaneSaveFields(fields);
+      if (Object.keys(catalog).length === 0 && Object.keys(effectDef).length === 0) {
         alert("Change at least one field before saving.");
         return;
       }
+      if (Object.keys(catalog).length > 0) {
+        persist("arcane", catalog, prefill?.category === "arcane" ? prefill.existingOverrideId : findExistingOverrideId("arcane", trimmedId));
+      }
+      if (Object.keys(effectDef).length > 0) {
+        persist(
+          "arcane_effect",
+          effectDef,
+          prefill?.category === "arcane_effect" ? prefill.existingOverrideId : findExistingOverrideId("arcane_effect", trimmedId),
+        );
+      }
+    } else {
+      persist(category, fields, prefill?.existingOverrideId);
     }
 
-    saveOverride({
-      id: prefill?.existingOverrideId ?? generateOverrideId(),
-      targetType: category,
-      targetId: targetId.trim(),
-      action,
-      fields,
-      note: note.trim(),
-      timestamp: Date.now(),
-    });
     onSave();
   };
 
   const selectedItemName = items.find((i) => i.id === selectedItemId)?.name ?? "";
-  const scalarChangeCount = Object.keys(fieldOverrides).length;
-  const structuredChangeCount = (structuredTouched.effects ? 1 : 0) + (structuredTouched.abilities ? 1 : 0);
+  const scalarChangeCount = useMemo(() => {
+    let count = 0;
+    for (const [path, rawValue] of Object.entries(fieldOverrides)) {
+      if (rawValue === "") continue;
+      const original = getOriginalAtPath(itemData, path);
+      const parsed = parseScalarValue(rawValue, original);
+      if (!valuesEqual(parsed, original)) count++;
+    }
+    return count;
+  }, [fieldOverrides, itemData]);
+  const structuredChangeCount =
+    (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) ? 1 : 0)
+    + (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities)) ? 1 : 0);
   const changedCount = scalarChangeCount + structuredChangeCount;
+
+  const isFieldChanged = (path: string, current: unknown) => {
+    const raw = fieldOverrides[path];
+    if (raw === undefined || raw === "") return false;
+    return !valuesEqual(parseScalarValue(raw, current), current);
+  };
   const canEditFields = Boolean(selectedItemId && action !== "remove") || action === "add";
 
   return (
@@ -368,7 +492,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
             {prefill?.existingOverrideId ? "Edit data fix" : action === "remove" ? "Hide item from site" : action === "add" ? "Add new item" : "Fix item data"}
           </h2>
           <p className="mt-0.5 text-[11px] text-muted-foreground">
-            Pick an item, change only what&apos;s wrong, then save. Leave fields blank to keep current values.
+            Pick an item, click a field to edit its current value, then save.
           </p>
         </div>
         <button type="button" onClick={onCancel} className="text-muted-foreground hover:text-foreground">
@@ -483,7 +607,9 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
         <div className="mb-4 space-y-5">
           {scalarFields.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xs font-medium text-foreground">Basic info</p>
+              <p className="text-xs font-medium text-foreground">
+                {category === "mod" || category === "arcane" ? "Base values" : "Basic info"}
+              </p>
               {scalarFields.map(({ key, currentValue, inputType }) => {
                 const overrideValue = fieldOverrides[key] ?? "";
                 const selectOptions = getSelectOptions(key);
@@ -505,6 +631,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
                       <textarea
                         value={overrideValue}
                         onChange={(e) => handleFieldChange(key, e.target.value)}
+                        onFocus={() => seedFieldOnFocus(key, currentValue)}
                         placeholder={String(currentValue ?? "Leave as-is")}
                         rows={3}
                         className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-sm resize-y"
@@ -525,6 +652,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
                         step={inputType === "number" ? "any" : undefined}
                         value={overrideValue}
                         onChange={(e) => handleFieldChange(key, e.target.value)}
+                        onFocus={() => seedFieldOnFocus(key, currentValue)}
                         placeholder={`Current: ${String(currentValue ?? "—")}`}
                         className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
                       />
@@ -542,6 +670,8 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
               rows={nestedStatRows.filter((r) => r.recordField === recordField)}
               overrideValues={fieldOverrides}
               onChange={handleFieldChange}
+              onFocusField={seedFieldOnFocus}
+              isFieldChanged={isFieldChanged}
               onAddKey={() => handleAddStatKey(recordField)}
               newKeyValue={newStatKey}
               onNewKeyChange={setNewStatKey}
@@ -551,6 +681,7 @@ export function OverrideEditor({ onSave, onCancel, prefill }: OverrideEditorProp
           {structuredFields.has("effects") && (
             <ArcaneEffectsEditor
               lines={effectLines}
+              maxRank={Number(itemData?.maxRank ?? 5)}
               onChange={(lines) => {
                 setEffectLines(lines);
                 setStructuredTouched((s) => ({ ...s, effects: true }));

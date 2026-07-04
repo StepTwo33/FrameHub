@@ -10,8 +10,12 @@ export const NESTED_RECORD_FIELDS: Partial<Record<OverrideCategory, string[]>> =
 /** Fields edited with dedicated form components (not raw JSON). */
 export const STRUCTURED_OVERRIDE_FIELDS: Partial<Record<OverrideCategory, string[]>> = {
   warframe: ["abilities"],
+  arcane: ["effects"],
   arcane_effect: ["effects"],
 };
+
+/** When saving arcane catalog fixes, effect fields go to arcane_effect overrides. */
+export const ARCANE_EFFECT_FIELD_KEYS = new Set(["effects", "trigger", "stackCap"]);
 
 /** Hidden from the editor — too complex for moderators; use a report instead. */
 export const HIDDEN_OVERRIDE_FIELDS = new Set([
@@ -107,9 +111,9 @@ export const FIELD_LABELS: Record<string, string> = {
   tier: "Tier",
   color: "Shard color",
   isCoalescent: "Coalescent variant",
-  stats: "Mod stats",
+  stats: "Mod stats (per-rank base)",
   statBonuses: "Shard stat options",
-  effects: "Effect lines",
+  effects: "Effect stat values",
   abilities: "Abilities",
 };
 
@@ -237,9 +241,9 @@ export function getSelectOptions(fieldKey: string): { value: string; label: stri
 
 /** Preferred field order per category (most-edited first). */
 export const FIELD_ORDER: Partial<Record<OverrideCategory, string[]>> = {
-  mod: ["name", "drain", "maxRank", "polarity", "rarity", "category", "description", "warframeId"],
-  arcane: ["name", "drain", "maxRank", "polarity", "rarity", "description"],
-  arcane_effect: ["name", "trigger", "maxRank", "stackCap"],
+  mod: ["name", "drain", "maxRank", "polarity", "rarity", "category", "description", "warframeId", "stats"],
+  arcane: ["name", "drain", "maxRank", "description", "stats", "trigger", "stackCap", "effects"],
+  arcane_effect: ["name", "trigger", "maxRank", "stackCap", "effects"],
   archon_shard: ["name", "color", "tier", "description", "isCoalescent"],
   warframe: ["name", "health", "shield", "armor", "energy", "sprintSpeed", "passive", "description"],
   weapon: ["name", "damage", "fireRate", "criticalChance", "criticalMultiplier", "statusChance", "magazine", "reloadTime", "multishot"],

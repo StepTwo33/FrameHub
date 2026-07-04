@@ -4,10 +4,7 @@ import { Suspense, useCallback, useMemo, useState, type ReactNode } from "react"
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
-  Flag,
-  Wrench,
   AlertTriangle,
-  ExternalLink,
   Library,
   X,
 } from "lucide-react";
@@ -19,9 +16,16 @@ import {
   CODEX_SECTIONS,
   CODEX_MOD_CATEGORIES,
   CODEX_ARCANE_SLOTS,
+  CODEX_CATEGORY_SECTIONS,
   parseCodexSection,
   type CodexSection,
 } from "@/lib/codex-sections";
+import {
+  CODEX_WEAPON_CATEGORY_FILTERS,
+  CODEX_COMPANION_TYPE_FILTERS,
+  filterCodexWeapons,
+  matchesCodexSearch,
+} from "@/lib/codex-catalog";
 import {
   matchesModBrowserCategory,
   modBrowserCategoryLabel,
@@ -39,8 +43,21 @@ import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
 import { getModImage, getArcaneImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
 import { scaleArcaneEffectValue } from "@/lib/arcane-utils";
-import { useMods, useArcanes, useArchonShards, useArcaneEffects } from "@/lib/use-data";
+import { useMods, useArcanes, useArchonShards, useArcaneEffects, useWeapons, useWarframes, useCompanions, useArchwings, useNecramechs } from "@/lib/use-data";
 import { Mod, ArchonShard } from "@/lib/types";
+import {
+  CodexActionLinks,
+  CodexWeaponRow,
+  CodexWarframeRow,
+  CodexCompanionRow,
+  CodexArchwingRow,
+  CodexNecramechRow,
+  WeaponDetailPanel,
+  WarframeDetailPanel,
+  CompanionDetailPanel,
+  ArchwingDetailPanel,
+  NecramechDetailPanel,
+} from "@/components/codex-entity-panels";
 import { cn } from "@/lib/utils";
 
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"] as const;
@@ -68,7 +85,10 @@ function CodexPageContent() {
   const searchParams = useSearchParams();
 
   const section = parseCodexSection(searchParams.get("section"));
-  const modCategory = (searchParams.get("category") as ModBrowserCategoryId) || "all";
+  const categoryParam = searchParams.get("category") || "all";
+  const modCategory = (section === "mods" ? categoryParam : "all") as ModBrowserCategoryId;
+  const weaponCategory = section === "weapons" ? categoryParam : "all";
+  const companionType = section === "companions" ? categoryParam : "all";
   const arcaneSlot = searchParams.get("slot") || "all";
   const selectedId = searchParams.get("id");
 
@@ -76,6 +96,11 @@ function CodexPageContent() {
   const arcanes = useArcanes();
   const shards = useArchonShards();
   const arcaneEffects = useArcaneEffects();
+  const weapons = useWeapons();
+  const warframes = useWarframes();
+  const companions = useCompanions();
+  const archwings = useArchwings();
+  const necramechs = useNecramechs();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [polarityFilter, setPolarityFilter] = useState<(typeof POLARITIES)[number]>("All");
@@ -99,8 +124,8 @@ function CodexPageContent() {
     setSearchQuery("");
     setParams({
       section: s,
-      category: s === "mods" ? "all" : null,
-      slot: s === "arcanes" ? null : null,
+      category: CODEX_CATEGORY_SECTIONS.has(s) ? "all" : null,
+      slot: s === "arcanes" ? "all" : null,
       id: null,
     });
   };
@@ -175,11 +200,69 @@ function CodexPageContent() {
     return list.sort((a, b) => a.name.localeCompare(b.name));
   }, [shards, searchQuery]);
 
+  const filteredWeapons = useMemo(
+    () => filterCodexWeapons(weapons, weaponCategory, searchQuery),
+    [weapons, weaponCategory, searchQuery],
+  );
+
+  const filteredWarframes = useMemo(() => {
+    let list = [...warframes];
+    if (searchQuery.trim()) {
+      list = list.filter((w) =>
+        matchesCodexSearch(searchQuery, [w.name, w.id, w.description, w.passive]),
+      );
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [warframes, searchQuery]);
+
+  const filteredCompanions = useMemo(() => {
+    let list = [...companions];
+    if (companionType !== "all") {
+      list = list.filter((c) => c.type === companionType);
+    }
+    if (searchQuery.trim()) {
+      list = list.filter((c) =>
+        matchesCodexSearch(searchQuery, [c.name, c.id, c.description, c.precept, c.type]),
+      );
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [companions, companionType, searchQuery]);
+
+  const filteredArchwings = useMemo(() => {
+    let list = [...archwings];
+    if (searchQuery.trim()) {
+      list = list.filter((a) =>
+        matchesCodexSearch(searchQuery, [a.name, a.id, a.description]),
+      );
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [archwings, searchQuery]);
+
+  const filteredNecramechs = useMemo(() => {
+    let list = [...necramechs];
+    if (searchQuery.trim()) {
+      list = list.filter((n) =>
+        matchesCodexSearch(searchQuery, [n.name, n.id, n.description]),
+      );
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [necramechs, searchQuery]);
+
   const selectedMod = section === "mods" && selectedId ? mods.find((m) => m.id === selectedId) : null;
   const selectedArcane =
     section === "arcanes" && selectedId ? arcanes.find((a) => a.id === selectedId) : null;
   const selectedShard =
     section === "shards" && selectedId ? shards.find((s) => s.id === selectedId) : null;
+  const selectedWeapon =
+    section === "weapons" && selectedId ? weapons.find((w) => w.id === selectedId) : null;
+  const selectedWarframe =
+    section === "warframes" && selectedId ? warframes.find((w) => w.id === selectedId) : null;
+  const selectedCompanion =
+    section === "companions" && selectedId ? companions.find((c) => c.id === selectedId) : null;
+  const selectedArchwing =
+    section === "archwings" && selectedId ? archwings.find((a) => a.id === selectedId) : null;
+  const selectedNecramech =
+    section === "necramechs" && selectedId ? necramechs.find((n) => n.id === selectedId) : null;
 
   const arcaneRank =
     selectedArcane && previewRank !== null
@@ -196,9 +279,28 @@ function CodexPageContent() {
       ? filteredMods.length
       : section === "arcanes"
         ? filteredArcanes.length
-        : filteredShards.length;
+        : section === "shards"
+          ? filteredShards.length
+          : section === "weapons"
+            ? filteredWeapons.length
+            : section === "warframes"
+              ? filteredWarframes.length
+              : section === "companions"
+                ? filteredCompanions.length
+                : section === "archwings"
+                  ? filteredArchwings.length
+                  : filteredNecramechs.length;
 
-  const hasSelection = Boolean(selectedMod || selectedArcane || selectedShard);
+  const hasSelection = Boolean(
+    selectedMod ||
+    selectedArcane ||
+    selectedShard ||
+    selectedWeapon ||
+    selectedWarframe ||
+    selectedCompanion ||
+    selectedArchwing ||
+    selectedNecramech,
+  );
 
   return (
     <div
@@ -214,7 +316,7 @@ function CodexPageContent() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Codex</h1>
-            <p className="text-xs text-muted-foreground">Browse and verify game data — mods, arcanes, and shards</p>
+            <p className="text-xs text-muted-foreground">Browse and verify game data across the full database</p>
           </div>
         </div>
         <div className="relative ml-auto min-w-[200px] flex-1 sm:max-w-sm">
@@ -230,7 +332,7 @@ function CodexPageContent() {
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
         {/* Left sidebar — sections + subcategories */}
-        <aside className="flex shrink-0 flex-col gap-3 lg:sticky lg:top-20 lg:w-52 lg:self-start">
+        <aside className="flex shrink-0 flex-col gap-3 lg:sticky lg:top-20 lg:w-52 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto">
           <ContentPanel className="p-2">
             <PanelHeading>Sections</PanelHeading>
             <nav className="mt-2 space-y-0.5">
@@ -270,6 +372,52 @@ function CodexPageContent() {
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       modCategory === cat.id
                         ? "bg-indigo-500/15 font-medium text-indigo-300"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                    )}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </nav>
+            </ContentPanel>
+          )}
+
+          {section === "weapons" && (
+            <ContentPanel className="p-2">
+              <PanelHeading>Weapon type</PanelHeading>
+              <nav className="mt-2 max-h-[40vh] space-y-0.5 overflow-y-auto">
+                {CODEX_WEAPON_CATEGORY_FILTERS.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setParams({ category: cat.id, id: null })}
+                    className={cn(
+                      "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
+                      weaponCategory === cat.id
+                        ? "bg-blue-500/15 font-medium text-blue-300"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                    )}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </nav>
+            </ContentPanel>
+          )}
+
+          {section === "companions" && (
+            <ContentPanel className="p-2">
+              <PanelHeading>Companion type</PanelHeading>
+              <nav className="mt-2 space-y-0.5">
+                {CODEX_COMPANION_TYPE_FILTERS.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setParams({ category: cat.id, id: null })}
+                    className={cn(
+                      "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
+                      companionType === cat.id
+                        ? "bg-orange-500/15 font-medium text-orange-300"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -409,11 +557,56 @@ function CodexPageContent() {
                   onSelect={() => setParams({ id: shard.id })}
                 />
               ))}
+            {section === "weapons" &&
+              filteredWeapons.map((weapon) => (
+                <CodexWeaponRow
+                  key={weapon.id}
+                  weapon={weapon}
+                  selected={selectedId === weapon.id}
+                  onSelect={() => setParams({ id: weapon.id })}
+                />
+              ))}
+            {section === "warframes" &&
+              filteredWarframes.map((warframe) => (
+                <CodexWarframeRow
+                  key={warframe.id}
+                  warframe={warframe}
+                  selected={selectedId === warframe.id}
+                  onSelect={() => setParams({ id: warframe.id })}
+                />
+              ))}
+            {section === "companions" &&
+              filteredCompanions.map((companion) => (
+                <CodexCompanionRow
+                  key={companion.id}
+                  companion={companion}
+                  selected={selectedId === companion.id}
+                  onSelect={() => setParams({ id: companion.id })}
+                />
+              ))}
+            {section === "archwings" &&
+              filteredArchwings.map((archwing) => (
+                <CodexArchwingRow
+                  key={archwing.id}
+                  archwing={archwing}
+                  selected={selectedId === archwing.id}
+                  onSelect={() => setParams({ id: archwing.id })}
+                />
+              ))}
+            {section === "necramechs" &&
+              filteredNecramechs.map((necramech) => (
+                <CodexNecramechRow
+                  key={necramech.id}
+                  necramech={necramech}
+                  selected={selectedId === necramech.id}
+                  onSelect={() => setParams({ id: necramech.id })}
+                />
+              ))}
           </div>
         </ContentPanel>
       </div>
 
-      {(selectedMod || selectedArcane || selectedShard) && (
+      {(selectedMod || selectedArcane || selectedShard || selectedWeapon || selectedWarframe || selectedCompanion || selectedArchwing || selectedNecramech) && (
         <CodexDetailCard onClose={() => setParams({ id: null })}>
           {selectedMod && <ModDetailPanel mod={selectedMod} compact />}
           {selectedArcane && arcaneDisplay && (
@@ -428,6 +621,11 @@ function CodexPageContent() {
             />
           )}
           {selectedShard && <ShardDetailPanel shard={selectedShard} compact />}
+          {selectedWeapon && <WeaponDetailPanel weapon={selectedWeapon} compact />}
+          {selectedWarframe && <WarframeDetailPanel warframe={selectedWarframe} compact />}
+          {selectedCompanion && <CompanionDetailPanel companion={selectedCompanion} compact />}
+          {selectedArchwing && <ArchwingDetailPanel archwing={selectedArchwing} compact />}
+          {selectedNecramech && <NecramechDetailPanel necramech={selectedNecramech} compact />}
         </CodexDetailCard>
       )}
     </div>
@@ -783,7 +981,7 @@ function ArcaneDetailPanel({
         reportType="mod"
         id={arcane.id}
         name={arcane.name}
-        overrideCategory="arcane_effect"
+        overrideCategory="arcane"
         wikiUrl={getArcaneWikiUrl(arcane.name)}
       />
     </div>
@@ -826,47 +1024,6 @@ function ShardDetailPanel({ shard, compact }: { shard: ArchonShard; compact?: bo
         name={shard.name}
         overrideCategory="archon_shard"
       />
-    </div>
-  );
-}
-
-function CodexActionLinks({
-  reportType,
-  id,
-  name,
-  overrideCategory,
-  wikiUrl,
-}: {
-  reportType: string;
-  id: string;
-  name: string;
-  overrideCategory: string;
-  wikiUrl?: string;
-}) {
-  return (
-    <div className="flex flex-wrap gap-2 border-t border-border pt-3">
-      {wikiUrl && (
-        <a
-          href={wikiUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-[10px] text-muted-foreground hover:border-purple-500/40 hover:text-purple-300"
-        >
-          <ExternalLink className="h-2.5 w-2.5" /> Wiki
-        </a>
-      )}
-      <a
-        href={`/report-issue?type=${encodeURIComponent(reportType)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`}
-        className="inline-flex items-center gap-1 rounded border border-amber-500/30 px-2 py-1 text-[10px] text-amber-400/70 hover:bg-amber-500/5 hover:text-amber-400"
-      >
-        <Flag className="h-2.5 w-2.5" /> Report
-      </a>
-      <a
-        href={`/report-issue?tab=overrides&overrideCategory=${encodeURIComponent(overrideCategory)}&overrideId=${encodeURIComponent(id)}`}
-        className="inline-flex items-center gap-1 rounded border border-purple-500/30 px-2 py-1 text-[10px] text-purple-400/70 hover:bg-purple-500/5 hover:text-purple-400"
-      >
-        <Wrench className="h-2.5 w-2.5" /> Override
-      </a>
     </div>
   );
 }
