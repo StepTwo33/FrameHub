@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
@@ -8,11 +8,10 @@ import {
   Wrench,
   AlertTriangle,
   ExternalLink,
-  ChevronLeft,
   Library,
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { PageShell, ContentPanel, PanelHeading } from "@/components/page-shell";
@@ -199,8 +198,15 @@ function CodexPageContent() {
         ? filteredArcanes.length
         : filteredShards.length;
 
+  const hasSelection = Boolean(selectedMod || selectedArcane || selectedShard);
+
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1600px] flex-col px-4 py-4 sm:px-6">
+    <div
+      className={cn(
+        "mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1600px] flex-col px-4 py-4 sm:px-6",
+        hasSelection && "pb-[min(75vh,32rem)]",
+      )}
+    >
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="rounded-lg bg-amber-500/10 p-2 text-amber-400">
@@ -224,7 +230,7 @@ function CodexPageContent() {
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
         {/* Left sidebar — sections + subcategories */}
-        <aside className="flex shrink-0 flex-col gap-3 lg:w-52">
+        <aside className="flex shrink-0 flex-col gap-3 lg:sticky lg:top-20 lg:w-52 lg:self-start">
           <ContentPanel className="p-2">
             <PanelHeading>Sections</PanelHeading>
             <nav className="mt-2 space-y-0.5">
@@ -310,8 +316,8 @@ function CodexPageContent() {
           )}
         </aside>
 
-        {/* Center — entry list */}
-        <ContentPanel padding={false} className="flex min-h-[50vh] min-w-0 flex-1 flex-col lg:min-h-0">
+        {/* Entry list — page scrolls; detail card floats in viewport */}
+        <ContentPanel padding={false} className="min-w-0 flex-1">
           <div className="border-b border-border px-3 py-2">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-muted-foreground">
@@ -365,75 +371,98 @@ function CodexPageContent() {
             </div>
           </div>
 
-          <ScrollArea className="flex-1">
-            <div className="grid grid-cols-1 gap-1 p-2 sm:grid-cols-2 xl:grid-cols-3">
-              {section === "mods" &&
-                filteredMods.map((mod) => (
-                  <CodexModRow
-                    key={mod.id}
-                    mod={mod}
-                    selected={selectedId === mod.id}
+          <div className="grid grid-cols-1 gap-1 p-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {section === "mods" &&
+              filteredMods.map((mod) => (
+                <CodexModRow
+                  key={mod.id}
+                  mod={mod}
+                  selected={selectedId === mod.id}
+                  onSelect={() => {
+                    setPreviewRank(null);
+                    setParams({ id: mod.id });
+                  }}
+                />
+              ))}
+            {section === "arcanes" &&
+              filteredArcanes.map((arcane) => {
+                const coverage = arcaneCoverageById.get(arcane.id);
+                return (
+                  <CodexArcaneRow
+                    key={arcane.id}
+                    arcane={arcane}
+                    selected={selectedId === arcane.id}
+                    hasIssues={(coverage?.issues.length ?? 0) > 0}
                     onSelect={() => {
-                      setPreviewRank(null);
-                      setParams({ id: mod.id });
+                      setPreviewRank(arcane.maxRank);
+                      setParams({ id: arcane.id });
                     }}
                   />
-                ))}
-              {section === "arcanes" &&
-                filteredArcanes.map((arcane) => {
-                  const coverage = arcaneCoverageById.get(arcane.id);
-                  return (
-                    <CodexArcaneRow
-                      key={arcane.id}
-                      arcane={arcane}
-                      selected={selectedId === arcane.id}
-                      hasIssues={(coverage?.issues.length ?? 0) > 0}
-                      onSelect={() => {
-                        setPreviewRank(arcane.maxRank);
-                        setParams({ id: arcane.id });
-                      }}
-                    />
-                  );
-                })}
-              {section === "shards" &&
-                filteredShards.map((shard) => (
-                  <CodexShardRow
-                    key={shard.id}
-                    shard={shard}
-                    selected={selectedId === shard.id}
-                    onSelect={() => setParams({ id: shard.id })}
-                  />
-                ))}
-            </div>
-          </ScrollArea>
+                );
+              })}
+            {section === "shards" &&
+              filteredShards.map((shard) => (
+                <CodexShardRow
+                  key={shard.id}
+                  shard={shard}
+                  selected={selectedId === shard.id}
+                  onSelect={() => setParams({ id: shard.id })}
+                />
+              ))}
+          </div>
         </ContentPanel>
-
-        {/* Right — detail panel */}
-        {(selectedMod || selectedArcane || selectedShard) && (
-          <ContentPanel className="w-full shrink-0 lg:w-96">
-            {selectedMod && (
-              <ModDetailPanel
-                mod={selectedMod}
-                onClose={() => setParams({ id: null })}
-              />
-            )}
-            {selectedArcane && arcaneDisplay && (
-              <ArcaneDetailPanel
-                arcane={selectedArcane}
-                display={arcaneDisplay}
-                coverage={arcaneCoverageById.get(selectedArcane.id)!}
-                effects={arcaneEffects[selectedArcane.id]}
-                rank={arcaneRank}
-                onRankChange={setPreviewRank}
-                onClose={() => setParams({ id: null })}
-              />
-            )}
-            {selectedShard && (
-              <ShardDetailPanel shard={selectedShard} onClose={() => setParams({ id: null })} />
-            )}
-          </ContentPanel>
-        )}
       </div>
+
+      {(selectedMod || selectedArcane || selectedShard) && (
+        <CodexDetailCard onClose={() => setParams({ id: null })}>
+          {selectedMod && <ModDetailPanel mod={selectedMod} compact />}
+          {selectedArcane && arcaneDisplay && (
+            <ArcaneDetailPanel
+              arcane={selectedArcane}
+              display={arcaneDisplay}
+              coverage={arcaneCoverageById.get(selectedArcane.id)!}
+              effects={arcaneEffects[selectedArcane.id]}
+              rank={arcaneRank}
+              onRankChange={setPreviewRank}
+              compact
+            />
+          )}
+          {selectedShard && <ShardDetailPanel shard={selectedShard} compact />}
+        </CodexDetailCard>
+      )}
+    </div>
+  );
+}
+
+function CodexDetailCard({ children, onClose }: { children: ReactNode; onClose: () => void }) {
+  return (
+    <div
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-end p-3 sm:p-4 lg:p-6"
+      role="dialog"
+      aria-label="Selected entry details"
+    >
+      <ContentPanel
+        className={cn(
+          "pointer-events-auto flex w-full max-w-sm flex-col overflow-hidden",
+          "max-h-[min(72vh,calc(100vh-5rem))] shadow-2xl shadow-black/40",
+          "border-border/80 bg-card/95 backdrop-blur-md",
+        )}
+      >
+        <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-3 py-1.5">
+          <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            Selected
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+            aria-label="Close detail card"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">{children}</div>
+      </ContentPanel>
     </div>
   );
 }
@@ -559,26 +588,23 @@ function CodexShardRow({
   );
 }
 
-function ModDetailPanel({ mod, onClose }: { mod: Mod; onClose: () => void }) {
+function ModDetailPanel({ mod, compact }: { mod: Mod; compact?: boolean }) {
   const aura = isAuraMod(mod);
   const maxCap = modMaxCapacity(mod);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-start gap-3">
-        <button type="button" onClick={onClose} className="lg:hidden text-muted-foreground">
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+    <div className={cn("space-y-3", compact && "space-y-2")}>
+      <div className="flex items-start gap-2.5">
         <GameAssetImage
           src={getModImage(mod.name)}
           alt={mod.name}
-          width={64}
-          height={64}
-          className="h-16 w-16 rounded object-contain bg-muted/20"
+          width={compact ? 48 : 64}
+          height={compact ? 48 : 64}
+          className={cn("rounded object-contain bg-muted/20", compact ? "h-12 w-12" : "h-16 w-16")}
           hideOnError
         />
         <div className="min-w-0 flex-1">
-          <h2 className="font-semibold">{mod.name}</h2>
+          <h2 className={cn("font-semibold leading-tight", compact && "text-sm")}>{mod.name}</h2>
           <p className="font-mono text-[10px] text-muted-foreground">{mod.id}</p>
           <div className="mt-1 flex flex-wrap gap-1">
             <Badge variant="outline" className="text-[10px] capitalize">
@@ -593,35 +619,37 @@ function ModDetailPanel({ mod, onClose }: { mod: Mod; onClose: () => void }) {
         </div>
       </div>
 
-      <p className="text-sm text-muted-foreground">{mod.description}</p>
+      <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
+        {mod.description}
+      </p>
 
-      <div className="grid grid-cols-2 gap-2 text-xs">
-        <div className="rounded border border-border/60 p-2">
+      <div className="grid grid-cols-2 gap-1.5 text-xs">
+        <div className="rounded border border-border/60 p-1.5">
           <p className="text-[10px] uppercase text-muted-foreground">Base drain (R0)</p>
-          <p className="font-mono text-lg">{mod.drain}</p>
+          <p className={cn("font-mono", compact ? "text-base" : "text-lg")}>{mod.drain}</p>
         </div>
-        <div className="rounded border border-border/60 p-2">
+        <div className="rounded border border-border/60 p-1.5">
           <p className="text-[10px] uppercase text-muted-foreground">
             {aura ? "Max rank bonus" : `Max drain (R${mod.maxRank})`}
           </p>
-          <p className="font-mono text-lg">{maxCap}</p>
+          <p className={cn("font-mono", compact ? "text-base" : "text-lg")}>{maxCap}</p>
         </div>
-        <div className="rounded border border-border/60 p-2">
+        <div className="rounded border border-border/60 p-1.5">
           <p className="text-[10px] uppercase text-muted-foreground">Max rank</p>
           <p className="font-mono">{mod.maxRank}</p>
         </div>
-        <div className="rounded border border-border/60 p-2">
+        <div className="rounded border border-border/60 p-1.5">
           <p className="text-[10px] uppercase text-muted-foreground">Polarity</p>
           <p className="capitalize">{mod.polarity}</p>
         </div>
       </div>
 
       {aura ? (
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-[10px] leading-snug text-muted-foreground">
           Aura capacity: R0 = {mod.drain}, max rank R{mod.maxRank} = {maxCap} (adds matching polarity capacity).
         </p>
       ) : (
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-[10px] leading-snug text-muted-foreground">
           Capacity drain: R0 = {mod.drain}, max rank R{mod.maxRank} = {maxCap} (+1 per rank).
         </p>
       )}
@@ -661,7 +689,7 @@ function ArcaneDetailPanel({
   effects,
   rank,
   onRankChange,
-  onClose,
+  compact,
 }: {
   arcane: Mod;
   display: ReturnType<typeof getArcaneDisplayInfo>;
@@ -669,24 +697,21 @@ function ArcaneDetailPanel({
   effects?: ArcaneEffectDef;
   rank: number;
   onRankChange: (r: number) => void;
-  onClose: () => void;
+  compact?: boolean;
 }) {
   return (
-    <div className="space-y-3">
-      <div className="flex items-start gap-3">
-        <button type="button" onClick={onClose} className="lg:hidden text-muted-foreground">
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+    <div className={cn("space-y-3", compact && "space-y-2")}>
+      <div className="flex items-start gap-2.5">
         <GameAssetImage
           src={getArcaneImage(arcane.name)}
           alt={arcane.name}
-          width={64}
-          height={64}
-          className="h-16 w-16 rounded object-contain bg-muted/20"
+          width={compact ? 48 : 64}
+          height={compact ? 48 : 64}
+          className={cn("rounded object-contain bg-muted/20", compact ? "h-12 w-12" : "h-16 w-16")}
           hideOnError
         />
         <div className="min-w-0 flex-1">
-          <h2 className="font-semibold">{arcane.name}</h2>
+          <h2 className={cn("font-semibold leading-tight", compact && "text-sm")}>{arcane.name}</h2>
           <p className="font-mono text-[10px] text-muted-foreground">{arcane.id}</p>
           {effects && (
             <Badge variant="outline" className="mt-1 text-[10px]">
@@ -712,11 +737,13 @@ function ArcaneDetailPanel({
         </span>
       </label>
 
-      <p className="text-sm text-muted-foreground">{display.description}</p>
+      <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
+        {display.description}
+      </p>
 
       {coverage.issues.length > 0 && (
-        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
-          <ul className="list-inside list-disc text-xs text-amber-200/80">
+        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5">
+          <ul className="list-inside list-disc text-[11px] text-amber-200/80">
             {coverage.issues.map((issue) => (
               <li key={issue}>{issue}</li>
             ))}
@@ -729,7 +756,7 @@ function ArcaneDetailPanel({
           <PanelHeading>Applied</PanelHeading>
           <ul className="space-y-0.5 text-xs">
             {display.applied.map((line) => (
-              <li key={line.label} className="flex justify-between">
+              <li key={line.label} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{line.label}</span>
                 <span className="font-mono text-emerald-400">{line.value}</span>
               </li>
@@ -741,11 +768,11 @@ function ArcaneDetailPanel({
       {effects && effects.effects.length > 0 && (
         <div>
           <PanelHeading>Effect lines</PanelHeading>
-          <div className="max-h-32 overflow-y-auto">
+          <div className={cn(compact ? "max-h-24" : "max-h-32", "overflow-y-auto")}>
             {effects.effects.map((line) => (
               <div key={line.stat} className="flex justify-between font-mono text-[10px]">
-                <span>{line.stat}</span>
-                <span>{scaleArcaneEffectValue(line.maxValue, rank, effects.maxRank)}</span>
+                <span className="truncate pr-2">{line.stat}</span>
+                <span className="shrink-0">{scaleArcaneEffectValue(line.maxValue, rank, effects.maxRank)}</span>
               </div>
             ))}
           </div>
@@ -763,27 +790,26 @@ function ArcaneDetailPanel({
   );
 }
 
-function ShardDetailPanel({ shard, onClose }: { shard: ArchonShard; onClose: () => void }) {
+function ShardDetailPanel({ shard, compact }: { shard: ArchonShard; compact?: boolean }) {
   return (
-    <div className="space-y-3">
-      <div className="flex items-start gap-3">
-        <button type="button" onClick={onClose} className="lg:hidden text-muted-foreground">
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+    <div className={cn("space-y-3", compact && "space-y-2")}>
+      <div className="flex items-start gap-2.5">
         <GameAssetImage
           src={getArchonShardImage(shard.color, shard.tier)}
           alt={shard.name}
-          width={64}
-          height={64}
-          className="h-16 w-16 rounded object-contain bg-muted/20"
+          width={compact ? 48 : 64}
+          height={compact ? 48 : 64}
+          className={cn("rounded object-contain bg-muted/20", compact ? "h-12 w-12" : "h-16 w-16")}
           hideOnError
         />
         <div>
-          <h2 className="font-semibold">{shard.name}</h2>
+          <h2 className={cn("font-semibold leading-tight", compact && "text-sm")}>{shard.name}</h2>
           <p className="font-mono text-[10px] text-muted-foreground">{shard.id}</p>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground">{shard.description}</p>
+      <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
+        {shard.description}
+      </p>
       <div>
         <PanelHeading>Stat options</PanelHeading>
         <div className="flex flex-wrap gap-1">
