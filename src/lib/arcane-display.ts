@@ -107,7 +107,6 @@ const STAT_LABELS: Record<string, string> = {
   statusProcChance: "Status Proc Chance",
   lifeStealChance: "Life Steal Chance",
   lifeSteal: "Life Steal",
-  energyRegen: "Energy Regen/s",
 };
 
 const PASSIVE_TRIGGERS = new Set<ArcaneTrigger>(["passive"]);
