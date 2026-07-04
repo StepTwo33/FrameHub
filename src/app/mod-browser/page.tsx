@@ -14,8 +14,13 @@ import {
 } from "@/components/page-shell";
 import { Search, Flag, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  MOD_BROWSER_CATEGORIES,
+  matchesModBrowserCategory,
+  modBrowserCategoryLabel,
+  type ModBrowserCategoryId,
+} from "@/lib/mod-browser-categories";
 
-const CATEGORIES = ["All", "Primary", "Secondary", "Melee", "Warframe", "Augment", "Companion", "Archwing"];
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"];
 const RARITIES = ["All", "Common", "Uncommon", "Rare", "Legendary"];
 
@@ -38,7 +43,7 @@ const RARITY_COLORS: Record<string, string> = {
 
 export default function ModBrowserPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState<ModBrowserCategoryId>("all");
   const [selectedPolarity, setSelectedPolarity] = useState("All");
   const [selectedRarity, setSelectedRarity] = useState("All");
   const [expandedMod, setExpandedMod] = useState<string | null>(null);
@@ -46,8 +51,8 @@ export default function ModBrowserPage() {
   const filteredMods = useMemo(() => {
     let mods = [...allMods];
 
-    if (selectedCategory !== "All") {
-      mods = mods.filter((m) => m.category.toLowerCase() === selectedCategory.toLowerCase());
+    if (selectedCategory !== "all") {
+      mods = mods.filter((m) => matchesModBrowserCategory(m, selectedCategory));
     }
     if (selectedPolarity !== "All") {
       mods = mods.filter((m) => m.polarity === selectedPolarity);
@@ -90,13 +95,13 @@ export default function ModBrowserPage() {
             <div>
               <PanelHeading>Category</PanelHeading>
               <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((cat) => (
+                {MOD_BROWSER_CATEGORIES.map((cat) => (
                   <FilterChip
-                    key={cat}
-                    active={selectedCategory === cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    key={cat.id}
+                    active={selectedCategory === cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
                   >
-                    {cat}
+                    {cat.label}
                   </FilterChip>
                 ))}
               </div>
@@ -168,7 +173,7 @@ export default function ModBrowserPage() {
                       >
                         {mod.polarity}
                       </span>
-                      <span className="text-xs text-muted-foreground capitalize hidden sm:inline">{mod.category || "—"}</span>
+                      <span className="text-xs text-muted-foreground hidden sm:inline">{modBrowserCategoryLabel(mod)}</span>
                       <span className="text-xs font-mono text-muted-foreground">
                         {mod.drain}/{mod.maxRank}
                       </span>
