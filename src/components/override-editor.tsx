@@ -14,6 +14,8 @@ import {
   getStructuredOverrideFields,
   getSelectOptions,
   sortFieldsForCategory,
+  STAT_RECORD_HELP,
+  OVERRIDE_EDITOR_CATEGORIES,
 } from "@/lib/override-schemas";
 import { buildNestedPatch, flattenRecordFields } from "@/lib/override-merge";
 import {
@@ -53,7 +55,7 @@ const CATEGORY_LABELS: Record<OverrideCategory, string> = {
   mod: "Mods",
   warframe: "Warframes",
   companion: "Companions",
-  arcane: "Arcanes (catalog + effect values)",
+  arcane: "Arcanes (catalog + build effects)",
   arcane_effect: "Arcane effect values only",
   archon_shard: "Archon Shards",
   archwing: "Archwings",
@@ -96,13 +98,9 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
       const effectDef = applyArcaneEffectOverrides()[id];
       return {
         ...(arcane as unknown as Record<string, unknown>),
-        ...(effectDef
-          ? {
-              trigger: effectDef.trigger,
-              stackCap: effectDef.stackCap,
-              effects: effectDef.effects,
-            }
-          : {}),
+        trigger: effectDef?.trigger ?? "passive",
+        stackCap: effectDef?.stackCap,
+        effects: effectDef?.effects ?? [],
       };
     }
     case "arcane_effect": {
@@ -400,16 +398,18 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     }
     const fields = buildNestedPatch(flat);
 
-    if (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines))) {
-      fields.effects = effectLines
-        .filter((l) => l.stat.trim())
-        .map(({ stat, maxValue, flat, stacking, constantAtAllRanks }) => ({
-          stat,
-          maxValue,
-          ...(flat ? { flat: true } : {}),
-          ...(stacking ? { stacking: true } : {}),
-          ...(constantAtAllRanks ? { constantAtAllRanks: true } : {}),
-        }));
+    if (structuredFields.has("effects") || category === "arcane" || category === "arcane_effect") {
+      if (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) {
+        fields.effects = effectLines
+          .filter((l) => l.stat.trim())
+          .map(({ stat, maxValue, flat, stacking, constantAtAllRanks }) => ({
+            stat,
+            maxValue,
+            ...(flat ? { flat: true } : {}),
+            ...(stacking ? { stacking: true } : {}),
+            ...(constantAtAllRanks ? { constantAtAllRanks: true } : {}),
+          }));
+      }
     }
     if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {
       fields.abilities = abilities;
@@ -482,9 +482,20 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
         persist("arcane", catalog, prefill?.category === "arcane" ? prefill.existingOverrideId : findExistingOverrideId("arcane", trimmedId));
       }
       if (Object.keys(effectDef).length > 0) {
+        const catalogArcane = getItemData("arcane", trimmedId);
+        const baseEffect = applyArcaneEffectOverrides()[trimmedId];
+        const enriched: Record<string, unknown> = {
+          name: baseEffect?.name ?? (catalogArcane?.name as string | undefined) ?? trimmedId,
+          trigger: effectDef.trigger ?? baseEffect?.trigger ?? "passive",
+          maxRank: effectDef.maxRank ?? baseEffect?.maxRank ?? catalogArcane?.maxRank ?? 5,
+          ...effectDef,
+        };
+        if (baseEffect?.stackCap != null && enriched.stackCap === undefined) {
+          enriched.stackCap = baseEffect.stackCap;
+        }
         persist(
           "arcane_effect",
-          effectDef,
+          enriched,
           prefill?.category === "arcane_effect" ? prefill.existingOverrideId : findExistingOverrideId("arcane_effect", trimmedId),
         );
       }
@@ -507,7 +518,8 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     return count;
   }, [fieldOverrides, itemData]);
   const structuredChangeCount =
-    (structuredFields.has("effects") && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) ? 1 : 0)
+    ((category === "arcane" || category === "arcane_effect" || structuredFields.has("effects"))
+      && (structuredTouched.effects || effectsChanged(itemData?.effects, effectLines)) ? 1 : 0)
     + (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities)) ? 1 : 0)
     + (structuredFields.has("radialAttacks") && (structuredTouched.radialAttacks || radialAttacksChanged(itemData?.radialAttacks, radialAttacks)) ? 1 : 0);
   const changedCount = scalarChangeCount + structuredChangeCount;
@@ -570,7 +582,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
       <div className="mb-4">
         <label className="mb-1.5 block text-xs text-muted-foreground">Item type</label>
         <div className="flex flex-wrap gap-1.5">
-          {OVERRIDE_CATEGORIES.map((cat) => (
+          {OVERRIDE_EDITOR_CATEGORIES.map((cat) => (
             <button
               key={cat}
               type="button"
@@ -711,6 +723,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
             <StatRowsEditor
               key={recordField}
               title={formatOverrideFieldLabel(recordField)}
+              helperText={STAT_RECORD_HELP[category]}
               rows={nestedStatRows.filter((r) => r.recordField === recordField)}
               overrideValues={fieldOverrides}
               onChange={handleFieldChange}
@@ -722,7 +735,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
             />
           ))}
 
-          {structuredFields.has("effects") && (
+          {(category === "arcane" || category === "arcane_effect") && (
             <ArcaneEffectsEditor
               lines={effectLines}
               maxRank={Number(itemData?.maxRank ?? 5)}

@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
   // Remove stale files from previous uploads with a different extension.
   await removeAvatarFiles(session.user.id, ext);
 
-  const imageUrl = `/api/uploads/avatars/${filename}?t=${Date.now()}`;
+  const imageUrl = `/uploads/avatars/${filename}?t=${Date.now()}`;
 
   await prisma.user.update({
     where: { id: session.user.id },

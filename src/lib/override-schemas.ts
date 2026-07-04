@@ -1,4 +1,4 @@
-import { OverrideCategory } from "@/lib/data-overrides";
+import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/data-overrides";
 
 /** Record fields edited as individual stat rows (mods, arcanes, shards). */
 export const NESTED_RECORD_FIELDS: Partial<Record<OverrideCategory, string[]>> = {
@@ -117,6 +117,16 @@ export const FIELD_LABELS: Record<string, string> = {
   abilities: "Abilities",
   radialAttacks: "Radial / AoE attacks",
 };
+
+/** Help text for StatRowsEditor — mod vs arcane catalog stats use different scaling. */
+export const STAT_RECORD_HELP: Partial<Record<OverrideCategory, string>> = {
+  mod: "Per-rank base from data. Max in build = base × (max rank + 1).",
+  arcane:
+    "Legacy catalog stats on the arcane card (display / fallback). Values are at max rank and scale linearly by rank — not the mod formula. Build math uses effect lines below.",
+  archon_shard: "Bonus amount for each shard stat option.",
+};
+
+export const OVERRIDE_EDITOR_CATEGORIES = OVERRIDE_CATEGORIES.filter((c) => c !== "arcane_effect");
 
 export const ADD_ITEM_TEMPLATES: Partial<Record<OverrideCategory, Record<string, unknown>>> = {
   mod: {

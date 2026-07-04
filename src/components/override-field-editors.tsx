@@ -42,9 +42,10 @@ export function ArcaneEffectsEditor({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-foreground">Arcane effect values (used in builds)</p>
+      <p className="text-xs font-medium text-foreground">Build effect values</p>
       <p className="text-[11px] text-muted-foreground">
-        Max value is at max rank (R{maxRank}) unless &quot;Same at all ranks&quot; is checked. Values scale linearly from R0 for scaling stats.
+        These drive arcane math in builds. Max value is at max rank (R{maxRank}) unless &quot;Same at all ranks&quot; is checked.
+        Scaling stats increase linearly from R0. Click a value field to edit the current number.
       </p>
       {lines.length === 0 && (
         <p className="text-xs text-muted-foreground italic">No effect lines yet.</p>
@@ -79,6 +80,7 @@ export function ArcaneEffectsEditor({
                 step="any"
                 value={line.maxValue}
                 onChange={(e) => update(index, { maxValue: Number(e.target.value) })}
+                onFocus={(e) => e.currentTarget.select()}
                 className="mt-0.5 h-8 w-full rounded border border-border bg-background px-2 text-sm"
               />
             </label>
@@ -230,6 +232,7 @@ export function StatRowsEditor({
   onAddKey,
   newKeyValue,
   onNewKeyChange,
+  helperText,
 }: {
   title: string;
   rows: { key: string; path: string; value: unknown }[];
@@ -240,12 +243,13 @@ export function StatRowsEditor({
   onAddKey: () => void;
   newKeyValue: string;
   onNewKeyChange: (v: string) => void;
+  helperText?: string;
 }) {
   return (
     <div>
       <p className="mb-1 text-xs font-medium text-foreground">{title}</p>
       <p className="mb-2 text-[11px] text-muted-foreground">
-        Per-rank base from data — enter a new number only where in-game differs. Max in build = base × (max rank + 1).
+        {helperText ?? "Per-rank base from data — enter a new number only where in-game differs. Max in build = base × (max rank + 1)."}
       </p>
       {rows.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">No stats on this item.</p>

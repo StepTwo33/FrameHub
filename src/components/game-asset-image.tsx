@@ -48,10 +48,26 @@ type AvatarImageProps = {
   className?: string;
 };
 
-/** Avatars: same-origin uploads or hosts listed in next.config.ts `images.remotePatterns` */
+/** Avatars: OAuth URLs use next/image; same-origin uploads skip the optimizer (API routes + cache-bust query strings break it). */
 export function AvatarImage({ src, alt, size, className }: AvatarImageProps) {
+  const isRemote = src.startsWith("http://") || src.startsWith("https://");
+
+  if (isRemote) {
+    return (
+      <Image src={src} alt={alt} width={size} height={size} className={className} sizes={`${size}px`} />
+    );
+  }
+
   return (
-    <Image src={src} alt={alt} width={size} height={size} className={className} sizes={`${size}px`} />
+    <img
+      src={src}
+      alt={alt}
+      width={size}
+      height={size}
+      className={className}
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 

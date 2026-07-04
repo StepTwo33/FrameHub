@@ -1016,6 +1016,27 @@ function ArcaneDetailPanel({
         </div>
       )}
 
+      {Object.keys(arcane.stats ?? {}).length > 0 && (
+        <div>
+          <PanelHeading>Catalog stats @ R{rank}</PanelHeading>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {Object.entries(arcane.stats ?? {}).map(([stat, value]) => {
+              const scaled = scaleArcaneEffectValue(value, rank, arcane.maxRank);
+              const label = stat.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
+              return (
+                <span key={stat} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+                  {label}: {scaled > 0 ? "+" : ""}
+                  {Number.isInteger(scaled) ? scaled : scaled.toFixed(1)}
+                </span>
+              );
+            })}
+          </div>
+          <p className="mt-1 text-[10px] text-muted-foreground">
+            Catalog stats are display/fallback. Build values come from effect lines below — edit via Override in Data Fixes.
+          </p>
+        </div>
+      )}
+
       {effects && effects.effects.length > 0 && (
         <div>
           <PanelHeading>Effect lines</PanelHeading>
