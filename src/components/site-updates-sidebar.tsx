@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { ChevronRight, Loader2, Megaphone, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatSiteUpdateTime, type SiteUpdateSummary } from "@/lib/site-updates";
@@ -51,10 +50,16 @@ export function SiteUpdatesSidebar({
   limit = 8,
   className,
 }: SiteUpdatesSidebarProps) {
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "admin";
+  const [isAdmin, setIsAdmin] = useState(false);
   const [updates, setUpdates] = useState<SiteUpdateSummary[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((r) => r.json())
+      .then((data) => setIsAdmin(data.user?.role === "admin"))
+      .catch(() => {});
+  }, []);
 
   const fetchUpdates = useCallback(async () => {
     setLoading(true);
