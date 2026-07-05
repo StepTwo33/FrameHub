@@ -70,6 +70,17 @@ export const SELECT_FIELD_OPTIONS: Record<string, { value: string; label: string
     { value: "onFreeze", label: "On freeze" },
     { value: "conditional", label: "Conditional (proc chance + effect)" },
   ],
+  subCategory: [
+    { value: "warframe", label: "Warframe" },
+    { value: "primary", label: "Primary" },
+    { value: "secondary", label: "Secondary" },
+    { value: "melee", label: "Melee" },
+    { value: "operator", label: "Operator (Magus)" },
+    { value: "kitgun", label: "Kitgun" },
+    { value: "amp", label: "Amp (Virtuos)" },
+    { value: "zaw", label: "Zaw / Exodia" },
+    { value: "tektolyst", label: "Tektolyst" },
+  ],
   color: [
     { value: "crimson", label: "Crimson" },
     { value: "azure", label: "Azure" },
@@ -256,7 +267,7 @@ export const ARCANE_TRIGGER_OPTIONS = SELECT_FIELD_OPTIONS.trigger!;
 /** Preferred field order per category (most-edited first). */
 export const FIELD_ORDER: Partial<Record<OverrideCategory, string[]>> = {
   mod: ["name", "drain", "maxRank", "polarity", "rarity", "category", "description", "warframeId", "stats"],
-  arcane: ["name", "drain", "maxRank", "description", "stats", "trigger", "stackCap", "effects"],
+  arcane: ["name", "subCategory", "drain", "maxRank", "description", "stats", "trigger", "stackCap", "effects"],
   arcane_effect: ["name", "trigger", "maxRank", "stackCap", "effects"],
   archon_shard: ["name", "color", "tier", "description", "isCoalescent"],
   warframe: ["name", "health", "shield", "armor", "energy", "sprintSpeed", "passive", "description"],

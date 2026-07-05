@@ -80,6 +80,8 @@ const STAT_LABELS: Record<string, string> = {
   bonusDamageOnStatus: "Bonus Damage on Status",
   enemyResistanceReduction: "Enemy Resistance Reduction",
   operatorToWarframeHeal: "Operator → Warframe Heal",
+  operatorEnergyToWarframe: "Operator Energy → Warframe",
+  operatorHealthRegen: "Operator Health Regen",
   operatorHealth: "Operator Health",
   operatorArmor: "Operator Armor",
   voidConversion: "Void Conversion",

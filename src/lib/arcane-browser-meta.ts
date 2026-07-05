@@ -7,6 +7,7 @@ export type ArcaneSlotCategory =
   | "primary"
   | "secondary"
   | "melee"
+  | "operator"
   | "kitgun"
   | "amp"
   | "zaw"
@@ -29,6 +30,7 @@ const SLOT_LABELS: Record<ArcaneSlotCategory, string> = {
   primary: "Primary",
   secondary: "Secondary",
   melee: "Melee",
+  operator: "Operator (Magus)",
   kitgun: "Kitgun",
   amp: "Amp",
   zaw: "Zaw / Exodia",
@@ -42,6 +44,7 @@ export function getArcaneSlotCategory(arcane: Mod): ArcaneSlotCategory {
   if (sub === "primary" || sub === "bow" || sub === "shotgun") return "primary";
   if (sub === "secondary") return "secondary";
   if (sub === "melee") return "melee";
+  if (sub === "operator") return "operator";
   if (sub === "kitgun" || sub === "residual") return "kitgun";
   if (sub === "amp") return "amp";
   if (sub === "zaw") return "zaw";
@@ -126,6 +129,7 @@ export const ARCANE_SLOT_FILTERS: { id: ArcaneSlotCategory | "all"; label: strin
   { id: "primary", label: "Primary" },
   { id: "secondary", label: "Secondary" },
   { id: "melee", label: "Melee" },
+  { id: "operator", label: "Operator (Magus)" },
   { id: "kitgun", label: "Kitgun" },
   { id: "amp", label: "Amp" },
   { id: "zaw", label: "Zaw / Exodia" },

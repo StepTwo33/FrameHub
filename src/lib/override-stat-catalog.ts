@@ -224,6 +224,7 @@ export function getArcaneEffectStatPickerOptions(): StatPickerOption[] {
       if (["damage", "criticalChance", "criticalMultiplier", "multishot", "fireRate", "attackSpeed", "statusChance", "meleeDamageBonus"].includes(k)) {
         return "Combat stats";
       }
+      if (k.startsWith("operator")) return "Operator";
       if (["health", "healthFlat", "shield", "armor", "energyRegen", "damageReduction"].includes(k)) {
         return "Defense / sustain";
       }

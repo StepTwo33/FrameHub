@@ -38,6 +38,7 @@ import {
 import {
   getArcaneCoverageInfo,
   getArcaneSlotCategory,
+  getArcaneSlotLabel,
   getArcaneWikiUrl,
   ARCANE_TRIGGER_FILTERS,
 } from "@/lib/arcane-browser-meta";
@@ -793,7 +794,7 @@ function CodexArcaneRow({
       />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{arcane.name}</p>
-        <p className="text-[10px] capitalize text-muted-foreground">{getArcaneSlotCategory(arcane)}</p>
+        <p className="text-[10px] text-muted-foreground">{getArcaneSlotLabel(arcane)}</p>
       </div>
       {hasIssues && <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-400" />}
     </button>
