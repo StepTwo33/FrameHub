@@ -22,6 +22,8 @@ import {
 } from "@/components/page-shell";
 import { CommunityBuildsSidebar } from "@/components/community-builds-sidebar";
 import { SiteUpdatesSidebar } from "@/components/site-updates-sidebar";
+import { HOME_SIDEBAR_ASIDE_CLASS } from "@/lib/home-sidebar-layout";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -30,8 +32,8 @@ export default function Home() {
         {/* 1fr side gutters push panels to the edges; center column caps at ~max-w-5xl */}
         <div className="mx-auto grid w-full grid-cols-1 gap-8 xl:grid-cols-[1fr_minmax(0,64rem)_1fr] xl:items-start xl:gap-x-6 2xl:gap-x-10">
           {/* Left: site updates — flush to page edge */}
-          <aside className="hidden xl:block xl:justify-self-start xl:w-full xl:max-w-[280px]">
-            <SiteUpdatesSidebar variant="sidebar" limit={8} />
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:justify-self-start")}>
+            <SiteUpdatesSidebar variant="sidebar" limit={10} />
           </aside>
 
           {/* Center: hero + feature grid */}
@@ -166,7 +168,7 @@ export default function Home() {
           </div>
 
           {/* Right: community builds — flush to page edge */}
-          <aside className="hidden xl:block xl:col-start-3 xl:justify-self-end xl:w-full xl:max-w-[280px]">
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-3 xl:justify-self-end")}>
             <CommunityBuildsSidebar variant="sidebar" limit={10} />
           </aside>
         </div>

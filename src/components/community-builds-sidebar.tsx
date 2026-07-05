@@ -6,6 +6,11 @@ import { ChevronRight, Loader2, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PublicBuildSummary } from "@/lib/build-types";
 import { PublicBuildRow } from "@/components/public-build-row";
+import {
+  HOME_SIDEBAR_BODY_CLASS,
+  HOME_SIDEBAR_PANEL_CLASS,
+  HOME_SIDEBAR_TAB_ROW_CLASS,
+} from "@/lib/home-sidebar-layout";
 import { ContentPanel } from "@/components/page-shell";
 
 type SortMode = "recent" | "popular";
@@ -51,10 +56,7 @@ export function CommunityBuildsSidebar({
   return (
     <ContentPanel
       padding={false}
-      className={cn(
-        isSidebar && "sticky top-20 max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col p-0",
-        className,
-      )}
+      className={cn(isSidebar && HOME_SIDEBAR_PANEL_CLASS, className)}
     >
       <div className="flex items-center justify-between gap-2 border-b border-border/60 px-4 py-3">
         <div className="min-w-0">
@@ -75,7 +77,7 @@ export function CommunityBuildsSidebar({
         </Link>
       </div>
 
-      <div className="flex gap-1 border-b border-border/60 px-3 py-2">
+      <div className={HOME_SIDEBAR_TAB_ROW_CLASS}>
         {([
           { id: "recent" as const, label: "Recent", icon: Sparkles },
           { id: "popular" as const, label: "Top rated", icon: TrendingUp },
@@ -97,12 +99,7 @@ export function CommunityBuildsSidebar({
         ))}
       </div>
 
-      <div
-        className={cn(
-          "space-y-2 p-3",
-          isSidebar && "overflow-y-auto",
-        )}
-      >
+      <div className={cn(isSidebar ? HOME_SIDEBAR_BODY_CLASS : "space-y-2 p-3")}>
         {loading ? (
           <div className="flex items-center justify-center py-10 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />

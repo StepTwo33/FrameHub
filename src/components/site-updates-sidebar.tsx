@@ -5,6 +5,11 @@ import Link from "next/link";
 import { ChevronRight, Loader2, Megaphone, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatSiteUpdateTime, type SiteUpdateSummary } from "@/lib/site-updates";
+import {
+  HOME_SIDEBAR_BODY_CLASS,
+  HOME_SIDEBAR_PANEL_CLASS,
+  HOME_SIDEBAR_TAB_ROW_CLASS,
+} from "@/lib/home-sidebar-layout";
 import { ContentPanel } from "@/components/page-shell";
 
 interface SiteUpdatesSidebarProps {
@@ -82,10 +87,7 @@ export function SiteUpdatesSidebar({
   return (
     <ContentPanel
       padding={false}
-      className={cn(
-        isSidebar && "sticky top-20 max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col",
-        className,
-      )}
+      className={cn(isSidebar && HOME_SIDEBAR_PANEL_CLASS, className)}
     >
       <div className="flex items-center justify-between gap-2 border-b border-border/60 px-4 py-3">
         <div className="min-w-0">
@@ -97,9 +99,27 @@ export function SiteUpdatesSidebar({
             Updates from the Frame Hub team
           </p>
         </div>
+        {isAdmin && (
+          <Link
+            href="/admin/updates"
+            className="inline-flex shrink-0 items-center gap-0.5 text-[10px] font-medium text-primary hover:underline"
+          >
+            Manage
+            <ChevronRight className="h-3 w-3" />
+          </Link>
+        )}
       </div>
 
-      <div className={cn("space-y-2 p-3", isSidebar && "overflow-y-auto flex-1")}>
+      {isSidebar && (
+        <div className={HOME_SIDEBAR_TAB_ROW_CLASS}>
+          <div className="inline-flex flex-1 items-center justify-center gap-1 rounded-md bg-primary/10 px-2 py-1.5 text-[10px] font-medium text-primary">
+            <Megaphone className="h-3 w-3 shrink-0" />
+            Latest
+          </div>
+        </div>
+      )}
+
+      <div className={cn(isSidebar ? HOME_SIDEBAR_BODY_CLASS : "space-y-2 p-3")}>
         {loading ? (
           <div className="flex items-center justify-center py-10 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
@@ -115,7 +135,7 @@ export function SiteUpdatesSidebar({
         )}
       </div>
 
-      {isAdmin && (
+      {isAdmin && !isSidebar && (
         <div className="border-t border-border/60 px-3 py-2.5">
           <Link
             href="/admin/updates"
