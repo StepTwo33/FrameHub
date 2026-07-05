@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <PageShell>
       <PageMain maxWidth="md">
-        <PageHero icon={FileText} accent="primary" title="Terms of Service" description="Last updated: July 2, 2026" />
+        <PageHero icon={FileText} accent="primary" title="Terms of Service" description="Last updated: July 5, 2026" />
         <ProsePanel>
           <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
             <section>
@@ -22,8 +22,9 @@ export default function TermsPage() {
               <h2 className="text-lg font-semibold text-foreground mb-2">2. Description of Service</h2>
               <p>
                 Frame Hub is a free, fan-made build planning tool for the video game Warframe by Digital Extremes Ltd.
-                The Service provides build calculators, stat simulations, and community tools. Frame Hub is not
-                affiliated with, endorsed by, or sponsored by Digital Extremes.
+                The Service provides build calculators, stat simulations, a game-data Codex, loadout management,
+                community build sharing, and related tools. Frame Hub is not affiliated with, endorsed by, or
+                sponsored by Digital Extremes.
               </p>
             </section>
 
@@ -39,13 +40,18 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-foreground mb-2">4. User Content</h2>
               <p>
-                Builds, profile bios, and other content you publish are your responsibility. By saving builds to the cloud
-                or making them public, you grant Frame Hub a non-exclusive license to store, display, and serve that content
-                as part of the Service. You retain ownership of your content.
+                Builds, profile bios, usernames, avatar images, and other content you publish are your responsibility.
+                By saving builds to the cloud or making them public, you grant Frame Hub a non-exclusive license to store,
+                display, and serve that content as part of the Service. You retain ownership of your content.
               </p>
               <p className="mt-2">
-                Public builds and public profile pages may be visible to other users. Your email address is not shown on
-                public profile pages; it is used only for account access and, when applicable, service-related email.
+                Public builds, public profile pages, and uploaded avatars may be visible to other users. Your email
+                address is not shown on public profile pages; it is used only for account access and, when applicable,
+                service-related email (such as report status updates).
+              </p>
+              <p className="mt-2">
+                You must have the right to upload any avatar image you set on your profile. Do not upload images you
+                do not own or have permission to use, or images that violate these Terms.
               </p>
             </section>
 
@@ -54,11 +60,12 @@ export default function TermsPage() {
               <p>You agree not to:</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Use the Service for any unlawful purpose</li>
-                <li>Post offensive, harassing, sexually explicit, or otherwise inappropriate content in public builds, bios, or descriptions</li>
+                <li>Post offensive, harassing, sexually explicit, or otherwise inappropriate content in public builds, bios, usernames, avatars, or descriptions</li>
                 <li>Attempt to gain unauthorized access to the Service or its systems</li>
                 <li>Interfere with or disrupt the Service&apos;s infrastructure</li>
                 <li>Scrape or harvest data from the Service in bulk for commercial purposes</li>
                 <li>Impersonate other users or misrepresent your identity</li>
+                <li>Manipulate community features (such as upvotes) through automation, multiple accounts, or coordinated abuse</li>
               </ul>
             </section>
 
@@ -66,8 +73,9 @@ export default function TermsPage() {
               <h2 className="text-lg font-semibold text-foreground mb-2">6. Moderation and Enforcement</h2>
               <p>
                 We may review public content and take action when we believe it violates these Terms or harms the community.
-                Actions may include removing public visibility from builds, restricting account features, or banning accounts.
-                Banned users may lose access to the Service and their public content may be hidden.
+                Actions may include removing or resetting avatars, hiding public builds, restricting account features,
+                revoking staff privileges, or banning accounts. Banned users may lose access to the Service and their
+                public content may be hidden.
               </p>
             </section>
 

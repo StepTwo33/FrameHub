@@ -7,7 +7,7 @@ export default function DisclaimerPage() {
   return (
     <PageShell>
       <PageMain maxWidth="md">
-        <PageHero icon={AlertTriangle} accent="amber" title="Disclaimer" description="Last updated: July 2, 2026" />
+        <PageHero icon={AlertTriangle} accent="amber" title="Disclaimer" description="Last updated: July 5, 2026" />
         <ProsePanel>
           <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
             <section>
@@ -61,8 +61,18 @@ export default function DisclaimerPage() {
             <section>
               <h2 className="text-lg font-semibold text-foreground mb-2">Community Content</h2>
               <p>
-                User-submitted build names, descriptions, and profile bios are provided by community members.
-                Frame Hub does not endorse user-generated content and may remove or restrict content that violates our Terms.
+                User-submitted build names, descriptions, profile bios, usernames, and avatar images are provided
+                by community members. Frame Hub does not endorse user-generated content and may remove or restrict
+                content that violates our Terms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-semibold text-foreground mb-2">Community Builds</h2>
+              <p>
+                Builds shared through Discover or public profile pages reflect individual players&apos; choices and
+                opinions. They are not recommendations from Frame Hub or Digital Extremes. Always verify a build
+                suits your own goals, mastery, and in-game resources before investing forma, catalysts, or rivens.
               </p>
             </section>
 

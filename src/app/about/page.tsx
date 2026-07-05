@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github, Info } from "lucide-react";
+import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github, Info, BookOpen, FolderOpen, Plane, Rocket } from "lucide-react";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
 
@@ -22,9 +22,10 @@ export default function AboutPage() {
             <h2 className="mb-3 text-lg font-semibold">What is Frame Hub?</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Frame Hub is a free build planner for Digital Extremes&apos; Warframe.
-              It lets you theorycraft weapon, warframe, companion, archwing, and modular weapon builds
+              It lets you theorycraft weapon, warframe, companion, archwing, railjack, and modular weapon builds
               with real-time stat calculations, elemental combo resolution, damage simulation, and
-              time-to-kill estimates against every enemy faction.
+              time-to-kill estimates against every enemy faction. Browse the Codex to verify mod, arcane, and
+              shard data, share builds with the community, and save complete loadouts locally or to your account.
             </p>
           </ContentPanel>
 
@@ -35,8 +36,12 @@ export default function AboutPage() {
                 { icon: Swords, title: "Weapon Builder", desc: "Full mod, arcane, riven, and Incarnon support with burst/sustained DPS, status proc breakdowns, and elemental combo resolution." },
                 { icon: Shield, title: "Warframe Builder", desc: "Mod slots, archon shards, Helminth abilities, ability scaling preview, augment detection, and survivability stats." },
                 { icon: BarChart3, title: "Damage Simulator", desc: "Post-Update 32 enemy scaling, per-faction TTK with Viral/Corrosive status effects, DoT accounting, and armor DR." },
-                { icon: Wrench, title: "Modular & Companion", desc: "Zaw, Kitgun, MOA, and companion builders with category-specific mod pools and riven support." },
-                { icon: Users, title: "Build Sharing", desc: "Save builds locally or to the cloud, generate shareable URLs, and compare builds side by side." },
+                { icon: Wrench, title: "Modular & Companion", desc: "Zaw, Kitgun, Amp, MOA, and companion builders with category-specific mod pools and riven support." },
+                { icon: BookOpen, title: "Codex", desc: "Browse mods, arcanes, archon shards, weapons, and warframes — check drain, effects, arcane triggers, and data coverage." },
+                { icon: Users, title: "Discover & Profiles", desc: "Publish builds, browse community loadouts, upvote favorites, and share a public profile at /u/yourname." },
+                { icon: FolderOpen, title: "Loadout Manager", desc: "Save complete loadouts with warframe, weapons, and companion builds. Import and export locally or sync to your account." },
+                { icon: Plane, title: "Archwing & Necramech", desc: "Dedicated builders for Archwing frames and Necramechs with real-time stat preview and mod capacity." },
+                { icon: Rocket, title: "Railjack Builder", desc: "Configure Railjack components, turret stats, and Plexus mods for squad missions." },
                 { icon: Bug, title: "Riven Grader", desc: "Grade your rivens against disposition-scaled stat pools with tier rankings and reroll cost reference." },
               ].map((f) => (
                 <div
@@ -90,7 +95,8 @@ export default function AboutPage() {
             <p className="text-sm leading-relaxed text-muted-foreground">
               Found incorrect data or a missing entry? Use the{" "}
               <Link href="/report-issue" className="text-amber-400 hover:underline">Report Issue</Link>{" "}
-              page. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
+              page to flag stat discrepancies or missing items. Staff and moderators review reports and can apply
+              data corrections through the Codex and Data Fixes tools. Frame Hub is built with Next.js, TypeScript, and Tailwind CSS.
             </p>
           </ContentPanel>
 

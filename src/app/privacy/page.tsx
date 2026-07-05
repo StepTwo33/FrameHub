@@ -11,7 +11,7 @@ export default function PrivacyPage() {
           icon={Shield}
           accent="primary"
           title="Privacy Policy"
-          description="Last updated: July 2, 2026"
+          description="Last updated: July 5, 2026"
         />
         <ProsePanel>
           <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
@@ -19,10 +19,12 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-foreground">1. Information We Collect</h2>
               <p>Frame Hub collects minimal data necessary to operate the Service:</p>
               <ul className="mt-2 list-inside list-disc space-y-1">
-                <li><strong>Account Data:</strong> If you sign in via Google OAuth or email/password, we store your name, email address, and profile picture (when provided). Passwords are stored as one-way hashes, not plain text.</li>
-                <li><strong>Build Data:</strong> Weapon, warframe, and companion builds you save to the cloud are stored in our database, linked to your account.</li>
-                <li><strong>Public Profile Data:</strong> If you set a username, bio, or publish builds, that information may be visible to other users. Your email address is not displayed on public profile pages.</li>
-                <li><strong>Local Storage:</strong> If you use Frame Hub without signing in, builds are stored in your browser&apos;s local storage. We do not have access to this data.</li>
+                <li><strong>Account Data:</strong> If you sign in via Google OAuth or email/password, we store your name, email address, and profile picture (when provided). Passwords are stored as one-way hashes, not plain text. You may also set a public username, bio, and custom avatar image.</li>
+                <li><strong>Build Data:</strong> Weapon, warframe, companion, modular, archwing, and railjack builds you save to the cloud are stored in our database, linked to your account. Public builds and upvote activity may be visible to other users.</li>
+                <li><strong>Public Profile Data:</strong> If you set a username, bio, avatar, or publish builds, that information may be visible on your public profile page and in community features such as Discover. Your email address is not displayed on public profile pages.</li>
+                <li><strong>Issue Reports:</strong> If you submit a data report, we store the details you provide (item name, issue flags, comments, and optional reporter name). Reports may be linked to your account when you are signed in.</li>
+                <li><strong>Local Storage:</strong> If you use Frame Hub without signing in, builds and loadouts may be stored in your browser&apos;s local storage. We do not have access to this data.</li>
+                <li><strong>Technical Data:</strong> We may temporarily process IP addresses and request metadata for rate limiting, abuse prevention, and security (for example, limiting report submissions).</li>
               </ul>
             </section>
 
@@ -30,8 +32,10 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-foreground">2. How We Use Your Information</h2>
               <ul className="list-inside list-disc space-y-1">
                 <li>To authenticate your identity and provide account features</li>
-                <li>To store and retrieve your saved builds</li>
+                <li>To store and retrieve your saved builds and loadouts</li>
                 <li>To display your profile information (name, avatar, username, bio) within the app and on public profile pages where applicable</li>
+                <li>To operate community features such as public build discovery and upvotes</li>
+                <li>To review and respond to data issue reports you submit</li>
                 <li>To enforce community standards, including moderation actions such as hiding public content or banning accounts that violate our Terms</li>
               </ul>
               <p className="mt-2">We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
@@ -40,8 +44,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">3. Cookies and Local Storage</h2>
               <p>
-                Frame Hub uses session cookies for authentication and browser local storage for saving builds offline.
-                We do not use tracking cookies or third-party analytics services.
+                Frame Hub uses session cookies for authentication and browser local storage for saving builds and
+                loadouts offline. We do not use tracking cookies or third-party analytics services.
               </p>
             </section>
 
@@ -49,7 +53,8 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-lg font-semibold text-foreground">4. Data Retention</h2>
               <p>
                 Your account and build data are retained as long as your account is active.
-                You can delete individual builds from your profile page at any time.
+                You can delete individual builds from your profile page at any time and remove your custom avatar
+                from profile settings. Issue reports are retained so staff can track corrections and follow up when needed.
                 If you wish to delete your entire account, please contact us via the Report Issue page.
               </p>
             </section>
