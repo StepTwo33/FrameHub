@@ -243,7 +243,7 @@ export function AbilityCardShell({
       )}
     >
       <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/5 blur-2xl" />
-      <div className="relative p-4">{children}</div>
+      <div className="relative flex h-full min-h-full flex-col p-4">{children}</div>
     </div>
   );
 }

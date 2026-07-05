@@ -1,8 +1,7 @@
 "use client";
 
-import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Ability, Mod, EquippedMod, SimulationParams, EquippedArchonShard } from "@/lib/types";
+import { CalculatedStats, WarframeCalculatedStats, Warframe, Weapon, Mod, EquippedMod, SimulationParams, EquippedArchonShard } from "@/lib/types";
 import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/set-bonuses";
-import { HelminthAbility } from "@/data/helminth";
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
@@ -14,12 +13,6 @@ import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,
 } from "@/lib/calculator";
-import { getDualFormAbilities, getDualFormConfig } from "@/lib/dual-form-warframes";
-import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
-import {
-  AbilityPreviewShell,
-  AbilityStatsBlock,
-} from "@/components/ability-display";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-400",
@@ -507,14 +500,12 @@ function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) 
   );
 }
 
-export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, helminthSlot, helminthAbility, equippedShards, equippedArcanes, arcaneRanks, activeDualFormId }: {
+export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equippedShards, equippedArcanes, arcaneRanks }: {
   stats: WarframeCalculatedStats | null; warframe?: Warframe | null;
   equippedMods?: EquippedMod[]; allMods?: Map<string, Mod>;
-  helminthSlot?: number | null; helminthAbility?: HelminthAbility | null;
   equippedShards?: (EquippedArchonShard | null)[];
   equippedArcanes?: (Mod | null)[];
   arcaneRanks?: number[];
-  activeDualFormId?: string;
 }) {
   const shardLines = useMemo(
     () => buildShardBonusLines(equippedShards ?? []),
@@ -534,29 +525,6 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
       })
       .filter(Boolean);
   }, [equippedArcanes, arcaneRanks, stats]);
-
-  const abilityPreviewEntries = useMemo(() => {
-    if (!warframe?.abilities?.length) return [];
-    if (activeDualFormId) {
-      const entries = getDualFormAbilities(warframe.id, activeDualFormId, warframe.abilities);
-      if (entries) {
-        return entries.map((entry) => ({
-          key: `${entry.abilityIndex}-${activeDualFormId}`,
-          ability: entry.ability,
-          slotIndex: entry.gameSlot - 1,
-          gameSlot: entry.gameSlot,
-          formLabel: entry.formLabel,
-        }));
-      }
-    }
-    return warframe.abilities.map((ability, i) => ({
-      key: String(i),
-      ability,
-      slotIndex: i,
-      gameSlot: i + 1,
-      formLabel: undefined as string | undefined,
-    }));
-  }, [warframe, activeDualFormId]);
 
   if (!stats) {
     return (
@@ -706,36 +674,6 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, hel
         </CollapsibleSection>
       )}
 
-      {/* Ability Preview */}
-      {abilityPreviewEntries.length > 0 && (
-        <CollapsibleSection
-          title={
-            activeDualFormId
-              ? `ABILITIES — ${getDualFormConfig(warframe?.id ?? "")?.forms.find((f) => f.id === activeDualFormId)?.label ?? ""}`
-              : "ABILITIES"
-          }
-          defaultOpen
-        >
-          <div className="space-y-2">
-          {abilityPreviewEntries.map((entry) => {
-            if (helminthSlot === entry.slotIndex && helminthAbility) {
-              return <HelminthAbilityPreview key={entry.key} ability={helminthAbility} stats={stats} />;
-            }
-            return (
-              <AbilityPreview
-                key={entry.key}
-                ability={entry.ability}
-                stats={stats}
-                formLabel={entry.formLabel}
-                warframeId={warframe?.id}
-                slot={entry.gameSlot}
-              />
-            );
-          })}
-          </div>
-        </CollapsibleSection>
-      )}
-
       {/* Equipped Augments */}
       {equippedAugments.length > 0 && (
         <CollapsibleSection title="AUGMENTS" defaultOpen>
@@ -863,54 +801,5 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
         ))}
       </div>
     </CollapsibleSection>
-  );
-}
-
-
-function AbilityPreview({ ability, stats, formLabel, warframeId, slot }: {
-  ability: Ability; stats: WarframeCalculatedStats; formLabel?: string; warframeId?: string; slot?: number;
-}) {
-  const eff = stats.abilityEfficiency;
-  const display = { warframeId, abilityName: ability.name };
-  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const desc = formatAbilityDescription(ability.description);
-
-  return (
-    <AbilityPreviewShell
-      slot={slot}
-      title={ability.name}
-      formLabel={formLabel}
-      energyCost={ability.energyCost}
-      effectiveCost={effectiveCost}
-      description={desc}
-      damageType={ability.damageType}
-      subAbilities={ability.subAbilities}
-      className="mb-2"
-    >
-      <AbilityStatsBlock ability={ability} stats={stats} display={display} compact />
-    </AbilityPreviewShell>
-  );
-}
-
-function HelminthAbilityPreview({ ability, stats }: {
-  ability: HelminthAbility; stats: WarframeCalculatedStats;
-}) {
-  const eff = stats.abilityEfficiency;
-  const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
-  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const desc = formatAbilityDescription(ability.description);
-
-  return (
-    <AbilityPreviewShell
-      variant="helminth"
-      title={ability.name}
-      energyCost={ability.energyCost}
-      effectiveCost={effectiveCost}
-      subtitle={ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
-      description={desc}
-      className="mb-2"
-    >
-      <AbilityStatsBlock ability={ability} stats={stats} display={display} compact />
-    </AbilityPreviewShell>
   );
 }

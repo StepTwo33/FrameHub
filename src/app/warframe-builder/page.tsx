@@ -138,7 +138,7 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
   const slotNum = gameSlot ?? index + 1;
 
   return (
-    <AbilityCardShell slot={slotNum}>
+    <AbilityCardShell slot={slotNum} className="flex h-full min-h-0 flex-1 flex-col">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2.5">
           <AbilitySlotBadge slot={slotNum} />
@@ -170,7 +170,9 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
         </div>
       )}
 
-      <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+      <div className="mt-auto pt-1">
+        <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+      </div>
     </AbilityCardShell>
   );
 }
@@ -185,7 +187,7 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
   const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
 
   return (
-    <AbilityCardShell slot={1} variant="helminth">
+    <AbilityCardShell slot={1} variant="helminth" className="flex h-full min-h-0 flex-1 flex-col">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="text-sm font-semibold text-emerald-400">{ability.name}</h3>
@@ -206,7 +208,9 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
       <p className="mb-3 text-[11px] leading-relaxed text-muted-foreground">
         {formatAbilityDescription(ability.description)}
       </p>
-      <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+      <div className="mt-auto pt-1">
+        <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+      </div>
     </AbilityCardShell>
   );
 }
@@ -1050,12 +1054,12 @@ export default function WarframeBuilderPage() {
                           : undefined
                       }
                     />
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid items-stretch gap-4 sm:grid-cols-2">
                       {abilityDisplayEntries.map((entry) => {
                         const slotIndex = entry.gameSlot - 1;
                         const isHelminthed = helminthSlot === slotIndex && helminthAbility;
                         return (
-                          <div key={entry.key} className="relative group">
+                          <div key={entry.key} className="relative group flex h-full min-h-0 flex-col">
                             {isHelminthed ? (
                               <HelminthAbilityCard
                                 ability={helminthAbility}
@@ -1106,12 +1110,9 @@ export default function WarframeBuilderPage() {
                   warframe={selectedWarframe}
                   equippedMods={equippedMods}
                   allMods={modsMap}
-                  helminthSlot={helminthSlot}
-                  helminthAbility={helminthAbility}
                   equippedShards={equippedShards}
                   equippedArcanes={equippedArcanes}
                   arcaneRanks={equippedArcaneRanks}
-                  activeDualFormId={dualFormConfig ? activeDualFormId : undefined}
                 />
 
                 {/* Exalted Weapon Section */}
