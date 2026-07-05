@@ -21,15 +21,21 @@ import {
   FeatureCard,
 } from "@/components/page-shell";
 import { CommunityBuildsSidebar } from "@/components/community-builds-sidebar";
+import { SiteUpdatesSidebar } from "@/components/site-updates-sidebar";
 
 export default function Home() {
   return (
     <PageShell>
       <PageMain maxWidth="full" className="py-8 sm:py-12 lg:py-16">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-8 xl:flex-row xl:items-start xl:gap-10">
-          {/* Main content */}
-          <div className="min-w-0 flex-1">
-            <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12 xl:mx-0 xl:text-left">
+        <div className="mx-auto grid max-w-[88rem] grid-cols-1 gap-8 xl:grid-cols-[280px_minmax(0,1fr)_280px] xl:items-start">
+          {/* Left: site updates */}
+          <aside className="hidden xl:block">
+            <SiteUpdatesSidebar variant="sidebar" limit={8} />
+          </aside>
+
+          {/* Center: hero + feature grid (centered like before) */}
+          <div className="min-w-0">
+            <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
               <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
                 Build. Calculate. <span className="text-primary">Dominate.</span>
               </h1>
@@ -38,12 +44,13 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Mobile / tablet: community builds above the grid */}
-            <div className="mb-8 xl:hidden">
+            {/* Mobile / tablet: side columns stack above the grid */}
+            <div className="mb-8 space-y-6 xl:hidden">
+              <SiteUpdatesSidebar variant="inline" limit={4} />
               <CommunityBuildsSidebar variant="inline" limit={6} />
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <FeatureCard
                 href="/weapon-builder"
                 title="Weapon Builder"
@@ -142,7 +149,7 @@ export default function Home() {
               />
             </div>
 
-            <p className="mt-10 border-t border-border/30 pt-6 text-center text-xs leading-relaxed text-muted-foreground/80 xl:text-left">
+            <p className="mx-auto mt-10 max-w-5xl border-t border-border/30 pt-6 text-center text-xs leading-relaxed text-muted-foreground/80">
               Community shout-out:{" "}
               <a
                 href="https://buff0000n.github.io/dojocad/"
@@ -157,8 +164,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Desktop sidebar */}
-          <aside className="hidden w-80 shrink-0 xl:block">
+          {/* Right: community builds */}
+          <aside className="hidden xl:block">
             <CommunityBuildsSidebar variant="sidebar" limit={10} />
           </aside>
         </div>
