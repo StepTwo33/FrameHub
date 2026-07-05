@@ -28,14 +28,6 @@ const BUILD_TYPES = [
   { id: "railjack", label: "Railjack" },
 ] as const;
 
-function resolveItemName(type: string, itemId: string): string | null {
-  if (!itemId) return null;
-  if (type === "weapon") return allWeapons.find((w) => w.id === itemId)?.name ?? null;
-  if (type === "warframe") return allWarframes.find((w) => w.id === itemId)?.name ?? null;
-  if (type === "companion") return allCompanions.find((c) => c.id === itemId)?.name ?? null;
-  return null;
-}
-
 interface ItemSuggestion {
   id: string;
   name: string;
@@ -210,19 +202,9 @@ export default function DiscoverPage() {
           <>
             <ScrollArea className="max-h-[calc(100vh-22rem)]">
               <div className="space-y-3 pr-3">
-                {builds.map((build) => {
-                  const itemName = resolveItemName(build.type, build.itemId);
-                  return (
-                    <div key={build.id}>
-                      {itemName && (
-                        <div className="mb-1.5 px-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                          {itemName}
-                        </div>
-                      )}
-                      <PublicBuildRow build={build} />
-                    </div>
-                  );
-                })}
+                {builds.map((build) => (
+                  <PublicBuildRow key={build.id} build={build} />
+                ))}
               </div>
             </ScrollArea>
             {nextCursor && (

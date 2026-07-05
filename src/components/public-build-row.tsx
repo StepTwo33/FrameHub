@@ -3,10 +3,24 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ThumbsUp, Loader2, ExternalLink, Download } from "lucide-react";
+import {
+  ThumbsUp,
+  Loader2,
+  ExternalLink,
+  Download,
+  Crosshair,
+  Shield,
+  Dog,
+  Hammer,
+  Plane,
+  Rocket,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
 import type { PublicBuildSummary } from "@/lib/build-types";
+import { resolveBuildItemDisplay } from "@/lib/build-item-display";
+import { AvatarImage, GameAssetImage } from "@/components/game-asset-image";
 
 interface BuildVoteButtonProps {
   buildId: string;
@@ -96,15 +110,74 @@ function formatRelativeTime(ts: number): string {
   return new Date(ts).toLocaleDateString();
 }
 
+const BUILD_TYPE_ICONS: Record<string, LucideIcon> = {
+  weapon: Crosshair,
+  warframe: Shield,
+  companion: Dog,
+  modular: Hammer,
+  archwing: Plane,
+  railjack: Rocket,
+};
+
+function BuildItemThumbnail({
+  type,
+  itemId,
+  compact,
+}: {
+  type: string;
+  itemId: string;
+  compact?: boolean;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const { itemName, itemImage, typeLabel } = resolveBuildItemDisplay(type, itemId);
+  const Icon = BUILD_TYPE_ICONS[type] ?? Hammer;
+  const size = compact ? "h-10 w-10" : "h-12 w-12";
+  const showImage = itemImage && !imageFailed;
+
+  return (
+    <div
+      className={cn(
+        "relative shrink-0 overflow-hidden rounded-lg border border-border/50 bg-muted/20",
+        size,
+      )}
+      title={itemName ?? typeLabel}
+    >
+      {showImage ? (
+        <GameAssetImage
+          src={itemImage}
+          alt={itemName ?? typeLabel}
+          width={compact ? 40 : 48}
+          height={compact ? 40 : 48}
+          className="h-full w-full object-contain p-0.5"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-primary/5">
+          <Icon className={cn("text-primary/70", compact ? "h-4 w-4" : "h-5 w-5")} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface PublicBuildRowProps {
   build: PublicBuildSummary & { voted?: boolean };
   showVote?: boolean;
   onLoad?: () => void;
   compact?: boolean;
+  showThumbnails?: boolean;
 }
 
-export function PublicBuildRow({ build, showVote = true, onLoad, compact = false }: PublicBuildRowProps) {
+export function PublicBuildRow({
+  build,
+  showVote = true,
+  onLoad,
+  compact = false,
+  showThumbnails = true,
+}: PublicBuildRowProps) {
   const router = useRouter();
+  const itemDisplay = resolveBuildItemDisplay(build.type, build.itemId);
+
   return (
     <div
       className={cn(
@@ -117,12 +190,28 @@ export function PublicBuildRow({ build, showVote = true, onLoad, compact = false
         href={buildOpenUrl(build.type, build.id)}
         className="flex flex-1 items-center gap-3 p-3 sm:p-4 min-w-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-inset"
       >
+        {showThumbnails && (
+          <BuildItemThumbnail type={build.type} itemId={build.itemId} compact={compact} />
+        )}
         <div className="flex-1 min-w-0">
+          {itemDisplay.itemName && (
+            <div className="truncate text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              {itemDisplay.itemName}
+            </div>
+          )}
           <div className="font-medium truncate group-hover:text-primary transition-colors">{build.name}</div>
           {!compact && build.description && (
             <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{build.description}</p>
           )}
           <div className="text-[10px] text-muted-foreground mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            {build.author.image && (
+              <AvatarImage
+                src={build.author.image}
+                alt=""
+                size={14}
+                className="h-3.5 w-3.5 rounded-full object-cover ring-1 ring-border/50"
+              />
+            )}
             {build.author.profileSlug ? (
               // Not a <Link>: nesting an anchor inside the row's anchor is invalid HTML
               <span
@@ -148,7 +237,7 @@ export function PublicBuildRow({ build, showVote = true, onLoad, compact = false
               <span>@{build.author.username}</span>
             )}
             <span>•</span>
-            <span>{build.type}</span>
+            <span>{itemDisplay.typeLabel}</span>
             <span>•</span>
             <span>{formatRelativeTime(build.updatedAt)}</span>
           </div>
