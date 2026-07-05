@@ -26,15 +26,16 @@ import { SiteUpdatesSidebar } from "@/components/site-updates-sidebar";
 export default function Home() {
   return (
     <PageShell>
-      <PageMain maxWidth="full" className="py-8 sm:py-12 lg:py-16">
-        <div className="mx-auto grid max-w-[88rem] grid-cols-1 gap-8 xl:grid-cols-[280px_minmax(0,1fr)_280px] xl:items-start">
-          {/* Left: site updates */}
-          <aside className="hidden xl:block">
+      <PageMain maxWidth="full" className="py-8 sm:py-12 lg:py-16 xl:px-6 2xl:px-8">
+        {/* 1fr side gutters push panels to the edges; center column caps at ~max-w-5xl */}
+        <div className="mx-auto grid w-full grid-cols-1 gap-8 xl:grid-cols-[1fr_minmax(0,64rem)_1fr] xl:items-start xl:gap-x-6 2xl:gap-x-10">
+          {/* Left: site updates — flush to page edge */}
+          <aside className="hidden xl:block xl:justify-self-start xl:w-full xl:max-w-[280px]">
             <SiteUpdatesSidebar variant="sidebar" limit={8} />
           </aside>
 
-          {/* Center: hero + feature grid (centered like before) */}
-          <div className="min-w-0">
+          {/* Center: hero + feature grid */}
+          <div className="min-w-0 xl:col-start-2">
             <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
               <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
                 Build. Calculate. <span className="text-primary">Dominate.</span>
@@ -50,7 +51,7 @@ export default function Home() {
               <CommunityBuildsSidebar variant="inline" limit={6} />
             </div>
 
-            <div className="mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid w-full gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <FeatureCard
                 href="/weapon-builder"
                 title="Weapon Builder"
@@ -149,7 +150,7 @@ export default function Home() {
               />
             </div>
 
-            <p className="mx-auto mt-10 max-w-5xl border-t border-border/30 pt-6 text-center text-xs leading-relaxed text-muted-foreground/80">
+            <p className="mt-10 border-t border-border/30 pt-6 text-center text-xs leading-relaxed text-muted-foreground/80">
               Community shout-out:{" "}
               <a
                 href="https://buff0000n.github.io/dojocad/"
@@ -164,8 +165,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Right: community builds */}
-          <aside className="hidden xl:block">
+          {/* Right: community builds — flush to page edge */}
+          <aside className="hidden xl:block xl:col-start-3 xl:justify-self-end xl:w-full xl:max-w-[280px]">
             <CommunityBuildsSidebar variant="sidebar" limit={10} />
           </aside>
         </div>
