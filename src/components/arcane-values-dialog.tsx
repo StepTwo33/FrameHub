@@ -12,7 +12,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ArcaneEffectsEditor } from "@/components/override-field-editors";
+import { ArcaneEffectsEditor, ArcaneTriggerPicker } from "@/components/override-field-editors";
+import type { ArcaneTrigger } from "@/data/arcane-effects";
 import {
   draftsToEffectsPayload,
   saveArcaneEffectOverride,
@@ -41,12 +42,14 @@ export function ArcaneValuesDialog({
   onSaved,
 }: ArcaneValuesDialogProps) {
   const [lines, setLines] = useState<ArcaneEffectLineDraft[]>([]);
+  const [trigger, setTrigger] = useState<ArcaneTrigger>("passive");
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     setLines(toEffectDrafts(effects?.effects ?? []));
+    setTrigger(effects?.trigger ?? "passive");
     setNote("");
   }, [open, effects]);
 
@@ -62,6 +65,7 @@ export function ArcaneValuesDialog({
           ...effects,
           name: arcaneName,
           maxRank,
+          trigger,
           effects: draftsToEffectsPayload(lines),
         },
         note.trim(),
@@ -95,7 +99,15 @@ export function ArcaneValuesDialog({
             to add them.
           </p>
         ) : (
-          <ArcaneEffectsEditor lines={lines} maxRank={maxRank} onChange={setLines} />
+          <>
+            <ArcaneTriggerPicker
+              value={trigger}
+              currentValue={effects.trigger}
+              required
+              onChange={(t) => setTrigger(t as ArcaneTrigger)}
+            />
+            <ArcaneEffectsEditor lines={lines} maxRank={maxRank} onChange={setLines} />
+          </>
         )}
 
         <label className="block text-[11px]">

@@ -35,6 +35,7 @@ import {
   AbilityDraft,
   ArcaneEffectLineDraft,
   ArcaneEffectsEditor,
+  ArcaneTriggerPicker,
   RadialAttackDraft,
   RadialAttacksEditor,
   StatRowsEditor,
@@ -268,7 +269,10 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
         return true;
       })
       .map(([key]) => key);
-    return sortFieldsForCategory(category, keys).map((key) => ({
+    const ordered = sortFieldsForCategory(category, keys).filter(
+      (key) => !((category === "arcane" || category === "arcane_effect") && key === "trigger"),
+    );
+    return ordered.map((key) => ({
       key,
       currentValue: itemData[key],
       inputType: inferInputType(key, itemData[key]),
@@ -657,6 +661,11 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
                   Most arcanes only need <strong className="text-foreground">Effect base values</strong> — e.g. Ammo Efficiency for Akimbo Slip Shot.
                 </p>
               )}
+              <ArcaneTriggerPicker
+                value={fieldOverrides.trigger ?? ""}
+                currentValue={String(itemData?.trigger ?? "")}
+                onChange={(trigger) => handleFieldChange("trigger", trigger)}
+              />
               <ArcaneEffectsEditor
                 lines={effectLines}
                 maxRank={Number(itemData?.maxRank ?? 5)}

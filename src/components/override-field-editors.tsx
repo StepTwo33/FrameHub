@@ -18,8 +18,48 @@ import { getArcaneEffectStatPickerOptions } from "@/lib/override-stat-catalog";
 import { StatKeyAddRow, StatKeyPicker } from "@/components/stat-key-picker";
 import { getModStatLabel } from "@/lib/override-stat-catalog";
 import type { StatPickerOption } from "@/lib/override-stat-catalog";
+import { ARCANE_TRIGGER_OPTIONS } from "@/lib/override-schemas";
 
 export type { ArcaneEffectLineDraft };
+
+export function ArcaneTriggerPicker({
+  value,
+  onChange,
+  currentValue,
+  required = false,
+}: {
+  value: string;
+  onChange: (trigger: string) => void;
+  /** Shown when leaving override empty — existing data value. */
+  currentValue?: string;
+  /** When true, always pick a trigger (Codex inline edit). */
+  required?: boolean;
+}) {
+  return (
+    <label className="block text-[11px]">
+      <span className="text-muted-foreground">When does this arcane apply?</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+      >
+        {!required && (
+          <option value="">
+            Leave as-is{currentValue ? ` (${ARCANE_TRIGGER_OPTIONS.find((o) => o.value === currentValue)?.label ?? currentValue})` : ""}
+          </option>
+        )}
+        {ARCANE_TRIGGER_OPTIONS.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <p className="mt-1 text-[10px] text-muted-foreground">
+        Use <strong>On reload</strong> for Plated Round, Arcane Rise, etc. Use <strong>Conditional</strong> for proc-chance effects like Momentum.
+      </p>
+    </label>
+  );
+}
 
 export function ArcaneEffectsEditor({
   lines,

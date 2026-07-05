@@ -213,7 +213,15 @@ export function getArcaneEffectStatPickerOptions(): StatPickerOption[] {
     (k) => {
       if (k.endsWith("Chance") || k.includes("Proc")) return "Proc / conditional";
       if (k.includes("Duration") || k === "buffDuration") return "Duration";
-      if (["damage", "criticalChance", "criticalMultiplier", "multishot", "fireRate", "attackSpeed", "statusChance", "reloadSpeed", "reloadSpeedBonus", "meleeDamageBonus"].includes(k)) {
+      if (
+        k === "reloadSpeed"
+        || k === "reloadSpeedBonus"
+        || k === "reloadSpeedChance"
+        || k === "reloadDamageRamp"
+      ) {
+        return "On reload / reload speed";
+      }
+      if (["damage", "criticalChance", "criticalMultiplier", "multishot", "fireRate", "attackSpeed", "statusChance", "meleeDamageBonus"].includes(k)) {
         return "Combat stats";
       }
       if (["health", "healthFlat", "shield", "armor", "energyRegen", "damageReduction"].includes(k)) {

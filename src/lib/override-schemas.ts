@@ -53,8 +53,8 @@ export const SELECT_FIELD_OPTIONS: Record<string, { value: string; label: string
     { value: "peculiar", label: "Peculiar" },
   ],
   trigger: [
-    { value: "passive", label: "Passive" },
-    { value: "stacks", label: "Stacks" },
+    { value: "passive", label: "Passive (always on)" },
+    { value: "stacks", label: "Stacks (Merciless, Deadhead, etc.)" },
     { value: "onKill", label: "On kill" },
     { value: "onHeadshot", label: "On headshot" },
     { value: "onDamaged", label: "When damaged" },
@@ -63,12 +63,12 @@ export const SELECT_FIELD_OPTIONS: Record<string, { value: string; label: string
     { value: "onMeleeKill", label: "On melee kill" },
     { value: "onFinisher", label: "On finisher" },
     { value: "onStatus", label: "On status proc" },
-    { value: "onPickup", label: "On pickup" },
+    { value: "onPickup", label: "On orb pickup" },
     { value: "onVoidSling", label: "On Void Sling" },
-    { value: "onMovement", label: "On movement" },
+    { value: "onMovement", label: "On movement (slide / aim glide)" },
     { value: "onHit", label: "On hit" },
     { value: "onFreeze", label: "On freeze" },
-    { value: "conditional", label: "Conditional" },
+    { value: "conditional", label: "Conditional (proc chance + effect)" },
   ],
   color: [
     { value: "crimson", label: "Crimson" },
@@ -249,6 +249,9 @@ export function formatOverrideFieldLabel(key: string): string {
 export function getSelectOptions(fieldKey: string): { value: string; label: string }[] | null {
   return SELECT_FIELD_OPTIONS[fieldKey] ?? null;
 }
+
+/** Arcane trigger types for override editors and Codex inline edit. */
+export const ARCANE_TRIGGER_OPTIONS = SELECT_FIELD_OPTIONS.trigger!;
 
 /** Preferred field order per category (most-edited first). */
 export const FIELD_ORDER: Partial<Record<OverrideCategory, string[]>> = {
