@@ -20,6 +20,17 @@ const WARFRAME_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Sirius & Orion": "Sirius_Orion",
 };
 
+/** Mod display name → PNG stem when it differs from the default rule. */
+const MOD_IMAGE_STEM_BY_NAME: Record<string, string> = {
+  "Endless Lull": "Endless_Lullaby",
+  "Flame Claws": "Heated_Charge",
+  "Frost Claws": "Chilling_Claws",
+  "Looters": "Looter",
+  "ReactivStorm": "Reactive_Storm",
+};
+
+const MOD_STEM_SMALL_WORDS = new Set(["of", "the", "and"]);
+
 export type GameImageCategory = "weapons" | "warframes" | "mods" | "arcanes" | "companions";
 
 /** Shared icon for companion beast claw weapons. */
@@ -35,10 +46,41 @@ const LOCAL_IMAGE_OVERRIDES: Partial<Record<GameImageCategory, Record<string, st
 function resolvedDisplayName(name: string, category: GameImageCategory): string {
   if (category === "weapons") return WEAPON_IMAGE_STEM_BY_NAME[name] ?? name;
   if (category === "warframes") return WARFRAME_IMAGE_STEM_BY_NAME[name] ?? name;
+  if (category === "mods") return MOD_IMAGE_STEM_BY_NAME[name] ?? name;
   return name;
 }
 
+/** Normalize mod PNG stems to match on-disk Title_Case conventions. */
+function modPngStem(name: string): string {
+  const explicit = MOD_IMAGE_STEM_BY_NAME[name];
+  if (explicit) return explicit;
+
+  const setBonus = name.match(/^(\w+) Set Bonus$/);
+  if (setBonus) return `${setBonus[1]}setmod`;
+
+  const riven = name.match(/^Riven Mod \((.+)\)$/);
+  if (riven) return `${riven[1].replace(/ /g, "_")}_Riven_Mod`;
+
+  const claw = name.match(/^(.+) \(Claws\)$/);
+  if (claw) return claw[1].replace(/ /g, "_");
+
+  const parts = name.replace(/ /g, "_").split("_");
+  return parts
+    .map((word, index) => {
+      if (!word) return word;
+      if (index > 0 && MOD_STEM_SMALL_WORDS.has(word.toLowerCase())) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      if (word === word.toUpperCase() && word.length <= 4) {
+        return word.charAt(0) + word.slice(1).toLowerCase();
+      }
+      return word;
+    })
+    .join("_");
+}
+
 export function pngStemForCategory(name: string, category: GameImageCategory): string {
+  if (category === "mods") return modPngStem(name);
   return resolvedDisplayName(name, category).replace(/ /g, "_");
 }
 

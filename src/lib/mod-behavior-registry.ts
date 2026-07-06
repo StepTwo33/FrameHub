@@ -190,6 +190,11 @@ export type WarframeModAccumulators = {
   abilityRange: number;
 };
 
+export type ArchwingModAccumulators = WarframeModAccumulators & {
+  flightSpeedBonus: number;
+  kineticDiversionPercent: number;
+};
+
 export type CompanionModAccumulators = {
   healthBonus: number;
   shieldBonus: number;
@@ -381,6 +386,69 @@ export function applyVerifiedModStatToWarframe(
       return true;
     case "parkourVelocity":
       acc.parkourVelocityBonus += modValue;
+      return true;
+    default:
+      trackModPanel(stats, modId, statKey, modValue);
+      return true;
+  }
+}
+
+export function applyVerifiedModStatToArchwing(
+  stats: { modBonuses?: Record<string, number> },
+  modId: string,
+  statKey: string,
+  modValue: number,
+  acc: ArchwingModAccumulators,
+): boolean {
+  if (modId === "kinetic_diversion" && statKey === "damage") {
+    acc.kineticDiversionPercent += modValue * 100;
+    return true;
+  }
+
+  const line = getVerifiedModStatLine(modId, statKey);
+  if (!line) {
+    trackModPanel(stats, modId, statKey, modValue);
+    return false;
+  }
+
+  if (line.target === "mod_panel" || line.target === "pending") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  if (line.target !== "warframe_totals") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  switch (statKey) {
+    case "health":
+      acc.healthBonus += modValue;
+      return true;
+    case "shield":
+      acc.shieldBonus += modValue;
+      return true;
+    case "armor":
+      acc.armorBonus += modValue;
+      return true;
+    case "energy":
+    case "energyMax":
+      acc.energyBonus += modValue;
+      return true;
+    case "abilityStrength":
+      acc.abilityStrength += modValue;
+      return true;
+    case "abilityDuration":
+      acc.abilityDuration += modValue;
+      return true;
+    case "abilityEfficiency":
+      acc.abilityEfficiency += modValue;
+      return true;
+    case "abilityRange":
+      acc.abilityRange += modValue;
+      return true;
+    case "flightSpeed":
+      acc.flightSpeedBonus += modValue;
       return true;
     default:
       trackModPanel(stats, modId, statKey, modValue);

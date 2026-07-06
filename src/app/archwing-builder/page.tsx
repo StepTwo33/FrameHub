@@ -12,9 +12,10 @@ import { archgunModsForBuilder } from "@/lib/archgun-weapon-augment-mods";
 import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateArchwingBuild, calculateNecramechBuild } from "@/lib/archwing-calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
-import { WeaponStatsPanel } from "@/components/stats-panel";
-import { Weapon, EquippedMod, CalculatedStats } from "@/lib/types";
+import { WeaponStatsPanel, ArchwingStatsPanel } from "@/components/stats-panel";
+import { Weapon, EquippedMod, CalculatedStats, ArchwingCalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Star, Zap, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -157,6 +158,16 @@ export default function ArchwingBuilderPage() {
     if (!selectedWeapon) return null;
     return calculateWeaponBuild(selectedWeapon, weaponMods, modsMap);
   }, [selectedWeapon, weaponMods]);
+
+  const frameStats = useMemo<ArchwingCalculatedStats | null>(() => {
+    if (mode === "archwing" && selectedArchwing) {
+      return calculateArchwingBuild(selectedArchwing, archwingMods);
+    }
+    if (mode === "necramech" && selectedNecramech) {
+      return calculateNecramechBuild(selectedNecramech, necramechMods);
+    }
+    return null;
+  }, [mode, selectedArchwing, selectedNecramech, archwingMods, necramechMods]);
 
   const frameCapacity = (hasReactor ? 60 : 30) + (isMR30 ? 10 : 0);
   const weaponCapacity = (hasCatalyst ? 60 : 30) + (isMR30 ? 10 : 0);
@@ -367,27 +378,11 @@ export default function ArchwingBuilderPage() {
                 </div>
 
                 {/* Stats display */}
-                <div className="mt-4 border border-border rounded-xl p-4 bg-card">
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-2">
-                    {mode === "archwing" ? "ARCHWING STATS" : "NECRAMECH STATS"}
-                  </h3>
-                  {mode === "archwing" && selectedArchwing && (
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Health</span><span>{selectedArchwing.health}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span>{selectedArchwing.shield}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span>{selectedArchwing.armor}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Energy</span><span>{selectedArchwing.energy}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Speed</span><span>{selectedArchwing.speed}</span></div>
-                    </div>
-                  )}
-                  {mode === "necramech" && selectedNecramech && (
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Health</span><span>{selectedNecramech.health}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span>0</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span>{selectedNecramech.armor}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Energy</span><span>{selectedNecramech.energy}</span></div>
-                    </div>
-                  )}
+                <div className="mt-4">
+                  <ArchwingStatsPanel
+                    stats={frameStats}
+                    title={mode === "archwing" ? "ARCHWING STATS" : "NECRAMECH STATS"}
+                  />
                 </div>
               </div>
             )}

@@ -409,6 +409,33 @@ export interface CompanionCalculatedStats {
   modBonuses?: Record<string, number>;
 }
 
+export interface ArchwingCalculatedStats {
+  baseHealth: number;
+  baseShield: number;
+  baseArmor: number;
+  baseEnergy: number;
+  baseFlightSpeed: number;
+  healthBonus: number;
+  shieldBonus: number;
+  armorBonus: number;
+  energyBonus: number;
+  flightSpeedBonus: number;
+  abilityStrength: number;
+  abilityDuration: number;
+  abilityEfficiency: number;
+  abilityRange: number;
+  totalHealth: number;
+  totalShield: number;
+  totalArmor: number;
+  totalEnergy: number;
+  totalFlightSpeed: number;
+  effectiveHealth: number;
+  damageReduction: number;
+  /** Kinetic Diversion: % of health damage converted to energy (max 40). */
+  kineticDiversionPercent: number;
+  modBonuses?: Record<string, number>;
+}
+
 export interface Loadout {
   id: string;
   name: string;
