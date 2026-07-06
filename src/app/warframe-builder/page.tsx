@@ -1043,7 +1043,7 @@ export default function WarframeBuilderPage() {
                     </div>
                   )}
                   {/* Regular Mod Slots (1-8) */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     {Array.from({ length: 8 }, (_, i) => {
                       const slotIdx = i + 1;
                       const equipped = equippedMods.find((m) => m.slotIndex === slotIdx);
@@ -1064,82 +1064,6 @@ export default function WarframeBuilderPage() {
                     })}
                   </div>
                 </div>
-
-                {/* Exalted Weapon — full-width mod grid in main column */}
-                {exaltedWeapon && (
-                  <div className="rounded-xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.07] via-card to-card p-5 shadow-sm ring-1 ring-violet-500/10">
-                    <div className="mb-4 flex items-start gap-3">
-                      <GameAssetImage
-                        src={getWeaponImage(exaltedWeapon.name, { category: exaltedWeapon.category })}
-                        alt=""
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 shrink-0 rounded-lg object-contain bg-muted/30 ring-1 ring-violet-500/20"
-                        hideOnError
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Sparkles className="h-4 w-4 shrink-0 text-violet-400" aria-hidden />
-                          <h2 className="text-sm font-semibold tracking-wide text-violet-300">
-                            Exalted Weapon
-                          </h2>
-                          <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-300 ring-1 ring-violet-500/25">
-                            {exaltedWeapon.name}
-                          </span>
-                        </div>
-                        {exaltedWeapons.length > 1 && (
-                          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
-                            Also moddable:{" "}
-                            {exaltedWeapons
-                              .filter((w) => w.id !== exaltedWeapon.id)
-                              .map((w) => w.name)
-                              .join(", ")}
-                            . Grid below is for {exaltedWeapon.name}.
-                          </p>
-                        )}
-                        <div className="mt-2 flex items-center gap-3 text-xs">
-                          <span className="text-muted-foreground">Capacity</span>
-                          <span className={cn(
-                            "font-mono font-medium",
-                            exaltedCapacity > 60 ? "text-red-400" : "text-foreground",
-                          )}>
-                            {exaltedCapacity} / 60
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
-                      {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
-                        const equipped = exaltedMods.find((m) => m.slotIndex === i);
-                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                        return (
-                          <ModSlotCard
-                            key={`ex${i}`}
-                            mod={mod}
-                            rank={equipped?.rank ?? 0}
-                            slotIndex={i}
-                            slotPolarity={exaltedSlotPolarities[i]}
-                            onAdd={() => { setExaltedActiveSlot(i); setExaltedModPickerOpen(true); }}
-                            onRemove={() => setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
-                            onPolarize={(p) => setExaltedSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {exaltedStats && (
-                      <div className="mt-4 border-t border-violet-500/15 pt-4 [&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-violet-300/80">
-                        <WeaponStatsPanel
-                          stats={exaltedStats}
-                          baseStats={exaltedBaseStats}
-                          weapon={exaltedWeapon}
-                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
 
                 {/* Archon Shards */}
                 <div>
@@ -1244,6 +1168,82 @@ export default function WarframeBuilderPage() {
                         );
                       })}
                     </div>
+                  </div>
+                )}
+
+                {/* Exalted Weapon */}
+                {exaltedWeapon && (
+                  <div className="rounded-xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.07] via-card to-card p-5 shadow-sm ring-1 ring-violet-500/10">
+                    <div className="mb-4 flex items-start gap-3">
+                      <GameAssetImage
+                        src={getWeaponImage(exaltedWeapon.name, { category: exaltedWeapon.category })}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 shrink-0 rounded-lg object-contain bg-muted/30 ring-1 ring-violet-500/20"
+                        hideOnError
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Sparkles className="h-4 w-4 shrink-0 text-violet-400" aria-hidden />
+                          <h2 className="text-sm font-semibold tracking-wide text-violet-300">
+                            Exalted Weapon
+                          </h2>
+                          <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-300 ring-1 ring-violet-500/25">
+                            {exaltedWeapon.name}
+                          </span>
+                        </div>
+                        {exaltedWeapons.length > 1 && (
+                          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                            Also moddable:{" "}
+                            {exaltedWeapons
+                              .filter((w) => w.id !== exaltedWeapon.id)
+                              .map((w) => w.name)
+                              .join(", ")}
+                            . Grid below is for {exaltedWeapon.name}.
+                          </p>
+                        )}
+                        <div className="mt-2 flex items-center gap-3 text-xs">
+                          <span className="text-muted-foreground">Capacity</span>
+                          <span className={cn(
+                            "font-mono font-medium",
+                            exaltedCapacity > 60 ? "text-red-400" : "text-foreground",
+                          )}>
+                            {exaltedCapacity} / 60
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                      {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
+                        const equipped = exaltedMods.find((m) => m.slotIndex === i);
+                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                        return (
+                          <ModSlotCard
+                            key={`ex${i}`}
+                            mod={mod}
+                            rank={equipped?.rank ?? 0}
+                            slotIndex={i}
+                            slotPolarity={exaltedSlotPolarities[i]}
+                            onAdd={() => { setExaltedActiveSlot(i); setExaltedModPickerOpen(true); }}
+                            onRemove={() => setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
+                            onPolarize={(p) => setExaltedSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    {exaltedStats && (
+                      <div className="mt-4 border-t border-violet-500/15 pt-4 [&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-violet-300/80">
+                        <WeaponStatsPanel
+                          stats={exaltedStats}
+                          baseStats={exaltedBaseStats}
+                          weapon={exaltedWeapon}
+                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
 

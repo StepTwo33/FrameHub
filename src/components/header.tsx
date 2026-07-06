@@ -8,6 +8,7 @@ import { ThemePicker } from "@/components/theme-picker";
 import { AvatarImage } from "@/components/game-asset-image";
 import { Input } from "@/components/ui/input";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
+import { bestBuildCatalogMatch, buildDiscoverUrl } from "@/lib/build-search";
 
 interface SessionUser {
   id: string;
@@ -118,14 +119,24 @@ function AdminOpenReportsBadge({ count }: { count: number }) {
   );
 }
 
-function HeaderCodexSearch({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
+function HeaderBuildSearch({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
 
   const submit = (e?: FormEvent) => {
     e?.preventDefault();
     const q = query.trim();
-    router.push(q ? `/codex?q=${encodeURIComponent(q)}` : "/codex");
+    if (!q) {
+      router.push("/discover");
+      onNavigate?.();
+      return;
+    }
+    const match = bestBuildCatalogMatch(q);
+    router.push(
+      match
+        ? buildDiscoverUrl({ type: match.type, itemId: match.id })
+        : buildDiscoverUrl({ q }),
+    );
     onNavigate?.();
   };
 
@@ -137,8 +148,8 @@ function HeaderCodexSearch({ className, onNavigate }: { className?: string; onNa
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search codex..."
-          aria-label="Search codex"
+          placeholder="Search builds by frame or weapon..."
+          aria-label="Search community builds"
           className="h-9 border-border/60 bg-background/40 pl-9 pr-3 text-sm backdrop-blur-sm"
         />
       </div>
@@ -229,7 +240,7 @@ export function Header() {
         </nav>
 
         {/* Center search — grows on wide screens */}
-        <HeaderCodexSearch className="hidden md:block min-w-0 flex-1 max-w-md lg:max-w-lg mx-auto" />
+        <HeaderBuildSearch className="hidden md:block min-w-0 flex-1 max-w-md lg:max-w-lg mx-auto" />
 
         {/* Right cluster — pinned to the right edge */}
         <div className="ml-auto flex items-center gap-1 shrink-0">
@@ -323,7 +334,7 @@ export function Header() {
       {/* Mobile nav drawer */}
       {mobileOpen && (
         <nav className="lg:hidden border-t border-border bg-card px-4 py-3 space-y-1 max-h-[70vh] overflow-y-auto">
-          <HeaderCodexSearch className="pb-2 md:hidden" onNavigate={() => setMobileOpen(false)} />
+          <HeaderBuildSearch className="pb-2 md:hidden" onNavigate={() => setMobileOpen(false)} />
           <Link
             href="/discover"
             onClick={() => setMobileOpen(false)}

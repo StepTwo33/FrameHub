@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PublicBuildRow } from "@/components/public-build-row";
@@ -14,9 +15,12 @@ import {
 } from "@/components/page-shell";
 import { Search, Loader2, Users, X } from "lucide-react";
 import type { PublicBuildSummary } from "@/lib/build-types";
-import { allWeapons } from "@/data/weapons";
-import { allWarframes } from "@/data/warframes";
-import { allCompanions } from "@/data/companions";
+import {
+  buildDiscoverUrl,
+  getBuildItemRef,
+  searchBuildCatalog,
+  type BuildSearchItem,
+} from "@/lib/build-search";
 
 const BUILD_TYPES = [
   { id: "all", label: "All" },
@@ -28,17 +32,26 @@ const BUILD_TYPES = [
   { id: "railjack", label: "Railjack" },
 ] as const;
 
-interface ItemSuggestion {
-  id: string;
-  name: string;
-  type: string;
-}
-
 export default function DiscoverPage() {
-  const [sort, setSort] = useState<"recent" | "popular">("recent");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [itemFilter, setItemFilter] = useState<ItemSuggestion | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const urlQ = searchParams.get("q") ?? "";
+  const urlItemId = searchParams.get("itemId");
+  const urlType = searchParams.get("type");
+  const urlSort = searchParams.get("sort") === "popular" ? "popular" : "recent";
+
+  const urlItem = useMemo(() => {
+    if (!urlItemId || !urlType) return null;
+    return getBuildItemRef(urlType, urlItemId);
+  }, [urlItemId, urlType]);
+
+  const [sort, setSort] = useState<"recent" | "popular">(urlSort);
+  const [typeFilter, setTypeFilter] = useState(
+    urlItem ? urlItem.type : urlType && urlType !== "all" ? urlType : "all",
+  );
+  const [searchQuery, setSearchQuery] = useState(urlQ);
+  const [itemFilter, setItemFilter] = useState<BuildSearchItem | null>(urlItem);
   const [itemSearch, setItemSearch] = useState("");
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
   const [builds, setBuilds] = useState<(PublicBuildSummary & { voted?: boolean })[]>([]);
@@ -46,27 +59,43 @@ export default function DiscoverPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
 
-  const itemSuggestions = useMemo(() => {
-    const q = itemSearch.trim().toLowerCase();
-    if (q.length < 2) return [];
-    const results: ItemSuggestion[] = [];
-    const limit = 8;
-    for (const w of allWeapons) {
-      if (w.name.toLowerCase().includes(q)) {
-        results.push({ id: w.id, name: w.name, type: "weapon" });
-        if (results.length >= limit) break;
-      }
-    }
-    if (results.length < limit) {
-      for (const wf of allWarframes) {
-        if (wf.name.toLowerCase().includes(q)) {
-          results.push({ id: wf.id, name: wf.name, type: "warframe" });
-          if (results.length >= limit) break;
-        }
-      }
-    }
-    return results;
-  }, [itemSearch]);
+  useEffect(() => {
+    setSearchQuery(urlQ);
+    setItemFilter(urlItem);
+    setSort(urlSort);
+    setTypeFilter(urlItem ? urlItem.type : urlType && urlType !== "all" ? urlType : "all");
+    setItemSearch("");
+    setShowItemSuggestions(false);
+  }, [urlQ, urlItem, urlSort, urlType]);
+
+  const itemSuggestions = useMemo(
+    () => searchBuildCatalog(itemSearch, 8),
+    [itemSearch],
+  );
+
+  const syncUrl = useCallback(
+    (next: {
+      sort?: "recent" | "popular";
+      typeFilter?: string;
+      itemFilter?: BuildSearchItem | null;
+      searchQuery?: string;
+    }) => {
+      const resolvedSort = next.sort ?? sort;
+      const resolvedItem = next.itemFilter !== undefined ? next.itemFilter : itemFilter;
+      const resolvedType = next.typeFilter ?? typeFilter;
+      const resolvedQ = next.searchQuery !== undefined ? next.searchQuery : searchQuery;
+
+      router.replace(
+        buildDiscoverUrl({
+          sort: resolvedSort === "popular" ? "popular" : undefined,
+          type: resolvedItem ? resolvedItem.type : resolvedType !== "all" ? resolvedType : undefined,
+          itemId: resolvedItem?.id,
+          q: !resolvedItem && resolvedQ.trim() ? resolvedQ.trim() : undefined,
+        }),
+      );
+    },
+    [router, sort, typeFilter, itemFilter, searchQuery],
+  );
 
   const fetchBuilds = useCallback(
     async (cursor?: string | null, append = false) => {
@@ -83,7 +112,7 @@ export default function DiscoverPage() {
           params.set("itemId", itemFilter.id);
           if (typeFilter === "all") params.set("type", itemFilter.type);
         }
-        if (searchQuery.trim()) params.set("q", searchQuery.trim());
+        if (searchQuery.trim() && !itemFilter) params.set("q", searchQuery.trim());
         if (cursor) params.set("cursor", cursor);
 
         const res = await fetch(`/api/builds/public?${params}`);
@@ -96,12 +125,22 @@ export default function DiscoverPage() {
         setLoadingMore(false);
       }
     },
-    [sort, typeFilter, itemFilter, searchQuery]
+    [sort, typeFilter, itemFilter, searchQuery],
   );
 
   useEffect(() => {
     fetchBuilds();
   }, [fetchBuilds]);
+
+  const heroTitle = itemFilter
+    ? `Builds for ${itemFilter.name}`
+    : searchQuery.trim()
+      ? `Builds matching “${searchQuery.trim()}”`
+      : "Discover Builds";
+
+  const heroDescription = itemFilter
+    ? `Community loadouts for ${itemFilter.name}. Upvote builds you like or open one to copy mods.`
+    : "Browse community builds shared by other Tenno. Search by name or filter to a specific weapon or warframe.";
 
   return (
     <PageShell>
@@ -109,14 +148,21 @@ export default function DiscoverPage() {
         <PageHero
           icon={Users}
           accent="primary"
-          title="Discover Builds"
-          description="Browse community builds shared by other Tenno. Search by name or filter to a specific weapon or warframe."
+          title={heroTitle}
+          description={heroDescription}
         />
 
         <ContentPanel className="mb-6 space-y-4">
           <div className="flex flex-wrap gap-2">
             {(["recent", "popular"] as const).map((s) => (
-              <FilterChip key={s} active={sort === s} onClick={() => setSort(s)}>
+              <FilterChip
+                key={s}
+                active={sort === s}
+                onClick={() => {
+                  setSort(s);
+                  syncUrl({ sort: s });
+                }}
+              >
                 {s === "recent" ? "Most Recent" : "Top Rated"}
               </FilterChip>
             ))}
@@ -126,7 +172,16 @@ export default function DiscoverPage() {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSearchQuery(value);
+                if (itemFilter) setItemFilter(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  syncUrl({ searchQuery, itemFilter: null });
+                }
+              }}
               placeholder="Search build names and descriptions…"
               className="border-border/60 bg-background/50 pl-9"
             />
@@ -142,7 +197,19 @@ export default function DiscoverPage() {
                 setShowItemSuggestions(true);
               }}
               onFocus={() => setShowItemSuggestions(true)}
-              placeholder="Filter by weapon or warframe…"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && itemSearch.trim()) {
+                  const match = searchBuildCatalog(itemSearch, 1)[0];
+                  if (match) {
+                    setItemFilter(match);
+                    setItemSearch("");
+                    setTypeFilter(match.type);
+                    setShowItemSuggestions(false);
+                    syncUrl({ itemFilter: match, typeFilter: match.type, searchQuery: "" });
+                  }
+                }
+              }}
+              placeholder="Filter by weapon, warframe, companion…"
               className="border-border/60 bg-background/50 pl-9 pr-9"
             />
             {(itemFilter || itemSearch) && (
@@ -152,6 +219,7 @@ export default function DiscoverPage() {
                   setItemFilter(null);
                   setItemSearch("");
                   setShowItemSuggestions(false);
+                  syncUrl({ itemFilter: null });
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
               >
@@ -167,7 +235,9 @@ export default function DiscoverPage() {
                     onClick={() => {
                       setItemFilter(item);
                       setItemSearch("");
+                      setTypeFilter(item.type);
                       setShowItemSuggestions(false);
+                      syncUrl({ itemFilter: item, typeFilter: item.type, searchQuery: "" });
                     }}
                     className="flex w-full justify-between px-3 py-2.5 text-left text-sm transition-colors hover:bg-primary/5"
                   >
@@ -181,7 +251,15 @@ export default function DiscoverPage() {
 
           <div className="flex flex-wrap gap-2">
             {BUILD_TYPES.map((t) => (
-              <FilterChip key={t.id} active={typeFilter === t.id} onClick={() => setTypeFilter(t.id)}>
+              <FilterChip
+                key={t.id}
+                active={typeFilter === t.id}
+                onClick={() => {
+                  setTypeFilter(t.id);
+                  if (t.id !== "all") setItemFilter(null);
+                  syncUrl({ typeFilter: t.id, itemFilter: t.id !== "all" ? null : itemFilter });
+                }}
+              >
                 {t.label}
               </FilterChip>
             ))}
@@ -195,8 +273,12 @@ export default function DiscoverPage() {
         ) : builds.length === 0 ? (
           <EmptyState
             icon={Users}
-            title="No community builds yet"
-            description='Save a build in any builder and check "List in Community Builds" to share it here.'
+            title={itemFilter ? `No builds for ${itemFilter.name} yet` : "No community builds yet"}
+            description={
+              itemFilter
+                ? `Be the first to share a ${itemFilter.name} build — save in the builder and enable “List in Community Builds”.`
+                : 'Save a build in any builder and check "List in Community Builds" to share it here.'
+            }
           />
         ) : (
           <>
