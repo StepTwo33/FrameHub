@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@/generated/prisma/client";
 import { verifyAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import {
@@ -9,6 +10,10 @@ import {
 import { deepMergeOverrideFields } from "@/lib/override-merge";
 
 const VALID_ACTIONS = new Set(["modify", "add", "remove"]);
+
+function toPrismaJson(fields: Record<string, unknown>): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(fields)) as Prisma.InputJsonValue;
+}
 
 function isOverrideCategory(value: string): value is OverrideCategory {
   return (OVERRIDE_CATEGORIES as readonly string[]).includes(value);
@@ -113,6 +118,8 @@ export async function POST(req: NextRequest) {
     mergedFields = deepMergeOverrideFields(prev, payload.fields);
   }
 
+  const fieldsJson = toPrismaJson(payload.action === "remove" ? {} : mergedFields);
+
   const row = await prisma.dataOverride.upsert({
     where: {
       targetType_targetId: {
@@ -125,13 +132,13 @@ export async function POST(req: NextRequest) {
       targetType: payload.targetType,
       targetId: payload.targetId,
       action: payload.action,
-      fields: payload.action === "remove" ? {} : mergedFields,
+      fields: fieldsJson,
       note: payload.note,
       authorId: userId,
     },
     update: {
       action: payload.action,
-      fields: payload.action === "remove" ? {} : mergedFields,
+      fields: fieldsJson,
       note: payload.note,
       authorId: userId,
     },
@@ -186,7 +193,7 @@ export async function PUT(req: NextRequest) {
         targetType: payload.targetType,
         targetId: payload.targetId,
         action: payload.action,
-        fields: payload.action === "remove" ? {} : payload.fields,
+        fields: toPrismaJson(payload.action === "remove" ? {} : payload.fields),
         note: payload.note,
         authorId: userId,
       },
