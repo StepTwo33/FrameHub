@@ -26,6 +26,7 @@ import {
 import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { isTomeMod } from "@/lib/mod-slot-categories";
 import { isTomeWeapon } from "@/lib/tome-weapons";
+import { isSetBonusMod } from "@/lib/set-mod-catalog";
 
 const rarityColors: Record<string, string> = {
   common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
@@ -117,6 +118,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       });
     } else {
       categoryMods = mods.filter((m) => {
+        if (isSetBonusMod(m)) return false;
         // Stance mods should never appear in regular mod slots
         if (m.category === "stance") return false;
         // Necramech/archwing/operator mods should not leak into normal weapon builders
@@ -167,6 +169,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       if (!isTomeMod(m)) return true;
       return isTomeWeapon(weaponId);
     });
+
+    categoryMods = categoryMods.filter((m) => !isSetBonusMod(m));
 
     if (!search.trim()) return categoryMods;
     const q = search.toLowerCase();

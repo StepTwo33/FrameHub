@@ -7,6 +7,7 @@ import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
 import { isCompanionAffectingWarframeAugment } from "@/lib/companion-augment-mods";
 import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { isWarframeAugment, isWarframeSpecificAugment } from "@/lib/warframe-augment-mods";
+import { isSetBonusMod } from "@/lib/set-mod-catalog";
 
 export type ModBrowserCategoryId =
   | "all"
@@ -24,7 +25,8 @@ export type ModBrowserCategoryId =
   | "archgun"
   | "archmelee"
   | "necramech"
-  | "kdrive";
+  | "kdrive"
+  | "set";
 
 /** Standard equipment-type filters (game-like order). */
 export const MOD_BROWSER_CATEGORIES: { id: ModBrowserCategoryId; label: string }[] = [
@@ -44,6 +46,7 @@ export const MOD_BROWSER_CATEGORIES: { id: ModBrowserCategoryId; label: string }
   { id: "archmelee", label: "Arch Melee" },
   { id: "necramech", label: "Necramech" },
   { id: "kdrive", label: "K-Drive" },
+  { id: "set", label: "Set Bonus" },
 ];
 
 /** Known K-Drive mod ids (legacy fallback if category not yet set). */
@@ -131,12 +134,15 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
       return mod.category === "necramech";
     case "kdrive":
       return mod.category === "kdrive" || isKDriveMod(mod);
+    case "set":
+      return isSetBonusMod(mod);
     default:
       return false;
   }
 }
 
 export function modBrowserCategoryLabel(mod: Mod): string {
+  if (isSetBonusMod(mod)) return "Set bonus";
   const slot = getModSlotCategory(mod);
   if (slot) {
     return slot === "exilus" ? "Exilus" : slot === "tome" ? "Tome" : "Historic";

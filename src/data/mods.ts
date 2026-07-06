@@ -1,6 +1,7 @@
 import { Mod } from "@/lib/types";
+import { normalizeModCatalog } from "@/lib/set-mod-catalog";
 
-export const allMods: Mod[] = [
+const RAW_MODS: Mod[] = [
   {
     "id": "heavy_caliber",
     "name": "Heavy Caliber",
@@ -22781,6 +22782,8 @@ export const allMods: Mod[] = [
     "warframeId": "mag"
   }
 ];
+
+export const allMods: Mod[] = normalizeModCatalog(RAW_MODS);
 export const modsMap = new Map<string, Mod>(allMods.map(m => [m.id, m]));
 
 /** Legacy duplicate augment ids → canonical mod (saved builds). */

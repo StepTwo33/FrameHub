@@ -82,6 +82,7 @@ import {
   NecramechDetailPanel,
 } from "@/components/codex-entity-panels";
 import { cn } from "@/lib/utils";
+import { getSetBonusPieces, isSetBonusMod } from "@/lib/set-mod-catalog";
 
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"] as const;
 const RARITIES = ["All", "Common", "Uncommon", "Rare", "Legendary"] as const;
@@ -762,6 +763,8 @@ function CodexModRow({
   onSelect: () => void;
 }) {
   const maxCap = modMaxCapacity(mod);
+  const setBonus = isSetBonusMod(mod);
+  const pieces = setBonus ? getSetBonusPieces(mod) : 0;
 
   return (
     <button
@@ -786,10 +789,16 @@ function CodexModRow({
           {modBrowserCategoryLabel(mod)}
         </p>
       </div>
-      <span className="font-mono text-[10px] text-muted-foreground" title="Capacity drain at R0 → max rank">
-        {mod.drain}
-        <span className="text-muted-foreground/60"> → {maxCap}</span>
-      </span>
+      {setBonus ? (
+        <span className="text-[10px] font-medium text-amber-300/90" title="Set pieces required">
+          {pieces}-piece
+        </span>
+      ) : (
+        <span className="font-mono text-[10px] text-muted-foreground" title="Capacity drain at R0 → max rank">
+          {mod.drain}
+          <span className="text-muted-foreground/60"> → {maxCap}</span>
+        </span>
+      )}
     </button>
   );
 }
@@ -873,6 +882,8 @@ function CodexShardRow({
 
 function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolean; returnTo?: string }) {
   const aura = isAuraMod(mod);
+  const setBonus = isSetBonusMod(mod);
+  const setPieces = setBonus ? getSetBonusPieces(mod) : 0;
   const slotCategory = getModSlotCategory(mod);
   const maxCap = modMaxCapacity(mod);
   const exclusiveWeapons = isWeaponExclusiveMod(mod.id) ? getExclusiveWeaponEntries(mod.id) : [];
@@ -930,6 +941,11 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
                 Universal augment
               </Badge>
             )}
+            {setBonus && (
+              <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-300">
+                Set bonus
+              </Badge>
+            )}
           </div>
         </div>
       </div>
@@ -938,6 +954,19 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
         {cleanModDescription(mod.description)}
       </p>
 
+      {setBonus ? (
+        <div className="grid grid-cols-2 gap-1.5 text-xs">
+          <div className="rounded border border-amber-500/25 bg-amber-500/5 p-1.5">
+            <p className="text-[10px] uppercase text-muted-foreground">Pieces required</p>
+            <p className={cn("font-mono", compact ? "text-base" : "text-lg")}>{setPieces}</p>
+          </div>
+          <div className="rounded border border-border/60 p-1.5">
+            <p className="text-[10px] uppercase text-muted-foreground">Activation</p>
+            <p className="text-sm font-medium">Automatic</p>
+          </div>
+        </div>
+      ) : (
+        <>
       <div className="grid grid-cols-2 gap-1.5 text-xs">
         <div className="rounded border border-border/60 p-1.5">
           <p className="text-[10px] uppercase text-muted-foreground">Base drain (R0)</p>
@@ -968,10 +997,18 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
           Capacity drain: R0 = {modDrainAtRank(mod.drain, 0)}, max rank R{mod.maxRank} = {modDrainAtRank(mod.drain, mod.maxRank)} (+1 per rank).
         </p>
       )}
+        </>
+      )}
+
+      {setBonus && (
+        <p className="text-[10px] leading-snug text-muted-foreground">
+          Set bonuses are not equippable mods — they activate automatically when enough mods from the same set are installed across your loadout.
+        </p>
+      )}
 
       {Object.keys(mod.stats ?? {}).length > 0 && (
         <div>
-          <PanelHeading>Stats (R0 → max)</PanelHeading>
+          <PanelHeading>{setBonus ? "Effect at full set" : "Stats (R0 → max)"}</PanelHeading>
           <ul className="mt-1 space-y-1">
             {Object.entries(mod.stats ?? {}).map(([statKey, perRank]) => {
               const r0 = getModStatDisplayLines({ ...mod, stats: { [statKey]: perRank } }, 0)[0];

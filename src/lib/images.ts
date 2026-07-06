@@ -28,6 +28,12 @@ const MOD_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Looters": "Looter",
   "ReactivStorm": "Reactive_Storm",
   "Berserker": "Berserker_Fury",
+  "Aero Set Bonus": "Hawksetmod",
+  "Carnis Set Bonus": "Ashensetmod",
+  "Jugulus Set Bonus": "Bonebladesetmod",
+  "Motus Set Bonus": "Raptorsetmod",
+  "Proton Set Bonus": "Spidersetmod",
+  "Saxum Set Bonus": "Femursetmod",
 };
 
 const MOD_STEM_SMALL_WORDS = new Set(["of", "the", "and"]);
