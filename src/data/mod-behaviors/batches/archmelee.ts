@@ -15,7 +15,9 @@ function mod(modId: string, stats: VerifiedItemStatLine[], descriptionOnly?: str
 
 export const MOD_BEHAVIORS_ARCHMELEE: Record<string, VerifiedModBehavior> = {
   astral_autopsy: mod("astral_autopsy", [], "wiki: Astral Autopsy \u2014 Fatal strikes against an enemy also perform a Codex Scan. Scans require an equipped Codex Scanner and an available charge."),
-  astral_cut: mod("astral_cut", [], "wiki: Astral Cut \u2014 Tauron Strike slash size is increased by 80%."),
+  astral_cut: mod("astral_cut", [
+    line("slashSize", "mod_panel", "multiplicative_percent", "Astral Cut: slashSize \u2014 Tauron Strike slash size is increased by 80%."),
+  ]),
   astral_slash: mod("astral_slash", [
     line("slash", "weapon_dps", "multiplicative_percent", "Astral Slash: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),
   ]),

@@ -165,20 +165,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "mutalist_quake",
-    "name": "Mutalist Quanta",
-    "polarity": "madurai",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "rifle",
-    "subCategory": "",
-    "stats": {
-      "ammoMaximum": 5
-    },
-    "description": "+5% Ammo Maximum per rank",
-    "rarity": "uncommon"
-  },
-  {
     "id": "vigilante_fervor",
     "name": "Vigilante Fervor",
     "polarity": "madurai",
@@ -201,7 +187,8 @@ export const allMods: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "ammoPickup": 15
+      "ammoPickup": 15,
+      "ammoConversion": 5.0
     },
     "description": "Converts Secondary ammo pickups to 30% of Ammo Pick Up.",
     "rarity": "rare"
@@ -591,7 +578,7 @@ export const allMods: Mod[] = [
     "category": "pistol",
     "subCategory": "",
     "stats": {
-      "ammoConversion": 20
+      "ammoConversion": 8.333333
     },
     "description": "Converts Primary ammo pickups to 50% of Ammo Pick Up.",
     "rarity": "rare"
@@ -750,7 +737,7 @@ export const allMods: Mod[] = [
     "category": "shotgun",
     "subCategory": "",
     "stats": {
-      "ammoConversion": 20
+      "ammoConversion": 8.333333
     },
     "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
     "rarity": "rare"
@@ -923,7 +910,7 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "range": 17
+      "range": 0.272727
     },
     "description": "+17% Range per rank (Primed)",
     "rarity": "legendary"
@@ -937,7 +924,7 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "range": 15,
+      "range": 0.166667,
       "duration": 4.0
     },
     "description": "On Status Effect: +1 Range for 24s. Stacks up to 2 times.",
@@ -983,7 +970,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "heavyAttackDamage": 20,
-      "damage": 20.0
+      "damage": 20.0,
+      "heavyAttackEfficiency": 10.0
     },
     "description": "+120% Melee Damage On Heavy Attack\\n+60% Heavy Attack Wind Up Speed",
     "rarity": "uncommon"
@@ -1013,7 +1001,8 @@ export const allMods: Mod[] = [
     "subCategory": "weapon",
     "stats": {
       "criticalMultiplier": 14.1667,
-      "heavyWindUp": 10
+      "heavyWindUp": 10,
+      "heavyAttackEfficiency": 10.0
     },
     "description": "+85% Critical Damage\\n+60% Heavy Attack Wind Up Speed",
     "rarity": "rare"
@@ -1098,7 +1087,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "lethalDamage": 100,
-      "damage": 25.0
+      "damage": 25.0,
+      "finisherDamage": 25.0
     },
     "description": "+16 Initial Combo\\n+100% Finisher Damage",
     "rarity": "rare"
@@ -1160,7 +1150,9 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "abilityRange": 2.5
+      "abilityRange": 2.5,
+      "slideSpeed": 2.0,
+      "slideFriction": -5.0
     },
     "description": "+12% Slide\\n-30% Friction\\n+15% Ability Range",
     "rarity": "rare"
@@ -1217,7 +1209,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "energyRegen": 0.3
+      "energyRegen": 0.3,
+      "energyOnKill": 0.1
     },
     "description": "Squad receives +0.6 Energy Regen/s",
     "rarity": "uncommon"
@@ -1420,7 +1413,7 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "shieldRecharge": 15,
-      "knockdownResistance": 50,
+      "knockdownResistance": 10.0,
       "shield": 25.0
     },
     "description": "+15% Shield Recharge, +50% Knockdown Resistance per rank",
@@ -2872,7 +2865,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "finisherDamageBonus": 50,
-      "damage": 75.0
+      "damage": 75.0,
+      "finisherDamage": 75.0
     },
     "description": "Radial Blind Augment: Blinded enemies take 300% more Finisher Damage.",
     "rarity": "rare",
@@ -3841,7 +3835,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "controlledDamage": 100,
-      "attackSpeed": 250.0
+      "attackSpeed": 250.0,
+      "damage": 250.0
     },
     "description": "Mind Control Augment: Controlled target inflicts +1000% Damage and gains +25% Movement and Attack Speed.",
     "rarity": "rare",
@@ -4182,7 +4177,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "damagePerSecondActive": 25,
-      "totalDamageCap": 200
+      "totalDamageCap": 200,
+      "explosionDamage": 25.0
     },
     "description": "Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental projectile dealing 100 Damage for each second the ability was active, to a maximum of 500 Damage.",
     "rarity": "rare",
@@ -4796,7 +4792,8 @@ export const allMods: Mod[] = [
     "stats": {
       "comboPerHit": 1,
       "slash": 25.0,
-      "range": 2.25
+      "range": 2.25,
+      "comboCountChance": 25.0
     },
     "description": "Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons gain 100% additional Combo Count Chance when hitting targets affected by Slash Status.",
     "rarity": "rare",
@@ -5961,7 +5958,8 @@ export const allMods: Mod[] = [
     "subCategory": "weapon",
     "stats": {
       "damageBonus": 10,
-      "statusChance": 25.0
+      "statusChance": 25.0,
+      "syndicatePower": 1.0
     },
     "description": "+100% Status Chance\\n+1 'Blight'",
     "rarity": "rare"
@@ -6307,7 +6305,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "lifeSteal": 0.5
+      "lifeSteal": 0.5,
+      "headshotMultiplier": 12.5
     },
     "description": "+75% to Headshot Multiplier, +3% Life Steal on Nikanas, <LINE_SEPARATOR>\\n60% chance to pickup used arrows.",
     "rarity": "rare"
@@ -6322,7 +6321,8 @@ export const allMods: Mod[] = [
     "subCategory": "weapon",
     "stats": {
       "magazine": 7.5,
-      "shield": 16.666667
+      "shield": 16.666667,
+      "comboCountChance": 16.666667
     },
     "description": "+45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield",
     "rarity": "rare"
@@ -6377,7 +6377,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.333333
+    },
     "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
     "rarity": "rare"
   },
@@ -6590,7 +6592,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionDamage": 100.0
+    },
     "description": "Enemies killed explode, dealing 600 Damage shortly after death.",
     "rarity": "rare"
   },
@@ -6660,7 +6664,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "criticalChance": 50
+      "criticalChance": 50,
+      "syndicatePower": 1.0
     },
     "description": "+200% Critical Chance, +1 'Sequence'",
     "rarity": "rare"
@@ -6716,7 +6721,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "disarmChance": 10.0,
+      "syndicatePower": 1.0
+    },
     "description": "Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'",
     "rarity": "rare"
   },
@@ -6787,7 +6795,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "statusChance": 5
+      "statusChance": 5,
+      "syndicatePower": 1.0
     },
     "description": "+20 Final Status Chance, +1 'Entropy'",
     "rarity": "rare"
@@ -6918,7 +6927,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "fireRate": 20
+      "fireRate": 20,
+      "syndicatePower": 1.0
     },
     "description": "+80% Fire Rate, +1 'Truth'",
     "rarity": "rare"
@@ -7062,7 +7072,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "ricochetBounces": 6.0,
+      "range": 5.0
+    },
     "description": "Shots now bounce up to 6x and travel 30% further.",
     "rarity": "rare"
   },
@@ -7075,7 +7088,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "damage": 15
+      "damage": 15,
+      "syndicatePower": 1.0
     },
     "description": "+60% Damage when Aiming, +1 'Purity'",
     "rarity": "rare"
@@ -7178,7 +7192,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOrbBonus": 10.0
+    },
     "description": "Shoot Health Orbs to obtain them with +110% extra effect.",
     "rarity": "rare"
   },
@@ -7264,7 +7280,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "nullifierPopChance": 22.5,
+      "syndicatePower": 1.0
+    },
     "description": "Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1 'Justice'",
     "rarity": "rare"
   },
@@ -7521,7 +7540,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.363636
+    },
     "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
     "rarity": "legendary"
   },
@@ -7548,7 +7569,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.363636
+    },
     "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
     "rarity": "legendary"
   },
@@ -7634,7 +7657,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.333333
+    },
     "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
     "rarity": "rare"
   },
@@ -7704,7 +7729,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "multishot": 50
+      "multishot": 50,
+      "syndicatePower": 1.0
     },
     "description": "+200% Multishot, +1 'Justice'",
     "rarity": "rare"
@@ -7732,7 +7758,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "criticalChance": 50.0,
+      "criticalMultiplier": 50.0
+    },
     "description": "Discharge from Alt-Fire now has infinite Body Punch Through but no longer explodes on contact. Each enemy hit will refill one charge, and reaching a full charge will increase the Critical Chance and Critical Damage of the next discharge by 300%.",
     "rarity": "rare"
   },
@@ -7758,7 +7787,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOnKill": 1.363636
+    },
     "description": "On Headshot Kill:\\n+15 Energy",
     "rarity": "rare"
   },
@@ -7771,7 +7802,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "statusChance": 22.5
+      "statusChance": 22.5,
+      "syndicatePower": 1.0
     },
     "description": "+90% Status Chance, +1 'Justice'",
     "rarity": "rare"
@@ -7812,7 +7844,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.333333
+    },
     "description": "Converts Secondary ammo pickups to 50% of Ammo Pick Up.",
     "rarity": "rare"
   },
@@ -7955,7 +7989,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "headshotMultiplier": 10.0
+    },
     "description": "+60% to Headshot Multiplier",
     "rarity": "rare"
   },
@@ -8010,7 +8046,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionChance": 7.5
+    },
     "description": "+45% Chance to Explode (Use with Caution)",
     "rarity": "rare"
   },
@@ -8097,7 +8135,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "storedDamage": 5000.0
+    },
     "description": "Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac dealing and resetting the accumulated damage.",
     "rarity": "rare"
   },
@@ -8141,7 +8181,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "duration": 2.0
+      "duration": 2.0,
+      "syndicatePower": 1.0
     },
     "description": "Killing a flying enemy creates a lightning trap from their remains, lasting 8s, +1 'Sequence'",
     "rarity": "rare"
@@ -8225,7 +8266,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "primary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "noiseReduction": 25.0
+    },
     "description": "Reduces the chance an enemy will hear gunfire by 100%.",
     "rarity": "common"
   },
@@ -8509,7 +8552,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionChance": 7.5
+    },
     "description": "+30% Chance to Explode (Use with Caution)",
     "rarity": "rare"
   },
@@ -8536,7 +8581,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionChance": 20.0
+    },
     "description": "+80% Chance to Explode (Use with Caution)",
     "rarity": "rare"
   },
@@ -8562,7 +8609,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "criticalChance": 5.0,
+      "criticalMultiplier": 5.0
+    },
     "description": "Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduce by 30% when fewer than 3 enemies are struck by the grenade explosion.",
     "rarity": "rare"
   },
@@ -8647,7 +8697,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOrbBonus": 10.0
+    },
     "description": "Shoot Energy Orbs to obtain them with +110% extra effect.",
     "rarity": "rare"
   },
@@ -8659,7 +8711,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "explosionChance": 5.0,
+      "syndicatePower": 1.0
+    },
     "description": "+20% Chance to Explode (Use with Caution), +1 'Entropy'",
     "rarity": "rare"
   },
@@ -8672,7 +8727,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "magazine": 50
+      "magazine": 50,
+      "syndicatePower": 1.0
     },
     "description": "+200% Magazine Capacity, +1 'Blight'",
     "rarity": "rare"
@@ -8862,7 +8918,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "armorDebuffOnKill": 1.25,
+      "shieldDebuffOnKill": 1.25
+    },
     "description": "Killing enemies reduces the Armor and Shields of other enemies within Affinity Range by 5%.",
     "rarity": "rare"
   },
@@ -8889,7 +8948,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "universalOrbChance": 3.0
+    },
     "description": "Enemies have a 12% chance to drop a Universal Orb on death.",
     "rarity": "rare"
   },
@@ -9220,7 +9281,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.363636
+    },
     "description": "Converts Primary ammo pickups to 92% of Ammo Pick Up.",
     "rarity": "legendary"
   },
@@ -9420,7 +9483,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "range": 5.0
+      "range": 5.0,
+      "syndicatePower": 1.0
     },
     "description": "+20m Beam Range, +1 'Sequence'",
     "rarity": "rare"
@@ -9536,7 +9600,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "magazine": 10.0,
+      "syndicatePower": 1.0
+    },
     "description": "+40 Magazine Capacity, +1 'Truth'",
     "rarity": "rare"
   },
@@ -9549,7 +9616,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "magazine": 50
+      "magazine": 50,
+      "syndicatePower": 1.0
     },
     "description": "+200% Magazine Capacity, +1 'Blight'",
     "rarity": "rare"
@@ -9637,7 +9705,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "statusDuration": 50
+      "statusDuration": 50,
+      "syndicatePower": 1.0
     },
     "description": "+200% Status Duration, +1 'Sequence'",
     "rarity": "rare"
@@ -9651,7 +9720,8 @@ export const allMods: Mod[] = [
     "category": "secondary",
     "subCategory": "",
     "stats": {
-      "duration": 5.0
+      "duration": 5.0,
+      "abilityStrength": 1.0
     },
     "description": "Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stacks up to 15 times.",
     "rarity": "rare"
@@ -9665,7 +9735,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "lifeSteal": 5
+      "lifeSteal": 5,
+      "syndicatePower": 1.0
     },
     "description": "+20% Life Steal, +1 'Purity'",
     "rarity": "rare"
@@ -9963,7 +10034,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "secondary",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "noiseReduction": 16.666667
+    },
     "description": "Reduces the chance an enemy will hear gunfire by 100%.",
     "rarity": "common"
   },
@@ -10107,7 +10180,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "damage": 12.5
+      "damage": 12.5,
+      "syndicatePower": 1.0
     },
     "description": "Blocking absorbs 50% of incoming damage, stored as Extra Damage for the next charge attack., +1 'Truth'",
     "rarity": "rare"
@@ -10136,7 +10210,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "damage": 25
+      "damage": 25,
+      "syndicatePower": 1.0
     },
     "description": "+100% Melee Damage, +1 'Truth'",
     "rarity": "rare"
@@ -10164,7 +10239,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "damage": 25
+      "damage": 25,
+      "syndicatePower": 1.0
     },
     "description": "+100% Melee Damage, +1 'Purity'",
     "rarity": "rare"
@@ -10364,7 +10440,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "comboCountChance": 5.0
+    },
     "description": "+20% Additional Combo Count Chance on Lifted enemies",
     "rarity": "common"
   },
@@ -10378,7 +10456,8 @@ export const allMods: Mod[] = [
     "subCategory": "weapon",
     "stats": {
       "damage": 5.0,
-      "range": 2.5
+      "range": 2.5,
+      "syndicatePower": 1.0
     },
     "description": "Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max Health) <DT_EXPLOSION_COLOR>Blast Damage, in a +10m radius., +1 'Entropy'",
     "rarity": "rare"
@@ -10392,7 +10471,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "projectileSpeed": 35
+      "projectileSpeed": 35,
+      "syndicatePower": 1.0
     },
     "description": "+140% Projectile Speed, +1 'Entropy'",
     "rarity": "rare"
@@ -10405,7 +10485,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionDamage": 50.0
+    },
     "description": "Enemies killed explode, dealing 300 Damage shortly after death.",
     "rarity": "rare"
   },
@@ -10418,7 +10500,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "radiation": 15
+      "radiation": 15,
+      "heavyAttackEfficiency": 10.0
     },
     "description": "+60% <DT_RADIATION_COLOR>Radiation, +40% Heavy Attack Efficiency",
     "rarity": "rare"
@@ -10431,7 +10514,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "blockAngle": 5.0
+    },
     "description": "+20 Parry Angle",
     "rarity": "common"
   },
@@ -10460,7 +10545,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "duration": 1.818182
+      "duration": 1.818182,
+      "heavyAttackEfficiency": 4.545455
     },
     "description": "+50% Heavy Attack Efficiency\\nOn Melee Kill:\\n+20 Initial Combo for 20s. Stacks up to 4x.",
     "rarity": "rare"
@@ -10503,7 +10589,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "duration": 0.5
+    },
     "description": "With Melee Weapon equipped, unchanneled hits slow target and disable jump for +2s.",
     "rarity": "rare"
   },
@@ -10544,7 +10632,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "augment",
     "subCategory": "weapon",
-    "stats": {},
+    "stats": {
+      "finisherDamage": 20.0
+    },
     "description": "Increase Finisher Damage by 120% against prone enemies.",
     "rarity": "uncommon"
   },
@@ -10600,7 +10690,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "damage": 25
+      "damage": 25,
+      "syndicatePower": 1.0
     },
     "description": "+100% Melee Damage, +1 'Justice'",
     "rarity": "rare"
@@ -10687,7 +10778,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damage": 10.0
+    },
     "description": "Enables Tennokai. Increases Tennokai damage by 60%.",
     "rarity": "uncommon"
   },
@@ -10701,7 +10794,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "heavyAttackSpeed": 10,
-      "damage": 15.0
+      "damage": 15.0,
+      "heavyAttackEfficiency": 10.0
     },
     "description": "+90% Status Damage, +60% Heavy Attack Wind Up Speed",
     "rarity": "uncommon"
@@ -10914,7 +11008,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ricochetBounces": -4.0
+    },
     "description": "-4 Bounce",
     "rarity": "common"
   },
@@ -10926,7 +11022,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ricochetBounces": 4.0
+    },
     "description": "+4 Bounce",
     "rarity": "common"
   },
@@ -10939,7 +11037,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "duration": 1.0
+      "duration": 1.0,
+      "energyOnKill": 0.5
     },
     "description": "On Kill:\\n+2 Energy Rate for 4s",
     "rarity": "rare"
@@ -11081,7 +11180,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 10.0
+    },
     "description": "Blocking reduces damage taken from enemy abilities by 60%.",
     "rarity": "rare"
   },
@@ -11150,7 +11251,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "weapon",
     "stats": {
-      "toxin": 25
+      "toxin": 25,
+      "syndicatePower": 1.0
     },
     "description": "+100% <DT_POISON_COLOR>Toxin, +1 'Blight'",
     "rarity": "rare"
@@ -11164,7 +11266,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "comboDuration": -12.5
+      "comboDuration": -12.5,
+      "comboCountChance": 25.0
     },
     "description": "+100% Additional Combo Count Chance, -50% Combo Duration",
     "rarity": "common"
@@ -11208,7 +11311,9 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "punchThrough": 25.0
+      "punchThrough": 25.0,
+      "explosionChance": 25.0,
+      "ricochetBounces": -4.0
     },
     "description": "-4 Bounce, +3 Blast Radius, +100% Chance to explode on Bounce (Disables Punch Through)",
     "rarity": "uncommon"
@@ -11222,7 +11327,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "punchThrough": 25.0
+      "punchThrough": 25.0,
+      "explosionChance": 25.0
     },
     "description": "+100% Chance to explode on Bounce (Disables Punch Through)",
     "rarity": "rare"
@@ -11339,7 +11445,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "damage": 10.0
+      "damage": 10.0,
+      "finisherDamage": 10.0
     },
     "description": "+60% Finisher Damage",
     "rarity": "uncommon"
@@ -11353,7 +11460,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "electricity": 15
+      "electricity": 15,
+      "heavyAttackEfficiency": 10.0
     },
     "description": "+40% Heavy Attack Efficiency, +60% <DT_ELECTRICITY_COLOR>Electricity",
     "rarity": "rare"
@@ -11437,7 +11545,8 @@ export const allMods: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "attackSpeed": 10
+      "attackSpeed": 10,
+      "comboCountChance": 5.0
     },
     "description": "+40% Attack Speed, +20% Combo Count Chance",
     "rarity": "rare"
@@ -11450,7 +11559,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "range": 0.25
+    },
     "description": "+1.5 Range",
     "rarity": "common"
   },
@@ -11462,7 +11573,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "melee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "heavyAttackEfficiency": 10.0
+    },
     "description": "+60% Heavy Attack Efficiency",
     "rarity": "uncommon"
   },
@@ -11580,6 +11693,21 @@ export const allMods: Mod[] = [
     "rarity": "common"
   },
   {
+    "id": "truths_flame",
+    "name": "Truth's Flame",
+    "polarity": "madurai",
+    "drain": 6,
+    "maxRank": 3,
+    "category": "melee",
+    "subCategory": "",
+    "stats": {
+      "duration": 1.5,
+      "syndicatePower": 1.0
+    },
+    "description": "Enables Tennokai.\\nTennokai kills grant an additional 4s Tennokai opportunity and increase Tennokai damage by 120%.\\n\\nCURSE: Suffer 100 Heat Damage/s for 6s.\\n+1 'Truth'",
+    "rarity": "rare"
+  },
+  {
     "id": "weeping_wounds_r5",
     "name": "Weeping Wounds",
     "polarity": "madurai",
@@ -11634,7 +11762,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "parkourVelocity": 2.5,
+      "health": -6.25
+    },
     "description": "+10% Mobility, -25 Health",
     "rarity": "uncommon"
   },
@@ -11676,7 +11807,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "gravityReduction": -25.0
+    },
     "description": "-100% Gravity while Aim Gliding",
     "rarity": "uncommon"
   },
@@ -11689,7 +11822,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "accuracy": -1.0
+      "accuracy": -1.0,
+      "damageReduction": 2.0
     },
     "description": "Reduced damage by 12% while airborne, <LOWER_IS_BETTER>-6% Enemy Accuracy when targeting Warframe",
     "rarity": "rare"
@@ -11702,7 +11836,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slideSpeed": 25.0
+    },
     "description": "+100% Slide Boost when Airborne, -20% Mobility",
     "rarity": "uncommon"
   },
@@ -11744,7 +11880,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityStrength": 2.5
+    },
     "description": "Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%.",
     "rarity": "rare",
     "warframeId": "zephyr"
@@ -11757,7 +11895,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 5.0,
+      "parkourVelocity": -2.5
+    },
     "description": "+20 <DT_EXPLOSION_COLOR>Blast Resistance, -10% Mobility",
     "rarity": "uncommon"
   },
@@ -11858,7 +11999,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "abilityRange": 4.090909,
-      "duration": 0.454545
+      "duration": 0.454545,
+      "energyOnKill": 0.181818
     },
     "description": "Abilities that deal <DT_ELECTRICITY_COLOR>Electricity Damage restore +2 Energy/s over 5s.",
     "rarity": "rare"
@@ -11920,7 +12062,8 @@ export const allMods: Mod[] = [
     "stats": {
       "armor": 12.5,
       "sprintSpeed": -5,
-      "damage": 12.5
+      "damage": 12.5,
+      "slideSpeed": -5.0
     },
     "description": "+50% Damage Resistance when knocked down, -20% Slide",
     "rarity": "uncommon"
@@ -11933,7 +12076,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "duration": 2.5
+    },
     "description": "Sonar Augment: Affected enemies also become visible through walls for 10s.",
     "rarity": "rare"
   },
@@ -11945,7 +12090,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 10.0
+    },
     "description": "Reduced damage by 60% while airborne",
     "rarity": "common"
   },
@@ -11975,7 +12122,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "impact": 10
+      "impact": 10,
+      "bulletJump": 10.0
     },
     "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_IMPACT_COLOR>Impact on Bullet Jump",
     "rarity": "uncommon"
@@ -11985,7 +12133,7 @@ export const allMods: Mod[] = [
     "name": "Biting Frost",
     "polarity": "zenurik",
     "drain": 6,
-    "maxRank": 9,
+    "maxRank": 3,
     "category": "Augment",
     "subCategory": "",
     "stats": {
@@ -12119,7 +12267,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "auraStrengthSquad": 2.5,
+      "auraStrengthSelf": 2.5
+    },
     "description": "Squad benefits +15% more from Auras, You benefit an additional +15% from Auras",
     "rarity": "rare"
   },
@@ -12173,7 +12324,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "abilityDuration": 7
+      "abilityDuration": 7,
+      "knockdownRecovery": 10.0
     },
     "description": "+40% Faster Knockdown Recovery, +28% Ability Duration",
     "rarity": "rare"
@@ -12186,7 +12338,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityStrength": 2.5
+    },
     "description": "Disable Nezha's passive ability. Increase Ability Strength by 15%.",
     "rarity": "rare"
   },
@@ -12198,7 +12352,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damage": 87.5
+    },
     "description": "Decoy Augment: Decoy can be cast on enemies. Enemies who attack that decoy receive 5 random Status Effects, and the reflected damage is increased by 350%.",
     "rarity": "rare"
   },
@@ -12307,7 +12463,7 @@ export const allMods: Mod[] = [
     "id": "emp_aura",
     "name": "EMP Aura",
     "polarity": "vazarin",
-    "drain": -7,
+    "drain": -2,
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
@@ -12339,7 +12495,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityDuration": 12.5
+    },
     "description": "Lull Augment: Performing a finisher on or killing a sleeping enemy will retrigger Lull for 100% of the remaining duration.\\nPassive: +50% Lull Duration.",
     "rarity": "rare"
   },
@@ -12367,7 +12525,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOnKill": 0.5
+    },
     "description": "Warframe receives +3 Energy Regen/s",
     "rarity": "rare"
   },
@@ -12442,7 +12602,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "heat": 25
+      "heat": 25,
+      "bulletJump": 25.0
     },
     "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FIRE_COLOR>Heat on Bullet Jump",
     "rarity": "rare"
@@ -12455,7 +12616,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOnKill": 2.5
+    },
     "description": "On Respawn:\\n+10 Energy",
     "rarity": "uncommon"
   },
@@ -12508,7 +12671,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "",
     "stats": {
-      "duration": 2.0
+      "duration": 2.0,
+      "ricochetBounces": 3.0
     },
     "description": "Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clouds that last 8s and inflict nearby enemies with <DT_GAS_COLOR> Gas Status Effect.",
     "rarity": "rare",
@@ -12522,7 +12686,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityEfficiency": 10.0
+    },
     "description": "Drains Energy to stop Lethal Damage with 60% Efficiency.",
     "rarity": "rare"
   },
@@ -12609,7 +12775,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "range": 1.0
+      "range": 1.0,
+      "explosionDamage": 50.0
     },
     "description": "Create 11m seismic shockwaves from heavy landings, dealing 550 Damage and knocking foes off their feet.",
     "rarity": "uncommon"
@@ -12685,7 +12852,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "cold": 25
+      "cold": 25,
+      "bulletJump": 25.0
     },
     "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FREEZE_COLOR>Cold on Bullet Jump",
     "rarity": "rare"
@@ -12755,7 +12923,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 10.0
+    },
     "description": "Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne.",
     "rarity": "rare",
     "warframeId": "titania"
@@ -12810,7 +12980,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "hardLandingReduction": 25.0
+    },
     "description": "Falling is 100% less likely to result in a hard landing.",
     "rarity": "rare"
   },
@@ -12868,7 +13040,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "electricity": 25
+      "electricity": 25,
+      "bulletJump": 25.0
     },
     "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_ELECTRICITY_COLOR>Electricity on Bullet Jump",
     "rarity": "rare"
@@ -12923,7 +13096,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slideSpeed": 5.0,
+      "slideFriction": -5.0
+    },
     "description": "+20% Slide, -20% Friction",
     "rarity": "uncommon"
   },
@@ -12935,7 +13111,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "lockerUnlockChance": 10.0
+    },
     "description": "+60% chance to unlock locked lockers.",
     "rarity": "rare"
   },
@@ -12976,7 +13154,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "bulletJump": 50.0
+    },
     "description": "Increase Double Jump strength by +200%.",
     "rarity": "common"
   },
@@ -12988,7 +13168,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "castSpeed": 12.5
+    },
     "description": "Improves Casting Speed on Warframe abilities if applicable.\\n+50% Casting Speed",
     "rarity": "rare"
   },
@@ -13015,7 +13197,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "parkourVelocity": 2.5
+    },
     "description": "+10% Mobility, 0 Energy Rate",
     "rarity": "uncommon"
   },
@@ -13056,7 +13240,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "overshieldConversion": 16.666667,
+      "energyMax": 8.333333
+    },
     "description": "On Respawn:\\nConverts up to 50 Energy to Overshields at a rate of 100%.",
     "rarity": "rare"
   },
@@ -13068,7 +13255,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "knockdownRecovery": 40.0
+    },
     "description": "+160% Faster Stagger Recovery",
     "rarity": "rare"
   },
@@ -13126,7 +13315,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "puncture": 10
+      "puncture": 10,
+      "bulletJump": 10.0
     },
     "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_PUNCTURE_COLOR>Puncture on Bullet Jump",
     "rarity": "uncommon"
@@ -13152,7 +13342,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "abilityStrength": 2.5
+      "abilityStrength": 2.5,
+      "knockdownResistance": 5.0
     },
     "description": "+15% Ability Strength, +30% Chance to Resist Knockdown",
     "rarity": "rare"
@@ -13164,10 +13355,14 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 3,
     "category": "augment",
-    "subCategory": "weapon",
-    "stats": {},
+    "subCategory": "",
+    "stats": {
+      "extraEnergyCost": 5,
+      "abilityProjectileCount": 3
+    },
     "description": "Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more Energy.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "ivara"
   },
   {
     "id": "precision_intensify",
@@ -13190,10 +13385,14 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 3,
     "category": "augment",
-    "subCategory": "weapon",
-    "stats": {},
+    "subCategory": "",
+    "stats": {
+      "damageVulnerability": 12.5,
+      "spreadRadiusBonus": 37.5
+    },
     "description": "Shroud of Dynar Augment: Increase an enemy\u2019s Damage Vulnerability by 50%. Using Fang of Raksh on that enemy increases its spread radius by 150%.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "voruna"
   },
   {
     "id": "primed_streamline",
@@ -13245,11 +13444,14 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityDuration": 12.5
+    },
     "description": "Prismatic Gem Augment: The gem now attaches to your free-moving companion. \\nPassive : +50% Prismatic Gem Duration.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "mirage"
   },
   {
     "id": "prolonged_paralysis",
@@ -13274,7 +13476,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "bulletJump": 25.0
+    },
     "description": "Wall Dashing grants +100% Bullet Jump Speed.",
     "rarity": "common"
   },
@@ -13359,7 +13563,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityEfficiency": 40.0
+    },
     "description": "Drains Energy to stop Lethal Damage with 240% Efficiency.",
     "rarity": "rare"
   },
@@ -13456,7 +13662,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "blockStaggerChance": 12.216667,
+      "blockStunChance": 3.05
+    },
     "description": "+73.3% chance to Stagger on Block, +18.3% chance to Stun on Block",
     "rarity": "uncommon"
   },
@@ -13469,7 +13678,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "slash": 10
+      "slash": 10,
+      "bulletJump": 10.0
     },
     "description": "+18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_SLASH_COLOR>Slash on Bullet Jump",
     "rarity": "uncommon"
@@ -13483,7 +13693,8 @@ export const allMods: Mod[] = [
     "category": "augment",
     "subCategory": "",
     "stats": {
-      "health": 5.0
+      "health": 5.0,
+      "incapacitationTimerReduction": 3.0
     },
     "description": "Dispensary Augment: Dispensary also creates pick ups that heal companions for 20% of their maximum health and reduce their incapacitation timer by 12 sec.",
     "rarity": "rare",
@@ -13563,7 +13774,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "parkourVelocity": 2.5,
+      "shield": -7.5
+    },
     "description": "+10% Mobility, -30 Shield Capacity",
     "rarity": "uncommon"
   },
@@ -13857,7 +14071,10 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slideSpeed": 5.0,
+      "slideFriction": -5.0
+    },
     "description": "+30% Slide, -30% Friction",
     "rarity": "rare"
   },
@@ -13883,7 +14100,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyOnKill": 1.0
+    },
     "description": "Gain +6 energy, upon replenishing shields completely after they have been deactivated.",
     "rarity": "rare"
   },
@@ -13896,7 +14115,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "duration": 1.0
+      "duration": 1.0,
+      "heavyAttackEfficiency": 5.0
     },
     "description": "Squad receives +30% Heavy Attack Wind Up Speed and +6s Melee Combo Duration",
     "rarity": "rare"
@@ -14001,7 +14221,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "parkourVelocity": -2.5,
+      "shield": 7.5
+    },
     "description": "-10% Mobility, +30 Shield Capacity",
     "rarity": "uncommon"
   },
@@ -14115,7 +14338,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "toxin": 25
+      "toxin": 25,
+      "bulletJump": 25.0
     },
     "description": "+24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_POISON_COLOR>Toxin on Bullet Jump",
     "rarity": "rare"
@@ -14155,7 +14379,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "bleedoutReduction": 7.0
+    },
     "description": "+42% Bleedout Reduction",
     "rarity": "rare"
   },
@@ -14195,7 +14421,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "healthRegen": 6.25
+    },
     "description": "Grasp of Lohk Augment: When a stolen weapon deals damage to an enemy affected by The Lost: Gaze or The Vast Untime, Xaku heals by 25.",
     "rarity": "rare"
   },
@@ -14331,7 +14559,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityStrength": 3.75
+    },
     "description": "Passive Augment: Umbra's Ability Strength increases by +15% but he no longer fights independently alongside his Operator.",
     "rarity": "rare"
   },
@@ -14471,7 +14701,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "knockdownRecovery": 40.0
+    },
     "description": "+240% Faster Knockdown Recovery",
     "rarity": "rare"
   },
@@ -14570,7 +14802,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "finisherChance": 16.0
+    },
     "description": "+96% chance to open enemies to Finisher Attacks after Warframe blocks Melee",
     "rarity": "common"
   },
@@ -14694,7 +14928,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "knockdownResistance": 10.0
+    },
     "description": "+90% Chance to Resist Knockdown",
     "rarity": "rare"
   },
@@ -14722,7 +14958,8 @@ export const allMods: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "duration": 0.5
+      "duration": 0.5,
+      "bulletJump": 10.0
     },
     "description": "On Equip:\\n+40% Bullet Jump for 2s",
     "rarity": "rare"
@@ -14867,7 +15104,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "impactStatusStacks": 1.0
+    },
     "description": "Melee attacks knock down enemies and apply +4 <DT_IMPACT_COLOR>Impact Status Effects",
     "rarity": "uncommon"
   },
@@ -15011,7 +15250,8 @@ export const allMods: Mod[] = [
     "category": "companion",
     "subCategory": "",
     "stats": {
-      "range": 1.666667
+      "range": 1.666667,
+      "explosionDamage": 1.666667
     },
     "description": "Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.0 Damage.",
     "rarity": "common"
@@ -15024,7 +15264,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "weakspotDamage": 45.833333333333336
+    },
     "description": "Upon completing research on an enemy, subsequent scans will reveal their weak points.",
     "rarity": "rare"
   },
@@ -15242,7 +15484,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "finisherDamage": 20.0
+    },
     "description": "+120% Finisher Damage",
     "rarity": "rare"
   },
@@ -15283,7 +15527,8 @@ export const allMods: Mod[] = [
     "category": "companion",
     "subCategory": "",
     "stats": {
-      "damage": 50.0
+      "damage": 50.0,
+      "finisherDamage": 50.0
     },
     "description": "An attack that deals +200% Finisher Damage and infects the target with a Virus that grows 4 volatile pustules that react to damage and explode.",
     "rarity": "rare"
@@ -15325,7 +15570,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "pickupDoubleChance": 2.1666666666666665
+    },
     "description": "13% chance to double Credit and Resource pickups",
     "rarity": "uncommon"
   },
@@ -15440,7 +15687,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "range": 7.5,
-      "duration": 2.5
+      "duration": 2.5,
+      "explosionDamage": 40.0
     },
     "description": "Charges at an enemy within 30m dealing 160 damage. This releases spores that affect enemies within 15m, opening them up to Melee Finishers, and slowing them by 50% for 10s.",
     "rarity": "rare"
@@ -15468,7 +15716,8 @@ export const allMods: Mod[] = [
     "category": "companion",
     "subCategory": "",
     "stats": {
-      "range": 7.5
+      "range": 7.5,
+      "explosionDamage": 25.0
     },
     "description": "Helminth Charger whips a proboscis out at an enemy within 30m, pulling them back and dealing 100 damage.",
     "rarity": "rare"
@@ -15481,7 +15730,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "creditPickupDoubleChance": 3.0
+    },
     "description": "18% chance to double Credit pickups",
     "rarity": "rare"
   },
@@ -15523,7 +15774,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "resourcePickupDoubleChance": 3.0
+    },
     "description": "18% chance to double Resource pickups",
     "rarity": "rare"
   },
@@ -15579,7 +15832,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "reviveShieldHealth": 163.63636363636363
+    },
     "description": "Creates a shield with 1800 Health around the player when they are reviving fallen allies.",
     "rarity": "uncommon"
   },
@@ -15735,7 +15990,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "companion",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "aimGlideDuration": 25.0,
+      "gravityReduction": -12.5
+    },
     "description": "+100% Aim Glide Duration\\n<LOWER_IS_BETTER>-50% Gravity",
     "rarity": "common"
   },
@@ -15825,7 +16083,8 @@ export const allMods: Mod[] = [
     "subCategory": "",
     "stats": {
       "damage": 1.6667,
-      "duration": 0.833333
+      "duration": 0.833333,
+      "explosionDamage": 26.666667
     },
     "description": "The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It gains +10% Melee Damage, Max Health and Armor for every enemy hit for 5s.",
     "rarity": "rare"
@@ -16213,8 +16472,8 @@ export const allMods: Mod[] = [
     "category": "archgun",
     "subCategory": "",
     "stats": {
-      "reloadSpeed": 16.6667,
-      "heat": 8.333333,
+      "fireRate": 8.333333,
+      "reloadSpeed": 16.666667,
       "duration": 1.5
     },
     "description": "On Headshot Kill:\\n+50% Fire/Charge Rate\\n+100% Reload Speed for 9s",
@@ -16302,7 +16561,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "archmelee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slashSize": 20.0
+    },
     "description": "Tauron Strike slash size is increased by 80%.",
     "rarity": "uncommon"
   },
@@ -17701,7 +17962,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "archwing",
-    "stats": {},
+    "stats": {
+      "projectileSpeed": 15.0,
+      "ricochetBounces": 4.0
+    },
     "description": "Flak now bounces up to 4x and travels 60% faster.",
     "rarity": "uncommon"
   },
@@ -18977,7 +19241,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "necramech",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 10.0
+    },
     "description": "Reduced damage by 40% while airborne",
     "rarity": "common"
   },
@@ -18990,7 +19256,8 @@ export const allMods: Mod[] = [
     "category": "necramech",
     "subCategory": "",
     "stats": {
-      "damage": 20.0
+      "damage": 20.0,
+      "slideSpeed": 20.0
     },
     "description": "+80% Slide Attack Damage",
     "rarity": "common"
@@ -19083,7 +19350,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "necramech",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slideSpeed": 10.0
+    },
     "description": "+60% Slide Efficiency",
     "rarity": "uncommon"
   },
@@ -19246,7 +19515,9 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "necramech",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "slideSpeed": 10.0
+    },
     "description": "+60% Slide",
     "rarity": "common"
   },
@@ -19992,7 +20263,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "general",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "ammoConversion": 8.363636
+    },
     "description": "Converts Secondary ammo pickups to 92% of Ammo Pick Up.",
     "rarity": "legendary"
   },
@@ -20727,7 +21000,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "general",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "noiseReduction": 25.0
+    },
     "description": "Reduces the chance an enemy will hear gunfire by 100%.",
     "rarity": "uncommon"
   },
@@ -20739,7 +21014,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "kdrive",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "explosionDamage": 100.0
+    },
     "description": "On Directional Dismount:\\nBoard is launched, dealing 400 Damage while slicing enemies.",
     "rarity": "uncommon"
   },

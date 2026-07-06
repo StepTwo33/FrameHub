@@ -824,6 +824,8 @@ export default function ModularBuilderPage() {
           mods={allMods}
           category={modCategory}
           slotType={modPickerSlotType}
+          weaponCategory={assembledWeapon.category}
+          weapon={assembledWeapon}
           equippedModIds={equippedMods.map((m) => m.modId)}
           onSelect={(mod, rank) => {
             setEquippedMods((prev) => {

@@ -17,9 +17,12 @@ export const MOD_BEHAVIORS_NECRAMECH: Record<string, VerifiedModBehavior> = {
   necramech_augur: mod("necramech_augur", [
     line("shield", "warframe_totals", "multiplicative_percent", "Necramech Augur: shield \u2014 240% Energy spent on abilities is converted to Shields."),
   ]),
-  necramech_aviator: mod("necramech_aviator", [], "wiki: Necramech Aviator \u2014 Reduced damage by 40% while airborne"),
+  necramech_aviator: mod("necramech_aviator", [
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Necramech Aviator: damageReduction \u2014 Reduced damage by 40% while airborne"),
+  ]),
   necramech_blitz: mod("necramech_blitz", [
     line("damage", "mod_panel", "multiplicative_percent", "Necramech Blitz: damage \u2014 +80% Slide Attack Damage"),
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Necramech Blitz: slideSpeed \u2014 +80% Slide Attack Damage"),
   ]),
   necramech_continuity: mod("necramech_continuity", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Necramech Continuity: abilityDuration \u2014 +30% Ability Duration"),
@@ -35,7 +38,9 @@ export const MOD_BEHAVIORS_NECRAMECH: Record<string, VerifiedModBehavior> = {
   necramech_flow: mod("necramech_flow", [
     line("energy", "warframe_totals", "multiplicative_percent", "Necramech Flow: energy \u2014 +100% Energy Max"),
   ]),
-  necramech_friction: mod("necramech_friction", [], "wiki: Necramech Friction \u2014 +60% Slide Efficiency"),
+  necramech_friction: mod("necramech_friction", [
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Necramech Friction: slideSpeed \u2014 +60% Slide Efficiency"),
+  ]),
   necramech_fury: mod("necramech_fury", [
     line("attackSpeed", "mod_panel", "multiplicative_percent", "Necramech Fury: attackSpeed \u2014 +40% Melee Attack Speed"),
   ]),
@@ -66,7 +71,9 @@ export const MOD_BEHAVIORS_NECRAMECH: Record<string, VerifiedModBehavior> = {
   necramech_seismic_wave: mod("necramech_seismic_wave", [
     line("damage", "mod_panel", "multiplicative_percent", "Necramech Seismic Wave: damage \u2014 +45% Slam Attack Damage"),
   ]),
-  necramech_slipstream: mod("necramech_slipstream", [], "wiki: Necramech Slipstream \u2014 +60% Slide"),
+  necramech_slipstream: mod("necramech_slipstream", [
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Necramech Slipstream: slideSpeed \u2014 +60% Slide"),
+  ]),
   necramech_stamina: mod("necramech_stamina", [], "wiki: Necramech Stamina \u2014 -60% Sprint Efficiency"),
   necramech_steel_fiber: mod("necramech_steel_fiber", [
     line("armor", "warframe_totals", "multiplicative_percent", "Necramech Steel Fiber: armor \u2014 +100% Armor"),

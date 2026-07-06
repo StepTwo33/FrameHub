@@ -18,9 +18,9 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
     line("ammoMaximum", "mod_panel", "multiplicative_percent", "Ammo Chain: ammoMaximum \u2014 +100% Ammo Maximum"),
   ]),
   archgun_ace: mod("archgun_ace", [
-    line("duration", "mod_panel", "multiplicative_percent", "Archgun Ace: duration \u2014 On Headshot Kill:\\\\n+50% Fire/Charge Rate\\\\n+100% Reload Speed for 9s"),
-    line("heat", "weapon_dps", "elemental_from_base_damage", "Archgun Ace: heat \u2014 On Headshot Kill:\\\\n+50% Fire/Charge Rate\\\\n+100% Reload Speed for 9s"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Archgun Ace: reloadSpeed \u2014 On Headshot Kill:\\\\n+50% Fire/Charge Rate\\\\n+100% Reload Speed for 9s"),
+    line("duration", "mod_panel", "multiplicative_percent", "Archgun Ace: duration \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
+    line("fireRate", "weapon_dps", "multiplicative_percent", "Archgun Ace: fireRate \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
+    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Archgun Ace: reloadSpeed \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
   ]),
   archgun_riven_mod: mod("archgun_riven_mod", [], "wiki: Archgun Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
   argent_scourge: mod("argent_scourge", [], "wiki: Argent Scourge \u2014 Fighting form devised for Conclave."),

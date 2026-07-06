@@ -1411,6 +1411,8 @@ export default function WarframeBuilderPage() {
                 : "primary"
           }
           equippedModIds={exaltedMods.map((m) => m.modId)}
+          weaponCategory={exaltedWeapon.category}
+          weapon={exaltedWeapon}
           onSelect={(mod, rank) => {
             setExaltedMods((prev) => {
               const filtered = prev.filter((m) => m.slotIndex !== exaltedActiveSlot);

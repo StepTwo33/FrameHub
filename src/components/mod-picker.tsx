@@ -20,17 +20,11 @@ function isRivenMod(mod: Mod): boolean {
   return mod.subCategory === "riven" || mod.id.startsWith("riven_");
 }
 
-/** Augment data uses base warframe ids (e.g. loki); selected frame may be loki_prime or excalibur_umbra. */
-function augmentMatchesWarframe(mod: Mod, selectedWarframeId: string): boolean {
-  const mid = mod.warframeId;
-  if (!mid || mid === "universal") return mid === "universal";
-  const candidates = new Set([
-    selectedWarframeId,
-    selectedWarframeId.replace(/_prime$/i, ""),
-    selectedWarframeId.replace(/_umbra$/i, ""),
-  ]);
-  return candidates.has(mid);
-}
+import {
+  warframeAugmentEligibleInBuilder,
+} from "@/lib/warframe-augment-mods";
+import { isTomeMod } from "@/lib/mod-slot-categories";
+import { isTomeWeapon } from "@/lib/tome-weapons";
 
 const rarityColors: Record<string, string> = {
   common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
@@ -41,12 +35,15 @@ const rarityColors: Record<string, string> = {
 
 import {
   isWarframeExilusMod,
-  isSecondaryWeaponExilusMod,
-  isMeleeWeaponExilusMod,
-  TOME_CANTICLE_MOD_IDS,
 } from "@/lib/mod-slot-categories";
+import {
+  modEligibleForWeaponSlot,
+  type WeaponModSlotType,
+} from "@/lib/mod-weapon-eligibility";
+import { getWeaponModProfile } from "@/lib/weapon-mod-tags";
+import type { Weapon } from "@/lib/types";
 
-export type SlotType = "regular" | "aura" | "exilus" | "weapon_exilus_secondary" | "weapon_exilus_melee";
+export type SlotType = WeaponModSlotType | "aura" | "exilus";
 
 interface ModPickerProps {
   open: boolean;
@@ -58,6 +55,8 @@ interface ModPickerProps {
   onSelect: (mod: Mod, rank: number) => void;
   onSelectRiven?: (mod: Mod, stats: Record<string, number>) => void;
   weaponCategory?: string; // for riven stat pool filtering
+  /** When set, filters mods by beam / AoE / projectile wiki compatibility tags. */
+  weapon?: Pick<Weapon, "id" | "name" | "category" | "triggerType">;
   warframeId?: string; // When set, augment mods are filtered to this warframe + universal
   /** When provided, shows Mods / Arcanes tabs for browsing warframe arcanes. */
   arcaneCatalog?: Mod[];
@@ -65,7 +64,7 @@ interface ModPickerProps {
   equippedArcaneIds?: string[];
 }
 
-export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, warframeId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
+export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
   const [search, setSearch] = useState("");
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
@@ -77,17 +76,43 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
   const blockedByExclusion = useMemo(() => getBlockedModIds(equippedModIds), [equippedModIds]);
 
+  const weaponModProfile = useMemo(
+    () => (weapon ? getWeaponModProfile(weapon) : undefined),
+    [weapon],
+  );
+
   const filteredMods = useMemo(() => {
     let categoryMods: Mod[];
-    if (slotType === "weapon_exilus_secondary") {
-      categoryMods = mods.filter(
-        (m) => isSecondaryWeaponExilusMod(m) || TOME_CANTICLE_MOD_IDS.has(m.id),
+    if (slotType === "weapon_exilus_primary") {
+      categoryMods = mods.filter((m) =>
+        modEligibleForWeaponSlot(m, "primary", weaponCategory, "weapon_exilus_primary", weaponModProfile),
+      );
+    } else if (slotType === "weapon_exilus_secondary") {
+      categoryMods = mods.filter((m) =>
+        modEligibleForWeaponSlot(m, "secondary", weaponCategory, "weapon_exilus_secondary", weaponModProfile),
       );
     } else if (slotType === "weapon_exilus_melee") {
-      categoryMods = mods.filter(isMeleeWeaponExilusMod);
+      categoryMods = mods.filter((m) =>
+        modEligibleForWeaponSlot(m, "melee", weaponCategory, "weapon_exilus_melee", weaponModProfile),
+      );
     } else if (category === "_prefiltered") {
       // Mods already filtered by caller (e.g. companion weapon mods)
       categoryMods = [...mods];
+    } else if (
+      weaponCategory &&
+      (category === "primary" || category === "secondary" || category === "melee")
+    ) {
+      categoryMods = mods.filter((m) => {
+        if (m.subCategory === "riven") {
+          const wc = weaponCategory.toLowerCase();
+          if (m.id === "riven_rifle") return ["rifle", "bow", "primary", "launcher"].includes(wc);
+          if (m.id === "riven_shotgun") return wc === "shotgun";
+          if (m.id === "riven_pistol") return ["pistol", "secondary", "dual_pistols"].includes(wc);
+          if (m.id === "riven_melee") return wc === "melee";
+          return false;
+        }
+        return modEligibleForWeaponSlot(m, category, weaponCategory, "regular", weaponModProfile);
+      });
     } else {
       categoryMods = mods.filter((m) => {
         // Stance mods should never appear in regular mod slots
@@ -123,14 +148,17 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       categoryMods = categoryMods.filter(isWarframeExilusMod);
     }
 
-    // Filter augments to matching warframe (+ universal; primes/umbra base ids; Umbra polarity = any frame)
-    if (warframeId) {
-      categoryMods = categoryMods.filter((m) => {
-        if (m.category !== "augment") return true;
-        if (m.polarity === "umbra") return true;
-        return augmentMatchesWarframe(m, warframeId);
-      });
-    }
+    // Warframe ability augments: only in warframe builder for the selected frame (+ universal).
+    categoryMods = categoryMods.filter((m) =>
+      warframeAugmentEligibleInBuilder(m, category, warframeId),
+    );
+
+    // Tome mods (canticles + invocations) only on tome weapons.
+    const weaponId = weapon?.id;
+    categoryMods = categoryMods.filter((m) => {
+      if (!isTomeMod(m)) return true;
+      return isTomeWeapon(weaponId);
+    });
 
     if (!search.trim()) return categoryMods;
     const q = search.toLowerCase();
@@ -139,7 +167,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         m.name.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [mods, category, slotType, search, warframeId, weaponCategory]);
+  }, [mods, category, slotType, search, warframeId, weaponCategory, weaponModProfile, weapon?.id]);
 
   const filteredArcanes = useMemo(() => {
     if (!arcaneCatalog) return [];
@@ -202,7 +230,9 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 ? "Select Aura Mod"
                 : slotType === "exilus"
                   ? "Select Exilus Mod"
-                  : slotType === "weapon_exilus_secondary"
+                  : slotType === "weapon_exilus_primary"
+                    ? "Select Primary Exilus Mod"
+                    : slotType === "weapon_exilus_secondary"
                     ? "Select Secondary Exilus Mod"
                     : slotType === "weapon_exilus_melee"
                       ? "Select Melee Exilus Mod"

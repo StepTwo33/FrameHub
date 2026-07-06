@@ -9,7 +9,7 @@ MODS_TS = Path(__file__).resolve().parent.parent / "src/data/mods.ts"
 WEAPON_AUGMENT_IDS = {
     "flux_overdrive", "kinetic_ricochet", "nightwatch_napalm", "spring_loaded_broadhead",
     "tether_grenades", "thermagnetic_shells", "winds_of_purity", "blade_of_truth",
-    "hunters_bonesaw", "rift_strike", "static_discharge", "power_of_three", "prey_of_dynar",
+    "hunters_bonesaw", "rift_strike", "static_discharge",
     "vulcan_blitz", "gleaming_blight", "stance_gleaming_talent",
     "amalgam_argonak_metal_auger", "amalgam_daikyu_target_acquired",
     "amalgam_furax_body_count", "amalgam_javlok_magazine_warp", "amalgam_ripkas_true_steel",

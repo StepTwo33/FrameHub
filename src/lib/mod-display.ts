@@ -18,6 +18,13 @@ const FLAT_STAT_KEYS = new Set([
   "damageResistanceCap",
   "attractionRange",
   "allyRadius",
+  "ricochetBounces",
+  "syndicatePower",
+  "blockAngle",
+  "abilityProjectileCount",
+  "impactStatusStacks",
+  "reviveShieldHealth",
+  "incapacitationTimerReduction",
 ]);
 
 const PERCENT_LIKE_KEYS = new Set([
@@ -77,6 +84,15 @@ export function formatModStatValue(
   if (usesPercentDisplay(statKey)) {
     return `${formatStatNumber(total)}% ${label}`;
   }
+  if (statKey === "ricochetBounces") {
+    return `${formatStatNumber(perRank)} bounces`;
+  }
+  if (statKey === "syndicatePower") {
+    return `+${perRank} syndicate power`;
+  }
+  if (statKey === "abilityProjectileCount") {
+    return `${formatStatNumber(perRank)} projectiles`;
+  }
   if (statKey === "range" || statKey === "attractionRange" || statKey === "allyRadius") {
     return `${formatStatNumber(total)}m ${label}`;
   }
@@ -96,8 +112,13 @@ export interface ModStatDisplayLine {
 export function getModStatDisplayLines(mod: Mod, rank: number): ModStatDisplayLine[] {
   const stats = mod.stats ?? {};
   return Object.entries(stats).map(([statKey, perRank]) => {
-    const atRank = formatModStatValue(statKey, perRank, rank);
-    const atMax = formatModStatValue(statKey, perRank, mod.maxRank);
+    const flat = FLAT_STAT_KEYS.has(statKey);
+    const atRank = flat
+      ? formatModStatValue(statKey, perRank, 0)
+      : formatModStatValue(statKey, perRank, rank);
+    const atMax = flat
+      ? atRank
+      : formatModStatValue(statKey, perRank, mod.maxRank);
     return {
       statKey,
       label: getModStatLabel(statKey),

@@ -11,9 +11,12 @@ import {
   radialAttackDamageTags,
   weaponHasRadialAttacks,
 } from "@/lib/weapon-radial-utils";
-import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
+import { getWeaponImage, getWarframeImage, getCompanionImage, getModImage } from "@/lib/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
+import { modsMap } from "@/data/mods";
+import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
+import { getAugmentModIdsForWarframe } from "@/lib/warframe-augment-mods";
 import { appendReturnTo } from "@/lib/nav-return";
 import { cn } from "@/lib/utils";
 
@@ -290,6 +293,10 @@ function StatGrid({ items, compact }: { items: { label: string; value: string }[
 export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapon; compact?: boolean; returnTo?: string }) {
   const elements = weaponElementEntries(weapon);
   const radialAttacks = getWeaponRadialAttacks(weapon);
+  const exclusiveModIds = getExclusiveModIdsForWeapon(weapon.id);
+  const exclusiveMods = exclusiveModIds
+    .map((id) => modsMap.get(id))
+    .filter((mod): mod is NonNullable<typeof mod> => Boolean(mod));
 
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
@@ -387,6 +394,43 @@ export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapo
         </div>
       )}
 
+      {exclusiveMods.length > 0 && (
+        <div>
+          <PanelHeading>Weapon mods</PanelHeading>
+          <ul className="space-y-2">
+            {exclusiveMods.map((mod) => (
+              <li key={mod.id}>
+                <a
+                  href={
+                    returnTo
+                      ? appendReturnTo(
+                          `/codex?section=mods&id=${encodeURIComponent(mod.id)}`,
+                          returnTo,
+                        )
+                      : `/codex?section=mods&id=${encodeURIComponent(mod.id)}`
+                  }
+                  className="flex items-center gap-2 rounded border border-orange-500/25 bg-orange-500/5 p-2 transition-colors hover:border-orange-500/40"
+                >
+                  <GameAssetImage
+                    src={getModImage(mod.name)}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 shrink-0 rounded object-contain bg-muted/20"
+                    hideOnError
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{mod.name}</p>
+                    <p className="truncate text-[10px] text-muted-foreground">Weapon-exclusive mod</p>
+                  </div>
+                  <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {radialAttacks.length > 0 && (
         <div>
           <PanelHeading>Radial / AoE attacks</PanelHeading>
@@ -442,6 +486,11 @@ export function WarframeDetailPanel({
   compact?: boolean;
   returnTo?: string;
 }) {
+  const augmentModIds = getAugmentModIdsForWarframe(warframe.id);
+  const augmentMods = augmentModIds
+    .map((id) => modsMap.get(id))
+    .filter((mod): mod is NonNullable<typeof mod> => Boolean(mod));
+
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -477,6 +526,43 @@ export function WarframeDetailPanel({
           <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
             {warframe.passive}
           </p>
+        </div>
+      )}
+
+      {augmentMods.length > 0 && (
+        <div>
+          <PanelHeading>Augments</PanelHeading>
+          <ul className="space-y-2">
+            {augmentMods.map((mod) => (
+              <li key={mod.id}>
+                <a
+                  href={
+                    returnTo
+                      ? appendReturnTo(
+                          `/codex?section=mods&id=${encodeURIComponent(mod.id)}`,
+                          returnTo,
+                        )
+                      : `/codex?section=mods&id=${encodeURIComponent(mod.id)}`
+                  }
+                  className="flex items-center gap-2 rounded border border-indigo-500/25 bg-indigo-500/5 p-2 transition-colors hover:border-indigo-500/40"
+                >
+                  <GameAssetImage
+                    src={getModImage(mod.name)}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 shrink-0 rounded object-contain bg-muted/20"
+                    hideOnError
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{mod.name}</p>
+                    <p className="truncate text-[10px] text-muted-foreground">Ability augment</p>
+                  </div>
+                  <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

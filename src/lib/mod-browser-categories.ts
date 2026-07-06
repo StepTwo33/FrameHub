@@ -2,6 +2,10 @@ import { Mod } from "@/lib/types";
 import { isAuraMod } from "@/lib/aura-mods";
 import { isArchmeleeMod } from "@/lib/archmelee-mods";
 import { getModSlotCategory } from "@/lib/mod-slot-categories";
+import { getModCodexBrowserCategories } from "@/lib/weapon-exclusive-mods";
+import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
+import { isCompanionAffectingWarframeAugment } from "@/lib/companion-augment-mods";
+import { isWarframeAugment, isWarframeSpecificAugment } from "@/lib/warframe-augment-mods";
 
 export type ModBrowserCategoryId =
   | "all"
@@ -89,17 +93,33 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
     case "tome":
       return getModSlotCategory(mod) === "tome";
     case "primary":
-      return ["primary", "rifle", "shotgun", "bow", "launcher"].includes(mod.category) && !hasSpecialSlot(mod);
+      return (
+        (["primary", "rifle", "shotgun", "bow", "launcher"].includes(mod.category) && !hasSpecialSlot(mod))
+        || getModCodexBrowserCategories(mod.id).includes("primary")
+      );
     case "secondary":
-      return ["secondary", "pistol", "dual_pistols"].includes(mod.category) && !hasSpecialSlot(mod);
+      return (
+        (["secondary", "pistol", "dual_pistols"].includes(mod.category) && !hasSpecialSlot(mod))
+        || getModCodexBrowserCategories(mod.id).includes("secondary")
+      );
     case "melee":
-      return mod.category === "melee" && !isArchmeleeMod(mod) && !hasSpecialSlot(mod);
+      return (
+        (mod.category === "melee" && !isArchmeleeMod(mod) && !hasSpecialSlot(mod))
+        || getModCodexBrowserCategories(mod.id).includes("melee")
+      );
     case "warframe":
-      return mod.category === "warframe" && !hasSpecialSlot(mod);
+      return (
+        (mod.category === "warframe" && !hasSpecialSlot(mod))
+        || isWarframeAugment(mod)
+      );
     case "augment":
       return mod.category === "augment" && !hasSpecialSlot(mod);
     case "companion":
-      return mod.category === "companion" || mod.category === "companion_weapon";
+      return (
+        mod.category === "companion"
+        || mod.category === "companion_weapon"
+        || isCompanionAffectingWarframeAugment(mod)
+      );
     case "archwing":
       return mod.category === "archwing";
     case "archgun":
@@ -131,8 +151,11 @@ export function modBrowserCategoryLabel(mod: Mod): string {
   if (["secondary", "pistol", "dual_pistols"].includes(mod.category)) return "Secondary";
   if (mod.category === "melee") return "Melee";
   if (mod.category === "warframe") return "Warframe";
+  if (isWarframeSpecificAugment(mod)) return "Warframe augment";
   if (mod.category === "augment") return "Augment";
+  if (isCompanionAffectingWarframeAugment(mod)) return "Companion augment";
   if (mod.category === "companion") return "Companion";
   if (mod.category === "tektolyst") return "Historic";
+  if (isWeaponExclusiveMod(mod.id)) return "Weapon mod";
   return mod.category || "—";
 }

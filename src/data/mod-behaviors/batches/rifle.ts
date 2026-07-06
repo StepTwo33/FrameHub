@@ -1,5 +1,5 @@
 /**
- * Per-mod verified behaviors — category: rifle (28 mods).
+ * Per-mod verified behaviors — category: rifle (27 mods).
  * Generated: python scripts/generate_mod_behavior_batch.py rifle
  * Each mod has its own entry; edit lines after individual wiki review.
  */
@@ -76,9 +76,6 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("cold", "weapon_dps", "elemental_from_base_damage", "Ice Storm: cold \u2014 +15% Cold, +5% Magazine per rank"),
     line("magazine", "weapon_dps", "multiplicative_percent", "Ice Storm: magazine \u2014 +15% Cold, +5% Magazine per rank"),
   ]),
-  mutalist_quake: mod("mutalist_quake", [
-    line("ammoMaximum", "mod_panel", "multiplicative_percent", "Mutalist Quanta: ammoMaximum \u2014 +5% Ammo Maximum per rank"),
-  ]),
   piercing_caliber: mod("piercing_caliber", [
     line("punchThrough", "mod_panel", "multiplicative_percent", "Piercing Caliber: punchThrough \u2014 +0.4m Punch Through per rank (arsenal display only)"),
     line("puncture", "weapon_dps", "multiplicative_percent", "Piercing Caliber: puncture \u2014 +0.4m Punch Through per rank"),
@@ -112,6 +109,7 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("multishot", "weapon_dps", "multiplicative_percent", "Vigilante Offensive: multishot \u2014 +10% Multishot per rank"),
   ]),
   vigilante_supplies: mod("vigilante_supplies", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Vigilante Supplies: ammoConversion \u2014 Converts Secondary ammo pickups to 30% of Ammo Pick Up."),
     line("ammoPickup", "mod_panel", "multiplicative_percent", "Vigilante Supplies: ammoPickup \u2014 Converts Secondary ammo pickups to 30% of Ammo Pick Up."),
   ]),
   vile_acceleration: mod("vile_acceleration", [

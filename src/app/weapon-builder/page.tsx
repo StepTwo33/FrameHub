@@ -33,6 +33,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Crosshair } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
+import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
+import { isTomeWeapon } from "@/lib/tome-weapons";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { incarnonDataMap } from "@/data/incarnon";
@@ -77,7 +79,7 @@ function getModCategory(weaponCategory: string): string {
   return weaponCategory;
 }
 
-/** 9th slot (index 8) for secondary / melee — matches in-game weapon Exilus slot (after regular slots). */
+/** 9th slot (index 8) for primary / secondary / melee — in-game weapon Exilus slot. */
 const WEAPON_EXILUS_SLOT_INDEX = 8;
 
 export default function WeaponBuilderPage() {
@@ -409,11 +411,18 @@ export default function WeaponBuilderPage() {
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
     const w = selectedWeapon;
+    const pri = w && isPrimaryWeaponCategory(w.category);
     const sec = w && ["pistol", "secondary", "dual_pistols"].includes(w.category);
     const mel = w && w.category === "melee";
-    const isExilus = slotIndex === WEAPON_EXILUS_SLOT_INDEX && Boolean(sec || mel);
+    const isExilus = slotIndex === WEAPON_EXILUS_SLOT_INDEX && Boolean(pri || sec || mel);
     setModPickerSlotType(
-      sec && isExilus ? "weapon_exilus_secondary" : mel && isExilus ? "weapon_exilus_melee" : "regular"
+      pri && isExilus
+        ? "weapon_exilus_primary"
+        : sec && isExilus
+          ? "weapon_exilus_secondary"
+          : mel && isExilus
+            ? "weapon_exilus_melee"
+            : "regular",
     );
     setModPickerOpen(true);
   }, [selectedWeapon]);
@@ -461,9 +470,10 @@ export default function WeaponBuilderPage() {
   const modCategory = selectedWeapon ? getModCategory(selectedWeapon.category) : "primary";
   const equippedModIds = equippedMods.map((m) => m.modId);
   const numSlots = selectedWeapon?.modSlots || 8;
+  const isPrimaryWeapon = selectedWeapon ? isPrimaryWeaponCategory(selectedWeapon.category) : false;
   const isSecondaryWeapon = selectedWeapon ? ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category) : false;
   const isMeleeWeapon = selectedWeapon?.category === "melee";
-  const hasWeaponExilusSlot = isSecondaryWeapon || isMeleeWeapon;
+  const hasWeaponExilusSlot = isPrimaryWeapon || isSecondaryWeapon || isMeleeWeapon;
   const totalModSlots = hasWeaponExilusSlot ? numSlots + 1 : numSlots;
 
   return (
@@ -738,7 +748,7 @@ export default function WeaponBuilderPage() {
                         mod={mod}
                         rank={equipped?.rank ?? 0}
                         slotIndex={i}
-                        label={isExilus ? "Exilus" : undefined}
+                        label={isExilus ? (isTomeWeapon(selectedWeapon.id) ? "Canticle" : "Exilus") : undefined}
                         slotPolarity={slotPolarities[i]}
                         rivenStats={rivenStatsMap[i]}
                         weaponCategory={selectedWeapon.category}
@@ -897,6 +907,7 @@ export default function WeaponBuilderPage() {
         onSelect={handleSelectMod}
         onSelectRiven={handleSelectRiven}
         weaponCategory={selectedWeapon?.category}
+        weapon={selectedWeapon ?? undefined}
       />
 
       {/* Weapon Arcane Picker */}

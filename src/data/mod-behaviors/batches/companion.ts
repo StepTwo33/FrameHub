@@ -63,7 +63,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("cooldown", "mod_panel", "multiplicative_percent", "Auto Omni: cooldown \u2014 Nautilus has 100% chance to repair nearby Railjack hull damages and extinguishes\u2026"),
     line("damage", "mod_panel", "multiplicative_percent", "Auto Omni: damage \u2014 Nautilus has 100% chance to repair nearby Railjack hull damages and extinguishes\u2026"),
   ]),
-  bell_ringer: mod("bell_ringer", [], "wiki: Bell Ringer \u2014 Melee attacks knock down enemies and apply +4 <DT_IMPACT_COLOR>Impact Status Effects"),
+  bell_ringer: mod("bell_ringer", [
+    line("impactStatusStacks", "mod_panel", "flat", "Bell Ringer: impactStatusStacks \u2014 Melee attacks knock down enemies and apply +4 Impact Status Effects"),
+  ]),
   bite: mod("bite", [
     line("critChance", "mod_panel", "multiplicative_percent", "Bite: critChance \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
     line("critDamage", "companion_totals", "multiplicative_percent", "Bite: critDamage \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
@@ -129,9 +131,12 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Crescent Devolution: duration \u2014 Devolves into its larval form when downed and charges at enemies, dealing 100 <D\u2026"),
   ]),
   crowd_dispersion: mod("crowd_dispersion", [
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Crowd Dispersion: explosionDamage \u2014 Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Crowd Dispersion: range \u2014 Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.\u2026 (arsenal display only)"),
   ]),
-  detect_vulnerability: mod("detect_vulnerability", [], "wiki: Detect Vulnerability \u2014 Upon completing research on an enemy, subsequent scans will reveal their weak points."),
+  detect_vulnerability: mod("detect_vulnerability", [
+    line("weakspotDamage", "mod_panel", "multiplicative_percent", "Detect Vulnerability: weakspotDamage \u2014 Reveals weakspots on codex-complete enemies; hits deal +275% Damage at max rank"),
+  ]),
   dig: mod("dig", [
     line("digCooldown", "mod_panel", "multiplicative_percent", "Dig: digCooldown \u2014 The kubrow sniffs out buried objects and digs them up.\\\\n+270% Success Chance"),
   ]),
@@ -216,7 +221,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   hastened_deflection: mod("hastened_deflection", [
     line("shield", "warframe_totals", "multiplicative_percent", "Hastened Deflection: shield \u2014 +90% Shield Recharge, -45% Shield Recharge Delay"),
   ]),
-  helminth_ferocity: mod("helminth_ferocity", [], "wiki: Helminth Ferocity \u2014 +120% Finisher Damage"),
+  helminth_ferocity: mod("helminth_ferocity", [
+    line("finisherDamage", "mod_panel", "multiplicative_percent", "Helminth Ferocity: finisherDamage \u2014 +120% Finisher Damage"),
+  ]),
   howl: mod("howl", [
     line("duration", "mod_panel", "multiplicative_percent", "Howl: duration \u2014 The kubrow cries out with a blood-curdling howl that strikes fear into 15 enemie\u2026"),
     line("fearDuration", "mod_panel", "multiplicative_percent", "Howl: fearDuration \u2014 The kubrow cries out with a blood-curdling howl that strikes fear into 15 enemie\u2026"),
@@ -246,6 +253,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   ]),
   infectious_bite: mod("infectious_bite", [
     line("damage", "mod_panel", "multiplicative_percent", "Infectious Bite: damage \u2014 An attack that deals +200% Finisher Damage and infects the target with a Virus t\u2026"),
+    line("finisherDamage", "mod_panel", "multiplicative_percent", "Infectious Bite: finisherDamage \u2014 An attack that deals +200% Finisher Damage and infects the target with a Virus t\u2026"),
   ]),
   investigator: mod("investigator", [
     line("duration", "mod_panel", "multiplicative_percent", "Investigator: duration \u2014 Helios Sentinel will scan objects and enemies within 50m over 2.0s. This consume\u2026"),
@@ -278,7 +286,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Loyal Companion: duration \u2014 When your Health falls below 35%, gain 75% Damage Reduction for 10s while your C\u2026"),
     line("heat", "mod_panel", "multiplicative_percent", "Loyal Companion: heat \u2014 When your Health falls below 35%, gain 75% Damage Reduction for 10s while your C\u2026"),
   ]),
-  loyal_retriever: mod("loyal_retriever", [], "wiki: Loyal Retriever \u2014 13% chance to double Credit and Resource pickups"),
+  loyal_retriever: mod("loyal_retriever", [
+    line("pickupDoubleChance", "mod_panel", "multiplicative_percent", "Loyal Retriever: pickupDoubleChance \u2014 13% chance to double Credit and Resource pickups"),
+  ]),
   magnetic_strike: mod("magnetic_strike", [
     line("impact", "weapon_dps", "multiplicative_percent", "Magnetic Strike: impact \u2014 100% Chance to apply a <DT_MAGNETIC_COLOR>Magnetic status effect when inflicting\u2026"),
   ]),
@@ -371,6 +381,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   ]),
   paralytic_spores: mod("paralytic_spores", [
     line("duration", "mod_panel", "multiplicative_percent", "Paralytic Spores: duration \u2014 Charges at an enemy within 30m dealing 160 damage. This releases spores that aff\u2026"),
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Paralytic Spores: explosionDamage \u2014 Charges at an enemy within 30m dealing 160 damage. This releases spores that aff\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Paralytic Spores: range \u2014 Charges at an enemy within 30m dealing 160 damage. This releases spores that aff\u2026 (arsenal display only)"),
   ]),
   pounce: mod("pounce", [
@@ -390,9 +401,12 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("regenCharges", "mod_panel", "multiplicative_percent", "Primed Regen: regenCharges \u2014 Sentinel recovery time reduced by 35s. Revives with 10s of invulnerability."),
   ]),
   proboscis: mod("proboscis", [
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Proboscis: explosionDamage \u2014 Helminth Charger whips a proboscis out at an enemy within 30m, pulling them back\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Proboscis: range \u2014 Helminth Charger whips a proboscis out at an enemy within 30m, pulling them back\u2026 (arsenal display only)"),
   ]),
-  prosperous_retriever: mod("prosperous_retriever", [], "wiki: Prosperous Retriever \u2014 18% chance to double Credit pickups"),
+  prosperous_retriever: mod("prosperous_retriever", [
+    line("creditPickupDoubleChance", "mod_panel", "multiplicative_percent", "Prosperous Retriever: creditPickupDoubleChance \u2014 18% chance to double Credit pickups"),
+  ]),
   protect: mod("protect", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Protect: cooldown \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Protect: duration \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
@@ -428,7 +442,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   repo_audit: mod("repo_audit", [
     line("range", "mod_panel", "multiplicative_percent", "Repo Audit: range \u2014 Emits a magnetic pulse that disarms enemies within 30m. (arsenal display only)"),
   ]),
-  resourceful_retriever: mod("resourceful_retriever", [], "wiki: Resourceful Retriever \u2014 18% chance to double Resource pickups"),
+  resourceful_retriever: mod("resourceful_retriever", [
+    line("resourcePickupDoubleChance", "mod_panel", "multiplicative_percent", "Resourceful Retriever: resourcePickupDoubleChance \u2014 18% chance to double Resource pickups"),
+  ]),
   restorative_bond: mod("restorative_bond", [
     line("duration", "mod_panel", "multiplicative_percent", "Restorative Bond: duration \u2014 Health Orbs restore 60 more health and reduce Companion Recovery Time by 3s."),
     line("healthOnKill", "mod_panel", "multiplicative_percent", "Restorative Bond: healthOnKill \u2014 Health Orbs restore 60 more health and reduce Companion Recovery Time by 3s."),
@@ -485,7 +501,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   sharpened_claws: mod("sharpened_claws", [
     line("damage", "mod_panel", "multiplicative_percent", "Sharpened Claws: damage \u2014 A vicious attack dealing 300% damage that sunders armor by 120% and rends flesh."),
   ]),
-  shelter: mod("shelter", [], "wiki: Shelter \u2014 Creates a shield with 1800 Health around the player when they are reviving fallen allies."),
+  shelter: mod("shelter", [
+    line("reviveShieldHealth", "mod_panel", "flat", "Shelter: reviveShieldHealth \u2014 Creates a shield with 1800 Health around the player when they are reviving fallen allies."),
+  ]),
   shield_charger: mod("shield_charger", [
     line("duration", "mod_panel", "multiplicative_percent", "Shield Charger: duration \u2014 Increase Warframe Max Shields and Shield Regeneration by 60% for 10s."),
     line("overshields", "mod_panel", "multiplicative_percent", "Shield Charger: overshields \u2014 Increase Warframe Max Shields and Shield Regeneration by 60% for 10s."),
@@ -575,10 +593,14 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   thumper: mod("thumper", [
     line("range", "mod_panel", "multiplicative_percent", "Thumper: range \u2014 Djinn will attack the first visible enemy within 60m. (arsenal display only)"),
   ]),
-  tractor_beam: mod("tractor_beam", [], "wiki: Tractor Beam \u2014 +100% Aim Glide Duration\\\\n<LOWER_IS_BETTER>-50% Gravity"),
+  tractor_beam: mod("tractor_beam", [
+    line("aimGlideDuration", "mod_panel", "multiplicative_percent", "Tractor Beam: aimGlideDuration \u2014 +100% Aim Glide Duration"),
+    line("gravityReduction", "mod_panel", "multiplicative_percent", "Tractor Beam: gravityReduction \u2014 -50% Gravity"),
+  ]),
   trample: mod("trample", [
     line("damage", "mod_panel", "multiplicative_percent", "Trample: damage \u2014 The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It \u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Trample: duration \u2014 The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It \u2026"),
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Trample: explosionDamage \u2014 The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It \u2026"),
   ]),
   transfusion: mod("transfusion", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Transfusion: cooldown \u2014 When its Master is bleeding out, the Vasca Kavat sacrifices 20% of its Health to\u2026"),

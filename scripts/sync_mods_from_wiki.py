@@ -40,6 +40,13 @@ UPGRADE_TYPE_STAT: dict[str, str] = {
     "WEAPON_ZOOM": "zoom",
     "WEAPON_SPREAD": "recoil",
     "WEAPON_HEADSHOT_MULTIPLIER": "headshotMultiplier",
+    "WEAPON_PROJECTILE_EXPLOSION_CHANCE": "explosionChance",
+    "WEAPON_CORPSE_EXPLODE_DAMAGE": "explosionDamage",
+    "WEAPON_PROJECTILE_BOUNCES": "ricochetBounces",
+    "WEAPON_RANGE": "range",
+    "WEAPON_NULLIFIER_BUBBLE_POP_CHANCE": "nullifierPopChance",
+    "WEAPON_SYNDICATE_POWER": "syndicatePower",
+    "WEAPON_PROC_AMOUNT": "finisherDamage",
     "AVATAR_ABILITY_STRENGTH": "abilityStrength",
     "AVATAR_ABILITY_DURATION": "abilityDuration",
     "AVATAR_ABILITY_EFFICIENCY": "abilityEfficiency",
@@ -53,6 +60,9 @@ UPGRADE_TYPE_STAT: dict[str, str] = {
     "AVATAR_SHIELD_RECHARGE_RATE": "shieldRecharge",
     "AVATAR_HEALTH_REGEN": "healthRegen",
     "AVATAR_MOVEMENT_SPEED": "sprintSpeed",
+    "AVATAR_AURA_STRENGTH": "auraStrengthSquad",
+    "AVATAR_AURA_EFFECTIVENESS_ON_ME": "auraStrengthSelf",
+    "AVATAR_DAMAGE_TAKEN": "damageReduction",
 }
 
 DESC_LABEL_TO_STAT: list[tuple[re.Pattern[str], str]] = [
@@ -62,10 +72,16 @@ DESC_LABEL_TO_STAT: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"critical damage|crit damage", re.I), "criticalMultiplier"),
     (re.compile(r"status chance", re.I), "statusChance"),
     (re.compile(r"status duration", re.I), "statusDuration"),
+    (re.compile(r"headshot multiplier", re.I), "headshotMultiplier"),
+    (re.compile(r"finisher damage", re.I), "finisherDamage"),
+    (re.compile(r"chance to explode", re.I), "explosionChance"),
+    (re.compile(r"chance to disarm", re.I), "disarmChance"),
+    (re.compile(r"magazine capacity", re.I), "magazine"),
     (re.compile(r"magazine", re.I), "magazine"),
     (re.compile(r"reload speed", re.I), "reloadSpeed"),
     (re.compile(r"reload time", re.I), "reloadSpeed"),
-    (re.compile(r"attack speed", re.I), "attackSpeed"),
+    (re.compile(r"combo count chance", re.I), "comboCountChance"),
+    (re.compile(r"heavy attack efficiency|heavy attack wind up speed", re.I), "heavyAttackEfficiency"),
     (re.compile(r"melee damage", re.I), "damage"),
     (re.compile(r"damage(?! reduction)", re.I), "damage"),
     (re.compile(r"ability strength", re.I), "abilityStrength"),
@@ -77,7 +93,10 @@ DESC_LABEL_TO_STAT: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"armor|armour", re.I), "armor"),
     (re.compile(r"energy", re.I), "energy"),
     (re.compile(r"sprint speed", re.I), "sprintSpeed"),
-    (re.compile(r"parkour", re.I), "parkourVelocity"),
+    (re.compile(r"knockdown resistance", re.I), "knockdownResistance"),
+    (re.compile(r"slide speed|slide(?!\s*attack)", re.I), "slideSpeed"),
+    (re.compile(r"friction", re.I), "slideFriction"),
+    (re.compile(r"bullet jump", re.I), "bulletJump"),
     (re.compile(r"accuracy", re.I), "accuracy"),
     (re.compile(r"recoil", re.I), "recoil"),
     (re.compile(r"range(?! per)", re.I), "range"),
@@ -315,6 +334,141 @@ def parse_description_stats(desc: str, max_rank: int) -> dict[str, float]:
     m = re.search(r"grants?\s+(\d+(?:\.\d+)?)\s+energy", desc, re.I)
     if m:
         stats["energyOnCast"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)\s+energy\b", desc, re.I)
+    if m:
+        stats["energyOnKill"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"dealing\s+(\d+(?:\.\d+)?)\s+damage", desc, re.I)
+    if m:
+        stats["explosionDamage"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"Finisher Damage by\s+(\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["finisherDamage"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"(\d+(?:\.\d+)?)%\s+chance to disarm", desc, re.I)
+    if m:
+        stats["disarmChance"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(
+        r"\+(\d+(?:\.\d+)?)%\s+chance to immediately destroy a Nullifier",
+        desc,
+        re.I,
+    )
+    if m:
+        stats["nullifierPopChance"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"accumulated up to\s+([\d,]+)", desc, re.I)
+    if m:
+        stats["storedDamage"] = round(float(m.group(1).replace(",", "")) / divisor, 6)
+    m = re.search(r"travel[s]?\s+(\d+(?:\.\d+)?)%\s+faster", desc, re.I)
+    if m:
+        stats["projectileSpeed"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+)\s+Magazine Capacity", desc, re.I)
+    if m:
+        stats["magazine"] = round(float(m.group(1)) / divisor, 6)
+    if re.search(r"\+1\s+'[^']+'", desc):
+        stats.setdefault("syndicatePower", 1.0)
+    m = re.search(r"bounces? up to\s+(\d+)", desc, re.I)
+    if m:
+        stats["ricochetBounces"] = float(m.group(1))
+    m = re.search(r"travel[s]?\s+(\d+(?:\.\d+)?)%\s+further", desc, re.I)
+    if m:
+        stats["range"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(
+        r"increases?\s+Critical Chance and Critical Damage by\s+(\d+(?:\.\d+)?)%",
+        desc,
+        re.I,
+    )
+    if m:
+        val = round(float(m.group(1)) / divisor, 6)
+        stats["criticalChance"] = val
+        stats["criticalMultiplier"] = val
+    m = re.search(
+        r"increase the Critical Chance and Critical Damage of the next discharge by\s+(\d+(?:\.\d+)?)%",
+        desc,
+        re.I,
+    )
+    if m:
+        val = round(float(m.group(1)) / divisor, 6)
+        stats["criticalChance"] = val
+        stats["criticalMultiplier"] = val
+    # Warframe Exilus / mobility phrasing
+    m = re.search(r"Reduced damage by (\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["damageReduction"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"In(?:crease|creases?) Ability Strength by (\d+(?:\.\d+)?)%", desc, re.I)
+    if m and "abilityStrength" not in stats:
+        stats["abilityStrength"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"(\d+(?:\.\d+)?)%\s+chance to unlock", desc, re.I)
+    if m:
+        stats["lockerUnlockChance"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)%\s+Faster Knockdown Recovery", desc, re.I)
+    if m:
+        stats["knockdownRecovery"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)%\s+Chance to Resist Knockdown", desc, re.I)
+    if m:
+        stats["knockdownResistance"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)%\s+Slide", desc, re.I)
+    if m:
+        stats["slideSpeed"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"-(\d+(?:\.\d+)?)%\s+Friction", desc, re.I)
+    if m:
+        stats["slideFriction"] = -round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)%\s+Bullet Jump Speed", desc, re.I)
+    if m:
+        stats["bulletJump"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"Squad benefits \+(\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["auraStrengthSquad"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"You benefit an additional \+(\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["auraStrengthSelf"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"hear gunfire by (\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["noiseReduction"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(
+        r"Armor and Shields of other enemies within Affinity Range by (\d+(?:\.\d+)?)%",
+        desc,
+        re.I,
+    )
+    if m:
+        val = round(float(m.group(1)) / divisor, 6)
+        stats["armorDebuffOnKill"] = val
+        stats["shieldDebuffOnKill"] = val
+    m = re.search(r"(\d+(?:\.\d+)?)% chance to drop a Universal Orb", desc, re.I)
+    if m:
+        stats["universalOrbChance"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"with \+(\d+(?:\.\d+)?)% extra effect", desc, re.I)
+    if m:
+        stats["energyOrbBonus"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"Converts? \w+ ammo pickups to (\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["ammoConversion"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"consumes?\s+(\d+(?:\.\d+)?)\s+more Energy", desc, re.I)
+    if m:
+        stats["extraEnergyCost"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"Damage Vulnerability by (\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["damageVulnerability"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"spread radius by (\d+(?:\.\d+)?)%", desc, re.I)
+    if m:
+        stats["spreadRadiusBonus"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"fires three arrows", desc, re.I)
+    if m:
+        stats["abilityProjectileCount"] = 3.0
+    m = re.search(r"([+-])(\d+)\s+Bounce", desc, re.I)
+    if m:
+        sign = -1 if m.group(1) == "-" else 1
+        stats["ricochetBounces"] = float(m.group(2)) * sign
+    m = re.search(
+        r"Blocking reduces damage taken from enemy abilities by (\d+(?:\.\d+)?)%",
+        desc,
+        re.I,
+    )
+    if m:
+        stats["damageReduction"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"disable jump for \+(\d+(?:\.\d+)?)s", desc, re.I)
+    if m:
+        stats["duration"] = round(float(m.group(1)) / divisor, 6)
+    m = re.search(r"\+(\d+(?:\.\d+)?)\s+Range\b", desc, re.I)
+    if m and "%" not in desc.split("Range")[0][-3:]:
+        stats["range"] = round(float(m.group(1)) / divisor, 6)
     return stats
 
 

@@ -38,7 +38,9 @@ export const MOD_BEHAVIORS_KDRIVE: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Quick Escape: duration \u2014 Gain invulnerability for 5s mounting a K-drive, but will expire early upon dismo\u2026"),
   ]),
   rail_guards: mod("rail_guards", [], "wiki: Rail Guards \u2014 +30% K-Drive Grind Speed"),
-  slay_board: mod("slay_board", [], "wiki: Slay Board \u2014 On Directional Dismount:\\\\nBoard is launched, dealing 400 Damage while slicing enemies."),
+  slay_board: mod("slay_board", [
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Slay Board: explosionDamage \u2014 On Directional Dismount:\\\\nBoard is launched, dealing 400 Damage while slicing e\u2026"),
+  ]),
   sonic_boost: mod("sonic_boost", [
     line("duration", "mod_panel", "multiplicative_percent", "Sonic Boost: duration \u2014 Every <LOWER_IS_BETTER>10s, boosting will release a shockwave, stunning enemies \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Sonic Boost: range \u2014 Every <LOWER_IS_BETTER>10s, boosting will release a shockwave, stunning enemies \u2026 (arsenal display only)"),

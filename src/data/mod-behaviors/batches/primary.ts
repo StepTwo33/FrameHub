@@ -34,7 +34,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   apex_predator: mod("apex_predator", [
     line("duration", "mod_panel", "multiplicative_percent", "Apex Predator: duration \u2014 On Hit:\\\\nReveals target on Minimap for +6s."),
   ]),
-  arrow_mutation: mod("arrow_mutation", [], "wiki: Arrow Mutation \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  arrow_mutation: mod("arrow_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Arrow Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  ]),
   bane_of_corpus: mod("bane_of_corpus", [
     line("factionCorpus", "mod_panel", "multiplicative_percent", "Bane Of Corpus: factionCorpus \u2014 x1.3 Damage to Corpus"),
   ]),
@@ -75,7 +77,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Combat Reload: duration \u2014 If 5 pellets are headshots, increase reload speed by +120% for 3s."),
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Combat Reload: reloadSpeed \u2014 If 5 pellets are headshots, increase reload speed by +120% for 3s."),
   ]),
-  combustion_beam: mod("combustion_beam", [], "wiki: Combustion Beam \u2014 Enemies killed explode, dealing 600 Damage shortly after death."),
+  combustion_beam: mod("combustion_beam", [
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Combustion Beam: explosionDamage \u2014 Enemies killed explode, dealing 600 Damage shortly after death."),
+  ]),
   comet_rounds: mod("comet_rounds", [
     line("damage", "weapon_dps", "multiplicative_percent", "Comet Rounds: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
   ]),
@@ -172,7 +176,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("electricity", "weapon_dps", "elemental_from_base_damage", "High Voltage: electricity \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "High Voltage: statusChance \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
   ]),
-  hush_r3: mod("hush_r3", [], "wiki: Hush \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  hush_r3: mod("hush_r3", [
+    line("noiseReduction", "mod_panel", "multiplicative_percent", "Hush: noiseReduction \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  ]),
   hydraulic_gauge: mod("hydraulic_gauge", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Hydraulic Gauge: magazine \u2014 -60% Weapon Recoil, -10% Magazine Capacity"),
     line("recoil", "mod_panel", "multiplicative_percent", "Hydraulic Gauge: recoil \u2014 -60% Weapon Recoil, -10% Magazine Capacity (arsenal display only)"),
@@ -214,7 +220,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Measured Burst: damage \u2014 When Aiming:\\\\n-60% Fire Rate\\\\n+30% Damage"),
     line("fireRate", "weapon_dps", "multiplicative_percent", "Measured Burst: fireRate \u2014 When Aiming:\\\\n-60% Fire Rate\\\\n+30% Damage"),
   ]),
-  mending_shot: mod("mending_shot", [], "wiki: Mending Shot \u2014 Shoot Health Orbs to obtain them with +110% extra effect."),
+  mending_shot: mod("mending_shot", [
+    line("energyOrbBonus", "mod_panel", "multiplicative_percent", "Mending Shot: energyOrbBonus \u2014 Shoot Health Orbs to obtain them with +110% extra effect."),
+  ]),
   metal_auger_r3: mod("metal_auger_r3", [
     line("punchThrough", "mod_panel", "multiplicative_percent", "Metal Auger: punchThrough \u2014 +2.1 Punch Through (arsenal display only)"),
   ]),
@@ -283,12 +291,16 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   primed_magazine_warp: mod("primed_magazine_warp", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Primed Magazine Warp: magazine \u2014 +55% Magazine Capacity"),
   ]),
-  primed_rifle_ammo_mutation: mod("primed_rifle_ammo_mutation", [], "wiki: Primed Rifle Ammo Mutation \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  primed_rifle_ammo_mutation: mod("primed_rifle_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Primed Rifle Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  ]),
   primed_shred: mod("primed_shred", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Primed Shred: fireRate \u2014 +55% Fire Rate (x2 for Bows), +2.2 Punch Through"),
     line("punchThrough", "mod_panel", "multiplicative_percent", "Primed Shred: punchThrough \u2014 +55% Fire Rate (x2 for Bows), +2.2 Punch Through (arsenal display only)"),
   ]),
-  primed_sniper_ammo_mutation: mod("primed_sniper_ammo_mutation", [], "wiki: Primed Sniper Ammo Mutation \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  primed_sniper_ammo_mutation: mod("primed_sniper_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Primed Sniper Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  ]),
   primed_stabilizer: mod("primed_stabilizer", [
     line("recoil", "mod_panel", "multiplicative_percent", "Primed Stabilizer: recoil \u2014 -85% Weapon Recoil (arsenal display only)"),
   ]),
@@ -308,7 +320,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Recover: duration \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
     line("health", "warframe_totals", "multiplicative_percent", "Recover: health \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
   ]),
-  rifle_ammo_mutation: mod("rifle_ammo_mutation", [], "wiki: Rifle Ammo Mutation \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  rifle_ammo_mutation: mod("rifle_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Rifle Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  ]),
   rifle_aptitude_r3: mod("rifle_aptitude_r3", [
     line("statusChance", "weapon_dps", "multiplicative_percent", "Rifle Aptitude: statusChance \u2014 +90% Status Chance"),
   ]),
@@ -333,21 +347,28 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Semi-Rifle Cannonade: damage \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+240% Da\u2026"),
     line("punchThrough", "mod_panel", "multiplicative_percent", "Semi-Rifle Cannonade: punchThrough \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+240% Da\u2026 (arsenal display only)"),
   ]),
-  sentient_barrage: mod("sentient_barrage", [], "wiki: Sentient Barrage \u2014 Discharge from Alt-Fire now has infinite Body Punch Through but no longer explodes on contact. Each enemy hit will refill one charge, and reaching a full charge will increase the Critical Chance and Critical Damage of the next discharge by 300%."),
+  sentient_barrage: mod("sentient_barrage", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Sentient Barrage: criticalChance \u2014 Discharge from Alt-Fire now has infinite Body Punch Through but no longer explod\u2026"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Sentient Barrage: criticalMultiplier \u2014 Discharge from Alt-Fire now has infinite Body Punch Through but no longer explod\u2026"),
+  ]),
   serrated_rounds: mod("serrated_rounds", [
     line("damage", "weapon_dps", "multiplicative_percent", "Serrated Rounds: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
   ]),
   serration_r3: mod("serration_r3", [
     line("damage", "weapon_dps", "multiplicative_percent", "Serration: damage \u2014 +165% Damage"),
   ]),
-  sharpshooter: mod("sharpshooter", [], "wiki: Sharpshooter \u2014 On Headshot Kill:\\\\n+15 Energy"),
+  sharpshooter: mod("sharpshooter", [
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Sharpshooter: energyOnKill \u2014 On Headshot Kill:\\\\n+15 Energy"),
+  ]),
   shivering_contagion: mod("shivering_contagion", [
     line("range", "mod_panel", "multiplicative_percent", "Shivering Contagion: range \u2014 On <DT_FREEZE_COLOR>Cold Status Effect: 100% chance to spread that status to oth\u2026 (arsenal display only)"),
   ]),
   sinister_reach: mod("sinister_reach", [
     line("range", "mod_panel", "multiplicative_percent", "Sinister Reach: range \u2014 +12m Beam Range (arsenal display only)"),
   ]),
-  sniper_ammo_mutation: mod("sniper_ammo_mutation", [], "wiki: Sniper Ammo Mutation \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  sniper_ammo_mutation: mod("sniper_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Sniper Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
+  ]),
   soaring_strike: mod("soaring_strike", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Soaring Strike: fireRate \u2014 +50% Fire Rate when Airborne"),
   ]),
@@ -389,11 +410,15 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("magazine", "weapon_dps", "multiplicative_percent", "Tainted Mag: magazine \u2014 +66% Magazine Capacity, -33% Reload Speed"),
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Tainted Mag: reloadSpeed \u2014 +66% Magazine Capacity, -33% Reload Speed"),
   ]),
-  target_acquired: mod("target_acquired", [], "wiki: Target Acquired \u2014 +60% to Headshot Multiplier"),
+  target_acquired: mod("target_acquired", [
+    line("headshotMultiplier", "mod_panel", "multiplicative_percent", "Target Acquired: headshotMultiplier \u2014 +60% to Headshot Multiplier"),
+  ]),
   terminal_velocity: mod("terminal_velocity", [
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Terminal Velocity: projectileSpeed \u2014 +60% Projectile Speed"),
   ]),
-  thunderbolt: mod("thunderbolt", [], "wiki: Thunderbolt \u2014 +45% Chance to Explode (Use with Caution)"),
+  thunderbolt: mod("thunderbolt", [
+    line("explosionChance", "mod_panel", "multiplicative_percent", "Thunderbolt: explosionChance \u2014 +45% Chance to Explode (Use with Caution)"),
+  ]),
   thundermiter: mod("thundermiter", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Thundermiter: magazine \u2014 +100% chance charged Projectiles explode, -60% Magazine Capacity"),
   ]),
@@ -414,7 +439,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Vanquished Prey: health \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
     line("shield", "warframe_totals", "multiplicative_percent", "Vanquished Prey: shield \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
   ]),
-  vile_discharge: mod("vile_discharge", [], "wiki: Vile Discharge \u2014 Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac dealing and resetting the accumulated damage."),
+  vile_discharge: mod("vile_discharge", [
+    line("storedDamage", "mod_panel", "multiplicative_percent", "Vile Discharge: storedDamage \u2014 Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac\u2026"),
+  ]),
   vile_precision: mod("vile_precision", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Vile Precision: fireRate \u2014 -90% Weapon Recoil, -36% Fire Rate (x2 for Bows)"),
     line("recoil", "mod_panel", "multiplicative_percent", "Vile Precision: recoil \u2014 -90% Weapon Recoil, -36% Fire Rate (x2 for Bows) (arsenal display only)"),

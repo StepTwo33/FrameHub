@@ -39,19 +39,26 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Calculated Victory: health \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
     line("shield", "warframe_totals", "multiplicative_percent", "Calculated Victory: shield \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
   ]),
-  cannonade: mod("cannonade", [], "wiki: Cannonade \u2014 +30% Chance to Explode (Use with Caution)"),
+  cannonade: mod("cannonade", [
+    line("explosionChance", "mod_panel", "multiplicative_percent", "Cannonade: explosionChance \u2014 +30% Chance to Explode (Use with Caution)"),
+  ]),
   carnis_stinger: mod("carnis_stinger", [
     line("slash", "weapon_dps", "multiplicative_percent", "Carnis Stinger: slash \u2014 +90% <DT_SLASH_COLOR>Slash, +60% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "Carnis Stinger: statusChance \u2014 +90% <DT_SLASH_COLOR>Slash, +60% Status Chance"),
   ]),
-  concealed_explosives: mod("concealed_explosives", [], "wiki: Concealed Explosives \u2014 +80% Chance to Explode (Use with Caution)"),
+  concealed_explosives: mod("concealed_explosives", [
+    line("explosionChance", "mod_panel", "multiplicative_percent", "Concealed Explosives: explosionChance \u2014 +80% Chance to Explode (Use with Caution)"),
+  ]),
   concussion_rounds: mod("concussion_rounds", [
     line("impact", "weapon_dps", "multiplicative_percent", "Concussion Rounds: impact \u2014 +90% <DT_IMPACT_COLOR>Impact"),
   ]),
   convulsion_r3: mod("convulsion_r3", [
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Convulsion: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),
   ]),
-  critical_mutation: mod("critical_mutation", [], "wiki: Critical Mutation \u2014 Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduce by 30% when fewer than 3 enemies are struck by the grenade explosion."),
+  critical_mutation: mod("critical_mutation", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Critical Mutation: criticalChance \u2014 Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduc\u2026"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Critical Mutation: criticalMultiplier \u2014 Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduc\u2026"),
+  ]),
   damzav_vati: mod("damzav_vati", [
     line("viral", "weapon_dps", "elemental_from_base_damage", "Damzav-Vati: viral \u2014 +240% <DT_VIRAL_COLOR>Viral"),
   ]),
@@ -73,7 +80,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   eject_magazine: mod("eject_magazine", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Eject Magazine: magazine \u2014 +20% Magazine Reloaded/s when Holstered"),
   ]),
-  energizing_shot: mod("energizing_shot", [], "wiki: Energizing Shot \u2014 Shoot Energy Orbs to obtain them with +110% extra effect."),
+  energizing_shot: mod("energizing_shot", [
+    line("energyOrbBonus", "mod_panel", "multiplicative_percent", "Energizing Shot: energyOrbBonus \u2014 Shoot Energy Orbs to obtain them with +110% extra effect."),
+  ]),
   expel_corpus_r3: mod("expel_corpus_r3", [
     line("factionCorpus", "mod_panel", "multiplicative_percent", "Expel Corpus: factionCorpus \u2014 x1.3 Damage to Corpus"),
   ]),
@@ -141,7 +150,10 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   impaler_munitions: mod("impaler_munitions", [
     line("damage", "weapon_dps", "multiplicative_percent", "Impaler Munitions: damage \u2014 20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture"),
   ]),
-  jahu_canticle: mod("jahu_canticle", [], "wiki: Jahu Canticle \u2014 Killing enemies reduces the Armor and Shields of other enemies within Affinity Range by 5%."),
+  jahu_canticle: mod("jahu_canticle", [
+    line("armorDebuffOnKill", "mod_panel", "multiplicative_percent", "Jahu Canticle: armorDebuffOnKill \u2014 Killing enemies reduces the Armor and Shields of other enemies within Affinity R\u2026"),
+    line("shieldDebuffOnKill", "mod_panel", "multiplicative_percent", "Jahu Canticle: shieldDebuffOnKill \u2014 Killing enemies reduces the Armor and Shields of other enemies within Affinity R\u2026"),
+  ]),
   jolt_r3: mod("jolt_r3", [
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Jolt: electricity \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "Jolt: statusChance \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
@@ -150,7 +162,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("puncture", "weapon_dps", "multiplicative_percent", "Jugulus Spines: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "Jugulus Spines: statusChance \u2014 +90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance"),
   ]),
-  khra_canticle: mod("khra_canticle", [], "wiki: Khra Canticle \u2014 Enemies have a 12% chance to drop a Universal Orb on death."),
+  khra_canticle: mod("khra_canticle", [
+    line("universalOrbChance", "mod_panel", "multiplicative_percent", "Khra Canticle: universalOrbChance \u2014 Enemies have a 12% chance to drop a Universal Orb on death."),
+  ]),
   leaded_gas: mod("leaded_gas", [
     line("duration", "mod_panel", "multiplicative_percent", "Leaded Gas: duration \u2014 On Weak Point Hit:\\\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s"),
     line("gas", "weapon_dps", "elemental_from_base_damage", "Leaded Gas: gas \u2014 On Weak Point Hit:\\\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s"),
@@ -238,7 +252,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("blastRange", "mod_panel", "multiplicative_percent", "Primed Fulmination: blastRange \u2014 Improves the Blast Radius of weapons with Radial Attacks.\\\\n+44% Blast Range"),
     line("range", "mod_panel", "multiplicative_percent", "Primed Fulmination: range \u2014 Improves the Blast Radius of weapons with Radial Attacks.\\\\n+44% Blast Range (arsenal display only)"),
   ]),
-  primed_pistol_ammo_mutation: mod("primed_pistol_ammo_mutation", [], "wiki: Primed Pistol Ammo Mutation \u2014 Converts Primary ammo pickups to 92% of Ammo Pick Up."),
+  primed_pistol_ammo_mutation: mod("primed_pistol_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Primed Pistol Ammo Mutation: ammoConversion \u2014 Converts Primary ammo pickups to 92% of Ammo Pick Up."),
+  ]),
   primed_slip_magazine: mod("primed_slip_magazine", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Primed Slip Magazine: magazine \u2014 +55% Magazine Capacity"),
   ]),
@@ -330,7 +346,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Stunning Speed: reloadSpeed \u2014 +40% Reload Speed, +30% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "Stunning Speed: statusChance \u2014 +40% Reload Speed, +30% Status Chance"),
   ]),
-  suppress_r3: mod("suppress_r3", [], "wiki: Suppress \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  suppress_r3: mod("suppress_r3", [
+    line("noiseReduction", "mod_panel", "multiplicative_percent", "Suppress: noiseReduction \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  ]),
   sure_shot: mod("sure_shot", [
     line("statusChance", "weapon_dps", "multiplicative_percent", "Sure Shot: statusChance \u2014 +90% Status Chance"),
   ]),
@@ -352,6 +370,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("ammoMaximum", "mod_panel", "multiplicative_percent", "Trick Mag: ammoMaximum \u2014 +90% Ammo Maximum"),
   ]),
   vome_invocation: mod("vome_invocation", [
+    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Vome Invocation: abilityStrength \u2014 Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stac\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Vome Invocation: duration \u2014 Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stac\u2026"),
   ]),
   xata_invocation: mod("xata_invocation", [

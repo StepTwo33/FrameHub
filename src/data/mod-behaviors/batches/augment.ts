@@ -37,6 +37,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Amalgam Argonak Metal Auger: punchThrough \u2014 +3 Punch Through, Damage from Daggers reduces Armor by 6.\\\\n<LINE_SEPARATOR>\\\\nE\u2026"),
   ]),
   amalgam_daikyu_target_acquired: mod("amalgam_daikyu_target_acquired", [
+    line("headshotMultiplier", "mod_panel", "multiplicative_percent", "Amalgam Daikyu Target Acquired: headshotMultiplier \u2014 +75% to Headshot Multiplier, +3% Life Steal on Nikanas, <LINE_SEPARATOR>\\\\n60% c\u2026"),
     line("lifeSteal", "mod_panel", "multiplicative_percent", "Amalgam Daikyu Target Acquired: lifeSteal \u2014 +75% to Headshot Multiplier, +3% Life Steal on Nikanas, <LINE_SEPARATOR>\\\\n60% c\u2026"),
   ]),
   amalgam_furax_body_count: mod("amalgam_furax_body_count", [
@@ -46,6 +47,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: range \u2014 +15s Combo Duration\\\\n+45% Fire Rate for Secondary Weapons\\\\n<LINE_SEPARATOR>\\\\n\u2026"),
   ]),
   amalgam_javlok_magazine_warp: mod("amalgam_javlok_magazine_warp", [
+    line("comboCountChance", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: comboCountChance \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
     line("magazine", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: magazine \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
     line("shield", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: shield \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
   ]),
@@ -53,7 +55,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("criticalChance", "mod_panel", "multiplicative_percent", "Amalgam Ripkas True Steel: criticalChance \u2014 +187% Critical Chance (x2 for Heavy Attacks), +20% Reload Speed on Shotguns, <LI\u2026"),
     line("reloadSpeed", "mod_panel", "multiplicative_percent", "Amalgam Ripkas True Steel: reloadSpeed \u2014 +187% Critical Chance (x2 for Heavy Attacks), +20% Reload Speed on Shotguns, <LI\u2026"),
   ]),
-  anchored_glide: mod("anchored_glide", [], "wiki: Anchored Glide \u2014 Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%."),
+  anchored_glide: mod("anchored_glide", [
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "Anchored Glide: abilityStrength \u2014 Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%."),
+  ]),
   antimatter_mine: mod("antimatter_mine", [
     line("duration", "mod_panel", "multiplicative_percent", "Antimatter Mine: duration \u2014 Antimatter Drop Augment: Creates a fully charged stationary orb that explodes af\u2026"),
   ]),
@@ -116,6 +120,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_chroma_afterburn: mod("augment_chroma_afterburn", [
     line("damagePerSecondActive", "mod_panel", "multiplicative_percent", "Afterburn: damagePerSecondActive \u2014 Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental proj\u2026"),
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Afterburn: explosionDamage \u2014 Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental proj\u2026"),
     line("totalDamageCap", "mod_panel", "multiplicative_percent", "Afterburn: totalDamageCap \u2014 Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental proj\u2026"),
   ]),
   augment_chroma_everlasting_ward: mod("augment_chroma_everlasting_ward", [
@@ -171,6 +176,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_excalibur_radiant_finish: mod("augment_excalibur_radiant_finish", [
     line("damage", "mod_panel", "multiplicative_percent", "Radiant Finish: damage \u2014 Radial Blind Augment: Blinded enemies take 300% more Finisher Damage."),
+    line("finisherDamage", "mod_panel", "multiplicative_percent", "Radiant Finish: finisherDamage \u2014 Radial Blind Augment: Blinded enemies take 300% more Finisher Damage."),
     line("finisherDamageBonus", "mod_panel", "multiplicative_percent", "Radiant Finish: finisherDamageBonus \u2014 Radial Blind Augment: Blinded enemies take 300% more Finisher Damage."),
   ]),
   augment_excalibur_surging_dash: mod("augment_excalibur_surging_dash", [
@@ -202,6 +208,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("energyOnKill", "mod_panel", "multiplicative_percent", "Spectrosiphon: energyOnKill \u2014 Spectrorage Augment: Enemies that die within Spectrorage have a 50% chance to dr\u2026"),
   ]),
   augment_garuda_blending_talons: mod("augment_garuda_blending_talons", [
+    line("comboCountChance", "mod_panel", "multiplicative_percent", "Blending Talons: comboCountChance \u2014 Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons g\u2026"),
     line("comboPerHit", "mod_panel", "multiplicative_percent", "Blending Talons: comboPerHit \u2014 Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons g\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Blending Talons: range \u2014 Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons g\u2026"),
     line("slash", "mod_panel", "multiplicative_percent", "Blending Talons: slash \u2014 Seeking Talons Augment: Tap to perform a 9m AoE around Garuda. Garuda's Talons g\u2026"),
@@ -421,6 +428,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_nyx_mind_freak: mod("augment_nyx_mind_freak", [
     line("attackSpeed", "mod_panel", "multiplicative_percent", "Mind Freak: attackSpeed \u2014 Mind Control Augment: Controlled target inflicts +1000% Damage and gains +25% Mo\u2026"),
     line("controlledDamage", "mod_panel", "multiplicative_percent", "Mind Freak: controlledDamage \u2014 Mind Control Augment: Controlled target inflicts +1000% Damage and gains +25% Mo\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "Mind Freak: damage \u2014 Mind Control Augment: Controlled target inflicts +1000% Damage and gains +25% Mo\u2026"),
   ]),
   augment_nyx_pacifying_bolts: mod("augment_nyx_pacifying_bolts", [
     line("duration", "mod_panel", "multiplicative_percent", "Pacifying Bolts: duration \u2014 Psychic Bolts Augment: Throw an additional 3 force bolts with guaranteed Radiati\u2026"),
@@ -588,6 +596,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   avenging_truth: mod("avenging_truth", [
     line("damage", "mod_panel", "multiplicative_percent", "Avenging Truth: damage \u2014 Blocking absorbs 50% of incoming damage, stored as Extra Damage for the next cha\u2026"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Avenging Truth: syndicatePower \u2014 Blocking absorbs 50% of incoming damage, stored as Extra Damage for the next cha\u2026"),
   ]),
   axios_javelineers: mod("axios_javelineers", [
     line("duration", "mod_panel", "multiplicative_percent", "Axios Javelineers: duration \u2014 Axios Javelin Augment: Spawns specters that throw two extra javelins with guaran\u2026"),
@@ -596,6 +605,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   blade_of_truth: mod("blade_of_truth", [
     line("damage", "mod_panel", "multiplicative_percent", "Blade Of Truth: damage \u2014 +100% Melee Damage, +1 'Truth'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Blade Of Truth: syndicatePower \u2014 +100% Melee Damage, +1 'Truth'"),
   ]),
   blinding_reave: mod("blinding_reave", [
     line("duration", "mod_panel", "multiplicative_percent", "Blinding Reave: duration \u2014 Reave Augment: Reave gains +40% range and enemies are blinded by its fog for 10s\u2026"),
@@ -603,6 +613,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   bright_purity: mod("bright_purity", [
     line("damage", "mod_panel", "multiplicative_percent", "Bright Purity: damage \u2014 +100% Melee Damage, +1 'Purity'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Bright Purity: syndicatePower \u2014 +100% Melee Damage, +1 'Purity'"),
   ]),
   bursting_mass: mod("bursting_mass", [
     line("damage", "mod_panel", "multiplicative_percent", "Bursting Mass: damage \u2014 The infested mass accumulates 200% of the damage that goes through it and deals \u2026"),
@@ -630,6 +641,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   deadly_sequence: mod("deadly_sequence", [
     line("criticalChance", "mod_panel", "multiplicative_percent", "Deadly Sequence: criticalChance \u2014 +200% Critical Chance, +1 'Sequence'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Deadly Sequence: syndicatePower \u2014 +200% Critical Chance, +1 'Sequence'"),
   ]),
   deceptive_bond: mod("deceptive_bond", [
     line("damage", "mod_panel", "multiplicative_percent", "Deceptive Bond: damage \u2014 Decoy Augment: 50% of damage Loki takes is transferred to Decoy, and vice versa."),
@@ -637,7 +649,10 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   defiled_reckoning: mod("defiled_reckoning", [
     line("duration", "mod_panel", "multiplicative_percent", "Defiled Reckoning: duration \u2014 Reckoning Augment: Health Orbs become unusable by enemies for 10s."),
   ]),
-  disarming_purity: mod("disarming_purity", [], "wiki: Disarming Purity \u2014 Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'"),
+  disarming_purity: mod("disarming_purity", [
+    line("disarmChance", "mod_panel", "multiplicative_percent", "Disarming Purity: disarmChance \u2014 Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Disarming Purity: syndicatePower \u2014 Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'"),
+  ]),
   discharge_strike: mod("discharge_strike", [], "wiki: Discharge Strike \u2014 Soul Punch Augment: Depletes up to 25 Energy from the target."),
   divebomb_vortex: mod("divebomb_vortex", [], "wiki: Divebomb Vortex \u2014 Dive Bomb Augment - Enemies within 12 meters of the point of impact are dragged into it."),
   divine_retribution: mod("divine_retribution", [
@@ -663,17 +678,24 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   entropy_burst: mod("entropy_burst", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Entropy Burst: statusChance \u2014 +20 Final Status Chance, +1 'Entropy'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Burst: syndicatePower \u2014 +20 Final Status Chance, +1 'Entropy'"),
   ]),
   entropy_detonation: mod("entropy_detonation", [
     line("damage", "mod_panel", "multiplicative_percent", "Entropy Detonation: damage \u2014 Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max H\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Entropy Detonation: range \u2014 Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max H\u2026"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Detonation: syndicatePower \u2014 Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max H\u2026"),
   ]),
   entropy_flight: mod("entropy_flight", [
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Entropy Flight: projectileSpeed \u2014 +140% Projectile Speed, +1 'Entropy'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Flight: syndicatePower \u2014 +140% Projectile Speed, +1 'Entropy'"),
   ]),
-  entropy_spike: mod("entropy_spike", [], "wiki: Entropy Spike \u2014 +20% Chance to Explode (Use with Caution), +1 'Entropy'"),
+  entropy_spike: mod("entropy_spike", [
+    line("explosionChance", "mod_panel", "multiplicative_percent", "Entropy Spike: explosionChance \u2014 +20% Chance to Explode (Use with Caution), +1 'Entropy'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Spike: syndicatePower \u2014 +20% Chance to Explode (Use with Caution), +1 'Entropy'"),
+  ]),
   eroding_blight: mod("eroding_blight", [
     line("magazine", "mod_panel", "multiplicative_percent", "Eroding Blight: magazine \u2014 +200% Magazine Capacity, +1 'Blight'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Eroding Blight: syndicatePower \u2014 +200% Magazine Capacity, +1 'Blight'"),
   ]),
   eternal_war: mod("eternal_war", [
     line("duration", "mod_panel", "multiplicative_percent", "Eternal War: duration \u2014 Warcry Augment: While active, Warcry's duration is increased by 2s for each Mele\u2026"),
@@ -690,14 +712,19 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Flux Overdrive: duration \u2014 Status Chance fluctuates between +150% and +250% over 5s while the beam is fired\u2026"),
     line("heat", "mod_panel", "multiplicative_percent", "Flux Overdrive: heat \u2014 Status Chance fluctuates between +150% and +250% over 5s while the beam is fired\u2026"),
   ]),
-  fomorian_accelerant: mod("fomorian_accelerant", [], "wiki: Fomorian Accelerant \u2014 Flak now bounces up to 4x and travels 60% faster."),
+  fomorian_accelerant: mod("fomorian_accelerant", [
+    line("projectileSpeed", "mod_panel", "multiplicative_percent", "Fomorian Accelerant: projectileSpeed \u2014 Flak now bounces up to 4x and travels 60% faster."),
+    line("ricochetBounces", "mod_panel", "multiplicative_percent", "Fomorian Accelerant: ricochetBounces \u2014 Flak now bounces up to 4x and travels 60% faster."),
+  ]),
   funnel_clouds: mod("funnel_clouds", [], "wiki: Funnel Clouds \u2014 Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies."),
   fused_crucible: mod("fused_crucible", [], "wiki: Fused Crucible \u2014 Crucible Blast Augment: Becomes a channeled ability consuming <LOWER_IS_BETTER>20 <ENERGY> Energy/s that ramps up. While active Chyrinka Pillars trigger chain reactions and their duration is frozen. Mobility is greatly reduced."),
   gastro: mod("gastro", [
     line("duration", "mod_panel", "multiplicative_percent", "Gastro: duration \u2014 Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clo\u2026"),
+    line("ricochetBounces", "mod_panel", "multiplicative_percent", "Gastro: ricochetBounces \u2014 Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clo\u2026"),
   ]),
   gilded_truth: mod("gilded_truth", [
     line("fireRate", "mod_panel", "multiplicative_percent", "Gilded Truth: fireRate \u2014 +80% Fire Rate, +1 'Truth'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gilded Truth: syndicatePower \u2014 +80% Fire Rate, +1 'Truth'"),
   ]),
   guardian_armor: mod("guardian_armor", [
     line("duration", "mod_panel", "multiplicative_percent", "Guardian Armor: duration \u2014 Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHA\u2026"),
@@ -708,7 +735,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Hallowed Reckoning: damage \u2014 Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Hallowed Reckoning: range \u2014 Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected \u2026"),
   ]),
-  hunters_bonesaw: mod("hunters_bonesaw", [], "wiki: Hunter's Bonesaw \u2014 Increase Finisher Damage by 120% against prone enemies."),
+  hunters_bonesaw: mod("hunters_bonesaw", [
+    line("finisherDamage", "mod_panel", "multiplicative_percent", "Hunter's Bonesaw: finisherDamage \u2014 Increase Finisher Damage by 120% against prone enemies."),
+  ]),
   hysterical_assault: mod("hysterical_assault", [
     line("duration", "mod_panel", "multiplicative_percent", "Hysterical Assault: duration \u2014 Hysteria Augment: Attack with Valkyr\\u2019s Talons to leap onto targeted enemies\u2026"),
     line("parkourVelocity", "mod_panel", "multiplicative_percent", "Hysterical Assault: parkourVelocity \u2014 Hysteria Augment: Attack with Valkyr\\u2019s Talons to leap onto targeted enemies\u2026"),
@@ -729,15 +758,21 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Iron Vault: damage \u2014 Iron Jab Augment: Aiming Iron Jab at the ground launches Wukong into the air. Ex\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Iron Vault: range \u2014 Iron Jab Augment: Aiming Iron Jab at the ground launches Wukong into the air. Ex\u2026"),
   ]),
-  ironclad_flight: mod("ironclad_flight", [], "wiki: Ironclad Flight \u2014 Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne."),
+  ironclad_flight: mod("ironclad_flight", [
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Ironclad Flight: damageReduction \u2014 Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne."),
+  ]),
   jet_stream: mod("jet_stream", [], "wiki: Jet Stream \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
   justice_blades: mod("justice_blades", [
     line("damage", "mod_panel", "multiplicative_percent", "Justice Blades: damage \u2014 +100% Melee Damage, +1 'Justice'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Justice Blades: syndicatePower \u2014 +100% Melee Damage, +1 'Justice'"),
   ]),
   kinetic_collision: mod("kinetic_collision", [
     line("duration", "mod_panel", "multiplicative_percent", "Kinetic Collision: duration \u2014 Speed Augment: Running into an opponent increases the duration of Speed by 4s."),
   ]),
-  kinetic_ricochet: mod("kinetic_ricochet", [], "wiki: Kinetic Ricochet \u2014 Shots now bounce up to 6x and travel 30% further."),
+  kinetic_ricochet: mod("kinetic_ricochet", [
+    line("range", "mod_panel", "multiplicative_percent", "Kinetic Ricochet: range \u2014 Shots now bounce up to 6x and travel 30% further."),
+    line("ricochetBounces", "mod_panel", "multiplicative_percent", "Kinetic Ricochet: ricochetBounces \u2014 Shots now bounce up to 6x and travel 30% further."),
+  ]),
   larva_burst: mod("larva_burst", [
     line("range", "mod_panel", "multiplicative_percent", "Larva Burst: range \u2014 Larva Augment: Reactivate Larva to detonate and deal 600 Toxin Damage in a 8m ra\u2026"),
   ]),
@@ -746,6 +781,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   lasting_purity: mod("lasting_purity", [
     line("damage", "mod_panel", "multiplicative_percent", "Lasting Purity: damage \u2014 +60% Damage when Aiming, +1 'Purity'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Lasting Purity: syndicatePower \u2014 +60% Damage when Aiming, +1 'Purity'"),
   ]),
   mesmer_shield: mod("mesmer_shield", [
     line("range", "mod_panel", "multiplicative_percent", "Mesmer Shield: range \u2014 Mesmer Skin Augment: Revenant receives +50% Mesmer Skin Strength and allies with\u2026"),
@@ -760,7 +796,10 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   negation_armor: mod("negation_armor", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Negation Armor: cooldown \u2014 Scarab Shell Augment: When Inaros takes fatal damage, he consumes Scarab Shell t\u2026"),
   ]),
-  neutralizing_justice: mod("neutralizing_justice", [], "wiki: Neutralizing Justice \u2014 Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1 'Justice'"),
+  neutralizing_justice: mod("neutralizing_justice", [
+    line("nullifierPopChance", "mod_panel", "multiplicative_percent", "Neutralizing Justice: nullifierPopChance \u2014 Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1\u2026"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Neutralizing Justice: syndicatePower \u2014 Each Miter blade has a +90% chance to immediately destroy a Nullifier field., +1\u2026"),
+  ]),
   nightwatch_napalm: mod("nightwatch_napalm", [
     line("damage", "mod_panel", "multiplicative_percent", "Nightwatch Napalm: damage \u2014 Rockets disperse napalm, inflicting 30% damage over 6s across 90% of the explosi\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Nightwatch Napalm: duration \u2014 Rockets disperse napalm, inflicting 30% damage over 6s across 90% of the explosi\u2026"),
@@ -780,8 +819,14 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("criticalMultiplier", "mod_panel", "multiplicative_percent", "Photon Overcharge: criticalMultiplier \u2014 +90% Critical Damage, On Kill or Assist: Slain enemies have a 2% chance to drop \u2026"),
     line("energy", "mod_panel", "multiplicative_percent", "Photon Overcharge: energy \u2014 +90% Critical Damage, On Kill or Assist: Slain enemies have a 2% chance to drop \u2026"),
   ]),
-  power_of_three: mod("power_of_three", [], "wiki: Power Of Three \u2014 Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more Energy."),
-  prey_of_dynar: mod("prey_of_dynar", [], "wiki: Prey Of Dynar \u2014 Shroud of Dynar Augment: Increase an enemy\\u2019s Damage Vulnerability by 50%. Using Fang of Raksh on that enemy increases its spread radius by 150%."),
+  power_of_three: mod("power_of_three", [
+    line("abilityProjectileCount", "mod_panel", "multiplicative_percent", "Power Of Three: abilityProjectileCount \u2014 Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more \u2026"),
+    line("extraEnergyCost", "mod_panel", "multiplicative_percent", "Power Of Three: extraEnergyCost \u2014 Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more \u2026"),
+  ]),
+  prey_of_dynar: mod("prey_of_dynar", [
+    line("damageVulnerability", "mod_panel", "multiplicative_percent", "Prey Of Dynar: damageVulnerability \u2014 Shroud of Dynar Augment: Increase an enemy\\u2019s Damage Vulnerability by 50%. U\u2026"),
+    line("spreadRadiusBonus", "mod_panel", "multiplicative_percent", "Prey Of Dynar: spreadRadiusBonus \u2014 Shroud of Dynar Augment: Increase an enemy\\u2019s Damage Vulnerability by 50%. U\u2026"),
+  ]),
   prism_guard: mod("prism_guard", [
     line("duration", "mod_panel", "multiplicative_percent", "Prism Guard: duration \u2014 Prism Augment: Prism follows above Mirage. Duration changed to 4s."),
   ]),
@@ -800,8 +845,12 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   recharge_barrier: mod("recharge_barrier", [
     line("shield", "mod_panel", "multiplicative_percent", "Recharge Barrier: shield \u2014 Electric Shield Augment: Allies that pass through have 35% Shields restored."),
   ]),
+  prismatic_companion: mod("prismatic_companion", [
+    line("abilityDuration", "mod_panel", "multiplicative_percent", "Prismatic Companion: abilityDuration \u2014 Prismatic Gem Augment: The gem now attaches to your free-moving companion. Passive: +50% Prismatic Gem Duration."),
+  ]),
   repair_dispensary: mod("repair_dispensary", [
-    line("health", "mod_panel", "multiplicative_percent", "Repair Dispensary: health \u2014 Dispensary Augment: Dispensary also creates pick ups that heal companions for 20\u2026"),
+    line("health", "mod_panel", "multiplicative_percent", "Repair Dispensary: health \u2014 Dispensary Augment: Dispensary also creates pick ups that heal companions for 20% of their maximum health\u2026"),
+    line("incapacitationTimerReduction", "mod_panel", "flat", "Repair Dispensary: incapacitationTimerReduction \u2014 \u2026and reduce their incapacitation timer by 12 sec."),
   ]),
   rift_strike: mod("rift_strike", [
     line("range", "mod_panel", "multiplicative_percent", "Rift Strike: range \u2014 Heavy attacks now step through the rift to attack enemies up to 25m away"),
@@ -813,9 +862,11 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   sapping_reach: mod("sapping_reach", [], "wiki: Sapping Reach \u2014 Pull Augment: Steals up to 25 Energy from the target."),
   scattered_justice: mod("scattered_justice", [
     line("multishot", "mod_panel", "multiplicative_percent", "Scattered Justice: multishot \u2014 +200% Multishot, +1 'Justice'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Scattered Justice: syndicatePower \u2014 +200% Multishot, +1 'Justice'"),
   ]),
   sequence_burn: mod("sequence_burn", [
     line("range", "mod_panel", "multiplicative_percent", "Sequence Burn: range \u2014 +20m Beam Range, +1 'Sequence'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Sequence Burn: syndicatePower \u2014 +20m Beam Range, +1 'Sequence'"),
   ]),
   shadow_haze: mod("shadow_haze", [
     line("critBonusPerKill", "mod_panel", "multiplicative_percent", "Shadow Haze: critBonusPerKill \u2014 Reap Augment: Increase Critical Chance by 50% on enemies inflicted with Death Ha\u2026"),
@@ -823,6 +874,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   shattered_storm: mod("shattered_storm", [], "wiki: Shattered Storm \u2014 Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength."),
   shattering_justice: mod("shattering_justice", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Shattering Justice: statusChance \u2014 +90% Status Chance, +1 'Justice'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Shattering Justice: syndicatePower \u2014 +90% Status Chance, +1 'Justice'"),
   ]),
   shield_overload: mod("shield_overload", [
     line("duration", "mod_panel", "multiplicative_percent", "Shield Overload: duration \u2014 Polarize Augment: Increases the time for the target's Shields to regenerate by 9\u2026"),
@@ -851,13 +903,18 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   stance_gleaming_talent: mod("stance_gleaming_talent", [
     line("damageBonus", "mod_panel", "multiplicative_percent", "Gleaming Blight: damageBonus \u2014 +100% Status Chance\\\\n+1 'Blight'"),
     line("statusChance", "mod_panel", "multiplicative_percent", "Gleaming Blight: statusChance \u2014 +100% Status Chance\\\\n+1 'Blight'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gleaming Blight: syndicatePower \u2014 +100% Status Chance\\\\n+1 'Blight'"),
   ]),
   static_discharge: mod("static_discharge", [
     line("damage", "mod_panel", "multiplicative_percent", "Static Discharge: damage \u2014 Heavy Attacks electrify nearby enemies for <DT_ELECTRICITY_COLOR>Electricity Dam\u2026"),
   ]),
-  stinging_truth: mod("stinging_truth", [], "wiki: Stinging Truth \u2014 +40 Magazine Capacity, +1 'Truth'"),
+  stinging_truth: mod("stinging_truth", [
+    line("magazine", "mod_panel", "multiplicative_percent", "Stinging Truth: magazine \u2014 +40 Magazine Capacity, +1 'Truth'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stinging Truth: syndicatePower \u2014 +40 Magazine Capacity, +1 'Truth'"),
+  ]),
   stockpiled_blight: mod("stockpiled_blight", [
     line("magazine", "mod_panel", "multiplicative_percent", "Stockpiled Blight: magazine \u2014 +200% Magazine Capacity, +1 'Blight'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stockpiled Blight: syndicatePower \u2014 +200% Magazine Capacity, +1 'Blight'"),
   ]),
   swing_line: mod("swing_line", [
     line("parkourVelocity", "mod_panel", "multiplicative_percent", "Swing Line: parkourVelocity \u2014 Rip Line Augment: Rip Lines has no Energy cost while Airborne., +20% Parkour Vel\u2026"),
@@ -896,10 +953,12 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Titanic Rumbler: range \u2014 Rumblers Augment: Create a single rumbler with 300% Health and 400% Damage.\\\\nRe\u2026"),
   ]),
   toxic_blight: mod("toxic_blight", [
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Blight: syndicatePower \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
     line("toxin", "mod_panel", "multiplicative_percent", "Toxic Blight: toxin \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
   ]),
   toxic_sequence: mod("toxic_sequence", [
     line("statusDuration", "mod_panel", "multiplicative_percent", "Toxic Sequence: statusDuration \u2014 +200% Status Duration, +1 'Sequence'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Sequence: syndicatePower \u2014 +200% Status Duration, +1 'Sequence'"),
   ]),
   ulfruns_endurance: mod("ulfruns_endurance", [
     line("range", "mod_panel", "multiplicative_percent", "Ulfrun's Endurance: range \u2014 Ulfrun's Descent Augment: During Ulfrun's attack, enemies that die from Slash St\u2026"),
@@ -909,6 +968,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   voltage_sequence: mod("voltage_sequence", [
     line("duration", "mod_panel", "multiplicative_percent", "Voltage Sequence: duration \u2014 Killing a flying enemy creates a lightning trap from their remains, lasting 8s, \u2026"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Voltage Sequence: syndicatePower \u2014 Killing a flying enemy creates a lightning trap from their remains, lasting 8s, \u2026"),
   ]),
   vulcan_blitz: mod("vulcan_blitz", [
     line("health", "mod_panel", "multiplicative_percent", "Vulcan Blitz: health \u2014 Enemies explode on death, dealing 300 <DT_EXPLOSION_COLOR>Blast Damage (+60% Ene\u2026"),
@@ -923,6 +983,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   winds_of_purity: mod("winds_of_purity", [
     line("lifeSteal", "mod_panel", "multiplicative_percent", "Winds Of Purity: lifeSteal \u2014 +20% Life Steal, +1 'Purity'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Winds Of Purity: syndicatePower \u2014 +20% Life Steal, +1 'Purity'"),
   ]),
   wrecking_wall: mod("wrecking_wall", [
     line("shield", "mod_panel", "multiplicative_percent", "Wrecking Wall: shield \u2014 Containment Wall Augment: Strip 50% of armor and shields from struck enemies. Hi\u2026"),

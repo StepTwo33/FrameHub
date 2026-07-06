@@ -3599,6 +3599,11 @@
     "isAugment": false,
     "wikiName": "True Steel"
   },
+  "truths_flame": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Truth's Flame"
+  },
   "weeping_wounds_r5": {
     "wikiType": "Melee",
     "isAugment": false,

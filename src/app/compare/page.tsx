@@ -21,6 +21,7 @@ import { weaponsMap } from "@/data/weapons";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getLoadouts } from "@/lib/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
+import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
 
 /* ─── Shared helpers ─── */
 
@@ -219,9 +220,10 @@ function BuildCompareTab() {
               {/* Mod Slots */}
               {build.weapon && (() => {
                 const w = build.weapon;
+                const isPri = isPrimaryWeaponCategory(w.category);
                 const isSec = ["pistol", "secondary", "dual_pistols"].includes(w.category);
                 const isMel = ["melee", "archmelee"].includes(w.category);
-                const hasExilus = isSec || isMel;
+                const hasExilus = isPri || isSec || isMel;
                 const nSlots = w.modSlots + (hasExilus ? 1 : 0);
                 return (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
@@ -240,11 +242,13 @@ function BuildCompareTab() {
                             setActiveSlot(side);
                             setActiveModSlot(i);
                             setModPickerSlotType(
-                              isSec && isExilus
-                                ? "weapon_exilus_secondary"
-                                : isMel && isExilus
-                                  ? "weapon_exilus_melee"
-                                  : "regular"
+                              isPri && isExilus
+                                ? "weapon_exilus_primary"
+                                : isSec && isExilus
+                                  ? "weapon_exilus_secondary"
+                                  : isMel && isExilus
+                                    ? "weapon_exilus_melee"
+                                    : "regular",
                             );
                             setModPickerOpen(true);
                           }}
@@ -292,6 +296,8 @@ function BuildCompareTab() {
         slotType={modPickerSlotType}
         equippedModIds={builds[activeSlot].mods.map((m) => m.modId)}
         onSelect={addMod}
+        weaponCategory={builds[activeSlot].weapon?.category}
+        weapon={builds[activeSlot].weapon ?? undefined}
       />
     </>
   );

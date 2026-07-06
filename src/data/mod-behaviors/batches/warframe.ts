@@ -1,5 +1,5 @@
 /**
- * Per-mod verified behaviors — category: warframe (201 mods).
+ * Per-mod verified behaviors — category: warframe (199 mods).
  * Generated: python scripts/generate_mod_behavior_batch.py warframe
  * Each mod has its own entry; edit lines after individual wiki review.
  */
@@ -20,12 +20,17 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("damageResistancePerStack", "mod_panel", "multiplicative_percent", "Adaptation: damageResistancePerStack \u2014 When Damaged:\\\\n+10% Resistance to that Damage Type for 20s. Stacks up to 90%."),
     line("duration", "mod_panel", "multiplicative_percent", "Adaptation: duration \u2014 When Damaged:\\\\n+10% Resistance to that Damage Type for 20s. Stacks up to 90%."),
   ]),
-  adept_surge: mod("adept_surge", [], "wiki: Adept Surge \u2014 +10% Mobility, -25 Health"),
+  adept_surge: mod("adept_surge", [
+    line("health", "warframe_totals", "multiplicative_percent", "Adept Surge: health \u2014 +10% Mobility, -25 Health"),
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Adept Surge: parkourVelocity \u2014 +10% Mobility, -25 Health"),
+  ]),
   adrenaline_boost: mod("adrenaline_boost", [
     line("energy", "warframe_totals", "multiplicative_percent", "Adrenaline Boost: energy \u2014 +50% Energy, -20% Health"),
     line("health", "warframe_totals", "multiplicative_percent", "Adrenaline Boost: health \u2014 +50% Energy, -20% Health"),
   ]),
-  aero_vantage: mod("aero_vantage", [], "wiki: Aero Vantage \u2014 -100% Gravity while Aim Gliding"),
+  aero_vantage: mod("aero_vantage", [
+    line("gravityReduction", "mod_panel", "multiplicative_percent", "Aero Vantage: gravityReduction \u2014 -100% Gravity while Aim Gliding"),
+  ]),
   aerodynamic: mod("aerodynamic", [
     line("airborneDamageReduction", "mod_panel", "multiplicative_percent", "Aerodynamic: airborneDamageReduction \u2014 Squad takes 24% reduced damage while airborne, gains +6s Aim Glide and +12s Wall\u2026"),
     line("damage", "mod_panel", "multiplicative_percent", "Aerodynamic: damage \u2014 Squad takes 24% reduced damage while airborne, gains +6s Aim Glide and +12s Wall\u2026"),
@@ -33,13 +38,19 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   agility_drift: mod("agility_drift", [
     line("accuracy", "mod_panel", "multiplicative_percent", "Agility Drift: accuracy \u2014 Reduced damage by 12% while airborne, <LOWER_IS_BETTER>-6% Enemy Accuracy when t\u2026 (arsenal display only)"),
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Agility Drift: damageReduction \u2014 Reduced damage by 12% while airborne, <LOWER_IS_BETTER>-6% Enemy Accuracy when t\u2026"),
   ]),
-  air_thrusters: mod("air_thrusters", [], "wiki: Air Thrusters \u2014 +100% Slide Boost when Airborne, -20% Mobility"),
+  air_thrusters: mod("air_thrusters", [
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Air Thrusters: slideSpeed \u2014 +100% Slide Boost when Airborne, -20% Mobility"),
+  ]),
   ambush: mod("ambush", [
     line("damage", "mod_panel", "multiplicative_percent", "Ambush: damage \u2014 When Ghost invisibility is broken, Shade's owner is granted +240% Weapon Damage \u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Ambush: duration \u2014 When Ghost invisibility is broken, Shade's owner is granted +240% Weapon Damage \u2026"),
   ]),
-  anti_flak_plating: mod("anti_flak_plating", [], "wiki: Anti-Flak Plating \u2014 +20 <DT_EXPLOSION_COLOR>Blast Resistance, -10% Mobility"),
+  anti_flak_plating: mod("anti_flak_plating", [
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Anti-Flak Plating: damageReduction \u2014 +20 <DT_EXPLOSION_COLOR>Blast Resistance, -10% Mobility"),
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Anti-Flak Plating: parkourVelocity \u2014 +20 <DT_EXPLOSION_COLOR>Blast Resistance, -10% Mobility"),
+  ]),
   anticipation: mod("anticipation", [
     line("duration", "mod_panel", "multiplicative_percent", "Anticipation: duration \u2014 Immune to Knockdown for an additional +4s after being knocked down., Immune to S\u2026"),
   ]),
@@ -60,6 +71,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   archon_stretch: mod("archon_stretch", [
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Archon Stretch: abilityRange \u2014 Abilities that deal <DT_ELECTRICITY_COLOR>Electricity Damage restore +2 Energy/s\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Archon Stretch: duration \u2014 Abilities that deal <DT_ELECTRICITY_COLOR>Electricity Damage restore +2 Energy/s\u2026"),
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Archon Stretch: energyOnKill \u2014 Abilities that deal <DT_ELECTRICITY_COLOR>Electricity Damage restore +2 Energy/s\u2026"),
   ]),
   archon_vitality: mod("archon_vitality", [
     line("health", "warframe_totals", "multiplicative_percent", "Archon Vitality: health \u2014 +100% Health, Status Effects from abilities that deal <DT_FIRE_COLOR>Heat Damage\u2026"),
@@ -81,9 +93,12 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   armored_recovery: mod("armored_recovery", [
     line("armor", "warframe_totals", "multiplicative_percent", "Armored Recovery: armor \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
     line("damage", "mod_panel", "multiplicative_percent", "Armored Recovery: damage \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Armored Recovery: slideSpeed \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
     line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Armored Recovery: sprintSpeed \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
   ]),
-  augmented_sonar: mod("augmented_sonar", [], "wiki: Augmented Sonar \u2014 Sonar Augment: Affected enemies also become visible through walls for 10s."),
+  augmented_sonar: mod("augmented_sonar", [
+    line("duration", "mod_panel", "multiplicative_percent", "Augmented Sonar: duration \u2014 Sonar Augment: Affected enemies also become visible through walls for 10s."),
+  ]),
   augur_accord: mod("augur_accord", [
     line("shield", "warframe_totals", "multiplicative_percent", "Augur Accord: shield \u2014 +25% Shield Capacity per rank"),
   ]),
@@ -106,11 +121,14 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   aura_cunning_drift: mod("aura_cunning_drift", [
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Cunning Drift: abilityRange \u2014 +12% Slide\\\\n-30% Friction\\\\n+15% Ability Range"),
+    line("slideFriction", "mod_panel", "multiplicative_percent", "Cunning Drift: slideFriction \u2014 +12% Slide\\\\n-30% Friction\\\\n+15% Ability Range"),
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Cunning Drift: slideSpeed \u2014 +12% Slide\\\\n-30% Friction\\\\n+15% Ability Range"),
   ]),
   aura_enemy_radar: mod("aura_enemy_radar", [
     line("enemyRadar", "mod_panel", "multiplicative_percent", "Enemy Radar: enemyRadar \u2014 Highlights enemies on the Minimap\\\\nSquad receives +30 Enemy Radar"),
   ]),
   aura_energy_siphon: mod("aura_energy_siphon", [
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Energy Siphon: energyOnKill \u2014 Squad receives +0.6 Energy Regen/s"),
     line("energyRegen", "mod_panel", "multiplicative_percent", "Energy Siphon: energyRegen \u2014 Squad receives +0.6 Energy Regen/s"),
   ]),
   aura_infested_impedance: mod("aura_infested_impedance", [
@@ -158,12 +176,12 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("toxin", "mod_panel", "multiplicative_percent", "Toxin Resistance: toxin \u2014 +15% Toxin Resistance per rank"),
     line("toxinResistance", "mod_panel", "multiplicative_percent", "Toxin Resistance: toxinResistance \u2014 +15% Toxin Resistance per rank"),
   ]),
-  aviator: mod("aviator", [], "wiki: Aviator \u2014 Reduced damage by 60% while airborne"),
-  battering_maneuver: mod("battering_maneuver", [
-    line("impact", "mod_panel", "multiplicative_percent", "Battering Maneuver: impact \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_IMPACT_CO\u2026"),
+  aviator: mod("aviator", [
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Aviator: damageReduction \u2014 Reduced damage by 60% while airborne"),
   ]),
-  biting_frost: mod("biting_frost", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Biting Frost: criticalChance \u2014 Frost gains +|CHANCE|% Critical Chance and +|DAMAGE|% Critical Damage against fr\u2026"),
+  battering_maneuver: mod("battering_maneuver", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Battering Maneuver: bulletJump \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_IMPACT_CO\u2026"),
+    line("impact", "mod_panel", "multiplicative_percent", "Battering Maneuver: impact \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_IMPACT_CO\u2026"),
   ]),
   blind_rage: mod("blind_rage", [
     line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Blind Rage: abilityEfficiency \u2014 +99% Ability Strength\\\\n-55% Ability Efficiency"),
@@ -189,16 +207,24 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   champions_blessing: mod("champions_blessing", [
     line("duration", "mod_panel", "multiplicative_percent", "Champion's Blessing: duration \u2014 Blessing Augment: Gain Primary and Secondary Critical Chance for 30s for each pe\u2026"),
   ]),
-  coaction_drift: mod("coaction_drift", [], "wiki: Coaction Drift \u2014 Squad benefits +15% more from Auras, You benefit an additional +15% from Auras"),
+  coaction_drift: mod("coaction_drift", [
+    line("auraStrengthSelf", "mod_panel", "multiplicative_percent", "Coaction Drift: auraStrengthSelf \u2014 Squad benefits +15% more from Auras, You benefit an additional +15% from Auras"),
+    line("auraStrengthSquad", "mod_panel", "multiplicative_percent", "Coaction Drift: auraStrengthSquad \u2014 Squad benefits +15% more from Auras, You benefit an additional +15% from Auras"),
+  ]),
   combat_discipline: mod("combat_discipline", [], "wiki: Combat Discipline \u2014 You lose <LOWER_IS_BETTER>10 Health on kill\\\\nSquadmates gain 20 Health on kill"),
   constitution: mod("constitution", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Constitution: abilityDuration \u2014 +40% Faster Knockdown Recovery, +28% Ability Duration"),
+    line("knockdownRecovery", "mod_panel", "multiplicative_percent", "Constitution: knockdownRecovery \u2014 +40% Faster Knockdown Recovery, +28% Ability Duration"),
   ]),
   continuity_r3: mod("continuity_r3", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Continuity: abilityDuration \u2014 +30% Ability Duration"),
   ]),
-  controlled_slide: mod("controlled_slide", [], "wiki: Controlled Slide \u2014 Disable Nezha's passive ability. Increase Ability Strength by 15%."),
-  damage_decoy: mod("damage_decoy", [], "wiki: Damage Decoy \u2014 Decoy Augment: Decoy can be cast on enemies. Enemies who attack that decoy receive 5 random Status Effects, and the reflected damage is increased by 350%."),
+  controlled_slide: mod("controlled_slide", [
+    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Controlled Slide: abilityStrength \u2014 Disable Nezha's passive ability. Increase Ability Strength by 15%."),
+  ]),
+  damage_decoy: mod("damage_decoy", [
+    line("damage", "mod_panel", "multiplicative_percent", "Damage Decoy: damage \u2014 Decoy Augment: Decoy can be cast on enemies. Enemies who attack that decoy recei\u2026"),
+  ]),
   dead_eye: mod("dead_eye", [
     line("damage", "mod_panel", "multiplicative_percent", "Dead Eye: damage \u2014 Squad receives +52.5% Sniper Rifle Damage"),
   ]),
@@ -211,7 +237,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   empowered_blades: mod("empowered_blades", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Empowered Blades: statusChance \u2014 Squad receives +60% Status Chance and Status Damage on Heavy Attacks, but lose <\u2026"),
   ]),
-  endless_lullaby: mod("endless_lullaby", [], "wiki: Endless Lullaby \u2014 Lull Augment: Performing a finisher on or killing a sleeping enemy will retrigger Lull for 100% of the remaining duration.\\\\nPassive: +50% Lull Duration."),
+  endless_lullaby: mod("endless_lullaby", [
+    line("abilityDuration", "mod_panel", "multiplicative_percent", "Endless Lullaby: abilityDuration \u2014 Lull Augment: Performing a finisher on or killing a sleeping enemy will retrigge\u2026"),
+  ]),
   endurance_drift: mod("endurance_drift", [
     line("energy", "warframe_totals", "multiplicative_percent", "Endurance Drift: energy \u2014 +10% Energy Max, +12% Parkour Velocity"),
     line("energyMax", "warframe_totals", "multiplicative_percent", "Endurance Drift: energyMax \u2014 +10% Energy Max, +12% Parkour Velocity"),
@@ -220,7 +248,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   enemy_sense_r3: mod("enemy_sense_r3", [
     line("range", "mod_panel", "multiplicative_percent", "Enemy Sense: range \u2014 +55m Enemy Radar (arsenal display only)"),
   ]),
-  energy_nexus: mod("energy_nexus", [], "wiki: Energy Nexus \u2014 Warframe receives +3 Energy Regen/s"),
+  energy_nexus: mod("energy_nexus", [
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Energy Nexus: energyOnKill \u2014 Warframe receives +3 Energy Regen/s"),
+  ]),
   equilibrium: mod("equilibrium", [
     line("energy", "warframe_totals", "multiplicative_percent", "Equilibrium: energy \u2014 Health pickups give +110% Energy. Energy pickups give +110% Health."),
     line("health", "warframe_totals", "multiplicative_percent", "Equilibrium: health \u2014 Health pickups give +110% Energy. Energy pickups give +110% Health."),
@@ -233,6 +263,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Final Act: duration \u2014 On Low Health:\\\\n+30% Ability Strength\\\\n+30% Casting Speed for 8s"),
   ]),
   firewalker: mod("firewalker", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Firewalker: bulletJump \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FIRE\u2026"),
     line("heat", "mod_panel", "multiplicative_percent", "Firewalker: heat \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FIRE\u2026"),
   ]),
   flame_repellent_r3: mod("flame_repellent_r3", [
@@ -245,7 +276,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   flow_r3: mod("flow_r3", [
     line("energy", "warframe_totals", "multiplicative_percent", "Flow: energy \u2014 +100% Energy Max"),
   ]),
-  follow_through: mod("follow_through", [], "wiki: Follow Through \u2014 On Respawn:\\\\n+10 Energy"),
+  follow_through: mod("follow_through", [
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Follow Through: energyOnKill \u2014 On Respawn:\\\\n+10 Energy"),
+  ]),
   fortitude: mod("fortitude", [
     line("knockdownResistance", "mod_panel", "multiplicative_percent", "Fortitude: knockdownResistance \u2014 +15% Shield Recharge, +50% Knockdown Resistance per rank"),
     line("shield", "warframe_totals", "multiplicative_percent", "Fortitude: shield \u2014 +15% Shield Recharge, +50% Knockdown Resistance per rank"),
@@ -257,19 +290,24 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   gladiator_aegis: mod("gladiator_aegis", [
     line("armor", "warframe_totals", "multiplicative_percent", "Gladiator Aegis: armor \u2014 +7.5% Armor per rank (Set)"),
   ]),
-  gladiator_finesse: mod("gladiator_finesse", [], "wiki: Gladiator Finesse \u2014 Drains Energy to stop Lethal Damage with 60% Efficiency."),
+  gladiator_finesse: mod("gladiator_finesse", [
+    line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Gladiator Finesse: abilityEfficiency \u2014 Drains Energy to stop Lethal Damage with 60% Efficiency."),
+  ]),
   gladiator_resolve: mod("gladiator_resolve", [
     line("health", "warframe_totals", "multiplicative_percent", "Gladiator Resolve: health \u2014 +40% Health"),
   ]),
   growing_power: mod("growing_power", [
     line("duration", "mod_panel", "multiplicative_percent", "Growing Power: duration \u2014 On Status Effect with Weapon: Squad increases personal Ability Strength by 25% f\u2026"),
   ]),
-  handspring_r10: mod("handspring_r10", [], "wiki: Handspring \u2014 +240% Faster Knockdown Recovery"),
+  handspring_r10: mod("handspring_r10", [
+    line("knockdownRecovery", "mod_panel", "multiplicative_percent", "Handspring: knockdownRecovery \u2014 +240% Faster Knockdown Recovery"),
+  ]),
   hastened_steps: mod("hastened_steps", [
     line("shield", "warframe_totals", "multiplicative_percent", "Hastened Steps: shield \u2014 +20% Sprint Speed, -20% Shield Capacity"),
     line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Hastened Steps: sprintSpeed \u2014 +20% Sprint Speed, -20% Shield Capacity"),
   ]),
   heavy_impact: mod("heavy_impact", [
+    line("explosionDamage", "mod_panel", "multiplicative_percent", "Heavy Impact: explosionDamage \u2014 Create 11m seismic shockwaves from heavy landings, dealing 550 Damage and knocki\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Heavy Impact: range \u2014 Create 11m seismic shockwaves from heavy landings, dealing 550 Damage and knocki\u2026 (arsenal display only)"),
   ]),
   heightened_reflexes: mod("heightened_reflexes", [
@@ -288,6 +326,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("statusDuration", "mod_panel", "multiplicative_percent", "Hunter Track: statusDuration \u2014 +10m Enemy Radar vs bleeding per rank"),
   ]),
   ice_spring: mod("ice_spring", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Ice Spring: bulletJump \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FREE\u2026"),
     line("cold", "mod_panel", "multiplicative_percent", "Ice Spring: cold \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_FREE\u2026"),
   ]),
   insulation_r3: mod("insulation_r3", [
@@ -306,8 +345,11 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("armor", "warframe_totals", "multiplicative_percent", "Jugulus Carapace: armor \u2014 +55% Armor, +20% Health"),
     line("health", "warframe_totals", "multiplicative_percent", "Jugulus Carapace: health \u2014 +55% Armor, +20% Health"),
   ]),
-  kavats_grace: mod("kavats_grace", [], "wiki: Kavat's Grace \u2014 Falling is 100% less likely to result in a hard landing."),
+  kavats_grace: mod("kavats_grace", [
+    line("hardLandingReduction", "mod_panel", "multiplicative_percent", "Kavat's Grace: hardLandingReduction \u2014 Falling is 100% less likely to result in a hard landing."),
+  ]),
   lightning_dash: mod("lightning_dash", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Lightning Dash: bulletJump \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_ELEC\u2026"),
     line("electricity", "mod_panel", "multiplicative_percent", "Lightning Dash: electricity \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_ELEC\u2026"),
   ]),
   lightning_rod_r3: mod("lightning_rod_r3", [
@@ -322,8 +364,13 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   loyal_merulina: mod("loyal_merulina", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Loyal Merulina: cooldown \u2014 Merulina Augment: Yareli no longer rides Merulina. Instead, Merulina follows her\u2026"),
   ]),
-  maglev: mod("maglev", [], "wiki: Maglev \u2014 +20% Slide, -20% Friction"),
-  master_thief: mod("master_thief", [], "wiki: Master Thief \u2014 +60% chance to unlock locked lockers."),
+  maglev: mod("maglev", [
+    line("slideFriction", "mod_panel", "multiplicative_percent", "Maglev: slideFriction \u2014 +20% Slide, -20% Friction"),
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Maglev: slideSpeed \u2014 +20% Slide, -20% Friction"),
+  ]),
+  master_thief: mod("master_thief", [
+    line("lockerUnlockChance", "mod_panel", "multiplicative_percent", "Master Thief: lockerUnlockChance \u2014 +60% chance to unlock locked lockers."),
+  ]),
   mecha_pulse_r3: mod("mecha_pulse_r3", [
     line("armor", "warframe_totals", "multiplicative_percent", "Mecha Pulse: armor \u2014 Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m."),
     line("duration", "mod_panel", "multiplicative_percent", "Mecha Pulse: duration \u2014 Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m."),
@@ -335,31 +382,45 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   mobilize_r3: mod("mobilize_r3", [
     line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Mobilize: parkourVelocity \u2014 +20% to Parkour Velocity, +20% Aim Glide/Wall Latch Duration"),
   ]),
-  motus_signal: mod("motus_signal", [], "wiki: Motus Signal \u2014 Increase Double Jump strength by +200%."),
+  motus_signal: mod("motus_signal", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Motus Signal: bulletJump \u2014 Increase Double Jump strength by +200%."),
+  ]),
   narrow_minded: mod("narrow_minded", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Narrow Minded: abilityDuration \u2014 +99% Ability Duration\\\\n-66% Ability Range"),
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Narrow Minded: abilityRange \u2014 +99% Ability Duration\\\\n-66% Ability Range"),
   ]),
-  natural_talent: mod("natural_talent", [], "wiki: Natural Talent \u2014 Improves Casting Speed on Warframe abilities if applicable.\\\\n+50% Casting Speed"),
-  no_current_leap: mod("no_current_leap", [], "wiki: No Current Leap \u2014 +10% Mobility, 0 Energy Rate"),
+  natural_talent: mod("natural_talent", [
+    line("castSpeed", "mod_panel", "multiplicative_percent", "Natural Talent: castSpeed \u2014 Improves Casting Speed on Warframe abilities if applicable.\\\\n+50% Casting Speed"),
+  ]),
+  no_current_leap: mod("no_current_leap", [
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "No Current Leap: parkourVelocity \u2014 +10% Mobility, 0 Energy Rate"),
+  ]),
   overcharge_detectors: mod("overcharge_detectors", [
     line("range", "mod_panel", "multiplicative_percent", "Overcharge Detectors: range \u2014 Exposes enemies at maximum Energy Capacity within 30m. (arsenal display only)"),
   ]),
-  overcharged: mod("overcharged", [], "wiki: Overcharged \u2014 On Respawn:\\\\nConverts up to 50 Energy to Overshields at a rate of 100%."),
+  overcharged: mod("overcharged", [
+    line("energyMax", "warframe_totals", "multiplicative_percent", "Overcharged: energyMax \u2014 On Respawn:\\\\nConverts up to 50 Energy to Overshields at a rate of 100%."),
+    line("overshieldConversion", "mod_panel", "multiplicative_percent", "Overcharged: overshieldConversion \u2014 On Respawn:\\\\nConverts up to 50 Energy to Overshields at a rate of 100%."),
+  ]),
   overextended_r5: mod("overextended_r5", [
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Overextended: abilityRange \u2014 +90% Ability Range, -60% Ability Strength"),
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Overextended: abilityStrength \u2014 +90% Ability Range, -60% Ability Strength"),
   ]),
-  pain_threshold: mod("pain_threshold", [], "wiki: Pain Threshold \u2014 +160% Faster Stagger Recovery"),
+  pain_threshold: mod("pain_threshold", [
+    line("knockdownRecovery", "mod_panel", "multiplicative_percent", "Pain Threshold: knockdownRecovery \u2014 +160% Faster Stagger Recovery"),
+  ]),
   parasitic_vitality: mod("parasitic_vitality", [
     line("health", "mod_panel", "multiplicative_percent", "Parasitic Vitality: health \u2014 Parasitic Link Augment: Nidus and any ally he's bound to gain 4% Max Health per \u2026"),
   ]),
-  parry_r3: mod("parry_r3", [], "wiki: Parry \u2014 +96% chance to open enemies to Finisher Attacks after Warframe blocks Melee"),
+  parry_r3: mod("parry_r3", [
+    line("finisherChance", "mod_panel", "multiplicative_percent", "Parry: finisherChance \u2014 +96% chance to open enemies to Finisher Attacks after Warframe blocks Melee"),
+  ]),
   patagium: mod("patagium", [
     line("aimGlide", "mod_panel", "multiplicative_percent", "Patagium: aimGlide \u2014 +2.5s Aim Glide and Wall Latch per rank"),
     line("wallLatch", "mod_panel", "multiplicative_percent", "Patagium: wallLatch \u2014 +2.5s Aim Glide and Wall Latch per rank"),
   ]),
   piercing_step: mod("piercing_step", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Piercing Step: bulletJump \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_PUNCTURE_\u2026"),
     line("puncture", "mod_panel", "multiplicative_percent", "Piercing Step: puncture \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_PUNCTURE_\u2026"),
   ]),
   pistol_scavenger: mod("pistol_scavenger", [], "wiki: Pistol Scavenger \u2014 Squad receives +150% Pistol Ammo Recovery"),
@@ -368,6 +429,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   power_drift: mod("power_drift", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Power Drift: abilityStrength \u2014 +15% Ability Strength, +30% Chance to Resist Knockdown"),
+    line("knockdownResistance", "mod_panel", "multiplicative_percent", "Power Drift: knockdownResistance \u2014 +15% Ability Strength, +30% Chance to Resist Knockdown"),
   ]),
   precision_intensify: mod("precision_intensify", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Precision Intensify: abilityStrength \u2014 +90% Ability Strength for your 4th Ability"),
@@ -391,15 +453,18 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Primed Vigor: health \u2014 +75% Shield Capacity, +75% Health"),
     line("shield", "warframe_totals", "multiplicative_percent", "Primed Vigor: shield \u2014 +75% Shield Capacity, +75% Health"),
   ]),
-  prismatic_companion: mod("prismatic_companion", [], "wiki: Prismatic Companion \u2014 Prismatic Gem Augment: The gem now attaches to your free-moving companion. \\\\nPassive : +50% Prismatic Gem Duration."),
-  proton_pulse: mod("proton_pulse", [], "wiki: Proton Pulse \u2014 Wall Dashing grants +100% Bullet Jump Speed."),
+  proton_pulse: mod("proton_pulse", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Proton Pulse: bulletJump \u2014 Wall Dashing grants +100% Bullet Jump Speed."),
+  ]),
   provoked: mod("provoked", [
     line("damage", "mod_panel", "multiplicative_percent", "Provoked: damage \u2014 +110% Damage during Bleedout"),
   ]),
   quick_charge: mod("quick_charge", [
     line("shield", "warframe_totals", "multiplicative_percent", "Quick Charge: shield \u2014 -20% Shield Recharge Delay, -20 Shield Capacity"),
   ]),
-  quick_thinking: mod("quick_thinking", [], "wiki: Quick Thinking \u2014 Drains Energy to stop Lethal Damage with 240% Efficiency."),
+  quick_thinking: mod("quick_thinking", [
+    line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Quick Thinking: abilityEfficiency \u2014 Drains Energy to stop Lethal Damage with 240% Efficiency."),
+  ]),
   rage: mod("rage", [
     line("damage", "mod_panel", "multiplicative_percent", "Rage: damage \u2014 Convert +60% of Damage on Health to Energy. Without Shields, ally Overguard imit\u2026"),
   ]),
@@ -418,11 +483,15 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   redirection_r3: mod("redirection_r3", [
     line("shield", "warframe_totals", "multiplicative_percent", "Redirection: shield \u2014 +100% Shield Capacity"),
   ]),
-  reflection: mod("reflection", [], "wiki: Reflection \u2014 +73.3% chance to Stagger on Block, +18.3% chance to Stun on Block"),
+  reflection: mod("reflection", [
+    line("blockStaggerChance", "mod_panel", "multiplicative_percent", "Reflection: blockStaggerChance \u2014 +73.3% chance to Stagger on Block, +18.3% chance to Stun on Block"),
+    line("blockStunChance", "mod_panel", "multiplicative_percent", "Reflection: blockStunChance \u2014 +73.3% chance to Stagger on Block, +18.3% chance to Stun on Block"),
+  ]),
   reflex_guard_r10: mod("reflex_guard_r10", [
     line("comboCountChance", "mod_panel", "multiplicative_percent", "Reflex Guard: comboCountChance \u2014 +100% Combo Count Chance while Blocking"),
   ]),
   rending_turn: mod("rending_turn", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Rending Turn: bulletJump \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_SLASH_COL\u2026"),
     line("slash", "mod_panel", "multiplicative_percent", "Rending Turn: slash \u2014 +18% to Parkour Velocity, +18% Aim Glide/Wall Latch Duration, +60% <DT_SLASH_COL\u2026"),
   ]),
   resilient_focus: mod("resilient_focus", [
@@ -436,7 +505,10 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   rifle_scavenger: mod("rifle_scavenger", [], "wiki: Rifle Scavenger \u2014 Squad receives +150% Rifle Ammo Recovery"),
   rime_vault: mod("rime_vault", [], "wiki: Rime Vault \u2014 Ice FX on Bullet Jump"),
-  rising_skill: mod("rising_skill", [], "wiki: Rising Skill \u2014 +10% Mobility, -30 Shield Capacity"),
+  rising_skill: mod("rising_skill", [
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Rising Skill: parkourVelocity \u2014 +10% Mobility, -30 Shield Capacity"),
+    line("shield", "warframe_totals", "multiplicative_percent", "Rising Skill: shield \u2014 +10% Mobility, -30 Shield Capacity"),
+  ]),
   rolling_guard: mod("rolling_guard", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Rolling Guard: cooldown \u2014 On Dodge:\\\\nBecome invulnerable for 3s and remove all Status Effects. <LOWER_IS_\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Rolling Guard: duration \u2014 On Dodge:\\\\nBecome invulnerable for 3s and remove all Status Effects. <LOWER_IS_\u2026"),
@@ -475,23 +547,32 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   streamline_r3: mod("streamline_r3", [
     line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Streamline: abilityEfficiency \u2014 +12% Ability Efficiency"),
   ]),
-  streamlined_form: mod("streamlined_form", [], "wiki: Streamlined Form \u2014 +30% Slide, -30% Friction"),
+  streamlined_form: mod("streamlined_form", [
+    line("slideFriction", "mod_panel", "multiplicative_percent", "Streamlined Form: slideFriction \u2014 +30% Slide, -30% Friction"),
+    line("slideSpeed", "mod_panel", "multiplicative_percent", "Streamlined Form: slideSpeed \u2014 +30% Slide, -30% Friction"),
+  ]),
   stretch_r3: mod("stretch_r3", [
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Stretch: abilityRange \u2014 +45% Ability Range"),
   ]),
   summoners_wrath: mod("summoners_wrath", [
     line("damage", "mod_panel", "multiplicative_percent", "Summoner's Wrath: damage \u2014 Squad receives 75% Companion and Summon Damage"),
   ]),
-  sure_footed_r5: mod("sure_footed_r5", [], "wiki: Sure Footed \u2014 +90% Chance to Resist Knockdown"),
-  surplus_diverters: mod("surplus_diverters", [], "wiki: Surplus Diverters \u2014 Gain +6 energy, upon replenishing shields completely after they have been deactivated."),
+  sure_footed_r5: mod("sure_footed_r5", [
+    line("knockdownResistance", "mod_panel", "multiplicative_percent", "Sure Footed: knockdownResistance \u2014 +90% Chance to Resist Knockdown"),
+  ]),
+  surplus_diverters: mod("surplus_diverters", [
+    line("energyOnKill", "mod_panel", "multiplicative_percent", "Surplus Diverters: energyOnKill \u2014 Gain +6 energy, upon replenishing shields completely after they have been deacti\u2026"),
+  ]),
   swift_bite_r3: mod("swift_bite_r3", [
     line("abilityRange", "mod_panel", "multiplicative_percent", "Swift Bite: abilityRange \u2014 Ophidian Bite Augment: Reduce Ability Cooldowns by 4s when at least 4 enemies ar\u2026"),
     line("cooldown", "mod_panel", "multiplicative_percent", "Swift Bite: cooldown \u2014 Ophidian Bite Augment: Reduce Ability Cooldowns by 4s when at least 4 enemies ar\u2026"),
   ]),
   swift_momentum: mod("swift_momentum", [
     line("duration", "mod_panel", "multiplicative_percent", "Swift Momentum: duration \u2014 Squad receives +30% Heavy Attack Wind Up Speed and +6s Melee Combo Duration"),
+    line("heavyAttackEfficiency", "mod_panel", "multiplicative_percent", "Swift Momentum: heavyAttackEfficiency \u2014 Squad receives +30% Heavy Attack Wind Up Speed and +6s Melee Combo Duration"),
   ]),
   synth_reflex_r3: mod("synth_reflex_r3", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Synth Reflex: bulletJump \u2014 On Equip:\\\\n+40% Bullet Jump for 2s"),
     line("duration", "mod_panel", "multiplicative_percent", "Synth Reflex: duration \u2014 On Equip:\\\\n+40% Bullet Jump for 2s"),
   ]),
   tactical_retreat: mod("tactical_retreat", [
@@ -500,7 +581,10 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   tek_collateral_r3: mod("tek_collateral_r3", [
     line("criticalMultiplier", "mod_panel", "multiplicative_percent", "Tek Collateral: criticalMultiplier \u2014 Increased Pistol Ammo recovery.\\\\n+100% Critical Damage when inside the Marked Z\u2026"),
   ]),
-  tempered_bound: mod("tempered_bound", [], "wiki: Tempered Bound \u2014 -10% Mobility, +30 Shield Capacity"),
+  tempered_bound: mod("tempered_bound", [
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Tempered Bound: parkourVelocity \u2014 -10% Mobility, +30 Shield Capacity"),
+    line("shield", "warframe_totals", "multiplicative_percent", "Tempered Bound: shield \u2014 -10% Mobility, +30 Shield Capacity"),
+  ]),
   tharros_lethality: mod("tharros_lethality", [
     line("criticalMultiplier", "mod_panel", "multiplicative_percent", "Tharros Lethality: criticalMultiplier \u2014 Tharros Strike Augment: Increases Critical Damage by 100% on enemies you hit. Cr\u2026"),
   ]),
@@ -515,6 +599,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Thrall Pact: damage \u2014 Enthrall Augment: Gain +25% Primary Weapon Damage for each active Thrall."),
   ]),
   toxic_flight: mod("toxic_flight", [
+    line("bulletJump", "mod_panel", "multiplicative_percent", "Toxic Flight: bulletJump \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_POIS\u2026"),
     line("toxin", "mod_panel", "multiplicative_percent", "Toxic Flight: toxin \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_POIS\u2026"),
   ]),
   transient_fortitude: mod("transient_fortitude", [
@@ -534,14 +619,18 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Umbral Vitality: health \u2014 +44% Health, +11% Tau Resistance"),
     line("tauResistance", "mod_panel", "multiplicative_percent", "Umbral Vitality: tauResistance \u2014 +44% Health, +11% Tau Resistance"),
   ]),
-  undying_will: mod("undying_will", [], "wiki: Undying Will \u2014 +42% Bleedout Reduction"),
+  undying_will: mod("undying_will", [
+    line("bleedoutReduction", "mod_panel", "multiplicative_percent", "Undying Will: bleedoutReduction \u2014 +42% Bleedout Reduction"),
+  ]),
   untime_rift: mod("untime_rift", [
     line("range", "mod_panel", "multiplicative_percent", "Untime Rift: range \u2014 The Vast Untime Augment: Creates a Rift that connects to enemies suffering from \u2026"),
   ]),
   valence_formation: mod("valence_formation", [
     line("duration", "mod_panel", "multiplicative_percent", "Valence Formation: duration \u2014 Passive Augment: Casting an Ability imbued with extra Elemental Damage applies t\u2026"),
   ]),
-  vampiric_grasp: mod("vampiric_grasp", [], "wiki: Vampiric Grasp \u2014 Grasp of Lohk Augment: When a stolen weapon deals damage to an enemy affected by The Lost: Gaze or The Vast Untime, Xaku heals by 25."),
+  vampiric_grasp: mod("vampiric_grasp", [
+    line("healthRegen", "mod_panel", "multiplicative_percent", "Vampiric Grasp: healthRegen \u2014 Grasp of Lohk Augment: When a stolen weapon deals damage to an enemy affected by\u2026"),
+  ]),
   venomous_rise: mod("venomous_rise", [], "wiki: Venomous Rise \u2014 Toxin FX on Bullet Jump"),
   vigilante_pursuit: mod("vigilante_pursuit", [
     line("enemyRadar", "mod_panel", "multiplicative_percent", "Vigilante Pursuit: enemyRadar \u2014 +5m Enemy Radar per rank (Set)"),
@@ -576,7 +665,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   warm_coat: mod("warm_coat", [
     line("shield", "warframe_totals", "multiplicative_percent", "Warm Coat: shield \u2014 +18% Shield Resistance to Environmental Ice Hazards"),
   ]),
-  warriors_rest: mod("warriors_rest", [], "wiki: Warrior's Rest \u2014 Passive Augment: Umbra's Ability Strength increases by +15% but he no longer fights independently alongside his Operator."),
+  warriors_rest: mod("warriors_rest", [
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "Warrior's Rest: abilityStrength \u2014 Passive Augment: Umbra's Ability Strength increases by +15% but he no longer fig\u2026"),
+  ]),
   worthy_comradery: mod("worthy_comradery", [
     line("criticalChance", "mod_panel", "multiplicative_percent", "Worthy Comradery: criticalChance \u2014 Squad receives +75% Weak Point Critical Chance"),
   ]),

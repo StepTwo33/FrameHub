@@ -422,7 +422,9 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   primed_counterbalance: mod("primed_counterbalance", [
     line("recoil", "mod_panel", "multiplicative_percent", "Primed Counterbalance: recoil \u2014 -85% Weapon Recoil (arsenal display only)"),
   ]),
-  primed_shotgun_ammo_mutation: mod("primed_shotgun_ammo_mutation", [], "wiki: Primed Shotgun Ammo Mutation \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  primed_shotgun_ammo_mutation: mod("primed_shotgun_ammo_mutation", [
+    line("ammoConversion", "mod_panel", "multiplicative_percent", "Primed Shotgun Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 92% of Ammo Pick Up."),
+  ]),
   prismatic_beam: mod("prismatic_beam", [], "wiki: Prismatic Beam \u2014 Enemies struck by the Tauron Strike fire off smaller beams at other enemies within 20m."),
   prize_kill: mod("prize_kill", [
     line("duration", "mod_panel", "multiplicative_percent", "Prize Kill: duration \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
@@ -520,7 +522,9 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   shredder: mod("shredder", [
     line("slash", "weapon_dps", "multiplicative_percent", "Shredder: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),
   ]),
-  silent_battery: mod("silent_battery", [], "wiki: Silent Battery \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  silent_battery: mod("silent_battery", [
+    line("noiseReduction", "mod_panel", "multiplicative_percent", "Silent Battery: noiseReduction \u2014 Reduces the chance an enemy will hear gunfire by 100%."),
+  ]),
   slicing_feathers: mod("slicing_feathers", [], "wiki: Slicing Feathers \u2014 Twirling, acrobatic slashes with a refined touch."),
   sling_strength: mod("sling_strength", [], "wiki: Sling Strength \u2014 Switching to Warframe after a Chained Sling adds 40% Ability Strength for 20s."),
   snap_shot: mod("snap_shot", [

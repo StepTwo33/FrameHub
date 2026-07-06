@@ -9,6 +9,7 @@ import {
   X,
   ArrowLeft,
   Pencil,
+  ExternalLink,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +48,7 @@ import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
 import { getModSlotCategory, modSlotCategoryLabel } from "@/lib/mod-slot-categories";
 import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
-import { getModImage, getArcaneImage } from "@/lib/images";
+import { getModImage, getArcaneImage, getWeaponImage, getWarframeImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
 import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { getArcaneStatLabel } from "@/lib/arcane-display";
@@ -55,6 +56,14 @@ import { getVerifiedArcaneBehavior } from "@/lib/arcane-behavior-registry";
 import { itemApplyTargetLabel } from "@/lib/item-behavior-types";
 import { cleanModDescription, getModStatDisplayLines, modDrainAtRank } from "@/lib/mod-display";
 import { getModStatLabel } from "@/lib/override-stat-catalog";
+import { getExclusiveWeaponEntries } from "@/lib/weapon-exclusive-mods";
+import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
+import {
+  getAugmentWarframeEntry,
+  isWarframeAugment,
+  isWarframeSpecificAugment,
+} from "@/lib/warframe-augment-mods";
+import { appendReturnTo } from "@/lib/nav-return";
 import { useStaffRole } from "@/lib/use-staff";
 import { ArcaneValuesDialog } from "@/components/arcane-values-dialog";
 import { useMods, useArcanes, useArchonShards, useArcaneEffects, useWeapons, useWarframes, useCompanions, useArchwings, useNecramechs } from "@/lib/use-data";
@@ -861,6 +870,9 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
   const aura = isAuraMod(mod);
   const slotCategory = getModSlotCategory(mod);
   const maxCap = modMaxCapacity(mod);
+  const exclusiveWeapons = isWeaponExclusiveMod(mod.id) ? getExclusiveWeaponEntries(mod.id) : [];
+  const augmentWarframe = isWarframeSpecificAugment(mod) ? getAugmentWarframeEntry(mod) : null;
+  const isUniversalAugment = isWarframeAugment(mod) && mod.warframeId === "universal";
 
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
@@ -896,6 +908,21 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
                 )}
               >
                 {modSlotCategoryLabel(slotCategory)}
+              </Badge>
+            )}
+            {exclusiveWeapons.length > 0 && (
+              <Badge variant="outline" className="text-[10px] border-orange-500/30 text-orange-300">
+                Weapon mod
+              </Badge>
+            )}
+            {augmentWarframe && (
+              <Badge variant="outline" className="text-[10px] border-indigo-500/30 text-indigo-300">
+                Warframe augment
+              </Badge>
+            )}
+            {isUniversalAugment && (
+              <Badge variant="outline" className="text-[10px] border-indigo-500/30 text-indigo-300">
+                Universal augment
               </Badge>
             )}
           </div>
@@ -955,6 +982,78 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
                 </li>
               );
             })}
+          </ul>
+        </div>
+      )}
+
+      {exclusiveWeapons.length > 0 && (
+        <div>
+          <PanelHeading>Compatible weapons</PanelHeading>
+          <ul className="space-y-2">
+            {exclusiveWeapons.map((weapon) => (
+              <li key={weapon.id}>
+                <a
+                  href={
+                    returnTo
+                      ? appendReturnTo(
+                          `/codex?section=weapons&id=${encodeURIComponent(weapon.id)}`,
+                          returnTo,
+                        )
+                      : `/codex?section=weapons&id=${encodeURIComponent(weapon.id)}`
+                  }
+                  className="flex items-center gap-2 rounded border border-orange-500/25 bg-orange-500/5 p-2 transition-colors hover:border-orange-500/40"
+                >
+                  <GameAssetImage
+                    src={getWeaponImage(weapon.name, { category: weapon.category })}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 shrink-0 rounded object-contain bg-muted/20"
+                    hideOnError
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{weapon.name}</p>
+                    <p className="truncate text-[10px] text-muted-foreground">Weapon-exclusive</p>
+                  </div>
+                  <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {augmentWarframe && (
+        <div>
+          <PanelHeading>Compatible warframe</PanelHeading>
+          <ul className="space-y-2">
+            <li>
+              <a
+                href={
+                  returnTo
+                    ? appendReturnTo(
+                        `/codex?section=warframes&id=${encodeURIComponent(augmentWarframe.id)}`,
+                        returnTo,
+                      )
+                    : `/codex?section=warframes&id=${encodeURIComponent(augmentWarframe.id)}`
+                }
+                className="flex items-center gap-2 rounded border border-indigo-500/25 bg-indigo-500/5 p-2 transition-colors hover:border-indigo-500/40"
+              >
+                <GameAssetImage
+                  src={getWarframeImage(augmentWarframe.name)}
+                  alt=""
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 shrink-0 rounded object-contain bg-muted/20"
+                  hideOnError
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{augmentWarframe.name}</p>
+                  <p className="truncate text-[10px] text-muted-foreground">Ability augment</p>
+                </div>
+                <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+              </a>
+            </li>
           </ul>
         </div>
       )}
