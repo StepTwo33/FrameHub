@@ -45,6 +45,7 @@ import {
 import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
+import { getModSlotCategory, modSlotCategoryLabel } from "@/lib/mod-slot-categories";
 import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
 import { getModImage, getArcaneImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
