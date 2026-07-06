@@ -237,10 +237,12 @@ export function getKnownArcaneStatKeys(): string[] {
 
 const PASSIVE_TRIGGERS = new Set<ArcaneTrigger>(["passive"]);
 
+/** Proc/chance stats go in conditional; bonus stats use applied + trigger note. */
 function isProcStat(stat: string, trigger: ArcaneTrigger): boolean {
   if (PASSIVE_TRIGGERS.has(trigger) || trigger === "stacks") return false;
   if (stat.endsWith("Chance")) return true;
-  return true;
+  if (stat.endsWith("ProcChance")) return true;
+  return false;
 }
 
 function fmtPct(n: number, decimals = 0): string {
@@ -322,6 +324,8 @@ function buildLinesFromDef(
     return { applied, conditional };
   }
 
+  const seen = new Set<string>();
+
   for (const line of def.effects) {
     if (line.stat === "removeShields" || line.stat === "persistenceDamageCapPerSecond") continue;
     if (line.stat === "abilityStrengthPerHealthStep") continue;
@@ -330,6 +334,9 @@ function buildLinesFromDef(
     const label = getArcaneStatLabel(line.stat);
     const value = fmtStatValue(line.stat, scaled, line.flat);
     const proc = isProcStat(line.stat, def.trigger);
+    const dedupeKey = `${line.stat}|${label}|${value}|${proc ? "c" : "a"}`;
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
 
     if (proc) {
       conditional.push({

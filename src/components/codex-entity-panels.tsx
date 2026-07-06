@@ -1,17 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Flag, Wrench, ExternalLink } from "lucide-react";
+import { Flag, Wrench, ExternalLink, Crosshair } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { PanelHeading } from "@/components/page-shell";
-import {
-  formatCompanionType,
-  formatWeaponCategory,
-  getCodexWikiUrl,
-  pct,
-  weaponElementEntries,
-} from "@/lib/codex-catalog";
+import { formatCompanionType, formatWeaponCategory, getCodexWikiUrl, pct, weaponElementEntries } from "@/lib/codex-catalog";
 import {
   getWeaponRadialAttacks,
   radialAttackDamageTags,
@@ -331,8 +325,30 @@ export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapo
               </Badge>
             )}
           </div>
+          {weapon.isExalted && weapon.warframeId && weapon.abilityName && (
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              {weapon.abilityName === "Passive" ? "Signature weapon" : `${weapon.abilityName} ability`}
+            </p>
+          )}
         </div>
       </div>
+
+      {weapon.isExalted && weapon.warframeId && (
+        <div>
+          <PanelHeading>Warframe</PanelHeading>
+          <a
+            href={
+              returnTo
+                ? appendReturnTo(`/codex?section=warframes&id=${encodeURIComponent(weapon.warframeId)}`, returnTo)
+                : `/codex?section=warframes&id=${encodeURIComponent(weapon.warframeId)}`
+            }
+            className="inline-flex items-center gap-1.5 rounded border border-cyan-500/30 px-2 py-1 text-[10px] text-cyan-300 hover:bg-cyan-500/5"
+          >
+            <Crosshair className="h-2.5 w-2.5" />
+            View warframe in codex
+          </a>
+        </div>
+      )}
 
       <StatGrid
         compact={compact}
@@ -415,7 +431,17 @@ export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapo
   );
 }
 
-export function WarframeDetailPanel({ warframe, compact, returnTo }: { warframe: Warframe; compact?: boolean; returnTo?: string }) {
+export function WarframeDetailPanel({
+  warframe,
+  exaltedWeapons = [],
+  compact,
+  returnTo,
+}: {
+  warframe: Warframe;
+  exaltedWeapons?: Weapon[];
+  compact?: boolean;
+  returnTo?: string;
+}) {
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
@@ -451,6 +477,47 @@ export function WarframeDetailPanel({ warframe, compact, returnTo }: { warframe:
           <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
             {warframe.passive}
           </p>
+        </div>
+      )}
+
+      {exaltedWeapons.length > 0 && (
+        <div>
+          <PanelHeading>Exalted weapons</PanelHeading>
+          <ul className="space-y-2">
+            {exaltedWeapons.map((weapon) => (
+              <li key={weapon.id}>
+                <a
+                  href={
+                    returnTo
+                      ? appendReturnTo(`/codex?section=weapons&id=${encodeURIComponent(weapon.id)}`, returnTo)
+                      : `/codex?section=weapons&id=${encodeURIComponent(weapon.id)}`
+                  }
+                  className="flex items-center gap-2 rounded border border-purple-500/25 bg-purple-500/5 p-2 transition-colors hover:border-purple-500/40"
+                >
+                  <GameAssetImage
+                    src={getWeaponImage(weapon.name, { category: weapon.category })}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 shrink-0 rounded object-contain bg-muted/20"
+                    hideOnError
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{weapon.name}</p>
+                    <p className="truncate text-[10px] text-muted-foreground">
+                      {formatWeaponCategory(weapon.category)}
+                      {weapon.abilityName && weapon.abilityName !== "Passive"
+                        ? ` · ${weapon.abilityName}`
+                        : weapon.abilityName === "Passive"
+                          ? " · Passive (no melee equipped)"
+                          : ""}
+                    </p>
+                  </div>
+                  <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

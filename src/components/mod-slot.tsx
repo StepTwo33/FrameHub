@@ -38,18 +38,22 @@ interface ModSlotProps {
   onEditRiven?: () => void;
   /** When set (warframe builder), Umbral set bonuses scale displayed mod stats. */
   equippedModIds?: string[];
-  /** Tighter layout for exalted weapon mod grids. */
+  /** Tighter layout for narrow sidebars — prefer full-width grids instead when possible. */
   compact?: boolean;
+  /** Inline forma control in the footer row instead of overlapping the card corner. */
+  inlineForma?: boolean;
 }
 
 function FormaPolarizeButton({
   active,
   slotPolarity,
   onClick,
+  inline = false,
 }: {
   active: boolean;
   slotPolarity?: string;
   onClick: (e: MouseEvent) => void;
+  inline?: boolean;
 }) {
   const polarized = Boolean(slotPolarity);
   const polarityLabel = slotPolarity ? polarityNames[slotPolarity] || slotPolarity : null;
@@ -59,7 +63,8 @@ function FormaPolarizeButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "absolute bottom-1.5 right-1.5 z-10 flex items-center justify-center rounded-md border transition-all shadow-sm",
+        "flex shrink-0 items-center justify-center rounded-md border transition-all shadow-sm",
+        inline ? "relative" : "absolute bottom-1.5 right-1.5 z-10",
         polarized
           ? cn(
               "p-1 min-w-[28px] min-h-[28px]",
@@ -135,7 +140,7 @@ function PolarityPicker({
   );
 }
 
-export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds, compact }: ModSlotProps) {
+export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds, compact, inlineForma = true }: ModSlotProps) {
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
   if (!mod) {
@@ -194,26 +199,31 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
       >
         <X className="h-3 w-3" />
       </button>
-      {onPolarize && (
+      {onPolarize && !inlineForma && (
         <FormaPolarizeButton
           active={showPolarityPicker}
           slotPolarity={slotPolarity}
           onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
         />
       )}
-      <div className="flex items-start gap-2.5">
+      <div className="flex items-start gap-2.5 pr-6">
         <GameAssetImage
           src={getModImage(mod.name)}
           alt=""
           width={44}
           height={44}
-          className="w-11 h-11 rounded object-contain bg-muted/20 shrink-0 mt-0.5"
+          className={cn(
+            "rounded object-contain bg-muted/20 shrink-0 mt-0.5",
+            compact ? "w-9 h-9" : "w-11 h-11",
+          )}
           hideOnError
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5">
             <PolarityIcon polarity={mod.polarity} size={14} />
-            <span className="text-[13px] font-semibold truncate leading-tight">{mod.name}</span>
+            <span className={cn("font-semibold leading-tight", compact ? "text-xs line-clamp-2" : "text-[13px]")}>
+              {mod.name}
+            </span>
           </div>
           {mod.subCategory === "riven" && rivenStats && Object.keys(rivenStats).length > 0 ? (
             <div className="text-[11px] text-purple-300 mt-0.5 space-y-0 leading-snug">
@@ -225,9 +235,9 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
               {Object.keys(rivenStats).length > 3 && <div className="text-purple-400/60">+{Object.keys(rivenStats).length - 3} more</div>}
             </div>
           ) : statEntries.length > 0 ? (
-            <div className="text-[11px] text-cyan-300/80 mt-0.5 space-y-0 leading-snug">
+            <div className="text-[11px] text-cyan-300/80 mt-0.5 space-y-0.5 leading-snug">
               {statEntries.map(([k, v]) => (
-                <div key={k} className="truncate">{formatStat(k, v as number)}</div>
+                <div key={k} className={compact ? "line-clamp-1" : undefined}>{formatStat(k, v as number)}</div>
               ))}
             </div>
           ) : (
@@ -235,26 +245,36 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
               {cleanModDescription(mod.description).substring(0, compact ? 60 : 80)}
             </div>
           )}
-          <div className="flex items-center gap-2.5 mt-1.5">
-            <span className="text-[11px] text-muted-foreground font-medium">
-              R{rank}/{mod.maxRank}
-            </span>
-            <span
-              className={cn(
-                "text-[11px] font-medium",
-                polarityEffect === "match"
-                  ? "text-green-400"
-                  : polarityEffect === "mismatch"
-                    ? "text-red-400"
-                    : "text-muted-foreground",
+          <div className="flex items-center justify-between gap-2 mt-1.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="text-[11px] text-muted-foreground font-medium whitespace-nowrap">
+                R{rank}/{mod.maxRank}
+              </span>
+              <span
+                className={cn(
+                  "text-[11px] font-medium whitespace-nowrap",
+                  polarityEffect === "match"
+                    ? "text-green-400"
+                    : polarityEffect === "mismatch"
+                      ? "text-red-400"
+                      : "text-muted-foreground",
+                )}
+              >
+                ⚡{effectiveDrain}
+              </span>
+              {mod.subCategory === "riven" && onEditRiven && (
+                <button onClick={(e) => { e.stopPropagation(); onEditRiven(); }} className="text-purple-400 hover:text-purple-300 transition-colors" title="Edit Riven Stats">
+                  <Pencil className="h-3 w-3" />
+                </button>
               )}
-            >
-              ⚡{effectiveDrain}
-            </span>
-            {mod.subCategory === "riven" && onEditRiven && (
-              <button onClick={(e) => { e.stopPropagation(); onEditRiven(); }} className="text-purple-400 hover:text-purple-300 transition-colors" title="Edit Riven Stats">
-                <Pencil className="h-3 w-3" />
-              </button>
+            </div>
+            {onPolarize && inlineForma && (
+              <FormaPolarizeButton
+                inline
+                active={showPolarityPicker}
+                slotPolarity={slotPolarity}
+                onClick={(e) => { e.stopPropagation(); setShowPolarityPicker(!showPolarityPicker); }}
+              />
             )}
           </div>
         </div>

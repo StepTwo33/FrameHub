@@ -13,19 +13,17 @@
   },
   "arcane_acceleration": {
     "replace": true,
+    "trigger": "onHit",
     "effects": [
       {
-        "stat": "fireRate",
-        "maxValue": 90
-      },
-      {
-        "stat": "holsterDamage",
-        "maxValue": 90
+        "stat": "fireRateOnCritChance",
+        "maxValue": 48,
+        "baseValue": 18
       },
       {
         "stat": "fireRateOnCrit",
-        "maxValue": 30,
-        "constantAtAllRanks": true
+        "maxValue": 39,
+        "baseValue": 9
       }
     ]
   },

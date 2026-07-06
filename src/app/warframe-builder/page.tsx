@@ -20,7 +20,7 @@ import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStat
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Zap, Flag, RefreshCw, Gem, Crosshair, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
+import { Search, Zap, Flag, RefreshCw, Gem, Sparkles, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
 import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
@@ -28,11 +28,17 @@ import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
 import { formatAbilityDescription } from "@/lib/ability-text";
+import {
+  getExaltedWeaponForAbility,
+  getExaltedWeaponsForWarframe,
+  getPrimaryExaltedWeapon,
+} from "@/lib/exalted-weapons";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
+import { getWeaponImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
@@ -124,7 +130,7 @@ function getSlotType(index: number): SlotType {
 }
 
 // Full ability card with all stats
-function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, footer }: {
+function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, footer, exaltedWeapon }: {
   ability: Ability;
   index: number;
   stats: WarframeCalculatedStats | null;
@@ -132,6 +138,7 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, f
   formLabel?: string;
   warframeId?: string;
   footer?: ReactNode;
+  exaltedWeapon?: Weapon | null;
 }) {
   const eff = stats?.abilityEfficiency ?? 1;
   const display = { warframeId, abilityName: ability.name };
@@ -174,6 +181,16 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, f
       <div className="mb-3">
         <AbilityStatsBlock ability={ability} stats={stats} display={display} />
       </div>
+
+      {exaltedWeapon && (
+        <div className="mb-3 rounded-lg border border-purple-500/25 bg-purple-500/5 px-2.5 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-purple-300">Exalted weapon</p>
+          <p className="mt-0.5 text-xs font-medium">{exaltedWeapon.name}</p>
+          <p className="text-[10px] text-muted-foreground">
+            Mod this weapon in the Exalted Weapon section below.
+          </p>
+        </div>
+      )}
 
       {footer}
     </AbilityCardShell>
@@ -544,9 +561,14 @@ export default function WarframeBuilderPage() {
   const allWeaponsData = useWeapons();
 
   // Find exalted weapon for selected warframe
+  const exaltedWeapons = useMemo<Weapon[]>(() => {
+    if (!selectedWarframe) return [];
+    return getExaltedWeaponsForWarframe(selectedWarframe.id, allWeaponsData);
+  }, [selectedWarframe, allWeaponsData]);
+
   const exaltedWeapon = useMemo<Weapon | null>(() => {
     if (!selectedWarframe) return null;
-    return allWeaponsData.find((w) => w.isExalted && w.warframeId === selectedWarframe.id) ?? null;
+    return getPrimaryExaltedWeapon(selectedWarframe.id, allWeaponsData);
   }, [selectedWarframe, allWeaponsData]);
 
   const exaltedStats = useMemo<CalculatedStats | null>(() => {
@@ -1043,6 +1065,82 @@ export default function WarframeBuilderPage() {
                   </div>
                 </div>
 
+                {/* Exalted Weapon — full-width mod grid in main column */}
+                {exaltedWeapon && (
+                  <div className="rounded-xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.07] via-card to-card p-5 shadow-sm ring-1 ring-violet-500/10">
+                    <div className="mb-4 flex items-start gap-3">
+                      <GameAssetImage
+                        src={getWeaponImage(exaltedWeapon.name, { category: exaltedWeapon.category })}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 shrink-0 rounded-lg object-contain bg-muted/30 ring-1 ring-violet-500/20"
+                        hideOnError
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Sparkles className="h-4 w-4 shrink-0 text-violet-400" aria-hidden />
+                          <h2 className="text-sm font-semibold tracking-wide text-violet-300">
+                            Exalted Weapon
+                          </h2>
+                          <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-300 ring-1 ring-violet-500/25">
+                            {exaltedWeapon.name}
+                          </span>
+                        </div>
+                        {exaltedWeapons.length > 1 && (
+                          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                            Also moddable:{" "}
+                            {exaltedWeapons
+                              .filter((w) => w.id !== exaltedWeapon.id)
+                              .map((w) => w.name)
+                              .join(", ")}
+                            . Grid below is for {exaltedWeapon.name}.
+                          </p>
+                        )}
+                        <div className="mt-2 flex items-center gap-3 text-xs">
+                          <span className="text-muted-foreground">Capacity</span>
+                          <span className={cn(
+                            "font-mono font-medium",
+                            exaltedCapacity > 60 ? "text-red-400" : "text-foreground",
+                          )}>
+                            {exaltedCapacity} / 60
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                      {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
+                        const equipped = exaltedMods.find((m) => m.slotIndex === i);
+                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                        return (
+                          <ModSlotCard
+                            key={`ex${i}`}
+                            mod={mod}
+                            rank={equipped?.rank ?? 0}
+                            slotIndex={i}
+                            slotPolarity={exaltedSlotPolarities[i]}
+                            onAdd={() => { setExaltedActiveSlot(i); setExaltedModPickerOpen(true); }}
+                            onRemove={() => setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
+                            onPolarize={(p) => setExaltedSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    {exaltedStats && (
+                      <div className="mt-4 border-t border-violet-500/15 pt-4 [&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-violet-300/80">
+                        <WeaponStatsPanel
+                          stats={exaltedStats}
+                          baseStats={exaltedBaseStats}
+                          weapon={exaltedWeapon}
+                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Archon Shards */}
                 <div>
                   <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-1">
@@ -1128,6 +1226,11 @@ export default function WarframeBuilderPage() {
                                 formLabel={entry.formLabel}
                                 stats={calculatedStats}
                                 warframeId={selectedWarframe.id}
+                                exaltedWeapon={getExaltedWeaponForAbility(
+                                  selectedWarframe.id,
+                                  entry.ability.name,
+                                  allWeaponsData,
+                                )}
                                 footer={
                                   canSubsumeHere ? (
                                     <div className="mt-auto border-t border-border/40 pt-3">
@@ -1166,54 +1269,6 @@ export default function WarframeBuilderPage() {
                   equippedArcanes={equippedArcanes}
                   arcaneRanks={equippedArcaneRanks}
                 />
-
-                {/* Exalted Weapon Section */}
-                {exaltedWeapon && (
-                  <div className="border border-amber-500/30 rounded-xl p-5 bg-amber-500/5">
-                    <h2 className="text-sm font-semibold tracking-wider text-amber-400 mb-3 flex items-center gap-2">
-                      <Crosshair className="h-4 w-4" />
-                      EXALTED WEAPON — {exaltedWeapon.name}
-                    </h2>
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
-                        const equipped = exaltedMods.find((m) => m.slotIndex === i);
-                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                        return (
-                          <ModSlotCard
-                            key={`ex${i}`}
-                            compact
-                            mod={mod}
-                            rank={equipped?.rank ?? 0}
-                            slotIndex={i}
-                            slotPolarity={exaltedSlotPolarities[i]}
-                            onAdd={() => { setExaltedActiveSlot(i); setExaltedModPickerOpen(true); }}
-                            onRemove={() => setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
-                            onPolarize={(p) => setExaltedSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
-                          />
-                        );
-                      })}
-                    </div>
-                    <div className="flex items-center justify-between text-xs mb-3 pb-3 border-b border-amber-500/20">
-                      <span className="text-muted-foreground">Capacity</span>
-                      <span className={cn(
-                        "font-mono",
-                        exaltedCapacity > 60 ? "text-red-400" : "text-muted-foreground"
-                      )}>
-                        {exaltedCapacity} / 60
-                      </span>
-                    </div>
-                    {exaltedStats && (
-                      <div className="[&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-amber-400/80">
-                        <WeaponStatsPanel
-                          stats={exaltedStats}
-                          baseStats={exaltedBaseStats}
-                          weapon={exaltedWeapon}
-                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           </div>

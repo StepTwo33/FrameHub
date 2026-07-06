@@ -7,9 +7,11 @@ export function applyArcaneEffectOverrides(
   base: Record<string, ArcaneEffectDef> = ARCANE_EFFECTS,
 ): Record<string, ArcaneEffectDef> {
   const overrides = getOverrides().filter((o) => o.targetType === "arcane_effect");
-  if (overrides.length === 0) return base;
+  if (overrides.length === 0) {
+    return structuredClone(base);
+  }
 
-  const result = { ...base };
+  const result = structuredClone(base);
 
   for (const ovr of overrides) {
     if (ovr.action === "remove") {

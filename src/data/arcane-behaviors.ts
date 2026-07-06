@@ -17,9 +17,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_acceleration": {
     arcaneId: "arcane_acceleration",
     effects: [
-      {"statKey": "fireRate", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRate (conditional proc)"},
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: holsterDamage (conditional proc)"},
-      {"statKey": "fireRateOnCrit", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRateOnCrit (conditional proc)"},
+      {"statKey": "fireRateOnCritChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRateOnCritChance (on hit proc)"},
+      {"statKey": "fireRateOnCrit", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRateOnCrit (on hit proc)"},
     ],
   },
   "arcane_aegis": {

@@ -24,6 +24,7 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calculator";
+import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import type {
   Ability,
@@ -102,9 +103,7 @@ function resolveExaltedPreview(
 ): PublicBuildWeaponPreview | null {
   const exaltedMods = data.exaltedMods ?? [];
   if (exaltedMods.length === 0) return null;
-  const exaltedWeapon = allWeapons.find(
-    (w) => w.isExalted && w.warframeId === data.warframeId,
-  );
+  const exaltedWeapon = getPrimaryExaltedWeapon(data.warframeId, allWeapons);
   if (!exaltedWeapon) return null;
   const entry = calcSavedWeaponBuildStats({
     weaponId: exaltedWeapon.id,

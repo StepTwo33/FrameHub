@@ -59,23 +59,18 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "arcane_acceleration": {
     "name": "Arcane Acceleration",
-    "trigger": "conditional",
+    "trigger": "onHit",
     "maxRank": 5,
     "effects": [
       {
-        "stat": "fireRate",
-        "maxValue": 90.0,
-        "baseValue": 15.0
-      },
-      {
-        "stat": "holsterDamage",
-        "maxValue": 90.0,
-        "baseValue": 15.0
+        "stat": "fireRateOnCritChance",
+        "maxValue": 48.0,
+        "baseValue": 18.0
       },
       {
         "stat": "fireRateOnCrit",
-        "maxValue": 30.0,
-        "baseValue": 5.0
+        "maxValue": 39.0,
+        "baseValue": 9.0
       }
     ]
   },

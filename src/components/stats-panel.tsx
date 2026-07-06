@@ -659,7 +659,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
                 />
               ))}
               {info.conditional.map((line, i) => (
-                <div key={`c-${i}`} className="py-0.5">
+                <div key={`c-${i}-${line.label}`} className="py-0.5">
                   <StatRow
                     label={line.label}
                     value={line.value}

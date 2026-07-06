@@ -1,5 +1,6 @@
 import { modsMap } from "@/data/mods";
 import { enrichWeapon } from "@/lib/weapon-enrich";
+import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
 import { warframesMap } from "@/data/warframes";
 import { weaponsMap, allWeapons as allWeaponsData } from "@/data/weapons";
 import { companionsMap } from "@/data/companions";
@@ -341,9 +342,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         result.warframe = { name: wf.name, stats };
       }
 
-      const exaltedWeapon = weaponList.find(
-        (w) => w.isExalted && w.warframeId === loadout.warframeBuild!.warframeId,
-      );
+      const exaltedWeapon = getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList);
       if (exaltedWeapon && (loadout.warframeBuild.exaltedMods?.length ?? 0) > 0) {
         const base = weaponWithPassive(exaltedWeapon);
         const statsEx = calculateWeaponBuild(

@@ -45,6 +45,7 @@ import {
 import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
+import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
 import { getModImage, getArcaneImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
 import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
@@ -281,6 +282,10 @@ function CodexPageContent() {
     section === "weapons" && selectedId ? weapons.find((w) => w.id === selectedId) : null;
   const selectedWarframe =
     section === "warframes" && selectedId ? warframes.find((w) => w.id === selectedId) : null;
+  const selectedWarframeExalted = useMemo(
+    () => (selectedWarframe ? getExaltedWeaponsForWarframe(selectedWarframe.id, weapons) : []),
+    [selectedWarframe, weapons],
+  );
   const selectedCompanion =
     section === "companions" && selectedId ? companions.find((c) => c.id === selectedId) : null;
   const selectedArchwing =
@@ -664,6 +669,7 @@ function CodexPageContent() {
           {selectedMod && <ModDetailPanel mod={selectedMod} compact returnTo={codexReturnTo} />}
           {selectedArcane && arcaneDisplay && (
             <ArcaneDetailPanel
+              key={`${selectedArcane.id}-${arcaneRank}`}
               arcane={selectedArcane}
               display={arcaneDisplay}
               coverage={arcaneCoverageById.get(selectedArcane.id)!}
@@ -676,7 +682,14 @@ function CodexPageContent() {
           )}
           {selectedShard && <ShardDetailPanel shard={selectedShard} compact returnTo={codexReturnTo} />}
           {selectedWeapon && <WeaponDetailPanel weapon={selectedWeapon} compact returnTo={codexReturnTo} />}
-          {selectedWarframe && <WarframeDetailPanel warframe={selectedWarframe} compact returnTo={codexReturnTo} />}
+          {selectedWarframe && (
+            <WarframeDetailPanel
+              warframe={selectedWarframe}
+              exaltedWeapons={selectedWarframeExalted}
+              compact
+              returnTo={codexReturnTo}
+            />
+          )}
           {selectedCompanion && <CompanionDetailPanel companion={selectedCompanion} compact returnTo={codexReturnTo} />}
           {selectedArchwing && <ArchwingDetailPanel archwing={selectedArchwing} compact returnTo={codexReturnTo} />}
           {selectedNecramech && <NecramechDetailPanel necramech={selectedNecramech} compact returnTo={codexReturnTo} />}
@@ -733,7 +746,6 @@ function CodexModRow({
   selected: boolean;
   onSelect: () => void;
 }) {
-  const aura = isAuraMod(mod);
   const maxCap = modMaxCapacity(mod);
 
   return (
@@ -757,7 +769,6 @@ function CodexModRow({
         <p className="truncate text-sm font-medium">{mod.name}</p>
         <p className="text-[10px] text-muted-foreground">
           {modBrowserCategoryLabel(mod)}
-          {aura && " · Aura"}
         </p>
       </div>
       <span className="font-mono text-[10px] text-muted-foreground" title="Capacity drain at R0 → max rank">
@@ -847,6 +858,7 @@ function CodexShardRow({
 
 function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolean; returnTo?: string }) {
   const aura = isAuraMod(mod);
+  const slotCategory = getModSlotCategory(mod);
   const maxCap = modMaxCapacity(mod);
 
   return (
@@ -870,6 +882,19 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
             {aura && (
               <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-300">
                 Aura
+              </Badge>
+            )}
+            {slotCategory && (
+              <Badge
+                variant="outline"
+                className={cn(
+                  "text-[10px]",
+                  slotCategory === "exilus" && "border-cyan-500/30 text-cyan-300",
+                  slotCategory === "tome" && "border-purple-500/30 text-purple-300",
+                  slotCategory === "historic" && "border-rose-500/30 text-rose-300",
+                )}
+              >
+                {modSlotCategoryLabel(slotCategory)}
               </Badge>
             )}
           </div>
@@ -1023,8 +1048,8 @@ function ArcaneDetailPanel({
         <div>
           <PanelHeading>Applied @ R{rank}</PanelHeading>
           <ul className="space-y-0.5 text-xs">
-            {display.applied.map((line) => (
-              <li key={line.label} className="flex justify-between gap-2">
+            {display.applied.map((line, idx) => (
+              <li key={`applied-${idx}-${line.label}`} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{line.label}</span>
                 <span className="font-mono text-emerald-400">{line.value}</span>
               </li>
@@ -1034,11 +1059,11 @@ function ArcaneDetailPanel({
       )}
 
       {display.conditional.length > 0 && (
-        <div>
+        <div key={`conditional-${rank}`}>
           <PanelHeading>Conditional @ R{rank}</PanelHeading>
           <ul className="space-y-1 text-xs">
-            {display.conditional.map((line) => (
-              <li key={`${line.label}-${line.value}`}>
+            {display.conditional.map((line, idx) => (
+              <li key={`cond-${idx}-${line.label}`}>
                 <div className="flex justify-between gap-2">
                   <span className="text-muted-foreground">{line.label}</span>
                   <span className="font-mono text-amber-300/90">{line.value}</span>

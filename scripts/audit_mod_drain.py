@@ -5,15 +5,15 @@ import re
 from pathlib import Path
 
 MODS_TS = Path(__file__).resolve().parents[1] / "src" / "data" / "mods.ts"
-AURA_IDS = {
-    "aura_steel_charge", "aura_energy_siphon", "aura_corrosive_projection",
-    "aura_rejuvenation", "aura_enemy_radar", "aura_physique",
-    "aura_rifle_amplification", "aura_shotgun_amplification", "aura_pistol_amplification",
-    "dead_eye", "aura_infested_impedance", "loot_detector", "aura_shield_disruption",
-    "aura_speed_holster", "aura_sprint_boost", "aura_sprint_speed", "aura_looters",
-    "aura_emp_auras", "aura_toxin_resistance", "stand_united", "growing_power",
-    "brief_respite", "aerodynamic", "power_donation_r5", "combat_discipline", "shepherd",
-}
+AURA_TS = Path(__file__).resolve().parents[1] / "src" / "lib" / "aura-mods.ts"
+
+
+def load_aura_ids() -> set[str]:
+    text = AURA_TS.read_text(encoding="utf-8")
+    return set(re.findall(r'"([^"]+)"', text.split("AURA_MOD_IDS")[1].split(");")[0]))
+
+
+AURA_IDS = load_aura_ids()
 
 
 def load_mods() -> list[dict]:

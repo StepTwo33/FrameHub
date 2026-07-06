@@ -1397,20 +1397,6 @@ export const allMods: Mod[] = [
     "rarity": "uncommon"
   },
   {
-    "id": "aura_emp_auras",
-    "name": "Empowered Auras",
-    "polarity": "umbra",
-    "drain": -7,
-    "maxRank": 5,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {
-      "auraEffectiveness": 10
-    },
-    "description": "+10% Aura Effectiveness per rank",
-    "rarity": "legendary"
-  },
-  {
     "id": "primed_redirection",
     "name": "Primed Redirection",
     "polarity": "vazarin",
@@ -12319,9 +12305,9 @@ export const allMods: Mod[] = [
   },
   {
     "id": "emp_aura",
-    "name": "Emp Aura",
+    "name": "EMP Aura",
     "polarity": "vazarin",
-    "drain": -2,
+    "drain": -7,
     "maxRank": 5,
     "category": "warframe",
     "subCategory": "",

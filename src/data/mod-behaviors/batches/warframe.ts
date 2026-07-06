@@ -107,9 +107,6 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   aura_cunning_drift: mod("aura_cunning_drift", [
     line("abilityRange", "warframe_totals", "multiplicative_percent", "Cunning Drift: abilityRange \u2014 +12% Slide\\\\n-30% Friction\\\\n+15% Ability Range"),
   ]),
-  aura_emp_auras: mod("aura_emp_auras", [
-    line("auraEffectiveness", "mod_panel", "multiplicative_percent", "Empowered Auras: auraEffectiveness \u2014 +10% Aura Effectiveness per rank"),
-  ]),
   aura_enemy_radar: mod("aura_enemy_radar", [
     line("enemyRadar", "mod_panel", "multiplicative_percent", "Enemy Radar: enemyRadar \u2014 Highlights enemies on the Minimap\\\\nSquad receives +30 Enemy Radar"),
   ]),
@@ -209,7 +206,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("radiation", "mod_panel", "multiplicative_percent", "Diamond Skin: radiation \u2014 +82.5% <DT_RADIATION_COLOR>Radiation Resistance"),
   ]),
   emp_aura: mod("emp_aura", [
-    line("accuracy", "mod_panel", "multiplicative_percent", "Emp Aura: accuracy \u2014 Enemy Corpus lose -15% Accuracy (arsenal display only)"),
+    line("accuracy", "mod_panel", "multiplicative_percent", "EMP Aura: accuracy \u2014 Enemy Corpus lose -15% Accuracy (arsenal display only)"),
   ]),
   empowered_blades: mod("empowered_blades", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Empowered Blades: statusChance \u2014 Squad receives +60% Status Chance and Status Damage on Heavy Attacks, but lose <\u2026"),

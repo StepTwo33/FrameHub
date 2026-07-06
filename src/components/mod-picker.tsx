@@ -39,57 +39,12 @@ const rarityColors: Record<string, string> = {
   legendary: "bg-white/10 text-white border-white/30",
 };
 
-// Known exilus mod IDs (movement, utility, drift mods — matched to actual data)
-const EXILUS_MODS = new Set([
-  "rush_r3", "maglev", "master_thief", "intruder",
-  "enemy_sense_r3", "vigilante_pursuit", "animal_instinct",
-  "aura_cunning_drift", "endurance_drift", "power_drift", "speed_drift", "coaction_drift",
-  "lightning_dash", "firewalker", "ice_spring", "toxic_flight", "battering_maneuver",
-  "handspring_r10", "sure_footed_r5",
-  "constitution", "aviator", "agility_drift",
-  "mobilize_r3", "patagium", "proton_pulse", "streamlined_form", "preparation_r10",
-]);
-
-// Wiki: Exilus_Mods → Secondary weapon tab (+ patch-listed Vigilante Supplies)
-const SECONDARY_WEAPON_EXILUS_MOD_IDS = new Set([
-  "trick_mag_r3",
-  "pistol_ammo_mutation",
-  "primed_pistol_ammo_mutation",
-  "vigilante_supplies",
-  "air_recon",
-  "hawk_eye",
-  "spry_sights",
-  "strafing_slide",
-  "steady_hands",
-  "primed_steady_hands",
-  "targeting_subsystem",
-  "suppress_r3",
-  "reflex_draw",
-  "eject_magazine",
-  "lethal_momentum",
-  "energizing_shot",
-  "ruinous_extension",
-  "fass_canticle",
-  "jahu_canticle",
-  "khra_canticle",
-  "lohk_canticle",
-]);
-
-/** Melee Exilus (utility / block / glaive); matches in-game Exilus-eligible melee weapon mods. */
-const MELEE_WEAPON_EXILUS_MOD_IDS = new Set([
-  "dispatch_overdrive",
-  "electromagnetic_shielding",
-  "focused_defense",
-  "guardian_derision",
-  "whirlwind",
-  "focus_energy_r3",
-  "power_throw",
-  "quick_return",
-  "rebound",
-  "volatile_quick_return",
-  "volatile_rebound",
-  "parry_r3",
-]);
+import {
+  isWarframeExilusMod,
+  isSecondaryWeaponExilusMod,
+  isMeleeWeaponExilusMod,
+  TOME_CANTICLE_MOD_IDS,
+} from "@/lib/mod-slot-categories";
 
 export type SlotType = "regular" | "aura" | "exilus" | "weapon_exilus_secondary" | "weapon_exilus_melee";
 
@@ -125,9 +80,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
   const filteredMods = useMemo(() => {
     let categoryMods: Mod[];
     if (slotType === "weapon_exilus_secondary") {
-      categoryMods = mods.filter((m) => SECONDARY_WEAPON_EXILUS_MOD_IDS.has(m.id));
+      categoryMods = mods.filter(
+        (m) => isSecondaryWeaponExilusMod(m) || TOME_CANTICLE_MOD_IDS.has(m.id),
+      );
     } else if (slotType === "weapon_exilus_melee") {
-      categoryMods = mods.filter((m) => MELEE_WEAPON_EXILUS_MOD_IDS.has(m.id));
+      categoryMods = mods.filter(isMeleeWeaponExilusMod);
     } else if (category === "_prefiltered") {
       // Mods already filtered by caller (e.g. companion weapon mods)
       categoryMods = [...mods];
@@ -163,9 +120,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     if (slotType === "aura") {
       categoryMods = categoryMods.filter(isAuraMod);
     } else if (slotType === "exilus") {
-      categoryMods = categoryMods.filter(
-        (m) => EXILUS_MODS.has(m.id) || (m.category === "augment" && m.polarity === "exilus"),
-      );
+      categoryMods = categoryMods.filter(isWarframeExilusMod);
     }
 
     // Filter augments to matching warframe (+ universal; primes/umbra base ids; Umbra polarity = any frame)

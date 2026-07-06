@@ -133,7 +133,9 @@ export function useArchonShards(): ArchonShard[] {
 }
 
 export function useArcaneEffects(): Record<string, ArcaneEffectDef> {
-  const [effects, setEffects] = useState<Record<string, ArcaneEffectDef>>(ARCANE_EFFECTS);
+  const [effects, setEffects] = useState<Record<string, ArcaneEffectDef>>(() =>
+    applyArcaneEffectOverrides(),
+  );
   const reload = useCallback(() => {
     setEffects(applyArcaneEffectOverrides());
   }, []);

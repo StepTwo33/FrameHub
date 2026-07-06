@@ -19,34 +19,37 @@ interface SiteUpdatesSidebarProps {
 }
 
 function UpdateCard({ update, compact }: { update: SiteUpdateSummary; compact?: boolean }) {
-  const [expanded, setExpanded] = useState(false);
-  const clamped = !expanded && update.body.length > 140;
+  const excerpt = update.body.length > 140;
 
   return (
-    <article className="rounded-lg border border-border/50 bg-background/40 p-3 transition-colors hover:border-primary/25">
+    <Link
+      href={`/updates/${update.id}`}
+      className="group block rounded-lg border border-border/50 bg-background/40 p-3 transition-colors hover:border-primary/40 hover:bg-background/60"
+    >
       <time className="text-[10px] text-muted-foreground">{formatSiteUpdateTime(update.createdAt)}</time>
-      <h3 className={cn("mt-1 font-semibold leading-snug text-foreground", compact ? "text-xs" : "text-sm")}>
+      <h3
+        className={cn(
+          "mt-1 font-semibold leading-snug text-foreground transition-colors group-hover:text-primary",
+          compact ? "text-xs" : "text-sm",
+        )}
+      >
         {update.title}
       </h3>
       <p
         className={cn(
           "mt-1.5 text-muted-foreground whitespace-pre-wrap leading-relaxed",
           compact ? "text-[11px]" : "text-xs",
-          clamped && "line-clamp-3",
+          excerpt && "line-clamp-3",
         )}
       >
         {update.body}
       </p>
-      {update.body.length > 140 && (
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="mt-1.5 text-[10px] font-medium text-primary hover:underline"
-        >
-          {expanded ? "Show less" : "Read more"}
-        </button>
+      {excerpt && (
+        <span className="mt-1.5 inline-block text-[10px] font-medium text-primary group-hover:underline">
+          Read more
+        </span>
       )}
-    </article>
+    </Link>
   );
 }
 
@@ -99,15 +102,23 @@ export function SiteUpdatesSidebar({
             Updates from the Frame Hub team
           </p>
         </div>
-        {isAdmin && (
+        <div className="flex shrink-0 items-center gap-2">
+          {isAdmin && (
+            <Link
+              href="/admin/updates"
+              className="inline-flex items-center gap-0.5 text-[10px] font-medium text-muted-foreground hover:text-primary hover:underline"
+            >
+              Manage
+            </Link>
+          )}
           <Link
-            href="/admin/updates"
-            className="inline-flex shrink-0 items-center gap-0.5 text-[10px] font-medium text-primary hover:underline"
+            href="/updates"
+            className="inline-flex items-center gap-0.5 text-[10px] font-medium text-primary hover:underline"
           >
-            Manage
+            View all
             <ChevronRight className="h-3 w-3" />
           </Link>
-        )}
+        </div>
       </div>
 
       {isSidebar && (

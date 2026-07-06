@@ -1,10 +1,14 @@
 import { Mod } from "@/lib/types";
 import { isAuraMod } from "@/lib/aura-mods";
 import { isArchmeleeMod } from "@/lib/archmelee-mods";
+import { getModSlotCategory } from "@/lib/mod-slot-categories";
 
 export type ModBrowserCategoryId =
   | "all"
   | "aura"
+  | "exilus"
+  | "historic"
+  | "tome"
   | "primary"
   | "secondary"
   | "melee"
@@ -17,9 +21,13 @@ export type ModBrowserCategoryId =
   | "necramech"
   | "kdrive";
 
+/** Standard equipment-type filters (game-like order). */
 export const MOD_BROWSER_CATEGORIES: { id: ModBrowserCategoryId; label: string }[] = [
   { id: "all", label: "All" },
   { id: "aura", label: "Aura" },
+  { id: "exilus", label: "Exilus" },
+  { id: "historic", label: "Historic" },
+  { id: "tome", label: "Tome" },
   { id: "primary", label: "Primary" },
   { id: "secondary", label: "Secondary" },
   { id: "melee", label: "Melee" },
@@ -63,22 +71,33 @@ export function isKDriveMod(mod: Mod): boolean {
   return mod.category === "kdrive" || KDRIVE_MOD_IDS.has(mod.id) || /k-drive/i.test(mod.description);
 }
 
+/** Mods that belong to a dedicated special slot (Aura / Exilus / Tome / Historic). */
+function hasSpecialSlot(mod: Mod): boolean {
+  return isAuraMod(mod) || getModSlotCategory(mod) !== null;
+}
+
 export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategoryId): boolean {
   if (category === "all") return true;
 
   switch (category) {
     case "aura":
       return isAuraMod(mod);
+    case "exilus":
+      return getModSlotCategory(mod) === "exilus";
+    case "historic":
+      return getModSlotCategory(mod) === "historic";
+    case "tome":
+      return getModSlotCategory(mod) === "tome";
     case "primary":
-      return ["primary", "rifle", "shotgun", "bow", "launcher"].includes(mod.category);
+      return ["primary", "rifle", "shotgun", "bow", "launcher"].includes(mod.category) && !hasSpecialSlot(mod);
     case "secondary":
-      return ["secondary", "pistol", "dual_pistols"].includes(mod.category);
+      return ["secondary", "pistol", "dual_pistols"].includes(mod.category) && !hasSpecialSlot(mod);
     case "melee":
-      return mod.category === "melee" && !isArchmeleeMod(mod);
+      return mod.category === "melee" && !isArchmeleeMod(mod) && !hasSpecialSlot(mod);
     case "warframe":
-      return mod.category === "warframe";
+      return mod.category === "warframe" && !hasSpecialSlot(mod);
     case "augment":
-      return mod.category === "augment";
+      return mod.category === "augment" && !hasSpecialSlot(mod);
     case "companion":
       return mod.category === "companion" || mod.category === "companion_weapon";
     case "archwing":
@@ -97,6 +116,10 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
 }
 
 export function modBrowserCategoryLabel(mod: Mod): string {
+  const slot = getModSlotCategory(mod);
+  if (slot) {
+    return slot === "exilus" ? "Exilus" : slot === "tome" ? "Tome" : "Historic";
+  }
   if (isAuraMod(mod)) return "Aura";
   if (mod.category === "kdrive" || isKDriveMod(mod)) return "K-Drive";
   if (mod.category === "archgun") return "Archgun";
@@ -110,5 +133,6 @@ export function modBrowserCategoryLabel(mod: Mod): string {
   if (mod.category === "warframe") return "Warframe";
   if (mod.category === "augment") return "Augment";
   if (mod.category === "companion") return "Companion";
+  if (mod.category === "tektolyst") return "Historic";
   return mod.category || "—";
 }

@@ -173,11 +173,11 @@ def convert_mods():
     
     # Remove hallucinated / invalid mods
     HALLUCINATED_MODS = {
-        'empowered_auras', 'umbral_set_bonus',
+        'empowered_auras', 'aura_emp_auras', 'umbral_set_bonus',
         'archon_shard_crimson', 'archon_shard_amber', 'archon_shard_cyan',
         'empowered_aura',
     }
-    HALLUCINATED_NAME_PATTERNS = ['Empowered Aura', 'Umbral Set Bonus']
+    HALLUCINATED_NAME_PATTERNS = ['Empowered Aura', 'Empowered Auras', 'Umbral Set Bonus']
     # Also remove any mod whose id starts with 'archon_shard'
     before = len(all_mods)
     all_mods = [m for m in all_mods
