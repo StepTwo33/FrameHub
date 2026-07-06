@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
 import { IncarnonEvolution } from "@/data/incarnon";
 import { formatAbilityDescription } from "@/lib/ability-text";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
 import { buildShardBonusLines } from "@/lib/shard-display";
 import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 import {
@@ -535,13 +536,13 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
     );
   }
 
-  // Detect equipped augments
-  const equippedAugments: Mod[] = [];
+  // Detect equipped augments (with rank for display)
+  const equippedAugments: { mod: Mod; rank: number }[] = [];
   if (equippedMods && allMods) {
     for (const em of equippedMods) {
       const mod = allMods.get(em.modId);
       if (mod && mod.category === "augment") {
-        equippedAugments.push(mod);
+        equippedAugments.push({ mod, rank: em.rank });
       }
     }
   }
@@ -677,21 +678,41 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
       {/* Equipped Augments */}
       {equippedAugments.length > 0 && (
         <CollapsibleSection title="AUGMENTS" defaultOpen>
-          {equippedAugments.map((aug) => (
-            <div key={aug.id} className="py-1 border-b border-border/30 last:border-0">
-              <div className="text-xs font-medium text-purple-400">{aug.name}</div>
-              {aug.description && (
-                <div className="text-[10px] text-muted-foreground mt-0.5">{aug.description}</div>
-              )}
-              <div className="flex flex-wrap gap-1.5 mt-0.5">
-                {Object.entries(aug.stats).map(([stat, val]) => (
-                  <span key={stat} className="text-[10px] text-purple-300/80 font-mono">
-                    {stat}: +{String(val)}
+          {equippedAugments.map(({ mod, rank }) => {
+            const statLines = getModStatDisplayLines(mod, rank);
+            return (
+              <div key={mod.id} className="py-1.5 border-b border-border/30 last:border-0 space-y-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-medium text-purple-300">{mod.name}</span>
+                  <span className="text-[10px] text-muted-foreground font-mono shrink-0">
+                    R{rank}/{mod.maxRank} · ⚡{mod.drain + rank}
                   </span>
-                ))}
+                </div>
+                {mod.description && (
+                  <p className="text-[10px] text-muted-foreground leading-snug">
+                    {cleanModDescription(mod.description)}
+                  </p>
+                )}
+                {statLines.length > 0 ? (
+                  <ul className="space-y-0.5">
+                    {statLines.map((line) => (
+                      <li key={line.statKey} className="flex justify-between gap-2 text-[10px]">
+                        <span className="text-muted-foreground truncate">{line.label}</span>
+                        <span className="font-mono text-purple-300/90 shrink-0 text-right">
+                          {line.atRank}
+                          {rank < mod.maxRank && (
+                            <span className="text-muted-foreground/70"> ({line.atMax} max)</span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-[10px] text-muted-foreground/80 italic">Ability effect — see description</p>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </CollapsibleSection>
       )}
     </div>

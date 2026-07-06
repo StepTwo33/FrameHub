@@ -1,0 +1,6997 @@
+{
+  "heavy_caliber": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Heavy Caliber"
+  },
+  "vigilante_armaments": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Vigilante Armaments"
+  },
+  "vigilante_offensive": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Vigilante Offense"
+  },
+  "argon_scope": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Argon Scope"
+  },
+  "galvanized_scope": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Galvanized Scope"
+  },
+  "hammer_shot": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Hammer Shot"
+  },
+  "primed_cryo_rounds": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Cryo Rounds"
+  },
+  "shred": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Shred"
+  },
+  "vile_acceleration": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Vile Acceleration"
+  },
+  "piercing_caliber": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Piercing Caliber"
+  },
+  "bladed_rounds": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bladed Rounds"
+  },
+  "vigilante_fervor": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Vigilante Fervor"
+  },
+  "vigilante_supplies": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Vigilante Supplies"
+  },
+  "galvanized_chamber": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Galvanized Chamber"
+  },
+  "galvanized_aptitude": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Galvanized Aptitude"
+  },
+  "galvanized_savvy": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Galvanized Savvy"
+  },
+  "critical_delay": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Critical Delay"
+  },
+  "frail_momentum": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Frail Momentum"
+  },
+  "wildfire": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Wildfire"
+  },
+  "ice_storm": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Ice Storm"
+  },
+  "thermite_rounds_nightmare": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Thermite Rounds"
+  },
+  "critical_deceleration": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Critical Deceleration"
+  },
+  "amalgam_serration": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Amalgam Serration"
+  },
+  "seeking_fury": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Seeking Fury"
+  },
+  "magnum_force": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Magnum Force"
+  },
+  "primed_pistol_gambit": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Pistol Gambit"
+  },
+  "hydraulic_crosshairs": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hydraulic Crosshairs"
+  },
+  "galvanized_crosshairs": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Galvanized Crosshairs"
+  },
+  "primed_target_cracker": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Target Cracker"
+  },
+  "embedded_catalyzer": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Embedded Catalyzer"
+  },
+  "galvanized_shot": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Galvanized Shot"
+  },
+  "primed_heated_charge": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Heated Charge"
+  },
+  "primed_convulsion": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Convulsion"
+  },
+  "lethal_torrent": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Lethal Torrent"
+  },
+  "anemic_agility": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Anemic Agility"
+  },
+  "pistol_ammo_mutation": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Ammo Mutation"
+  },
+  "creeping_bullseye": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Creeping Bullseye"
+  },
+  "primed_point_blank": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Point Blank"
+  },
+  "vicious_spread": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Vicious Spread"
+  },
+  "hells_chamber": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Hell's Chamber"
+  },
+  "primed_ravage": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Ravage"
+  },
+  "primed_charged_shell": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Charged Shell"
+  },
+  "primed_chilling_grasp": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Chilling Grasp"
+  },
+  "galvanized_hell": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Galvanized Hell"
+  },
+  "ammo_mutation": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shotgun Ammo Mutation"
+  },
+  "blaze": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Blaze"
+  },
+  "burdened_magazine": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Burdened Magazine"
+  },
+  "primed_pressure_point": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Pressure Point"
+  },
+  "blood_rush": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Blood Rush"
+  },
+  "sacrificial_steel": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Sacrificial Steel"
+  },
+  "condition_overload": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Condition Overload"
+  },
+  "primed_fever_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Fever Strike"
+  },
+  "primed_fury": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Fury"
+  },
+  "berserker": {
+    "wikiType": "Valkyr Talons",
+    "isAugment": false,
+    "wikiName": "Hysteria"
+  },
+  "gladiator_vice": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Gladiator Vice"
+  },
+  "primed_reach": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Reach"
+  },
+  "spring_loaded_blade": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Spring-Loaded Blade"
+  },
+  "body_count": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Body Count"
+  },
+  "gladiator_rush": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Gladiator Rush"
+  },
+  "killing_blow": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Killing Blow"
+  },
+  "corrupt_charge": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Corrupt Charge"
+  },
+  "amalgam_organ_shatter": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Amalgam Organ Shatter"
+  },
+  "life_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Life Strike"
+  },
+  "healing_return": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Healing Return"
+  },
+  "covert_lethality": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Covert Lethality"
+  },
+  "aura_cunning_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Cunning Drift"
+  },
+  "aura_toxin_resistance": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Toxin Resistance"
+  },
+  "aura_physique": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Physique"
+  },
+  "aura_energy_siphon": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Energy Siphon"
+  },
+  "aura_rejuvenation": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Rejuvenation"
+  },
+  "aura_corrosive_projection": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Corrosive Projection"
+  },
+  "aura_shield_disruption": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Shield Disruption"
+  },
+  "aura_infested_impedance": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Infested Impedance"
+  },
+  "aura_rifle_amplification": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Rifle Amp"
+  },
+  "aura_shotgun_amplification": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Shotgun Amp"
+  },
+  "aura_pistol_amplification": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Pistol Amp"
+  },
+  "aura_steel_charge": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Steel Charge"
+  },
+  "aura_sprint_boost": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Sprint Boost"
+  },
+  "aura_enemy_radar": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Enemy Radar"
+  },
+  "primed_redirection": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Primed Redirection"
+  },
+  "fortitude": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Fortitude"
+  },
+  "armored_agility": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Armored Agility"
+  },
+  "gladiator_aegis": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Gladiator Aegis"
+  },
+  "primed_flow": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Primed Flow"
+  },
+  "primed_continuity": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Primed Continuity"
+  },
+  "narrow_minded": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Narrow Minded"
+  },
+  "blind_rage": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Blind Rage"
+  },
+  "transient_fortitude": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Transient Fortitude"
+  },
+  "umbra_intensify": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Umbral Intensify"
+  },
+  "speed_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Speed Drift"
+  },
+  "patagium": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Patagium"
+  },
+  "aerodynamic": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Aerodynamic"
+  },
+  "thiefs_wit": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Thief's Wit"
+  },
+  "vigilante_pursuit": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vigilante Pursuit"
+  },
+  "umbra_fiber": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Umbral Fiber"
+  },
+  "umbra_vitality": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Umbral Vitality"
+  },
+  "animal_instinct": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Animal Instinct"
+  },
+  "primed_animal_instinct": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Primed Animal Instinct"
+  },
+  "calculated_redirection": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Calculated Redirection"
+  },
+  "enhanced_vitality": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Enhanced Vitality"
+  },
+  "link_fiber": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Link Fiber"
+  },
+  "link_redirection": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Link Redirection"
+  },
+  "link_vitality": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Link Vitality"
+  },
+  "loyal_companion": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Loyal Companion"
+  },
+  "medi_pet_kit": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Medi-Pet Kit"
+  },
+  "metal_fiber": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Metal Fiber"
+  },
+  "pack_leader": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Pack Leader"
+  },
+  "primed_pack_leader": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Primed Pack Leader"
+  },
+  "synth_deconstruct": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Synth Deconstruct"
+  },
+  "synth_fiber": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Synth Fiber"
+  },
+  "aerial_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Aerial Bond"
+  },
+  "astral_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Astral Bond"
+  },
+  "contagious_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Contagious Bond"
+  },
+  "covert_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Covert Bond"
+  },
+  "duplex_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Duplex Bond"
+  },
+  "momentous_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Momentous Bond"
+  },
+  "mystic_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Mystic Bond"
+  },
+  "reinforced_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Reinforced Bond"
+  },
+  "restorative_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Restorative Bond"
+  },
+  "seismic_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Seismic Bond"
+  },
+  "tenacious_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Tenacious Bond"
+  },
+  "vicious_bond": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Vicious Bond"
+  },
+  "manifold_bond": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Manifold Bond"
+  },
+  "accelerated_deflection": {
+    "wikiType": "Companion",
+    "isAugment": false,
+    "wikiName": "Accelerated Deflection"
+  },
+  "anti_grav_array": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Anti-Grav Array"
+  },
+  "coolant_leak": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Coolant Leak"
+  },
+  "guardian": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Guardian"
+  },
+  "medi_ray": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Medi-Ray"
+  },
+  "odomedic": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Odomedic"
+  },
+  "sanctuary": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Sanctuary"
+  },
+  "shield_charger": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Shield Charger"
+  },
+  "spare_parts": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Spare Parts"
+  },
+  "vacuum": {
+    "wikiType": "Robotic",
+    "isAugment": false,
+    "wikiName": "Vacuum"
+  },
+  "regen": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Regen"
+  },
+  "primed_regen": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Primed Regen"
+  },
+  "repair_kit": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Repair Kit"
+  },
+  "sacrifice": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Sacrifice"
+  },
+  "self_destruct": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Self Destruct"
+  },
+  "targeting_receptor": {
+    "wikiType": "Helios",
+    "isAugment": false,
+    "wikiName": "Targeting Receptor"
+  },
+  "reawaken": {
+    "wikiType": "Djinn",
+    "isAugment": false,
+    "wikiName": "Reawaken"
+  },
+  "negate": {
+    "wikiType": "Wyrm",
+    "isAugment": false,
+    "wikiName": "Negate"
+  },
+  "bite": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Bite"
+  },
+  "maul": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Maul"
+  },
+  "ferocity": {
+    "wikiType": "Sahasa Kubrow",
+    "isAugment": false,
+    "wikiName": "Ferocity"
+  },
+  "hunt": {
+    "wikiType": "Huras Kubrow",
+    "isAugment": false,
+    "wikiName": "Hunt"
+  },
+  "howl": {
+    "wikiType": "Raksa Kubrow",
+    "isAugment": false,
+    "wikiName": "Howl"
+  },
+  "protect": {
+    "wikiType": "Raksa Kubrow",
+    "isAugment": false,
+    "wikiName": "Protect"
+  },
+  "retrieve": {
+    "wikiType": "Chesa Kubrow",
+    "isAugment": false,
+    "wikiName": "Retrieve"
+  },
+  "savagery": {
+    "wikiType": "Sunika Kubrow",
+    "isAugment": false,
+    "wikiName": "Savagery"
+  },
+  "scavenge": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Scavenge"
+  },
+  "stalk": {
+    "wikiType": "Huras Kubrow",
+    "isAugment": false,
+    "wikiName": "Stalk"
+  },
+  "unleashed": {
+    "wikiType": "Sunika Kubrow",
+    "isAugment": false,
+    "wikiName": "Unleashed"
+  },
+  "dig": {
+    "wikiType": "Sahasa Kubrow",
+    "isAugment": false,
+    "wikiName": "Dig"
+  },
+  "neutralize": {
+    "wikiType": "Chesa Kubrow",
+    "isAugment": false,
+    "wikiName": "Neutralize"
+  },
+  "reflect": {
+    "wikiType": "Adarza Kavat",
+    "isAugment": false,
+    "wikiName": "Reflect"
+  },
+  "cats_eye": {
+    "wikiType": "Adarza Kavat",
+    "isAugment": false,
+    "wikiName": "Cat's Eye"
+  },
+  "charm": {
+    "wikiType": "Smeeta Kavat",
+    "isAugment": false,
+    "wikiName": "Charm"
+  },
+  "draining_bite": {
+    "wikiType": "Vasca Kavat",
+    "isAugment": false,
+    "wikiName": "Draining Bite"
+  },
+  "transfusion": {
+    "wikiType": "Vasca Kavat",
+    "isAugment": false,
+    "wikiName": "Transfusion"
+  },
+  "claw_bite": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Bite"
+  },
+  "claw_maul": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Maul"
+  },
+  "claw_shred": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Shred"
+  },
+  "claw_swipe": {
+    "wikiType": "Kavat Claws",
+    "isAugment": false,
+    "wikiName": "Swipe"
+  },
+  "claw_fury": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Fury"
+  },
+  "claw_magnetic": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Magnetic Claws"
+  },
+  "bloodthirst": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Bloodthirst"
+  },
+  "cull_the_weak": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Cull the Weak"
+  },
+  "precision_conditioning": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Precision Conditioning"
+  },
+  "radon_claws": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Radon Claws"
+  },
+  "augment_excalibur_radiant_finish": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Radiant Finish"
+  },
+  "augment_excalibur_furious_javelin": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Furious Javelin"
+  },
+  "augment_excalibur_chromatic_blade": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Chromatic Blade"
+  },
+  "augment_excalibur_surging_dash": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Surging Dash"
+  },
+  "augment_mag_fracturing_crush": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Fracturing Crush"
+  },
+  "augment_mag_counter_pulse": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Counter Pulse"
+  },
+  "augment_mag_magnetized_discharge": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Magnetized Discharge"
+  },
+  "augment_mag_sgreedy_pull": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Greedy Pull"
+  },
+  "augment_volt_shocking_speed": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Shocking Speed"
+  },
+  "augment_volt_shock_trooper": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Shock Trooper"
+  },
+  "augment_volt_reactive_storm": {
+    "wikiType": "Baruuk",
+    "isAugment": true,
+    "wikiName": "Reactive Storm"
+  },
+  "augment_volt_transistor_shield": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Transistor Shield"
+  },
+  "augment_volt_capacitance": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Capacitance"
+  },
+  "augment_saryn_revealing_spores": {
+    "wikiType": "Saryn",
+    "isAugment": true,
+    "wikiName": "Revealing Spores"
+  },
+  "augment_saryn_regenerative_molt": {
+    "wikiType": "Saryn",
+    "isAugment": true,
+    "wikiName": "Regenerative Molt"
+  },
+  "augment_saryn_contagion_cloud": {
+    "wikiType": "Saryn",
+    "isAugment": true,
+    "wikiName": "Contagion Cloud"
+  },
+  "augment_saryn_venom_dose": {
+    "wikiType": "Saryn",
+    "isAugment": true,
+    "wikiName": "Venom Dose"
+  },
+  "augment_rhino_ironclad_charge": {
+    "wikiType": "Rhino",
+    "isAugment": true,
+    "wikiName": "Ironclad Charge"
+  },
+  "augment_rhino_iron_shrapnel": {
+    "wikiType": "Rhino",
+    "isAugment": true,
+    "wikiName": "Iron Shrapnel"
+  },
+  "augment_rhino_piercing_roar": {
+    "wikiType": "Rhino",
+    "isAugment": true,
+    "wikiName": "Piercing Roar"
+  },
+  "augment_rhino_reinforcing_stomp": {
+    "wikiType": "Rhino",
+    "isAugment": true,
+    "wikiName": "Reinforcing Stomp"
+  },
+  "augment_nova_neutron_star": {
+    "wikiType": "Nova",
+    "isAugment": true,
+    "wikiName": "Neutron Star"
+  },
+  "augment_nova_antimatter_absorb": {
+    "wikiType": "Nova",
+    "isAugment": true,
+    "wikiName": "Antimatter Absorb"
+  },
+  "augment_nova_escape_velocity": {
+    "wikiType": "Nova",
+    "isAugment": true,
+    "wikiName": "Escape Velocity"
+  },
+  "augment_nova_molecular_fission": {
+    "wikiType": "Nova",
+    "isAugment": true,
+    "wikiName": "Molecular Fission"
+  },
+  "augment_trinity_vampire_leech": {
+    "wikiType": "Trinity",
+    "isAugment": true,
+    "wikiName": "Vampire Leech"
+  },
+  "augment_trinity_abating_link": {
+    "wikiType": "Trinity",
+    "isAugment": true,
+    "wikiName": "Abating Link"
+  },
+  "augment_trinity_pool_of_life": {
+    "wikiType": "Trinity",
+    "isAugment": true,
+    "wikiName": "Pool of Life"
+  },
+  "augment_mesa_ballistic_bullseye": {
+    "wikiType": "Mesa",
+    "isAugment": true,
+    "wikiName": "Ballistic Bullseye"
+  },
+  "augment_mesa_muzzle_flash": {
+    "wikiType": "Mesa",
+    "isAugment": true,
+    "wikiName": "Muzzle Flash"
+  },
+  "augment_mesa_staggering_shield": {
+    "wikiType": "Mesa",
+    "isAugment": true,
+    "wikiName": "Staggering Shield"
+  },
+  "augment_mesa_mess_waltz": {
+    "wikiType": "Mesa",
+    "isAugment": true,
+    "wikiName": "Mesa's Waltz"
+  },
+  "augment_wisp_fused_reservoir": {
+    "wikiType": "Wisp",
+    "isAugment": true,
+    "wikiName": "Fused Reservoir"
+  },
+  "augment_khora_accumulating_whipclaw": {
+    "wikiType": "Khora",
+    "isAugment": true,
+    "wikiName": "Accumulating Whipclaw"
+  },
+  "augment_khora_pilfering_strangledome": {
+    "wikiType": "Khora",
+    "isAugment": true,
+    "wikiName": "Pilfering Strangledome"
+  },
+  "augment_khora_venari_bodyguard": {
+    "wikiType": "Khora",
+    "isAugment": true,
+    "wikiName": "Venari Bodyguard"
+  },
+  "augment_ash_safeguard_switch": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Safeguard Switch"
+  },
+  "augment_ash_rising_storm": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Rising Storm"
+  },
+  "augment_ash_seeking_shuriken": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Seeking Shuriken"
+  },
+  "augment_ash_smoke_shadow": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Smoke Shadow"
+  },
+  "augment_ivar_piercing_navigator": {
+    "wikiType": "Ivara",
+    "isAugment": true,
+    "wikiName": "Piercing Navigator"
+  },
+  "augment_ivar_infiltrate": {
+    "wikiType": "Ivara",
+    "isAugment": true,
+    "wikiName": "Infiltrate"
+  },
+  "augment_ivar_concentrated_arrow": {
+    "wikiType": "Ivara",
+    "isAugment": true,
+    "wikiName": "Concentrated Arrow"
+  },
+  "augment_ivar_empowered_quiver": {
+    "wikiType": "Ivara",
+    "isAugment": true,
+    "wikiName": "Empowered Quiver"
+  },
+  "augment_octavia_partition_mallet": {
+    "wikiType": "Octavia",
+    "isAugment": true,
+    "wikiName": "Partitioned Mallet"
+  },
+  "augment_octavia_conductor": {
+    "wikiType": "Octavia",
+    "isAugment": true,
+    "wikiName": "Conductor"
+  },
+  "augment_ember_fireball_frenzy": {
+    "wikiType": "Ember",
+    "isAugment": true,
+    "wikiName": "Fireball Frenzy"
+  },
+  "augment_ember_healing_flame": {
+    "wikiType": "Ember",
+    "isAugment": true,
+    "wikiName": "Healing Flame"
+  },
+  "augment_ember_exothermic": {
+    "wikiType": "Ember",
+    "isAugment": true,
+    "wikiName": "Exothermic"
+  },
+  "augment_frost_freeze_force": {
+    "wikiType": "Frost",
+    "isAugment": true,
+    "wikiName": "Freeze Force"
+  },
+  "augment_frost_ice_wave_impedance": {
+    "wikiType": "Frost",
+    "isAugment": true,
+    "wikiName": "Ice Wave Impedance"
+  },
+  "augment_frost_chilling_globe": {
+    "wikiType": "Frost",
+    "isAugment": true,
+    "wikiName": "Chilling Globe"
+  },
+  "augment_frost_icy_avalanche": {
+    "wikiType": "Frost",
+    "isAugment": true,
+    "wikiName": "Icy Avalanche"
+  },
+  "augment_loki_savior_decoy": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Savior Decoy"
+  },
+  "augment_loki_hushed_invisibility": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Hushed Invisibility"
+  },
+  "augment_loki_irradiating_disarm": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Irradiating Disarm"
+  },
+  "augment_nyx_mind_freak": {
+    "wikiType": "Nyx",
+    "isAugment": true,
+    "wikiName": "Mind Freak"
+  },
+  "augment_nyx_chaos_sphere": {
+    "wikiType": "Nyx",
+    "isAugment": true,
+    "wikiName": "Chaos Sphere"
+  },
+  "augment_nyx_assimilate": {
+    "wikiType": "Nyx",
+    "isAugment": true,
+    "wikiName": "Assimilate"
+  },
+  "augment_nyx_pacifying_bolts": {
+    "wikiType": "Nyx",
+    "isAugment": true,
+    "wikiName": "Pacifying Bolts"
+  },
+  "augment_banshee_sonic_fracture": {
+    "wikiType": "Banshee",
+    "isAugment": true,
+    "wikiName": "Sonic Fracture"
+  },
+  "augment_banshee_resonance": {
+    "wikiType": "Banshee",
+    "isAugment": true,
+    "wikiName": "Resonance"
+  },
+  "augment_banshee_silence_savage": {
+    "wikiType": "Banshee",
+    "isAugment": true,
+    "wikiName": "Savage Silence"
+  },
+  "augment_banshee_resonating_quake": {
+    "wikiType": "Banshee",
+    "isAugment": true,
+    "wikiName": "Resonating Quake"
+  },
+  "augment_vauban_photon_repeater": {
+    "wikiType": "Vauban",
+    "isAugment": true,
+    "wikiName": "Photon Repeater"
+  },
+  "augment_nekros_creeping_terrify": {
+    "wikiType": "Nekros",
+    "isAugment": true,
+    "wikiName": "Creeping Terrify"
+  },
+  "augment_nekros_despoil": {
+    "wikiType": "Nekros",
+    "isAugment": true,
+    "wikiName": "Despoil"
+  },
+  "augment_nekros_soul_survivor": {
+    "wikiType": "Nekros",
+    "isAugment": true,
+    "wikiName": "Soul Survivor"
+  },
+  "augment_nekros_shield_of_shadows": {
+    "wikiType": "Nekros",
+    "isAugment": true,
+    "wikiName": "Shield of Shadows"
+  },
+  "augment_hydroid_tidal_impunity": {
+    "wikiType": "Hydroid",
+    "isAugment": true,
+    "wikiName": "Tidal Impunity"
+  },
+  "augment_hydroid_curative_undertow": {
+    "wikiType": "Hydroid",
+    "isAugment": true,
+    "wikiName": "Curative Undertow"
+  },
+  "augment_hydroid_pilfering_swarm": {
+    "wikiType": "Hydroid",
+    "isAugment": true,
+    "wikiName": "Pilfering Swarm"
+  },
+  "augment_mirage_explosive_legerdemain": {
+    "wikiType": "Mirage",
+    "isAugment": true,
+    "wikiName": "Explosive Legerdemain"
+  },
+  "augment_mirage_total_eclipse": {
+    "wikiType": "Mirage",
+    "isAugment": true,
+    "wikiName": "Total Eclipse"
+  },
+  "augment_mirage_hall_of_malevolence": {
+    "wikiType": "Mirage",
+    "isAugment": true,
+    "wikiName": "Hall of Malevolence"
+  },
+  "augment_chroma_afterburn": {
+    "wikiType": "Chroma",
+    "isAugment": true,
+    "wikiName": "Afterburn"
+  },
+  "augment_chroma_everlasting_ward": {
+    "wikiType": "Chroma",
+    "isAugment": true,
+    "wikiName": "Everlasting Ward"
+  },
+  "augment_chroma_vexing_retaliation": {
+    "wikiType": "Chroma",
+    "isAugment": true,
+    "wikiName": "Vexing Retaliation"
+  },
+  "augment_chroma_guided_effigy": {
+    "wikiType": "Chroma",
+    "isAugment": true,
+    "wikiName": "Guided Effigy"
+  },
+  "augment_limbo_rift_haven": {
+    "wikiType": "Limbo",
+    "isAugment": true,
+    "wikiName": "Rift Haven"
+  },
+  "augment_limbo_rift_torrent": {
+    "wikiType": "Limbo",
+    "isAugment": true,
+    "wikiName": "Rift Torrent"
+  },
+  "augment_limbo_cataclysmic_continuum": {
+    "wikiType": "Limbo",
+    "isAugment": true,
+    "wikiName": "Cataclysmic Continuum"
+  },
+  "augment_equinox_duality": {
+    "wikiType": "Equinox",
+    "isAugment": true,
+    "wikiName": "Duality"
+  },
+  "augment_equinox_calm_frenzy": {
+    "wikiType": "Equinox",
+    "isAugment": true,
+    "wikiName": "Calm & Frenzy"
+  },
+  "augment_equinox_energy_transfer": {
+    "wikiType": "Equinox",
+    "isAugment": true,
+    "wikiName": "Energy Transfer"
+  },
+  "augment_atlas_tectonic_fracture": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Tectonic Fracture"
+  },
+  "augment_atlas_ore_gaze": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Ore Gaze"
+  },
+  "augment_atlas_rumbled": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Rumbled"
+  },
+  "augment_atlas_path_of_statues": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Path of Statues"
+  },
+  "augment_wukong_celestial_stomp": {
+    "wikiType": "Wukong",
+    "isAugment": true,
+    "wikiName": "Celestial Stomp"
+  },
+  "augment_wukong_enveloping_cloud": {
+    "wikiType": "Wukong",
+    "isAugment": true,
+    "wikiName": "Enveloping Cloud"
+  },
+  "augment_wukong_primal_rage": {
+    "wikiType": "Wukong",
+    "isAugment": true,
+    "wikiName": "Primal Rage"
+  },
+  "augment_titania_spellbound_harvest": {
+    "wikiType": "Titania",
+    "isAugment": true,
+    "wikiName": "Spellbound Harvest"
+  },
+  "augment_titania_razorwing_blitz": {
+    "wikiType": "Titania",
+    "isAugment": true,
+    "wikiName": "Razorwing Blitz"
+  },
+  "augment_titania_beguiling_lantern": {
+    "wikiType": "Titania",
+    "isAugment": true,
+    "wikiName": "Beguiling Lantern"
+  },
+  "augment_nezha_pyroclastic_flow": {
+    "wikiType": "Nezha",
+    "isAugment": true,
+    "wikiName": "Pyroclastic Flow"
+  },
+  "augment_nezha_reaping_chakram": {
+    "wikiType": "Nezha",
+    "isAugment": true,
+    "wikiName": "Reaping Chakram"
+  },
+  "augment_nezha_safeguard": {
+    "wikiType": "Nezha",
+    "isAugment": true,
+    "wikiName": "Safeguard"
+  },
+  "augment_inaros_elemental_sandstorm": {
+    "wikiType": "Inaros",
+    "isAugment": true,
+    "wikiName": "Elemental Sandstorm"
+  },
+  "augment_inaros_negation_swarm": {
+    "wikiType": "Inaros",
+    "isAugment": true,
+    "wikiName": "Negation Swarm"
+  },
+  "augment_inaros_desiccation_curse": {
+    "wikiType": "Inaros",
+    "isAugment": true,
+    "wikiName": "Desiccation's Curse"
+  },
+  "augment_gara_mending_splinters": {
+    "wikiType": "Gara",
+    "isAugment": true,
+    "wikiName": "Mending Splinters"
+  },
+  "augment_gara_spectrosiphon": {
+    "wikiType": "Gara",
+    "isAugment": true,
+    "wikiName": "Spectrosiphon"
+  },
+  "augment_baruuk_elusive_retribution": {
+    "wikiType": "Baruuk",
+    "isAugment": true,
+    "wikiName": "Elusive Retribution"
+  },
+  "augment_baruuk_reactive_storm": {
+    "wikiType": "Baruuk",
+    "isAugment": true,
+    "wikiName": "Reactive Storm"
+  },
+  "augment_hildryn_balefire_surge": {
+    "wikiType": "Hildryn",
+    "isAugment": true,
+    "wikiName": "Balefire Surge"
+  },
+  "augment_hildryn_pillage_aug": {
+    "wikiType": "Hildryn",
+    "isAugment": true,
+    "wikiName": "Blazing Pillage"
+  },
+  "augment_garuda_blood_forge": {
+    "wikiType": "Garuda",
+    "isAugment": true,
+    "wikiName": "Blood Forge"
+  },
+  "augment_garuda_dread_ward": {
+    "wikiType": "Garuda",
+    "isAugment": true,
+    "wikiName": "Dread Ward"
+  },
+  "augment_garuda_blending_talons": {
+    "wikiType": "Garuda",
+    "isAugment": true,
+    "wikiName": "Blending Talons"
+  },
+  "augment_gauss_mach_crash": {
+    "wikiType": "Gauss",
+    "isAugment": true,
+    "wikiName": "Mach Crash"
+  },
+  "augment_gauss_thermal_transfer": {
+    "wikiType": "Gauss",
+    "isAugment": true,
+    "wikiName": "Thermal Transfer"
+  },
+  "augment_grendel_hearty_nourishment": {
+    "wikiType": "Grendel",
+    "isAugment": true,
+    "wikiName": "Hearty Nourishment"
+  },
+  "augment_grendel_catapult": {
+    "wikiType": "Grendel",
+    "isAugment": true,
+    "wikiName": "Catapult"
+  },
+  "augment_grendel_gourmand": {
+    "wikiType": "Grendel",
+    "isAugment": true,
+    "wikiName": "Gourmand"
+  },
+  "augment_yareli_merulina_guardian": {
+    "wikiType": "Yareli",
+    "isAugment": true,
+    "wikiName": "Merulina Guardian"
+  },
+  "augment_yareli_surging_blades": {
+    "wikiType": "Yareli",
+    "isAugment": true,
+    "wikiName": "Surging Blades"
+  },
+  "augment_wisp_critical_surge": {
+    "wikiType": "Wisp",
+    "isAugment": true,
+    "wikiName": "Critical Surge"
+  },
+  "augment_universal_health_conversion": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Health Conversion"
+  },
+  "augment_universal_energy_conversion": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Energy Conversion"
+  },
+  "augment_universal_shattering_impact": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Shattering Impact"
+  },
+  "augur_message": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Augur Message"
+  },
+  "augur_seeker": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Augur Seeker"
+  },
+  "augur_reach": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Augur Reach"
+  },
+  "augur_accord": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Augur Accord"
+  },
+  "augur_secrets": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Augur Secrets"
+  },
+  "augur_breach": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Augur Pact"
+  },
+  "gladiator_might": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Gladiator Might"
+  },
+  "hunter_adrenaline": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Hunter Adrenaline"
+  },
+  "hunter_munitions": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Hunter Munitions"
+  },
+  "hunter_track": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Hunter Track"
+  },
+  "hunter_recovery": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Hunter Recovery"
+  },
+  "hunter_command": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Hunter Command"
+  },
+  "hunter_synergy": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Hunter Synergy"
+  },
+  "mecha_empowered": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Mecha Empowered"
+  },
+  "mecha_recharge": {
+    "wikiType": "Kubrow",
+    "isAugment": false,
+    "wikiName": "Mecha Recharge"
+  },
+  "melee_prowess_sentinel": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Assault Mode"
+  },
+  "energy_generator": {
+    "wikiType": "Dethcube",
+    "isAugment": false,
+    "wikiName": "Energy Generator"
+  },
+  "hard_engag": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Hard Engage"
+  },
+  "security_override": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Security Override"
+  },
+  "stasis_field": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Stasis Field"
+  },
+  "stance_iron_phoenix": {
+    "wikiType": "Swords",
+    "isAugment": false,
+    "wikiName": "Iron Phoenix"
+  },
+  "stance_crimson_dervish": {
+    "wikiType": "Swords",
+    "isAugment": false,
+    "wikiName": "Crimson Dervish"
+  },
+  "stance_vengeful_revenant": {
+    "wikiType": "Swords",
+    "isAugment": false,
+    "wikiName": "Vengeful Revenant"
+  },
+  "stance_swooping_falcon": {
+    "wikiType": "Swords",
+    "isAugment": false,
+    "wikiName": "Swooping Falcon"
+  },
+  "stance_crossing_snakes": {
+    "wikiType": "Dual Swords",
+    "isAugment": false,
+    "wikiName": "Crossing Snakes"
+  },
+  "stance_swirling_tiger": {
+    "wikiType": "Dual Swords",
+    "isAugment": false,
+    "wikiName": "Swirling Tiger"
+  },
+  "stance_carving_mantis": {
+    "wikiType": "Dual Swords",
+    "isAugment": false,
+    "wikiName": "Carving Mantis"
+  },
+  "stance_cleaving_whirlwind": {
+    "wikiType": "Heavy Blade",
+    "isAugment": false,
+    "wikiName": "Cleaving Whirlwind"
+  },
+  "stance_temporal_royale": {
+    "wikiType": "Heavy Blade",
+    "isAugment": false,
+    "wikiName": "Tempo Royale"
+  },
+  "stance_shimmering_blight": {
+    "wikiType": "Polearms",
+    "isAugment": false,
+    "wikiName": "Shimmering Blight"
+  },
+  "stance_bleeding_willow": {
+    "wikiType": "Polearms",
+    "isAugment": false,
+    "wikiName": "Bleeding Willow"
+  },
+  "stance_twirling_spire": {
+    "wikiType": "Polearms",
+    "isAugment": false,
+    "wikiName": "Twirling Spire"
+  },
+  "stance_burning_wasp": {
+    "wikiType": "Whips",
+    "isAugment": false,
+    "wikiName": "Burning Wasp"
+  },
+  "stance_coiling_viper": {
+    "wikiType": "Whips",
+    "isAugment": false,
+    "wikiName": "Coiling Viper"
+  },
+  "stance_seismic_palm": {
+    "wikiType": "Fists",
+    "isAugment": false,
+    "wikiName": "Seismic Palm"
+  },
+  "stance_vermillion_storm": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Vermillion Storm"
+  },
+  "stance_decisive_judgement": {
+    "wikiType": "Nikanas",
+    "isAugment": false,
+    "wikiName": "Decisive Judgement"
+  },
+  "stance_vulpine_mask": {
+    "wikiType": "Rapiers",
+    "isAugment": false,
+    "wikiName": "Vulpine Mask"
+  },
+  "stance_high_noon": {
+    "wikiType": "Gunblade",
+    "isAugment": false,
+    "wikiName": "High Noon"
+  },
+  "stance_bullet_dance": {
+    "wikiType": "Gunblade",
+    "isAugment": false,
+    "wikiName": "Bullet Dance"
+  },
+  "stance_aurora_rush": {
+    "wikiType": "Glaives",
+    "isAugment": false,
+    "wikiName": "Astral Twilight"
+  },
+  "stance_gleaming_talent": {
+    "wikiType": "Dark Dagger",
+    "isAugment": false,
+    "wikiName": "Gleaming Blight"
+  },
+  "stance_pointed_wind": {
+    "wikiType": "Daggers",
+    "isAugment": false,
+    "wikiName": "Pointed Wind"
+  },
+  "stance_stinging_thorn": {
+    "wikiType": "Daggers",
+    "isAugment": false,
+    "wikiName": "Stinging Thorn"
+  },
+  "stance_homing_fang": {
+    "wikiType": "Daggers",
+    "isAugment": false,
+    "wikiName": "Homing Fang"
+  },
+  "stance_sundering_weave": {
+    "wikiType": "Machetes",
+    "isAugment": false,
+    "wikiName": "Sundering Weave"
+  },
+  "stance_reaping_spiral": {
+    "wikiType": "Scythes",
+    "isAugment": false,
+    "wikiName": "Reaping Spiral"
+  },
+  "stance_stalking_fan": {
+    "wikiType": "Scythes",
+    "isAugment": false,
+    "wikiName": "Stalking Fan"
+  },
+  "stance_clashing_forest": {
+    "wikiType": "Staves",
+    "isAugment": false,
+    "wikiName": "Clashing Forest"
+  },
+  "stance_flailing_branch": {
+    "wikiType": "Staves",
+    "isAugment": false,
+    "wikiName": "Flailing Branch"
+  },
+  "stance_gnashing_payara": {
+    "wikiType": "Dual Daggers",
+    "isAugment": false,
+    "wikiName": "Gnashing Payara"
+  },
+  "stance_sinking_talon": {
+    "wikiType": "Dual Daggers",
+    "isAugment": false,
+    "wikiName": "Sinking Talon"
+  },
+  "stance_grim_fury_sparring": {
+    "wikiType": "Sparring",
+    "isAugment": false,
+    "wikiName": "Grim Fury"
+  },
+  "stance_wise_razor": {
+    "wikiType": "Two-Handed Nikana",
+    "isAugment": false,
+    "wikiName": "Wise Razor"
+  },
+  "stance_spinning_needle": {
+    "wikiType": "Dual Daggers",
+    "isAugment": false,
+    "wikiName": "Spinning Needle"
+  },
+  "stance_defiled_snapdragon": {
+    "wikiType": "Blade And Whip",
+    "isAugment": false,
+    "wikiName": "Defiled Snapdragon"
+  },
+  "adhesive_blast": {
+    "wikiType": "Unique",
+    "isAugment": false,
+    "wikiName": "Adhesive Blast"
+  },
+  "aerial_ace": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Aerial Ace"
+  },
+  "aero_agility": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Aero Agility"
+  },
+  "aero_periphery": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Aero Periphery"
+  },
+  "agile_aim": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Agile Aim"
+  },
+  "amalgam_argonak_metal_auger": {
+    "wikiType": "Argonak",
+    "isAugment": false,
+    "wikiName": "Amalgam Argonak Metal Auger"
+  },
+  "amalgam_daikyu_target_acquired": {
+    "wikiType": "Daikyu",
+    "isAugment": false,
+    "wikiName": "Amalgam Daikyu Target Acquired"
+  },
+  "amalgam_javlok_magazine_warp": {
+    "wikiType": "Javlok",
+    "isAugment": false,
+    "wikiName": "Amalgam Javlok Magazine Warp"
+  },
+  "ambush_optics": {
+    "wikiType": "Rubico",
+    "isAugment": false,
+    "wikiName": "Ambush Optics"
+  },
+  "ammo_drum": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Ammo Drum"
+  },
+  "apex_predator": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Apex Predator"
+  },
+  "arrow_mutation": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Arrow Mutation"
+  },
+  "bane_of_corpus": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bane of Corpus"
+  },
+  "bane_of_grineer": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bane of Grineer"
+  },
+  "bane_of_infested": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bane of Infested"
+  },
+  "bane_of_orokin": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bane of Orokin"
+  },
+  "bane_of_the_murmur": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Bane of The Murmur"
+  },
+  "bhisaj_bal": {
+    "wikiType": "Paris Prime",
+    "isAugment": false,
+    "wikiName": "Bhisaj-Bal"
+  },
+  "biotic_rounds": {
+    "wikiType": "AX-52",
+    "isAugment": false,
+    "wikiName": "Biotic Rounds"
+  },
+  "brain_storm": {
+    "wikiType": "Grakata",
+    "isAugment": false,
+    "wikiName": "Brain Storm"
+  },
+  "bursting_mass": {
+    "wikiType": "Mutalist Quanta",
+    "isAugment": false,
+    "wikiName": "Bursting Mass"
+  },
+  "catalyzer_link": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Catalyzer Link"
+  },
+  "cautious_shot": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Cautious Shot"
+  },
+  "charged_chamber": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Charged Chamber"
+  },
+  "clip_delegation": {
+    "wikiType": "Sobek",
+    "isAugment": false,
+    "wikiName": "Clip Delegation"
+  },
+  "combat_reload": {
+    "wikiType": "Tigris",
+    "isAugment": false,
+    "wikiName": "Combat Reload"
+  },
+  "combustion_beam": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Combustion Beam"
+  },
+  "comet_rounds": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Comet Rounds"
+  },
+  "continuous_misery": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Continuous Misery"
+  },
+  "crash_course": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Crash Course"
+  },
+  "critical_precision": {
+    "wikiType": "Tiberon",
+    "isAugment": false,
+    "wikiName": "Critical Precision"
+  },
+  "deadly_sequence": {
+    "wikiType": "Grinlok",
+    "isAugment": false,
+    "wikiName": "Deadly Sequence"
+  },
+  "deft_tempo": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Deft Tempo"
+  },
+  "depleted_reload": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Depleted Reload"
+  },
+  "directed_convergence": {
+    "wikiType": "Supra",
+    "isAugment": false,
+    "wikiName": "Directed Convergence"
+  },
+  "disarming_purity": {
+    "wikiType": "Panthera",
+    "isAugment": false,
+    "wikiName": "Disarming Purity"
+  },
+  "double_tap": {
+    "wikiType": "Latron",
+    "isAugment": false,
+    "wikiName": "Double Tap"
+  },
+  "dreadful_killshot": {
+    "wikiType": "Basmu",
+    "isAugment": false,
+    "wikiName": "Dreadful Killshot"
+  },
+  "eagle_eye": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Eagle Eye"
+  },
+  "emergent_aftermath": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Emergent Aftermath"
+  },
+  "entropy_burst": {
+    "wikiType": "Supra",
+    "isAugment": false,
+    "wikiName": "Entropy Burst"
+  },
+  "eximus_advantage": {
+    "wikiType": "Zylok",
+    "isAugment": false,
+    "wikiName": "Eximus Advantage"
+  },
+  "exposing_harpoon": {
+    "wikiType": "Harpak",
+    "isAugment": false,
+    "wikiName": "Exposing Harpoon"
+  },
+  "fanged_fusillade": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Fanged Fusillade"
+  },
+  "feathered_arrows": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Feathered Arrows"
+  },
+  "final_tap": {
+    "wikiType": "Hind",
+    "isAugment": false,
+    "wikiName": "Final Tap"
+  },
+  "firestorm": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Firestorm"
+  },
+  "flux_overdrive": {
+    "wikiType": "Flux Rifle",
+    "isAugment": false,
+    "wikiName": "Flux Overdrive"
+  },
+  "focused_acceleration": {
+    "wikiType": "Tetra",
+    "isAugment": false,
+    "wikiName": "Focused Acceleration"
+  },
+  "gilded_truth": {
+    "wikiType": "Burston Prime",
+    "isAugment": false,
+    "wikiName": "Gilded Truth"
+  },
+  "gorgon_frenzy": {
+    "wikiType": "Gorgon",
+    "isAugment": false,
+    "wikiName": "Gorgon Frenzy"
+  },
+  "grinloked": {
+    "wikiType": "Grinlok",
+    "isAugment": false,
+    "wikiName": "Grinloked"
+  },
+  "guided_ordnance": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Guided Ordnance"
+  },
+  "gun_glide": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Gun Glide"
+  },
+  "harkonar_scope": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Harkonar Scope"
+  },
+  "hata_satya": {
+    "wikiType": "Soma Prime",
+    "isAugment": false,
+    "wikiName": "Hata-Satya"
+  },
+  "higasa_serration": {
+    "wikiType": "Higasa",
+    "isAugment": false,
+    "wikiName": "Higasa Serration"
+  },
+  "hydraulic_gauge": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Hydraulic Gauge"
+  },
+  "internal_bleeding": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Internal Bleeding"
+  },
+  "kinetic_ricochet": {
+    "wikiType": "Tetra",
+    "isAugment": false,
+    "wikiName": "Kinetic Ricochet"
+  },
+  "lasting_purity": {
+    "wikiType": "Vulkar",
+    "isAugment": false,
+    "wikiName": "Lasting Purity"
+  },
+  "lie_in_wait": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Lie In Wait"
+  },
+  "loose_hatch": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Loose Hatch"
+  },
+  "lucky_shot": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Lucky Shot"
+  },
+  "magnetic_capacity": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Magnetic Capacity"
+  },
+  "maximum_capacity": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Maximum Capacity"
+  },
+  "measured_burst": {
+    "wikiType": "Tiberon",
+    "isAugment": false,
+    "wikiName": "Measured Burst"
+  },
+  "mending_shot": {
+    "wikiType": "Rifle (No AoE)",
+    "isAugment": false,
+    "wikiName": "Mending Shot"
+  },
+  "metamorphic_magazine": {
+    "wikiType": "Gorgon",
+    "isAugment": false,
+    "wikiName": "Metamorphic Magazine"
+  },
+  "meticulous_aim": {
+    "wikiType": "Vulkar",
+    "isAugment": false,
+    "wikiName": "Meticulous Aim"
+  },
+  "motus_setup": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Motus Setup"
+  },
+  "napalm_grenades": {
+    "wikiType": "Penta",
+    "isAugment": false,
+    "wikiName": "Napalm Grenades"
+  },
+  "necrophagic_vigor": {
+    "wikiType": "Hema",
+    "isAugment": false,
+    "wikiName": "Necrophagic Vigor"
+  },
+  "neutralizing_justice": {
+    "wikiType": "Miter",
+    "isAugment": false,
+    "wikiName": "Neutralizing Justice"
+  },
+  "nightwatch_napalm": {
+    "wikiType": "Ogris",
+    "isAugment": false,
+    "wikiName": "Nightwatch Napalm"
+  },
+  "overview": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Overview"
+  },
+  "photon_overcharge": {
+    "wikiType": "Glaxion",
+    "isAugment": false,
+    "wikiName": "Photon Overcharge"
+  },
+  "piercing_hit": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Piercing Hit"
+  },
+  "plan_b": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Plan B"
+  },
+  "precision_munition": {
+    "wikiType": "Tonkor",
+    "isAugment": false,
+    "wikiName": "Precision Munition"
+  },
+  "precision_strike": {
+    "wikiType": "Tonkor",
+    "isAugment": false,
+    "wikiName": "Precision Strike"
+  },
+  "primary_acuity": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primary Acuity"
+  },
+  "primed_bane_of_corpus": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Bane of Corpus"
+  },
+  "primed_bane_of_grineer": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Bane of Grineer"
+  },
+  "primed_bane_of_infested": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Bane of Infested"
+  },
+  "primed_bane_of_orokin": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Bane of Orokin"
+  },
+  "primed_bane_of_the_murmur": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Bane of The Murmur"
+  },
+  "primed_chamber": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Primed Chamber"
+  },
+  "primed_firestorm": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Firestorm"
+  },
+  "primed_magazine_warp": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Magazine Warp"
+  },
+  "primed_rifle_ammo_mutation": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Rifle Ammo Mutation"
+  },
+  "primed_shred": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Shred"
+  },
+  "primed_sniper_ammo_mutation": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Primed Sniper Ammo Mutation"
+  },
+  "primed_stabilizer": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Primed Stabilizer"
+  },
+  "proton_jet": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Proton Jet"
+  },
+  "radiated_reload": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Radiated Reload"
+  },
+  "range_advantage": {
+    "wikiType": "Akjagara",
+    "isAugment": false,
+    "wikiName": "Range Advantage"
+  },
+  "recover": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Recover"
+  },
+  "rifle_ammo_mutation": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Rifle Ammo Mutation"
+  },
+  "rifle_elementalist": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Rifle Elementalist"
+  },
+  "ripper_rounds": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Ripper Rounds"
+  },
+  "rupture": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Rupture"
+  },
+  "sawtooth_clip": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Sawtooth Clip"
+  },
+  "scattered_justice": {
+    "wikiType": "Hek",
+    "isAugment": false,
+    "wikiName": "Scattered Justice"
+  },
+  "semi_rifle_cannonade": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Semi-Rifle Cannonade"
+  },
+  "sentient_barrage": {
+    "wikiType": "Battacor",
+    "isAugment": false,
+    "wikiName": "Sentient Barrage"
+  },
+  "serrated_rounds": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Serrated Rounds"
+  },
+  "sharpshooter": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Sharpshooter"
+  },
+  "shattering_justice": {
+    "wikiType": "Sobek",
+    "isAugment": false,
+    "wikiName": "Shattering Justice"
+  },
+  "shivering_contagion": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Shivering Contagion"
+  },
+  "sinister_reach": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Sinister Reach"
+  },
+  "sniper_ammo_mutation": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Sniper Ammo Mutation"
+  },
+  "soaring_strike": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Soaring Strike"
+  },
+  "spectral_serration": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Spectral Serration"
+  },
+  "split_flights": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Split Flights"
+  },
+  "spontaneous_singularity": {
+    "wikiType": "Simulor",
+    "isAugment": false,
+    "wikiName": "Spontaneous Singularity"
+  },
+  "spring_loaded_broadhead": {
+    "wikiType": "Daikyu",
+    "isAugment": false,
+    "wikiName": "Spring-Loaded Broadhead"
+  },
+  "spring_loaded_chamber": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Spring-Loaded Chamber"
+  },
+  "stabilizer": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Stabilizer"
+  },
+  "sudden_justice": {
+    "wikiType": "Sybaris",
+    "isAugment": false,
+    "wikiName": "Sudden Justice"
+  },
+  "tainted_mag": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Tainted Mag"
+  },
+  "target_acquired": {
+    "wikiType": "Sniper",
+    "isAugment": false,
+    "wikiName": "Target Acquired"
+  },
+  "terminal_velocity": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Terminal Velocity"
+  },
+  "tether_grenades": {
+    "wikiType": "Penta",
+    "isAugment": false,
+    "wikiName": "Tether Grenades"
+  },
+  "thermagnetic_shells": {
+    "wikiType": "Detron",
+    "isAugment": false,
+    "wikiName": "Thermagnetic Shells"
+  },
+  "thunderbolt": {
+    "wikiType": "Bow",
+    "isAugment": false,
+    "wikiName": "Thunderbolt"
+  },
+  "thundermiter": {
+    "wikiType": "Miter",
+    "isAugment": false,
+    "wikiName": "Thundermiter"
+  },
+  "triple_tap": {
+    "wikiType": "Burston",
+    "isAugment": false,
+    "wikiName": "Triple Tap"
+  },
+  "twitch": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Twitch"
+  },
+  "unseen_dread": {
+    "wikiType": "Dread",
+    "isAugment": false,
+    "wikiName": "Unseen Dread"
+  },
+  "vanquished_prey": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Vanquished Prey"
+  },
+  "vile_discharge": {
+    "wikiType": "Embolist",
+    "isAugment": false,
+    "wikiName": "Vile Discharge"
+  },
+  "vile_precision": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Vile Precision"
+  },
+  "volatile_variant": {
+    "wikiType": "Sporothrix",
+    "isAugment": false,
+    "wikiName": "Volatile Variant"
+  },
+  "voltage_sequence": {
+    "wikiType": "Lanka",
+    "isAugment": false,
+    "wikiName": "Voltage Sequence"
+  },
+  "wild_frenzy": {
+    "wikiType": "Grakata",
+    "isAugment": false,
+    "wikiName": "Wild Frenzy"
+  },
+  "cryo_rounds_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Cryo Rounds"
+  },
+  "fast_hands_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Fast Hands"
+  },
+  "hellfire_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Hellfire"
+  },
+  "high_voltage_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "High Voltage"
+  },
+  "hush_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Hush"
+  },
+  "infected_clip_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Infected Clip"
+  },
+  "magazine_warp_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Magazine Warp"
+  },
+  "malignant_force_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Malignant Force"
+  },
+  "metal_auger_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Metal Auger"
+  },
+  "point_strike_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Point Strike"
+  },
+  "rifle_aptitude_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Rifle Aptitude"
+  },
+  "rime_rounds_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Rime Rounds"
+  },
+  "serration_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Serration"
+  },
+  "speed_trigger_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Speed Trigger"
+  },
+  "split_chamber_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Split Chamber"
+  },
+  "stormbringer_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Stormbringer"
+  },
+  "tactical_reload_r3": {
+    "wikiType": "Assault Rifle",
+    "isAugment": false,
+    "wikiName": "Tactical Reload"
+  },
+  "vital_sense_r3": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Vital Sense"
+  },
+  "accelerated_isotope": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Accelerated Isotope"
+  },
+  "air_recon": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Air Recon"
+  },
+  "amalgam_barrel_diffusion": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Amalgam Barrel Diffusion"
+  },
+  "blind_shot": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Blind Shot"
+  },
+  "bore": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Bore"
+  },
+  "calculated_victory": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Calculated Victory"
+  },
+  "cannonade": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Cannonade"
+  },
+  "carnis_stinger": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Carnis Stinger"
+  },
+  "concealed_explosives": {
+    "wikiType": "Thrown",
+    "isAugment": false,
+    "wikiName": "Concealed Explosives"
+  },
+  "concussion_rounds": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Concussion Rounds"
+  },
+  "critical_mutation": {
+    "wikiType": "Catabolyst",
+    "isAugment": false,
+    "wikiName": "Critical Mutation"
+  },
+  "damzav_vati": {
+    "wikiType": "Akbronco Prime",
+    "isAugment": false,
+    "wikiName": "Damzav-Vati"
+  },
+  "deadly_maneuvers": {
+    "wikiType": "Magnus",
+    "isAugment": false,
+    "wikiName": "Deadly Maneuvers"
+  },
+  "dizzying_rounds": {
+    "wikiType": "Bronco",
+    "isAugment": false,
+    "wikiName": "Dizzying Rounds"
+  },
+  "draining_gloom": {
+    "wikiType": "Despair",
+    "isAugment": false,
+    "wikiName": "Draining Gloom"
+  },
+  "eject_magazine": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Eject Magazine"
+  },
+  "energizing_shot": {
+    "wikiType": "Pistol (No AoE)",
+    "isAugment": false,
+    "wikiName": "Energizing Shot"
+  },
+  "entropy_spike": {
+    "wikiType": "Bolto",
+    "isAugment": false,
+    "wikiName": "Entropy Spike"
+  },
+  "eroding_blight": {
+    "wikiType": "Embolist",
+    "isAugment": false,
+    "wikiName": "Eroding Blight"
+  },
+  "expel_orokin": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Expel Orokin"
+  },
+  "expel_the_murmur": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Expel The Murmur"
+  },
+  "fass_canticle": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Fass Canticle"
+  },
+  "full_capacity": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Full Capacity"
+  },
+  "fulmination": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Fulmination"
+  },
+  "galvanized_diffusion": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Galvanized Diffusion"
+  },
+  "hawk_eye": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hawk Eye"
+  },
+  "heavy_warhead": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Heavy Warhead"
+  },
+  "hemorrhage": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hemorrhage"
+  },
+  "hollow_point": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hollow Point"
+  },
+  "hydraulic_barrel": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hydraulic Barrel"
+  },
+  "impaler_munitions": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Impaler Munitions"
+  },
+  "jahu_canticle": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Jahu Canticle"
+  },
+  "jugulus_spines": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Jugulus Spines"
+  },
+  "khra_canticle": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Khra Canticle"
+  },
+  "leaded_gas": {
+    "wikiType": "Vesper 77",
+    "isAugment": false,
+    "wikiName": "Leaded Gas"
+  },
+  "lethal_momentum": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Lethal Momentum"
+  },
+  "lohk_canticle": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Lohk Canticle"
+  },
+  "loose_magazine": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Loose Magazine"
+  },
+  "magnetic_might": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Magnetic Might"
+  },
+  "maim": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Maim"
+  },
+  "merciless_gunfight": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Merciless Gunfight"
+  },
+  "meteor_munitions": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Meteor Munitions"
+  },
+  "netra_invocation": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Netra Invocation"
+  },
+  "night_stalker": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Night Stalker"
+  },
+  "no_return": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "No Return"
+  },
+  "pain_points": {
+    "wikiType": "Athodai",
+    "isAugment": false,
+    "wikiName": "Pain Points"
+  },
+  "perpetual_agony": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Perpetual Agony"
+  },
+  "pistol_acuity": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Acuity"
+  },
+  "pistol_elementalist": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Elementalist"
+  },
+  "pressurized_magazine": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pressurized Magazine"
+  },
+  "primed_expel_corpus": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Expel Corpus"
+  },
+  "primed_expel_grineer": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Expel Grineer"
+  },
+  "primed_expel_infested": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Expel Infested"
+  },
+  "primed_expel_orokin": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Expel Orokin"
+  },
+  "primed_expel_the_murmur": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Expel The Murmur"
+  },
+  "primed_fulmination": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Fulmination"
+  },
+  "primed_pistol_ammo_mutation": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Pistol Ammo Mutation"
+  },
+  "primed_slip_magazine": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Slip Magazine"
+  },
+  "primed_steady_hands": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Primed Steady Hands"
+  },
+  "pummel": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pummel"
+  },
+  "razor_munitions": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Razor Munitions"
+  },
+  "razor_shot": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Razor Shot"
+  },
+  "recuperate": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Recuperate"
+  },
+  "reflex_draw": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Reflex Draw"
+  },
+  "ris_invocation": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Ris Invocation"
+  },
+  "ruinous_extension": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Ruinous Extension"
+  },
+  "saxum_spittle": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Saxum Spittle"
+  },
+  "secondary_wind": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Secondary Wind"
+  },
+  "semi_pistol_cannonade": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Semi-Pistol Cannonade"
+  },
+  "sentient_surge": {
+    "wikiType": "Ocucor",
+    "isAugment": false,
+    "wikiName": "Sentient Surge"
+  },
+  "sequence_burn": {
+    "wikiType": "Spectra",
+    "isAugment": false,
+    "wikiName": "Sequence Burn"
+  },
+  "sharpened_bullets": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Sharpened Bullets"
+  },
+  "shrapnel_rounds": {
+    "wikiType": "Marelok",
+    "isAugment": false,
+    "wikiName": "Shrapnel Rounds"
+  },
+  "skull_shots": {
+    "wikiType": "Viper",
+    "isAugment": false,
+    "wikiName": "Skull Shots"
+  },
+  "spry_sights": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Spry Sights"
+  },
+  "static_alacrity": {
+    "wikiType": "Staticor",
+    "isAugment": false,
+    "wikiName": "Static Alacrity"
+  },
+  "steady_hands": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Steady Hands"
+  },
+  "stinging_truth": {
+    "wikiType": "Viper",
+    "isAugment": false,
+    "wikiName": "Stinging Truth"
+  },
+  "stockpiled_blight": {
+    "wikiType": "Kunai",
+    "isAugment": false,
+    "wikiName": "Stockpiled Blight"
+  },
+  "strafing_slide": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Strafing Slide"
+  },
+  "stunning_speed": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Stunning Speed"
+  },
+  "sure_shot": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Sure Shot"
+  },
+  "tainted_clip": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Tainted Clip"
+  },
+  "targeting_subsystem": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Targeting Subsystem"
+  },
+  "toxic_sequence": {
+    "wikiType": "Acrid",
+    "isAugment": false,
+    "wikiName": "Toxic Sequence"
+  },
+  "vome_invocation": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Vome Invocation"
+  },
+  "winds_of_purity": {
+    "wikiType": "Furis",
+    "isAugment": false,
+    "wikiName": "Winds of Purity"
+  },
+  "xata_invocation": {
+    "wikiType": "Tome",
+    "isAugment": false,
+    "wikiName": "Xata Invocation"
+  },
+  "zazvat_kar": {
+    "wikiType": "Akstiletto Prime",
+    "isAugment": false,
+    "wikiName": "Zazvat-Kar"
+  },
+  "barrel_diffusion_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Barrel Diffusion"
+  },
+  "convulsion_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Convulsion"
+  },
+  "deep_freeze_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Deep Freeze"
+  },
+  "expel_corpus_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Expel Corpus"
+  },
+  "expel_grineer_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Expel Grineer"
+  },
+  "expel_infested_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Expel Infested"
+  },
+  "frostbite_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Frostbite"
+  },
+  "gunslinger_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Gunslinger"
+  },
+  "heated_charge_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Heated Charge"
+  },
+  "hornet_strike_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Hornet Strike"
+  },
+  "jolt_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Jolt"
+  },
+  "pathogen_rounds_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pathogen Rounds"
+  },
+  "pistol_gambit_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Gambit"
+  },
+  "pistol_pestilence_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Pestilence"
+  },
+  "quickdraw_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Quickdraw"
+  },
+  "scorch_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Scorch"
+  },
+  "seeker_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Seeker"
+  },
+  "slip_magazine_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Slip Magazine"
+  },
+  "suppress_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Suppress"
+  },
+  "synth_charge_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Synth Charge"
+  },
+  "target_cracker_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Target Cracker"
+  },
+  "trick_mag_r3": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Trick Mag"
+  },
+  "amalgam_furax_body_count": {
+    "wikiType": "Furax",
+    "isAugment": false,
+    "wikiName": "Amalgam Furax Body Count"
+  },
+  "amalgam_ripkas_true_steel": {
+    "wikiType": "Ripkas",
+    "isAugment": false,
+    "wikiName": "Amalgam Ripkas True Steel"
+  },
+  "amanata_pressure": {
+    "wikiType": "Amanata",
+    "isAugment": false,
+    "wikiName": "Amanata Pressure"
+  },
+  "amars_contempt": {
+    "wikiType": "Dual Daggers",
+    "isAugment": false,
+    "wikiName": "Amar's Contempt"
+  },
+  "auger_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Auger Strike"
+  },
+  "avenging_truth": {
+    "wikiType": "Silva & Aegis",
+    "isAugment": false,
+    "wikiName": "Avenging Truth"
+  },
+  "berserker_fury": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Berserker Fury"
+  },
+  "blade_of_truth": {
+    "wikiType": "Jaw Sword",
+    "isAugment": false,
+    "wikiName": "Blade of Truth"
+  },
+  "boreals_contempt": {
+    "wikiType": "Polearms",
+    "isAugment": false,
+    "wikiName": "Boreal's Contempt"
+  },
+  "bright_purity": {
+    "wikiType": "Skana",
+    "isAugment": false,
+    "wikiName": "Bright Purity"
+  },
+  "burning_hate": {
+    "wikiType": "Hate",
+    "isAugment": false,
+    "wikiName": "Burning Hate"
+  },
+  "buzz_kill": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Buzz Kill"
+  },
+  "carnis_mandible": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Carnis Mandible"
+  },
+  "collision_force": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Collision Force"
+  },
+  "combo_fury": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Combo Fury"
+  },
+  "combo_killer": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Combo Killer"
+  },
+  "conditions_perfection": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Condition's Perfection"
+  },
+  "counterweight": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Counterweight"
+  },
+  "disciplines_merit": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Discipline's Merit"
+  },
+  "dispatch_overdrive": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Dispatch Overdrive"
+  },
+  "dreamers_wrath": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Dreamer's Wrath"
+  },
+  "electromagnetic_shielding": {
+    "wikiType": "Ack & Brunt",
+    "isAugment": false,
+    "wikiName": "Electromagnetic Shielding"
+  },
+  "enduring_affliction": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Enduring Affliction"
+  },
+  "enduring_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Enduring Strike"
+  },
+  "entropy_detonation": {
+    "wikiType": "Obex",
+    "isAugment": false,
+    "wikiName": "Entropy Detonation"
+  },
+  "entropy_flight": {
+    "wikiType": "Kestrel",
+    "isAugment": false,
+    "wikiName": "Entropy Flight"
+  },
+  "explosive_demise": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Explosive Demise"
+  },
+  "focus_radon": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Focus Radon"
+  },
+  "focused_defense": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Focused Defense"
+  },
+  "galvanized_elementalist": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Galvanized Elementalist"
+  },
+  "galvanized_reflex": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Galvanized Reflex"
+  },
+  "galvanized_steel": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Galvanized Steel"
+  },
+  "guardian_derision": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Guardian Derision"
+  },
+  "heartseeker": {
+    "wikiType": "Daggers",
+    "isAugment": false,
+    "wikiName": "Heartseeker"
+  },
+  "heavy_trauma": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Heavy Trauma"
+  },
+  "hunters_bonesaw": {
+    "wikiType": "Ripkas",
+    "isAugment": false,
+    "wikiName": "Hunter's Bonesaw"
+  },
+  "impenetrable_offense": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Impenetrable Offense"
+  },
+  "jagged_edge": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Jagged Edge"
+  },
+  "jugulus_barbs": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Jugulus Barbs"
+  },
+  "justice_blades": {
+    "wikiType": "Dual Cleavers",
+    "isAugment": false,
+    "wikiName": "Justice Blades"
+  },
+  "lasting_sting": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Lasting Sting"
+  },
+  "magnetic_rush": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Magnetic Rush"
+  },
+  "maiming_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Maiming Strike"
+  },
+  "mark_of_the_beast": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Mark of the Beast"
+  },
+  "martial_fury": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Martial Fury"
+  },
+  "masters_edge": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Master's Edge"
+  },
+  "melee_elementalist": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Melee Elementalist"
+  },
+  "melee_prowess": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Melee Prowess"
+  },
+  "mentors_legacy": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Mentor's Legacy"
+  },
+  "mortal_conduct": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Mortal Conduct"
+  },
+  "motus_impact": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Motus Impact"
+  },
+  "niras_contempt": {
+    "wikiType": "Whips",
+    "isAugment": false,
+    "wikiName": "Nira's Contempt"
+  },
+  "opportunitys_reach": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Opportunity's Reach"
+  },
+  "power_throw": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Power Throw"
+  },
+  "primed_heavy_trauma": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Heavy Trauma"
+  },
+  "primed_smite_corpus": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Smite Corpus"
+  },
+  "primed_smite_grineer": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Smite Grineer"
+  },
+  "primed_smite_infested": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Smite Infested"
+  },
+  "primed_smite_orokin": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Smite Orokin"
+  },
+  "primed_smite_the_murmur": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Primed Smite The Murmur"
+  },
+  "proton_snap": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Proton Snap"
+  },
+  "quick_return": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Quick Return"
+  },
+  "rebound": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Rebound"
+  },
+  "relentless_assault": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Relentless Assault"
+  },
+  "rending_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Rending Strike"
+  },
+  "rift_strike": {
+    "wikiType": "Twin Basolk",
+    "isAugment": false,
+    "wikiName": "Rift Strike"
+  },
+  "sacrificial_pressure": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Sacrificial Pressure"
+  },
+  "saxum_thorax": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Saxum Thorax"
+  },
+  "seismic_wave": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Seismic Wave"
+  },
+  "serrated_edges": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Serrated Edges"
+  },
+  "sharpened_blade": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Sharpened Blade"
+  },
+  "smite_orokin": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Smite Orokin"
+  },
+  "smite_the_murmur": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Smite The Murmur"
+  },
+  "stand_ground": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Stand Ground"
+  },
+  "static_discharge": {
+    "wikiType": "Prova",
+    "isAugment": false,
+    "wikiName": "Static Discharge"
+  },
+  "strain_infection": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Strain Infection"
+  },
+  "sundering_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Sundering Strike"
+  },
+  "sword_alone": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Sword Alone"
+  },
+  "toxic_blight": {
+    "wikiType": "Mire",
+    "isAugment": false,
+    "wikiName": "Toxic Blight"
+  },
+  "true_punishment": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "True Punishment"
+  },
+  "vicious_frost": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Vicious Frost"
+  },
+  "virulent_scourge": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Virulent Scourge"
+  },
+  "volatile_quick_return": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Volatile Quick Return"
+  },
+  "volatile_rebound": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Volatile Rebound"
+  },
+  "volcanic_edge": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Volcanic Edge"
+  },
+  "voltaic_strike": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Voltaic Strike"
+  },
+  "vulcan_blitz": {
+    "wikiType": "Jat Kittag",
+    "isAugment": false,
+    "wikiName": "Vulcan Blitz"
+  },
+  "whirlwind": {
+    "wikiType": "Thrown Melee",
+    "isAugment": false,
+    "wikiName": "Whirlwind"
+  },
+  "drifting_contact_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Drifting Contact"
+  },
+  "energy_channel_r10": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Energy Channel"
+  },
+  "fever_strike_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Fever Strike"
+  },
+  "finishing_touch_r10": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Finishing Touch"
+  },
+  "focus_energy_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Focus Energy"
+  },
+  "fury_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Fury"
+  },
+  "molten_impact_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Molten Impact"
+  },
+  "north_wind_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "North Wind"
+  },
+  "organ_shatter_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Organ Shatter"
+  },
+  "pressure_point_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Pressure Point"
+  },
+  "quickening_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Quickening"
+  },
+  "reach_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Reach"
+  },
+  "reflex_coil_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Reflex Coil"
+  },
+  "relentless_combination_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Relentless Combination"
+  },
+  "shocking_touch_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Shocking Touch"
+  },
+  "smite_corpus_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Smite Corpus"
+  },
+  "smite_grineer_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Smite Grineer"
+  },
+  "smite_infested_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Smite Infested"
+  },
+  "spoiled_strike_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Spoiled Strike"
+  },
+  "tek_gravity_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Tek Gravity"
+  },
+  "true_steel_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "True Steel"
+  },
+  "weeping_wounds_r5": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Weeping Wounds"
+  },
+  "abundant_mutation": {
+    "wikiType": "Nidus",
+    "isAugment": true,
+    "wikiName": "Abundant Mutation"
+  },
+  "adaptation": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Adaptation"
+  },
+  "adept_surge": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Adept Surge"
+  },
+  "adrenaline_boost": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Adrenaline Boost"
+  },
+  "aegis_gale": {
+    "wikiType": "Hildryn",
+    "isAugment": true,
+    "wikiName": "Aegis Gale"
+  },
+  "aero_vantage": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Aero Vantage"
+  },
+  "agility_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Agility Drift"
+  },
+  "air_thrusters": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Air Thrusters"
+  },
+  "airburst_rounds": {
+    "wikiType": "Zephyr",
+    "isAugment": true,
+    "wikiName": "Airburst Rounds"
+  },
+  "ambush": {
+    "wikiType": "Shade",
+    "isAugment": false,
+    "wikiName": "Ambush"
+  },
+  "anchored_glide": {
+    "wikiType": "Zephyr",
+    "isAugment": false,
+    "wikiName": "Anchored Glide"
+  },
+  "anti_flak_plating": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Anti-Flak Plating"
+  },
+  "anticipation": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Anticipation"
+  },
+  "antimatter_mine": {
+    "wikiType": "Nova",
+    "isAugment": true,
+    "wikiName": "Antimatter Mine"
+  },
+  "antitoxin": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Antitoxin"
+  },
+  "archon_continuity": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Archon Continuity"
+  },
+  "archon_flow": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Archon Flow"
+  },
+  "archon_intensify": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Archon Intensify"
+  },
+  "archon_stretch": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Archon Stretch"
+  },
+  "archon_vitality": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Archon Vitality"
+  },
+  "armored_acrobatics": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Armored Acrobatics"
+  },
+  "armored_evade": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Armored Evade"
+  },
+  "armored_recovery": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Armored Recovery"
+  },
+  "aviator": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Aviator"
+  },
+  "axios_javelineers": {
+    "wikiType": "Styanax",
+    "isAugment": true,
+    "wikiName": "Axios Javelineers"
+  },
+  "battering_maneuver": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Battering Maneuver"
+  },
+  "biting_frost": {
+    "wikiType": "Frost",
+    "isAugment": true,
+    "wikiName": "Biting Frost"
+  },
+  "blinding_reave": {
+    "wikiType": "Revenant",
+    "isAugment": true,
+    "wikiName": "Blinding Reave"
+  },
+  "brief_respite": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Brief Respite"
+  },
+  "calculated_spring": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Calculated Spring"
+  },
+  "carnis_carapace": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Carnis Carapace"
+  },
+  "cataclysmic_gate": {
+    "wikiType": "Wisp",
+    "isAugment": true,
+    "wikiName": "Cataclysmic Gate"
+  },
+  "catalyzing_shields": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Catalyzing Shields"
+  },
+  "cathode_current": {
+    "wikiType": "Gyre",
+    "isAugment": true,
+    "wikiName": "Cathode Current"
+  },
+  "champions_blessing": {
+    "wikiType": "Trinity",
+    "isAugment": true,
+    "wikiName": "Champion's Blessing"
+  },
+  "coaction_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Coaction Drift"
+  },
+  "coil_recharge": {
+    "wikiType": "Gyre",
+    "isAugment": true,
+    "wikiName": "Coil Recharge"
+  },
+  "combat_discipline": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Combat Discipline"
+  },
+  "conductive_sphere": {
+    "wikiType": "Gyre",
+    "isAugment": true,
+    "wikiName": "Conductive Sphere"
+  },
+  "constitution": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Constitution"
+  },
+  "controlled_slide": {
+    "wikiType": "Nezha",
+    "isAugment": false,
+    "wikiName": "Controlled Slide"
+  },
+  "damage_decoy": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Damage Decoy"
+  },
+  "dark_propagation": {
+    "wikiType": "Sevagoth",
+    "isAugment": true,
+    "wikiName": "Dark Propagation"
+  },
+  "dead_eye": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Dead Eye"
+  },
+  "deceptive_bond": {
+    "wikiType": "Loki",
+    "isAugment": true,
+    "wikiName": "Deceptive Bond"
+  },
+  "defiled_reckoning": {
+    "wikiType": "Oberon",
+    "isAugment": true,
+    "wikiName": "Defiled Reckoning"
+  },
+  "diamond_skin": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Diamond Skin"
+  },
+  "discharge_strike": {
+    "wikiType": "Nekros",
+    "isAugment": true,
+    "wikiName": "Discharge Strike"
+  },
+  "divine_retribution": {
+    "wikiType": "Nezha",
+    "isAugment": true,
+    "wikiName": "Divine Retribution"
+  },
+  "emp_aura": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "EMP Aura"
+  },
+  "empowered_blades": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Empowered Blades"
+  },
+  "endless_lullaby": {
+    "wikiType": "Baruuk",
+    "isAugment": true,
+    "wikiName": "Endless Lullaby"
+  },
+  "endurance_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Endurance Drift"
+  },
+  "energy_nexus": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Energy Nexus"
+  },
+  "enraged": {
+    "wikiType": "Valkyr",
+    "isAugment": true,
+    "wikiName": "Enraged"
+  },
+  "equilibrium": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Equilibrium"
+  },
+  "eternal_war": {
+    "wikiType": "Valkyr",
+    "isAugment": true,
+    "wikiName": "Eternal War"
+  },
+  "final_act": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Final Act"
+  },
+  "firewalker": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Firewalker"
+  },
+  "follow_through": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Follow Through"
+  },
+  "funnel_clouds": {
+    "wikiType": "Zephyr",
+    "isAugment": true,
+    "wikiName": "Funnel Clouds"
+  },
+  "fused_crucible": {
+    "wikiType": "Qorvex",
+    "isAugment": true,
+    "wikiName": "Fused Crucible"
+  },
+  "gale_kick": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Gale Kick"
+  },
+  "gastro": {
+    "wikiType": "Grendel",
+    "isAugment": true,
+    "wikiName": "Gastro"
+  },
+  "gladiator_finesse": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Gladiator Finesse"
+  },
+  "growing_power": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Growing Power"
+  },
+  "guardian_armor": {
+    "wikiType": "Chroma",
+    "isAugment": true,
+    "wikiName": "Guardian Armor"
+  },
+  "hallowed_eruption": {
+    "wikiType": "Oberon",
+    "isAugment": true,
+    "wikiName": "Hallowed Eruption"
+  },
+  "hallowed_reckoning": {
+    "wikiType": "Oberon",
+    "isAugment": true,
+    "wikiName": "Hallowed Reckoning"
+  },
+  "hastened_steps": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Hastened Steps"
+  },
+  "heavy_impact": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Heavy Impact"
+  },
+  "heightened_reflexes": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Heightened Reflexes"
+  },
+  "holster_amp": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Holster Amp"
+  },
+  "hysterical_assault": {
+    "wikiType": "Valkyr",
+    "isAugment": true,
+    "wikiName": "Hysterical Assault"
+  },
+  "hysterical_fixation": {
+    "wikiType": "Warframe",
+    "isAugment": true,
+    "wikiName": "Hysterical Fixation"
+  },
+  "ice_spring": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Ice Spring"
+  },
+  "immolated_radiance": {
+    "wikiType": "Ember",
+    "isAugment": true,
+    "wikiName": "Immolated Radiance"
+  },
+  "insatiable": {
+    "wikiType": "Nidus",
+    "isAugment": true,
+    "wikiName": "Insatiable"
+  },
+  "intrepid_stand": {
+    "wikiType": "Styanax",
+    "isAugment": true,
+    "wikiName": "Intrepid Stand"
+  },
+  "intruder": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Intruder"
+  },
+  "ironclad_flight": {
+    "wikiType": "Titania",
+    "isAugment": false,
+    "wikiName": "Ironclad Flight"
+  },
+  "jades_judgment": {
+    "wikiType": "Jade",
+    "isAugment": true,
+    "wikiName": "Jade's Judgment"
+  },
+  "jet_stream": {
+    "wikiType": "Zephyr",
+    "isAugment": true,
+    "wikiName": "Jet Stream"
+  },
+  "jugulus_carapace": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Jugulus Carapace"
+  },
+  "kavats_grace": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Kavat's Grace"
+  },
+  "kinetic_collision": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Kinetic Collision"
+  },
+  "larva_burst": {
+    "wikiType": "Nidus",
+    "isAugment": true,
+    "wikiName": "Larva Burst"
+  },
+  "lasting_covenant": {
+    "wikiType": "Harrow",
+    "isAugment": true,
+    "wikiName": "Lasting Covenant"
+  },
+  "lightning_dash": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Lightning Dash"
+  },
+  "lingering_transmutation": {
+    "wikiType": "Lavos",
+    "isAugment": true,
+    "wikiName": "Lingering Transmutation"
+  },
+  "loot_detector": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Loot Detector"
+  },
+  "loyal_merulina": {
+    "wikiType": "Yareli",
+    "isAugment": true,
+    "wikiName": "Loyal Merulina"
+  },
+  "maglev": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Maglev"
+  },
+  "master_thief": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Master Thief"
+  },
+  "melee_guidance": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Melee Guidance"
+  },
+  "mesmer_shield": {
+    "wikiType": "Revenant",
+    "isAugment": true,
+    "wikiName": "Mesmer Shield"
+  },
+  "motus_signal": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Motus Signal"
+  },
+  "natural_talent": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Natural Talent"
+  },
+  "negation_armor": {
+    "wikiType": "Inaros",
+    "isAugment": true,
+    "wikiName": "Negation Armor"
+  },
+  "no_current_leap": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "No Current Leap"
+  },
+  "omikujis_fortune": {
+    "wikiType": "Koumei",
+    "isAugment": true,
+    "wikiName": "Omikuji's Fortune"
+  },
+  "overcharge_detectors": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Overcharge Detectors"
+  },
+  "overcharged": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Overcharged"
+  },
+  "pain_threshold": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Pain Threshold"
+  },
+  "parasitic_vitality": {
+    "wikiType": "Nidus",
+    "isAugment": true,
+    "wikiName": "Parasitic Vitality"
+  },
+  "peaceful_provocation": {
+    "wikiType": "Equinox",
+    "isAugment": true,
+    "wikiName": "Peaceful Provocation"
+  },
+  "phoenix_renewal": {
+    "wikiType": "Oberon",
+    "isAugment": true,
+    "wikiName": "Phoenix Renewal"
+  },
+  "piercing_step": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Piercing Step"
+  },
+  "pistol_scavenger": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Pistol Scavenger"
+  },
+  "power_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Power Drift"
+  },
+  "power_of_three": {
+    "wikiType": "Ivara",
+    "isAugment": true,
+    "wikiName": "Power of Three"
+  },
+  "precision_intensify": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Precision Intensify"
+  },
+  "prey_of_dynar": {
+    "wikiType": "Voruna",
+    "isAugment": true,
+    "wikiName": "Prey of Dynar"
+  },
+  "primed_streamline": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Primed Streamline"
+  },
+  "primed_vigor": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Primed Vigor"
+  },
+  "prism_guard": {
+    "wikiType": "Mirage",
+    "isAugment": true,
+    "wikiName": "Prism Guard"
+  },
+  "prismatic_companion": {
+    "wikiType": "Citrine",
+    "isAugment": true,
+    "wikiName": "Prismatic Companion"
+  },
+  "prolonged_paralysis": {
+    "wikiType": "Valkyr",
+    "isAugment": true,
+    "wikiName": "Prolonged Paralysis"
+  },
+  "proton_pulse": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Proton Pulse"
+  },
+  "provoked": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Provoked"
+  },
+  "purging_slash": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Purging Slash"
+  },
+  "purifying_flames": {
+    "wikiType": "Ember",
+    "isAugment": true,
+    "wikiName": "Purifying Flames"
+  },
+  "push_&_pull": {
+    "wikiType": "Equinox",
+    "isAugment": true,
+    "wikiName": "Push & Pull"
+  },
+  "quick_charge": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Quick Charge"
+  },
+  "quick_thinking": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Quick Thinking"
+  },
+  "rage": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rage"
+  },
+  "rapid_resilience": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rapid Resilience"
+  },
+  "razor_mortar": {
+    "wikiType": "Caliban",
+    "isAugment": true,
+    "wikiName": "Razor Mortar"
+  },
+  "ready_steel": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Ready Steel"
+  },
+  "recharge_barrier": {
+    "wikiType": "Volt",
+    "isAugment": true,
+    "wikiName": "Recharge Barrier"
+  },
+  "recrystalize": {
+    "wikiType": "Citrine",
+    "isAugment": true,
+    "wikiName": "Recrystalize"
+  },
+  "reflection": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Reflection"
+  },
+  "rending_turn": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rending Turn"
+  },
+  "repair_dispensary": {
+    "wikiType": "Protea",
+    "isAugment": true,
+    "wikiName": "Repair Dispensary"
+  },
+  "resilient_focus": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Resilient Focus"
+  },
+  "retribution": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Retribution"
+  },
+  "reverse_rotorswell": {
+    "wikiType": "Gyre",
+    "isAugment": true,
+    "wikiName": "Reverse Rotorswell"
+  },
+  "rifle_scavenger": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Rifle Scavenger"
+  },
+  "rime_vault": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rime Vault"
+  },
+  "rising_skill": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rising Skill"
+  },
+  "rolling_guard": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rolling Guard"
+  },
+  "rousing_plunder": {
+    "wikiType": "Hydroid",
+    "isAugment": false,
+    "wikiName": "Rousing Plunder"
+  },
+  "rubble_heap": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Rubble Heap"
+  },
+  "sapping_reach": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Sapping Reach"
+  },
+  "saxum_carapace": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Saxum Carapace"
+  },
+  "searing_leap": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Searing Leap"
+  },
+  "shadow_haze": {
+    "wikiType": "Sevagoth",
+    "isAugment": true,
+    "wikiName": "Shadow Haze"
+  },
+  "shattered_storm": {
+    "wikiType": "Gara",
+    "isAugment": true,
+    "wikiName": "Shattered Storm"
+  },
+  "shepherd": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Shepherd"
+  },
+  "shield_overload": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Shield Overload"
+  },
+  "shock_absorbers": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Shock Absorbers"
+  },
+  "shotgun_scavenger": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Shotgun Scavenger"
+  },
+  "signal_flare": {
+    "wikiType": "Excalibur",
+    "isAugment": true,
+    "wikiName": "Signal Flare"
+  },
+  "singularity": {
+    "wikiType": "Nyx",
+    "isAugment": true,
+    "wikiName": "Singularity"
+  },
+  "smite_infusion": {
+    "wikiType": "Oberon",
+    "isAugment": true,
+    "wikiName": "Smite Infusion"
+  },
+  "sniper_scavenger": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Sniper Scavenger"
+  },
+  "spectral_spirit": {
+    "wikiType": "Dagath",
+    "isAugment": true,
+    "wikiName": "Spectral Spirit"
+  },
+  "stand_united": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Stand United"
+  },
+  "stealth_drift": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Stealth Drift"
+  },
+  "strain_consume": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Strain Consume"
+  },
+  "streamlined_form": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Streamlined Form"
+  },
+  "summoners_wrath": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Summoner's Wrath"
+  },
+  "surplus_diverters": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Surplus Diverters"
+  },
+  "swift_momentum": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Swift Momentum"
+  },
+  "swing_line": {
+    "wikiType": "Valkyr",
+    "isAugment": true,
+    "wikiName": "Swing Line"
+  },
+  "tactical_retreat": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Tactical Retreat"
+  },
+  "target_fixation": {
+    "wikiType": "Zephyr",
+    "isAugment": true,
+    "wikiName": "Target Fixation"
+  },
+  "tear_gas": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Tear Gas"
+  },
+  "teeming_virulence": {
+    "wikiType": "Nidus",
+    "isAugment": true,
+    "wikiName": "Teeming Virulence"
+  },
+  "teleport_rush": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Teleport Rush"
+  },
+  "tempered_bound": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Tempered Bound"
+  },
+  "temporal_artillery": {
+    "wikiType": "Protea",
+    "isAugment": true,
+    "wikiName": "Temporal Artillery"
+  },
+  "temporal_erosion": {
+    "wikiType": "Protea",
+    "isAugment": true,
+    "wikiName": "Temporal Erosion"
+  },
+  "tesla_bank": {
+    "wikiType": "Vauban",
+    "isAugment": true,
+    "wikiName": "Tesla Bank"
+  },
+  "tharros_lethality": {
+    "wikiType": "Styanax",
+    "isAugment": true,
+    "wikiName": "Tharros Lethality"
+  },
+  "the_relentless_lost": {
+    "wikiType": "Xaku",
+    "isAugment": true,
+    "wikiName": "The Relentless Lost"
+  },
+  "thrall_pact": {
+    "wikiType": "Revenant",
+    "isAugment": true,
+    "wikiName": "Thrall Pact"
+  },
+  "titanic_rumbler": {
+    "wikiType": "Atlas",
+    "isAugment": true,
+    "wikiName": "Titanic Rumbler"
+  },
+  "toxic_flight": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Toxic Flight"
+  },
+  "tribunal": {
+    "wikiType": "Harrow",
+    "isAugment": true,
+    "wikiName": "Tribunal"
+  },
+  "ulfruns_endurance": {
+    "wikiType": "Voruna",
+    "isAugment": true,
+    "wikiName": "Ulfrun's Endurance"
+  },
+  "undying_will": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Undying Will"
+  },
+  "untime_rift": {
+    "wikiType": "Xaku",
+    "isAugment": true,
+    "wikiName": "Untime Rift"
+  },
+  "valence_formation": {
+    "wikiType": "Lavos",
+    "isAugment": true,
+    "wikiName": "Valence Formation"
+  },
+  "vampiric_grasp": {
+    "wikiType": "Xaku",
+    "isAugment": true,
+    "wikiName": "Vampiric Grasp"
+  },
+  "venomous_rise": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Venomous Rise"
+  },
+  "vigorous_swap": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vigorous Swap"
+  },
+  "viral_tempest": {
+    "wikiType": "Hydroid",
+    "isAugment": false,
+    "wikiName": "Viral Tempest"
+  },
+  "vital_systems_bypass": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vital Systems Bypass"
+  },
+  "volatile_recompense": {
+    "wikiType": "Kullervo",
+    "isAugment": true,
+    "wikiName": "Volatile Recompense"
+  },
+  "voltaic_lance": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Voltaic Lance"
+  },
+  "ward_recovery": {
+    "wikiType": "Nezha",
+    "isAugment": true,
+    "wikiName": "Ward Recovery"
+  },
+  "warding_thurible": {
+    "wikiType": "Harrow",
+    "isAugment": true,
+    "wikiName": "Warding Thurible"
+  },
+  "warm_coat": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Warm Coat"
+  },
+  "warriors_rest": {
+    "wikiType": "Excalibur Umbra",
+    "isAugment": true,
+    "wikiName": "Warrior's Rest"
+  },
+  "worthy_comradery": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Worthy Comradery"
+  },
+  "wrath_of_ukko": {
+    "wikiType": "Kullervo",
+    "isAugment": true,
+    "wikiName": "Wrath of Ukko"
+  },
+  "wrecking_wall": {
+    "wikiType": "Qorvex",
+    "isAugment": true,
+    "wikiName": "Wrecking Wall"
+  },
+  "continuity_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Continuity"
+  },
+  "enemy_sense_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Enemy Sense"
+  },
+  "fast_deflection_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Fast Deflection"
+  },
+  "flame_repellent_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Flame Repellent"
+  },
+  "fleeting_expertise_r5": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Fleeting Expertise"
+  },
+  "flow_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Flow"
+  },
+  "handspring_r10": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Handspring"
+  },
+  "insulation_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Insulation"
+  },
+  "intensify_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Intensify"
+  },
+  "lightning_rod_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Lightning Rod"
+  },
+  "mecha_pulse_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Mecha Pulse"
+  },
+  "mobilize_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Mobilize"
+  },
+  "overextended_r5": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Overextended"
+  },
+  "parry_r3": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Parry"
+  },
+  "power_donation_r5": {
+    "wikiType": "Aura",
+    "isAugment": false,
+    "wikiName": "Power Donation"
+  },
+  "preparation_r10": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Preparation"
+  },
+  "redirection_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Redirection"
+  },
+  "reflex_guard_r10": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Reflex Guard"
+  },
+  "rush_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Rush"
+  },
+  "steel_fiber_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Steel Fiber"
+  },
+  "streamline_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Streamline"
+  },
+  "stretch_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Stretch"
+  },
+  "sure_footed_r5": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Sure Footed"
+  },
+  "swift_bite_r3": {
+    "wikiType": "Lavos",
+    "isAugment": true,
+    "wikiName": "Swift Bite"
+  },
+  "synth_reflex_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Synth Reflex"
+  },
+  "tek_collateral_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Tek Collateral"
+  },
+  "vigor_r5": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vigor"
+  },
+  "vitality_r3": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vitality"
+  },
+  "acidic_spittle": {
+    "wikiType": "Vizier Predasite",
+    "isAugment": false,
+    "wikiName": "Acidic Spittle"
+  },
+  "aerial_prospectus": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Aerial Prospectus"
+  },
+  "anabolic_pollination": {
+    "wikiType": "Pharaoh Predasite",
+    "isAugment": false,
+    "wikiName": "Anabolic Pollination"
+  },
+  "anti_grav_grenade": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Anti-Grav Grenade"
+  },
+  "arc_coil": {
+    "wikiType": "Diriga",
+    "isAugment": false,
+    "wikiName": "Arc Coil"
+  },
+  "auto_omni": {
+    "wikiType": "Nautilus",
+    "isAugment": false,
+    "wikiName": "Auto Omni"
+  },
+  "bell_ringer": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Bell Ringer"
+  },
+  "blast_shield": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Blast Shield"
+  },
+  "botanist": {
+    "wikiType": "Oxylus",
+    "isAugment": false,
+    "wikiName": "Botanist"
+  },
+  "brute_conditioning": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Brute Conditioning"
+  },
+  "burning_claws": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Burning Claws"
+  },
+  "calculated_shot": {
+    "wikiType": "Diriga",
+    "isAugment": false,
+    "wikiName": "Calculated Shot"
+  },
+  "chilling_claws": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Chilling Claws"
+  },
+  "cordon": {
+    "wikiType": "Nautilus",
+    "isAugment": false,
+    "wikiName": "Cordon"
+  },
+  "crescent_charge": {
+    "wikiType": "Crescent Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Crescent Charge"
+  },
+  "crescent_devolution": {
+    "wikiType": "Crescent Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Crescent Devolution"
+  },
+  "crowd_dispersion": {
+    "wikiType": "Wyrm",
+    "isAugment": false,
+    "wikiName": "Crowd Dispersion"
+  },
+  "detect_vulnerability": {
+    "wikiType": "Helios",
+    "isAugment": false,
+    "wikiName": "Detect Vulnerability"
+  },
+  "disabling_conditioning": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Disabling Conditioning"
+  },
+  "diversified_denial": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Diversified Denial"
+  },
+  "electro_pulse": {
+    "wikiType": "Diriga",
+    "isAugment": false,
+    "wikiName": "Electro Pulse"
+  },
+  "endoparasitic_vector": {
+    "wikiType": "Pharaoh Predasite",
+    "isAugment": false,
+    "wikiName": "Endoparasitic Vector"
+  },
+  "equilibrium_audit": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Equilibrium Audit"
+  },
+  "evasive_denial": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Evasive Denial"
+  },
+  "fatal_attraction": {
+    "wikiType": "Djinn",
+    "isAugment": false,
+    "wikiName": "Fatal Attraction"
+  },
+  "fear_sense": {
+    "wikiType": "Kavat",
+    "isAugment": false,
+    "wikiName": "Fear Sense"
+  },
+  "fired_up": {
+    "wikiType": "Sentinel",
+    "isAugment": false,
+    "wikiName": "Fired Up"
+  },
+  "flame_gland": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Flame Gland"
+  },
+  "focused_prospectus": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Focused Prospectus"
+  },
+  "frost_jaw": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Frost Jaw"
+  },
+  "ghost": {
+    "wikiType": "Shade",
+    "isAugment": false,
+    "wikiName": "Ghost"
+  },
+  "hastened_deflection": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Hastened Deflection"
+  },
+  "iatric_mycelium": {
+    "wikiType": "Vizier Predasite",
+    "isAugment": false,
+    "wikiName": "Iatric Mycelium"
+  },
+  "immunity_resistance": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Immunity Resistance"
+  },
+  "infectious_bite": {
+    "wikiType": "Medjay Predasite",
+    "isAugment": false,
+    "wikiName": "Infectious Bite"
+  },
+  "investigator": {
+    "wikiType": "Helios",
+    "isAugment": false,
+    "wikiName": "Investigator"
+  },
+  "looter": {
+    "wikiType": "Carrier",
+    "isAugment": false,
+    "wikiName": "Looter"
+  },
+  "loyal_retriever": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Loyal Retriever"
+  },
+  "magnetic_strike": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Magnetic Strike"
+  },
+  "martyr_symbiosis": {
+    "wikiType": "Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Martyr Symbiosis"
+  },
+  "mecha_overdrive": {
+    "wikiType": "Kubrow Claws",
+    "isAugment": false,
+    "wikiName": "Mecha Overdrive"
+  },
+  "mischief": {
+    "wikiType": "Smeeta Kavat",
+    "isAugment": false,
+    "wikiName": "Mischief"
+  },
+  "molecular_conversion": {
+    "wikiType": "Taxon",
+    "isAugment": false,
+    "wikiName": "Molecular Conversion"
+  },
+  "null_audit": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Null Audit"
+  },
+  "panzer_devolution": {
+    "wikiType": "Panzer Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Panzer Devolution"
+  },
+  "paralytic_spores": {
+    "wikiType": "Medjay Predasite",
+    "isAugment": false,
+    "wikiName": "Paralytic Spores"
+  },
+  "pounce": {
+    "wikiType": "Kavat",
+    "isAugment": false,
+    "wikiName": "Pounce"
+  },
+  "proboscis": {
+    "wikiType": "Helminth Charger",
+    "isAugment": false,
+    "wikiName": "Proboscis"
+  },
+  "prosperous_retriever": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Prosperous Retriever"
+  },
+  "reflex_denial": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Reflex Denial"
+  },
+  "repo_audit": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Repo Audit"
+  },
+  "resourceful_retriever": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Resourceful Retriever"
+  },
+  "scan_matter": {
+    "wikiType": "Oxylus",
+    "isAugment": false,
+    "wikiName": "Scan Matter"
+  },
+  "sepsis_claws": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Sepsis Claws"
+  },
+  "sharpened_claws": {
+    "wikiType": "Kavat",
+    "isAugment": false,
+    "wikiName": "Sharpened Claws"
+  },
+  "shelter": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Shelter"
+  },
+  "shock_collar": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Shock Collar"
+  },
+  "shocking_claws": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Shocking Claws"
+  },
+  "sly_devolution": {
+    "wikiType": "Sly Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Sly Devolution"
+  },
+  "strain_eruption": {
+    "wikiType": "Helminth Charger",
+    "isAugment": false,
+    "wikiName": "Strain Eruption"
+  },
+  "strain_fever": {
+    "wikiType": "Helminth Charger",
+    "isAugment": false,
+    "wikiName": "Strain Fever"
+  },
+  "survival_instinct": {
+    "wikiType": "Sly Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Survival Instinct"
+  },
+  "swipe": {
+    "wikiType": "Kavat Claws",
+    "isAugment": false,
+    "wikiName": "Swipe"
+  },
+  "synergized_prospectus": {
+    "wikiType": "Hound",
+    "isAugment": false,
+    "wikiName": "Synergized Prospectus"
+  },
+  "tandem_bond": {
+    "wikiType": "Beast",
+    "isAugment": false,
+    "wikiName": "Tandem Bond"
+  },
+  "thumper": {
+    "wikiType": "Djinn",
+    "isAugment": false,
+    "wikiName": "Thumper"
+  },
+  "tractor_beam": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Tractor Beam"
+  },
+  "vaporize": {
+    "wikiType": "Dethcube",
+    "isAugment": false,
+    "wikiName": "Vaporize"
+  },
+  "venom_teeth": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Venom Teeth"
+  },
+  "viral_quills": {
+    "wikiType": "Panzer Vulpaphyla",
+    "isAugment": false,
+    "wikiName": "Viral Quills"
+  },
+  "volatile_parasite": {
+    "wikiType": "Predasite",
+    "isAugment": false,
+    "wikiName": "Volatile Parasite"
+  },
+  "ammo_case": {
+    "wikiType": "Carrier",
+    "isAugment": false,
+    "wikiName": "Ammo Case"
+  },
+  "trample": {
+    "wikiType": "Helminth Charger",
+    "isAugment": false,
+    "wikiName": "Trample"
+  },
+  "shockwave_actuators_r3": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Shockwave Actuators"
+  },
+  "tek_assault_r3": {
+    "wikiType": "Kavat",
+    "isAugment": false,
+    "wikiName": "Tek Assault"
+  },
+  "territorial_aggression_r3": {
+    "wikiType": "Kavat",
+    "isAugment": false,
+    "wikiName": "Territorial Aggression"
+  },
+  "whiplash_mine_r3": {
+    "wikiType": "MOA",
+    "isAugment": false,
+    "wikiName": "Whiplash Mine"
+  },
+  "afterburner": {
+    "wikiType": "Elytron",
+    "isAugment": true,
+    "wikiName": "Afterburner"
+  },
+  "argon_plating": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Argon Plating"
+  },
+  "auxiliary_power": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Auxiliary Power"
+  },
+  "cold_snap": {
+    "wikiType": "Itzal",
+    "isAugment": true,
+    "wikiName": "Cold Snap"
+  },
+  "efficient_transferral": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Efficient Transferral"
+  },
+  "energy_amplifier": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Energy Amplifier"
+  },
+  "energy_field": {
+    "wikiType": "Odonata",
+    "isAugment": true,
+    "wikiName": "Energy Field"
+  },
+  "energy_inversion": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Energy Inversion"
+  },
+  "enhanced_durability": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Enhanced Durability"
+  },
+  "hyperion_thrusters": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Hyperion Thrusters"
+  },
+  "kinetic_diversion": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Kinetic Diversion"
+  },
+  "morphic_transformer": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Morphic Transformer"
+  },
+  "primed_morphic_transformer": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Primed Morphic Transformer"
+  },
+  "superior_defenses": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "Superior Defenses"
+  },
+  "system_reroute": {
+    "wikiType": "Archwing",
+    "isAugment": false,
+    "wikiName": "System Reroute"
+  },
+  "acid_shells": {
+    "wikiType": "Sobek",
+    "isAugment": false,
+    "wikiName": "Acid Shells"
+  },
+  "air_time": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Air Time"
+  },
+  "amalgam_shotgun_barrage": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Amalgam Shotgun Barrage"
+  },
+  "ammo_chain": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Ammo Chain"
+  },
+  "anti_v": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Anti-V"
+  },
+  "archgun_ace": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Archgun Ace"
+  },
+  "archgun_riven_mod": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Archgun Riven Mod"
+  },
+  "argent_scourge": {
+    "wikiType": "Polearms",
+    "isAugment": false,
+    "wikiName": "Argent Scourge"
+  },
+  "artillery_cheap_shot": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Artillery Cheap Shot"
+  },
+  "assassin_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Assassin Posture"
+  },
+  "astral_autopsy": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Astral Autopsy"
+  },
+  "astral_slash": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Astral Slash"
+  },
+  "atlantis_vulcan": {
+    "wikiType": "Nunchaku",
+    "isAugment": false,
+    "wikiName": "Atlantis Vulcan"
+  },
+  "atomic_fallout": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Atomic Fallout"
+  },
+  "auto_breach": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Auto Breach"
+  },
+  "automatic_trigger": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Automatic Trigger"
+  },
+  "balanced_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Balanced Posture"
+  },
+  "ballista_measure": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Ballista Measure"
+  },
+  "battle_forge": {
+    "wikiType": "Railjack (Tactical, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Battle Forge"
+  },
+  "battle_stations": {
+    "wikiType": "Railjack (Tactical, Slot 2)",
+    "isAugment": false,
+    "wikiName": "Battle Stations"
+  },
+  "biting_piranha": {
+    "wikiType": "Dual Daggers",
+    "isAugment": false,
+    "wikiName": "Biting Piranha"
+  },
+  "blackout_pulse": {
+    "wikiType": "Railjack (Battle, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Blackout Pulse"
+  },
+  "blazing_steel": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Blazing Steel"
+  },
+  "bleeding_edge": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Bleeding Edge"
+  },
+  "blind_justice": {
+    "wikiType": "Nikanas",
+    "isAugment": false,
+    "wikiName": "Blind Justice"
+  },
+  "blood_for_ammo": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Blood For Ammo"
+  },
+  "blood_for_energy": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Blood For Energy"
+  },
+  "blood_for_life": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Blood For Life"
+  },
+  "bomb_the_landin": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Bomb The Landin'"
+  },
+  "bounty_hunter": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Bounty Hunter"
+  },
+  "breach_loader": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Breach Loader"
+  },
+  "breach_quanta": {
+    "wikiType": "Railjack (Tactical, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Breach Quanta"
+  },
+  "broad_eye": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Broad Eye"
+  },
+  "brutal_tide": {
+    "wikiType": "Sparring",
+    "isAugment": false,
+    "wikiName": "Brutal Tide"
+  },
+  "butchers_revelry": {
+    "wikiType": "Assault Saw",
+    "isAugment": false,
+    "wikiName": "Butcher's Revelry"
+  },
+  "byteryte": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "ByteRyte"
+  },
+  "celestial_nightfall": {
+    "wikiType": "Glaives",
+    "isAugment": false,
+    "wikiName": "Celestial Nightfall"
+  },
+  "charged_bullets": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Charged Bullets"
+  },
+  "chilling_reload": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Chilling Reload"
+  },
+  "cleanse_orokin": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Cleanse Orokin"
+  },
+  "cleanse_the_murmur": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Cleanse The Murmur"
+  },
+  "cold_arrival": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Cold Arrival"
+  },
+  "combustion_rounds": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Combustion Rounds"
+  },
+  "comet_blast": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Comet Blast"
+  },
+  "companion_weapon_riven_mod": {
+    "wikiType": "Robotic Weapon",
+    "isAugment": false,
+    "wikiName": "Companion Weapon Riven Mod"
+  },
+  "computer_cop": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Computer Cop"
+  },
+  "conductive_blade": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Conductive Blade"
+  },
+  "conic_nozzle": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Conic Nozzle"
+  },
+  "containment_breach": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Containment Breach"
+  },
+  "contamination_casing": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Contamination Casing"
+  },
+  "counterbalance": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Counterbalance"
+  },
+  "countermeasures": {
+    "wikiType": "Railjack (Battle, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Countermeasures"
+  },
+  "crash_shot": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Crash Shot"
+  },
+  "crashing_havoc": {
+    "wikiType": "Hammers",
+    "isAugment": false,
+    "wikiName": "Crashing Havoc"
+  },
+  "crashing_timber": {
+    "wikiType": "Staves",
+    "isAugment": false,
+    "wikiName": "Crashing Timber"
+  },
+  "crimson_fugue": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Crimson Fugue"
+  },
+  "critical_focus": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Critical Focus"
+  },
+  "critical_meltdown": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Critical Meltdown"
+  },
+  "cruising_speed": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Cruising Speed"
+  },
+  "crushing_ruin": {
+    "wikiType": "Hammers",
+    "isAugment": false,
+    "wikiName": "Crushing Ruin"
+  },
+  "cryo_coating": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Cryo Coating"
+  },
+  "cunning_aspect": {
+    "wikiType": "Rapiers",
+    "isAugment": false,
+    "wikiName": "Cunning Aspect"
+  },
+  "cutting_edge": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Cutting Edge"
+  },
+  "cyclone_kraken": {
+    "wikiType": "Machetes",
+    "isAugment": false,
+    "wikiName": "Cyclone Kraken"
+  },
+  "deadly_efficiency": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Deadly Efficiency"
+  },
+  "death_blossom": {
+    "wikiType": "Railjack (Tactical, Slot 2)",
+    "isAugment": false,
+    "wikiName": "Death Blossom"
+  },
+  "defensive_fire": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Defensive Fire"
+  },
+  "disruptor": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Disruptor"
+  },
+  "dividing_blades": {
+    "wikiType": "Dual Swords",
+    "isAugment": false,
+    "wikiName": "Dividing Blades"
+  },
+  "double_barrel_drift": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Double-Barrel Drift"
+  },
+  "drive_duster": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Drive-Duster"
+  },
+  "dual_rounds": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Dual Rounds"
+  },
+  "efficient_beams": {
+    "wikiType": "Convectrix",
+    "isAugment": false,
+    "wikiName": "Efficient Beams"
+  },
+  "electrified_barrel": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Electrified Barrel"
+  },
+  "eleventh_storm": {
+    "wikiType": "Sword And Shield",
+    "isAugment": false,
+    "wikiName": "Eleventh Storm"
+  },
+  "elusive_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Elusive Posture"
+  },
+  "extend": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Extend"
+  },
+  "extreme_velocity": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Extreme Velocity"
+  },
+  "failsafe": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Failsafe"
+  },
+  "fass": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Fass"
+  },
+  "fatal_acceleration": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Fatal Acceleration"
+  },
+  "fateful_truth": {
+    "wikiType": "Nikanas",
+    "isAugment": false,
+    "wikiName": "Fateful Truth"
+  },
+  "final_harbinger": {
+    "wikiType": "Sword And Shield",
+    "isAugment": false,
+    "wikiName": "Final Harbinger"
+  },
+  "fire_suppression": {
+    "wikiType": "Railjack (Tactical, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Fire Suppression"
+  },
+  "firewall": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Firewall"
+  },
+  "flak_shot": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Flak Shot"
+  },
+  "flechette": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Flechette"
+  },
+  "flow_burn": {
+    "wikiType": "Railjack (Tactical, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Flow Burn"
+  },
+  "fomorian_accelerant": {
+    "wikiType": "Drakgoon",
+    "isAugment": false,
+    "wikiName": "Fomorian Accelerant"
+  },
+  "form_up": {
+    "wikiType": "Railjack (Tactical, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Form Up"
+  },
+  "fortifying_fire": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Fortifying Fire"
+  },
+  "forward_artillery": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Forward Artillery"
+  },
+  "four_riders": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Four Riders"
+  },
+  "fracturing_wind": {
+    "wikiType": "Fists",
+    "isAugment": false,
+    "wikiName": "Fracturing Wind"
+  },
+  "frenzied_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Frenzied Posture"
+  },
+  "full_contact": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Full Contact"
+  },
+  "furor": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Furor"
+  },
+  "gaias_tragedy": {
+    "wikiType": "Fists",
+    "isAugment": false,
+    "wikiName": "Gaia's Tragedy"
+  },
+  "galeforce_dawn": {
+    "wikiType": "Heavy Scythe",
+    "isAugment": false,
+    "wikiName": "Galeforce Dawn"
+  },
+  "galvanized_acceleration": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Galvanized Acceleration"
+  },
+  "gemini_cross": {
+    "wikiType": "Tonfas",
+    "isAugment": false,
+    "wikiName": "Gemini Cross"
+  },
+  "glacial_edge": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Glacial Edge"
+  },
+  "gleaming_talon": {
+    "wikiType": "Glaives",
+    "isAugment": false,
+    "wikiName": "Gleaming Talon"
+  },
+  "granums_nemesis": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Granum's Nemesis"
+  },
+  "hard_reset": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Hard Reset"
+  },
+  "harrowing_spire": {
+    "wikiType": "Bayonet",
+    "isAugment": false,
+    "wikiName": "Harrowing Spire"
+  },
+  "hit_and_run": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Hit And Run"
+  },
+  "hollowed_bullets": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Hollowed Bullets"
+  },
+  "hydraulic_chamber": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Hydraulic Chamber"
+  },
+  "hyperstrike": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Hyperstrike"
+  },
+  "hypothermic_shell": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Hypothermic Shell"
+  },
+  "immuno_shield": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Immuno Shield"
+  },
+  "indomitable_matrix": {
+    "wikiType": "Railjack Aura",
+    "isAugment": false,
+    "wikiName": "Indomitable Matrix"
+  },
+  "inertia_dampeners": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Inertia Dampeners"
+  },
+  "infectious_injection": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Infectious Injection"
+  },
+  "instant_secure": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Instant Secure"
+  },
+  "intruder_stasis": {
+    "wikiType": "Railjack (Tactical, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Intruder Stasis"
+  },
+  "ion_burn": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Ion Burn"
+  },
+  "ion_infusion": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Ion Infusion"
+  },
+  "ironclad_matrix": {
+    "wikiType": "Railjack Aura",
+    "isAugment": false,
+    "wikiName": "Ironclad Matrix"
+  },
+  "jahu": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Jahu"
+  },
+  "juice": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Juice"
+  },
+  "keep_clean": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Keep-Clean"
+  },
+  "khra": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Khra"
+  },
+  "kill_switch": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Kill Switch"
+  },
+  "kinetic_friction": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Kinetic Friction"
+  },
+  "kitgun_riven_mod": {
+    "wikiType": "Rifle or Pistol",
+    "isAugment": false,
+    "wikiName": "Kitgun Riven Mod"
+  },
+  "laser_sight": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Laser Sight"
+  },
+  "lashing_coil": {
+    "wikiType": "Whips",
+    "isAugment": false,
+    "wikiName": "Lashing Coil"
+  },
+  "last_herald": {
+    "wikiType": "Sword And Shield",
+    "isAugment": false,
+    "wikiName": "Last Herald"
+  },
+  "lingering_torment": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Lingering Torment"
+  },
+  "live_wire": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Live Wire"
+  },
+  "loaded_capacity": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Loaded Capacity"
+  },
+  "lock_and_load": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Lock and Load"
+  },
+  "lohk": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Lohk"
+  },
+  "loose_chamber": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Loose Chamber"
+  },
+  "mad_stack": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Mad Stack"
+  },
+  "madurai_transmute_core": {
+    "wikiType": "Mod",
+    "isAugment": false,
+    "wikiName": "Madurai Transmute Core"
+  },
+  "mafic_rain": {
+    "wikiType": "Nunchaku",
+    "isAugment": false,
+    "wikiName": "Mafic Rain"
+  },
+  "mag_locks": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Mag Locks"
+  },
+  "magazine_extension": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Magazine Extension"
+  },
+  "magma_chamber": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Magma Chamber"
+  },
+  "magnetic_strafe": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Magnetic Strafe"
+  },
+  "magnetic_welt": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Magnetic Welt"
+  },
+  "magnetized_core": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Magnetized Core"
+  },
+  "magnetized_cycle": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Magnetized Cycle"
+  },
+  "malicious_code": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Malicious Code"
+  },
+  "malicious_raptor": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Malicious Raptor"
+  },
+  "marked_target": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Marked Target"
+  },
+  "master_key": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Master Key"
+  },
+  "melee_riven_mod": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Melee Riven Mod"
+  },
+  "meteor_crash": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Meteor Crash"
+  },
+  "modified_munitions": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Modified Munitions"
+  },
+  "momentary_pause": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Momentary Pause"
+  },
+  "mountains_edge": {
+    "wikiType": "Dual Nikanas",
+    "isAugment": false,
+    "wikiName": "Mountain's Edge"
+  },
+  "munitions_vortex": {
+    "wikiType": "Railjack (Battle, Slot 1)",
+    "isAugment": false,
+    "wikiName": "Munitions Vortex"
+  },
+  "nano_applicator": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Nano-Applicator"
+  },
+  "naramon_transmute_core": {
+    "wikiType": "Mod",
+    "isAugment": false,
+    "wikiName": "Naramon Transmute Core"
+  },
+  "narrow_barrel": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Narrow Barrel"
+  },
+  "nebula_bore": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Nebula Bore"
+  },
+  "necramech_augur": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Augur"
+  },
+  "necramech_aviator": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Aviator"
+  },
+  "necramech_blitz": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Blitz"
+  },
+  "necramech_continuity": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Continuity"
+  },
+  "necramech_deflection": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Deflection"
+  },
+  "necramech_drift": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Drift"
+  },
+  "necramech_efficiency": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Efficiency"
+  },
+  "necramech_enemy_sense": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Enemy Sense"
+  },
+  "necramech_flow": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Flow"
+  },
+  "necramech_friction": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Friction"
+  },
+  "necramech_fury": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Fury"
+  },
+  "necramech_hydraulics": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Hydraulics"
+  },
+  "necramech_intensify": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Intensify"
+  },
+  "necramech_pressure_point": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Pressure Point"
+  },
+  "necramech_rage": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Rage"
+  },
+  "necramech_reach": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Reach"
+  },
+  "necramech_rebuke": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Rebuke"
+  },
+  "necramech_redirection": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Redirection"
+  },
+  "necramech_refuel": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Refuel"
+  },
+  "necramech_repair": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Repair"
+  },
+  "necramech_seismic_wave": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Seismic Wave"
+  },
+  "necramech_slipstream": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Slipstream"
+  },
+  "necramech_steel_fiber": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Steel Fiber"
+  },
+  "necramech_streamline": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Streamline"
+  },
+  "necramech_stretch": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Stretch"
+  },
+  "necramech_thrusters": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Thrusters"
+  },
+  "necramech_vitality": {
+    "wikiType": "Necramech",
+    "isAugment": false,
+    "wikiName": "Necramech Vitality"
+  },
+  "netra": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Netra"
+  },
+  "nitro_boost": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Nitro Boost"
+  },
+  "noble_cadence": {
+    "wikiType": "Heavy Blade",
+    "isAugment": false,
+    "wikiName": "Noble Cadence"
+  },
+  "onslaught_matrix": {
+    "wikiType": "Railjack Aura",
+    "isAugment": false,
+    "wikiName": "Onslaught Matrix"
+  },
+  "ordnance_cheap_shot": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Ordnance Cheap Shot"
+  },
+  "ordnance_velocity": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Ordnance Velocity"
+  },
+  "orgone_tuning_matrix": {
+    "wikiType": "Railjack Aura",
+    "isAugment": false,
+    "wikiName": "Orgone Tuning Matrix"
+  },
+  "oull": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Oull"
+  },
+  "out_of_sight": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Out Of Sight"
+  },
+  "overloader": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Overloader"
+  },
+  "parallax_scope": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Parallax Scope"
+  },
+  "particle_ram": {
+    "wikiType": "Railjack (Battle, Slot 2)",
+    "isAugment": false,
+    "wikiName": "Particle Ram"
+  },
+  "peculiar_audience": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Peculiar Audience"
+  },
+  "peculiar_bloom": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Peculiar Bloom"
+  },
+  "peculiar_end": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Peculiar End"
+  },
+  "peculiar_growth": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Peculiar Growth"
+  },
+  "perfect_balance": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Perfect Balance"
+  },
+  "persistent_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Persistent Posture"
+  },
+  "phoenix_blaze": {
+    "wikiType": "Railjack (Battle, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Phoenix Blaze"
+  },
+  "piercing_fury": {
+    "wikiType": "Daggers",
+    "isAugment": false,
+    "wikiName": "Piercing Fury"
+  },
+  "pistol_riven_mod": {
+    "wikiType": "Pistol",
+    "isAugment": false,
+    "wikiName": "Pistol Riven Mod"
+  },
+  "poisonous_sting": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Poisonous Sting"
+  },
+  "polar_magazine": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Polar Magazine"
+  },
+  "pop_top": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Pop Top"
+  },
+  "poppin_vert": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Poppin' Vert"
+  },
+  "power_drain": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Power Drain"
+  },
+  "predator": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Predator"
+  },
+  "primed_ammo_chain": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Ammo Chain"
+  },
+  "primed_ammo_stock": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Ammo Stock"
+  },
+  "primed_cleanse_corpus": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Cleanse Corpus"
+  },
+  "primed_cleanse_grineer": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Cleanse Grineer"
+  },
+  "primed_cleanse_infested": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Cleanse Infested"
+  },
+  "primed_cleanse_orokin": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Cleanse Orokin"
+  },
+  "primed_cleanse_the_murmur": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Cleanse The Murmur"
+  },
+  "primed_combustion_rounds": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Combustion Rounds"
+  },
+  "primed_counterbalance": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Counterbalance"
+  },
+  "primed_deadly_efficiency": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Deadly Efficiency"
+  },
+  "primed_dual_rounds": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Dual Rounds"
+  },
+  "primed_rubedo_lined_barrel": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Rubedo-Lined Barrel"
+  },
+  "primed_shotgun_ammo_mutation": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Primed Shotgun Ammo Mutation"
+  },
+  "primed_venomous_clip": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Primed Venomous Clip"
+  },
+  "primo_flair": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Primo Flair"
+  },
+  "prize_kill": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Prize Kill"
+  },
+  "protective_shots": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Protective Shots"
+  },
+  "protector_posture": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Protector Posture"
+  },
+  "quaking_hand": {
+    "wikiType": "Fists",
+    "isAugment": false,
+    "wikiName": "Quaking Hand"
+  },
+  "quasar_drill": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Quasar Drill"
+  },
+  "quick_correct": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Quick Correct"
+  },
+  "quick_escape": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Quick Escape"
+  },
+  "quick_reload": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Quick Reload"
+  },
+  "quicklock": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Quicklock"
+  },
+  "raider_matrix": {
+    "wikiType": "Railjack Aura",
+    "isAugment": false,
+    "wikiName": "Raider Matrix"
+  },
+  "rail_guards": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Rail Guards"
+  },
+  "rending_crane": {
+    "wikiType": "Heavy Blade",
+    "isAugment": false,
+    "wikiName": "Rending Crane"
+  },
+  "rending_wind": {
+    "wikiType": "Machetes",
+    "isAugment": false,
+    "wikiName": "Rending Wind"
+  },
+  "repeater_clip": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Repeater Clip"
+  },
+  "resolute_focus": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Resolute Focus"
+  },
+  "revo_reducer": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Revo Reducer"
+  },
+  "rifle_riven_mod": {
+    "wikiType": "Rifle",
+    "isAugment": false,
+    "wikiName": "Rifle Riven Mod"
+  },
+  "ripload": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Ripload"
+  },
+  "ris": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Ris"
+  },
+  "rising_steel": {
+    "wikiType": "Swords",
+    "isAugment": false,
+    "wikiName": "Rising Steel"
+  },
+  "rubedo_lined_barrel": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Rubedo-Lined Barrel"
+  },
+  "runtime": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Runtime"
+  },
+  "sabot_rounds": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Sabot Rounds"
+  },
+  "scarlet_hurricane": {
+    "wikiType": "Claws",
+    "isAugment": false,
+    "wikiName": "Scarlet Hurricane"
+  },
+  "scourging_warheads": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Scourging Warheads"
+  },
+  "searing_steel": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Searing Steel"
+  },
+  "section_density": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Section Density"
+  },
+  "seeker_volley": {
+    "wikiType": "Railjack (Battle, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Seeker Volley"
+  },
+  "semi_shotgun_cannonade": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Semi-Shotgun Cannonade"
+  },
+  "sentient_scalpel": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Sentient Scalpel"
+  },
+  "shadow_harvest": {
+    "wikiType": "Scythes",
+    "isAugment": false,
+    "wikiName": "Shadow Harvest"
+  },
+  "shatter_burst": {
+    "wikiType": "Railjack (Battle, Slot 2)",
+    "isAugment": false,
+    "wikiName": "Shatter Burst"
+  },
+  "shattering_storm": {
+    "wikiType": "Hammers",
+    "isAugment": false,
+    "wikiName": "Shattering Storm"
+  },
+  "shell_compression": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shell Compression"
+  },
+  "shell_rush": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Shell Rush"
+  },
+  "shotgun_barrage": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shotgun Barrage"
+  },
+  "shotgun_elementalist": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shotgun Elementalist"
+  },
+  "shotgun_riven_mod": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shotgun Riven Mod"
+  },
+  "shotgun_savvy": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shotgun Savvy"
+  },
+  "shrapnel_shot": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shrapnel Shot"
+  },
+  "shred_shot": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shred Shot"
+  },
+  "shredder": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shredder"
+  },
+  "silent_battery": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Silent Battery"
+  },
+  "slay_board": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Slay Board"
+  },
+  "slicing_feathers": {
+    "wikiType": "Warfans",
+    "isAugment": false,
+    "wikiName": "Slicing Feathers"
+  },
+  "snap_shot": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Snap Shot"
+  },
+  "soft_hands": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Soft Hands"
+  },
+  "soft_safe": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Soft Safe"
+  },
+  "sonic_boost": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Sonic Boost"
+  },
+  "sovereign_outcast": {
+    "wikiType": "Tonfas",
+    "isAugment": false,
+    "wikiName": "Sovereign Outcast"
+  },
+  "squad_renew": {
+    "wikiType": "Railjack (Tactical, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Squad Renew"
+  },
+  "star_divide": {
+    "wikiType": "Tonfas",
+    "isAugment": false,
+    "wikiName": "Star Divide"
+  },
+  "sudden_impact": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Sudden Impact"
+  },
+  "sweeping_serration": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Sweeping Serration"
+  },
+  "swift_mercy": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Swift Mercy"
+  },
+  "tainted_hydra": {
+    "wikiType": "Blade And Whip",
+    "isAugment": false,
+    "wikiName": "Tainted Hydra"
+  },
+  "tempered_blade": {
+    "wikiType": "Archmelee",
+    "isAugment": false,
+    "wikiName": "Tempered Blade"
+  },
+  "tether": {
+    "wikiType": "Railjack (Battle, Slot 2)",
+    "isAugment": false,
+    "wikiName": "Tether"
+  },
+  "thrash_landing": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Thrash Landing"
+  },
+  "threat_blocker": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Threat Blocker"
+  },
+  "trail_blazer": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Trail Blazer"
+  },
+  "tranquil_cleave": {
+    "wikiType": "Nikanas",
+    "isAugment": false,
+    "wikiName": "Tranquil Cleave"
+  },
+  "transmute_core": {
+    "wikiType": "Mod",
+    "isAugment": false,
+    "wikiName": "Madurai Transmute Core"
+  },
+  "trojan_tracker": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Trojan Tracker"
+  },
+  "turbo_protect": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Turbo Protect"
+  },
+  "turret_velocity": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Turret Velocity"
+  },
+  "untraceable": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Untraceable"
+  },
+  "vapor_trail": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Vapor Trail"
+  },
+  "vazarin_transmute_core": {
+    "wikiType": "Mod",
+    "isAugment": false,
+    "wikiName": "Vazarin Transmute Core"
+  },
+  "venerdo_hoverdrive": {
+    "wikiType": "K-Drive",
+    "isAugment": false,
+    "wikiName": "Venerdo Hoverdrive"
+  },
+  "venomous_clip": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Venomous Clip"
+  },
+  "vicious_approach": {
+    "wikiType": "Sparring",
+    "isAugment": false,
+    "wikiName": "Vicious Approach"
+  },
+  "void_cloak": {
+    "wikiType": "Railjack (Tactical, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Void Cloak"
+  },
+  "void_hole": {
+    "wikiType": "Railjack (Battle, Slot 3)",
+    "isAugment": false,
+    "wikiName": "Void Hole"
+  },
+  "vome": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Vome"
+  },
+  "votive_onslaught": {
+    "wikiType": "Warfans",
+    "isAugment": false,
+    "wikiName": "Votive Onslaught"
+  },
+  "warhead": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Warhead"
+  },
+  "waveband_disruptor": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Waveband Disruptor"
+  },
+  "worm_away": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Worm Away"
+  },
+  "worms_torment": {
+    "wikiType": "Plexus",
+    "isAugment": false,
+    "wikiName": "Worm's Torment"
+  },
+  "xata": {
+    "wikiType": "Parazon",
+    "isAugment": false,
+    "wikiName": "Xata"
+  },
+  "zaw_riven_mod": {
+    "wikiType": "Melee",
+    "isAugment": false,
+    "wikiName": "Zaw Riven Mod"
+  },
+  "zodiac_shred": {
+    "wikiType": "Archgun",
+    "isAugment": false,
+    "wikiName": "Zodiac Shred"
+  },
+  "accelerated_blast_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Accelerated Blast"
+  },
+  "ammo_stock_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Ammo Stock"
+  },
+  "blunderbuss_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Blunderbuss"
+  },
+  "charged_shell_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Charged Shell"
+  },
+  "chilling_grasp_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Chilling Grasp"
+  },
+  "cleanse_corpus_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Cleanse Corpus"
+  },
+  "cleanse_grineer_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Cleanse Grineer"
+  },
+  "cleanse_infested_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Cleanse Infested"
+  },
+  "contagious_spread_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Contagious Spread"
+  },
+  "frigid_blast_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Frigid Blast"
+  },
+  "incendiary_coat_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Incendiary Coat"
+  },
+  "point_blank_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Point Blank"
+  },
+  "ravage_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Ravage"
+  },
+  "scattering_inferno_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Scattering Inferno"
+  },
+  "seeking_force_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Seeking Force"
+  },
+  "shell_shock_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Shell Shock"
+  },
+  "tactical_pump_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Tactical Pump"
+  },
+  "tainted_shell_r10": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Tainted Shell"
+  },
+  "toxic_barrage_r3": {
+    "wikiType": "Shotgun",
+    "isAugment": false,
+    "wikiName": "Toxic Barrage"
+  },
+  "gladiator_resolve": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Gladiator Resolve"
+  },
+  "vigilante_offense": {
+    "wikiType": "Primary",
+    "isAugment": false,
+    "wikiName": "Vigilante Offense"
+  },
+  "vigilante_vigor": {
+    "wikiType": "Warframe",
+    "isAugment": false,
+    "wikiName": "Vigilante Vigor"
+  },
+  "da_ren": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Da-Ren"
+  },
+  "empazu_shol": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Empazu-Shol"
+  },
+  "esti_vel_ikha": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Esti Vel-Ikha"
+  },
+  "evir_ti": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Evir-Ti"
+  },
+  "hayan_dabor": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Hayan-Dabor"
+  },
+  "hok_kaal": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Hok-Kaal"
+  },
+  "kaal_zidi": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Kaal-zidi"
+  },
+  "lashta_vak": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Lashta-Vak"
+  },
+  "lorun_tash": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Lorun-Tash"
+  },
+  "metem_erun": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Metem-Erun"
+  },
+  "metem_hakh": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Metem-Hakh"
+  },
+  "omn_evi": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Omn-Evi"
+  },
+  "sey_taph": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Sey-Taph"
+  },
+  "sil_tabol": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Sil-Tabol"
+  },
+  "talsek_an": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Talsek-An"
+  },
+  "ubri_kaneph": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Ubri-Kaneph"
+  },
+  "ulashta_shol": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Ulashta-Shol"
+  },
+  "vik_anam": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Vik-Anam"
+  },
+  "vikla_safor": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Vikla-Safor"
+  },
+  "yar_dal": {
+    "wikiType": "Antique",
+    "isAugment": false,
+    "wikiName": "Yar Dal"
+  },
+  "corroding_barrage": {
+    "wikiType": "Hydroid",
+    "isAugment": true,
+    "wikiName": "Corroding Barrage"
+  },
+  "divebomb_vortex": {
+    "wikiType": "Zephyr",
+    "isAugment": true,
+    "wikiName": "Divebomb Vortex"
+  },
+  "enduring_bastille": {
+    "wikiType": "Vauban",
+    "isAugment": true,
+    "wikiName": "Enduring Bastille"
+  },
+  "fatal_teleport": {
+    "wikiType": "Ash",
+    "isAugment": true,
+    "wikiName": "Fatal Teleport"
+  },
+  "iron_vault": {
+    "wikiType": "Wukong",
+    "isAugment": true,
+    "wikiName": "Iron Vault"
+  },
+  "shield_transference": {
+    "wikiType": "Mag",
+    "isAugment": true,
+    "wikiName": "Shield Transference"
+  }
+}

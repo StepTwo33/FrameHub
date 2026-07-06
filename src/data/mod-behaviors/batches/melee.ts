@@ -1,0 +1,401 @@
+/**
+ * Per-mod verified behaviors — category: melee (122 mods).
+ * Generated: python scripts/generate_mod_behavior_batch.py melee
+ * Each mod has its own entry; edit lines after individual wiki review.
+ */
+import type { VerifiedModBehavior, VerifiedItemStatLine } from "@/lib/item-behavior-types";
+
+function line(statKey: string, target: VerifiedItemStatLine['target'], mode: VerifiedItemStatLine['mode'], source: string): VerifiedItemStatLine {
+  return { statKey, target, mode, source };
+}
+
+function mod(modId: string, stats: VerifiedItemStatLine[], descriptionOnly?: string): VerifiedModBehavior {
+  return descriptionOnly ? { modId, stats, descriptionOnly } : { modId, stats };
+}
+
+export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
+  aerial_assault: mod("aerial_assault", [
+    line("aerialDamage", "mod_panel", "multiplicative_percent", "Aerial Assault: aerialDamage \u2014 +25% Aerial Damage per rank"),
+  ]),
+  air_martial: mod("air_martial", [
+    line("channelingDamage", "mod_panel", "multiplicative_percent", "Air Martial: channelingDamage \u2014 With Melee equipped, lock onto targets within +5m while Airborne, -100% Channeli\u2026"),
+  ]),
+  amalgam_organ_shatter: mod("amalgam_organ_shatter", [
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Amalgam Organ Shatter: criticalMultiplier \u2014 +85% Critical Damage\\\\n+60% Heavy Attack Wind Up Speed"),
+    line("heavyWindUp", "mod_panel", "multiplicative_percent", "Amalgam Organ Shatter: heavyWindUp \u2014 +85% Critical Damage\\\\n+60% Heavy Attack Wind Up Speed"),
+  ]),
+  amanata_pressure: mod("amanata_pressure", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Amanata Pressure: damage \u2014 When Combo Multiplier reaches 8x, Heavy attacks apply a random Status Effect to \u2026"),
+  ]),
+  amars_contempt: mod("amars_contempt", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Amar's Contempt: damage \u2014 +90% Melee Damage\\\\n+30% Slash"),
+    line("slash", "weapon_dps", "multiplicative_percent", "Amar's Contempt: slash \u2014 +90% Melee Damage\\\\n+30% Slash"),
+  ]),
+  auger_strike: mod("auger_strike", [
+    line("puncture", "weapon_dps", "multiplicative_percent", "Auger Strike: puncture \u2014 +120% <DT_PUNCTURE_COLOR>Puncture"),
+  ]),
+  berserker: mod("berserker", [
+    line("attackSpeedOnCrit", "mod_panel", "multiplicative_percent", "Berserker: attackSpeedOnCrit \u2014 Stance: Valkyr is imbued with energy and becomes a ball of vicious rage, capable\u2026"),
+  ]),
+  berserker_fury: mod("berserker_fury", [
+    line("attackSpeed", "weapon_dps", "conditional_attack_speed_on_kill", "Berserker Fury: attackSpeed \u2014 On Melee Kill:\\\\n+35% Attack Speed for 10s. Stacks up to 2x."),
+    line("duration", "mod_panel", "multiplicative_percent", "Berserker Fury: duration \u2014 On Melee Kill:\\\\n+35% Attack Speed for 10s. Stacks up to 2x."),
+  ]),
+  blood_rush: mod("blood_rush", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Blood Rush: criticalChance \u2014 +40% Critical Chance per Combo Multiplier at max rank"),
+    line("criticalChancePerCombo", "weapon_dps", "conditional_combo_crit", "Blood Rush: criticalChancePerCombo \u2014 +40% Critical Chance per Combo Multiplier at max rank"),
+  ]),
+  body_count: mod("body_count", [
+    line("comboDuration", "weapon_dps", "multiplicative_percent", "Body Count: comboDuration \u2014 +2s Combo Duration per rank"),
+    line("duration", "mod_panel", "multiplicative_percent", "Body Count: duration \u2014 +2s Combo Duration per rank"),
+  ]),
+  boreals_contempt: mod("boreals_contempt", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Boreal's Contempt: damage \u2014 +90% Melee Damage\\\\n+60% Status Damage"),
+  ]),
+  burning_hate: mod("burning_hate", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Burning Hate: damage \u2014 When Hate damages enemies inflicted with <DT_FIRE_COLOR>Heat Status, they become\u2026"),
+  ]),
+  buzz_kill: mod("buzz_kill", [
+    line("slash", "weapon_dps", "multiplicative_percent", "Buzz Kill: slash \u2014 +120% <DT_SLASH_COLOR>Slash"),
+  ]),
+  carnis_mandible: mod("carnis_mandible", [
+    line("slash", "weapon_dps", "multiplicative_percent", "Carnis Mandible: slash \u2014 +90% <DT_SLASH_COLOR>Slash, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Carnis Mandible: statusChance \u2014 +90% <DT_SLASH_COLOR>Slash, +60% Status Chance"),
+  ]),
+  collision_force: mod("collision_force", [
+    line("impact", "weapon_dps", "multiplicative_percent", "Collision Force: impact \u2014 +120% <DT_IMPACT_COLOR>Impact"),
+  ]),
+  combo_fury: mod("combo_fury", [
+    line("duration", "mod_panel", "multiplicative_percent", "Combo Fury: duration \u2014 On Melee Kill:\\\\n+100% Reload Speed\\\\n+100% Magazine Capacity for 12s on Seconda\u2026"),
+    line("magazine", "weapon_dps", "multiplicative_percent", "Combo Fury: magazine \u2014 On Melee Kill:\\\\n+100% Reload Speed\\\\n+100% Magazine Capacity for 12s on Seconda\u2026"),
+    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Combo Fury: reloadSpeed \u2014 On Melee Kill:\\\\n+100% Reload Speed\\\\n+100% Magazine Capacity for 12s on Seconda\u2026"),
+  ]),
+  combo_killer: mod("combo_killer", [
+    line("comboDuration", "weapon_dps", "multiplicative_percent", "Combo Killer: comboDuration \u2014 +5s Combo Duration, On Kill with Secondary Weapon:\\\\nReset Melee Combo Timer"),
+    line("duration", "mod_panel", "multiplicative_percent", "Combo Killer: duration \u2014 +5s Combo Duration, On Kill with Secondary Weapon:\\\\nReset Melee Combo Timer"),
+  ]),
+  condition_overload: mod("condition_overload", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Condition Overload: damage \u2014 +80% Damage per Status Type affecting the target at max rank"),
+    line("damagePerStatus", "weapon_dps", "conditional_damage_per_status", "Condition Overload: damagePerStatus \u2014 +80% Damage per Status Type affecting the target at max rank"),
+  ]),
+  conditions_perfection: mod("conditions_perfection", [
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Condition's Perfection: statusChance \u2014 Enables Tennokai. Increases status chance by +100% on Tennokai attacks."),
+  ]),
+  corrupt_charge: mod("corrupt_charge", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Corrupt Charge: attackSpeed \u2014 Start with +15 Combo, -10% Attack Speed per rank"),
+    line("comboCount", "mod_panel", "multiplicative_percent", "Corrupt Charge: comboCount \u2014 Start with +15 Combo, -10% Attack Speed per rank"),
+  ]),
+  counterweight: mod("counterweight", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Counterweight: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
+  ]),
+  covert_lethality: mod("covert_lethality", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Covert Lethality: damage \u2014 +16 Initial Combo\\\\n+100% Finisher Damage"),
+    line("lethalDamage", "mod_panel", "multiplicative_percent", "Covert Lethality: lethalDamage \u2014 +16 Initial Combo\\\\n+100% Finisher Damage"),
+  ]),
+  disciplines_merit: mod("disciplines_merit", [], "wiki: Discipline's Merit \u2014 Enables Tennokai. Opportunities occur every 4 melee hits instead of at random."),
+  dispatch_overdrive: mod("dispatch_overdrive", [
+    line("duration", "mod_panel", "multiplicative_percent", "Dispatch Overdrive: duration \u2014 On Heavy Attack Hit:\\\\n+60% Movement Speed for 15s"),
+    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Dispatch Overdrive: sprintSpeed \u2014 On Heavy Attack Hit:\\\\n+60% Movement Speed for 15s"),
+  ]),
+  dreamers_wrath: mod("dreamers_wrath", [
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Dreamer's Wrath: criticalMultiplier \u2014 Enables Tennokai. Increases opportunity chance by 50% and critical damage by 32%\u2026"),
+  ]),
+  drifting_contact_r3: mod("drifting_contact_r3", [
+    line("comboDuration", "weapon_dps", "multiplicative_percent", "Drifting Contact: comboDuration \u2014 +10s Combo Duration, +40% Status Chance"),
+    line("duration", "mod_panel", "multiplicative_percent", "Drifting Contact: duration \u2014 +10s Combo Duration, +40% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Drifting Contact: statusChance \u2014 +10s Combo Duration, +40% Status Chance"),
+  ]),
+  enduring_affliction: mod("enduring_affliction", [
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Enduring Affliction: statusChance \u2014 +100% Status Chance on Lifted enemies"),
+  ]),
+  enduring_strike: mod("enduring_strike", [], "wiki: Enduring Strike \u2014 +20% Additional Combo Count Chance on Lifted enemies"),
+  energy_channel_r10: mod("energy_channel_r10", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Energy Channel: damage \u2014 Converts 200% of Energy used to up to 200 Bonus Damage on next Melee Attack."),
+  ]),
+  explosive_demise: mod("explosive_demise", [], "wiki: Explosive Demise \u2014 Enemies killed explode, dealing 300 Damage shortly after death."),
+  fever_strike_r3: mod("fever_strike_r3", [
+    line("toxin", "weapon_dps", "elemental_from_base_damage", "Fever Strike: toxin \u2014 +90% <DT_POISON_COLOR>Toxin"),
+  ]),
+  finishing_touch_r10: mod("finishing_touch_r10", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Finishing Touch: damage \u2014 +60% Finisher Damage"),
+  ]),
+  focus_energy_r3: mod("focus_energy_r3", [
+    line("electricity", "weapon_dps", "elemental_from_base_damage", "Focus Energy: electricity \u2014 +40% Heavy Attack Efficiency, +60% <DT_ELECTRICITY_COLOR>Electricity"),
+  ]),
+  focus_radon: mod("focus_radon", [
+    line("radiation", "weapon_dps", "elemental_from_base_damage", "Focus Radon: radiation \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Heavy Attack Efficiency"),
+  ]),
+  focused_defense: mod("focused_defense", [], "wiki: Focused Defense \u2014 +20 Parry Angle"),
+  fury_r3: mod("fury_r3", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Fury: attackSpeed \u2014 +30% Attack Speed"),
+  ]),
+  galvanized_elementalist: mod("galvanized_elementalist", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Galvanized Elementalist: damage \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Elementalist: duration \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
+    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Elementalist: statusChance \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
+  ]),
+  galvanized_reflex: mod("galvanized_reflex", [
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Reflex: duration \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
+  ]),
+  galvanized_steel: mod("galvanized_steel", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Galvanized Steel: criticalChance \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Galvanized Steel: criticalMultiplier \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Steel: duration \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
+  ]),
+  gladiator_ailment: mod("gladiator_ailment", [
+    line("statusDuration", "mod_panel", "multiplicative_percent", "Gladiator Ailment: statusDuration \u2014 +15% Status Duration per rank (Set)"),
+  ]),
+  gladiator_might: mod("gladiator_might", [
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Gladiator Might: criticalMultiplier \u2014 +7.5% Critical Damage per rank (Set)"),
+  ]),
+  gladiator_rush: mod("gladiator_rush", [
+    line("comboDuration", "weapon_dps", "multiplicative_percent", "Gladiator Rush: comboDuration \u2014 +1.5s Combo Duration per rank (Set)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Gladiator Rush: duration \u2014 +1.5s Combo Duration per rank (Set)"),
+  ]),
+  gladiator_vice: mod("gladiator_vice", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Gladiator Vice: attackSpeed \u2014 +7.5% Attack Speed per rank (Set)"),
+  ]),
+  guardian_derision: mod("guardian_derision", [
+    line("comboCountChance", "mod_panel", "multiplicative_percent", "Guardian Derision: comboCountChance \u2014 Blocking taunts enemies within 15 meters to target you instead of allies., +30% \u2026"),
+  ]),
+  harrowed_hook: mod("harrowed_hook", [], "wiki: Harrowed Hook \u2014 With Melee Weapon equipped, unchanneled hits slow target and disable jump for +2s."),
+  healing_return: mod("healing_return", [
+    line("healthOnStatus", "mod_panel", "multiplicative_percent", "Healing Return: healthOnStatus \u2014 Restores 11 Health per Status Type affecting the target"),
+  ]),
+  heartseeker: mod("heartseeker", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Heartseeker: damage \u2014 Lock onto targets within 1m, but reduces blocking effectiveness., -50% Damage Bl\u2026"),
+    line("range", "mod_panel", "multiplicative_percent", "Heartseeker: range \u2014 Lock onto targets within 1m, but reduces blocking effectiveness., -50% Damage Bl\u2026 (arsenal display only)"),
+  ]),
+  heavy_trauma: mod("heavy_trauma", [
+    line("impact", "weapon_dps", "multiplicative_percent", "Heavy Trauma: impact \u2014 +90% <DT_IMPACT_COLOR>Impact"),
+  ]),
+  impenetrable_offense: mod("impenetrable_offense", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Impenetrable Offense: damage \u2014 +30% Damage Block, -10% Melee Damage"),
+  ]),
+  jagged_edge: mod("jagged_edge", [
+    line("slash", "weapon_dps", "multiplicative_percent", "Jagged Edge: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),
+  ]),
+  jugulus_barbs: mod("jugulus_barbs", [
+    line("puncture", "weapon_dps", "multiplicative_percent", "Jugulus Barbs: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Jugulus Barbs: statusChance \u2014 +90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance"),
+  ]),
+  killing_blow: mod("killing_blow", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Killing Blow: damage \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
+    line("heavyAttackDamage", "mod_panel", "multiplicative_percent", "Killing Blow: heavyAttackDamage \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
+  ]),
+  lasting_sting: mod("lasting_sting", [
+    line("statusDuration", "mod_panel", "multiplicative_percent", "Lasting Sting: statusDuration \u2014 +110% Status Duration"),
+  ]),
+  life_strike: mod("life_strike", [
+    line("lifeSteal", "mod_panel", "multiplicative_percent", "Life Strike: lifeSteal \u2014 Heavy Attacks have +5% Life Steal per rank"),
+  ]),
+  magnetic_rush: mod("magnetic_rush", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Magnetic Rush: attackSpeed \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +20% Attack Speed"),
+    line("magnetic", "weapon_dps", "elemental_from_base_damage", "Magnetic Rush: magnetic \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +20% Attack Speed"),
+  ]),
+  maiming_strike: mod("maiming_strike", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Maiming Strike: criticalChance \u2014 +150% Critical Chance for Slide Attack"),
+  ]),
+  mark_of_the_beast: mod("mark_of_the_beast", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Mark Of The Beast: criticalChance \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Mark Of The Beast: duration \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Mark Of The Beast: statusChance \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
+  ]),
+  martial_fury: mod("martial_fury", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Martial Fury: attackSpeed \u2014 +20% Attack Speed, -50% Energy Rate"),
+    line("energy", "warframe_totals", "multiplicative_percent", "Martial Fury: energy \u2014 +20% Attack Speed, -50% Energy Rate"),
+  ]),
+  masters_edge: mod("masters_edge", [], "wiki: Master's Edge \u2014 Enables Tennokai. Increases Tennokai damage by 60%."),
+  melee_aptitude: mod("melee_aptitude", [
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Melee Aptitude: statusChance \u2014 +15% Status Chance per rank"),
+  ]),
+  melee_elementalist: mod("melee_elementalist", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Melee Elementalist: damage \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
+    line("heavyAttackSpeed", "mod_panel", "multiplicative_percent", "Melee Elementalist: heavyAttackSpeed \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
+  ]),
+  melee_prowess: mod("melee_prowess", [
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Melee Prowess: statusChance \u2014 +90% Status Chance"),
+  ]),
+  mentors_legacy: mod("mentors_legacy", [], "wiki: Mentor's Legacy \u2014 Enables Tennokai."),
+  molten_impact_r3: mod("molten_impact_r3", [
+    line("heat", "weapon_dps", "elemental_from_base_damage", "Molten Impact: heat \u2014 +90% <DT_FIRE_COLOR>Heat"),
+  ]),
+  mortal_conduct: mod("mortal_conduct", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Mortal Conduct: damage \u2014 At Less than 50 Health:\\\\n+60% Damage taken is reflected when Blocking attacks w\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Mortal Conduct: duration \u2014 At Less than 50 Health:\\\\n+60% Damage taken is reflected when Blocking attacks w\u2026"),
+  ]),
+  motus_impact: mod("motus_impact", [
+    line("range", "mod_panel", "multiplicative_percent", "Motus Impact: range \u2014 Increase range of aerial melee attacks by +2m. (arsenal display only)"),
+  ]),
+  niras_contempt: mod("niras_contempt", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Nira's Contempt: damage \u2014 +90% Melee Damage\\\\n+60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Nira's Contempt: statusChance \u2014 +90% Melee Damage\\\\n+60% Status Chance"),
+  ]),
+  north_wind_r3: mod("north_wind_r3", [
+    line("cold", "weapon_dps", "elemental_from_base_damage", "North Wind: cold \u2014 +90% <DT_FREEZE_COLOR>Cold"),
+  ]),
+  opportunitys_reach: mod("opportunitys_reach", [
+    line("duration", "mod_panel", "multiplicative_percent", "Opportunity's Reach: duration \u2014 Enables Tennokai. Increases opportunity window to 4.0s and melee range by 3m for\u2026"),
+    line("range", "mod_panel", "multiplicative_percent", "Opportunity's Reach: range \u2014 Enables Tennokai. Increases opportunity window to 4.0s and melee range by 3m for\u2026 (arsenal display only)"),
+  ]),
+  organ_shatter_r3: mod("organ_shatter_r3", [
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Organ Shatter: criticalMultiplier \u2014 +90% Critical Damage"),
+  ]),
+  power_throw: mod("power_throw", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Power Throw: damage \u2014 +2 Punch Through, On Consecutive throw (Max stacks 3):\\\\n+100% Throw Damage"),
+    line("punchThrough", "mod_panel", "multiplicative_percent", "Power Throw: punchThrough \u2014 +2 Punch Through, On Consecutive throw (Max stacks 3):\\\\n+100% Throw Damage (arsenal display only)"),
+  ]),
+  pressure_point_r3: mod("pressure_point_r3", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Pressure Point: damage \u2014 +200% Melee Damage, +120% COMBO COUNT CHANCE"),
+  ]),
+  primed_fever_strike: mod("primed_fever_strike", [
+    line("toxin", "weapon_dps", "elemental_from_base_damage", "Primed Fever Strike: toxin \u2014 +15% Toxin per rank (Primed)"),
+  ]),
+  primed_fury: mod("primed_fury", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Primed Fury: attackSpeed \u2014 +7.5% Attack Speed per rank (Primed)"),
+  ]),
+  primed_heavy_trauma: mod("primed_heavy_trauma", [
+    line("impact", "weapon_dps", "multiplicative_percent", "Primed Heavy Trauma: impact \u2014 +165% <DT_IMPACT_COLOR>Impact"),
+  ]),
+  primed_pressure_point: mod("primed_pressure_point", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Primed Pressure Point: damage \u2014 +20% Damage per rank (Primed)"),
+  ]),
+  primed_reach: mod("primed_reach", [
+    line("range", "mod_panel", "multiplicative_percent", "Primed Reach: range \u2014 +17% Range per rank (Primed) (arsenal display only)"),
+  ]),
+  primed_smite_corpus: mod("primed_smite_corpus", [
+    line("factionCorpus", "mod_panel", "multiplicative_percent", "Primed Smite Corpus: factionCorpus \u2014 x1.55 Damage to Corpus"),
+  ]),
+  primed_smite_grineer: mod("primed_smite_grineer", [
+    line("factionGrineer", "mod_panel", "multiplicative_percent", "Primed Smite Grineer: factionGrineer \u2014 x1.55 Damage to Grineer"),
+  ]),
+  primed_smite_infested: mod("primed_smite_infested", [
+    line("factionInfested", "mod_panel", "multiplicative_percent", "Primed Smite Infested: factionInfested \u2014 x1.55 Damage to Infested"),
+  ]),
+  primed_smite_orokin: mod("primed_smite_orokin", [
+    line("factionOrokin", "mod_panel", "multiplicative_percent", "Primed Smite Orokin: factionOrokin \u2014 x1.55 Damage to Orokin"),
+  ]),
+  primed_smite_the_murmur: mod("primed_smite_the_murmur", [
+    line("factionMurmur", "mod_panel", "multiplicative_percent", "Primed Smite The Murmur: factionMurmur \u2014 x1.55 Damage to Murmur"),
+  ]),
+  proton_snap: mod("proton_snap", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Proton Snap: damage \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Proton Snap: duration \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Proton Snap: statusChance \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
+  ]),
+  quick_return: mod("quick_return", [], "wiki: Quick Return \u2014 -4 Bounce"),
+  quickening_r3: mod("quickening_r3", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Quickening: attackSpeed \u2014 +40% Attack Speed, +20% Combo Count Chance"),
+  ]),
+  reach_r3: mod("reach_r3", [], "wiki: Reach \u2014 +1.5 Range"),
+  rebound: mod("rebound", [], "wiki: Rebound \u2014 +4 Bounce"),
+  reflex_coil_r3: mod("reflex_coil_r3", [], "wiki: Reflex Coil \u2014 +60% Heavy Attack Efficiency"),
+  relentless_assault: mod("relentless_assault", [
+    line("duration", "mod_panel", "multiplicative_percent", "Relentless Assault: duration \u2014 On Kill:\\\\n+2 Energy Rate for 4s"),
+  ]),
+  relentless_combination_r3: mod("relentless_combination_r3", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Relentless Combination: damage \u2014 +100% chance to increase Melee Combo Counter when <DT_SLASH_COLOR>Slash Status d\u2026"),
+  ]),
+  rending_strike: mod("rending_strike", [
+    line("puncture", "weapon_dps", "multiplicative_percent", "Rending Strike: puncture \u2014 +60% <DT_SLASH_COLOR>Slash, +80% <DT_PUNCTURE_COLOR>Puncture"),
+    line("slash", "weapon_dps", "multiplicative_percent", "Rending Strike: slash \u2014 +60% <DT_SLASH_COLOR>Slash, +80% <DT_PUNCTURE_COLOR>Puncture"),
+  ]),
+  riven_melee: mod("riven_melee", [], "wiki: Riven Mod (Melee) \u2014 Riven mod with random stats. Configure stats after equipping."),
+  sacrificial_pressure: mod("sacrificial_pressure", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Sacrificial Pressure: damage \u2014 +110% Melee Damage, x1.33 Damage to Sentients"),
+    line("sentientDamage", "mod_panel", "multiplicative_percent", "Sacrificial Pressure: sentientDamage \u2014 +110% Melee Damage, x1.33 Damage to Sentients"),
+  ]),
+  sacrificial_steel: mod("sacrificial_steel", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "Sacrificial Steel: criticalChance \u2014 +220% Critical Chance (x2 for Heavy Attacks)\\\\nx1.33 Damage to Sentients"),
+    line("sentientDamage", "mod_panel", "multiplicative_percent", "Sacrificial Steel: sentientDamage \u2014 +220% Critical Chance (x2 for Heavy Attacks)\\\\nx1.33 Damage to Sentients"),
+  ]),
+  saxum_thorax: mod("saxum_thorax", [
+    line("impact", "weapon_dps", "multiplicative_percent", "Saxum Thorax: impact \u2014 +90% <DT_IMPACT_COLOR>Impact, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Saxum Thorax: statusChance \u2014 +90% <DT_IMPACT_COLOR>Impact, +60% Status Chance"),
+  ]),
+  seismic_wave: mod("seismic_wave", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Seismic Wave: damage \u2014 +200% Slam Attack Damage"),
+  ]),
+  serrated_edges: mod("serrated_edges", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Serrated Edges: damage \u2014 20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture"),
+  ]),
+  sharpened_blade: mod("sharpened_blade", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Sharpened Blade: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
+  ]),
+  shocking_touch_r3: mod("shocking_touch_r3", [
+    line("electricity", "weapon_dps", "elemental_from_base_damage", "Shocking Touch: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),
+  ]),
+  smite_corpus_r3: mod("smite_corpus_r3", [
+    line("factionCorpus", "mod_panel", "multiplicative_percent", "Smite Corpus: factionCorpus \u2014 x1.3 Damage to Corpus"),
+  ]),
+  smite_grineer_r3: mod("smite_grineer_r3", [
+    line("factionGrineer", "mod_panel", "multiplicative_percent", "Smite Grineer: factionGrineer \u2014 x1.3 Damage to Grineer"),
+  ]),
+  smite_infested_r3: mod("smite_infested_r3", [
+    line("factionInfested", "mod_panel", "multiplicative_percent", "Smite Infested: factionInfested \u2014 x1.3 Damage to Infested"),
+  ]),
+  smite_orokin: mod("smite_orokin", [
+    line("factionOrokin", "mod_panel", "multiplicative_percent", "Smite Orokin: factionOrokin \u2014 x1.3 Damage to Orokin"),
+  ]),
+  smite_the_murmur: mod("smite_the_murmur", [
+    line("factionMurmur", "mod_panel", "multiplicative_percent", "Smite The Murmur: factionMurmur \u2014 x1.3 Damage to Murmur"),
+  ]),
+  spoiled_strike_r3: mod("spoiled_strike_r3", [
+    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Spoiled Strike: attackSpeed \u2014 +100% Melee Damage, -20% Attack Speed"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Spoiled Strike: damage \u2014 +100% Melee Damage, -20% Attack Speed"),
+  ]),
+  spring_loaded_blade: mod("spring_loaded_blade", [
+    line("duration", "mod_panel", "multiplicative_percent", "Spring-Loaded Blade: duration \u2014 On Status Effect: +1 Range for 24s. Stacks up to 2 times."),
+    line("range", "mod_panel", "multiplicative_percent", "Spring-Loaded Blade: range \u2014 On Status Effect: +1 Range for 24s. Stacks up to 2 times. (arsenal display only)"),
+  ]),
+  stance_bonus_crimson: mod("stance_bonus_crimson", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Crimson Orbit: damage \u2014 Stance bonus: +10% Damage per rank"),
+  ]),
+  stand_ground: mod("stand_ground", [], "wiki: Stand Ground \u2014 Blocking reduces damage taken from enemy abilities by 60%."),
+  strain_infection: mod("strain_infection", [
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Strain Infection: criticalMultiplier \u2014 Melee Attacks gain +20% Critical Damage per Cyst."),
+  ]),
+  sundering_strike: mod("sundering_strike", [
+    line("puncture", "weapon_dps", "multiplicative_percent", "Sundering Strike: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),
+  ]),
+  sword_alone: mod("sword_alone", [
+    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Sword Alone: sprintSpeed \u2014 With Melee Equipped:\\\\n+10% Mobility\\\\n+30% Sprint Speed"),
+  ]),
+  tek_gravity_r3: mod("tek_gravity_r3", [
+    line("range", "mod_panel", "multiplicative_percent", "Tek Gravity: range \u2014 Slam Attacks in the Marked Zone pull all enemies within 20m. (arsenal display only)"),
+  ]),
+  true_punishment: mod("true_punishment", [
+    line("comboDuration", "weapon_dps", "multiplicative_percent", "True Punishment: comboDuration \u2014 +100% Additional Combo Count Chance, -50% Combo Duration"),
+  ]),
+  true_steel_r3: mod("true_steel_r3", [
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "True Steel: criticalChance \u2014 +120% Critical Chance (x2 for Heavy Attacks)"),
+  ]),
+  vicious_frost: mod("vicious_frost", [
+    line("cold", "weapon_dps", "elemental_from_base_damage", "Vicious Frost: cold \u2014 +60% <DT_FREEZE_COLOR>Cold, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Vicious Frost: statusChance \u2014 +60% <DT_FREEZE_COLOR>Cold, +60% Status Chance"),
+  ]),
+  virulent_scourge: mod("virulent_scourge", [
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Virulent Scourge: statusChance \u2014 +60% <DT_POISON_COLOR>Toxin, +60% Status Chance"),
+    line("toxin", "weapon_dps", "elemental_from_base_damage", "Virulent Scourge: toxin \u2014 +60% <DT_POISON_COLOR>Toxin, +60% Status Chance"),
+  ]),
+  volatile_quick_return: mod("volatile_quick_return", [
+    line("punchThrough", "mod_panel", "multiplicative_percent", "Volatile Quick Return: punchThrough \u2014 -4 Bounce, +3 Blast Radius, +100% Chance to explode on Bounce (Disables Punch Th\u2026 (arsenal display only)"),
+  ]),
+  volatile_rebound: mod("volatile_rebound", [
+    line("punchThrough", "mod_panel", "multiplicative_percent", "Volatile Rebound: punchThrough \u2014 +100% Chance to explode on Bounce (Disables Punch Through) (arsenal display only)"),
+  ]),
+  volcanic_edge: mod("volcanic_edge", [
+    line("heat", "weapon_dps", "elemental_from_base_damage", "Volcanic Edge: heat \u2014 +60% <DT_FIRE_COLOR>Heat, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Volcanic Edge: statusChance \u2014 +60% <DT_FIRE_COLOR>Heat, +60% Status Chance"),
+  ]),
+  voltaic_strike: mod("voltaic_strike", [
+    line("electricity", "weapon_dps", "elemental_from_base_damage", "Voltaic Strike: electricity \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "Voltaic Strike: statusChance \u2014 +60% <DT_ELECTRICITY_COLOR>Electricity, +60% Status Chance"),
+  ]),
+  weeping_wounds_r5: mod("weeping_wounds_r5", [
+    line("statusChance", "weapon_dps", "conditional_combo_status", "Weeping Wounds: statusChance \u2014 +40% Status Chance per Combo Multiplier"),
+  ]),
+  whirlwind: mod("whirlwind", [
+    line("projectileSpeed", "mod_panel", "multiplicative_percent", "Whirlwind: projectileSpeed \u2014 +180% Projectile Speed"),
+  ]),
+};

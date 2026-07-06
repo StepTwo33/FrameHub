@@ -1,7 +1,7 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getArcaneEffectDef } from "@/lib/arcane-effect-overrides";
 export { getArcaneEffectDef };
-import { shouldApplyEffectToBuild } from "@/lib/arcane-apply-policy";
+import { shouldApplyArcaneLineToBuild } from "@/lib/arcane-behavior-registry";
 import {
   applyCustomArcaneToWarframe,
   applyCustomArcaneToWeapon,
@@ -217,7 +217,7 @@ export function applyArcaneEffectsToWeapon(
   for (const line of def.effects) {
     const raw = resolveEffectValue(def, line, rank, stacks);
     trackBonus(stats, line.stat, line.flat ? raw : raw);
-    if (shouldApplyEffectToBuild(def.trigger, line.stat, "weapon", arcaneId)) {
+    if (shouldApplyArcaneLineToBuild(arcaneId, line.stat, "weapon")) {
       applyWeaponStatToBuild(stats, line.stat, raw, line, baseWeapon);
     }
   }
@@ -257,7 +257,7 @@ export function applyArcaneEffectsToWarframe(
   for (const line of def.effects) {
     const raw = resolveEffectValue(def, line, rank, stacks);
     applyWarframeStat(stats, line.stat, raw, line);
-    if (shouldApplyEffectToBuild(def.trigger, line.stat, "warframe", arcaneId)) {
+    if (shouldApplyArcaneLineToBuild(arcaneId, line.stat, "warframe")) {
       applyWarframeStatToBuild(stats, line.stat, raw, line, context, def);
     }
   }
@@ -280,7 +280,7 @@ export function applyArcaneToWeaponFromMod(
     const line = { stat, maxValue: value, flat: false };
     const raw = value * stacks;
     trackBonus(stats, stat, raw);
-    if (shouldApplyEffectToBuild("passive", stat, "weapon", arcane.id)) {
+    if (shouldApplyArcaneLineToBuild(arcane.id, stat, "weapon")) {
       applyWeaponStatToBuild(stats, stat, raw, line, baseWeapon);
     }
   }
@@ -307,7 +307,7 @@ export function applyArcaneToWarframeFromMod(
       totalArmor: stats.totalArmor,
     };
     applyWarframeStat(stats, stat, raw, line);
-    if (shouldApplyEffectToBuild("passive", stat, "warframe", arcane.id)) {
+    if (shouldApplyArcaneLineToBuild(arcane.id, stat, "warframe")) {
       applyWarframeStatToBuild(stats, stat, raw, line, wfCtx);
     }
   }

@@ -245,8 +245,9 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_energize": {
+      trackBonus(stats, "energyPickupChance", scaledLine(def, findEffect(def, "energyPickupChance"), rank, stacks));
       trackBonus(stats, "energyOrbBonus", scaledLine(def, findEffect(def, "energyOrbBonus"), rank, stacks));
-      trackBonus(stats, "allyEnergy", scaledLine(def, findEffect(def, "allyEnergy"), rank, stacks));
+      trackBonus(stats, "allyEnergyRadius", scaledLine(def, findEffect(def, "allyEnergyRadius"), rank, stacks));
       return true;
     }
 

@@ -1,0 +1,74 @@
+/**
+ * Per-item stat behavior — no blanket stat-key rules.
+ * Each mod, arcane, and ability line gets its own verified entry.
+ */
+
+/** Where a verified stat line is applied in build math. */
+export type ItemApplyTarget =
+  | "weapon_dps"
+  | "warframe_totals"
+  | "companion_totals"
+  | "arcane_panel"
+  | "mod_panel"
+  | "pending";
+
+/** How to fold a ranked mod/arcane value into the build. */
+export type ItemApplyMode =
+  | "multiplicative_percent"
+  | "additive_percent"
+  | "flat"
+  | "elemental_from_base_damage"
+  | "conditional_combo_crit"
+  | "conditional_combo_status"
+  | "conditional_damage_per_status"
+  | "conditional_multishot_on_kill"
+  | "conditional_damage_per_status_on_kill"
+  | "conditional_attack_speed_on_kill"
+  | "custom";
+
+export interface VerifiedItemStatLine {
+  statKey: string;
+  target: ItemApplyTarget;
+  mode: ItemApplyMode;
+  /** Wiki page or note for staff audit trail. */
+  source?: string;
+}
+
+export interface VerifiedModBehavior {
+  modId: string;
+  /** When set, entire mod dispatches to a named custom handler (still per-mod, not by stat key). */
+  customHandler?: string;
+  stats: VerifiedItemStatLine[];
+  /** Mod exists in catalog but stats live in ability logic / description only (mods.ts stats: {}). */
+  descriptionOnly?: string;
+}
+
+export interface VerifiedArcaneEffectLine {
+  statKey: string;
+  target: ItemApplyTarget;
+  mode: ItemApplyMode;
+  source?: string;
+}
+
+export interface VerifiedArcaneBehavior {
+  arcaneId: string;
+  customHandler?: string;
+  effects: VerifiedArcaneEffectLine[];
+}
+
+export function itemApplyTargetLabel(target: ItemApplyTarget): string {
+  switch (target) {
+    case "weapon_dps":
+      return "Weapon DPS";
+    case "warframe_totals":
+      return "Warframe totals";
+    case "companion_totals":
+      return "Companion totals";
+    case "arcane_panel":
+      return "Arcane panel only";
+    case "mod_panel":
+      return "Mod panel only";
+    case "pending":
+      return "Pending verification";
+  }
+}

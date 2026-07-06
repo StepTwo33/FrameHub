@@ -49,6 +49,10 @@ import { getModImage, getArcaneImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
 import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { getArcaneStatLabel } from "@/lib/arcane-display";
+import { getVerifiedArcaneBehavior } from "@/lib/arcane-behavior-registry";
+import { itemApplyTargetLabel } from "@/lib/item-behavior-types";
+import { cleanModDescription, getModStatDisplayLines, modDrainAtRank } from "@/lib/mod-display";
+import { getModStatLabel } from "@/lib/override-stat-catalog";
 import { useStaffRole } from "@/lib/use-staff";
 import { ArcaneValuesDialog } from "@/components/arcane-values-dialog";
 import { useMods, useArcanes, useArchonShards, useArcaneEffects, useWeapons, useWarframes, useCompanions, useArchwings, useNecramechs } from "@/lib/use-data";
@@ -873,7 +877,7 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
       </div>
 
       <p className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-sm")}>
-        {mod.description}
+        {cleanModDescription(mod.description)}
       </p>
 
       <div className="grid grid-cols-2 gap-1.5 text-xs">
@@ -903,25 +907,29 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
         </p>
       ) : (
         <p className="text-[10px] leading-snug text-muted-foreground">
-          Capacity drain: R0 = {mod.drain}, max rank R{mod.maxRank} = {maxCap} (+1 per rank).
+          Capacity drain: R0 = {modDrainAtRank(mod.drain, 0)}, max rank R{mod.maxRank} = {modDrainAtRank(mod.drain, mod.maxRank)} (+1 per rank).
         </p>
       )}
 
       {Object.keys(mod.stats ?? {}).length > 0 && (
         <div>
-          <PanelHeading>Stats @ max rank</PanelHeading>
-          <div className="mt-1 flex flex-wrap gap-1">
-            {Object.entries(mod.stats ?? {}).map(([stat, value]) => {
-              const maxVal = value * (mod.maxRank + 1);
-              const label = stat.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
+          <PanelHeading>Stats (R0 → max)</PanelHeading>
+          <ul className="mt-1 space-y-1">
+            {Object.entries(mod.stats ?? {}).map(([statKey, perRank]) => {
+              const r0 = getModStatDisplayLines({ ...mod, stats: { [statKey]: perRank } }, 0)[0];
+              const rMax = getModStatDisplayLines({ ...mod, stats: { [statKey]: perRank } }, mod.maxRank)[0];
               return (
-                <span key={stat} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
-                  {label}: {maxVal > 0 ? "+" : ""}
-                  {Number.isInteger(maxVal) ? maxVal : maxVal.toFixed(1)}
-                </span>
+                <li key={statKey} className="flex justify-between gap-2 text-xs">
+                  <span className="text-muted-foreground">{getModStatLabel(statKey)}</span>
+                  <span className="font-mono text-emerald-400 text-right">
+                    {r0?.atRank ?? "—"}
+                    <span className="text-muted-foreground/70"> → </span>
+                    {rMax?.atMax ?? "—"}
+                  </span>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
       )}
 
@@ -957,6 +965,7 @@ function ArcaneDetailPanel({
 }) {
   const isStaff = useStaffRole();
   const [editValuesOpen, setEditValuesOpen] = useState(false);
+  const behavior = getVerifiedArcaneBehavior(arcane.id);
 
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
@@ -1012,12 +1021,45 @@ function ArcaneDetailPanel({
 
       {display.applied.length > 0 && (
         <div>
-          <PanelHeading>Applied</PanelHeading>
+          <PanelHeading>Applied @ R{rank}</PanelHeading>
           <ul className="space-y-0.5 text-xs">
             {display.applied.map((line) => (
               <li key={line.label} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{line.label}</span>
                 <span className="font-mono text-emerald-400">{line.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {display.conditional.length > 0 && (
+        <div>
+          <PanelHeading>Conditional @ R{rank}</PanelHeading>
+          <ul className="space-y-1 text-xs">
+            {display.conditional.map((line) => (
+              <li key={`${line.label}-${line.value}`}>
+                <div className="flex justify-between gap-2">
+                  <span className="text-muted-foreground">{line.label}</span>
+                  <span className="font-mono text-amber-300/90">{line.value}</span>
+                </div>
+                {line.note && (
+                  <p className="text-[10px] text-muted-foreground/80">{line.note}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {behavior && behavior.effects.length > 0 && (
+        <div>
+          <PanelHeading>Build apply</PanelHeading>
+          <ul className="space-y-0.5 text-xs">
+            {behavior.effects.map((line) => (
+              <li key={line.statKey} className="flex justify-between gap-2">
+                <span className="text-muted-foreground truncate">{getArcaneStatLabel(line.statKey)}</span>
+                <span className="shrink-0 text-[10px] text-purple-300/90">{itemApplyTargetLabel(line.target)}</span>
               </li>
             ))}
           </ul>

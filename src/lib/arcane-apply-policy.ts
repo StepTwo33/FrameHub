@@ -1,8 +1,8 @@
 import { ArcaneEffectLine, ArcaneTrigger } from "@/data/arcane-effects";
 
 /**
- * Which effects may modify core build totals vs display-only arcaneBonuses.
- * Conditional/proc/on-pickup stats must NOT blanket-inflate DPS, EHP, or max pool stats.
+ * @deprecated Runtime apply rules live in src/data/arcane-behaviors.ts (per arcane, per effect line).
+ * This file is kept only for the generate_arcane_behaviors.py migration script.
  */
 
 /** Never folded into burst/sustained DPS or primary stat rows — tracked for arcane panel only. */
@@ -59,6 +59,27 @@ export const WEAPON_BONUS_ONLY_STATS = new Set([
   "comboDuration",
   "recoilReduction",
   "meleeDamageBonus",
+  "buffDuration",
+  "cooldown",
+  "aimGlideDuration",
+  "airborneAccuracy",
+  "airborneRecoilReduction",
+  "ampAmmoEfficiency",
+  "explosionRadiusScale",
+  "freezeRadius",
+  "zoneProcChance",
+  "zoneDuration",
+  "zoneDamage",
+  "zoneDamagePerSec",
+  "reloadProcChance",
+  "holsterDamageChance",
+  "headshotProcChance",
+  "killProcChance",
+  "primaryDamageChance",
+  "fireRateOnCritChance",
+  "meleeDamagePerShield",
+  "meleeDamagePerShieldCap",
+  "overguardStrip",
 ]);
 
 /** Passive weapon arcanes may modify these core stats. */
@@ -151,6 +172,29 @@ export const WARFRAME_BONUS_ONLY_STATS = new Set([
   "headshotHealthRegen",
   "statusChancePerHit",
   "tauronStrikeCharge",
+  "buffDuration",
+  "cooldown",
+  "abilityStrengthCap",
+  "allyEnergyRadius",
+  "allyHealRadius",
+  "attackCount",
+  "damagePerArmorCap",
+  "dodgeSpeedChance",
+  "energyCap",
+  "energyPickupChance",
+  "headshotHealthRegenChance",
+  "healthPickupChance",
+  "kdDriveSpeed",
+  "operatorHealPercent",
+  "operatorHeatDamage",
+  "shieldRestorePercent",
+  "voidSlingRadius",
+  "voidParticleCap",
+  "voidTrapRadius",
+  "voidTrapTetherCount",
+  "voidStunDuration",
+  "voidBlastRadius",
+  "meleeHeavyCritCap",
 ]);
 
 /** Passive warframe arcanes may modify these core stats. */

@@ -20,6 +20,12 @@ import {
   weaponAcceptsSynthReloadBonus,
 } from './set-bonuses';
 import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
+import {
+  applyVerifiedModStatToWarframe,
+  applyVerifiedModStatToWeapon,
+  type WarframeModAccumulators,
+  type WeaponModAccumulators,
+} from '@/lib/mod-behavior-registry';
 
 /** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
 export function getWarframeEnergyModBase(warframe: Warframe): number {
@@ -40,7 +46,7 @@ const ELEMENTAL_COMBOS: Record<string, { a: string; b: string }> = {
 };
 
 const BASE_ELEMENTS = ['heat', 'cold', 'toxin', 'electricity'] as const;
-/** Combo elements that can be added directly by mods (no further combining). */
+/** @deprecated Element mods apply only via per-mod verified entries in mod-behaviors. */
 const DIRECT_ELEMENT_MOD_STATS = [
   'radiation', 'magnetic', 'viral', 'corrosive', 'gas', 'blast',
 ] as const;
@@ -152,18 +158,6 @@ const GLADIATOR_MOD_IDS = [
 ];
 
 const vigilanteIdList = VIGILANTE_MOD_IDS as unknown as string[];
-
-// ── Conditional Mod Detection ───────────────────────────────────────────
-function isConditionalMod(modName: string): string | null {
-  const n = modName.toLowerCase();
-  if (n.includes('condition overload')) return 'condition_overload';
-  if (n.includes('blood rush')) return 'blood_rush';
-  if (n.includes('weeping wounds')) return 'weeping_wounds';
-  if (n.includes('berserker fury')) return 'berserker_fury';
-  if (n.includes('galvanized aptitude') || n.includes('galvanized savvy') || n.includes('galvanized shot')) return 'galvanized_condition';
-  if (n.includes('galvanized chamber') || n.includes('galvanized hell') || n.includes('galvanized diffusion')) return 'galvanized_multishot';
-  return null;
-}
 
 // ── Melee combo (current system, wiki: Melee Combo) ─────────────────────
 // Blood Rush / Weeping Wounds / Gladiator use the "Melee Damage Multiplier" column.
@@ -311,70 +305,74 @@ export function calculateWeaponBuild(
   const vigFromSimFallback = linkage ? 0 : (sim.extraVigilanteModsFromWarframe ?? 0);
   const vigilanteCount = vigOnWeapon + vigFromLinkedWf + vigFromSimFallback;
 
+  const weaponModAcc: WeaponModAccumulators = {
+    damageBonus: 0,
+    critChanceBonus: 0,
+    critMultBonus: 0,
+    fireRateBonus: 0,
+    multishotBonus: 0,
+    statusBonus: 0,
+    magBonus: 0,
+    reloadBonus: 0,
+    impactBonus: 0,
+    punctureBonus: 0,
+    slashBonus: 0,
+    hasBloodRush: false,
+    bloodRushValue: 0,
+    hasConditionOverload: false,
+    conditionOverloadPerStatus: 0,
+    hasWeepingWounds: false,
+    weepingWoundsValue: 0,
+    hasBerserkerFury: false,
+    berserkerFuryPerStack: 0,
+    galvMultishotOnKillPerStack: 0,
+    galvDamagePerStatusPerStack: 0,
+  };
+
   for (const modSlot of equippedMods) {
     const mod = allMods.get(modSlot.modId);
     if (!mod) continue;
 
     const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
-    const conditional = isConditionalMod(mod.name);
-    // Sacrificial set bonus: multiply mod values by (1 + setBonus)
     const setMult = SACRIFICIAL_MOD_IDS.includes(modSlot.modId) ? (1 + sacSetBonus) : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
       const modValue = (value * multiplier * setMult) / 100.0;
-
-      if (BASE_ELEMENTS.includes(statName as typeof BASE_ELEMENTS[number])) {
-        elementalMods.push({ type: statName, value: baseWeapon.damage * modValue });
-      } else if (DIRECT_ELEMENT_MOD_STATS.includes(statName as typeof DIRECT_ELEMENT_MOD_STATS[number])) {
-        elementalMods.push({ type: statName, value: baseWeapon.damage * modValue });
-      } else if (conditional === 'blood_rush' && (statName === 'criticalChance' || statName === 'criticalChancePerCombo')) {
-        hasBloodRush = true;
-        bloodRushValue = modValue;
-      } else if (conditional === 'condition_overload' && (statName === 'damage' || statName === 'damagePerStatus')) {
-        hasConditionOverload = true;
-        conditionOverloadPerStatus = modValue;
-      } else if (conditional === 'weeping_wounds' && (statName === 'statusChance' || statName === 'statusChancePerCombo')) {
-        hasWeepingWounds = true;
-        weepingWoundsValue = modValue;
-      } else if (conditional === 'berserker_fury' && statName === 'attackSpeed') {
-        hasBerserkerFury = true;
-        berserkerFuryPerStack = modValue;
-      } else if (conditional === 'galvanized_multishot') {
-        if (statName === 'multishot') {
-          // Base multishot bonus (always active)
-          multishotBonus += modValue;
-        } else if (statName === 'multishotOnKill') {
-          // Per-kill stack bonus
-          galvMultishotOnKillPerStack = modValue;
-        }
-      } else if (conditional === 'galvanized_condition') {
-        if (statName === 'statusChance') {
-          // Base status chance bonus (always active)
-          statusBonus += modValue;
-        } else if (statName === 'damagePerStatus') {
-          // Per-status-type damage bonus
-          galvDamagePerStatusPerStack = modValue;
-        }
-      } else {
-        switch (statName) {
-          case 'damage': damageBonus += modValue; break;
-          case 'criticalChance': critChanceBonus += modValue; break;
-          case 'criticalMultiplier': critMultBonus += modValue; break;
-          case 'fireRate': case 'attackSpeed': fireRateBonus += modValue; break;
-          case 'multishot': multishotBonus += modValue; break;
-          case 'statusChance': statusBonus += modValue; break;
-          case 'magazine': magBonus += modValue; break;
-          case 'reloadSpeed': reloadBonus += modValue; break;
-          case 'comboDuration': stats.comboDuration += modValue; break;
-          case 'heavyAttackEfficiency': stats.heavyAttackEfficiency += modValue; break;
-          case 'impact': impactBonus += modValue; break;
-          case 'puncture': punctureBonus += modValue; break;
-          case 'slash': slashBonus += modValue; break;
-        }
-      }
+      applyVerifiedModStatToWeapon(stats, {
+        modId: modSlot.modId,
+        statKey: statName,
+        modValue,
+        baseWeaponDamage: baseWeapon.damage,
+        acc: weaponModAcc,
+        elementalMods,
+        comboDuration: { add: (v) => { stats.comboDuration += v; } },
+        heavyAttackEfficiency: { add: (v) => { stats.heavyAttackEfficiency += v; } },
+      });
     }
   }
+
+  damageBonus = weaponModAcc.damageBonus;
+  critChanceBonus = weaponModAcc.critChanceBonus;
+  critMultBonus = weaponModAcc.critMultBonus;
+  fireRateBonus = weaponModAcc.fireRateBonus;
+  multishotBonus = weaponModAcc.multishotBonus;
+  statusBonus = weaponModAcc.statusBonus;
+  magBonus = weaponModAcc.magBonus;
+  reloadBonus = weaponModAcc.reloadBonus;
+  impactBonus = weaponModAcc.impactBonus;
+  punctureBonus = weaponModAcc.punctureBonus;
+  slashBonus = weaponModAcc.slashBonus;
+  hasBloodRush = weaponModAcc.hasBloodRush;
+  bloodRushValue = weaponModAcc.bloodRushValue;
+  hasConditionOverload = weaponModAcc.hasConditionOverload;
+  conditionOverloadPerStatus = weaponModAcc.conditionOverloadPerStatus;
+  hasWeepingWounds = weaponModAcc.hasWeepingWounds;
+  weepingWoundsValue = weaponModAcc.weepingWoundsValue;
+  hasBerserkerFury = weaponModAcc.hasBerserkerFury;
+  berserkerFuryPerStack = weaponModAcc.berserkerFuryPerStack;
+  galvMultishotOnKillPerStack = weaponModAcc.galvMultishotOnKillPerStack;
+  galvDamagePerStatusPerStack = weaponModAcc.galvDamagePerStatusPerStack;
 
   // Apply Condition Overload: multiplicative damage per status type on target
   if (hasConditionOverload && sim.statusTypesOnTarget > 0) {
@@ -650,6 +648,20 @@ export function calculateWarframeBuild(
 
   const umbralCount = countUmbralSetPieces(equippedMods);
 
+  const wfModAcc: WarframeModAccumulators = {
+    healthBonus: 0,
+    shieldBonus: 0,
+    armorBonus: 0,
+    energyBonus: 0,
+    sprintSpeedBonus: 0,
+    flowBonus: 0,
+    parkourVelocityBonus: 0,
+    abilityStrength: 0,
+    abilityDuration: 0,
+    abilityEfficiency: 0,
+    abilityRange: 0,
+  };
+
   for (const modSlot of equippedMods) {
     const mod = allMods.get(modSlot.modId);
     if (!mod) continue;
@@ -662,9 +674,21 @@ export function calculateWarframeBuild(
     for (const [statName, value] of Object.entries(mod.stats)) {
       const setMult = isUmbral && statName === "tauResistance" ? 1 : umbralSetMult;
       const modValue = (value * multiplier * setMult) / 100.0;
-      applyWarframeMod(stats, statName, modValue);
+      applyVerifiedModStatToWarframe(stats, modSlot.modId, statName, modValue, wfModAcc);
     }
   }
+
+  stats.healthBonus = wfModAcc.healthBonus;
+  stats.shieldBonus = wfModAcc.shieldBonus;
+  stats.armorBonus = wfModAcc.armorBonus;
+  stats.energyBonus = wfModAcc.energyBonus;
+  stats.sprintSpeedBonus = wfModAcc.sprintSpeedBonus;
+  stats.flowBonus = wfModAcc.flowBonus;
+  stats.parkourVelocityBonus = wfModAcc.parkourVelocityBonus;
+  stats.abilityStrength = 1.0 + wfModAcc.abilityStrength;
+  stats.abilityDuration = 1.0 + wfModAcc.abilityDuration;
+  stats.abilityEfficiency = 1.0 + wfModAcc.abilityEfficiency;
+  stats.abilityRange = 1.0 + wfModAcc.abilityRange;
 
   // Calculate derived stats
   stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus);
@@ -708,46 +732,6 @@ export function computeAdaptationSurvivability(
   const combinedDRPercent = (1 - combinedMult) * 100;
   const adaptedEHP = typedDR < 1 ? effectiveHealth / (1 - typedDR) : effectiveHealth;
   return { typedDRPercent: typedDR * 100, combinedDRPercent, adaptedEHP };
-}
-
-function applyWarframeMod(stats: WarframeCalculatedStats, statName: string, value: number): void {
-  switch (statName) {
-    case 'health':
-      stats.healthBonus += value;
-      break;
-    case 'shield':
-      stats.shieldBonus += value;
-      break;
-    case 'armor':
-      stats.armorBonus += value;
-      break;
-    case 'energy':
-    case 'energyMax':
-      stats.energyBonus += value;
-      break;
-    case 'abilityStrength':
-      stats.abilityStrength += value;
-      break;
-    case 'abilityDuration':
-      stats.abilityDuration += value;
-      break;
-    case 'abilityEfficiency':
-      stats.abilityEfficiency += value;
-      break;
-    case 'abilityRange':
-      stats.abilityRange += value;
-      break;
-    case 'sprintSpeed':
-      stats.sprintSpeedBonus += value;
-      break;
-    case 'flow':
-    case 'flowEnergyMax':
-      stats.flowBonus += value;
-      break;
-    case 'parkourVelocity':
-      stats.parkourVelocityBonus += value;
-      break;
-  }
 }
 
 /** Multishot-adjusted status chance (arsenal-style). Beams skip pellet aggregation. */

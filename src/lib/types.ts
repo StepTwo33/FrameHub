@@ -301,6 +301,8 @@ export interface CalculatedStats {
   radialAttacks?: WeaponRadialAttack[];
   /** Accumulated arcane stat values for display / future modeling. */
   arcaneBonuses?: Record<string, number>;
+  /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
+  modBonuses?: Record<string, number>;
 }
 
 export interface WarframeCalculatedStats {
@@ -361,6 +363,8 @@ export interface WarframeCalculatedStats {
   persistenceActive?: boolean;
   /** Accumulated arcane stat values for display / future modeling. */
   arcaneBonuses?: Record<string, number>;
+  /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
+  modBonuses?: Record<string, number>;
 }
 
 export interface Companion {
