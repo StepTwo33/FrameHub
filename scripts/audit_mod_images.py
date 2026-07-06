@@ -16,6 +16,7 @@ MOD_IMAGE_STEM_BY_NAME = {
     "Frost Claws": "Chilling_Claws",
     "Looters": "Looter",
     "ReactivStorm": "Reactive_Storm",
+    "Berserker": "Berserker_Fury",
 }
 MOD_STEM_SMALL_WORDS = {"of", "the", "and"}
 

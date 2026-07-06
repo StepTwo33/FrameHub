@@ -90,6 +90,9 @@ export interface WeaponRadialAttack {
   /** Damage reduction at max radius (0.5 = 50% falloff from center to edge). */
   falloffReduction?: number;
   explosionDelay?: number;
+  /** Populated by build calculator for innate radial profiles. */
+  burstDps?: number;
+  avgDamage?: number;
 }
 
 export interface Warframe {
@@ -299,6 +302,10 @@ export interface CalculatedStats {
   setBonusSummary?: SetBonusSummaryLine[];
   /** Mod-scaled radial / AoE attacks when the weapon has them. */
   radialAttacks?: WeaponRadialAttack[];
+  /** Sum of inferred radial burst DPS (excludes manual melee slams). */
+  radialBurstDps?: number;
+  /** Radial burst DPS adjusted for reload/magazine cycle. */
+  radialSustainedDps?: number;
   /** Accumulated arcane stat values for display / future modeling. */
   arcaneBonuses?: Record<string, number>;
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */

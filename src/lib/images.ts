@@ -27,6 +27,7 @@ const MOD_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Frost Claws": "Chilling_Claws",
   "Looters": "Looter",
   "ReactivStorm": "Reactive_Storm",
+  "Berserker": "Berserker_Fury",
 };
 
 const MOD_STEM_SMALL_WORDS = new Set(["of", "the", "and"]);

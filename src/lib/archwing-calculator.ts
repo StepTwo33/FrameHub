@@ -2,6 +2,7 @@ import { modsMap } from "@/data/mods";
 import type { Archwing, Necramech } from "@/data/archwing";
 import {
   applyVerifiedModStatToArchwing,
+  applyVerifiedModStatToNecramech,
   type ArchwingModAccumulators,
 } from "@/lib/mod-behavior-registry";
 import type { ArchwingCalculatedStats, Mod, ModSlot } from "@/lib/types";
@@ -92,12 +93,10 @@ export function calculateArchwingBuild(
   };
 }
 
-/** Necramech frame stats — archwing mods only; necramech mods use panel bonuses until verified. */
-export function calculateNecramechBuild(
-  necramech: Necramech,
+function applyNecramechMods(
   equippedMods: EquippedArchwingMod[],
-  allMods: Map<string, Mod> = modsMap,
-): ArchwingCalculatedStats {
+  allMods: Map<string, Mod>,
+): { acc: ArchwingModAccumulators; panel: { modBonuses?: Record<string, number> } } {
   const acc = emptyAccumulators();
   const panel: { modBonuses?: Record<string, number> } = {};
 
@@ -108,27 +107,19 @@ export function calculateNecramechBuild(
     const rank = Math.min(Math.max(em.rank ?? 0, 0), mod.maxRank);
     for (const [statKey, perRank] of Object.entries(mod.stats)) {
       const modValue = modStatFraction(perRank, rank);
-      switch (statKey) {
-        case "health":
-          acc.healthBonus += modValue;
-          break;
-        case "shield":
-          acc.shieldBonus += modValue;
-          break;
-        case "armor":
-          acc.armorBonus += modValue;
-          break;
-        case "energy":
-          acc.energyBonus += modValue;
-          break;
-        default:
-          if (!panel.modBonuses) panel.modBonuses = {};
-          panel.modBonuses[`${mod.id}::${statKey}`] =
-            (panel.modBonuses[`${mod.id}::${statKey}`] ?? 0) + modValue * 100;
-          break;
-      }
+      applyVerifiedModStatToNecramech(panel, mod.id, statKey, modValue, acc);
     }
   }
+
+  return { acc, panel };
+}
+
+export function calculateNecramechBuild(
+  necramech: Necramech,
+  equippedMods: EquippedArchwingMod[],
+  allMods: Map<string, Mod> = modsMap,
+): ArchwingCalculatedStats {
+  const { acc, panel } = applyNecramechMods(equippedMods, allMods);
 
   const totalHealth = necramech.health * (1 + acc.healthBonus);
   const totalShield = necramech.shield * (1 + acc.shieldBonus);
@@ -147,10 +138,10 @@ export function calculateNecramechBuild(
     armorBonus: acc.armorBonus,
     energyBonus: acc.energyBonus,
     flightSpeedBonus: 0,
-    abilityStrength: 1,
-    abilityDuration: 1,
-    abilityEfficiency: 1,
-    abilityRange: 1,
+    abilityStrength: 1 + acc.abilityStrength,
+    abilityDuration: 1 + acc.abilityDuration,
+    abilityEfficiency: 1 + acc.abilityEfficiency,
+    abilityRange: 1 + acc.abilityRange,
     totalHealth,
     totalShield,
     totalArmor,

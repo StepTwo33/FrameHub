@@ -393,6 +393,61 @@ export function applyVerifiedModStatToWarframe(
   }
 }
 
+export function applyVerifiedModStatToNecramech(
+  stats: { modBonuses?: Record<string, number> },
+  modId: string,
+  statKey: string,
+  modValue: number,
+  acc: ArchwingModAccumulators,
+): boolean {
+  const line = getVerifiedModStatLine(modId, statKey);
+  if (!line) {
+    trackModPanel(stats, modId, statKey, modValue);
+    return false;
+  }
+
+  if (line.target === "mod_panel" || line.target === "pending") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  if (line.target !== "warframe_totals") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  switch (statKey) {
+    case "health":
+      acc.healthBonus += modValue;
+      return true;
+    case "shield":
+      acc.shieldBonus += modValue;
+      return true;
+    case "armor":
+      acc.armorBonus += modValue;
+      return true;
+    case "energy":
+    case "energyMax":
+      acc.energyBonus += modValue;
+      return true;
+    case "abilityStrength":
+      acc.abilityStrength += modValue;
+      return true;
+    case "abilityDuration":
+      acc.abilityDuration += modValue;
+      return true;
+    case "abilityEfficiency":
+      acc.abilityEfficiency += modValue;
+      return true;
+    case "abilityRange":
+      acc.abilityRange += modValue;
+      return true;
+    default:
+      trackModPanel(stats, modId, statKey, modValue);
+      return true;
+  }
+}
+
 export function applyVerifiedModStatToArchwing(
   stats: { modBonuses?: Record<string, number> },
   modId: string,

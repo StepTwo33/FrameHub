@@ -1,5 +1,9 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponRadialAttack } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard } from './types';
+import { avgCritMultiplier } from './crit-utils';
+import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
+
+export { avgCritMultiplier } from './crit-utils';
 import {
   applyArcaneToWarframeFromMod,
   applyArcaneToWeaponFromMod,
@@ -196,30 +200,16 @@ function getHeavyAttackComboMultiplier(comboCount: number, weaponId?: string): n
   return 12.0;
 }
 
-const RADIAL_DAMAGE_KEYS = [
-  'impact', 'puncture', 'slash', 'heat', 'cold', 'toxin', 'electricity',
-  'radiation', 'viral', 'corrosive', 'blast', 'gas', 'magnetic',
-] as const;
-
-function scaleRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
-  const attacks = baseWeapon.radialAttacks;
-  if (!attacks?.length || !baseWeapon.damage) return;
-
-  const mult = stats.totalDamage / baseWeapon.damage;
-  stats.radialAttacks = attacks.map((attack) => {
-    const scaled: WeaponRadialAttack = {
-      name: attack.name,
-      radius: attack.radius,
-      totalDamage: attack.totalDamage * mult,
-    };
-    if (attack.falloffReduction != null) scaled.falloffReduction = attack.falloffReduction;
-    if (attack.explosionDelay != null) scaled.explosionDelay = attack.explosionDelay;
-    for (const key of RADIAL_DAMAGE_KEYS) {
-      const val = attack[key];
-      if (val != null && val > 0) scaled[key] = val * mult;
-    }
-    return scaled;
-  });
+function applyRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
+  const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(baseWeapon, stats);
+  if (!attacks.length) return;
+  stats.radialAttacks = attacks;
+  stats.radialBurstDps = radialBurstDps;
+  stats.radialSustainedDps = radialSustainedDps;
+  if (radialBurstDps > 0) {
+    stats.burstDps += radialBurstDps;
+    stats.sustainedDps += radialSustainedDps;
+  }
 }
 
 // ── Main Weapon Calculator ──────────────────────────────────────────────
@@ -590,13 +580,13 @@ export function calculateWeaponBuild(
   // Status procs
   stats.statusProcs = calculateStatusProcs(stats, baseWeapon.damage * dmgMult);
 
-  // DPS
+  // DPS (direct hits)
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
-  scaleRadialAttacks(baseWeapon, stats);
+  applyRadialAttacks(baseWeapon, stats);
 
   return stats;
 }
@@ -925,28 +915,8 @@ export function calculateWeaponBuildWithArcanes(
   setStatusChancePerShot(stats, baseWeapon);
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
-  scaleRadialAttacks(baseWeapon, stats);
+  applyRadialAttacks(baseWeapon, stats);
   return stats;
-}
-
-function critTierDamage(tier: number, critMultiplier: number): number {
-  // Warframe crit tiers: yellow = cm, orange = 2(cm-1)+1, red = 3(cm-1)+1, etc.
-  // General: tier_damage = tier × (cm - 1) + 1
-  return tier * (critMultiplier - 1.0) + 1.0;
-}
-
-export function avgCritMultiplier(critChance: number, critMultiplier: number): number {
-  if (critChance <= 0) return 1.0;
-  if (critChance <= 1.0) {
-    // Blend between no-crit (1.0) and yellow crit
-    return 1.0 + critChance * (critMultiplier - 1.0);
-  }
-  // For >100% crit, interpolate between current tier and next tier
-  const tier = Math.floor(critChance);
-  const remainder = critChance - tier;
-  const currentTierDmg = critTierDamage(tier, critMultiplier);
-  const nextTierDmg = critTierDamage(tier + 1, critMultiplier);
-  return (1.0 - remainder) * currentTierDmg + remainder * nextTierDmg;
 }
 
 function calculateBurstDps(stats: CalculatedStats): number {

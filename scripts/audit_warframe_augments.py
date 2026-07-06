@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Audit warframe ability augments: behaviors, stats, metadata."""
+"""Audit warframe ability augments: behaviors, stats, metadata, wiki sync."""
 from __future__ import annotations
 
 import re
+import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from sync_mods_from_wiki import parse_lua_mod_entries  # noqa: E402
+
 MODS_TS = ROOT / "src/data/mods.ts"
 TAGS_TS = ROOT / "src/data/mod-weapon-tags.ts"
 BEHAVIOR_DIR = ROOT / "src/data/mod-behaviors"
+WIKI_CACHE = ROOT / "scripts/_wiki_mods_data.lua"
 
 COMPANION_WF_AUGMENT_IDS = {
     "augment_khora_venari_bodyguard",
@@ -89,10 +95,25 @@ def is_warframe_ability_augment(m: dict, exclusive: set[str]) -> bool:
     return bool(m["warframeId"])
 
 
-def main() -> None:
+def load_wiki() -> dict[str, dict]:
+    if not WIKI_CACHE.is_file():
+        return {}
+    return parse_lua_mod_entries(WIKI_CACHE.read_text(encoding="utf-8"))
+
+
+def wiki_entry(wiki: dict[str, dict], mod: dict) -> dict | None:
+    for key in (mod["name"].lower(), mod["id"].replace("_", " ").lower()):
+        hit = wiki.get(key)
+        if hit:
+            return hit
+    return None
+
+
+def main() -> int:
     exclusive = load_exclusive_ids()
     mods = load_mods()
     behaviors = load_behaviors()
+    wiki = load_wiki()
     pool = [m for m in mods if is_warframe_ability_augment(m, exclusive)]
 
     print("=== Warframe ability augment audit ===\n")
@@ -163,6 +184,57 @@ def main() -> None:
     if len(stats_no_lines) > 40:
         print(f"  ... and {len(stats_no_lines) - 40} more")
 
+    lines_no_stats: list[str] = []
+    for m in pool:
+        beh = behaviors.get(m["id"])
+        if not beh or beh.get("descriptionOnly"):
+            continue
+        extra = set(beh["statKeys"]) - set(m["stats"])
+        if extra:
+            lines_no_stats.append(f"{m['id']}: behavior-only {sorted(extra)}")
+    print(f"\nBehavior lines without catalog stats: {len(lines_no_stats)}")
+    for line in sorted(lines_no_stats)[:20]:
+        print(f"  {line}")
+
+    wiki_missing = [m for m in pool if not wiki_entry(wiki, m)]
+    print(f"\nNot in wiki Module:Mods/data: {len(wiki_missing)}")
+    for m in sorted(wiki_missing, key=lambda x: x["name"])[:25]:
+        print(f"  {m['id']}: {m['name']}")
+    if len(wiki_missing) > 25:
+        print(f"  ... +{len(wiki_missing) - 25}")
+
+    drain_mismatch: list[str] = []
+    rank_mismatch: list[str] = []
+    for m in pool:
+        entry = wiki_entry(wiki, m)
+        if not entry:
+            continue
+        if entry.get("drain") is not None and m.get("drain") != entry["drain"]:
+            drain_mismatch.append(f"{m['id']}: catalog {m.get('drain')} wiki {entry['drain']}")
+        if entry.get("maxRank") is not None and m.get("maxRank") != entry["maxRank"]:
+            rank_mismatch.append(f"{m['id']}: catalog {m.get('maxRank')} wiki {entry['maxRank']}")
+    print(f"\nWiki drain mismatches: {len(drain_mismatch)}")
+    for line in sorted(drain_mismatch)[:15]:
+        print(f"  {line}")
+    print(f"Wiki maxRank mismatches: {len(rank_mismatch)}")
+    for line in sorted(rank_mismatch)[:15]:
+        print(f"  {line}")
+
+    issues = (
+        len(missing_behavior)
+        + len(no_wf_id)
+        + len(wrong_cat)
+        + len(miscat_warframe)
+        + len(stats_no_lines)
+    )
+    print(f"\n--- Summary ---")
+    print(f"  Pool: {len(pool)}")
+    print(f"  Behavior coverage: {len(pool) - len(missing_behavior)}/{len(pool)}")
+    print(f"  Description-only: {len(desc_only)}")
+    print(f"  Wiki indexed: {len(pool) - len(wiki_missing)}/{len(pool)}")
+    print(f"  Actionable issues: {issues}")
+    return issues
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

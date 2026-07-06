@@ -317,6 +317,21 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   tooltip="Damage reduction at the edge of the blast radius (center = full damage)."
                 />
               )}
+              {"burstDps" in attack && typeof attack.burstDps === "number" && attack.burstDps > 0 && (
+                <StatRow
+                  label="Burst DPS"
+                  value={attack.burstDps.toFixed(0)}
+                  highlighted
+                  tooltip="Estimated DPS from this radial when it procs at the inferred rate (innate explosions scale with fire rate and multishot)."
+                />
+              )}
+              {"burstDps" in attack && typeof attack.burstDps === "number" && attack.burstDps === 0 && /slam/i.test(attack.name) && (
+                <StatRow
+                  label="Burst DPS"
+                  value="Manual"
+                  tooltip="Slam radials are player-triggered; not included in weapon burst/sustained DPS totals."
+                />
+              )}
             </div>
           ))}
         </CollapsibleSection>
@@ -379,6 +394,22 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
       <CollapsibleSection title="DPS" defaultOpen>
         <StatRow label="Burst DPS" value={stats.burstDps.toFixed(0)} highlighted />
         <StatRow label="Sustained DPS" value={stats.sustainedDps.toFixed(0)} highlighted />
+        {(stats.radialBurstDps ?? 0) > 0 && (
+          <>
+            <StatRow
+              label="Radial Burst DPS"
+              value={(stats.radialBurstDps ?? 0).toFixed(0)}
+              color="text-orange-300"
+              tooltip="Innate explosion / AoE DPS included in burst total above."
+            />
+            <StatRow
+              label="Radial Sustained DPS"
+              value={(stats.radialSustainedDps ?? 0).toFixed(0)}
+              color="text-orange-300"
+              tooltip="Radial DPS adjusted for magazine and reload cycle."
+            />
+          </>
+        )}
         {stats.statusProcs && stats.statusProcs.length > 0 && (() => {
           const procsPerSec = stats.fireRate * stats.statusChance * stats.multishot;
           const dotProcs = stats.statusProcs.filter(p => p.totalDamage > 0);
