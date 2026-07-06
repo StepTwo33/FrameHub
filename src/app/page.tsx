@@ -22,22 +22,29 @@ import {
 } from "@/components/page-shell";
 import { CommunityBuildsSidebar } from "@/components/community-builds-sidebar";
 import { SiteUpdatesSidebar } from "@/components/site-updates-sidebar";
-import { HOME_SIDEBAR_ASIDE_CLASS } from "@/lib/home-sidebar-layout";
+import {
+  HOME_CENTER_CLASS,
+  HOME_GRID_CLASS,
+  HOME_LEFT_ASIDE_CLASS,
+  HOME_RIGHT_ASIDE_CLASS,
+  HOME_SIDEBAR_ASIDE_CLASS,
+  HOME_SIDEBAR_INLINE_CLASS,
+} from "@/lib/home-sidebar-layout";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
     <PageShell>
-      <PageMain maxWidth="full" className="max-w-none py-8 sm:py-12 lg:py-16 xl:px-5 2xl:px-6">
+      <PageMain maxWidth="full" className="max-w-none overflow-x-hidden py-8 sm:py-12 lg:py-16 xl:px-5 2xl:px-6">
         {/* Equal side tracks keep the center grid centered; side panels pin to the outer edges. */}
-        <div className="mx-auto grid w-full grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,64rem)_minmax(0,1fr)] xl:items-start xl:gap-x-4 2xl:gap-x-6">
+        <div className={HOME_GRID_CLASS}>
           {/* Left: site updates — outer edge */}
-          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-1 xl:justify-self-start xl:pl-0")}>
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, HOME_LEFT_ASIDE_CLASS)}>
             <SiteUpdatesSidebar variant="sidebar" limit={10} />
           </aside>
 
           {/* Center: hero + feature grid */}
-          <div className="min-w-0 xl:col-start-2">
+          <div className={HOME_CENTER_CLASS}>
             <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
               <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
                 Build. Calculate. <span className="text-primary">Dominate.</span>
@@ -48,7 +55,7 @@ export default function Home() {
             </div>
 
             {/* Mobile / tablet: side columns stack above the grid */}
-            <div className="mb-8 space-y-6 xl:hidden">
+            <div className={HOME_SIDEBAR_INLINE_CLASS}>
               <SiteUpdatesSidebar variant="inline" limit={4} />
               <CommunityBuildsSidebar variant="inline" limit={6} />
             </div>
@@ -168,7 +175,7 @@ export default function Home() {
           </div>
 
           {/* Right: community builds — outer edge */}
-          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-3 xl:justify-self-end xl:pr-0")}>
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, HOME_RIGHT_ASIDE_CLASS)}>
             <CommunityBuildsSidebar variant="sidebar" limit={10} />
           </aside>
         </div>
