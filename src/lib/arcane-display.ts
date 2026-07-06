@@ -114,7 +114,6 @@ const STAT_LABELS: Record<string, string> = {
   statusProcChance: "Status Proc Chance",
   lifeStealChance: "Life Steal Chance",
   lifeSteal: "Life Steal",
-  buffDuration: "Duration",
   cooldown: "Cooldown",
   shieldRestorePercent: "Shield Restore",
   energyPickupChance: "Proc Chance",
@@ -212,11 +211,7 @@ const STAT_LABELS: Record<string, string> = {
   reflectDamage: "Reflect Damage",
   nullifyChance: "Nullify Chance",
   energyOrbPulse: "Energy Orb Pulse",
-  allyEnergy: "Ally Energy Share",
   damageOnEnergyPickup: "Damage on Energy Pickup",
-  damageOnRevive: "Damage on Revive",
-  headshotDamage: "Headshot Damage",
-  holsterSpeed: "Holster Speed",
   meleeComboGain: "Combo Gain",
   voidModeSpeed: "Void Mode Speed",
   voidModeDamageReduction: "Void Mode DR",
@@ -226,7 +221,6 @@ const STAT_LABELS: Record<string, string> = {
   zoneRadius: "Effect Range",
   corrosiveDamage: "Corrosive Damage",
   healthOrbPulse: "Health Orb Pulse",
-  corrosiveDamage: "Corrosive Damage",
 };
 
 export function getArcaneStatLabel(stat: string): string {
