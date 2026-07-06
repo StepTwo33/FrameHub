@@ -1,5 +1,6 @@
 import { Mod } from "@/lib/types";
 import { isAuraMod } from "@/lib/aura-mods";
+import { isArchmeleeMod } from "@/lib/archmelee-mods";
 
 export type ModBrowserCategoryId =
   | "all"
@@ -73,7 +74,7 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
     case "secondary":
       return ["secondary", "pistol", "dual_pistols"].includes(mod.category);
     case "melee":
-      return mod.category === "melee";
+      return mod.category === "melee" && !isArchmeleeMod(mod);
     case "warframe":
       return mod.category === "warframe";
     case "augment":
@@ -85,8 +86,7 @@ export function matchesModBrowserCategory(mod: Mod, category: ModBrowserCategory
     case "archgun":
       return mod.category === "archgun";
     case "archmelee":
-      // Arch-melee weapons use the standard melee mod pool in-game.
-      return mod.category === "melee";
+      return isArchmeleeMod(mod);
     case "necramech":
       return mod.category === "necramech";
     case "kdrive":
@@ -100,6 +100,7 @@ export function modBrowserCategoryLabel(mod: Mod): string {
   if (isAuraMod(mod)) return "Aura";
   if (mod.category === "kdrive" || isKDriveMod(mod)) return "K-Drive";
   if (mod.category === "archgun") return "Archgun";
+  if (isArchmeleeMod(mod)) return "Arch Melee";
   if (mod.category === "necramech") return "Necramech";
   if (mod.category === "archwing") return "Archwing";
   if (mod.category === "companion_weapon") return "Companion";

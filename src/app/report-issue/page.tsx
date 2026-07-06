@@ -3,9 +3,10 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import {
-  DataOverride, getOverrides, deleteOverride,
+  DataOverride, getOverrides, deleteOverride, getOverrideForTarget,
   exportOverrides, importOverrides, OverrideCategory, OVERRIDE_CATEGORIES,
 } from "@/lib/data-overrides";
+import { loadSharedOverrides } from "@/lib/data-overrides-client";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allCompanions } from "@/data/companions";
@@ -105,16 +106,22 @@ export default function ReportIssuePage() {
     }).catch(() => {});
   }, []);
 
-  // Load session, reports from API, and overrides from localStorage on mount
+  // Load session, reports, and shared overrides
   useEffect(() => {
     fetch("/api/auth/session").then((r) => r.json()).then((data) => {
       if (data.user?.role) setUserRole(data.user.role);
     }).catch(() => {});
     queueMicrotask(() => {
       refresh();
-      setOverrides(getOverrides());
+      void loadSharedOverrides().then(() => setOverrides(getOverrides()));
     });
   }, [refresh]);
+
+  useEffect(() => {
+    const onUpdate = () => setOverrides(getOverrides());
+    window.addEventListener("framehub-data-overrides-updated", onUpdate);
+    return () => window.removeEventListener("framehub-data-overrides-updated", onUpdate);
+  }, []);
 
   // Pre-fill from URL query params (e.g. ?type=weapon&name=Braton&id=braton)
   useEffect(() => {
@@ -236,7 +243,9 @@ export default function ReportIssuePage() {
     setFormIssues((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
   };
 
-  const refreshOverrides = useCallback(() => setOverrides(getOverrides()), []);
+  const refreshOverrides = useCallback(() => {
+    void loadSharedOverrides().then(() => setOverrides(getOverrides()));
+  }, []);
 
   const handleOverrideSaved = useCallback(() => {
     refreshOverrides();
@@ -244,13 +253,17 @@ export default function ReportIssuePage() {
     setOverridePrefill(undefined);
   }, [refreshOverrides]);
 
-  const handleDeleteOverride = useCallback((id: string) => {
-    deleteOverride(id);
-    refreshOverrides();
+  const handleDeleteOverride = useCallback(async (id: string) => {
+    try {
+      await deleteOverride(id);
+      refreshOverrides();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete override");
+    }
   }, [refreshOverrides]);
 
-  const handleExportOverrides = useCallback(() => {
-    const data = exportOverrides();
+  const handleExportOverrides = useCallback(async () => {
+    const data = await exportOverrides();
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -297,9 +310,10 @@ export default function ReportIssuePage() {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = () => {
-        const count = importOverrides(reader.result as string);
-        refreshOverrides();
-        alert(`Imported ${count} new overrides.`);
+        void importOverrides(reader.result as string).then((count) => {
+          refreshOverrides();
+          alert(`Imported ${count} new overrides (existing targets skipped).`);
+        });
       };
       reader.readAsText(file);
     };
@@ -317,12 +331,12 @@ export default function ReportIssuePage() {
     const discrepancies: { stat: string; currentValue: string; expectedValue: string }[] =
       (() => { try { return JSON.parse(report.statDiscrepancies || "[]"); } catch { return []; } })();
 
+    const cat = typeMap[report.itemType] ?? "weapon";
     let action: "modify" | "add" | "remove" = "modify";
     const fields: Record<string, unknown> = {};
     if (issues.doesNotExist) {
       action = "remove";
     } else if (discrepancies.length > 0) {
-      const cat = typeMap[report.itemType] ?? "weapon";
       const statPrefix = cat === "mod" || cat === "arcane" ? "stats." : cat === "archon_shard" ? "statBonuses." : "";
       for (const d of discrepancies) {
         if (!d.stat || !d.expectedValue) continue;
@@ -332,12 +346,16 @@ export default function ReportIssuePage() {
       }
     }
 
+    const itemId = report.itemId || "";
+    const existing = itemId ? getOverrideForTarget(cat, itemId) : undefined;
+
     setOverridePrefill({
-      category: typeMap[report.itemType] ?? "weapon",
-      itemId: report.itemId || undefined,
-      note: `From report: ${report.itemName} - ${report.comment || "no comment"}`,
-      action,
-      fields,
+      existingOverrideId: existing?.id,
+      category: cat,
+      itemId: itemId || undefined,
+      note: existing?.note ?? `From report: ${report.itemName} - ${report.comment || "no comment"}`,
+      action: existing?.action ?? action,
+      fields: existing?.fields ?? fields,
     });
     setActiveTab("overrides");
     setShowOverrideForm(true);
@@ -717,7 +735,7 @@ export default function ReportIssuePage() {
               <div className="text-center py-12 text-muted-foreground">
                 <Wrench className="h-8 w-8 mx-auto mb-3 opacity-50" />
                 <p className="text-sm">No data overrides yet.</p>
-                <p className="text-xs mt-1">Pick an item, change the fields that are wrong, and save — no coding required.</p>
+                <p className="text-xs mt-1">Shared across all staff — one fix per item. Pick an item, change wrong fields, and save.</p>
               </div>
             )}
             {overrides.map((ovr) => {
@@ -738,7 +756,10 @@ export default function ReportIssuePage() {
                   </button>
                   {isExpanded && (
                     <div className="border-t border-border p-3 space-y-3">
-                      <div className="text-[10px] text-muted-foreground">Created: {new Date(ovr.timestamp).toLocaleString()}</div>
+                      <div className="text-[10px] text-muted-foreground">
+                        Updated: {new Date(ovr.timestamp).toLocaleString()}
+                        {ovr.updatedBy && <> · by {ovr.updatedBy}</>}
+                      </div>
                       {Object.keys(ovr.fields).length > 0 && (
                         <ul className="space-y-0.5 text-xs text-foreground/90">
                           {formatOverrideFieldsSummary(ovr.fields).map((line) => (

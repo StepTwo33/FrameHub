@@ -59,7 +59,7 @@ export function ArcaneValuesDialog({
     if (!effects) return;
     setSaving(true);
     try {
-      saveArcaneEffectOverride(
+      await saveArcaneEffectOverride(
         arcaneId,
         {
           ...effects,
@@ -72,6 +72,8 @@ export function ArcaneValuesDialog({
       );
       onSaved?.();
       onOpenChange(false);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to save arcane values");
     } finally {
       setSaving(false);
     }

@@ -40,6 +40,10 @@ const ELEMENTAL_COMBOS: Record<string, { a: string; b: string }> = {
 };
 
 const BASE_ELEMENTS = ['heat', 'cold', 'toxin', 'electricity'] as const;
+/** Combo elements that can be added directly by mods (no further combining). */
+const DIRECT_ELEMENT_MOD_STATS = [
+  'radiation', 'magnetic', 'viral', 'corrosive', 'gas', 'blast',
+] as const;
 
 function resolveElementalCombos(rawElements: { type: string; value: number }[]): ElementalDamage[] {
   // Work with a mutable list of pending elements in mod order
@@ -321,6 +325,8 @@ export function calculateWeaponBuild(
       const modValue = (value * multiplier * setMult) / 100.0;
 
       if (BASE_ELEMENTS.includes(statName as typeof BASE_ELEMENTS[number])) {
+        elementalMods.push({ type: statName, value: baseWeapon.damage * modValue });
+      } else if (DIRECT_ELEMENT_MOD_STATS.includes(statName as typeof DIRECT_ELEMENT_MOD_STATS[number])) {
         elementalMods.push({ type: statName, value: baseWeapon.damage * modValue });
       } else if (conditional === 'blood_rush' && (statName === 'criticalChance' || statName === 'criticalChancePerCombo')) {
         hasBloodRush = true;

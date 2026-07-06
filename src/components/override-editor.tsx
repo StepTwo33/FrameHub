@@ -24,6 +24,7 @@ import {
   OVERRIDE_CATEGORIES,
   generateOverrideId,
   getOverrides,
+  getOverrideForTarget,
   saveOverride,
   applyModOverrides,
   applyArcaneOverrides,
@@ -126,9 +127,7 @@ function findExistingOverrideId(
   targetType: OverrideCategory,
   targetId: string,
 ): string | undefined {
-  return getOverrides().find(
-    (o) => o.action === "modify" && o.targetType === targetType && o.targetId === targetId,
-  )?.id;
+  return getOverrideForTarget(targetType, targetId)?.id;
 }
 
 function splitArcaneSaveFields(
@@ -417,85 +416,89 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     return fields;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const targetId = action === "add" ? selectedItemId.trim() : selectedItemId;
     if (!targetId?.trim()) {
       alert("Please select an item first.");
       return;
     }
 
-    if (action === "remove") {
-      saveOverride({
-        id: prefill?.existingOverrideId ?? generateOverrideId(),
-        targetType: category,
-        targetId: targetId.trim(),
-        action,
-        fields: {},
-        note: note.trim(),
-        timestamp: Date.now(),
-      });
-      onSave();
-      return;
-    }
+    try {
+      if (action === "remove") {
+        await saveOverride({
+          id: prefill?.existingOverrideId ?? findExistingOverrideId(category, targetId.trim()) ?? generateOverrideId(),
+          targetType: category,
+          targetId: targetId.trim(),
+          action,
+          fields: {},
+          note: note.trim(),
+          timestamp: Date.now(),
+        });
+        onSave();
+        return;
+      }
 
-    const fields = buildFields();
-    if (Object.keys(fields).length === 0) {
-      alert("Change at least one field before saving.");
-      return;
-    }
-
-    const timestamp = Date.now();
-    const trimmedNote = note.trim();
-    const trimmedId = targetId.trim();
-
-    const persist = (
-      targetType: OverrideCategory,
-      patch: Record<string, unknown>,
-      existingOverrideId?: string,
-    ) => {
-      saveOverride({
-        id: existingOverrideId ?? generateOverrideId(),
-        targetType,
-        targetId: trimmedId,
-        action: "modify",
-        fields: patch,
-        note: trimmedNote,
-        timestamp,
-      });
-    };
-
-    if (category === "arcane") {
-      const { catalog, effectDef } = splitArcaneSaveFields(fields);
-      if (Object.keys(catalog).length === 0 && Object.keys(effectDef).length === 0) {
+      const fields = buildFields();
+      if (Object.keys(fields).length === 0) {
         alert("Change at least one field before saving.");
         return;
       }
-      if (Object.keys(catalog).length > 0) {
-        persist("arcane", catalog, prefill?.category === "arcane" ? prefill.existingOverrideId : findExistingOverrideId("arcane", trimmedId));
-      }
-      if (Object.keys(effectDef).length > 0) {
-        const catalogArcane = getItemData("arcane", trimmedId);
-        const baseEffect = applyArcaneEffectOverrides()[trimmedId];
-        const enriched: Record<string, unknown> = {
-          name: baseEffect?.name ?? (catalogArcane?.name as string | undefined) ?? trimmedId,
-          trigger: effectDef.trigger ?? baseEffect?.trigger ?? "passive",
-          maxRank: effectDef.maxRank ?? baseEffect?.maxRank ?? catalogArcane?.maxRank ?? 5,
-          ...effectDef,
-        };
-        if (baseEffect?.stackCap != null && enriched.stackCap === undefined) {
-          enriched.stackCap = baseEffect.stackCap;
-        }
-        persist(
-          "arcane_effect",
-          enriched,
-          prefill?.category === "arcane_effect" ? prefill.existingOverrideId : findExistingOverrideId("arcane_effect", trimmedId),
-        );
-      }
-    } else {
-      persist(category, fields, prefill?.existingOverrideId);
-    }
 
-    onSave();
+      const timestamp = Date.now();
+      const trimmedNote = note.trim();
+      const trimmedId = targetId.trim();
+
+      const persist = async (
+        targetType: OverrideCategory,
+        patch: Record<string, unknown>,
+        existingOverrideId?: string,
+      ) => {
+        await saveOverride({
+          id: existingOverrideId ?? findExistingOverrideId(targetType, trimmedId) ?? generateOverrideId(),
+          targetType,
+          targetId: trimmedId,
+          action: "modify",
+          fields: patch,
+          note: trimmedNote,
+          timestamp,
+        });
+      };
+
+      if (category === "arcane") {
+        const { catalog, effectDef } = splitArcaneSaveFields(fields);
+        if (Object.keys(catalog).length === 0 && Object.keys(effectDef).length === 0) {
+          alert("Change at least one field before saving.");
+          return;
+        }
+        if (Object.keys(catalog).length > 0) {
+          await persist("arcane", catalog, prefill?.category === "arcane" ? prefill.existingOverrideId : findExistingOverrideId("arcane", trimmedId));
+        }
+        if (Object.keys(effectDef).length > 0) {
+          const catalogArcane = getItemData("arcane", trimmedId);
+          const baseEffect = applyArcaneEffectOverrides()[trimmedId];
+          const enriched: Record<string, unknown> = {
+            name: baseEffect?.name ?? (catalogArcane?.name as string | undefined) ?? trimmedId,
+            trigger: effectDef.trigger ?? baseEffect?.trigger ?? "passive",
+            maxRank: effectDef.maxRank ?? baseEffect?.maxRank ?? catalogArcane?.maxRank ?? 5,
+            ...effectDef,
+          };
+          if (baseEffect?.stackCap != null && enriched.stackCap === undefined) {
+            enriched.stackCap = baseEffect.stackCap;
+          }
+          await persist(
+            "arcane_effect",
+            enriched,
+            prefill?.category === "arcane_effect" ? prefill.existingOverrideId : findExistingOverrideId("arcane_effect", trimmedId),
+          );
+        }
+      } else {
+        await persist(category, fields, prefill?.existingOverrideId);
+      }
+
+      onSave();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to save override");
+    }
   };
 
   const selectedItemName = items.find((i) => i.id === selectedItemId)?.name ?? "";

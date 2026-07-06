@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Mod, getRivenStatsForCategory } from "@/lib/types";
 import { isAuraMod } from "@/lib/aura-mods";
+import { isArchmeleeMod } from "@/lib/archmelee-mods";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -135,6 +136,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         if (m.category === "stance") return false;
         // Necramech/archwing/operator mods should not leak into normal weapon builders
         if (m.category === "necramech" || m.category === "archwing" || m.category === "operator") return false;
+        if (category !== "archmelee" && (m.category === "archmelee" || isArchmeleeMod(m))) return false;
+        if (category !== "archgun" && m.category === "archgun") return false;
         // Riven mods: only show the riven matching the specific weapon category
         if (m.subCategory === "riven") {
           if (!weaponCategory) return false;
@@ -147,7 +150,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         }
         if (category === "primary") return ["primary", "rifle", "shotgun", "bow", "general"].includes(m.category);
         if (category === "secondary") return ["secondary", "pistol", "general"].includes(m.category);
-        if (category === "melee") return m.category === "melee" || m.category === "general";
+        if (category === "melee") return m.category === "melee" || (m.category === "general" && !isArchmeleeMod(m));
+        if (category === "archmelee") return isArchmeleeMod(m);
         if (category === "warframe") return m.category === "warframe" || m.category === "augment";
         if (category === "companion") return m.category === "companion";
         return m.category === category;

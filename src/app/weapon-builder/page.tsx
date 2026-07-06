@@ -67,9 +67,11 @@ const categoryLabels: Record<string, string> = {
 };
 
 function getModCategory(weaponCategory: string): string {
-  if (["rifle", "shotgun", "bow", "primary", "launcher", "archgun"].includes(weaponCategory)) return "primary";
+  if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(weaponCategory)) return "primary";
+  if (weaponCategory === "archgun") return "archgun";
   if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
-  if (["melee", "archmelee", "beast_claw"].includes(weaponCategory)) return "melee";
+  if (weaponCategory === "archmelee") return "archmelee";
+  if (["melee", "beast_claw"].includes(weaponCategory)) return "melee";
   if (["sentinel_weapon", "hound_weapon"].includes(weaponCategory)) return "primary";
   if (weaponCategory === "tektolyst") return "tektolyst";
   return weaponCategory;
@@ -408,7 +410,7 @@ export default function WeaponBuilderPage() {
     setActiveSlotIndex(slotIndex);
     const w = selectedWeapon;
     const sec = w && ["pistol", "secondary", "dual_pistols"].includes(w.category);
-    const mel = w && ["melee", "archmelee"].includes(w.category);
+    const mel = w && w.category === "melee";
     const isExilus = slotIndex === WEAPON_EXILUS_SLOT_INDEX && Boolean(sec || mel);
     setModPickerSlotType(
       sec && isExilus ? "weapon_exilus_secondary" : mel && isExilus ? "weapon_exilus_melee" : "regular"
@@ -460,7 +462,7 @@ export default function WeaponBuilderPage() {
   const equippedModIds = equippedMods.map((m) => m.modId);
   const numSlots = selectedWeapon?.modSlots || 8;
   const isSecondaryWeapon = selectedWeapon ? ["pistol", "secondary", "dual_pistols"].includes(selectedWeapon.category) : false;
-  const isMeleeWeapon = selectedWeapon ? ["melee", "archmelee"].includes(selectedWeapon.category) : false;
+  const isMeleeWeapon = selectedWeapon?.category === "melee";
   const hasWeaponExilusSlot = isSecondaryWeapon || isMeleeWeapon;
   const totalModSlots = hasWeaponExilusSlot ? numSlots + 1 : numSlots;
 

@@ -15422,7 +15422,7 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 10,
     "maxRank": 0,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {},
     "description": "Fatal strikes against an enemy also perform a Codex Scan. Scans require an equipped Codex Scanner and an available charge.",
@@ -15434,7 +15434,7 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {},
     "description": "Tauron Strike slash size is increased by 80%.",
@@ -15446,7 +15446,7 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "slash": 15
@@ -15634,7 +15634,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "heat": 20
@@ -15648,7 +15648,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 10,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "criticalMultiplier": 10
@@ -16059,6 +16059,7 @@ export const allMods: Mod[] = [
     "category": "archgun",
     "subCategory": "",
     "stats": {
+      "radiation": 15,
       "multishot": 7.5
     },
     "description": "+60% <DT_RADIATION_COLOR>Radiation, +30% Multishot",
@@ -16186,7 +16187,8 @@ export const allMods: Mod[] = [
     "category": "archgun",
     "subCategory": "",
     "stats": {
-      "criticalChance": 10
+      "criticalChance": 10,
+      "criticalMultiplier": 10
     },
     "description": "+60% Critical Chance and Damage when Aiming",
     "rarity": "rare"
@@ -16264,7 +16266,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 6,
     "maxRank": 10,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "damage": 10
@@ -16578,9 +16580,11 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 6,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "range": 25
+    },
     "description": "+100 Attraction Range (In Space), +3 Melee Range",
     "rarity": "common"
   },
@@ -16886,7 +16890,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "attackSpeed": 2.5
@@ -16950,7 +16954,7 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "cold": 20
@@ -17225,7 +17229,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "toxin": 15,
@@ -17302,7 +17306,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "electricity": 15,
@@ -17647,6 +17651,7 @@ export const allMods: Mod[] = [
     "category": "archgun",
     "subCategory": "",
     "stats": {
+      "heat": 15,
       "statusChance": 15
     },
     "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
@@ -17849,7 +17854,7 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "impact": 15
@@ -17989,7 +17994,7 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 2,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "puncture": 15
@@ -18715,7 +18720,7 @@ export const allMods: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "toxin": 20
@@ -19476,9 +19481,10 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
+      "heat": 15,
       "statusChance": 15
     },
     "description": "+60% <DT_FIRE_COLOR>Heat, +60% Status Chance",
@@ -19607,7 +19613,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "archgun",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "fireRate": 12.5
+    },
     "description": "+50% Charge Rate",
     "rarity": "uncommon"
   },
@@ -19955,7 +19963,7 @@ export const allMods: Mod[] = [
     "polarity": "vazarin",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "statusChance": 10
@@ -20091,7 +20099,7 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "archmelee",
     "subCategory": "",
     "stats": {
       "criticalChance": 25

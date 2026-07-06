@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { OverridesProvider } from "@/components/overrides-provider";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
 import { PWARegister } from "@/components/pwa-register";
@@ -57,12 +58,14 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <TooltipProvider>
+          <OverridesProvider>
           <Toaster theme="dark" position="bottom-right" richColors closeButton />
           <PWARegister />
           <PWAInstallPrompt />
           <DeployRefreshNotifier />
           {children}
           <Footer />
+          </OverridesProvider>
         </TooltipProvider>
       </body>
     </html>

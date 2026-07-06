@@ -7,6 +7,7 @@ import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import { allWeapons as allWeaponsData } from "@/data/weapons";
 import { enrichWeapon } from "@/lib/weapon-enrich";
+import { filterArchmeleeMods } from "@/lib/archmelee-mods";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
@@ -188,14 +189,14 @@ export default function ArchwingBuilderPage() {
     return allMods.filter((m) => m.category === frameModCategory);
   }, [frameModCategory]);
 
-  // Archgun mods use dedicated archgun category; archmelee uses melee mods
+  // Archgun and arch-melee each use their own mod pools (not ground weapon mods).
   const filteredWeaponMods = useMemo(() => {
     if (!selectedWeapon) return [];
     if (selectedWeapon.category === "archgun") {
       return allMods.filter((m) => m.category === "archgun");
     }
     if (selectedWeapon.category === "archmelee") {
-      return allMods.filter((m) => m.category === "melee");
+      return filterArchmeleeMods(allMods);
     }
     return [];
   }, [selectedWeapon]);

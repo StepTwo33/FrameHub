@@ -57,6 +57,7 @@ model User {
   reports       Report[]
   donationEvents DonationEvent[]
   siteUpdates   SiteUpdate[]
+  dataOverrides DataOverride[]
 }
 
 model DonationEvent {
@@ -148,4 +149,21 @@ model SiteUpdate {
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@index([published, createdAt])
+}
+
+/** Staff data fixes — shared globally; one override per target (type + id). */
+model DataOverride {
+  id         String   @id
+  targetType String
+  targetId   String
+  action     String   // modify | add | remove
+  fields     Json     @default("{}")
+  note       String   @default("")
+  authorId   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@unique([targetType, targetId])
+  @@index([targetType])
 }

@@ -1,7 +1,7 @@
 import type { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import {
   generateOverrideId,
-  getOverrides,
+  getOverrideForTarget,
   saveOverride,
 } from "@/lib/data-overrides";
 
@@ -59,16 +59,14 @@ export function draftsToEffectsPayload(lines: ArcaneEffectLineDraft[]): ArcaneEf
   return lines.filter((l) => l.stat.trim()).map(draftToEffectLine);
 }
 
-/** Persist arcane build effect values (same storage as Data Fixes). */
-export function saveArcaneEffectOverride(
+/** Persist arcane build effect values (shared staff override). */
+export async function saveArcaneEffectOverride(
   arcaneId: string,
   effectDef: ArcaneEffectDef,
   note = "",
-): void {
-  const existing = getOverrides().find(
-    (o) => o.action === "modify" && o.targetType === "arcane_effect" && o.targetId === arcaneId,
-  );
-  saveOverride({
+): Promise<void> {
+  const existing = getOverrideForTarget("arcane_effect", arcaneId);
+  await saveOverride({
     id: existing?.id ?? generateOverrideId(),
     targetType: "arcane_effect",
     targetId: arcaneId,

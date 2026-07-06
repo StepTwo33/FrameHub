@@ -33,7 +33,6 @@ function useOverrideRefresh(reload: () => void) {
   }, [reload]);
 }
 
-// Merge base weapons + custom-items.ts (wiki-verified additions)
 const mergedWeapons: Weapon[] = (() => {
   const ids = new Set(allWeapons.map((w) => w.id));
   const extras = customWeapons.filter((w) => !ids.has(w.id));
@@ -42,22 +41,21 @@ const mergedWeapons: Weapon[] = (() => {
 
 export function useWeapons(): Weapon[] {
   const [weapons, setWeapons] = useState<Weapon[]>(mergedWeapons);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "weapon")) {
-        setWeapons(applyWeaponOverrides(mergedWeapons));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setWeapons(overrides.some((o) => o.targetType === "weapon") ? applyWeaponOverrides(mergedWeapons, overrides) : mergedWeapons);
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return weapons;
 }
 
-/** Enriched weapons with localStorage overrides applied (for editors / static lookups). */
 export function getEffectiveWeapons(): Weapon[] {
   const overrides = getOverrides();
   if (overrides.some((o) => o.targetType === "weapon")) {
-    return applyWeaponOverrides(mergedWeapons);
+    return applyWeaponOverrides(mergedWeapons, overrides);
   }
   return mergedWeapons;
 }
@@ -65,55 +63,72 @@ export function getEffectiveWeapons(): Weapon[] {
 export function useMods(): { mods: Mod[]; modsMap: Map<string, Mod> } {
   const [mods, setMods] = useState<Mod[]>(allMods);
   const [map, setMap] = useState<Map<string, Mod>>(baseModsMap);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "mod")) {
-        const patched = applyModOverrides(allMods);
-        setMods(patched);
-        setMap(new Map(patched.map((m) => [m.id, m])));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    if (overrides.some((o) => o.targetType === "mod")) {
+      const patched = applyModOverrides(allMods, overrides);
+      setMods(patched);
+      setMap(new Map(patched.map((m) => [m.id, m])));
+    } else {
+      setMods(allMods);
+      setMap(baseModsMap);
+    }
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return { mods, modsMap: map };
 }
 
 export function useCompanions(): Companion[] {
   const [companions, setCompanions] = useState<Companion[]>(allCompanions);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "companion")) {
-        setCompanions(applyCompanionOverrides(allCompanions));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setCompanions(
+      overrides.some((o) => o.targetType === "companion")
+        ? applyCompanionOverrides(allCompanions, overrides)
+        : allCompanions,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return companions;
 }
 
 export function useArcanes(): Mod[] {
   const [arcanes, setArcanes] = useState<Mod[]>(allArcanes);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "arcane")) {
-        setArcanes(applyArcaneOverrides(allArcanes));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setArcanes(
+      overrides.some((o) => o.targetType === "arcane")
+        ? applyArcaneOverrides(allArcanes, overrides)
+        : allArcanes,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return arcanes;
 }
 
 export function useArchonShards(): ArchonShard[] {
   const [shards, setShards] = useState<ArchonShard[]>(allArchonShards);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "archon_shard")) {
-        setShards(applyArchonShardOverrides(allArchonShards));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setShards(
+      overrides.some((o) => o.targetType === "archon_shard")
+        ? applyArchonShardOverrides(allArchonShards, overrides)
+        : allArchonShards,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return shards;
 }
 
@@ -131,39 +146,51 @@ export function useArcaneEffects(): Record<string, ArcaneEffectDef> {
 
 export function useWarframes(): Warframe[] {
   const [warframes, setWarframes] = useState<Warframe[]>(allWarframes);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "warframe")) {
-        setWarframes(applyWarframeOverrides(allWarframes));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setWarframes(
+      overrides.some((o) => o.targetType === "warframe")
+        ? applyWarframeOverrides(allWarframes, overrides)
+        : allWarframes,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return warframes;
 }
 
 export function useArchwings(): Archwing[] {
   const [items, setItems] = useState<Archwing[]>(archwings);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "archwing")) {
-        setItems(applyArchwingOverrides(archwings));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setItems(
+      overrides.some((o) => o.targetType === "archwing")
+        ? applyArchwingOverrides(archwings, overrides)
+        : archwings,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return items;
 }
 
 export function useNecramechs(): Necramech[] {
   const [items, setItems] = useState<Necramech[]>(necramechs);
-  useEffect(() => {
-    queueMicrotask(() => {
-      const overrides = getOverrides();
-      if (overrides.some((o) => o.targetType === "necramech")) {
-        setItems(applyNecramechOverrides(necramechs));
-      }
-    });
+  const reload = useCallback(() => {
+    const overrides = getOverrides();
+    setItems(
+      overrides.some((o) => o.targetType === "necramech")
+        ? applyNecramechOverrides(necramechs, overrides)
+        : necramechs,
+    );
   }, []);
+  useEffect(() => {
+    queueMicrotask(reload);
+  }, [reload]);
+  useOverrideRefresh(reload);
   return items;
 }
