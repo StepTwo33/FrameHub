@@ -108,6 +108,13 @@ export default function ReportIssuePage() {
     }).catch(() => {});
   }, []);
 
+  const refreshOverrides = useCallback(() => {
+    void loadSharedOverrides().then(() => {
+      setOverrides(getOverrides());
+      setLegacyLocalCount(getLegacyLocalOverrideCount());
+    });
+  }, []);
+
   // Load session, reports, and shared overrides
   useEffect(() => {
     fetch("/api/auth/session").then((r) => r.json()).then((data) => {
@@ -282,13 +289,6 @@ export default function ReportIssuePage() {
   const toggleIssue = (key: string) => {
     setFormIssues((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
   };
-
-  const refreshOverrides = useCallback(() => {
-    void loadSharedOverrides().then(() => {
-      setOverrides(getOverrides());
-      setLegacyLocalCount(getLegacyLocalOverrideCount());
-    });
-  }, []);
 
   const handleOverrideSaved = useCallback(() => {
     refreshOverrides();
