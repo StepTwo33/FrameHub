@@ -511,6 +511,143 @@ export function applyVerifiedModStatToArchwing(
   }
 }
 
+export type RailjackModAccumulators = {
+  hullBonus: number;
+  armorBonus: number;
+  shieldBonus: number;
+  shieldRechargeBonus: number;
+  speedBonus: number;
+  boostSpeedBonus: number;
+  boostCostReduction: number;
+  fluxBonus: number;
+  avionicsBonus: number;
+  turretDamageBonus: number;
+  turretCritBonus: number;
+  turretCritDmgBonus: number;
+  ordnanceDamageBonus: number;
+  artilleryDamageBonus: number;
+  turretRangeBonus: number;
+  turretProjectileSpeedBonus: number;
+  ordnanceSpeedBonus: number;
+  munitionsCapacityBonus: number;
+};
+
+function emptyRailjackAccumulators(): RailjackModAccumulators {
+  return {
+    hullBonus: 0,
+    armorBonus: 0,
+    shieldBonus: 0,
+    shieldRechargeBonus: 0,
+    speedBonus: 0,
+    boostSpeedBonus: 0,
+    boostCostReduction: 0,
+    fluxBonus: 0,
+    avionicsBonus: 0,
+    turretDamageBonus: 0,
+    turretCritBonus: 0,
+    turretCritDmgBonus: 0,
+    ordnanceDamageBonus: 0,
+    artilleryDamageBonus: 0,
+    turretRangeBonus: 0,
+    turretProjectileSpeedBonus: 0,
+    ordnanceSpeedBonus: 0,
+    munitionsCapacityBonus: 0,
+  };
+}
+
+export function applyVerifiedModStatToRailjack(
+  stats: { modBonuses?: Record<string, number> },
+  modId: string,
+  statKey: string,
+  modValue: number,
+  acc: RailjackModAccumulators,
+): boolean {
+  const line = getVerifiedModStatLine(modId, statKey);
+  if (!line) {
+    trackModPanel(stats, modId, statKey, modValue);
+    return false;
+  }
+
+  if (line.target === "mod_panel" || line.target === "pending") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  if (line.target !== "railjack_totals") {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  switch (statKey) {
+    case "hull":
+    case "health":
+      acc.hullBonus += modValue;
+      return true;
+    case "armor":
+      acc.hullBonus += modValue;
+      acc.armorBonus += modValue;
+      return true;
+    case "shield":
+      acc.shieldBonus += modValue;
+      acc.shieldRechargeBonus += modValue;
+      return true;
+    case "engineSpeed":
+    case "speed":
+      acc.speedBonus += modValue;
+      return true;
+    case "boostSpeed":
+      acc.boostSpeedBonus += modValue;
+      return true;
+    case "boostCostReduction":
+      acc.boostCostReduction += modValue;
+      return true;
+    case "fluxCapacity":
+    case "flux":
+      acc.fluxBonus += modValue;
+      return true;
+    case "avionicsCapacity":
+    case "avionics":
+      acc.avionicsBonus += modValue;
+      return true;
+    case "turretDamage":
+    case "damage":
+      acc.turretDamageBonus += modValue;
+      return true;
+    case "turretCritChance":
+    case "criticalChance":
+      acc.turretCritBonus += modValue;
+      return true;
+    case "turretCritDamage":
+    case "criticalMultiplier":
+      acc.turretCritDmgBonus += modValue;
+      return true;
+    case "ordnanceDamage":
+      acc.ordnanceDamageBonus += modValue;
+      return true;
+    case "artilleryDamage":
+      acc.artilleryDamageBonus += modValue;
+      return true;
+    case "turretRange":
+    case "range":
+      acc.turretRangeBonus += modValue;
+      return true;
+    case "turretProjectileSpeed":
+      acc.ordnanceSpeedBonus += modValue;
+      acc.turretProjectileSpeedBonus += modValue;
+      return true;
+    case "ordnanceSpeed":
+      acc.ordnanceSpeedBonus += modValue;
+      return true;
+    case "magazine":
+    case "munitions":
+      acc.munitionsCapacityBonus += modValue;
+      return true;
+    default:
+      trackModPanel(stats, modId, statKey, modValue);
+      return true;
+  }
+}
+
 export function modHasVerifiedBehavior(modId: string): boolean {
   return modId in VERIFIED_MOD_BEHAVIORS;
 }

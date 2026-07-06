@@ -19800,7 +19800,9 @@ const RAW_MODS: Mod[] = [
     "maxRank": 3,
     "category": "general",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "magazine": 21.75
+    },
     "description": "+87% Maximum Ordnance Munitions",
     "rarity": "common"
   },

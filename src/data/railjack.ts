@@ -40,9 +40,9 @@ export const reactors: RailjackComponent[] = [
   { id: "sigma_reactor_mk1", name: "Sigma Reactor Mk I", type: "reactor", tier: "sigma", stats: { fluxCapacity: 50, avionicsCapacity: 20 }, description: "Basic Sigma-series reactor" },
   { id: "sigma_reactor_mk2", name: "Sigma Reactor Mk II", type: "reactor", tier: "sigma", stats: { fluxCapacity: 100, avionicsCapacity: 30 }, description: "Improved Sigma-series reactor" },
   { id: "sigma_reactor_mk3", name: "Sigma Reactor Mk III", type: "reactor", tier: "sigma", stats: { fluxCapacity: 150, avionicsCapacity: 40 }, description: "Advanced Sigma-series reactor" },
-  { id: "lavan_reactor_mk3", name: "Lavan Reactor Mk III", type: "reactor", tier: "lavan", stats: { fluxCapacity: 200, avionicsCapacity: 30 }, description: "High flux capacity Lavan reactor" },
-  { id: "vidar_reactor_mk3", name: "Vidar Reactor Mk III", type: "reactor", tier: "vidar", stats: { fluxCapacity: 150, avionicsCapacity: 50 }, description: "High avionics capacity Vidar reactor" },
-  { id: "zetki_reactor_mk3", name: "Zetki Reactor Mk III", type: "reactor", tier: "zetki", stats: { fluxCapacity: 180, avionicsCapacity: 40 }, description: "Balanced Zetki reactor with combat bonuses" },
+  { id: "lavan_reactor_mk3", name: "Lavan Reactor Mk III", type: "reactor", tier: "lavan", stats: { fluxCapacity: 200, avionicsCapacity: 30, abilityDuration: 0.45 }, description: "High flux Lavan reactor — boosts Battle Mod Duration" },
+  { id: "vidar_reactor_mk3", name: "Vidar Reactor Mk III", type: "reactor", tier: "vidar", stats: { fluxCapacity: 150, avionicsCapacity: 50, abilityRange: 0.45 }, description: "High avionics Vidar reactor — boosts Battle Mod Range" },
+  { id: "zetki_reactor_mk3", name: "Zetki Reactor Mk III", type: "reactor", tier: "zetki", stats: { fluxCapacity: 180, avionicsCapacity: 40, abilityStrength: 0.45 }, description: "Balanced Zetki reactor — boosts Battle Mod Strength" },
 ];
 
 // ── Shield Arrays ──────────────────────────────────────────────────
@@ -50,8 +50,8 @@ export const shieldArrays: RailjackComponent[] = [
   { id: "sigma_shield_mk1", name: "Sigma Shield Array Mk I", type: "shield", tier: "sigma", stats: { shieldCapacity: 200, shieldRecharge: 20 }, description: "Basic Sigma shield array" },
   { id: "sigma_shield_mk2", name: "Sigma Shield Array Mk II", type: "shield", tier: "sigma", stats: { shieldCapacity: 400, shieldRecharge: 35 }, description: "Improved Sigma shield array" },
   { id: "sigma_shield_mk3", name: "Sigma Shield Array Mk III", type: "shield", tier: "sigma", stats: { shieldCapacity: 600, shieldRecharge: 50 }, description: "Advanced Sigma shield array" },
-  { id: "lavan_shield_mk3", name: "Lavan Shield Array Mk III", type: "shield", tier: "lavan", stats: { shieldCapacity: 800, shieldRecharge: 40 }, description: "High capacity Lavan shield array" },
-  { id: "vidar_shield_mk3", name: "Vidar Shield Array Mk III", type: "shield", tier: "vidar", stats: { shieldCapacity: 600, shieldRecharge: 70 }, description: "Fast recharging Vidar shield array" },
+  { id: "lavan_shield_mk3", name: "Lavan Shield Array Mk III", type: "shield", tier: "lavan", stats: { shieldCapacity: 800, shieldRecharge: 50 }, description: "High capacity Lavan shield array (Update 43: improved recharge delay reduction)" },
+  { id: "vidar_shield_mk3", name: "Vidar Shield Array Mk III", type: "shield", tier: "vidar", stats: { shieldCapacity: 600, shieldRecharge: 85 }, description: "Fast recharging Vidar shield array (Update 43: improved recharge delay reduction)" },
   { id: "zetki_shield_mk3", name: "Zetki Shield Array Mk III", type: "shield", tier: "zetki", stats: { shieldCapacity: 700, shieldRecharge: 55 }, description: "Balanced Zetki shield array" },
 ];
 
@@ -122,7 +122,6 @@ export const mk4Turrets: RailjackArmament[] = turrets
 
 export const allTurrets: RailjackArmament[] = [...turrets, ...mk4Turrets];
 
-// ── Ordnance ───────────────────────────────────────────────────────
 export const ordnance: RailjackArmament[] = [
   { id: "sigma_milati", name: "Sigma Milati", type: "ordnance", house: "sigma", damage: 3000, critChance: 0.10, critMultiplier: 2.0, statusChance: 0.20, fireRate: 0.5, description: "Lock-on guided missile" },
   { id: "vidar_milati", name: "Vidar Milati", type: "ordnance", house: "vidar", damage: 4200, critChance: 0.14, critMultiplier: 2.2, statusChance: 0.22, fireRate: 0.5, description: "Enhanced Vidar guided missile" },
@@ -135,12 +134,65 @@ export const ordnance: RailjackArmament[] = [
   { id: "zetki_galvarc", name: "Zetki Galvarc", type: "ordnance", house: "zetki", damage: 6500, critChance: 0.35, critMultiplier: 3.0, statusChance: 0.04, fireRate: 0.3, description: "High-damage Zetki chain lightning" },
 ];
 
+/** Steel Path Mk IV components (~30% over Mk III house rolls). Turrets/ordnance use Mk IV in-game; components are projected for planning. */
+const MK4_COMPONENT_MULT = 1.3;
+
+function toMk4Component(component: RailjackComponent): RailjackComponent {
+  const scaledStats: Record<string, number> = {};
+  for (const [key, val] of Object.entries(component.stats)) {
+    scaledStats[key] = Math.round(val * MK4_COMPONENT_MULT * 100) / 100;
+  }
+  return {
+    ...component,
+    id: `${component.id.replace(/_mk3$/, "")}_mk4`,
+    name: component.name.replace(/ Mk III$/, " Mk IV"),
+    tier: "mk4",
+    stats: scaledStats,
+    description: `${component.description.replace(/ \(Mk III\)$/, "")}. Mk IV Steel Path variant (~30% stronger than Mk III).`,
+  };
+}
+
+function mk4HouseComponents(list: RailjackComponent[]): RailjackComponent[] {
+  return list.filter((c) => c.tier !== "sigma" && c.id.endsWith("_mk3")).map(toMk4Component);
+}
+
+export const mk4Reactors = mk4HouseComponents(reactors);
+export const mk4ShieldArrays = mk4HouseComponents(shieldArrays);
+export const mk4Engines = mk4HouseComponents(engines);
+export const mk4Plating = mk4HouseComponents(plating);
+
+export const allReactors: RailjackComponent[] = [...reactors, ...mk4Reactors];
+export const allShieldArrays: RailjackComponent[] = [...shieldArrays, ...mk4ShieldArrays];
+export const allEngines: RailjackComponent[] = [...engines, ...mk4Engines];
+export const allPlating: RailjackComponent[] = [...plating, ...mk4Plating];
+
+function toMk4Ordnance(item: RailjackArmament): RailjackArmament {
+  return {
+    ...item,
+    id: `${item.id}_mk4`,
+    name: `${item.name} Mk IV`,
+    tier: "mk4",
+    damage: Math.round(item.damage * 1.5),
+    description: `${item.description}. Mk IV Steel Path variant (~50% stronger than Mk III).`,
+  };
+}
+
+export const mk4Ordnance: RailjackArmament[] = ordnance
+  .filter((o) => o.house !== "sigma")
+  .map(toMk4Ordnance);
+
+export const allOrdnance: RailjackArmament[] = [...ordnance, ...mk4Ordnance];
+
 export function findRailjackComponent(id: string): RailjackComponent | undefined {
-  return [...reactors, ...shieldArrays, ...engines, ...plating].find((c) => c.id === id);
+  return [...allReactors, ...allShieldArrays, ...allEngines, ...allPlating].find((c) => c.id === id);
 }
 
 export function findRailjackArmament(id: string): RailjackArmament | undefined {
-  return allTurrets.concat(ordnance).find((a) => a.id === id);
+  return allTurrets.concat(allOrdnance).find((a) => a.id === id);
+}
+
+export function findRailjackEliteCrew(id: string): RailjackEliteCrew | undefined {
+  return railjackEliteCrew.find((c) => c.id === id);
 }
 
 // ── Update 43: Uranus Proxima & reference loadouts ─────────────────
@@ -247,11 +299,11 @@ export const RAILJACK_MOD_KEYWORDS = [
   "railjack", "turret", "hull", "breach", "flux",
   "ordnance", "crew", "shield recharge", "boost speed",
   "battle", "tactical", "archwing slingshot", "void cloak",
-  "fire suppression", "necraweb", "shatter burst", "seeker volley",
+  "fire suppression", "shatter burst", "seeker volley",
   "munitions vortex", "particle ram", "tether", "blackout pulse",
-  "void hole", "form up", "recall", "command link", "overseer",
-  "flow burn", "intruder stasis", "death blossom", "firestorm",
-  "forward artillery", "omni revolite", "revolite", "homing missile",
+  "void hole", "form up", "battle stations",
+  "flow burn", "intruder stasis", "death blossom",
+  "forward artillery", "omni revolite", "revolite",
   "phoenix blaze", "ion burn",
 ];
 
@@ -275,7 +327,6 @@ export const RAILJACK_MOD_IDS = new Set([
   "form_up",
   "battle_stations",
   "squad_renew",
-  "firestorm",
   "forward_artillery",
 ]);
 
@@ -286,6 +337,7 @@ export interface RailjackModRef {
 }
 
 export function isRailjackMod(mod: RailjackModRef): boolean {
+  if (mod.id === "firestorm" || mod.id === "primed_firestorm") return false;
   if (RAILJACK_MOD_IDS.has(mod.id)) return true;
   const desc = mod.description.toLowerCase();
   const name = mod.name.toLowerCase();

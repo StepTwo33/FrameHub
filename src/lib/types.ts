@@ -443,6 +443,79 @@ export interface ArchwingCalculatedStats {
   modBonuses?: Record<string, number>;
 }
 
+export interface RailjackArmamentComputed {
+  id: string;
+  name: string;
+  type: "turret" | "ordnance";
+  damage: number;
+  critChance: number;
+  critMultiplier: number;
+  statusChance: number;
+  fireRate: number;
+  estimatedDps: number;
+}
+
+export interface RailjackCalculatedStats {
+  baseHull: number;
+  baseArmor: number;
+  baseShield: number;
+  baseSpeed: number;
+  baseBoostSpeed: number;
+  baseBoostCost: number;
+  baseFluxCapacity: number;
+  baseAvionicsCapacity: number;
+  baseShieldRecharge: number;
+  hull: number;
+  armor: number;
+  shield: number;
+  shieldRecharge: number;
+  speed: number;
+  boostSpeed: number;
+  boostCost: number;
+  fluxCapacity: number;
+  avionicsCapacity: number;
+  turretDamageBonus: number;
+  turretCritBonus: number;
+  turretCritDmgBonus: number;
+  ordnanceDamageBonus: number;
+  artilleryDamageBonus: number;
+  turretRangeBonus: number;
+  turretProjectileSpeedBonus: number;
+  ordnanceSpeedBonus: number;
+  munitionsCapacityBonus: number;
+  turrets: RailjackArmamentComputed[];
+  ordnance: RailjackArmamentComputed | null;
+  modBonuses?: Record<string, number>;
+  /** Reactor battle-mod scaling from equipped reactor. */
+  abilityStrengthBonus?: number;
+  abilityRangeBonus?: number;
+  abilityDurationBonus?: number;
+  /** Passive bonuses from elite crew competency. */
+  crewBonuses?: {
+    turretDamageBonus: number;
+    speedBonus: number;
+    hullBonus: number;
+    repairSpeedBonus: number;
+  };
+  /** Equipped battle/tactical abilities with scaled costs/cooldowns. */
+  battleAbilities?: RailjackAbilityComputed[];
+  tacticalAbilities?: RailjackAbilityComputed[];
+  /** Extra turret damage from simulated active battle/tactical abilities. */
+  abilityTurretDamageBonus?: number;
+}
+
+export interface RailjackAbilityComputed {
+  modId: string;
+  name: string;
+  category: "defensive" | "offensive" | "super";
+  description: string;
+  rank: number;
+  energyCost?: number;
+  cooldownSec?: number;
+  turretDamageWhileActive?: number;
+  isSimulatedActive?: boolean;
+}
+
 export interface Loadout {
   id: string;
   name: string;

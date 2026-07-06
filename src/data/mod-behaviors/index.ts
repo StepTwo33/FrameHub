@@ -23,6 +23,7 @@ import { MOD_BEHAVIORS_ARCHWING } from "./batches/archwing";
 import { MOD_BEHAVIORS_RIFLE } from "./batches/rifle";
 import { MOD_BEHAVIORS_SET } from "./batches/set";
 import { MOD_BEHAVIORS_EVOLUTION } from "./batches/evolution";
+import { MOD_BEHAVIORS_RAILJACK } from "./batches/railjack";
 import type { VerifiedModBehavior } from "@/lib/item-behavior-types";
 
 const BATCHES: Record<string, VerifiedModBehavior>[] = [
@@ -47,6 +48,7 @@ const BATCHES: Record<string, VerifiedModBehavior>[] = [
   MOD_BEHAVIORS_RIFLE,
   MOD_BEHAVIORS_SET,
   MOD_BEHAVIORS_EVOLUTION,
+  MOD_BEHAVIORS_RAILJACK,
 ];
 
 export const VERIFIED_MOD_BEHAVIORS: Record<string, VerifiedModBehavior> = {

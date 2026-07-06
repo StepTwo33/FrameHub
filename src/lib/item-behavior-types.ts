@@ -8,6 +8,7 @@ export type ItemApplyTarget =
   | "weapon_dps"
   | "warframe_totals"
   | "companion_totals"
+  | "railjack_totals"
   | "arcane_panel"
   | "mod_panel"
   | "pending";
@@ -64,6 +65,8 @@ export function itemApplyTargetLabel(target: ItemApplyTarget): string {
       return "Warframe totals";
     case "companion_totals":
       return "Companion totals";
+    case "railjack_totals":
+      return "Railjack totals";
     case "arcane_panel":
       return "Arcane panel only";
     case "mod_panel":

@@ -6,16 +6,18 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { allMods, modsMap } from "@/data/mods";
 import {
-  reactors, shieldArrays, engines, plating,
-  allTurrets, ordnance,
-  railjackBaseStats, isRailjackMod,
+  allReactors, allShieldArrays, allEngines, allPlating,
+  allTurrets, allOrdnance,
+  isRailjackMod,
   RailjackComponent, RailjackArmament,
-  railjackPresets, uranusProximaMissions,
+  railjackPresets, uranusProximaMissions, railjackEliteCrew,
   findRailjackComponent, findRailjackArmament,
 } from "@/data/railjack";
 import { EquippedMod } from "@/lib/types";
+import { calculateRailjackBuild, railjackBuildNeedsSimulation } from "@/lib/railjack-calculator";
+import { filterRailjackModsForTab } from "@/lib/railjack-plexus-mods";
 import { cn } from "@/lib/utils";
-import { Save, FolderOpen, Trash2, Crosshair, Shield, Zap, Gauge, ChevronRight } from "lucide-react";
+import { Save, FolderOpen, Trash2, Crosshair, Shield, Zap, Gauge, ChevronRight, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, saveCloudBuild } from "@/lib/build-storage";
 import { toast } from "sonner";
@@ -36,9 +38,12 @@ export default function RailjackBuilderPage() {
   const [selectedEngine, setSelectedEngine] = useState<RailjackComponent | null>(null);
   const [selectedPlating, setSelectedPlating] = useState<RailjackComponent | null>(null);
 
-  // Armament state
-  const [selectedTurret, setSelectedTurret] = useState<RailjackArmament | null>(null);
+  // Armament state — port + starboard turrets, munitions launcher
+  const [selectedTurrets, setSelectedTurrets] = useState<[RailjackArmament | null, RailjackArmament | null]>([null, null]);
+  const [activeTurretSlot, setActiveTurretSlot] = useState<0 | 1>(0);
+  const [showTurretPicker, setShowTurretPicker] = useState(false);
   const [selectedOrdnance, setSelectedOrdnance] = useState<RailjackArmament | null>(null);
+  const [showOrdnancePicker, setShowOrdnancePicker] = useState(false);
 
   // Plexus mod state
   const [plexusTab, setPlexusTab] = useState<PlexusTab>("integrated");
@@ -52,6 +57,14 @@ export default function RailjackBuilderPage() {
   const [integratedPolarities, setIntegratedPolarities] = useState<Record<number, string>>({});
   const [battlePolarities, setBattlePolarities] = useState<Record<number, string>>({});
   const [tacticalPolarities, setTacticalPolarities] = useState<Record<number, string>>({});
+
+  // Elite crew & simulation
+  const [selectedEliteCrewId, setSelectedEliteCrewId] = useState<string | null>(null);
+  const [crimsonFugueStacks, setCrimsonFugueStacks] = useState(5);
+  const [cruisingSpeedActive, setCruisingSpeedActive] = useState(false);
+  const [protectiveShotsActive, setProtectiveShotsActive] = useState(true);
+  const [activeBattleAbilityId, setActiveBattleAbilityId] = useState<string | null>(null);
+  const [activeTacticalAbilityId, setActiveTacticalAbilityId] = useState<string | null>(null);
 
   // Save state
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
@@ -91,64 +104,57 @@ export default function RailjackBuilderPage() {
 
   const maxCapacity = plexusTab === "integrated" ? 60 : 15;
 
-  // Computed ship stats including Plexus mod bonuses
-  const computedStats = useMemo(() => {
-    const base = { ...railjackBaseStats };
-    if (selectedPlating) {
-      base.hull += selectedPlating.stats.hullBonus ?? 0;
-      base.armor += selectedPlating.stats.armorBonus ?? 0;
-    }
-    if (selectedShield) {
-      base.shield += selectedShield.stats.shieldCapacity ?? 0;
-    }
-    if (selectedEngine) {
-      base.speed += selectedEngine.stats.speed ?? 0;
-      base.boostSpeed += selectedEngine.stats.boostSpeed ?? 0;
-    }
-    if (selectedReactor) {
-      base.fluxCapacity += selectedReactor.stats.fluxCapacity ?? 0;
-    }
+  const tabRailjackMods = useMemo(
+    () => filterRailjackModsForTab(railjackMods, plexusTab),
+    [railjackMods, plexusTab],
+  );
 
-    // Apply integrated Plexus mod bonuses
-    let speedBonus = 0;
-    let boostBonus = 0;
-    let turretDmgBonus = 0;
-    let turretCritBonus = 0;
-    let turretCritDmgBonus = 0;
-    let ordnanceDmgBonus = 0;
-    let artilleryDmgBonus = 0;
+  const buildInput = useMemo(
+    () => ({
+      reactorId: selectedReactor?.id,
+      shieldId: selectedShield?.id,
+      engineId: selectedEngine?.id,
+      platingId: selectedPlating?.id,
+      turretIds: selectedTurrets.map((t) => t?.id),
+      ordnanceId: selectedOrdnance?.id,
+      integratedMods: integratedMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
+      battleMods: battleMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
+      tacticalMods: tacticalMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
+      eliteCrewId: selectedEliteCrewId ?? undefined,
+      simulation: {
+        crimsonFugueStacks,
+        cruisingSpeedActive,
+        protectiveShotsActive,
+        activeBattleAbilityId,
+        activeTacticalAbilityId,
+      },
+    }),
+    [
+      selectedReactor,
+      selectedShield,
+      selectedEngine,
+      selectedPlating,
+      selectedTurrets,
+      selectedOrdnance,
+      integratedMods,
+      battleMods,
+      tacticalMods,
+      selectedEliteCrewId,
+      crimsonFugueStacks,
+      cruisingSpeedActive,
+      protectiveShotsActive,
+      activeBattleAbilityId,
+      activeTacticalAbilityId,
+    ],
+  );
 
-    for (const em of integratedMods) {
-      const mod = modsMap.get(em.modId);
-      if (!mod) continue;
-      const rank = Math.min(em.rank, mod.maxRank);
-      const mult = rank + 1;
-      for (const [stat, val] of Object.entries(mod.stats)) {
-        const scaled = (val * mult) / 100;
-        switch (stat) {
-          case "engineSpeed": speedBonus += scaled; break;
-          case "boostSpeed": boostBonus += scaled; break;
-          case "turretDamage": turretDmgBonus += scaled; break;
-          case "turretCritChance": turretCritBonus += scaled; break;
-          case "turretCritDamage": turretCritDmgBonus += scaled; break;
-          case "ordnanceDamage": ordnanceDmgBonus += scaled; break;
-          case "artilleryDamage": artilleryDmgBonus += scaled; break;
-        }
-      }
-    }
+  const computedStats = useMemo(() => calculateRailjackBuild(buildInput), [buildInput]);
 
-    base.speed = Math.round(base.speed * (1 + speedBonus));
-    base.boostSpeed = Math.round(base.boostSpeed * (1 + boostBonus));
+  const showSimulationPanel = useMemo(() => railjackBuildNeedsSimulation(buildInput), [buildInput]);
 
-    return {
-      ...base,
-      turretDamageBonus: turretDmgBonus,
-      turretCritBonus,
-      turretCritDmgBonus,
-      ordnanceDamageBonus: ordnanceDmgBonus,
-      artilleryDamageBonus: artilleryDmgBonus,
-    };
-  }, [selectedPlating, selectedShield, selectedEngine, selectedReactor, integratedMods]);
+  const hasCrimsonFugue = integratedMods.some((m) => m.modId === "crimson_fugue");
+  const hasCruisingSpeed = integratedMods.some((m) => m.modId === "cruising_speed");
+  const hasProtectiveShots = integratedMods.some((m) => m.modId === "protective_shots");
 
   // Save
   const handleSaveBuildConfirm = useCallback(async ({ name, isPublic }: SaveBuildDialogValues) => {
@@ -157,7 +163,7 @@ export default function RailjackBuilderPage() {
       shieldId: selectedShield?.id,
       engineId: selectedEngine?.id,
       platingId: selectedPlating?.id,
-      turretId: selectedTurret?.id,
+      turretIds: selectedTurrets.map((t) => t?.id),
       ordnanceId: selectedOrdnance?.id,
       integratedMods: integratedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       battleMods: battleMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
@@ -165,6 +171,14 @@ export default function RailjackBuilderPage() {
       integratedPolarities,
       battlePolarities,
       tacticalPolarities,
+      eliteCrewId: selectedEliteCrewId ?? undefined,
+      simulation: {
+        crimsonFugueStacks,
+        cruisingSpeedActive,
+        protectiveShotsActive,
+        activeBattleAbilityId,
+        activeTacticalAbilityId,
+      },
     };
     const build: SavedBuild = {
       id: currentBuildId || generateBuildId(),
@@ -195,25 +209,39 @@ export default function RailjackBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, selectedTurret, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, currentBuildId]);
+  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, selectedTurrets, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, selectedEliteCrewId, crimsonFugueStacks, cruisingSpeedActive, protectiveShotsActive, activeBattleAbilityId, activeTacticalAbilityId, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as RailjackBuildData;
     const restoreMods = (slots: { modId: string; rank: number; slotIndex: number }[]) =>
       slots.map((m) => { const mod = modsMap.get(m.modId); return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain }; });
 
-    setSelectedReactor(reactors.find((r) => r.id === d.reactorId) ?? null);
-    setSelectedShield(shieldArrays.find((s) => s.id === d.shieldId) ?? null);
-    setSelectedEngine(engines.find((e) => e.id === d.engineId) ?? null);
-    setSelectedPlating(plating.find((p) => p.id === d.platingId) ?? null);
-    setSelectedTurret(findRailjackArmament(d.turretId ?? "") ?? null);
-    setSelectedOrdnance(ordnance.find((o) => o.id === d.ordnanceId) ?? null);
+    setSelectedReactor(findRailjackComponent(d.reactorId ?? "") ?? null);
+    setSelectedShield(findRailjackComponent(d.shieldId ?? "") ?? null);
+    setSelectedEngine(findRailjackComponent(d.engineId ?? "") ?? null);
+    setSelectedPlating(findRailjackComponent(d.platingId ?? "") ?? null);
+    const turretIds = d.turretIds?.length
+      ? d.turretIds
+      : d.turretId
+        ? [d.turretId, undefined]
+        : [undefined, undefined];
+    setSelectedTurrets([
+      findRailjackArmament(turretIds[0] ?? "") ?? null,
+      findRailjackArmament(turretIds[1] ?? "") ?? null,
+    ]);
+    setSelectedOrdnance(findRailjackArmament(d.ordnanceId ?? "") ?? null);
     setIntegratedMods(restoreMods(d.integratedMods));
     setBattleMods(restoreMods(d.battleMods));
     setTacticalMods(restoreMods(d.tacticalMods));
     setIntegratedPolarities(d.integratedPolarities || {});
     setBattlePolarities(d.battlePolarities || {});
     setTacticalPolarities(d.tacticalPolarities || {});
+    setSelectedEliteCrewId(d.eliteCrewId ?? null);
+    setCrimsonFugueStacks(d.simulation?.crimsonFugueStacks ?? 5);
+    setCruisingSpeedActive(d.simulation?.cruisingSpeedActive ?? false);
+    setProtectiveShotsActive(d.simulation?.protectiveShotsActive ?? true);
+    setActiveBattleAbilityId(d.simulation?.activeBattleAbilityId ?? null);
+    setActiveTacticalAbilityId(d.simulation?.activeTacticalAbilityId ?? null);
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildIsPublic(build.isPublic ?? false);
@@ -244,7 +272,10 @@ export default function RailjackBuilderPage() {
     setSelectedShield(findRailjackComponent(preset.shieldId) ?? null);
     setSelectedEngine(findRailjackComponent(preset.engineId) ?? null);
     setSelectedPlating(findRailjackComponent(preset.platingId) ?? null);
-    setSelectedTurret(findRailjackArmament(preset.turretIds[0]) ?? null);
+    setSelectedTurrets([
+      findRailjackArmament(preset.turretIds[0]) ?? null,
+      findRailjackArmament(preset.turretIds[1]) ?? null,
+    ]);
     setSelectedOrdnance(findRailjackArmament(preset.ordnanceId) ?? null);
     setBuildName(preset.name);
   }, [beginNewRailjackDraft]);
@@ -298,7 +329,7 @@ export default function RailjackBuilderPage() {
             ))}
           </div>
           <p className="text-[10px] text-muted-foreground/80 mt-2">
-            Presets apply components and primary turret/ordnance. Plexus mod lists are stored as reference only.
+            Presets apply all ship components, both turret hardpoints, and munitions launcher. Plexus mod lists are reference only.
           </p>
         </div>
 
@@ -312,11 +343,14 @@ export default function RailjackBuilderPage() {
                 <div className="flex justify-between"><span className="text-muted-foreground">Hull</span><span className="font-mono">{computedStats.hull}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span className="font-mono">{computedStats.armor}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span className="font-mono">{computedStats.shield}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Shield Recharge</span><span className="font-mono">{computedStats.shieldRecharge}/s</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Speed</span><span className="font-mono">{computedStats.speed}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Boost Speed</span><span className="font-mono">{computedStats.boostSpeed}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Boost Cost</span><span className="font-mono">{computedStats.boostCost}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Flux Capacity</span><span className="font-mono">{computedStats.fluxCapacity}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Avionics</span><span className="font-mono">{computedStats.avionicsCapacity}</span></div>
               </div>
-              {(computedStats.turretDamageBonus > 0 || computedStats.turretCritBonus > 0 || computedStats.turretCritDmgBonus > 0 || computedStats.ordnanceDamageBonus > 0 || computedStats.artilleryDamageBonus > 0) && (
+              {(computedStats.turretDamageBonus > 0 || computedStats.turretCritBonus > 0 || computedStats.turretCritDmgBonus > 0 || computedStats.ordnanceDamageBonus > 0 || computedStats.artilleryDamageBonus > 0 || computedStats.munitionsCapacityBonus > 0 || (computedStats.abilityTurretDamageBonus ?? 0) > 0 || (computedStats.crewBonuses?.turretDamageBonus ?? 0) > 0) && (
                 <div className="mt-3 pt-3 border-t border-border/50">
                   <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-1.5">PLEXUS BONUSES</h3>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
@@ -335,6 +369,31 @@ export default function RailjackBuilderPage() {
                     {computedStats.artilleryDamageBonus > 0 && (
                       <div className="flex justify-between"><span className="text-muted-foreground">Artillery Damage</span><span className="font-mono text-cyan-400">+{(computedStats.artilleryDamageBonus * 100).toFixed(0)}%</span></div>
                     )}
+                    {computedStats.munitionsCapacityBonus > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Munitions Capacity</span><span className="font-mono text-cyan-400">+{(computedStats.munitionsCapacityBonus * 100).toFixed(0)}%</span></div>
+                    )}
+                    {(computedStats.abilityTurretDamageBonus ?? 0) > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Ability Turret DMG</span><span className="font-mono text-cyan-400">+{((computedStats.abilityTurretDamageBonus ?? 0) * 100).toFixed(0)}%</span></div>
+                    )}
+                    {(computedStats.crewBonuses?.turretDamageBonus ?? 0) > 0 && (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Crew Gunnery</span><span className="font-mono text-cyan-400">+{((computedStats.crewBonuses!.turretDamageBonus) * 100).toFixed(0)}%</span></div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {(computedStats.abilityStrengthBonus || computedStats.abilityRangeBonus || computedStats.abilityDurationBonus) && (
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-1.5">REACTOR BATTLE SCALING</h3>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                    {computedStats.abilityStrengthBonus ? (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Strength</span><span className="font-mono text-orange-400">+{(computedStats.abilityStrengthBonus * 100).toFixed(0)}%</span></div>
+                    ) : null}
+                    {computedStats.abilityRangeBonus ? (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Range</span><span className="font-mono text-orange-400">+{(computedStats.abilityRangeBonus * 100).toFixed(0)}%</span></div>
+                    ) : null}
+                    {computedStats.abilityDurationBonus ? (
+                      <div className="flex justify-between"><span className="text-muted-foreground">Duration</span><span className="font-mono text-orange-400">+{(computedStats.abilityDurationBonus * 100).toFixed(0)}%</span></div>
+                    ) : null}
                   </div>
                 </div>
               )}
@@ -414,7 +473,7 @@ export default function RailjackBuilderPage() {
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <Shield className="h-3.5 w-3.5 text-amber-400" />
-                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">PLATING</span>
+                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">HULL (PLATING)</span>
                   </div>
                   <span className="text-sm font-medium">{selectedPlating?.name ?? "None"}</span>
                   {selectedPlating && (
@@ -429,9 +488,9 @@ export default function RailjackBuilderPage() {
               {showComponentPicker && (
                 <div className="mt-3 border border-border rounded-xl p-3 bg-card max-h-[250px] overflow-y-auto">
                   <div className="grid grid-cols-1 gap-1.5">
-                    {(showComponentPicker === "reactor" ? reactors :
-                      showComponentPicker === "shield" ? shieldArrays :
-                      showComponentPicker === "engine" ? engines : plating
+                    {(showComponentPicker === "reactor" ? allReactors :
+                      showComponentPicker === "shield" ? allShieldArrays :
+                      showComponentPicker === "engine" ? allEngines : allPlating
                     ).map((comp) => (
                       <button
                         key={comp.id}
@@ -457,62 +516,170 @@ export default function RailjackBuilderPage() {
               )}
             </div>
 
-            {/* Armaments */}
+            {/* Elite Crew */}
+            <div>
+              <h2 className="text-xs font-semibold tracking-wider text-muted-foreground mb-3">ELITE CREW</h2>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => { beginNewRailjackDraft(); setSelectedEliteCrewId(null); }}
+                  className={cn(
+                    "p-2.5 rounded-lg border text-left text-xs transition-all",
+                    !selectedEliteCrewId ? "border-primary/50 bg-primary/5" : "border-border hover:border-primary/30",
+                  )}
+                >
+                  <span className="font-medium">None</span>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Default crew bonuses</p>
+                </button>
+                {railjackEliteCrew.map((crew) => (
+                  <button
+                    key={crew.id}
+                    type="button"
+                    onClick={() => { beginNewRailjackDraft(); setSelectedEliteCrewId(crew.id); }}
+                    className={cn(
+                      "p-2.5 rounded-lg border text-left text-xs transition-all",
+                      selectedEliteCrewId === crew.id ? "border-violet-500/50 bg-violet-500/10" : "border-border hover:border-violet-500/30",
+                    )}
+                  >
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <Users className="h-3 w-3 text-violet-400" />
+                      <span className="font-medium">{crew.name}</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground line-clamp-2">{crew.description}</p>
+                    <p className="text-[10px] text-muted-foreground/80 mt-1">
+                      G{crew.competency.gunnery} C{crew.competency.combat} P{crew.competency.piloting} R{crew.competency.repair} E{crew.competency.endurance}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Armaments — 2 turrets + munitions launcher */}
             <div>
               <h2 className="text-xs font-semibold tracking-wider text-muted-foreground mb-3">ARMAMENTS</h2>
               <div className="space-y-3">
-                {/* Turret */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <Crosshair className="h-3.5 w-3.5 text-red-400" />
-                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">TURRETS</span>
+                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">TURRETS (×2)</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-[280px] overflow-y-auto">
-                    {allTurrets.map((t) => (
+                  <div className="grid grid-cols-2 gap-2">
+                    {([0, 1] as const).map((slot) => (
                       <button
-                        key={t.id}
-                        onClick={() => { beginNewRailjackDraft(); setSelectedTurret(t); }}
+                        key={slot}
+                        type="button"
+                        onClick={() => {
+                          setActiveTurretSlot(slot);
+                          setShowTurretPicker(true);
+                          setShowOrdnancePicker(false);
+                        }}
                         className={cn(
-                          "p-2 rounded-lg border text-left transition-all text-xs",
-                          selectedTurret?.id === t.id
-                            ? "border-red-500/50 bg-red-500/10 text-red-400"
-                            : "border-border hover:border-red-500/30"
+                          "rounded-lg border p-2.5 text-left transition-all",
+                          selectedTurrets[slot]
+                            ? "border-red-500/50 bg-red-500/10"
+                            : "border-dashed border-border hover:border-red-500/30",
                         )}
                       >
-                        <span className="font-medium">{t.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG {t.damage} • CC {(t.critChance * 100).toFixed(0)}% • SC {(t.statusChance * 100).toFixed(0)}%
-                        </div>
+                        <span className="text-[10px] text-muted-foreground">Turret {slot + 1}</span>
+                        <p className="text-sm font-medium mt-0.5 truncate">
+                          {selectedTurrets[slot]?.name ?? "Select turret"}
+                        </p>
+                        {selectedTurrets[slot] && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            DMG {selectedTurrets[slot]!.damage} • CC {(selectedTurrets[slot]!.critChance * 100).toFixed(0)}%
+                          </p>
+                        )}
                       </button>
                     ))}
                   </div>
+                  {showTurretPicker && (
+                    <div className="mt-3 border border-border rounded-xl p-3 bg-card max-h-[240px] overflow-y-auto">
+                      <p className="text-[10px] text-muted-foreground mb-2">Equipping Turret {activeTurretSlot + 1}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        {allTurrets.map((t) => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() => {
+                              beginNewRailjackDraft();
+                              setSelectedTurrets((prev) => {
+                                const next: [RailjackArmament | null, RailjackArmament | null] = [...prev];
+                                next[activeTurretSlot] = t;
+                                return next;
+                              });
+                              setShowTurretPicker(false);
+                            }}
+                            className={cn(
+                              "p-2 rounded-lg border text-left transition-all text-xs",
+                              selectedTurrets[activeTurretSlot]?.id === t.id
+                                ? "border-red-500/50 bg-red-500/10 text-red-400"
+                                : "border-border hover:border-red-500/30",
+                            )}
+                          >
+                            <span className="font-medium">{t.name}</span>
+                            <div className="text-[10px] text-muted-foreground mt-0.5">
+                              DMG {t.damage} • CC {(t.critChance * 100).toFixed(0)}% • SC {(t.statusChance * 100).toFixed(0)}%
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* Ordnance */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <Crosshair className="h-3.5 w-3.5 text-purple-400" />
-                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">ORDNANCE</span>
+                    <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">MUNITIONS LAUNCHER</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-[200px] overflow-y-auto">
-                    {ordnance.map((o) => (
-                      <button
-                        key={o.id}
-                        onClick={() => { beginNewRailjackDraft(); setSelectedOrdnance(o); }}
-                        className={cn(
-                          "p-2 rounded-lg border text-left transition-all text-xs",
-                          selectedOrdnance?.id === o.id
-                            ? "border-purple-500/50 bg-purple-500/10 text-purple-400"
-                            : "border-border hover:border-purple-500/30"
-                        )}
-                      >
-                        <span className="font-medium">{o.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          DMG {o.damage} • CC {(o.critChance * 100).toFixed(0)}% • FR {o.fireRate}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowOrdnancePicker(!showOrdnancePicker);
+                      setShowTurretPicker(false);
+                    }}
+                    className={cn(
+                      "w-full rounded-lg border p-2.5 text-left transition-all",
+                      selectedOrdnance
+                        ? "border-purple-500/50 bg-purple-500/10"
+                        : "border-dashed border-border hover:border-purple-500/30",
+                    )}
+                  >
+                    <span className="text-sm font-medium">{selectedOrdnance?.name ?? "Select munitions launcher"}</span>
+                    {selectedOrdnance && (
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                        DMG {selectedOrdnance.damage} • CC {(selectedOrdnance.critChance * 100).toFixed(0)}% • FR {selectedOrdnance.fireRate}
+                      </p>
+                    )}
+                  </button>
+                  {showOrdnancePicker && (
+                    <div className="mt-3 border border-border rounded-xl p-3 bg-card max-h-[200px] overflow-y-auto">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        {allOrdnance.map((o) => (
+                          <button
+                            key={o.id}
+                            type="button"
+                            onClick={() => {
+                              beginNewRailjackDraft();
+                              setSelectedOrdnance(o);
+                              setShowOrdnancePicker(false);
+                            }}
+                            className={cn(
+                              "p-2 rounded-lg border text-left transition-all text-xs",
+                              selectedOrdnance?.id === o.id
+                                ? "border-purple-500/50 bg-purple-500/10 text-purple-400"
+                                : "border-border hover:border-purple-500/30",
+                            )}
+                          >
+                            <span className="font-medium">{o.name}</span>
+                            <div className="text-[10px] text-muted-foreground mt-0.5">
+                              DMG {o.damage} • CC {(o.critChance * 100).toFixed(0)}% • FR {o.fireRate}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -584,31 +751,149 @@ export default function RailjackBuilderPage() {
               </div>
             </div>
 
-            {/* Armament Stats */}
-            {(selectedTurret || selectedOrdnance) && (
+            {/* Simulation toggles for conditional mods & active abilities */}
+            {showSimulationPanel && (
+              <div className="border border-amber-500/20 rounded-xl p-4 bg-amber-500/5">
+                <h3 className="text-xs font-semibold tracking-wider text-amber-300 mb-3">SIMULATION</h3>
+                <div className="space-y-3 text-xs">
+                  {hasCrimsonFugue && (
+                    <div>
+                      <label className="text-muted-foreground block mb-1">Crimson Fugue stacks (0–5)</label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={5}
+                        step={1}
+                        value={crimsonFugueStacks}
+                        onChange={(e) => setCrimsonFugueStacks(Number(e.target.value))}
+                        className="w-full"
+                      />
+                      <span className="font-mono text-amber-300">{crimsonFugueStacks}</span>
+                    </div>
+                  )}
+                  {hasCruisingSpeed && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={cruisingSpeedActive}
+                        onChange={(e) => setCruisingSpeedActive(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span>Cruising Speed active (no enemies within 3000m)</span>
+                    </label>
+                  )}
+                  {hasProtectiveShots && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={protectiveShotsActive}
+                        onChange={(e) => setProtectiveShotsActive(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span>Protective Shots active (shields above 75%)</span>
+                    </label>
+                  )}
+                  {(computedStats.battleAbilities?.some((a) => a.turretDamageWhileActive) || computedStats.tacticalAbilities?.some((a) => a.turretDamageWhileActive)) && (
+                    <div className="space-y-2 pt-1 border-t border-border/50">
+                      <p className="text-[10px] text-muted-foreground">Simulate active turret-boost ability:</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => { setActiveBattleAbilityId(null); setActiveTacticalAbilityId(null); }}
+                          className={cn(
+                            "px-2 py-1 rounded border text-[10px]",
+                            !activeBattleAbilityId && !activeTacticalAbilityId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                          )}
+                        >
+                          None
+                        </button>
+                        {computedStats.battleAbilities?.filter((a) => a.turretDamageWhileActive).map((a) => (
+                          <button
+                            key={a.modId}
+                            type="button"
+                            onClick={() => { setActiveBattleAbilityId(a.modId); setActiveTacticalAbilityId(null); }}
+                            className={cn(
+                              "px-2 py-1 rounded border text-[10px]",
+                              activeBattleAbilityId === a.modId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                            )}
+                          >
+                            {a.name}
+                          </button>
+                        ))}
+                        {computedStats.tacticalAbilities?.filter((a) => a.turretDamageWhileActive).map((a) => (
+                          <button
+                            key={a.modId}
+                            type="button"
+                            onClick={() => { setActiveTacticalAbilityId(a.modId); setActiveBattleAbilityId(null); }}
+                            className={cn(
+                              "px-2 py-1 rounded border text-[10px]",
+                              activeTacticalAbilityId === a.modId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                            )}
+                          >
+                            {a.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Battle / Tactical abilities */}
+            {plexusTab !== "integrated" && (computedStats.battleAbilities?.length || computedStats.tacticalAbilities?.length) ? (
               <div className="border border-border rounded-xl p-4 bg-card">
-                <h3 className="text-xs font-semibold text-muted-foreground mb-3">ARMAMENT STATS</h3>
-                {selectedTurret && (
-                  <div className="mb-3">
-                    <div className="text-xs font-medium text-red-400 mb-1.5">Turret — {selectedTurret.name}</div>
+                <h3 className="text-xs font-semibold tracking-wider text-muted-foreground mb-3">
+                  {plexusTab === "battle" ? "BATTLE ABILITIES" : "TACTICAL ABILITIES"}
+                </h3>
+                <div className="space-y-2">
+                  {(plexusTab === "battle" ? computedStats.battleAbilities : computedStats.tacticalAbilities)?.map((ability) => (
+                    <div key={ability.modId} className="rounded-lg border border-border/60 p-2.5 text-xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium">{ability.name}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{ability.category}</span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-1">{ability.description}</p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5 text-[10px] font-mono text-cyan-400">
+                        {ability.energyCost !== undefined && <span>Energy {ability.energyCost}</span>}
+                        {ability.cooldownSec !== undefined && <span>CD {ability.cooldownSec}s</span>}
+                        {ability.turretDamageWhileActive !== undefined && (
+                          <span>Turret +{(ability.turretDamageWhileActive * 100).toFixed(0)}%</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {/* Armament Stats */}
+            {(computedStats.turrets.length > 0 || computedStats.ordnance) && (
+              <div className="border border-border rounded-xl p-4 bg-card">
+                <h3 className="text-xs font-semibold text-muted-foreground mb-3">ARMAMENT STATS (WITH PLEXUS)</h3>
+                {computedStats.turrets.map((turret, index) => (
+                  <div key={turret.id} className={cn(index > 0 && "mt-3 pt-3 border-t border-border/50")}>
+                    <div className="text-xs font-medium text-red-400 mb-1.5">Turret {index + 1} — {turret.name}</div>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{selectedTurret.damage}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(selectedTurret.critChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{selectedTurret.critMultiplier.toFixed(1)}x</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(selectedTurret.statusChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{selectedTurret.fireRate}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{turret.damage}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{turret.estimatedDps}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(turret.critChance * 100).toFixed(1)}%</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{turret.critMultiplier.toFixed(1)}x</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(turret.statusChance * 100).toFixed(1)}%</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{turret.fireRate}</span></div>
                     </div>
                   </div>
-                )}
-                {selectedOrdnance && (
-                  <div>
-                    <div className="text-xs font-medium text-purple-400 mb-1.5">Ordnance — {selectedOrdnance.name}</div>
+                ))}
+                {computedStats.ordnance && (
+                  <div className={cn(computedStats.turrets.length > 0 && "mt-3 pt-3 border-t border-border/50")}>
+                    <div className="text-xs font-medium text-purple-400 mb-1.5">Munitions — {computedStats.ordnance.name}</div>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{selectedOrdnance.damage}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(selectedOrdnance.critChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{selectedOrdnance.critMultiplier.toFixed(1)}x</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(selectedOrdnance.statusChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{selectedOrdnance.fireRate}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{computedStats.ordnance.damage}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{computedStats.ordnance.estimatedDps}</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(computedStats.ordnance.critChance * 100).toFixed(1)}%</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{computedStats.ordnance.critMultiplier.toFixed(1)}x</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(computedStats.ordnance.statusChance * 100).toFixed(1)}%</span></div>
+                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{computedStats.ordnance.fireRate}</span></div>
                     </div>
                   </div>
                 )}
@@ -622,7 +907,7 @@ export default function RailjackBuilderPage() {
       <ModPicker
         open={modPickerOpen}
         onClose={() => setModPickerOpen(false)}
-        mods={railjackMods}
+        mods={tabRailjackMods}
         category="_prefiltered"
         equippedModIds={currentMods.map((m) => m.modId)}
         onSelect={(mod, rank) => {

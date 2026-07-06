@@ -167,6 +167,9 @@ export interface RailjackBuildData {
   shieldId?: string;
   engineId?: string;
   platingId?: string;
+  /** Port + starboard turret hardpoints. */
+  turretIds?: (string | undefined)[];
+  /** @deprecated Use turretIds[0] — kept for older saves. */
   turretId?: string;
   ordnanceId?: string;
   integratedMods: ModSlot[];
@@ -175,6 +178,16 @@ export interface RailjackBuildData {
   integratedPolarities: Record<number, string>;
   battlePolarities: Record<number, string>;
   tacticalPolarities: Record<number, string>;
+  /** Elite crew member (Update 43 protoframes). */
+  eliteCrewId?: string;
+  /** Simulation toggles for conditional integrated mods and active abilities. */
+  simulation?: {
+    crimsonFugueStacks?: number;
+    cruisingSpeedActive?: boolean;
+    protectiveShotsActive?: boolean;
+    activeBattleAbilityId?: string | null;
+    activeTacticalAbilityId?: string | null;
+  };
 }
 
 // Archwing/Necramech build data
