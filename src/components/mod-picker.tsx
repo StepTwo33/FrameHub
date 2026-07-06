@@ -14,6 +14,7 @@ import { PolarityIcon } from "@/components/polarity-icon";
 import { getModImage, getArcaneImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getBlockedModIds } from "@/data/mod-exclusions";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
 
 function isRivenMod(mod: Mod): boolean {
   return mod.subCategory === "riven" || mod.id.startsWith("riven_");
@@ -274,16 +275,22 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                {selectedMod.description.replace(/<[^>]+>/g, "")}
+                {cleanModDescription(selectedMod.description)}
               </p>
-              {Object.keys(selectedMod.stats).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {Object.entries(selectedMod.stats).map(([key, value]) => (
-                    <span key={key} className="text-xs bg-blue-500/10 text-blue-300 px-2 py-0.5 rounded">
-                      {key}: {value > 0 ? "+" : ""}{value}
-                    </span>
+              {getModStatDisplayLines(selectedMod, selectedRank).length > 0 && (
+                <ul className="space-y-1 mb-3">
+                  {getModStatDisplayLines(selectedMod, selectedRank).map((line) => (
+                    <li key={line.statKey} className="flex justify-between gap-3 text-xs">
+                      <span className="text-muted-foreground">{line.label}</span>
+                      <span className="font-mono text-blue-300 shrink-0 text-right">
+                        {line.atRank}
+                        {selectedRank < selectedMod.maxRank && (
+                          <span className="text-muted-foreground/70"> ({line.atMax} max)</span>
+                        )}
+                      </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
             </div>
 

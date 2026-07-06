@@ -28,11 +28,11 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   return (
     <PageShell>
-      <PageMain maxWidth="full" className="py-8 sm:py-12 lg:py-16 xl:px-6 2xl:px-8">
-        {/* 1fr side gutters push panels to the edges; center column caps at ~max-w-5xl */}
-        <div className="mx-auto grid w-full grid-cols-1 gap-8 xl:grid-cols-[1fr_minmax(0,64rem)_1fr] xl:items-start xl:gap-x-6 2xl:gap-x-10">
-          {/* Left: site updates — flush to page edge */}
-          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:justify-self-start")}>
+      <PageMain maxWidth="full" className="max-w-none py-8 sm:py-12 lg:py-16 xl:px-5 2xl:px-6">
+        {/* Equal side tracks keep the center grid centered; side panels pin to the outer edges. */}
+        <div className="mx-auto grid w-full grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,64rem)_minmax(0,1fr)] xl:items-start xl:gap-x-4 2xl:gap-x-6">
+          {/* Left: site updates — outer edge */}
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-1 xl:justify-self-start xl:pl-0")}>
             <SiteUpdatesSidebar variant="sidebar" limit={10} />
           </aside>
 
@@ -167,8 +167,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Right: community builds — flush to page edge */}
-          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-3 xl:justify-self-end")}>
+          {/* Right: community builds — outer edge */}
+          <aside className={cn(HOME_SIDEBAR_ASIDE_CLASS, "xl:col-start-3 xl:justify-self-end xl:pr-0")}>
             <CommunityBuildsSidebar variant="sidebar" limit={10} />
           </aside>
         </div>

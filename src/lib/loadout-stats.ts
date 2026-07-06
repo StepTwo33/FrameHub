@@ -132,6 +132,8 @@ function getIncarnonStatChanges(
   return Object.keys(merged).length > 0 ? merged : undefined;
 }
 
+export const getIncarnonStatChangesForWeapon = getIncarnonStatChanges;
+
 function calculateCompanionBodyStats(
   companion: Companion,
   equippedMods: ModSlot[],
@@ -195,7 +197,7 @@ function calculateCompanionBodyStats(
   return stats;
 }
 
-type WeaponBuildPayload = {
+export type WeaponBuildPayload = {
   weaponId: string;
   mods: ModSlot[];
   arcaneIds?: (string | null)[];
@@ -401,6 +403,18 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   }
 
   return result;
+}
+
+/** Weapon DPS stats from a saved build payload (shared by weapon / loadout previews). */
+export function calcSavedWeaponBuildStats(
+  build: WeaponBuildPayload,
+  simParams: SimulationParams = scenarioSimParams("midFight"),
+  linkage: SetBonusLinkage = {},
+): Omit<LoadoutWeaponSlotStats, "ttk"> | null {
+  const entry = calcWeaponSlotStats(build, simParams, linkage);
+  if (!entry) return null;
+  const { ttk: _ttk, ...rest } = entry;
+  return rest;
 }
 
 export function bestSustainedDps(stats: LoadoutStatsResult): {

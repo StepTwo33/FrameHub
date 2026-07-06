@@ -1,5 +1,5 @@
 /** Shared sizing for home page left/right columns — keep panels matched without affecting center grid. */
-export const HOME_SIDEBAR_ASIDE_CLASS = "hidden xl:block xl:w-[280px]";
+export const HOME_SIDEBAR_ASIDE_CLASS = "hidden xl:block xl:w-[300px] 2xl:w-[340px]";
 
 export const HOME_SIDEBAR_PANEL_CLASS =
   "sticky top-20 flex h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] min-h-[32rem] flex-col overflow-hidden";

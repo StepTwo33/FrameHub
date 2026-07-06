@@ -1,0 +1,157 @@
+import { companionsMap } from "@/data/companions";
+import { modsMap } from "@/data/mods";
+import { allWeapons as allWeaponsData, weaponsMap } from "@/data/weapons";
+import {
+  resolveSavedArcaneSlots,
+  type ArchwingBuildData,
+  type CompanionBuildData,
+  type WarframeBuildData,
+  type WeaponBuildData,
+} from "@/lib/build-storage";
+import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
+import {
+  calcSavedWeaponBuildStats,
+  getIncarnonStatChangesForWeapon,
+  scenarioSimParams,
+} from "@/lib/loadout-stats";
+import { weaponFromModularData } from "@/lib/modular-resolve";
+import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
+import { enrichWeapon } from "@/lib/weapon-enrich";
+import type { CalculatedStats, Mod, ModularBuildData, Weapon } from "@/lib/types";
+
+export interface PublicBuildWeaponPreview {
+  label: string;
+  weapon: Weapon;
+  stats: CalculatedStats;
+  baseStats: CalculatedStats;
+  isMelee: boolean;
+}
+
+function baseWeaponStats(weapon: Weapon, incarnonEvolutions?: Record<number, number>): CalculatedStats {
+  const incarnonChanges = getIncarnonStatChangesForWeapon(weapon.id, incarnonEvolutions);
+  return calculateWeaponBuild(
+    enrichWeapon(weapon),
+    [],
+    modsMap,
+    incarnonChanges,
+    scenarioSimParams("midFight"),
+  );
+}
+
+/** Resolve weapon stats for a public/community build page (when the build has a weapon to analyze). */
+export function resolvePublicBuildWeaponPreview(
+  type: string,
+  data: unknown,
+  allWeapons: Weapon[] = allWeaponsData,
+): PublicBuildWeaponPreview | null {
+  if (!data || typeof data !== "object") return null;
+
+  switch (type) {
+    case "weapon": {
+      const d = data as WeaponBuildData;
+      const entry = calcSavedWeaponBuildStats({
+        weaponId: d.weaponId,
+        mods: d.mods ?? [],
+        arcaneIds: d.arcaneIds,
+        progenitorElement: d.progenitorElement,
+        progenitorBonusPercent: d.progenitorBonusPercent,
+        incarnonEvolutions: d.incarnonEvolutions,
+      });
+      if (!entry) return null;
+      const weapon = weaponsMap.get(d.weaponId);
+      if (!weapon) return null;
+      return {
+        label: entry.name,
+        weapon: enrichWeapon(weapon),
+        stats: entry.stats,
+        baseStats: baseWeaponStats(weapon, d.incarnonEvolutions),
+        isMelee: entry.isMelee,
+      };
+    }
+    case "warframe": {
+      const d = data as WarframeBuildData;
+      const exaltedMods = d.exaltedMods ?? [];
+      if (exaltedMods.length === 0) return null;
+      const exaltedWeapon = allWeapons.find(
+        (w) => w.isExalted && w.warframeId === d.warframeId,
+      );
+      if (!exaltedWeapon) return null;
+      const entry = calcSavedWeaponBuildStats({
+        weaponId: exaltedWeapon.id,
+        mods: exaltedMods,
+      });
+      if (!entry) return null;
+      return {
+        label: `Exalted — ${entry.name}`,
+        weapon: enrichWeapon(exaltedWeapon),
+        stats: entry.stats,
+        baseStats: baseWeaponStats(exaltedWeapon),
+        isMelee: entry.isMelee,
+      };
+    }
+    case "companion": {
+      const d = data as CompanionBuildData;
+      const weaponMods = d.weaponMods ?? [];
+      if (weaponMods.length === 0) return null;
+      const companion = companionsMap.get(d.companionId);
+      if (!companion) return null;
+      const companionWeapon = resolveDefaultCompanionWeapon(companion, allWeapons);
+      if (!companionWeapon) return null;
+      const entry = calcSavedWeaponBuildStats({
+        weaponId: companionWeapon.id,
+        mods: weaponMods,
+        arcaneIds: d.arcaneIds,
+      });
+      if (!entry) return null;
+      return {
+        label: `Companion weapon — ${entry.name}`,
+        weapon: enrichWeapon(companionWeapon),
+        stats: entry.stats,
+        baseStats: baseWeaponStats(companionWeapon),
+        isMelee: entry.isMelee,
+      };
+    }
+    case "modular": {
+      const d = data as ModularBuildData;
+      const assembled = weaponFromModularData(d);
+      if (!assembled) return null;
+      const base = enrichWeapon(assembled);
+      const simParams = scenarioSimParams("midFight");
+      const modSlots = d.mods ?? [];
+      const arcaneMods = resolveSavedArcaneSlots(d.arcaneIds, 2).filter((m): m is Mod => m != null);
+      const stats =
+        arcaneMods.length > 0
+          ? calculateWeaponBuildWithArcanes(base, modSlots, modsMap, arcaneMods, undefined, simParams)
+          : calculateWeaponBuild(base, modSlots, modsMap, undefined, simParams);
+      const isMelee = base.category === "melee" || base.triggerType === "Melee";
+      return {
+        label: base.name,
+        weapon: base,
+        stats,
+        baseStats: calculateWeaponBuild(base, [], modsMap, undefined, simParams),
+        isMelee,
+      };
+    }
+    case "archwing": {
+      const d = data as ArchwingBuildData;
+      const weaponMods = d.weaponMods ?? [];
+      if (!d.weaponId || weaponMods.length === 0) return null;
+      const weapon = weaponsMap.get(d.weaponId);
+      if (!weapon) return null;
+      const entry = calcSavedWeaponBuildStats({
+        weaponId: d.weaponId,
+        mods: weaponMods,
+      });
+      if (!entry) return null;
+      return {
+        label: entry.name,
+        weapon: enrichWeapon(weapon),
+        stats: entry.stats,
+        baseStats: baseWeaponStats(weapon),
+        isMelee: entry.isMelee,
+      };
+    }
+    default:
+      return null;
+  }
+}

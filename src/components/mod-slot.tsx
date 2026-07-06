@@ -13,6 +13,7 @@ import {
   modCapacityAtRank,
   modSlotCapacityCost,
 } from "@/lib/mod-capacity";
+import { cleanModDescription, formatModStatValue } from "@/lib/mod-display";
 
 const rarityBorderColors: Record<string, string> = {
   common: "border-amber-900/50",
@@ -37,6 +38,8 @@ interface ModSlotProps {
   onEditRiven?: () => void;
   /** When set (warframe builder), Umbral set bonuses scale displayed mod stats. */
   equippedModIds?: string[];
+  /** Tighter layout for exalted weapon mod grids. */
+  compact?: boolean;
 }
 
 function FormaPolarizeButton({
@@ -132,7 +135,7 @@ function PolarityPicker({
   );
 }
 
-export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds }: ModSlotProps) {
+export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenStats, weaponCategory, onAdd, onRemove, onPolarize, onEditRiven, equippedModIds, compact }: ModSlotProps) {
   const [showPolarityPicker, setShowPolarityPicker] = useState(false);
 
   if (!mod) {
@@ -173,19 +176,18 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
   const umbralCount = equippedModIds?.filter((id) => UMBRAL_MOD_IDS.includes(id as (typeof UMBRAL_MOD_IDS)[number])).length ?? 0;
   const umbralSetMult = getUmbralSetBonusMultiplier(mod.id, umbralCount);
 
-  // Format mod stats into readable lines at the currently equipped rank
-  const statEntries = Object.entries(mod.stats).slice(0, 3);
+  const statEntries = Object.entries(mod.stats).slice(0, compact ? 2 : 3);
   const formatStat = (key: string, perRankVal: number) => {
-    const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
     const setMult = key === "tauResistance" ? 1 : umbralSetMult;
-    const scaled = perRankVal * (rank + 1) * setMult;
-    const sign = scaled > 0 ? "+" : "";
-    const decimals = scaled % 1 !== 0 ? 1 : 0;
-    return `${sign}${scaled.toFixed(decimals)}% ${label}`;
+    return formatModStatValue(key, perRankVal, rank, setMult);
   };
 
   return (
-    <div className={cn("group relative w-full min-h-24 border rounded-lg p-3 bg-card transition-all hover:ring-2 hover:ring-primary/20", borderColor)}>
+    <div className={cn(
+      "group relative w-full border rounded-lg bg-card transition-all hover:ring-2 hover:ring-primary/20",
+      compact ? "min-h-[5.5rem] p-2.5" : "min-h-24 p-3",
+      borderColor,
+    )}>
       <button
         onClick={onRemove}
         className="absolute top-1.5 right-1.5 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors z-10"
@@ -230,7 +232,7 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
             </div>
           ) : (
             <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
-              {mod.description.replace(/<[^>]+>/g, "").substring(0, 80)}
+              {cleanModDescription(mod.description).substring(0, compact ? 60 : 80)}
             </div>
           )}
           <div className="flex items-center gap-2.5 mt-1.5">

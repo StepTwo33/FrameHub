@@ -185,7 +185,7 @@ export function AbilityStatRow({
         {scaleHint && <AbilityScaleBadge scale={scaleHint} />}
         <span
           className={cn(
-            "truncate text-muted-foreground",
+            "text-muted-foreground",
             compact ? "text-[10px]" : "text-[11px]",
           )}
         >
@@ -235,7 +235,7 @@ export function AbilityCardShell({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-card via-card to-muted/20",
+        "relative rounded-xl border border-border/60 bg-gradient-to-br from-card via-card to-muted/20",
         "border-l-[3px] shadow-sm transition-shadow hover:shadow-md",
         variant === "default" ? cn(style.border, style.glow) : "border-l-emerald-500/70 shadow-[inset_3px_0_12px_-4px_rgba(52,211,153,0.25)]",
         variant === "helminth" && "from-emerald-500/5 via-card to-card ring-1 ring-emerald-500/20",
@@ -243,7 +243,7 @@ export function AbilityCardShell({
       )}
     >
       <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/5 blur-2xl" />
-      <div className="relative flex h-full min-h-full flex-col p-4">{children}</div>
+      <div className="relative flex h-full flex-col p-4">{children}</div>
     </div>
   );
 }
@@ -265,7 +265,9 @@ export function AbilitiesSectionHeader({
             <span className="ml-2 font-normal text-primary">{formLabel}</span>
           )}
         </h2>
-        <p className="text-[10px] text-muted-foreground">Stats update with your current build</p>
+        <p className="text-[10px] text-muted-foreground">
+          Stats update with your current build · one Helminth subsume per loadout
+        </p>
       </div>
     </div>
   );

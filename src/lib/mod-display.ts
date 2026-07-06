@@ -63,9 +63,17 @@ export function modStatTotalAtRank(perRank: number, rank: number): number {
   return perRank * (rank + 1);
 }
 
-export function formatModStatValue(statKey: string, perRank: number, rank: number): string {
-  const total = modStatTotalAtRank(perRank, rank);
+export function formatModStatValue(
+  statKey: string,
+  perRank: number,
+  rank: number,
+  multiplier = 1,
+): string {
+  const total = modStatTotalAtRank(perRank, rank) * multiplier;
   const label = getModStatLabel(statKey);
+  if (statKey === "critDecayPerSecond") {
+    return `${formatStatNumber(total)}%/s ${label}`;
+  }
   if (usesPercentDisplay(statKey)) {
     return `${formatStatNumber(total)}% ${label}`;
   }

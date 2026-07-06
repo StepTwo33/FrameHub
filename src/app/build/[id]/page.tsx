@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageShell, ContentPanel } from "@/components/page-shell";
 import { BuildPreviewSummary } from "@/components/build-preview-summary";
+import { BuildPreviewStats } from "@/components/build-preview-stats";
 import { buildOpenUrl } from "@/lib/build-url";
 import { summarizeBuildPreview } from "@/lib/build-preview";
 import { BuildPageVote } from "@/components/build-page-vote";
@@ -88,7 +89,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
 
   return (
     <PageShell>
-      <main className="flex-1 container mx-auto px-4 py-8 sm:py-12 max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <main className="flex-1 container mx-auto px-4 py-8 sm:py-12 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-700">
         <ContentPanel className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-8">
             <div className="min-w-0">
@@ -143,6 +144,8 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
           <div className="w-full h-px bg-border mb-8" />
 
           <BuildPreviewSummary preview={preview} />
+
+          <BuildPreviewStats type={build.type} data={build.data} />
 
           {build.description && (
             <>

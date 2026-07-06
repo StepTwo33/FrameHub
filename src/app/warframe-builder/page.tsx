@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, type ReactNode } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import {
@@ -11,7 +11,7 @@ import {
   BuilderActionGroup,
 } from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
-import { WarframeStatsPanel } from "@/components/stats-panel";
+import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
 import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
 import { calculateWarframeBuild, calculateWeaponBuild, applyWarframeShardsAndArcanes } from "@/lib/calculator";
@@ -124,13 +124,14 @@ function getSlotType(index: number): SlotType {
 }
 
 // Full ability card with all stats
-function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }: {
+function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, footer }: {
   ability: Ability;
   index: number;
   stats: WarframeCalculatedStats | null;
   gameSlot?: number;
   formLabel?: string;
   warframeId?: string;
+  footer?: ReactNode;
 }) {
   const eff = stats?.abilityEfficiency ?? 1;
   const display = { warframeId, abilityName: ability.name };
@@ -138,7 +139,7 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
   const slotNum = gameSlot ?? index + 1;
 
   return (
-    <AbilityCardShell slot={slotNum} className="flex h-full min-h-0 flex-1 flex-col">
+    <AbilityCardShell slot={slotNum} className="flex h-full flex-col">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2.5">
           <AbilitySlotBadge slot={slotNum} />
@@ -170,16 +171,45 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId }:
         </div>
       )}
 
-      <div className="mt-auto pt-1">
+      <div className="mb-3">
         <AbilityStatsBlock ability={ability} stats={stats} display={display} />
       </div>
+
+      {footer}
     </AbilityCardShell>
   );
 }
 
-function HelminthAbilityCard({ ability, stats, onRemove }: {
+function HelminthSubsumeButton({
+  onClick,
+  label = "Subsume Helminth",
+}: {
+  onClick: () => void;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-medium text-emerald-300 transition-colors hover:bg-emerald-500/20 hover:border-emerald-400/50"
+    >
+      <RefreshCw className="h-3.5 w-3.5 shrink-0" />
+      {label}
+    </button>
+  );
+}
+
+function HelminthAbilityCard({
+  ability,
+  stats,
+  gameSlot,
+  onChange,
+  onRemove,
+}: {
   ability: HelminthAbility;
   stats: WarframeCalculatedStats | null;
+  gameSlot: number;
+  onChange: () => void;
   onRemove: () => void;
 }) {
   const eff = stats?.abilityEfficiency ?? 1;
@@ -187,29 +217,39 @@ function HelminthAbilityCard({ ability, stats, onRemove }: {
   const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
 
   return (
-    <AbilityCardShell slot={1} variant="helminth" className="flex h-full min-h-0 flex-1 flex-col">
-      <div className="mb-2 flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-emerald-400">{ability.name}</h3>
-          <p className="mt-0.5 text-[10px] text-emerald-400/60">
-            {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
-          </p>
+    <AbilityCardShell slot={gameSlot} variant="helminth" className="flex h-full flex-col">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-2.5">
+          <AbilitySlotBadge slot={gameSlot} />
+          <div className="min-w-0">
+            <h3 className="text-base font-semibold leading-tight tracking-tight text-emerald-400">
+              {ability.name}
+            </h3>
+            <p className="mt-0.5 text-[10px] text-emerald-400/70">
+              {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
-          <button
-            onClick={onRemove}
-            className="rounded-md px-1.5 py-0.5 text-[10px] text-rose-400 ring-1 ring-rose-500/30 transition-colors hover:bg-rose-500/10"
-          >
-            Remove
-          </button>
-        </div>
+        <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
       </div>
-      <p className="mb-3 text-[11px] leading-relaxed text-muted-foreground">
+
+      <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
         {formatAbilityDescription(ability.description)}
       </p>
-      <div className="mt-auto pt-1">
+
+      <div className="mb-3">
         <AbilityStatsBlock ability={ability} stats={stats} display={display} />
+      </div>
+
+      <div className="mt-auto flex flex-wrap gap-2 border-t border-emerald-500/15 pt-3">
+        <HelminthSubsumeButton onClick={onChange} label="Change Helminth" />
+        <button
+          type="button"
+          onClick={onRemove}
+          className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-300 transition-colors hover:bg-rose-500/20"
+        >
+          Restore ability
+        </button>
       </div>
     </AbilityCardShell>
   );
@@ -514,6 +554,11 @@ export default function WarframeBuilderPage() {
     const slots = exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex }));
     return calculateWeaponBuild(exaltedWeapon, slots, modsMap);
   }, [exaltedWeapon, exaltedMods]);
+
+  const exaltedBaseStats = useMemo<CalculatedStats | null>(() => {
+    if (!exaltedWeapon) return null;
+    return calculateWeaponBuild(exaltedWeapon, [], modsMap);
+  }, [exaltedWeapon]);
 
   const exaltedCapacity = useMemo(() => {
     return exaltedMods.reduce((sum, m) => {
@@ -1054,16 +1099,25 @@ export default function WarframeBuilderPage() {
                           : undefined
                       }
                     />
-                    <div className="grid items-stretch gap-4 sm:grid-cols-2">
+                    <div className="grid auto-rows-fr items-stretch gap-4 sm:grid-cols-2">
                       {abilityDisplayEntries.map((entry) => {
                         const slotIndex = entry.gameSlot - 1;
-                        const isHelminthed = helminthSlot === slotIndex && helminthAbility;
+                        const hasHelminth = helminthSlot != null && helminthAbility != null;
+                        const isHelminthed = hasHelminth && helminthSlot === slotIndex;
+                        const canSubsumeHere = !hasHelminth || isHelminthed;
+                        const openHelminthPicker = () => {
+                          setHelminthPickerSlot(slotIndex);
+                          setHelminthPickerOpen(true);
+                          setHelminthSearch("");
+                        };
                         return (
-                          <div key={entry.key} className="relative group flex h-full min-h-0 flex-col">
+                          <div key={entry.key} className="flex h-full flex-col">
                             {isHelminthed ? (
                               <HelminthAbilityCard
                                 ability={helminthAbility}
                                 stats={calculatedStats}
+                                gameSlot={entry.gameSlot}
+                                onChange={openHelminthPicker}
                                 onRemove={() => { setHelminthSlot(null); setHelminthAbility(null); }}
                               />
                             ) : (
@@ -1074,16 +1128,14 @@ export default function WarframeBuilderPage() {
                                 formLabel={entry.formLabel}
                                 stats={calculatedStats}
                                 warframeId={selectedWarframe.id}
+                                footer={
+                                  canSubsumeHere ? (
+                                    <div className="mt-auto border-t border-border/40 pt-3">
+                                      <HelminthSubsumeButton onClick={openHelminthPicker} />
+                                    </div>
+                                  ) : undefined
+                                }
                               />
-                            )}
-                            {!isHelminthed && (
-                              <button
-                                onClick={() => { setHelminthPickerSlot(slotIndex); setHelminthPickerOpen(true); setHelminthSearch(""); }}
-                                className="absolute bottom-3 right-3 rounded-lg bg-emerald-500/15 p-1.5 text-emerald-400 opacity-0 ring-1 ring-emerald-500/30 transition-all hover:bg-emerald-500/25 group-hover:opacity-100"
-                                title="Replace with Helminth ability"
-                              >
-                                <RefreshCw className="h-3.5 w-3.5" />
-                              </button>
                             )}
                           </div>
                         );
@@ -1122,13 +1174,14 @@ export default function WarframeBuilderPage() {
                       <Crosshair className="h-4 w-4" />
                       EXALTED WEAPON — {exaltedWeapon.name}
                     </h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                    <div className="grid grid-cols-2 gap-2 mb-4">
                       {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
                         const equipped = exaltedMods.find((m) => m.slotIndex === i);
                         const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
                         return (
                           <ModSlotCard
                             key={`ex${i}`}
+                            compact
                             mod={mod}
                             rank={equipped?.rank ?? 0}
                             slotIndex={i}
@@ -1140,7 +1193,7 @@ export default function WarframeBuilderPage() {
                         );
                       })}
                     </div>
-                    <div className="flex items-center justify-between text-xs mb-3">
+                    <div className="flex items-center justify-between text-xs mb-3 pb-3 border-b border-amber-500/20">
                       <span className="text-muted-foreground">Capacity</span>
                       <span className={cn(
                         "font-mono",
@@ -1150,13 +1203,13 @@ export default function WarframeBuilderPage() {
                       </span>
                     </div>
                     {exaltedStats && (
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                        <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span>{exaltedStats.totalDamage.toFixed(1)}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span>{(exaltedStats.criticalChance * 100).toFixed(1)}%</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span>{exaltedStats.criticalMultiplier.toFixed(1)}x</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span>{(exaltedStats.statusChance * 100).toFixed(1)}%</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span>{exaltedStats.fireRate.toFixed(2)}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">DPS</span><span className="text-amber-400 font-medium">{exaltedStats.burstDps.toFixed(0)}</span></div>
+                      <div className="[&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-amber-400/80">
+                        <WeaponStatsPanel
+                          stats={exaltedStats}
+                          baseStats={exaltedBaseStats}
+                          weapon={exaltedWeapon}
+                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
+                        />
                       </div>
                     )}
                   </div>
@@ -1237,7 +1290,11 @@ export default function WarframeBuilderPage() {
       <Dialog open={helminthPickerOpen} onOpenChange={(v) => { if (!v) setHelminthPickerOpen(false); }}>
         <DialogContent className="max-w-lg max-h-[85vh] flex flex-col p-0">
           <DialogHeader className="p-6 pb-0">
-            <DialogTitle>Replace Ability {helminthPickerSlot + 1} with Helminth</DialogTitle>
+            <DialogTitle>
+              {helminthAbility
+                ? `Change Helminth ability (slot ${helminthPickerSlot + 1})`
+                : `Replace ability ${helminthPickerSlot + 1} with Helminth`}
+            </DialogTitle>
           </DialogHeader>
           <div className="px-6 py-3">
             <div className="relative">
