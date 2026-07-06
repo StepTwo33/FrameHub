@@ -238,7 +238,7 @@ def extract_kuva_block(text: str) -> str:
 
 
 def ts_key(key: str) -> str:
-    if re.match(r"^[a-z_][a-z0-9_&]*$", key):
+    if re.match(r"^[a-z_][a-z0-9_]*$", key):
         return key
     return json.dumps(key)
 
