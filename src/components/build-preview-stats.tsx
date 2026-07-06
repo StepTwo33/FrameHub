@@ -9,6 +9,7 @@ import {
 } from "@/lib/build-stats";
 import { modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
+import type { EquippedMod } from "@/lib/types";
 
 function StatsDivider() {
   return <div className="w-full h-px bg-border my-8" />;
@@ -55,13 +56,19 @@ export function BuildPreviewStats({ type, data }: { type: string; data: unknown 
     [type, data, allWeapons],
   );
 
-  const equippedMods = useMemo(() => {
+  const equippedMods = useMemo((): EquippedMod[] | undefined => {
     if (!warframePreview) return undefined;
-    return warframePreview.modSlots.map((m) => ({
-      modId: m.modId,
-      rank: m.rank,
-      slotIndex: m.slotIndex,
-    }));
+    return warframePreview.modSlots.map((m) => {
+      const mod = modsMap.get(m.modId);
+      return {
+        modId: m.modId,
+        modName: mod?.name ?? "",
+        rank: m.rank,
+        slotIndex: m.slotIndex,
+        polarity: mod?.polarity,
+        drain: mod?.drain,
+      };
+    });
   }, [warframePreview]);
 
   if (!warframePreview && !weaponPreview) return null;
