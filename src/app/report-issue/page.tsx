@@ -6,7 +6,7 @@ import {
   DataOverride, getOverrides, deleteOverride, getOverrideForTarget,
   exportOverrides, importOverrides, OverrideCategory, OVERRIDE_CATEGORIES,
 } from "@/lib/data-overrides";
-import { loadSharedOverrides } from "@/lib/data-overrides-client";
+import { loadSharedOverrides, getLegacyLocalOverrideCount, uploadLegacyLocalOverrides, exportLegacyLocalOverrides } from "@/lib/data-overrides-client";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allCompanions } from "@/data/companions";
@@ -79,6 +79,8 @@ export default function ReportIssuePage() {
   const [overrides, setOverrides] = useState<DataOverride[]>([]);
   const [showOverrideForm, setShowOverrideForm] = useState(false);
   const [ovrExpandedId, setOvrExpandedId] = useState<string | null>(null);
+  const [legacyLocalCount, setLegacyLocalCount] = useState(0);
+  const [legacyUploading, setLegacyUploading] = useState(false);
   const [overridePrefill, setOverridePrefill] = useState<{
     existingOverrideId?: string;
     category?: OverrideCategory;
@@ -113,14 +115,52 @@ export default function ReportIssuePage() {
     }).catch(() => {});
     queueMicrotask(() => {
       refresh();
-      void loadSharedOverrides().then(() => setOverrides(getOverrides()));
+      void loadSharedOverrides().then(() => {
+        setOverrides(getOverrides());
+        setLegacyLocalCount(getLegacyLocalOverrideCount());
+      });
     });
   }, [refresh]);
 
   useEffect(() => {
-    const onUpdate = () => setOverrides(getOverrides());
+    const onUpdate = () => {
+      setOverrides(getOverrides());
+      setLegacyLocalCount(getLegacyLocalOverrideCount());
+    };
     window.addEventListener("framehub-data-overrides-updated", onUpdate);
     return () => window.removeEventListener("framehub-data-overrides-updated", onUpdate);
+  }, []);
+
+  const handleUploadLegacyOverrides = useCallback(async () => {
+    setLegacyUploading(true);
+    try {
+      const { imported, remaining } = await uploadLegacyLocalOverrides();
+      refreshOverrides();
+      if (remaining === 0) {
+        alert(`Uploaded ${imported} override(s) to the shared server. This browser's local copy was cleared.`);
+      } else {
+        alert(`Uploaded ${imported} override(s). ${remaining} still only exist in this browser — export JSON and send them to staff if needed.`);
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setLegacyUploading(false);
+    }
+  }, [refreshOverrides]);
+
+  const handleExportLegacyOverrides = useCallback(() => {
+    const data = exportLegacyLocalOverrides();
+    if (!data) {
+      alert("No browser-saved overrides found on this device.");
+      return;
+    }
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `framehub-browser-overrides-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   }, []);
 
   // Pre-fill from URL query params (e.g. ?type=weapon&name=Braton&id=braton)
@@ -244,7 +284,10 @@ export default function ReportIssuePage() {
   };
 
   const refreshOverrides = useCallback(() => {
-    void loadSharedOverrides().then(() => setOverrides(getOverrides()));
+    void loadSharedOverrides().then(() => {
+      setOverrides(getOverrides());
+      setLegacyLocalCount(getLegacyLocalOverrideCount());
+    });
   }, []);
 
   const handleOverrideSaved = useCallback(() => {
@@ -719,6 +762,32 @@ export default function ReportIssuePage() {
 
           {/* ========== DATA OVERRIDES TAB ========== */}
           {activeTab === "overrides" && (<>
+          {isAdmin && legacyLocalCount > 0 && (
+            <div className="mb-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
+              <p className="text-sm text-amber-200">
+                This browser still has <strong>{legacyLocalCount}</strong> data fix{legacyLocalCount === 1 ? "" : "es"} saved locally from before shared storage.
+                They are applied on this device but other staff will not see them until uploaded.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => void handleUploadLegacyOverrides()}
+                  disabled={legacyUploading}
+                  className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-700 disabled:opacity-60"
+                >
+                  {legacyUploading ? "Uploading…" : "Upload to shared server"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleExportLegacyOverrides}
+                  className="rounded-lg border border-amber-500/40 px-3 py-1.5 text-xs text-amber-200 hover:bg-amber-500/10"
+                >
+                  Export browser JSON
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Override Editor */}
           {showOverrideForm && (
             <OverrideEditor

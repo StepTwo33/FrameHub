@@ -67,6 +67,18 @@ export function getOverrideForTarget(
   return getOverrides().find((o) => o.targetType === targetType && o.targetId === targetId);
 }
 
+/** Merge server + local lists; server wins on duplicate targets. */
+export function mergeOverrideLists(base: DataOverride[], extra: DataOverride[]): DataOverride[] {
+  const map = new Map<string, DataOverride>();
+  for (const o of extra) {
+    map.set(`${o.targetType}:${o.targetId}`, o);
+  }
+  for (const o of base) {
+    map.set(`${o.targetType}:${o.targetId}`, o);
+  }
+  return Array.from(map.values());
+}
+
 function applyModify<T extends object>(item: T, fields: Record<string, unknown>): T {
   return deepMergeOverrideFields(item, fields);
 }

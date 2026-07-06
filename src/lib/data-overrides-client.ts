@@ -4,39 +4,127 @@ import {
   setOverrideCache,
   notifyDataOverridesUpdated,
   generateOverrideId,
+  mergeOverrideLists,
   OVERRIDE_CATEGORIES,
   type OverrideCategory,
 } from "@/lib/data-overrides";
 
 const LEGACY_STORAGE_KEY = "framehub_data_overrides";
-const MIGRATED_FLAG_KEY = "framehub_data_overrides_migrated";
 
 let loadPromise: Promise<DataOverride[]> | null = null;
 
+function overrideTargetKey(o: Pick<DataOverride, "targetType" | "targetId">): string {
+  return `${o.targetType}:${o.targetId}`;
+}
+
 function upsertInCache(saved: DataOverride) {
-  const next = getOverrides().filter(
-    (o) => !(o.targetType === saved.targetType && o.targetId === saved.targetId),
-  );
+  const next = getOverrides().filter((o) => overrideTargetKey(o) !== overrideTargetKey(saved));
   next.push(saved);
   setOverrideCache(next);
 }
 
-/** Fetch shared overrides from the API and populate the in-memory cache. */
+/** Overrides still stored in this browser from before the shared DB migration. */
+export function readLegacyLocalOverrides(): DataOverride[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as DataOverride[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (o) =>
+        o &&
+        typeof o.id === "string" &&
+        typeof o.targetType === "string" &&
+        typeof o.targetId === "string" &&
+        (OVERRIDE_CATEGORIES as readonly string[]).includes(o.targetType),
+    );
+  } catch {
+    return [];
+  }
+}
+
+export function getLegacyLocalOverrideCount(): number {
+  return readLegacyLocalOverrides().length;
+}
+
+async function isStaffSession(): Promise<boolean> {
+  try {
+    const session = await fetch("/api/auth/session").then((r) => r.json());
+    const role = session?.user?.role;
+    return role === "admin" || role === "moderator";
+  } catch {
+    return false;
+  }
+}
+
+async function fetchServerOverrides(): Promise<DataOverride[]> {
+  const res = await fetch("/api/data-overrides", { cache: "no-store" });
+  if (!res.ok) return [];
+  const data = (await res.json()) as { overrides?: DataOverride[] };
+  return Array.isArray(data.overrides) ? data.overrides : [];
+}
+
+function pendingLegacyOverrides(server: DataOverride[], legacy: DataOverride[]): DataOverride[] {
+  const serverKeys = new Set(server.map(overrideTargetKey));
+  return legacy.filter((o) => !serverKeys.has(overrideTargetKey(o)));
+}
+
+async function syncLegacyToServer(serverList: DataOverride[], legacyList: DataOverride[]): Promise<DataOverride[]> {
+  if (legacyList.length === 0) return serverList;
+  if (!(await isStaffSession())) return mergeOverrideLists(serverList, legacyList);
+
+  const pending = pendingLegacyOverrides(serverList, legacyList);
+  if (pending.length === 0) {
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+    return serverList;
+  }
+
+  const res = await fetch("/api/data-overrides", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(legacyList),
+  });
+  if (!res.ok) {
+    return mergeOverrideLists(serverList, legacyList);
+  }
+
+  const refreshed = await fetchServerOverrides();
+  const stillPending = pendingLegacyOverrides(refreshed, legacyList);
+  if (stillPending.length === 0) {
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+    return refreshed;
+  }
+
+  return mergeOverrideLists(refreshed, stillPending);
+}
+
+/** Fetch shared overrides and merge any legacy browser copy until uploaded. */
 export async function loadSharedOverrides(): Promise<DataOverride[]> {
   if (typeof window === "undefined") return [];
   if (loadPromise) return loadPromise;
 
   loadPromise = (async () => {
     try {
-      const res = await fetch("/api/data-overrides", { cache: "no-store" });
-      if (!res.ok) return getOverrides();
-      const data = (await res.json()) as { overrides?: DataOverride[] };
-      const list = Array.isArray(data.overrides) ? data.overrides : [];
-      setOverrideCache(list);
+      const legacyList = readLegacyLocalOverrides();
+      let serverList: DataOverride[] = [];
+      try {
+        serverList = await fetchServerOverrides();
+      } catch {
+        serverList = [];
+      }
+
+      const merged = await syncLegacyToServer(serverList, legacyList);
+      setOverrideCache(merged);
       notifyDataOverridesUpdated();
-      await migrateLegacyLocalOverrides(list.length === 0);
-      return list;
+      return merged;
     } catch {
+      const legacy = readLegacyLocalOverrides();
+      if (legacy.length > 0) {
+        setOverrideCache(legacy);
+        notifyDataOverridesUpdated();
+        return legacy;
+      }
       return getOverrides();
     } finally {
       loadPromise = null;
@@ -46,43 +134,32 @@ export async function loadSharedOverrides(): Promise<DataOverride[]> {
   return loadPromise;
 }
 
-async function migrateLegacyLocalOverrides(serverEmpty: boolean) {
-  if (!serverEmpty || localStorage.getItem(MIGRATED_FLAG_KEY)) return;
-  try {
-    const raw = localStorage.getItem(LEGACY_STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(MIGRATED_FLAG_KEY, "1");
-      return;
-    }
-    const legacy = JSON.parse(raw) as DataOverride[];
-    if (!Array.isArray(legacy) || legacy.length === 0) {
-      localStorage.setItem(MIGRATED_FLAG_KEY, "1");
-      return;
-    }
-
-    const session = await fetch("/api/auth/session").then((r) => r.json()).catch(() => null);
-    const role = session?.user?.role;
-    const isStaff = role === "admin" || role === "moderator";
-    if (!isStaff) return;
-
-    const res = await fetch("/api/data-overrides", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(legacy),
-    });
-    if (!res.ok) return;
-
-    localStorage.removeItem(LEGACY_STORAGE_KEY);
-    localStorage.setItem(MIGRATED_FLAG_KEY, "1");
-    const refresh = await fetch("/api/data-overrides", { cache: "no-store" });
-    if (refresh.ok) {
-      const data = (await refresh.json()) as { overrides?: DataOverride[] };
-      setOverrideCache(Array.isArray(data.overrides) ? data.overrides : []);
-      notifyDataOverridesUpdated();
-    }
-  } catch {
-    // keep legacy data until next attempt
+/** Staff: upload this browser's legacy localStorage overrides to the shared server. */
+export async function uploadLegacyLocalOverrides(): Promise<{ imported: number; remaining: number }> {
+  const legacyList = readLegacyLocalOverrides();
+  if (legacyList.length === 0) {
+    return { imported: 0, remaining: 0 };
   }
+
+  const res = await fetch("/api/data-overrides", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(legacyList),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(typeof err.error === "string" ? err.error : "Failed to upload browser overrides");
+  }
+
+  const data = (await res.json()) as { imported?: number };
+  const refreshed = await fetchServerOverrides();
+  const stillPending = pendingLegacyOverrides(refreshed, legacyList);
+  if (stillPending.length === 0) {
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+  }
+  setOverrideCache(stillPending.length === 0 ? refreshed : mergeOverrideLists(refreshed, stillPending));
+  notifyDataOverridesUpdated();
+  return { imported: data.imported ?? 0, remaining: stillPending.length };
 }
 
 export async function persistOverride(override: DataOverride): Promise<DataOverride> {
@@ -132,6 +209,12 @@ export async function importSharedOverrides(json: string): Promise<number> {
 
 export function exportSharedOverrides(): string {
   return JSON.stringify(getOverrides(), null, 2);
+}
+
+export function exportLegacyLocalOverrides(): string | null {
+  const legacy = readLegacyLocalOverrides();
+  if (legacy.length === 0) return null;
+  return JSON.stringify(legacy, null, 2);
 }
 
 export function findExistingOverrideId(
