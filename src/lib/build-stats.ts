@@ -1,6 +1,8 @@
 import { companionsMap } from "@/data/companions";
 import { modsMap } from "@/data/mods";
 import { allWeapons as allWeaponsData, weaponsMap } from "@/data/weapons";
+import { warframesMap } from "@/data/warframes";
+import { allHelminthAbilities, type HelminthAbility } from "@/data/helminth";
 import {
   resolveSavedArcaneSlots,
   type ArchwingBuildData,
@@ -8,6 +10,7 @@ import {
   type WarframeBuildData,
   type WeaponBuildData,
 } from "@/lib/build-storage";
+import { buildAbilityTTKEntries, type AbilityTTKEntry } from "@/lib/ability-ttk";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import {
   calcSavedWeaponBuildStats,
@@ -15,9 +18,24 @@ import {
   scenarioSimParams,
 } from "@/lib/loadout-stats";
 import { weaponFromModularData } from "@/lib/modular-resolve";
-import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
+import {
+  applyWarframeShardsAndArcanes,
+  calculateWarframeBuild,
+  calculateWeaponBuild,
+  calculateWeaponBuildWithArcanes,
+} from "@/lib/calculator";
 import { enrichWeapon } from "@/lib/weapon-enrich";
-import type { CalculatedStats, Mod, ModularBuildData, Weapon } from "@/lib/types";
+import type {
+  Ability,
+  CalculatedStats,
+  EquippedArchonShard,
+  Mod,
+  ModularBuildData,
+  ModSlot,
+  Warframe,
+  WarframeCalculatedStats,
+  Weapon,
+} from "@/lib/types";
 
 export interface PublicBuildWeaponPreview {
   label: string;
@@ -25,6 +43,114 @@ export interface PublicBuildWeaponPreview {
   stats: CalculatedStats;
   baseStats: CalculatedStats;
   isMelee: boolean;
+}
+
+export interface PublicBuildWarframePreview {
+  warframe: Warframe;
+  stats: WarframeCalculatedStats;
+  modSlots: ModSlot[];
+  shards: (EquippedArchonShard | null)[];
+  arcanes: (Mod | null)[];
+  arcaneRanks: number[];
+  abilityEntries: AbilityTTKEntry[];
+  exalted: PublicBuildWeaponPreview | null;
+}
+
+function helminthToAbility(h: HelminthAbility): Ability {
+  return {
+    name: h.name,
+    energyCost: h.energyCost,
+    description: h.description,
+    damage: h.damage,
+    damageBuff: h.damageBuff,
+    damageReduction: h.damageReduction,
+    duration: h.duration,
+    range: h.range,
+    radius: h.radius,
+    castTime: h.castTime,
+    miscStats: h.miscStats,
+  };
+}
+
+function resolveBuildAbilities(data: WarframeBuildData): { ability: Ability; slot: number; helminth?: boolean }[] {
+  const wf = warframesMap.get(data.warframeId);
+  if (!wf) return [];
+
+  const rows = wf.abilities.map((ability, i) => ({
+    ability,
+    slot: i + 1,
+    helminth: false as boolean | undefined,
+  }));
+
+  if (data.helminthAbilityId != null && data.helminthSlot != null) {
+    const helminth = allHelminthAbilities.find((a) => a.id === data.helminthAbilityId);
+    if (helminth && data.helminthSlot >= 0 && data.helminthSlot < rows.length) {
+      rows[data.helminthSlot] = {
+        ability: helminthToAbility(helminth),
+        slot: data.helminthSlot + 1,
+        helminth: true,
+      };
+    }
+  }
+
+  return rows;
+}
+
+function resolveExaltedPreview(
+  data: WarframeBuildData,
+  allWeapons: Weapon[],
+): PublicBuildWeaponPreview | null {
+  const exaltedMods = data.exaltedMods ?? [];
+  if (exaltedMods.length === 0) return null;
+  const exaltedWeapon = allWeapons.find(
+    (w) => w.isExalted && w.warframeId === data.warframeId,
+  );
+  if (!exaltedWeapon) return null;
+  const entry = calcSavedWeaponBuildStats({
+    weaponId: exaltedWeapon.id,
+    mods: exaltedMods,
+  });
+  if (!entry) return null;
+  return {
+    label: `Exalted — ${entry.name}`,
+    weapon: enrichWeapon(exaltedWeapon),
+    stats: entry.stats,
+    baseStats: baseWeaponStats(exaltedWeapon),
+    isMelee: entry.isMelee,
+  };
+}
+
+export function resolvePublicBuildWarframePreview(
+  data: unknown,
+  allWeapons: Weapon[] = allWeaponsData,
+): PublicBuildWarframePreview | null {
+  if (!data || typeof data !== "object") return null;
+  const d = data as WarframeBuildData;
+  const wf = warframesMap.get(d.warframeId);
+  if (!wf) return null;
+
+  const modSlots = d.mods ?? [];
+  const baseStats = calculateWarframeBuild(wf, modSlots, modsMap);
+  const stats = applyWarframeShardsAndArcanes(
+    baseStats,
+    d.shards,
+    resolveSavedArcaneSlots(d.arcaneIds, 2),
+    d.arcaneRanks,
+  );
+
+  const abilityRows = resolveBuildAbilities(d);
+  const abilityEntries = buildAbilityTTKEntries(abilityRows, stats);
+
+  return {
+    warframe: wf,
+    stats,
+    modSlots,
+    shards: d.shards ?? [],
+    arcanes: resolveSavedArcaneSlots(d.arcaneIds, 2),
+    arcaneRanks: d.arcaneRanks ?? [],
+    abilityEntries,
+    exalted: resolveExaltedPreview(d, allWeapons),
+  };
 }
 
 function baseWeaponStats(weapon: Weapon, incarnonEvolutions?: Record<number, number>): CalculatedStats {
@@ -68,27 +194,8 @@ export function resolvePublicBuildWeaponPreview(
         isMelee: entry.isMelee,
       };
     }
-    case "warframe": {
-      const d = data as WarframeBuildData;
-      const exaltedMods = d.exaltedMods ?? [];
-      if (exaltedMods.length === 0) return null;
-      const exaltedWeapon = allWeapons.find(
-        (w) => w.isExalted && w.warframeId === d.warframeId,
-      );
-      if (!exaltedWeapon) return null;
-      const entry = calcSavedWeaponBuildStats({
-        weaponId: exaltedWeapon.id,
-        mods: exaltedMods,
-      });
-      if (!entry) return null;
-      return {
-        label: `Exalted — ${entry.name}`,
-        weapon: enrichWeapon(exaltedWeapon),
-        stats: entry.stats,
-        baseStats: baseWeaponStats(exaltedWeapon),
-        isMelee: entry.isMelee,
-      };
-    }
+    case "warframe":
+      return resolveExaltedPreview(data as WarframeBuildData, allWeapons);
     case "companion": {
       const d = data as CompanionBuildData;
       const weaponMods = d.weaponMods ?? [];

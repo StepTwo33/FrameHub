@@ -1,33 +1,117 @@
 "use client";
 
 import { useMemo } from "react";
-import { WeaponStatsPanel } from "@/components/stats-panel";
-import { resolvePublicBuildWeaponPreview } from "@/lib/build-stats";
+import { AbilityTTKPanel } from "@/components/ability-ttk-panel";
+import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
+import {
+  resolvePublicBuildWarframePreview,
+  resolvePublicBuildWeaponPreview,
+} from "@/lib/build-stats";
+import { modsMap } from "@/data/mods";
 import { useWeapons } from "@/lib/use-data";
+
+function StatsDivider() {
+  return <div className="w-full h-px bg-border my-8" />;
+}
+
+function WeaponPreviewSection({
+  label,
+  weapon,
+  stats,
+  baseStats,
+  isMelee,
+}: {
+  label: string;
+  weapon: NonNullable<ReturnType<typeof resolvePublicBuildWeaponPreview>>["weapon"];
+  stats: NonNullable<ReturnType<typeof resolvePublicBuildWeaponPreview>>["stats"];
+  baseStats: NonNullable<ReturnType<typeof resolvePublicBuildWeaponPreview>>["baseStats"];
+  isMelee: boolean;
+}) {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label} — calculated stats
+      </h2>
+      <WeaponStatsPanel
+        stats={stats}
+        baseStats={baseStats}
+        weapon={weapon}
+        isMelee={isMelee}
+      />
+    </section>
+  );
+}
 
 export function BuildPreviewStats({ type, data }: { type: string; data: unknown }) {
   const allWeapons = useWeapons();
-  const preview = useMemo(
-    () => resolvePublicBuildWeaponPreview(type, data, allWeapons),
+
+  const warframePreview = useMemo(
+    () => (type === "warframe" ? resolvePublicBuildWarframePreview(data, allWeapons) : null),
     [type, data, allWeapons],
   );
 
-  if (!preview) return null;
+  const weaponPreview = useMemo(
+    () => (type !== "warframe" ? resolvePublicBuildWeaponPreview(type, data, allWeapons) : null),
+    [type, data, allWeapons],
+  );
+
+  const equippedMods = useMemo(() => {
+    if (!warframePreview) return undefined;
+    return warframePreview.modSlots.map((m) => ({
+      modId: m.modId,
+      rank: m.rank,
+      slotIndex: m.slotIndex,
+    }));
+  }, [warframePreview]);
+
+  if (!warframePreview && !weaponPreview) return null;
 
   return (
     <>
-      <div className="w-full h-px bg-border my-8" />
-      <section className="space-y-3">
-      <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {preview.label} — calculated stats
-      </h2>
-      <WeaponStatsPanel
-        stats={preview.stats}
-        baseStats={preview.baseStats}
-        weapon={preview.weapon}
-        isMelee={preview.isMelee}
-      />
-      </section>
+      <StatsDivider />
+
+      {warframePreview && (
+        <div className="space-y-6">
+          <section className="space-y-3">
+            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {warframePreview.warframe.name} — survivability &amp; ability mods
+            </h2>
+            <WarframeStatsPanel
+              stats={warframePreview.stats}
+              warframe={warframePreview.warframe}
+              equippedMods={equippedMods}
+              allMods={modsMap}
+              equippedShards={warframePreview.shards}
+              equippedArcanes={warframePreview.arcanes}
+              arcaneRanks={warframePreview.arcaneRanks}
+            />
+          </section>
+
+          {warframePreview.abilityEntries.length > 0 && (
+            <AbilityTTKPanel entries={warframePreview.abilityEntries} />
+          )}
+
+          {warframePreview.exalted && (
+            <WeaponPreviewSection
+              label={warframePreview.exalted.label}
+              weapon={warframePreview.exalted.weapon}
+              stats={warframePreview.exalted.stats}
+              baseStats={warframePreview.exalted.baseStats}
+              isMelee={warframePreview.exalted.isMelee}
+            />
+          )}
+        </div>
+      )}
+
+      {weaponPreview && (
+        <WeaponPreviewSection
+          label={weaponPreview.label}
+          weapon={weaponPreview.weapon}
+          stats={weaponPreview.stats}
+          baseStats={weaponPreview.baseStats}
+          isMelee={weaponPreview.isMelee}
+        />
+      )}
     </>
   );
 }
