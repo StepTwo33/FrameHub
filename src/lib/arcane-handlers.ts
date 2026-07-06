@@ -1,5 +1,6 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
+import { estimateEnervateCritStacks, getArcaneProcUptime } from "@/lib/arcane-proc-model";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 export interface WarframeArcaneContext {
@@ -13,6 +14,7 @@ export interface ArcaneHandlerContext {
   arcaneId: string;
   rank: number;
   stacks: number;
+  simStacks?: number;
   baseWeapon?: Weapon;
   warframeCtx?: WarframeArcaneContext;
 }
@@ -53,6 +55,8 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_secondary_dexterity",
   "primary_overcharge",
   "melee_exposure",
+  "secondary_enervate",
+  "secondary_outburst",
   "cascadia_flare",
   "secondary_surge",
   "zid_an_uskos",
@@ -158,7 +162,35 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
 
     case "melee_exposure": {
       const bonus = scaledLine(def, findEffect(def, "meleeDamageBonus"), rank, stacks);
+      if (bonus > 0) applyWeaponDamageMult(stats, bonus);
       trackBonus(stats, "meleeDamageBonus", bonus);
+      const corrosive = scaledLine(def, findEffect(def, "corrosiveDamage"), rank, stacks);
+      if (corrosive > 0) trackBonus(stats, "corrosiveDamage", corrosive);
+      return true;
+    }
+
+    case "secondary_enervate": {
+      const { def, rank, stacks, baseWeapon, simStacks = stacks } = ctx;
+      const perHit = scaledLine(def, findEffect(def, "criticalChance"), rank, stacks);
+      const threshold = findEffect(def, "bigCritThreshold")?.maxValue ?? 6;
+      const baseCrit = baseWeapon?.criticalChance ?? stats.criticalChance;
+      const hitStacks = estimateEnervateCritStacks(stats.criticalChance, perHit, threshold, simStacks);
+      const bonus = baseCrit * (perHit / 100) * hitStacks;
+      stats.criticalChance += bonus;
+      trackBonus(stats, "criticalChance", perHit * hitStacks);
+      trackBonus(stats, "bigCritThreshold", threshold);
+      trackBonus(stats, "enervateStacks", hitStacks);
+      return true;
+    }
+
+    case "secondary_outburst": {
+      const { def, rank, stacks, baseWeapon } = ctx;
+      const baseCritMult = baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
+      const multBonus = scaledLine(def, findEffect(def, "criticalMultiplier"), rank, stacks);
+      const uptime = getArcaneProcUptime(def, rank, ctx.simStacks ?? stacks, stats.fireRate);
+      const applied = baseCritMult * (multBonus / 100) * stacks * uptime;
+      stats.criticalMultiplier += applied;
+      trackBonus(stats, "criticalMultiplier", multBonus * stacks);
       return true;
     }
 

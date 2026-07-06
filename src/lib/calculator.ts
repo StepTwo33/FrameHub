@@ -935,7 +935,7 @@ function critTierDamage(tier: number, critMultiplier: number): number {
   return tier * (critMultiplier - 1.0) + 1.0;
 }
 
-function avgCritMultiplier(critChance: number, critMultiplier: number): number {
+export function avgCritMultiplier(critChance: number, critMultiplier: number): number {
   if (critChance <= 0) return 1.0;
   if (critChance <= 1.0) {
     // Blend between no-crit (1.0) and yellow crit

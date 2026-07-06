@@ -1,0 +1,11 @@
+{
+  "virtuos_forge": "onHit",
+  "virtuos_fury": "onStatus",
+  "virtuos_ghost": "onHeadshot",
+  "virtuos_shadow": "onHeadshot",
+  "virtuos_spike": "onHit",
+  "virtuos_strike": "conditional",
+  "virtuos_surge": "onHit",
+  "virtuos_tempo": "onKill",
+  "virtuos_trojan": "onHit"
+}

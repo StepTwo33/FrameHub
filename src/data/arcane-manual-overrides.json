@@ -1827,7 +1827,7 @@
   },
   "virtuos_forge": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onHit",
     "effects": [
       {
         "stat": "voidConversion",
@@ -1838,7 +1838,7 @@
   },
   "virtuos_fury": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onStatus",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1849,12 +1849,18 @@
         "stat": "damage",
         "maxValue": 30,
         "baseValue": 7.5
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_ghost": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onHeadshot",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1865,6 +1871,12 @@
         "stat": "ampStatusChance",
         "maxValue": 60,
         "baseValue": 15
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1888,7 +1900,7 @@
   },
   "virtuos_shadow": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onHeadshot",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1896,15 +1908,21 @@
         "baseValue": 40
       },
       {
-        "stat": "critChanceOnDamaged",
+        "stat": "ampCritChance",
         "maxValue": 60,
         "baseValue": 15
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_spike": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onHit",
     "effects": [
       {
         "stat": "voidConversion",
@@ -1915,7 +1933,7 @@
   },
   "virtuos_strike": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1926,6 +1944,12 @@
         "stat": "ampCritDamage",
         "maxValue": 80,
         "baseValue": 20
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1942,7 +1966,7 @@
   },
   "virtuos_tempo": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onKill",
     "effects": [
       {
         "stat": "ampFireRate",
@@ -1953,12 +1977,18 @@
         "stat": "healthRegenChance",
         "maxValue": 60,
         "baseValue": 60
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_trojan": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "onHit",
     "effects": [
       {
         "stat": "voidConversion",

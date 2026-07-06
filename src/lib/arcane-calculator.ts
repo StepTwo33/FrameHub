@@ -8,6 +8,12 @@ import {
   WarframeArcaneContext,
 } from "@/lib/arcane-handlers";
 import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
+import {
+  estimateEnervateCritStacks,
+  isArcaneMetadataStat,
+  isArcaneProcChanceStat,
+  scaleArcaneEffectForBuild,
+} from "@/lib/arcane-proc-model";
 import { CalculatedStats, Mod, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 /** Effective stack count for arcane effect scaling. */
@@ -47,7 +53,13 @@ function resolveEffectValue(
   line: ArcaneEffectLine,
   rank: number,
   stacks: number,
+  simStacks: number,
+  fireRate: number,
+  forBuild: boolean,
 ): number {
+  if (forBuild) {
+    return scaleArcaneEffectForBuild(def, line, rank, stacks, simStacks, fireRate);
+  }
   const rankScaled = scaleArcaneEffectLine(line, rank, def.maxRank);
   const stackMult =
     def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
@@ -78,6 +90,7 @@ function applyWeaponStatToBuild(
   switch (stat) {
     case "criticalChance":
     case "ampCritChance":
+    case "critChanceOnDamaged":
       stats.criticalChance += baseCritChance * scaled;
       break;
     case "criticalMultiplier":
@@ -211,15 +224,21 @@ export function applyArcaneEffectsToWeapon(
   const stacks = effectiveArcaneStacks(def, simStacks, true);
   if (stacks <= 0) return;
 
-  const handlerCtx = { def, arcaneId, rank, stacks, baseWeapon };
+  const handlerCtx = { def, arcaneId, rank, stacks, baseWeapon, simStacks };
   if (applyCustomArcaneToWeapon(stats, handlerCtx)) return;
 
+  const fireRate = stats.fireRate;
+
   for (const line of def.effects) {
-    const raw = resolveEffectValue(def, line, rank, stacks);
-    trackBonus(stats, line.stat, line.flat ? raw : raw);
-    if (shouldApplyArcaneLineToBuild(arcaneId, line.stat, "weapon")) {
-      applyWeaponStatToBuild(stats, line.stat, raw, line, baseWeapon);
-    }
+    const panelValue = resolveEffectValue(def, line, rank, stacks, simStacks, fireRate, false);
+    trackBonus(stats, line.stat, line.flat ? panelValue : panelValue);
+
+    if (!shouldApplyArcaneLineToBuild(arcaneId, line.stat, "weapon")) continue;
+    if (isArcaneMetadataStat(line.stat) || isArcaneProcChanceStat(line.stat)) continue;
+
+    const buildValue = resolveEffectValue(def, line, rank, stacks, simStacks, fireRate, true);
+    if (buildValue === 0) continue;
+    applyWeaponStatToBuild(stats, line.stat, buildValue, line, baseWeapon);
   }
 }
 
@@ -251,15 +270,18 @@ export function applyArcaneEffectsToWarframe(
     totalArmor: stats.totalArmor,
   };
 
-  const handlerCtx = { def, arcaneId, rank, stacks, warframeCtx: context };
+  const handlerCtx = { def, arcaneId, rank, stacks, warframeCtx: context, simStacks };
   if (applyCustomArcaneToWarframe(stats, handlerCtx)) return;
 
   for (const line of def.effects) {
-    const raw = resolveEffectValue(def, line, rank, stacks);
-    applyWarframeStat(stats, line.stat, raw, line);
-    if (shouldApplyArcaneLineToBuild(arcaneId, line.stat, "warframe")) {
-      applyWarframeStatToBuild(stats, line.stat, raw, line, context, def);
-    }
+    const panelValue = resolveEffectValue(def, line, rank, stacks, simStacks, 1, false);
+    applyWarframeStat(stats, line.stat, panelValue, line);
+    if (!shouldApplyArcaneLineToBuild(arcaneId, line.stat, "warframe")) continue;
+    if (isArcaneMetadataStat(line.stat) || isArcaneProcChanceStat(line.stat)) continue;
+
+    const buildValue = resolveEffectValue(def, line, rank, stacks, simStacks, 1, true);
+    if (buildValue === 0) continue;
+    applyWarframeStatToBuild(stats, line.stat, buildValue, line, context, def);
   }
 }
 

@@ -2514,7 +2514,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_forge": {
     "name": "Virtuos Forge",
-    "trigger": "passive",
+    "trigger": "onHit",
     "maxRank": 3,
     "effects": [
       {
@@ -2526,7 +2526,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_fury": {
     "name": "Virtuos Fury",
-    "trigger": "passive",
+    "trigger": "onStatus",
     "maxRank": 3,
     "effects": [
       {
@@ -2538,12 +2538,18 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "damage",
         "maxValue": 30.0,
         "baseValue": 7.5
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_ghost": {
     "name": "Virtuos Ghost",
-    "trigger": "passive",
+    "trigger": "onHeadshot",
     "maxRank": 3,
     "effects": [
       {
@@ -2555,6 +2561,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "ampStatusChance",
         "maxValue": 60.0,
         "baseValue": 15.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2580,7 +2592,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_shadow": {
     "name": "Virtuos Shadow",
-    "trigger": "passive",
+    "trigger": "onHeadshot",
     "maxRank": 3,
     "effects": [
       {
@@ -2589,15 +2601,21 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "baseValue": 10.0
       },
       {
-        "stat": "critChanceOnDamaged",
+        "stat": "ampCritChance",
         "maxValue": 60.0,
         "baseValue": 15.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_spike": {
     "name": "Virtuos Spike",
-    "trigger": "passive",
+    "trigger": "onHit",
     "maxRank": 3,
     "effects": [
       {
@@ -2609,7 +2627,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_strike": {
     "name": "Virtuos Strike",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
@@ -2621,6 +2639,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "ampCritDamage",
         "maxValue": 80.0,
         "baseValue": 20.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2638,7 +2662,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_tempo": {
     "name": "Virtuos Tempo",
-    "trigger": "passive",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
@@ -2650,12 +2674,18 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "healthRegenChance",
         "maxValue": 60.0,
         "baseValue": 15.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_trojan": {
     "name": "Virtuos Trojan",
-    "trigger": "passive",
+    "trigger": "onHit",
     "maxRank": 3,
     "effects": [
       {
