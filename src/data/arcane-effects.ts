@@ -63,20 +63,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
-        "maxValue": 30.0,
-        "baseValue": 5.0
-      },
-      {
         "stat": "fireRate",
         "maxValue": 90.0,
         "baseValue": 15.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 9,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "holsterDamage",
+        "maxValue": 90.0,
+        "baseValue": 15.0
+      },
+      {
+        "stat": "fireRateOnCrit",
+        "maxValue": 30.0,
+        "baseValue": 5.0
       }
     ]
   },
@@ -88,22 +87,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "shieldRegenChance",
         "maxValue": 3.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 0.5
       },
       {
         "stat": "shieldRegenAmount",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -115,22 +104,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "parkourVelocity",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
-      },
-      {
-        "stat": "sprintSpeedChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 18,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -142,15 +116,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "wallLatchDamage",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 30,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -160,24 +126,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "critChanceOnDamaged",
-        "maxValue": 21.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 3.5
-      },
-      {
         "stat": "criticalChance",
         "maxValue": 45.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -187,24 +138,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "reloadProcChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
         "stat": "holsterDamage",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 24,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -215,22 +151,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "shieldRestoreChance",
-        "maxValue": 6.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 1.0
-      },
-      {
-        "stat": "shieldRestorePercent",
-        "maxValue": 100,
-        "flat": false,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "cooldown",
-        "maxValue": 6,
+        "maxValue": 100.0,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 16.666667
       }
     ]
   },
@@ -243,14 +166,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "energyPerArmor",
         "maxValue": 0.3,
         "flat": true,
-        "stacking": false,
         "baseValue": 0.05
-      },
-      {
-        "stat": "energyCap",
-        "maxValue": 1000,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -262,8 +178,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrengthPerHealth",
         "maxValue": 6.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 1.0
       },
       {
@@ -273,11 +187,10 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "constantAtAllRanks": true
       },
       {
-        "stat": "abilityStrengthCap",
-        "maxValue": 72.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 12.0
+        "stat": "abilityStrength",
+        "maxValue": 6.0,
+        "stacking": true,
+        "baseValue": 1.0
       }
     ]
   },
@@ -345,7 +258,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrength",
         "maxValue": 60.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 10.0
       }
@@ -359,15 +271,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "armorSteal",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 8.333333
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -399,15 +303,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "parkourVelocity",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 18,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -419,16 +315,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrength",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "criticalMultiplier",
-        "maxValue": 200.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 33.333333
+        "maxValue": 300.0,
+        "baseValue": 50.0
       }
     ]
   },
@@ -440,8 +332,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusResistance",
         "maxValue": 102.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 17.0
       }
     ]
@@ -454,15 +344,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damageReduction",
         "maxValue": 25.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 4.166667
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ],
     "stackCap": 3
@@ -473,30 +356,20 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "energyPickupChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
         "stat": "energyOrbBonus",
         "maxValue": 150.0,
-        "flat": true,
-        "stacking": false,
         "baseValue": 25.0
       },
       {
-        "stat": "allyEnergyRadius",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "allyEnergy",
+        "maxValue": 150.0,
+        "baseValue": 25.0
       },
       {
-        "stat": "cooldown",
-        "maxValue": 15,
+        "stat": "healthRegenChance",
+        "maxValue": 60.0,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 10.0
       }
     ]
   },
@@ -508,8 +381,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "knockdownChance",
         "maxValue": 100.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 16.666667
       }
     ]
@@ -523,14 +394,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "escapistStackCap",
         "maxValue": 9,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "invulnerabilityDuration",
         "maxValue": 12,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -543,8 +412,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrengthToShield",
         "maxValue": 100.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 16.666667
       }
     ]
@@ -555,24 +422,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "meleeDamageChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
         "stat": "meleeDamageBonus",
         "maxValue": 180.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 30.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 18,
+        "stat": "meleeDamageChance",
+        "maxValue": 60.0,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 10.0
       }
     ]
   },
@@ -584,22 +442,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "healthRegenChance",
         "maxValue": 9.0,
-        "flat": false,
-        "stacking": false,
+        "flat": true,
         "baseValue": 1.5
       },
       {
         "stat": "healthRegenAmount",
         "maxValue": 6.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 1.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 9,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -611,35 +460,24 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "armorBonusChance",
         "maxValue": 15.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 2.5
       },
       {
         "stat": "flatArmorBonus",
         "maxValue": 900.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 150.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 20,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "arcane_healing": {
     "name": "Arcane Healing",
-    "trigger": "passive",
+    "trigger": "onStatus",
     "maxRank": 5,
     "effects": [
       {
         "stat": "statusResistance",
         "maxValue": 102.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 17.0
       }
     ]
@@ -686,22 +524,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityDuration",
         "maxValue": 2.0,
-        "flat": false,
-        "stacking": true,
         "baseValue": 0.333333
       },
       {
         "stat": "abilityStrength",
         "maxValue": 2.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 0.333333
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ],
     "stackCap": 20
@@ -712,24 +541,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "abilityStrength",
-        "maxValue": 6.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 1.0
-      },
-      {
         "stat": "abilityEfficiency",
         "maxValue": 3.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 0.5
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 20,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "abilityStrength",
+        "maxValue": 6.0,
+        "baseValue": 1.0
       }
     ]
   },
@@ -742,7 +561,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "healthFlat",
         "maxValue": 250.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 41.666667
       }
     ]
@@ -755,22 +573,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "reloadSpeedChance",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       },
       {
         "stat": "reloadSpeedBonus",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -782,8 +590,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusResistance",
         "maxValue": 102.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 17.0
       }
     ]
@@ -797,7 +603,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "persistenceDamageCapPerSecond",
         "maxValue": 500,
         "flat": true,
-        "stacking": false,
         "valuesByRank": [
           750,
           700,
@@ -811,7 +616,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "removeShields",
         "maxValue": 1,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -824,22 +628,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "dodgeSpeed",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       },
       {
-        "stat": "dodgeSpeedChance",
+        "stat": "healthRegenChance",
         "maxValue": 45.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 18,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -874,12 +668,10 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "name": "Arcane Power Ramp",
     "trigger": "stacks",
     "maxRank": 5,
-    "stackCap": 4,
     "effects": [
       {
         "stat": "abilityStrength",
         "maxValue": 9.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 1.5
       }
@@ -891,17 +683,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "holsterDamage",
+        "stat": "headshotDamage",
         "maxValue": 300.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 50.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 18,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -911,24 +695,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "primaryDamageChance",
-        "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 5.0
+        "stat": "holsterDamage",
+        "maxValue": 300.0,
+        "baseValue": 50.0
       },
       {
         "stat": "damage",
         "maxValue": 300.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 50.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "armorBonusChance",
+        "maxValue": 30.0,
+        "baseValue": 5.0
       }
     ]
   },
@@ -938,30 +717,20 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "healthPickupChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
         "stat": "healthFromOrbs",
         "maxValue": 500.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 83.333333
       },
       {
-        "stat": "allyHealRadius",
-        "maxValue": 25,
-        "flat": true,
+        "stat": "healthOrbPulse",
+        "maxValue": 500,
         "constantAtAllRanks": true
       },
       {
-        "stat": "cooldown",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 60.0,
+        "baseValue": 10.0
       }
     ]
   },
@@ -971,24 +740,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "holsterDamageChance",
-        "maxValue": 15.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 2.5
-      },
-      {
         "stat": "holsterDamage",
         "maxValue": 180.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 30.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 24,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 15.0,
+        "baseValue": 2.5
       }
     ]
   },
@@ -1027,8 +786,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusResistance",
         "maxValue": 102.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 17.0
       }
     ]
@@ -1039,24 +796,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "reloadProcChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
-      },
-      {
         "stat": "holsterDamage",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 24,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 60.0,
+        "baseValue": 10.0
       }
     ]
   },
@@ -1068,8 +815,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "freeAbilityCastChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 3.333333
       }
     ]
@@ -1082,15 +827,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityEfficiency",
         "maxValue": 175.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 29.166667
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1100,24 +837,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "attackSpeedChance",
-        "maxValue": 15.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 2.5
-      },
-      {
-        "stat": "attackSpeedBonus",
+        "stat": "attackSpeed",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 18,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "attackSpeedChance",
+        "maxValue": 15.0,
+        "baseValue": 2.5
       }
     ]
   },
@@ -1130,14 +857,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "flatArmorBonus",
         "maxValue": 1200.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 200.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 60,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1147,24 +867,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
-        "maxValue": 15.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 2.5
-      },
-      {
         "stat": "fireRate",
         "maxValue": 90.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 15.0,
+        "baseValue": 2.5
       }
     ]
   },
@@ -1176,8 +886,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "invisibilityChance",
         "maxValue": 15.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 2.5
       },
       {
@@ -1197,14 +905,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "overguardThreshold",
         "maxValue": 3000,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "radialAttackRadius",
         "maxValue": 30,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -1215,17 +921,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "flatArmorBonus",
+        "stat": "armor",
         "maxValue": 1200.0,
-        "flat": true,
-        "stacking": false,
         "baseValue": 200.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 45,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1237,8 +935,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "universalOrbChance",
         "maxValue": 6.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 1.0
       }
     ]
@@ -1249,24 +945,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
-        "maxValue": 90.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 15.0
-      },
-      {
         "stat": "fireRate",
         "maxValue": 120.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 20.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 9,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1276,24 +957,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "headshotHealthRegenChance",
-        "maxValue": 75.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 12.5
-      },
-      {
         "stat": "headshotHealthRegen",
         "maxValue": 3.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 0.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 9,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1305,8 +971,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusResistance",
         "maxValue": 102.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 17.0
       }
     ]
@@ -1340,7 +1004,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "bonusDamageOnStatus",
         "maxValue": 750.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 125.0
       }
     ]
@@ -1405,14 +1068,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "dissipateRadius",
         "maxValue": 10,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "voidMoteEnergy",
         "maxValue": 10,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -1452,14 +1113,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "lethalInvulnDuration",
         "maxValue": 5,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "lethalHealPercent",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       }
     ]
@@ -1575,15 +1233,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusProcChance",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
         "stat": "procDamageMultiplier",
         "maxValue": 200.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 50.0
       }
     ]
@@ -1596,15 +1250,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "pullChance",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
         "stat": "pullRadius",
         "maxValue": 12,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -1617,15 +1268,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "lifeStealChance",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
         "stat": "lifeSteal",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
       }
     ]
@@ -1666,15 +1313,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "reloadSpeed",
         "maxValue": 240.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 40.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 5,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1686,8 +1325,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 300.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 50.0
       }
     ]
@@ -1700,8 +1337,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "enemyResistanceReduction",
         "maxValue": 65.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.833333
       }
     ]
@@ -1734,14 +1369,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "magus_anomaly": {
     "name": "Magus Anomaly",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
         "stat": "voidPullRadius",
         "maxValue": 30,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -1752,17 +1386,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "voidSprintSpeed",
+        "stat": "sprintSpeed",
         "maxValue": 90.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1774,15 +1400,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "voidSlingRadius",
         "maxValue": 300.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 50.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 6,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1794,76 +1412,54 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "enemyResistanceReduction",
         "maxValue": 65.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.833333
       }
     ]
   },
   "magus_drive": {
     "name": "Magus Drive",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
         "stat": "kdDriveSpeed",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 30,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "magus_elevate": {
     "name": "Magus Elevate",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
-        "stat": "operatorToWarframeHeal",
+        "stat": "healthRegenChance",
         "maxValue": 95.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.833333
       },
       {
-        "stat": "healthFromOrbs",
+        "stat": "operatorToWarframeHeal",
         "maxValue": 300.0,
-        "flat": true,
-        "stacking": false,
         "baseValue": 50.0
       }
     ]
   },
   "magus_firewall": {
     "name": "Magus Firewall",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
         "stat": "damageReduction",
-        "maxValue": 75.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 12.5
+        "maxValue": 12.5,
+        "baseValue": 2.083333
       },
       {
-        "stat": "voidParticleCap",
-        "maxValue": 6,
+        "stat": "voidModeDamageReduction",
+        "maxValue": 60.0,
         "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 60,
-        "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 10.0
       }
     ]
   },
@@ -1890,7 +1486,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "operatorArmor",
         "maxValue": 300.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 50.0
       }
     ]
@@ -1901,20 +1496,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "voidTrapTetherCount",
-        "maxValue": 10,
+        "stat": "voidTrapDuration",
+        "maxValue": 4,
         "flat": true,
         "constantAtAllRanks": true
       },
       {
         "stat": "voidTrapRadius",
         "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "voidTrapDuration",
-        "maxValue": 4,
         "flat": true,
         "constantAtAllRanks": true
       }
@@ -1926,20 +1515,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "operatorHeatDamage",
-        "maxValue": 30.0,
-        "flat": false,
-        "stacking": true,
-        "baseValue": 5.0
+        "stat": "damage",
+        "maxValue": 7.0,
+        "flat": true,
+        "baseValue": 1.166667
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "operatorHeatDamage",
+        "maxValue": 30.0,
+        "baseValue": 5.0
       }
-    ],
-    "stackCap": 7
+    ]
   },
   "magus_nourish": {
     "name": "Magus Nourish",
@@ -1950,7 +1536,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "operatorToWarframeHeal",
         "maxValue": 35.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 5.833333
       }
     ]
@@ -1961,23 +1546,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "voidStunDuration",
-        "maxValue": 3,
-        "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "voidBlastDamage",
+        "stat": "damage",
         "maxValue": 80.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 13.333333
-      },
-      {
-        "stat": "voidBlastRadius",
-        "maxValue": 25,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1989,8 +1560,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "operatorToWarframeHeal",
         "maxValue": 25.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 4.166667
       }
     ]
@@ -2001,10 +1570,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "operatorHealPercent",
+        "stat": "operatorHealthRegen",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       }
     ]
@@ -2039,7 +1606,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "operatorHealth",
         "maxValue": 600.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 100.0
       }
     ]
@@ -2060,21 +1626,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "arcane_melee_animosity": {
     "name": "Melee Animosity",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 5,
     "effects": [
       {
-        "stat": "meleeHeavyCrit",
+        "stat": "criticalChance",
         "maxValue": 42.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.0
       },
       {
-        "stat": "meleeHeavyCritCap",
+        "stat": "meleeHeavyCrit",
         "maxValue": 420.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 70.0
       }
     ]
@@ -2087,21 +1649,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "meleeHeavyDamage",
         "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 25.0
       },
       {
         "stat": "shieldRestorePercent",
         "maxValue": 30,
-        "flat": false,
-        "stacking": false,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 20,
-        "flat": true,
         "constantAtAllRanks": true
       }
     ]
@@ -2113,22 +1665,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "meleeDamageBonus",
-        "maxValue": 150.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 25.0
-      },
-      {
-        "stat": "freezeRadius",
-        "maxValue": 5.5,
-        "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "cooldown",
-        "maxValue": 2,
-        "flat": true,
-        "constantAtAllRanks": true
+        "maxValue": 250.0,
+        "baseValue": 41.666667
       }
     ]
   },
@@ -2168,8 +1706,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "duplicateAttackChance",
         "maxValue": 100.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 16.666667
       }
     ]
@@ -2181,13 +1717,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "meleeDamageBonus",
-        "maxValue": 60.0,
-        "flat": false,
+        "maxValue": 240.0,
         "stacking": true,
+        "baseValue": 40.0
+      },
+      {
+        "stat": "corrosiveDamage",
+        "maxValue": 60.0,
         "baseValue": 10.0
       }
     ],
-    "stackCap": 4
+    "stackCap": 240
   },
   "melee_fortification": {
     "name": "Melee Fortification",
@@ -2217,8 +1757,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "elementalProcChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 3.333333
       }
     ]
@@ -2252,15 +1790,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "pullChance",
         "maxValue": 45.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
       },
       {
         "stat": "pullRadius",
         "maxValue": 18,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -2273,7 +1808,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrength",
         "maxValue": 0.24,
-        "flat": false,
         "stacking": true,
         "baseValue": 0.04
       }
@@ -2316,49 +1850,35 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrength",
         "maxValue": 45.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
       }
     ]
   },
   "pax_bolt": {
     "name": "Pax Bolt",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "abilityEfficiency",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
       },
       {
         "stat": "abilityStrength",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "pax_charge": {
     "name": "Pax Charge",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
         "stat": "kitgunRecharge",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       }
     ]
@@ -2384,15 +1904,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "airborneAccuracy",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
         "stat": "airborneRecoilReduction",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
@@ -2409,18 +1925,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "criticalMultiplier",
-        "maxValue": 3.6,
-        "flat": false,
-        "stacking": true,
-        "baseValue": 0.6
-      },
-      {
         "stat": "multishot",
         "maxValue": 1.8,
-        "flat": false,
         "stacking": true,
         "baseValue": 0.3
+      },
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 3.6,
+        "stacking": true,
+        "baseValue": 0.6
       }
     ],
     "stackCap": 40
@@ -2432,23 +1946,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "damagePerArmorOver",
-        "maxValue": 1.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 0.166667
+        "maxValue": 500.0,
+        "baseValue": 83.333333
       },
       {
         "stat": "damagePerArmorThreshold",
         "maxValue": 1000,
         "flat": true,
         "constantAtAllRanks": true
-      },
-      {
-        "stat": "damagePerArmorCap",
-        "maxValue": 500.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 83.333333
       }
     ]
   },
@@ -2458,25 +1963,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "explosionRadiusScale",
-        "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 3.333333
+        "stat": "ammoEfficiency",
+        "maxValue": 5.5,
+        "baseValue": 0.916667
       },
       {
         "stat": "damage",
         "maxValue": 100.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 16.666667
-      },
-      {
-        "stat": "ammoEfficiency",
-        "maxValue": 5.5,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 0.916667
       }
     ]
   },
@@ -2486,18 +1980,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "statusChance",
-        "maxValue": 30.0,
-        "flat": false,
-        "stacking": true,
-        "baseValue": 5.0
-      },
-      {
         "stat": "ammoEfficiency",
         "maxValue": 6.0,
-        "flat": false,
-        "stacking": true,
         "baseValue": 1.0
+      },
+      {
+        "stat": "statusChancePerHit",
+        "maxValue": 30.0,
+        "baseValue": 5.0
       }
     ],
     "stackCap": 10
@@ -2510,22 +2000,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 120.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 20.0
       },
       {
         "stat": "headshotMultiplier",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "recoilReduction",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 8.333333
       }
     ],
@@ -2540,8 +2025,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "debilitateStackThreshold",
         "maxValue": 10,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
+      },
+      {
+        "stat": "statusProcChance",
+        "maxValue": 100.0,
+        "baseValue": 16.666667
       }
     ]
   },
@@ -2553,7 +2042,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 60.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 10.0
       },
@@ -2561,7 +2049,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "comboDuration",
         "maxValue": 7.5,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ],
@@ -2594,18 +2081,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "criticalMultiplier",
-        "maxValue": 3.0,
-        "flat": false,
-        "stacking": true,
-        "baseValue": 0.5
-      },
-      {
         "stat": "multishot",
         "maxValue": 2.25,
-        "flat": false,
         "stacking": true,
         "baseValue": 0.375
+      },
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 3.0,
+        "stacking": true,
+        "baseValue": 0.5
       }
     ],
     "stackCap": 40
@@ -2616,17 +2101,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "damage",
+        "stat": "reloadSpeed",
         "maxValue": 30.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 5.0
       },
       {
-        "stat": "reloadSpeed",
+        "stat": "damage",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
+        "stacking": true,
         "baseValue": 5.0
       }
     ],
@@ -2641,14 +2124,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "weaponJamRadius",
         "maxValue": 15,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "weaponJamCooldown",
         "maxValue": 10,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -2661,8 +2142,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "multishot",
         "maxValue": 350.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 58.333333
       }
     ]
@@ -2675,8 +2154,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "reloadDamageRamp",
         "maxValue": 100.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 16.666667
       },
       {
@@ -2693,22 +2170,23 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneProcChance",
-        "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 5.0
-      },
-      {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "flat": true,
         "constantAtAllRanks": true
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
         "stat": "zoneDamage",
         "maxValue": 80,
-        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 10,
         "constantAtAllRanks": true
       }
     ]
@@ -2719,14 +2197,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneProcChance",
+        "stat": "healthRegenChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
-        "stat": "zoneDuration",
+        "stat": "buffDuration",
         "maxValue": 12,
         "flat": true,
         "constantAtAllRanks": true
@@ -2734,7 +2210,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "zoneDamagePerSec",
         "maxValue": 40,
-        "flat": true,
         "constantAtAllRanks": true
       }
     ]
@@ -2745,21 +2220,25 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneProcChance",
-        "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 5.0
+        "stat": "electricZoneDuration",
+        "maxValue": 12.0,
+        "flat": true,
+        "baseValue": 3.0
       },
       {
-        "stat": "zoneDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 10,
         "flat": true,
         "constantAtAllRanks": true
       }
@@ -2771,22 +2250,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneProcChance",
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "healthRegenChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "flat": true,
         "constantAtAllRanks": true
       }
     ]
@@ -2800,7 +2276,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "coldStacksApplied",
         "maxValue": 3,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -2813,22 +2288,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 120.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 20.0
       },
       {
         "stat": "headshotMultiplier",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "recoilReduction",
         "maxValue": 50.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 8.333333
       }
     ],
@@ -2842,7 +2312,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 60.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 10.0
       },
@@ -2850,7 +2319,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "comboDuration",
         "maxValue": 7.5,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ],
@@ -2878,9 +2346,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "criticalChance",
         "maxValue": 10.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 1.666667
+      },
+      {
+        "stat": "bigCritThreshold",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2891,10 +2363,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "overguardDamage",
-        "maxValue": 800.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 133.333333
+        "maxValue": 8.0,
+        "flat": true,
+        "baseValue": 1.333333
       }
     ]
   },
@@ -2906,9 +2377,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "procDamageMultiplier",
         "maxValue": 180.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 30.0
+      },
+      {
+        "stat": "procAuraRadius",
+        "maxValue": 7,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2920,8 +2395,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "criticalChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 3.333333
       }
     ]
@@ -2932,17 +2405,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "damage",
+        "stat": "reloadSpeed",
         "maxValue": 30.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 5.0
       },
       {
-        "stat": "reloadSpeed",
+        "stat": "damage",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
+        "stacking": true,
         "baseValue": 5.0
       }
     ],
@@ -2955,10 +2426,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "criticalMultiplier",
-        "maxValue": 200.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 33.333333
+        "maxValue": 20.0,
+        "stacking": true,
+        "baseValue": 3.333333
       }
     ]
   },
@@ -2984,8 +2454,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damagePerEnergy",
         "maxValue": 800.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 133.333333
       }
     ]
@@ -2996,24 +2464,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "multishot",
-        "maxValue": 180.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 30.0
-      },
-      {
         "stat": "reloadSpeed",
         "maxValue": 75.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 12.5
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 15,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "multishot",
+        "maxValue": 180.0,
+        "baseValue": 30.0
       }
     ]
   },
@@ -3025,8 +2483,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "vulnerability",
         "maxValue": 200.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 33.333333
       }
     ]
@@ -3039,12 +2495,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "damage",
         "maxValue": 12.0,
-        "flat": false,
-        "stacking": true,
         "baseValue": 2.0
       }
-    ],
-    "stackCap": 15
+    ]
   },
   "theorem_infection": {
     "name": "Theorem Infection",
@@ -3054,78 +2507,54 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "companionDamageRamp",
         "maxValue": 24.0,
-        "flat": false,
         "stacking": true,
         "baseValue": 4.0
       }
-    ],
-    "stackCap": 15
+    ]
   },
   "virtuos_forge": {
     "name": "Virtuos Forge",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "voidConversion",
         "maxValue": 98,
-        "flat": false,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_fury": {
     "name": "Virtuos Fury",
-    "trigger": "onStatus",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "statusProcChance",
+        "stat": "healthRegenChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "damage",
         "maxValue": 30.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_ghost": {
     "name": "Virtuos Ghost",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "headshotProcChance",
+        "stat": "healthRegenChance",
         "maxValue": 40.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       },
       {
         "stat": "ampStatusChance",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -3151,69 +2580,47 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_shadow": {
     "name": "Virtuos Shadow",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "headshotProcChance",
+        "stat": "healthRegenChance",
         "maxValue": 40.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 10.0
       },
       {
-        "stat": "ampCritChance",
+        "stat": "critChanceOnDamaged",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_spike": {
     "name": "Virtuos Spike",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "voidConversion",
         "maxValue": 98,
-        "flat": false,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_strike": {
     "name": "Virtuos Strike",
-    "trigger": "conditional",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
+        "stat": "healthRegenChance",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {
         "stat": "ampCritDamage",
         "maxValue": 80.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 20.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -3225,49 +2632,35 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "voidConversion",
         "maxValue": 98,
-        "flat": false,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_tempo": {
     "name": "Virtuos Tempo",
-    "trigger": "onKill",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "killProcChance",
-        "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 15.0
-      },
-      {
         "stat": "ampFireRate",
         "maxValue": 60.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 15.0
       },
       {
-        "stat": "buffDuration",
-        "maxValue": 8,
-        "flat": true,
-        "constantAtAllRanks": true
+        "stat": "healthRegenChance",
+        "maxValue": 60.0,
+        "baseValue": 15.0
       }
     ]
   },
   "virtuos_trojan": {
     "name": "Virtuos Trojan",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "voidConversion",
         "maxValue": 98,
-        "flat": false,
-        "stacking": false,
         "constantAtAllRanks": true
       }
     ]
@@ -3363,14 +2756,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "invisibilityDuration",
         "maxValue": 30,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "tauronChargeRate",
         "maxValue": 9.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 1.5
       }
     ]

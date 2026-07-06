@@ -11999,13 +11999,13 @@ export const allMods: Mod[] = [
     "name": "Biting Frost",
     "polarity": "zenurik",
     "drain": 6,
-    "maxRank": 3,
-    "category": "warframe",
+    "maxRank": 9,
+    "category": "Augment",
     "subCategory": "",
     "stats": {
       "criticalChance": 50.0
     },
-    "description": "Frost gains +|CHANCE|% Critical Chance and +|DAMAGE|% Critical Damage against frozen enemies.",
+    "description": "Frost gains +|200|% Critical Chance and +|200|% Critical Damage against frozen enemies.",
     "rarity": "rare"
   },
   {

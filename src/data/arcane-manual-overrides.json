@@ -2,219 +2,401 @@
   "akimbo_slip_shot": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "ammoEfficiency", "maxValue": 65, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "ammoEfficiency",
+        "maxValue": 65,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "arcane_acceleration": {
     "replace": true,
-    "trigger": "conditional",
     "effects": [
-      {"stat": "fireRateOnCritChance", "maxValue": 30},
-      {"stat": "fireRate", "maxValue": 90},
-      {"stat": "buffDuration", "maxValue": 9, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "fireRate",
+        "maxValue": 90
+      },
+      {
+        "stat": "holsterDamage",
+        "maxValue": 90
+      },
+      {
+        "stat": "fireRateOnCrit",
+        "maxValue": 30,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_aegis": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "shieldRegenChance", "maxValue": 3, "flat": false, "stacking": false},
-      {"stat": "shieldRegenAmount", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "shieldRegenChance",
+        "maxValue": 3,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "shieldRegenAmount",
+        "maxValue": 30,
+        "baseValue": 5
+      }
     ]
   },
   "arcane_agility": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "parkourVelocity", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "sprintSpeedChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "parkourVelocity",
+        "maxValue": 60,
+        "baseValue": 10
+      }
     ]
   },
   "arcane_arachne": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "wallLatchDamage", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "wallLatchDamage",
+        "maxValue": 150,
+        "baseValue": 25
+      }
     ]
   },
   "arcane_avenger": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "critChanceOnDamaged", "maxValue": 21, "flat": false, "stacking": false},
-      {"stat": "criticalChance", "maxValue": 45, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "criticalChance",
+        "maxValue": 45,
+        "baseValue": 7.5
+      }
     ]
   },
   "arcane_awakening": {
     "replace": true,
     "trigger": "onReload",
     "effects": [
-      {"stat": "reloadProcChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "holsterDamage", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 24, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "holsterDamage",
+        "maxValue": 150,
+        "baseValue": 25
+      }
     ]
   },
   "arcane_barrier": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "shieldRestoreChance", "maxValue": 6, "flat": false, "stacking": false},
-      {"stat": "shieldRestorePercent", "maxValue": 100, "flat": false, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 6, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "shieldRestoreChance",
+        "maxValue": 100,
+        "flat": true,
+        "baseValue": 100
+      }
     ]
   },
   "arcane_camisado": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "abilityStrength", "maxValue": 60, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "abilityStrength",
+        "maxValue": 60,
+        "stacking": true,
+        "baseValue": 10
+      }
+    ]
   },
   "arcane_concentration": {
     "replace": true,
     "trigger": "onAbilityCast",
     "effects": [
-      {"stat": "abilityDuration", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 3, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "abilityDuration",
+        "maxValue": 60,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 3,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_consequence": {
     "replace": true,
     "trigger": "onHeadshot",
     "effects": [
-      {"stat": "parkourVelocity", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "parkourVelocity",
+        "maxValue": 60,
+        "baseValue": 10
+      }
     ]
   },
   "arcane_crepuscular": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "abilityStrength", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "criticalMultiplier", "maxValue": 200, "flat": false, "stacking": false}
+      {
+        "stat": "abilityStrength",
+        "maxValue": 30,
+        "baseValue": 5
+      },
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 300,
+        "baseValue": 100
+      }
     ]
   },
   "arcane_deflection": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "baseValue": 17
+      }
+    ]
   },
   "arcane_energize": {
     "replace": true,
-    "trigger": "onPickup",
     "effects": [
-      {"stat": "energyPickupChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "energyOrbBonus", "maxValue": 150, "flat": true, "stacking": false},
-      {"stat": "allyEnergyRadius", "maxValue": 15, "flat": true, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "energyOrbBonus",
+        "maxValue": 150,
+        "baseValue": 25
+      },
+      {
+        "stat": "allyEnergy",
+        "maxValue": 150,
+        "baseValue": 25
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 60,
+        "flat": true,
+        "baseValue": 60
+      }
     ]
   },
   "arcane_eruption": {
     "replace": true,
     "trigger": "onPickup",
-    "effects": [{"stat": "knockdownChance", "maxValue": 100, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "knockdownChance",
+        "maxValue": 100,
+        "baseValue": 17
+      }
+    ]
   },
   "arcane_escapist": {
     "replace": true,
     "trigger": "onKill",
     "effects": [
-      {"stat": "escapistStackCap", "maxValue": 9, "flat": true, "stacking": false},
-      {"stat": "invulnerabilityDuration", "maxValue": 12, "flat": true, "stacking": false}
+      {
+        "stat": "escapistStackCap",
+        "maxValue": 9,
+        "flat": true,
+        "baseValue": 9
+      },
+      {
+        "stat": "invulnerabilityDuration",
+        "maxValue": 12,
+        "flat": true
+      }
     ]
   },
   "arcane_fury": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "meleeDamageChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "meleeDamageBonus", "maxValue": 180, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "meleeDamageBonus",
+        "maxValue": 180,
+        "baseValue": 30
+      },
+      {
+        "stat": "meleeDamageChance",
+        "maxValue": 60,
+        "flat": true,
+        "baseValue": 60
+      }
     ]
   },
   "arcane_grace": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "healthRegenChance", "maxValue": 9, "flat": false, "stacking": false},
-      {"stat": "healthRegenAmount", "maxValue": 6, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 9, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 9,
+        "flat": true,
+        "baseValue": 9
+      },
+      {
+        "stat": "healthRegenAmount",
+        "maxValue": 6,
+        "baseValue": 1
+      }
     ]
   },
   "arcane_guardian": {
     "replace": true,
     "trigger": "onDamaged",
     "effects": [
-      {"stat": "armorBonusChance", "maxValue": 15, "flat": false, "stacking": false},
-      {"stat": "flatArmorBonus", "maxValue": 900, "flat": true, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 20, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "armorBonusChance",
+        "maxValue": 15,
+        "baseValue": 15
+      },
+      {
+        "stat": "flatArmorBonus",
+        "maxValue": 900,
+        "flat": true,
+        "baseValue": 150
+      }
     ]
   },
   "arcane_healing": {
     "replace": true,
-    "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "trigger": "onStatus",
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "baseValue": 17
+      }
+    ]
   },
   "arcane_ice": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "arcane_impetus": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "abilityStrength", "maxValue": 6, "flat": false, "stacking": false},
-      {"stat": "abilityEfficiency", "maxValue": 3, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 20, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "abilityEfficiency",
+        "maxValue": 3,
+        "baseValue": 0.5
+      },
+      {
+        "stat": "abilityStrength",
+        "maxValue": 6,
+        "baseValue": 1
+      }
     ]
   },
   "arcane_melee_animosity": {
     "replace": true,
-    "trigger": "onHit",
+    "trigger": "passive",
     "effects": [
-      {"stat": "meleeHeavyCrit", "maxValue": 42, "flat": false, "stacking": false},
-      {"stat": "meleeHeavyCritCap", "maxValue": 420, "flat": false, "stacking": false}
+      {
+        "stat": "criticalChance",
+        "maxValue": 42,
+        "baseValue": 7
+      },
+      {
+        "stat": "meleeHeavyCrit",
+        "maxValue": 420,
+        "baseValue": 70
+      }
     ]
   },
   "arcane_momentum": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "reloadSpeedChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "reloadSpeedBonus", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "reloadSpeedChance",
+        "maxValue": 60,
+        "baseValue": 60
+      },
+      {
+        "stat": "reloadSpeedBonus",
+        "maxValue": 150,
+        "baseValue": 25
+      }
     ]
   },
   "arcane_nullifier": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "baseValue": 17
+      }
+    ]
   },
   "arcane_phantasm": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "dodgeSpeed", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "dodgeSpeedChance", "maxValue": 45, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "dodgeSpeed",
+        "maxValue": 60,
+        "baseValue": 10
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 45,
+        "baseValue": 45
+      }
     ]
   },
   "arcane_precision": {
     "replace": true,
     "trigger": "onHeadshot",
     "effects": [
-      {"stat": "holsterDamage", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "headshotDamage",
+        "maxValue": 300,
+        "baseValue": 50
+      }
     ]
   },
   "arcane_primary_charger": {
     "replace": true,
     "trigger": "onMeleeKill",
     "effects": [
-      {"stat": "primaryDamageChance", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "damage", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "holsterDamage",
+        "maxValue": 300,
+        "baseValue": 50
+      },
+      {
+        "stat": "damage",
+        "maxValue": 300,
+        "baseValue": 50
+      },
+      {
+        "stat": "armorBonusChance",
+        "maxValue": 30,
+        "baseValue": 30
+      }
     ]
   },
   "arcane_primary_deadhead": {
@@ -222,9 +404,22 @@
     "trigger": "stacks",
     "stackCap": 3,
     "effects": [
-      {"stat": "damage", "maxValue": 120, "flat": false, "stacking": true},
-      {"stat": "headshotMultiplier", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "recoilReduction", "maxValue": 50, "flat": false, "stacking": false}
+      {
+        "stat": "damage",
+        "maxValue": 120,
+        "stacking": true,
+        "baseValue": 20
+      },
+      {
+        "stat": "headshotMultiplier",
+        "maxValue": 30,
+        "baseValue": 30
+      },
+      {
+        "stat": "recoilReduction",
+        "maxValue": 50,
+        "baseValue": 50
+      }
     ]
   },
   "arcane_primary_dexterity": {
@@ -232,8 +427,18 @@
     "trigger": "stacks",
     "stackCap": 6,
     "effects": [
-      {"stat": "damage", "maxValue": 60, "flat": false, "stacking": true},
-      {"stat": "comboDuration", "maxValue": 7.5, "flat": true, "stacking": false}
+      {
+        "stat": "damage",
+        "maxValue": 60,
+        "stacking": true,
+        "baseValue": 10
+      },
+      {
+        "stat": "comboDuration",
+        "maxValue": 7.5,
+        "flat": true,
+        "baseValue": 7.5
+      }
     ]
   },
   "arcane_primary_merciless": {
@@ -241,41 +446,82 @@
     "trigger": "stacks",
     "stackCap": 12,
     "effects": [
-      {"stat": "damage", "maxValue": 30, "flat": false, "stacking": true},
-      {"stat": "reloadSpeed", "maxValue": 30, "flat": false, "stacking": false}
+      {
+        "stat": "reloadSpeed",
+        "maxValue": 30,
+        "stacking": true,
+        "baseValue": 0
+      },
+      {
+        "stat": "damage",
+        "maxValue": 30,
+        "stacking": true,
+        "baseValue": 5
+      }
     ]
   },
   "arcane_pulse": {
     "replace": true,
     "trigger": "onPickup",
     "effects": [
-      {"stat": "healthPickupChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "healthFromOrbs", "maxValue": 500, "flat": true, "stacking": false},
-      {"stat": "allyHealRadius", "maxValue": 25, "flat": true, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthFromOrbs",
+        "maxValue": 500,
+        "flat": true,
+        "baseValue": 50
+      },
+      {
+        "stat": "healthOrbPulse",
+        "maxValue": 500,
+        "baseValue": 50
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 60,
+        "baseValue": 60
+      }
     ]
   },
   "arcane_rage": {
     "replace": true,
     "trigger": "onHeadshot",
     "effects": [
-      {"stat": "holsterDamageChance", "maxValue": 15, "flat": false, "stacking": false},
-      {"stat": "holsterDamage", "maxValue": 180, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 24, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "holsterDamage",
+        "maxValue": 180,
+        "baseValue": 30
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 15,
+        "baseValue": 15
+      }
     ]
   },
   "arcane_resistance": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "baseValue": 17
+      }
+    ]
   },
   "arcane_rise": {
     "replace": true,
     "trigger": "onReload",
     "effects": [
-      {"stat": "reloadProcChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "holsterDamage", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 24, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "holsterDamage",
+        "maxValue": 150
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 60,
+        "baseValue": 60
+      }
     ]
   },
   "arcane_secondary_deadhead": {
@@ -283,9 +529,22 @@
     "trigger": "stacks",
     "stackCap": 3,
     "effects": [
-      {"stat": "damage", "maxValue": 120, "flat": false, "stacking": true},
-      {"stat": "headshotMultiplier", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "recoilReduction", "maxValue": 50, "flat": false, "stacking": false}
+      {
+        "stat": "damage",
+        "maxValue": 120,
+        "stacking": true,
+        "baseValue": 20
+      },
+      {
+        "stat": "headshotMultiplier",
+        "maxValue": 30,
+        "baseValue": 0
+      },
+      {
+        "stat": "recoilReduction",
+        "maxValue": 50,
+        "baseValue": 0
+      }
     ]
   },
   "arcane_secondary_dexterity": {
@@ -293,8 +552,18 @@
     "trigger": "stacks",
     "stackCap": 6,
     "effects": [
-      {"stat": "damage", "maxValue": 60, "flat": false, "stacking": true},
-      {"stat": "comboDuration", "maxValue": 7.5, "flat": true, "stacking": false}
+      {
+        "stat": "damage",
+        "maxValue": 60,
+        "stacking": true,
+        "baseValue": 10
+      },
+      {
+        "stat": "comboDuration",
+        "maxValue": 7.5,
+        "flat": true,
+        "baseValue": 0
+      }
     ]
   },
   "arcane_secondary_merciless": {
@@ -302,409 +571,824 @@
     "trigger": "stacks",
     "stackCap": 12,
     "effects": [
-      {"stat": "damage", "maxValue": 30, "flat": false, "stacking": true},
-      {"stat": "reloadSpeed", "maxValue": 30, "flat": false, "stacking": false}
+      {
+        "stat": "reloadSpeed",
+        "maxValue": 30,
+        "stacking": true,
+        "baseValue": 0
+      },
+      {
+        "stat": "damage",
+        "maxValue": 30,
+        "stacking": true,
+        "baseValue": 5
+      }
     ]
   },
   "arcane_steadfast": {
     "replace": true,
     "trigger": "onAbilityCast",
-    "effects": [{"stat": "freeAbilityCastChance", "maxValue": 20, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "freeAbilityCastChance",
+        "maxValue": 20,
+        "baseValue": 5
+      }
+    ]
   },
   "arcane_strike": {
     "replace": true,
     "trigger": "onHit",
     "effects": [
-      {"stat": "attackSpeedChance", "maxValue": 15, "flat": false, "stacking": false},
-      {"stat": "attackSpeedBonus", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 18, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "attackSpeed",
+        "maxValue": 60,
+        "baseValue": 10
+      },
+      {
+        "stat": "attackSpeedChance",
+        "maxValue": 15,
+        "baseValue": 15
+      }
     ]
   },
   "arcane_tanker": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "flatArmorBonus", "maxValue": 1200, "flat": true, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 60, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "flatArmorBonus",
+        "maxValue": 1200,
+        "flat": true,
+        "baseValue": 200
+      }
     ]
   },
   "arcane_tempo": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "fireRateOnCritChance", "maxValue": 15, "flat": false, "stacking": false},
-      {"stat": "fireRate", "maxValue": 90, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "fireRate",
+        "maxValue": 90,
+        "baseValue": 15
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 15,
+        "baseValue": 15
+      }
     ]
   },
   "arcane_trickery": {
     "replace": true,
     "trigger": "onFinisher",
     "effects": [
-      {"stat": "invisibilityChance", "maxValue": 15, "flat": false, "stacking": false},
-      {"stat": "invisibilityDuration", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "invisibilityChance",
+        "maxValue": 15,
+        "baseValue": 15
+      },
+      {
+        "stat": "invisibilityDuration",
+        "maxValue": 30,
+        "flat": true,
+        "baseValue": 5
+      }
     ]
   },
   "arcane_truculence": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "overguardThreshold", "maxValue": 3000, "flat": true, "stacking": false},
-      {"stat": "radialAttackRadius", "maxValue": 30, "flat": true, "stacking": false}
+      {
+        "stat": "overguardThreshold",
+        "maxValue": 3000,
+        "flat": true,
+        "baseValue": 3000
+      },
+      {
+        "stat": "radialAttackRadius",
+        "maxValue": 30,
+        "flat": true
+      }
     ]
   },
   "arcane_ultimatum": {
     "replace": true,
     "trigger": "onFinisher",
     "effects": [
-      {"stat": "flatArmorBonus", "maxValue": 1200, "flat": true, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 45, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "armor",
+        "maxValue": 1200,
+        "baseValue": 200
+      }
     ]
   },
   "arcane_universal_fallout": {
     "replace": true,
     "trigger": "onStatus",
-    "effects": [{"stat": "universalOrbChance", "maxValue": 6, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "universalOrbChance",
+        "maxValue": 6,
+        "baseValue": 1
+      }
+    ]
   },
   "arcane_velocity": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "fireRateOnCritChance", "maxValue": 90, "flat": false, "stacking": false},
-      {"stat": "fireRate", "maxValue": 120, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 9, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "fireRate",
+        "maxValue": 120,
+        "baseValue": 20
+      }
     ]
   },
   "arcane_victory": {
     "replace": true,
     "trigger": "onHeadshot",
     "effects": [
-      {"stat": "headshotHealthRegenChance", "maxValue": 75, "flat": false, "stacking": false},
-      {"stat": "headshotHealthRegen", "maxValue": 3, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 9, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "headshotHealthRegen",
+        "maxValue": 3,
+        "baseValue": 0.5
+      }
     ]
   },
   "arcane_warmth": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "statusResistance", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusResistance",
+        "maxValue": 102,
+        "baseValue": 17
+      }
+    ]
   },
   "cascadia_flare": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 40,
-    "effects": [{"stat": "damage", "maxValue": 12, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "damage",
+        "maxValue": 12,
+        "flat": false,
+        "stacking": true
+      }
+    ]
   },
   "conjunction_voltage": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 40,
     "effects": [
-      {"stat": "reloadSpeed", "maxValue": 1.5, "flat": false, "stacking": true},
-      {"stat": "multishot", "maxValue": 3, "flat": false, "stacking": true}
+      {
+        "stat": "reloadSpeed",
+        "maxValue": 1.5,
+        "flat": false,
+        "stacking": true
+      },
+      {
+        "stat": "multishot",
+        "maxValue": 3,
+        "flat": false,
+        "stacking": true
+      }
     ]
   },
   "emergence_dissipate": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "dissipateRadius", "maxValue": 10, "flat": true, "stacking": false},
-      {"stat": "voidMoteEnergy", "maxValue": 10, "flat": true, "stacking": false}
+      {
+        "stat": "dissipateRadius",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 10
+      },
+      {
+        "stat": "voidMoteEnergy",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 5
+      }
     ]
   },
   "emergence_savior": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "lethalInvulnDuration", "maxValue": 5, "flat": true, "stacking": false},
-      {"stat": "lethalHealPercent", "maxValue": 60, "flat": false, "stacking": false}
+      {
+        "stat": "lethalInvulnDuration",
+        "maxValue": 5,
+        "flat": true,
+        "baseValue": 5
+      },
+      {
+        "stat": "lethalHealPercent",
+        "maxValue": 60,
+        "baseValue": 10
+      }
     ]
   },
   "exodia_brave": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 3,
-    "effects": [{"stat": "energyRegen", "maxValue": 5, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "energyRegen",
+        "maxValue": 5,
+        "flat": false,
+        "stacking": true
+      }
+    ]
   },
   "exodia_contagion": {
     "replace": true,
     "trigger": "onMovement",
-    "effects": [{"stat": "projectileOnAimGlide", "maxValue": 1, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "projectileOnAimGlide",
+        "maxValue": 1,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "exodia_epidemic": {
     "replace": true,
     "trigger": "onMovement",
-    "effects": [{"stat": "shockwaveOnSlam", "maxValue": 1, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "shockwaveOnSlam",
+        "maxValue": 1,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "exodia_force": {
     "replace": true,
     "trigger": "onStatus",
     "effects": [
-      {"stat": "statusProcChance", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "procDamageMultiplier", "maxValue": 200, "flat": false, "stacking": false}
+      {
+        "stat": "statusProcChance",
+        "maxValue": 50,
+        "baseValue": 50
+      },
+      {
+        "stat": "procDamageMultiplier",
+        "maxValue": 200,
+        "baseValue": 50
+      }
     ]
   },
   "exodia_hunt": {
     "replace": true,
     "trigger": "onMovement",
     "effects": [
-      {"stat": "pullChance", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "pullRadius", "maxValue": 12, "flat": true, "stacking": false}
+      {
+        "stat": "pullChance",
+        "maxValue": 50,
+        "baseValue": 50
+      },
+      {
+        "stat": "pullRadius",
+        "maxValue": 12,
+        "flat": true,
+        "baseValue": 6
+      }
     ]
   },
   "exodia_might": {
     "replace": true,
     "trigger": "onFinisher",
     "effects": [
-      {"stat": "lifeStealChance", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "lifeSteal", "maxValue": 30, "flat": false, "stacking": false}
+      {
+        "stat": "lifeStealChance",
+        "maxValue": 50,
+        "baseValue": 50
+      },
+      {
+        "stat": "lifeSteal",
+        "maxValue": 30,
+        "baseValue": 7.5
+      }
     ]
   },
   "exodia_triumph": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "meleeComboChance", "maxValue": 50, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "meleeComboChance",
+        "maxValue": 50,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "exodia_valor": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "meleeComboChance", "maxValue": 200, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "meleeComboChance",
+        "maxValue": 200,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "magus_accelerant": {
     "replace": true,
     "trigger": "onVoidSling",
-    "effects": [{"stat": "enemyResistanceReduction", "maxValue": 65, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "enemyResistanceReduction",
+        "maxValue": 65,
+        "baseValue": 12
+      }
+    ]
   },
   "magus_anomaly": {
     "replace": true,
-    "trigger": "passive",
-    "effects": [{"stat": "voidPullRadius", "maxValue": 30, "flat": true, "stacking": false}]
+    "trigger": "conditional",
+    "effects": [
+      {
+        "stat": "voidPullRadius",
+        "maxValue": 30,
+        "flat": true,
+        "baseValue": 5
+      }
+    ]
   },
   "magus_cadence": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "voidSprintSpeed", "maxValue": 90, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "sprintSpeed",
+        "maxValue": 90,
+        "baseValue": 15
+      }
     ]
   },
   "magus_cloud": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "voidSlingRadius", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 6, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "voidSlingRadius",
+        "maxValue": 300,
+        "baseValue": 50
+      }
     ]
   },
   "magus_destruct": {
     "replace": true,
     "trigger": "onVoidSling",
-    "effects": [{"stat": "enemyResistanceReduction", "maxValue": 65, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "enemyResistanceReduction",
+        "maxValue": 65,
+        "baseValue": 12
+      }
+    ]
   },
   "magus_drive": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
-      {"stat": "kdDriveSpeed", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "kdDriveSpeed",
+        "maxValue": 150,
+        "baseValue": 25
+      }
     ]
   },
   "magus_elevate": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
-      {"stat": "operatorToWarframeHeal", "maxValue": 95, "flat": false, "stacking": false},
-      {"stat": "healthFromOrbs", "maxValue": 300, "flat": true, "stacking": false}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 95,
+        "baseValue": 95
+      },
+      {
+        "stat": "operatorToWarframeHeal",
+        "maxValue": 300,
+        "baseValue": 50
+      }
     ]
   },
   "magus_firewall": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
-      {"stat": "damageReduction", "maxValue": 75, "flat": false, "stacking": false},
-      {"stat": "voidParticleCap", "maxValue": 6, "flat": true, "constantAtAllRanks": true},
-      {"stat": "buffDuration", "maxValue": 60, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "damageReduction",
+        "maxValue": 12.5,
+        "baseValue": 12.5
+      },
+      {
+        "stat": "voidModeDamageReduction",
+        "maxValue": 60,
+        "flat": true,
+        "baseValue": 10
+      }
     ]
   },
   "magus_glitch": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "transferenceStaticNegate", "maxValue": 102, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "transferenceStaticNegate",
+        "maxValue": 102,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "magus_husk": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "operatorArmor", "maxValue": 300, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "operatorArmor",
+        "maxValue": 300,
+        "flat": true,
+        "baseValue": 50
+      }
+    ]
   },
   "magus_lockdown": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "voidTrapTetherCount", "maxValue": 10, "flat": true, "constantAtAllRanks": true},
-      {"stat": "voidTrapRadius", "maxValue": 15, "flat": true, "constantAtAllRanks": true},
-      {"stat": "voidTrapDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "voidTrapDuration",
+        "maxValue": 4,
+        "flat": true,
+        "baseValue": 4
+      },
+      {
+        "stat": "voidTrapRadius",
+        "maxValue": 15,
+        "flat": true,
+        "baseValue": 3
+      }
     ]
   },
   "magus_melt": {
     "replace": true,
     "trigger": "stacks",
-    "stackCap": 7,
     "effects": [
-      {"stat": "operatorHeatDamage", "maxValue": 30, "flat": false, "stacking": true},
-      {"stat": "buffDuration", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "damage",
+        "maxValue": 7,
+        "flat": true,
+        "baseValue": 2
+      },
+      {
+        "stat": "operatorHeatDamage",
+        "maxValue": 30,
+        "baseValue": 30
+      }
     ]
   },
   "magus_nourish": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "operatorToWarframeHeal", "maxValue": 35, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "operatorToWarframeHeal",
+        "maxValue": 35,
+        "flat": true,
+        "baseValue": 10
+      }
+    ]
   },
   "magus_overload": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "voidStunDuration", "maxValue": 3, "flat": true, "constantAtAllRanks": true},
-      {"stat": "voidBlastDamage", "maxValue": 80, "flat": false, "stacking": false},
-      {"stat": "voidBlastRadius", "maxValue": 25, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "damage",
+        "maxValue": 80,
+        "baseValue": 15
+      }
     ]
   },
   "magus_repair": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "operatorToWarframeHeal", "maxValue": 25, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "operatorToWarframeHeal",
+        "maxValue": 25,
+        "baseValue": 5
+      }
+    ]
   },
   "magus_replenish": {
     "replace": true,
     "trigger": "onVoidSling",
-    "effects": [{"stat": "operatorHealPercent", "maxValue": 30, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "operatorHealthRegen",
+        "maxValue": 30,
+        "baseValue": 5
+      }
+    ]
   },
   "magus_revert": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "revertWindow", "maxValue": 3, "flat": true, "stacking": false},
-      {"stat": "revertHeal", "maxValue": 60, "flat": true, "stacking": false}
+      {
+        "stat": "revertWindow",
+        "maxValue": 3,
+        "flat": true,
+        "stacking": false
+      },
+      {
+        "stat": "revertHeal",
+        "maxValue": 60,
+        "flat": true,
+        "stacking": false
+      }
     ]
   },
   "magus_vigor": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "operatorHealth", "maxValue": 600, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "operatorHealth",
+        "maxValue": 600,
+        "flat": true,
+        "baseValue": 100
+      }
+    ]
   },
   "melee_afflictions": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "statusStackBonus", "maxValue": 6, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "statusStackBonus",
+        "maxValue": 6,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "melee_assimilation": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "meleeHeavyDamage", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "shieldRestorePercent", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 20, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "meleeHeavyDamage",
+        "maxValue": 150
+      },
+      {
+        "stat": "shieldRestorePercent",
+        "maxValue": 30,
+        "baseValue": 5
+      }
     ]
   },
   "melee_careen": {
     "replace": true,
     "trigger": "onMovement",
     "effects": [
-      {"stat": "meleeDamageBonus", "maxValue": 150, "flat": false, "stacking": false},
-      {"stat": "freezeRadius", "maxValue": 5.5, "flat": true, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 2, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "meleeDamageBonus",
+        "maxValue": 250,
+        "baseValue": 125
+      }
     ]
   },
   "melee_crescendo": {
     "replace": true,
     "trigger": "onFinisher",
-    "effects": [{"stat": "meleeComboInitial", "maxValue": 6, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "meleeComboInitial",
+        "maxValue": 6,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "melee_doughty": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "critPerPunctureTen", "maxValue": 100, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "critPerPunctureTen",
+        "maxValue": 100,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "melee_duplicate": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "duplicateAttackChance", "maxValue": 100, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "duplicateAttackChance",
+        "maxValue": 100,
+        "baseValue": 25
+      }
+    ]
   },
   "melee_exposure": {
     "replace": true,
     "trigger": "stacks",
-    "stackCap": 4,
-    "effects": [{"stat": "meleeDamageBonus", "maxValue": 60, "flat": false, "stacking": true}]
+    "stackCap": 240,
+    "effects": [
+      {
+        "stat": "meleeDamageBonus",
+        "maxValue": 240,
+        "stacking": true,
+        "baseValue": 240
+      },
+      {
+        "stat": "corrosiveDamage",
+        "maxValue": 60,
+        "baseValue": 10
+      }
+    ]
   },
   "melee_fortification": {
     "replace": true,
     "trigger": "onMeleeKill",
     "effects": [
-      {"stat": "flatArmorBonus", "maxValue": 210, "flat": true, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 10, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "flatArmorBonus",
+        "maxValue": 210,
+        "flat": true,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "melee_influence": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "elementalProcChance", "maxValue": 20, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "elementalProcChance",
+        "maxValue": 20,
+        "baseValue": 20
+      }
+    ]
   },
   "melee_retaliation": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "meleeDamagePerShield", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "meleeDamagePerShieldCap", "maxValue": 420, "flat": false, "stacking": false}
+      {
+        "stat": "meleeDamagePerShield",
+        "maxValue": 30,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "meleeDamagePerShieldCap",
+        "maxValue": 420,
+        "flat": false,
+        "stacking": false
+      }
     ]
   },
   "melee_vortex": {
     "replace": true,
     "trigger": "onKill",
     "effects": [
-      {"stat": "pullChance", "maxValue": 45, "flat": false, "stacking": false},
-      {"stat": "pullRadius", "maxValue": 18, "flat": true, "stacking": false}
+      {
+        "stat": "pullChance",
+        "maxValue": 45,
+        "baseValue": 20
+      },
+      {
+        "stat": "pullRadius",
+        "maxValue": 18,
+        "flat": true,
+        "baseValue": 18
+      }
     ]
   },
   "molt_efficiency": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "abilityDuration", "maxValue": 36, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "abilityDuration",
+        "maxValue": 36,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "molt_reconstruct": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "healPerEnergySpent", "maxValue": 6, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "healPerEnergySpent",
+        "maxValue": 6,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "molt_vigor": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "abilityStrength", "maxValue": 45, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "abilityStrength",
+        "maxValue": 45,
+        "baseValue": 15
+      }
+    ]
   },
   "pax_bolt": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
-      {"stat": "abilityEfficiency", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "abilityStrength", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "abilityEfficiency",
+        "maxValue": 30,
+        "baseValue": 7.5
+      },
+      {
+        "stat": "abilityStrength",
+        "maxValue": 30,
+        "baseValue": 7.5
+      }
     ]
   },
   "pax_charge": {
     "replace": true,
-    "trigger": "passive",
-    "effects": [{"stat": "kitgunRecharge", "maxValue": 50, "flat": false, "stacking": false}]
+    "trigger": "conditional",
+    "effects": [
+      {
+        "stat": "kitgunRecharge",
+        "maxValue": 50,
+        "baseValue": 12.5
+      }
+    ]
   },
   "pax_seeker": {
     "replace": true,
     "trigger": "onHeadshot",
-    "effects": [{"stat": "kitgunHoming", "maxValue": 4, "flat": true, "constantAtAllRanks": true}]
+    "effects": [
+      {
+        "stat": "kitgunHoming",
+        "maxValue": 4,
+        "flat": true,
+        "baseValue": 1
+      }
+    ]
   },
   "pax_soar": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "airborneAccuracy", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "airborneRecoilReduction", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "aimGlideDuration", "maxValue": 5, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "airborneAccuracy",
+        "maxValue": 50,
+        "baseValue": 12.5
+      },
+      {
+        "stat": "airborneRecoilReduction",
+        "maxValue": 50,
+        "baseValue": 12.5
+      },
+      {
+        "stat": "aimGlideDuration",
+        "maxValue": 5,
+        "flat": true,
+        "baseValue": 1.3
+      }
     ]
   },
   "primary_blight": {
@@ -712,26 +1396,51 @@
     "trigger": "stacks",
     "stackCap": 40,
     "effects": [
-      {"stat": "criticalMultiplier", "maxValue": 3.6, "flat": false, "stacking": true},
-      {"stat": "multishot", "maxValue": 1.8, "flat": false, "stacking": true}
+      {
+        "stat": "multishot",
+        "maxValue": 1.8,
+        "stacking": true,
+        "baseValue": 0.3
+      },
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 3.6,
+        "stacking": true,
+        "baseValue": 0.6
+      }
     ]
   },
   "primary_bulwark": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "damagePerArmorOver", "maxValue": 1, "flat": false, "stacking": false},
-      {"stat": "damagePerArmorThreshold", "maxValue": 1000, "flat": true, "constantAtAllRanks": true},
-      {"stat": "damagePerArmorCap", "maxValue": 500, "flat": false, "stacking": false}
+      {
+        "stat": "damagePerArmorOver",
+        "maxValue": 500,
+        "baseValue": 250
+      },
+      {
+        "stat": "damagePerArmorThreshold",
+        "maxValue": 1000,
+        "flat": true,
+        "baseValue": 1000
+      }
     ]
   },
   "primary_compression": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "explosionRadiusScale", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "damage", "maxValue": 100, "flat": false, "stacking": false},
-      {"stat": "ammoEfficiency", "maxValue": 5.5, "flat": false, "stacking": false}
+      {
+        "stat": "ammoEfficiency",
+        "maxValue": 5.5,
+        "baseValue": 3
+      },
+      {
+        "stat": "damage",
+        "maxValue": 100,
+        "baseValue": 50
+      }
     ]
   },
   "primary_crux": {
@@ -739,22 +1448,52 @@
     "trigger": "stacks",
     "stackCap": 10,
     "effects": [
-      {"stat": "statusChance", "maxValue": 30, "flat": false, "stacking": true},
-      {"stat": "ammoEfficiency", "maxValue": 6, "flat": false, "stacking": true}
+      {
+        "stat": "ammoEfficiency",
+        "maxValue": 6,
+        "baseValue": 1
+      },
+      {
+        "stat": "statusChancePerHit",
+        "maxValue": 30,
+        "baseValue": 5
+      }
     ]
   },
   "primary_debilitate": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "debilitateStackThreshold", "maxValue": 10, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "debilitateStackThreshold",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 10
+      },
+      {
+        "stat": "statusProcChance",
+        "maxValue": 100,
+        "baseValue": 50
+      }
+    ]
   },
   "primary_exhilarate": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 3,
     "effects": [
-      {"stat": "energyRegen", "maxValue": 1.2, "flat": false, "stacking": true},
-      {"stat": "buffDuration", "maxValue": 10, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "energyRegen",
+        "maxValue": 1.2,
+        "flat": false,
+        "stacking": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "primary_frostbite": {
@@ -762,302 +1501,677 @@
     "trigger": "stacks",
     "stackCap": 40,
     "effects": [
-      {"stat": "criticalMultiplier", "maxValue": 3, "flat": false, "stacking": true},
-      {"stat": "multishot", "maxValue": 2.25, "flat": false, "stacking": true}
+      {
+        "stat": "multishot",
+        "maxValue": 2.25,
+        "stacking": true,
+        "baseValue": 0.38
+      },
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 3,
+        "stacking": true,
+        "baseValue": 0.5
+      }
     ]
   },
   "primary_obstruct": {
     "replace": true,
     "trigger": "onStatus",
     "effects": [
-      {"stat": "weaponJamRadius", "maxValue": 15, "flat": true, "stacking": false},
-      {"stat": "weaponJamCooldown", "maxValue": 10, "flat": true, "stacking": false}
+      {
+        "stat": "weaponJamRadius",
+        "maxValue": 15,
+        "flat": true,
+        "baseValue": 15
+      },
+      {
+        "stat": "weaponJamCooldown",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 60
+      }
     ]
   },
   "primary_overcharge": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "multishot", "maxValue": 350, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "multishot",
+        "maxValue": 350,
+        "baseValue": 100
+      }
+    ]
   },
   "primary_plated_round": {
     "replace": true,
     "trigger": "onReload",
     "effects": [
-      {"stat": "reloadDamageRamp", "maxValue": 100, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 10, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "reloadDamageRamp",
+        "maxValue": 100
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 3
+      }
     ]
   },
   "residual_boils": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "zoneProcChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "zoneDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true},
-      {"stat": "zoneDamage", "maxValue": 80, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "baseValue": 3
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "zoneDamage",
+        "maxValue": 80,
+        "baseValue": 80
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 10,
+        "baseValue": 10
+      }
     ]
   },
   "residual_malodor": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "zoneProcChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "zoneDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true},
-      {"stat": "zoneDamagePerSec", "maxValue": 40, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "baseValue": 3
+      },
+      {
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "baseValue": 40
+      }
     ]
   },
   "residual_shock": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "zoneProcChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "zoneDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true},
-      {"stat": "zoneDamage", "maxValue": 200, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "electricZoneDuration",
+        "maxValue": 12,
+        "flat": true,
+        "baseValue": 3
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "zoneDamage",
+        "maxValue": 200,
+        "flat": true,
+        "baseValue": 200
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 10,
+        "flat": true,
+        "baseValue": 10
+      }
     ]
   },
   "residual_viremia": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "zoneProcChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "zoneDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true},
-      {"stat": "zoneDamagePerSec", "maxValue": 40, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
+        "baseValue": 40
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "baseValue": 3
+      }
     ]
   },
   "secondary_cryogenic": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "coldStacksApplied", "maxValue": 3, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "coldStacksApplied",
+        "maxValue": 3,
+        "flat": true,
+        "baseValue": 1
+      }
+    ]
   },
   "secondary_encumber": {
     "replace": true,
     "trigger": "onStatus",
-    "effects": [{"stat": "secondaryStatusProc", "maxValue": 24, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "secondaryStatusProc",
+        "maxValue": 24,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "secondary_enervate": {
     "replace": true,
     "trigger": "onHit",
-    "effects": [{"stat": "criticalChance", "maxValue": 10, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "criticalChance",
+        "maxValue": 10,
+        "baseValue": 10
+      },
+      {
+        "stat": "bigCritThreshold",
+        "maxValue": 6,
+        "flat": true,
+        "baseValue": 1
+      }
+    ]
   },
   "secondary_fortifier": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "overguardDamage", "maxValue": 800, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "overguardDamage",
+        "maxValue": 8,
+        "flat": true,
+        "baseValue": 3
+      }
+    ]
   },
   "secondary_irradiate": {
     "replace": true,
     "trigger": "onHit",
-    "effects": [{"stat": "procDamageMultiplier", "maxValue": 180, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "procDamageMultiplier",
+        "maxValue": 180,
+        "baseValue": 80
+      },
+      {
+        "stat": "procAuraRadius",
+        "maxValue": 7,
+        "flat": true,
+        "baseValue": 4.5
+      }
+    ]
   },
   "secondary_kinship": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "criticalChance", "maxValue": 20, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "criticalChance",
+        "maxValue": 20,
+        "baseValue": 3
+      }
+    ]
   },
   "secondary_outburst": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "criticalMultiplier", "maxValue": 200, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 20,
+        "stacking": true,
+        "baseValue": 5
+      }
+    ]
   },
   "secondary_shiver": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "damageTakenBonus", "maxValue": 45, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "damageTakenBonus",
+        "maxValue": 45,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "secondary_surge": {
     "replace": true,
     "trigger": "onAbilityCast",
-    "effects": [{"stat": "damagePerEnergy", "maxValue": 800, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "damagePerEnergy",
+        "maxValue": 800,
+        "baseValue": 200
+      }
+    ]
   },
   "shotgun_vendetta": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "multishot", "maxValue": 180, "flat": false, "stacking": false},
-      {"stat": "reloadSpeed", "maxValue": 75, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "reloadSpeed",
+        "maxValue": 75,
+        "baseValue": 12.5
+      },
+      {
+        "stat": "multishot",
+        "maxValue": 180,
+        "baseValue": 30
+      }
     ]
   },
   "theorem_contagion": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "vulnerability", "maxValue": 200, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "vulnerability",
+        "maxValue": 200,
+        "baseValue": 25
+      }
+    ]
   },
   "theorem_demulcent": {
     "replace": true,
     "trigger": "stacks",
-    "stackCap": 15,
-    "effects": [{"stat": "damage", "maxValue": 12, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "damage",
+        "maxValue": 12,
+        "baseValue": 2
+      }
+    ]
   },
   "theorem_infection": {
     "replace": true,
     "trigger": "stacks",
-    "stackCap": 15,
-    "effects": [{"stat": "companionDamageRamp", "maxValue": 24, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "companionDamageRamp",
+        "maxValue": 24,
+        "stacking": true,
+        "baseValue": 4
+      }
+    ]
   },
   "virtuos_forge": {
     "replace": true,
-    "trigger": "onHit",
-    "effects": [{"stat": "voidConversion", "maxValue": 98, "flat": false, "stacking": false}]
+    "trigger": "passive",
+    "effects": [
+      {
+        "stat": "voidConversion",
+        "maxValue": 98,
+        "baseValue": 24
+      }
+    ]
   },
   "virtuos_fury": {
     "replace": true,
-    "trigger": "onStatus",
+    "trigger": "passive",
     "effects": [
-      {"stat": "statusProcChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "damage", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "damage",
+        "maxValue": 30,
+        "baseValue": 7.5
+      }
     ]
   },
   "virtuos_ghost": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
-      {"stat": "headshotProcChance", "maxValue": 40, "flat": false, "stacking": false},
-      {"stat": "ampStatusChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 40,
+        "baseValue": 40
+      },
+      {
+        "stat": "ampStatusChance",
+        "maxValue": 60,
+        "baseValue": 15
+      }
     ]
   },
   "virtuos_null": {
     "replace": true,
     "trigger": "onKill",
     "effects": [
-      {"stat": "energyRegen", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "energyRegen",
+        "maxValue": 20,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "virtuos_shadow": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
-      {"stat": "headshotProcChance", "maxValue": 40, "flat": false, "stacking": false},
-      {"stat": "ampCritChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 40,
+        "baseValue": 40
+      },
+      {
+        "stat": "critChanceOnDamaged",
+        "maxValue": 60,
+        "baseValue": 15
+      }
     ]
   },
   "virtuos_spike": {
     "replace": true,
-    "trigger": "onHit",
-    "effects": [{"stat": "voidConversion", "maxValue": 98, "flat": false, "stacking": false}]
+    "trigger": "passive",
+    "effects": [
+      {
+        "stat": "voidConversion",
+        "maxValue": 98,
+        "baseValue": 24
+      }
+    ]
   },
   "virtuos_strike": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "passive",
     "effects": [
-      {"stat": "fireRateOnCritChance", "maxValue": 20, "flat": false, "stacking": false},
-      {"stat": "ampCritDamage", "maxValue": 80, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
+        "stat": "ampCritDamage",
+        "maxValue": 80,
+        "baseValue": 20
+      }
     ]
   },
   "virtuos_surge": {
     "replace": true,
     "trigger": "onHit",
-    "effects": [{"stat": "voidConversion", "maxValue": 98, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "voidConversion",
+        "maxValue": 98,
+        "baseValue": 24
+      }
+    ]
   },
   "virtuos_tempo": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "passive",
     "effects": [
-      {"stat": "killProcChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "ampFireRate", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 8, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "ampFireRate",
+        "maxValue": 60,
+        "baseValue": 15
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 60,
+        "baseValue": 60
+      }
     ]
   },
   "virtuos_trojan": {
     "replace": true,
-    "trigger": "onHit",
-    "effects": [{"stat": "voidConversion", "maxValue": 98, "flat": false, "stacking": false}]
+    "trigger": "passive",
+    "effects": [
+      {
+        "stat": "voidConversion",
+        "maxValue": 98,
+        "baseValue": 24
+      }
+    ]
   },
   "zid_an_asheir": {
     "replace": true,
     "trigger": "conditional",
     "stackCap": 50,
     "effects": [
-      {"stat": "statusChancePerHit", "maxValue": 6, "flat": false, "stacking": true},
-      {"stat": "tauronStrikeCharge", "maxValue": 18, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "statusChancePerHit",
+        "maxValue": 6,
+        "flat": false,
+        "stacking": true
+      },
+      {
+        "stat": "tauronStrikeCharge",
+        "maxValue": 18,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "zid_an_haras": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "ammoEfficiency", "maxValue": 48, "flat": false, "stacking": false},
-      {"stat": "ampAmmoEfficiency", "maxValue": 18, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "ammoEfficiency",
+        "maxValue": 48,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "ampAmmoEfficiency",
+        "maxValue": 18,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "zid_an_osbok": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "overguardStrip", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "ampCritDamage", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "overguardStrip",
+        "maxValue": 30,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "ampCritDamage",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "zid_an_sek_eel": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "invisibilityDuration", "maxValue": 30, "flat": true, "stacking": false},
-      {"stat": "tauronChargeRate", "maxValue": 9, "flat": false, "stacking": false}
+      {
+        "stat": "invisibilityDuration",
+        "maxValue": 30,
+        "flat": true,
+        "baseValue": 30
+      },
+      {
+        "stat": "tauronChargeRate",
+        "maxValue": 9
+      }
     ]
   },
   "zid_an_uskos": {
     "replace": true,
     "trigger": "conditional",
     "stackCap": 25,
-    "effects": [{"stat": "secondaryHeatDamage", "maxValue": 2.4, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "secondaryHeatDamage",
+        "maxValue": 2.4,
+        "flat": false,
+        "stacking": true
+      }
+    ]
   },
   "arcane_blade_charger": {
     "replace": true,
     "trigger": "onKill",
     "effects": [
-      {"stat": "meleeDamageChance", "maxValue": 30, "flat": false, "stacking": false},
-      {"stat": "meleeDamageBonus", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "meleeDamageChance",
+        "maxValue": 30,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "meleeDamageBonus",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_power_ramp": {
     "replace": true,
     "trigger": "stacks",
-    "stackCap": 4,
-    "effects": [{"stat": "abilityStrength", "maxValue": 9, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "abilityStrength",
+        "maxValue": 9,
+        "stacking": true,
+        "baseValue": 2
+      }
+    ]
   },
   "arcane_battery": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "energyPerArmor", "maxValue": 0.3, "flat": true, "stacking": false},
-      {"stat": "energyCap", "maxValue": 1000, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "energyPerArmor",
+        "maxValue": 0.3,
+        "flat": true,
+        "baseValue": 0.05
+      }
     ]
   },
   "arcane_bellicose": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "abilityStrengthPerHealth", "maxValue": 6, "flat": false, "stacking": false},
-      {"stat": "abilityStrengthPerHealthStep", "maxValue": 250, "flat": true, "constantAtAllRanks": true},
-      {"stat": "abilityStrengthCap", "maxValue": 72, "flat": false, "stacking": false}
+      {
+        "stat": "abilityStrengthPerHealth",
+        "maxValue": 6
+      },
+      {
+        "stat": "abilityStrengthPerHealthStep",
+        "maxValue": 250,
+        "flat": true
+      },
+      {
+        "stat": "abilityStrength",
+        "maxValue": 6,
+        "stacking": true,
+        "baseValue": 1
+      }
     ]
   },
   "arcane_blessing": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 50,
-    "effects": [{"stat": "healthFlat", "maxValue": 24, "flat": true, "stacking": true}]
+    "effects": [
+      {
+        "stat": "healthFlat",
+        "maxValue": 24,
+        "flat": true,
+        "stacking": true
+      }
+    ]
   },
   "arcane_bodyguard": {
     "replace": true,
     "trigger": "conditional",
-    "effects": [{"stat": "companionHeal", "maxValue": 900, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "companionHeal",
+        "maxValue": 900,
+        "flat": true,
+        "stacking": false
+      }
+    ]
   },
   "arcane_circumvent": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "armorSteal", "maxValue": 50, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "armorSteal",
+        "maxValue": 50,
+        "baseValue": 25
+      }
     ]
   },
   "arcane_double_back": {
@@ -1065,21 +2179,41 @@
     "trigger": "stacks",
     "stackCap": 3,
     "effects": [
-      {"stat": "damageReduction", "maxValue": 25, "flat": false, "stacking": true},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "damageReduction",
+        "maxValue": 25,
+        "stacking": true,
+        "baseValue": 5
+      }
     ]
   },
   "arcane_expertise": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "abilityStrengthToShield", "maxValue": 100, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "abilityStrengthToShield",
+        "maxValue": 100,
+        "baseValue": 50
+      }
+    ]
   },
   "arcane_hot_shot": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "criticalChance", "maxValue": 6, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 10, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "criticalChance",
+        "maxValue": 6,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_ice_storm": {
@@ -1087,127 +2221,285 @@
     "trigger": "stacks",
     "stackCap": 20,
     "effects": [
-      {"stat": "abilityDuration", "maxValue": 2, "flat": false, "stacking": true},
-      {"stat": "abilityStrength", "maxValue": 2, "flat": false, "stacking": true},
-      {"stat": "buffDuration", "maxValue": 15, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "abilityDuration",
+        "maxValue": 2,
+        "baseValue": 2
+      },
+      {
+        "stat": "abilityStrength",
+        "maxValue": 2,
+        "stacking": true,
+        "baseValue": 2
+      }
     ]
   },
   "arcane_intention": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "healthFlat", "maxValue": 250, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "healthFlat",
+        "maxValue": 250,
+        "flat": true,
+        "baseValue": 40
+      }
+    ]
   },
   "arcane_pistoleer": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "headshotProcChance", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "ammoEfficiency", "maxValue": 102, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "headshotProcChance",
+        "maxValue": 60,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "ammoEfficiency",
+        "maxValue": 102,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_reaper": {
     "replace": true,
     "trigger": "onMeleeKill",
     "effects": [
-      {"stat": "healthRegenPerSec", "maxValue": 24, "flat": true, "stacking": false},
-      {"stat": "flatArmorBonus", "maxValue": 660, "flat": true, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 10, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "healthRegenPerSec",
+        "maxValue": 24,
+        "flat": true,
+        "stacking": false
+      },
+      {
+        "stat": "flatArmorBonus",
+        "maxValue": 660,
+        "flat": true,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "arcane_sculptor": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "abilityEfficiency", "maxValue": 175, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 12, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "abilityEfficiency",
+        "maxValue": 175,
+        "baseValue": 125
+      }
     ]
   },
   "cascadia_accuracy": {
     "replace": true,
     "trigger": "onMovement",
     "effects": [
-      {"stat": "criticalChance", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 4, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "criticalChance",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "cascadia_empowered": {
     "replace": true,
     "trigger": "onStatus",
-    "effects": [{"stat": "bonusDamageOnStatus", "maxValue": 750, "flat": true, "stacking": false}]
+    "effects": [
+      {
+        "stat": "bonusDamageOnStatus",
+        "maxValue": 750,
+        "flat": true,
+        "baseValue": 250
+      }
+    ]
   },
   "cascadia_overcharge": {
     "replace": true,
     "trigger": "passive",
-    "effects": [{"stat": "criticalChance", "maxValue": 300, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "criticalChance",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      }
+    ]
   },
   "emergence_renewed": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "energyRegen", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 5, "flat": true, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 30, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "energyRegen",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 5,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "eternal_eradicate": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "ampDamage", "maxValue": 60, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 8, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "ampDamage",
+        "maxValue": 60,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "eternal_logistics": {
     "replace": true,
     "trigger": "onVoidSling",
     "effects": [
-      {"stat": "ampAmmoEfficiency", "maxValue": 72, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 8, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "ampAmmoEfficiency",
+        "maxValue": 72,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "eternal_onslaught": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "criticalChance", "maxValue": 180, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 8, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "criticalChance",
+        "maxValue": 180,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "fractalized_reset": {
     "replace": true,
     "trigger": "onAbilityCast",
     "effects": [
-      {"stat": "reloadSpeed", "maxValue": 240, "flat": false, "stacking": false},
-      {"stat": "buffDuration", "maxValue": 5, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "reloadSpeed",
+        "maxValue": 240,
+        "baseValue": 40
+      }
     ]
   },
   "longbow_sharpshot": {
     "replace": true,
     "trigger": "onHeadshot",
-    "effects": [{"stat": "damage", "maxValue": 300, "flat": false, "stacking": false}]
+    "effects": [
+      {
+        "stat": "damage",
+        "maxValue": 300,
+        "baseValue": 50
+      }
+    ]
   },
   "magus_aggress": {
     "replace": true,
     "trigger": "conditional",
     "effects": [
-      {"stat": "criticalMultiplier", "maxValue": 300, "flat": false, "stacking": false},
-      {"stat": "attackCount", "maxValue": 4, "flat": true, "constantAtAllRanks": true},
-      {"stat": "cooldown", "maxValue": 20, "flat": true, "constantAtAllRanks": true}
+      {
+        "stat": "criticalMultiplier",
+        "maxValue": 300,
+        "flat": false,
+        "stacking": false
+      },
+      {
+        "stat": "attackCount",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 20,
+        "flat": true,
+        "constantAtAllRanks": true
+      }
     ]
   },
   "molt_augmented": {
     "replace": true,
     "trigger": "stacks",
     "stackCap": 250,
-    "effects": [{"stat": "abilityStrength", "maxValue": 0.24, "flat": false, "stacking": true}]
+    "effects": [
+      {
+        "stat": "abilityStrength",
+        "maxValue": 0.24,
+        "stacking": true,
+        "baseValue": 0.04
+      }
+    ]
   },
   "arcane_persistence": {
     "replace": true,
     "trigger": "passive",
     "effects": [
-      {"stat": "persistenceDamageCapPerSecond", "maxValue": 500, "flat": true, "stacking": false},
-      {"stat": "removeShields", "maxValue": 1, "flat": true, "stacking": false}
+      {
+        "stat": "persistenceDamageCapPerSecond",
+        "maxValue": 500,
+        "flat": true,
+        "baseValue": 750
+      },
+      {
+        "stat": "removeShields",
+        "maxValue": 1,
+        "flat": true,
+        "baseValue": 1
+      }
     ]
   }
 }

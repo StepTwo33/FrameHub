@@ -221,6 +221,12 @@ const STAT_LABELS: Record<string, string> = {
   voidModeSpeed: "Void Mode Speed",
   voidModeDamageReduction: "Void Mode DR",
   voidSprintDamage: "Void Sprint Damage",
+  bigCritThreshold: "Big Critical Hit",
+  procAuraRadius: "Range",
+  zoneRadius: "Effect Range",
+  corrosiveDamage: "Corrosive Damage",
+  healthOrbPulse: "Health Orb Pulse",
+  corrosiveDamage: "Corrosive Damage",
 };
 
 export function getArcaneStatLabel(stat: string): string {
