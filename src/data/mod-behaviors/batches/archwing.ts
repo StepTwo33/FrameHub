@@ -32,7 +32,9 @@ export const MOD_BEHAVIORS_ARCHWING: Record<string, VerifiedModBehavior> = {
   enhanced_durability: mod("enhanced_durability", [
     line("health", "warframe_totals", "multiplicative_percent", "Enhanced Durability: health \u2014 +100% Health"),
   ]),
-  hyperion_thrusters: mod("hyperion_thrusters", [], "wiki: Hyperion Thrusters \u2014 +27.5% Flight Speed"),
+  hyperion_thrusters: mod("hyperion_thrusters", [
+    line("flightSpeed", "warframe_totals", "multiplicative_percent", "Hyperion Thrusters: flightSpeed \u2014 +27.5% Flight Speed"),
+  ]),
   kinetic_diversion: mod("kinetic_diversion", [
     line("damage", "mod_panel", "multiplicative_percent", "Kinetic Diversion: damage \u2014 Convert +40% of Damage on Health to Energy. Without Shields, ally Overguard imit\u2026"),
   ]),
@@ -43,7 +45,8 @@ export const MOD_BEHAVIORS_ARCHWING: Record<string, VerifiedModBehavior> = {
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Primed Morphic Transformer: abilityStrength \u2014 +55% Ability Strength"),
   ]),
   superior_defenses: mod("superior_defenses", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Superior Defenses: shield \u2014 +100% Shield Recharge, -50% Shield Recharge Delay"),
+    line("shieldRecharge", "mod_panel", "multiplicative_percent", "Superior Defenses: shieldRecharge \u2014 +100% Shield Recharge, -50% Shield Recharge Delay"),
+    line("shieldRechargeDelay", "mod_panel", "multiplicative_percent", "Superior Defenses: shieldRechargeDelay \u2014 +100% Shield Recharge, -50% Shield Recharge Delay"),
   ]),
   system_reroute: mod("system_reroute", [
     line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "System Reroute: abilityEfficiency \u2014 +55% Ability Efficiency"),

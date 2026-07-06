@@ -157,7 +157,6 @@ export const MOD_INCOMPATIBILITY_TAGS: Record<string, readonly string[]> = {
 export const MOD_COMPATIBILITY_TAGS: Record<string, readonly string[]> = {
   "adhesive_blast": ["PROJECTILE"],
   "amars_contempt": ["DUAL_DAGGERS_STANCE"],
-  "argent_scourge": ["POLEARMS_STANCE"],
   "atlantis_vulcan": ["NUNCHAKU_STANCE"],
   "biting_piranha": ["DUAL_DAGGERS_STANCE"],
   "blind_justice": ["NIKANAS_STANCE"],
@@ -270,7 +269,6 @@ export const MOD_EXCLUSIVE_WEAPON_IDS: Record<string, readonly string[]> = {
   "amalgam_ripkas_true_steel": ["ripkas"],
   "amanata_pressure": ["amanata"],
   "ambush_optics": ["rubico", "rubico_prime"],
-  "atlantis_vulcan": ["nunchaku"],
   "augment_garuda_blending_talons": ["garuda_prime_talons", "garuda_talons"],
   "augment_garuda_blood_forge": ["garuda_prime_talons", "garuda_talons"],
   "augment_garuda_dread_ward": ["garuda_prime_talons", "garuda_talons"],
@@ -318,7 +316,6 @@ export const MOD_EXCLUSIVE_WEAPON_IDS: Record<string, readonly string[]> = {
   "kinetic_ricochet": ["tetra"],
   "lasting_purity": ["vulkar", "vulkar_wraith"],
   "leaded_gas": ["vesper_77"],
-  "mafic_rain": ["nunchaku"],
   "measured_burst": ["tiberon", "tiberon_prime"],
   "metamorphic_magazine": ["gorgon", "gorgon_wraith"],
   "meticulous_aim": ["vulkar", "vulkar_wraith"],

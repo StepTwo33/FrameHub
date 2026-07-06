@@ -394,6 +394,19 @@ export interface CompanionCalculatedStats {
   critDamageBonus: number;
   effectiveHealth: number;
   damageReduction: number;
+  /** Armor-based DR plus conditional mod bonuses (e.g. Loyal Companion). */
+  armorDamageReduction: number;
+  weakspotDamageBonus: number;
+  finisherDamageBonus: number;
+  pickupDoubleChance: number;
+  creditPickupDoubleChance: number;
+  resourcePickupDoubleChance: number;
+  impactStatusStacks: number;
+  reviveShieldHealth: number;
+  incapacitationTimerReduction: number;
+  shieldRechargeBonus: number;
+  healthRegenBonus: number;
+  modBonuses?: Record<string, number>;
 }
 
 export interface Loadout {

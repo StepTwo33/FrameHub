@@ -36,8 +36,10 @@ PROFILE_INCOMPAT_TAGS = {
 MOD_WIKI_NAME_ALIASES: dict[str, str] = {}
 
 # Manual exclusive-weapon overrides when wiki match fails.
-MOD_EXCLUSIVE_WEAPON_OVERRIDES: dict[str, list[str]] = {
-}
+MOD_EXCLUSIVE_WEAPON_OVERRIDES: dict[str, list[str]] = {}
+
+# Stances mis-parsed as weapon-exclusive when wiki Type is a weapon name.
+MOD_EXCLUSIVE_WEAPON_BLOCKLIST = frozenset({"atlantis_vulcan", "mafic_rain"})
 
 
 def load_mods() -> list[dict]:
@@ -188,7 +190,10 @@ def main() -> None:
             compat[mod["id"]] = sorted(set(comp))
 
         wiki_type = (entry.get("wikiType") or "").strip()
-        if is_weapon_exclusive_type(wiki_type, entry.get("isWeaponAugment", False)):
+        if (
+            mod["id"] not in MOD_EXCLUSIVE_WEAPON_BLOCKLIST
+            and is_weapon_exclusive_type(wiki_type, entry.get("isWeaponAugment", False))
+        ):
             ids = resolve_weapon_ids(wiki_type, weapons)
             if ids:
                 exclusive[mod["id"]] = ids

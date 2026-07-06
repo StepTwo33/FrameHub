@@ -32,6 +32,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   assassin_posture: mod("assassin_posture", [
     line("damage", "weapon_dps", "multiplicative_percent", "Assassin Posture: damage \u2014 The companion will prioritize Eximus and other high-ranking enemies. +300% Overg\u2026"),
   ]),
+  argent_scourge: mod("argent_scourge", [], "wiki: Argent Scourge \u2014 Fighting form devised for Conclave."),
   atlantis_vulcan: mod("atlantis_vulcan", [], "wiki: Atlantis Vulcan \u2014 Rapid strikes, deceptive movements."),
   atomic_fallout: mod("atomic_fallout", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Atomic Fallout: magazine \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Magazine Capacity"),
@@ -300,7 +301,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Loaded Capacity: reloadSpeed \u2014 +30% Magazine Capacity, -15% Reload Speed"),
   ]),
   lock_and_load: mod("lock_and_load", [
-    line("magazine", "weapon_dps", "multiplicative_percent", "Lock And Load: magazine \u2014 +20% Magazine Reloaded/s when Holstered"),
+    line("holsterRate", "mod_panel", "multiplicative_percent", "Lock And Load: holsterRate \u2014 +20% Magazine Reloaded/s when Holstered (arsenal display only)"),
   ]),
   lohk: mod("lohk", [], "wiki: Lohk \u2014 From brooding gulfs are we beheld  By that which bears no name"),
   loose_chamber: mod("loose_chamber", [

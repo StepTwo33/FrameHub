@@ -101,6 +101,7 @@ export const PRIMARY_WEAPON_EXILUS_MOD_IDS = new Set([
   "shell_compression",
   "ammo_mutation",
   "silent_battery",
+  "sinister_reach",
   "sniper_ammo_mutation",
   "stabilizer",
   "terminal_velocity",

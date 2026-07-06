@@ -8,8 +8,9 @@ const PRIMARY_WEAPON_CATEGORIES = new Set([
   "bow",
   "launcher",
   "primary",
-  "archgun",
 ]);
+
+const ARCHGUN_WEAPON_CATEGORIES = new Set(["archgun"]);
 
 const SECONDARY_WEAPON_CATEGORIES = new Set(["pistol", "secondary", "dual_pistols"]);
 
@@ -19,6 +20,7 @@ function weaponIdToModBrowserCategory(weaponId: string): ModBrowserCategoryId | 
   const weapon = weaponsMap.get(weaponId);
   if (!weapon) return null;
   const category = weapon.category.toLowerCase();
+  if (ARCHGUN_WEAPON_CATEGORIES.has(category)) return "archgun";
   if (PRIMARY_WEAPON_CATEGORIES.has(category)) return "primary";
   if (SECONDARY_WEAPON_CATEGORIES.has(category)) return "secondary";
   if (MELEE_WEAPON_CATEGORIES.has(category)) return "melee";

@@ -1,5 +1,5 @@
 /**
- * Per-mod verified behaviors — category: archgun (38 mods).
+ * Per-mod verified behaviors — category: archgun (37 mods).
  * Generated: python scripts/generate_mod_behavior_batch.py archgun
  * Each mod has its own entry; edit lines after individual wiki review.
  */
@@ -23,7 +23,6 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Archgun Ace: reloadSpeed \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
   ]),
   archgun_riven_mod: mod("archgun_riven_mod", [], "wiki: Archgun Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
-  argent_scourge: mod("argent_scourge", [], "wiki: Argent Scourge \u2014 Fighting form devised for Conclave."),
   automatic_trigger: mod("automatic_trigger", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Automatic Trigger: fireRate \u2014 +60% Fire Rate"),
   ]),

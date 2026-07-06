@@ -64,7 +64,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Auto Omni: damage \u2014 Nautilus has 100% chance to repair nearby Railjack hull damages and extinguishes\u2026"),
   ]),
   bell_ringer: mod("bell_ringer", [
-    line("impactStatusStacks", "mod_panel", "flat", "Bell Ringer: impactStatusStacks \u2014 Melee attacks knock down enemies and apply +4 Impact Status Effects"),
+    line("impactStatusStacks", "companion_totals", "flat", "Bell Ringer: impactStatusStacks \u2014 Melee attacks knock down enemies and apply +4 Impact Status Effects"),
   ]),
   bite: mod("bite", [
     line("critChance", "mod_panel", "multiplicative_percent", "Bite: critChance \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
@@ -135,7 +135,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Crowd Dispersion: range \u2014 Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.\u2026 (arsenal display only)"),
   ]),
   detect_vulnerability: mod("detect_vulnerability", [
-    line("weakspotDamage", "mod_panel", "multiplicative_percent", "Detect Vulnerability: weakspotDamage \u2014 Reveals weakspots on codex-complete enemies; hits deal +275% Damage at max rank"),
+    line("weakspotDamage", "companion_totals", "multiplicative_percent", "Detect Vulnerability: weakspotDamage \u2014 Reveals weakspots on codex-complete enemies; hits deal +275% Damage at max rank"),
   ]),
   dig: mod("dig", [
     line("digCooldown", "mod_panel", "multiplicative_percent", "Dig: digCooldown \u2014 The kubrow sniffs out buried objects and digs them up.\\\\n+270% Success Chance"),
@@ -222,7 +222,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("shield", "warframe_totals", "multiplicative_percent", "Hastened Deflection: shield \u2014 +90% Shield Recharge, -45% Shield Recharge Delay"),
   ]),
   helminth_ferocity: mod("helminth_ferocity", [
-    line("finisherDamage", "mod_panel", "multiplicative_percent", "Helminth Ferocity: finisherDamage \u2014 +120% Finisher Damage"),
+    line("finisherDamage", "companion_totals", "multiplicative_percent", "Helminth Ferocity: finisherDamage \u2014 +120% Finisher Damage"),
   ]),
   howl: mod("howl", [
     line("duration", "mod_panel", "multiplicative_percent", "Howl: duration \u2014 The kubrow cries out with a blood-curdling howl that strikes fear into 15 enemie\u2026"),
@@ -287,7 +287,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("heat", "mod_panel", "multiplicative_percent", "Loyal Companion: heat \u2014 When your Health falls below 35%, gain 75% Damage Reduction for 10s while your C\u2026"),
   ]),
   loyal_retriever: mod("loyal_retriever", [
-    line("pickupDoubleChance", "mod_panel", "multiplicative_percent", "Loyal Retriever: pickupDoubleChance \u2014 13% chance to double Credit and Resource pickups"),
+    line("pickupDoubleChance", "companion_totals", "multiplicative_percent", "Loyal Retriever: pickupDoubleChance \u2014 13% chance to double Credit and Resource pickups"),
   ]),
   magnetic_strike: mod("magnetic_strike", [
     line("impact", "weapon_dps", "multiplicative_percent", "Magnetic Strike: impact \u2014 100% Chance to apply a <DT_MAGNETIC_COLOR>Magnetic status effect when inflicting\u2026"),
@@ -405,7 +405,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Proboscis: range \u2014 Helminth Charger whips a proboscis out at an enemy within 30m, pulling them back\u2026 (arsenal display only)"),
   ]),
   prosperous_retriever: mod("prosperous_retriever", [
-    line("creditPickupDoubleChance", "mod_panel", "multiplicative_percent", "Prosperous Retriever: creditPickupDoubleChance \u2014 18% chance to double Credit pickups"),
+    line("creditPickupDoubleChance", "companion_totals", "multiplicative_percent", "Prosperous Retriever: creditPickupDoubleChance \u2014 18% chance to double Credit pickups"),
   ]),
   protect: mod("protect", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Protect: cooldown \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
@@ -443,7 +443,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Repo Audit: range \u2014 Emits a magnetic pulse that disarms enemies within 30m. (arsenal display only)"),
   ]),
   resourceful_retriever: mod("resourceful_retriever", [
-    line("resourcePickupDoubleChance", "mod_panel", "multiplicative_percent", "Resourceful Retriever: resourcePickupDoubleChance \u2014 18% chance to double Resource pickups"),
+    line("resourcePickupDoubleChance", "companion_totals", "multiplicative_percent", "Resourceful Retriever: resourcePickupDoubleChance \u2014 18% chance to double Resource pickups"),
   ]),
   restorative_bond: mod("restorative_bond", [
     line("duration", "mod_panel", "multiplicative_percent", "Restorative Bond: duration \u2014 Health Orbs restore 60 more health and reduce Companion Recovery Time by 3s."),
@@ -502,7 +502,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Sharpened Claws: damage \u2014 A vicious attack dealing 300% damage that sunders armor by 120% and rends flesh."),
   ]),
   shelter: mod("shelter", [
-    line("reviveShieldHealth", "mod_panel", "flat", "Shelter: reviveShieldHealth \u2014 Creates a shield with 1800 Health around the player when they are reviving fallen allies."),
+    line("reviveShieldHealth", "companion_totals", "flat", "Shelter: reviveShieldHealth \u2014 Creates a shield with 1800 Health around the player when they are reviving fallen allies."),
   ]),
   shield_charger: mod("shield_charger", [
     line("duration", "mod_panel", "multiplicative_percent", "Shield Charger: duration \u2014 Increase Warframe Max Shields and Shield Regeneration by 60% for 10s."),

@@ -1,0 +1,38 @@
+import type { Mod } from "@/lib/types";
+
+/** Archwing ability augments (Elytron / Itzal / Odonata, etc.). */
+export function isArchwingAugment(
+  mod: Pick<Mod, "category" | "subCategory">,
+): boolean {
+  return mod.category === "augment" && mod.subCategory === "archwing";
+}
+
+/** Match archwing ids; tolerates odonata/odenata spelling drift in legacy data. */
+export function normalizeArchwingId(archwingId: string): string {
+  return archwingId.replace(/^odonata/i, "odenata");
+}
+
+export function archwingAugmentMatchesArchwing(
+  mod: Pick<Mod, "warframeId" | "category" | "subCategory">,
+  selectedArchwingId: string,
+): boolean {
+  if (!isArchwingAugment(mod) || !mod.warframeId) return false;
+  const candidates = new Set([
+    selectedArchwingId,
+    normalizeArchwingId(selectedArchwingId),
+  ]);
+  const mid = normalizeArchwingId(mod.warframeId);
+  return candidates.has(mid) || candidates.has(mod.warframeId);
+}
+
+/** Archwing augments only appear in the archwing builder for the selected frame. */
+export function archwingAugmentEligibleInBuilder(
+  mod: Mod,
+  builderCategory: string,
+  selectedArchwingId?: string,
+): boolean {
+  if (!isArchwingAugment(mod)) return true;
+  if (builderCategory !== "archwing") return false;
+  if (!selectedArchwingId) return false;
+  return archwingAugmentMatchesArchwing(mod, selectedArchwingId);
+}

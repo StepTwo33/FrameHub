@@ -653,8 +653,12 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("disarmChance", "mod_panel", "multiplicative_percent", "Disarming Purity: disarmChance \u2014 Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'"),
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Disarming Purity: syndicatePower \u2014 Secondary Fire mode has a 40% chance to disarm enemies., +1 'Purity'"),
   ]),
-  discharge_strike: mod("discharge_strike", [], "wiki: Discharge Strike \u2014 Soul Punch Augment: Depletes up to 25 Energy from the target."),
-  divebomb_vortex: mod("divebomb_vortex", [], "wiki: Divebomb Vortex \u2014 Dive Bomb Augment - Enemies within 12 meters of the point of impact are dragged into it."),
+  discharge_strike: mod("discharge_strike", [
+    line("energyLeech", "mod_panel", "multiplicative_percent", "Discharge Strike: energyLeech \u2014 Soul Punch Augment: Depletes up to 25 Energy from the target."),
+  ]),
+  divebomb_vortex: mod("divebomb_vortex", [
+    line("range", "mod_panel", "multiplicative_percent", "Divebomb Vortex: range \u2014 Dive Bomb Augment - Enemies within 12 meters of the point of impact are dragged into it."),
+  ]),
   divine_retribution: mod("divine_retribution", [
     line("range", "mod_panel", "multiplicative_percent", "Divine Retribution: range \u2014 Divine Spears Augment: Status Effects spread to all speared enemies. Spear explo\u2026"),
   ]),
@@ -707,7 +711,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   fatal_teleport: mod("fatal_teleport", [
     line("damage", "mod_panel", "multiplicative_percent", "Fatal Teleport: damage \u2014 Teleport Augment: Teleport will perform a Finisher on the target, dealing 200% E\u2026"),
   ]),
-  firequake: mod("firequake", [], "wiki: Firequake \u2014 Firequake augment."),
+  firequake: mod("firequake", [
+    line("knockdownChance", "mod_panel", "multiplicative_percent", "Firequake: knockdownChance \u2014 World On Fire Augment: Enemies caught in the flames have a chance to be knocked down."),
+  ]),
   flux_overdrive: mod("flux_overdrive", [
     line("duration", "mod_panel", "multiplicative_percent", "Flux Overdrive: duration \u2014 Status Chance fluctuates between +150% and +250% over 5s while the beam is fired\u2026"),
     line("heat", "mod_panel", "multiplicative_percent", "Flux Overdrive: heat \u2014 Status Chance fluctuates between +150% and +250% over 5s while the beam is fired\u2026"),
@@ -716,7 +722,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Fomorian Accelerant: projectileSpeed \u2014 Flak now bounces up to 4x and travels 60% faster."),
     line("ricochetBounces", "mod_panel", "multiplicative_percent", "Fomorian Accelerant: ricochetBounces \u2014 Flak now bounces up to 4x and travels 60% faster."),
   ]),
-  funnel_clouds: mod("funnel_clouds", [], "wiki: Funnel Clouds \u2014 Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies."),
+  funnel_clouds: mod("funnel_clouds", [
+    line("abilityProjectileCount", "mod_panel", "multiplicative_percent", "Funnel Clouds: abilityProjectileCount \u2014 Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies."),
+  ]),
   fused_crucible: mod("fused_crucible", [], "wiki: Fused Crucible \u2014 Crucible Blast Augment: Becomes a channeled ability consuming <LOWER_IS_BETTER>20 <ENERGY> Energy/s that ramps up. While active Chyrinka Pillars trigger chain reactions and their duration is frozen. Mobility is greatly reduced."),
   gastro: mod("gastro", [
     line("duration", "mod_panel", "multiplicative_percent", "Gastro: duration \u2014 Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clo\u2026"),
@@ -730,7 +738,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Guardian Armor: duration \u2014 Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHA\u2026"),
     line("health", "mod_panel", "multiplicative_percent", "Guardian Armor: health \u2014 Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHA\u2026"),
   ]),
-  hallowed_eruption: mod("hallowed_eruption", [], "wiki: Hallowed Eruption \u2014 Hallowed Ground Augment: Reactivate to deal all Remaining Damage and <DT_RADIATION_COLOR>Radiation Status.\\\\nPassive: +200% Hallowed Ground Duration."),
+  hallowed_eruption: mod("hallowed_eruption", [
+    line("abilityDuration", "mod_panel", "multiplicative_percent", "Hallowed Eruption: abilityDuration \u2014 Hallowed Ground Augment: Reactivate to deal all Remaining Damage and <DT_RADIATION_COLOR>Radiation Status.\\\\nPassive: +200% Hallowed Ground Duration."),
+  ]),
   hallowed_reckoning: mod("hallowed_reckoning", [
     line("damage", "mod_panel", "multiplicative_percent", "Hallowed Reckoning: damage \u2014 Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Hallowed Reckoning: range \u2014 Reckoning Augment: Reckoning gains +40% range. A 3m radius around each affected \u2026"),
@@ -747,8 +757,12 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   hysterical_fixation: mod("hysterical_fixation", [
     line("shield", "mod_panel", "multiplicative_percent", "Hysterical Fixation: shield \u2014 Hysteria Augment: While Hysteria is active, each kill restores 20% Maximum Shiel\u2026"),
   ]),
-  immolated_radiance: mod("immolated_radiance", [], "wiki: Immolated Radiance \u2014 Immolation Augment: Allies within Affinity range will receive 50% of Immolation's Damage Reduction."),
-  insatiable: mod("insatiable", [], "wiki: Insatiable \u2014 Ravenous Augment: Nidus has a chance for additional Mutation stacks while in the infestation. The base 60% chance increases with power strength, and multiple stacks are possible above 100%."),
+  immolated_radiance: mod("immolated_radiance", [
+    line("damageReduction", "mod_panel", "multiplicative_percent", "Immolated Radiance: damageReduction \u2014 Immolation Augment: Allies within Affinity range will receive 50% of Immolation's Damage Reduction."),
+  ]),
+  insatiable: mod("insatiable", [
+    line("mutationStackChance", "mod_panel", "multiplicative_percent", "Insatiable: mutationStackChance \u2014 Ravenous Augment: Nidus has a chance for additional Mutation stacks while in the infestation. The base 60% chance increases with power strength, and multiple stacks are possible above 100%."),
+  ]),
   intrepid_stand: mod("intrepid_stand", [
     line("overguardAlly", "mod_panel", "multiplicative_percent", "Intrepid Stand: overguardAlly \u2014 Final Stand Augment: Each javelin that damages an enemy grants 60 Overguard to S\u2026"),
     line("overguardCap", "mod_panel", "multiplicative_percent", "Intrepid Stand: overguardCap \u2014 Final Stand Augment: Each javelin that damages an enemy grants 60 Overguard to S\u2026"),
@@ -761,7 +775,10 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ironclad_flight: mod("ironclad_flight", [
     line("damageReduction", "mod_panel", "multiplicative_percent", "Ironclad Flight: damageReduction \u2014 Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne."),
   ]),
-  jet_stream: mod("jet_stream", [], "wiki: Jet Stream \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
+  jet_stream: mod("jet_stream", [
+    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Jet Stream: sprintSpeed \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
+    line("flightSpeed", "mod_panel", "multiplicative_percent", "Jet Stream: flightSpeed \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
+  ]),
   justice_blades: mod("justice_blades", [
     line("damage", "mod_panel", "multiplicative_percent", "Justice Blades: damage \u2014 +100% Melee Damage, +1 'Justice'"),
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Justice Blades: syndicatePower \u2014 +100% Melee Damage, +1 'Justice'"),
@@ -859,7 +876,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Rousing Plunder: damage \u2014 Plunder Augment: Plunder gains 50% max <DT_CORROSIVE_COLOR>Corrosive Damage and \u2026"),
   ]),
   rubble_heap: mod("rubble_heap", [], "wiki: Rubble Heap \u2014 Passive Augment: When above 1400 Rubble, Landslide costs no Energy, deals 2x Damage, and travels 2x faster."),
-  sapping_reach: mod("sapping_reach", [], "wiki: Sapping Reach \u2014 Pull Augment: Steals up to 25 Energy from the target."),
+  sapping_reach: mod("sapping_reach", [
+    line("energyLeech", "mod_panel", "multiplicative_percent", "Sapping Reach: energyLeech \u2014 Pull Augment: Steals up to 25 Energy from the target."),
+  ]),
   scattered_justice: mod("scattered_justice", [
     line("multishot", "mod_panel", "multiplicative_percent", "Scattered Justice: multishot \u2014 +200% Multishot, +1 'Justice'"),
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Scattered Justice: syndicatePower \u2014 +200% Multishot, +1 'Justice'"),
@@ -871,7 +890,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   shadow_haze: mod("shadow_haze", [
     line("critBonusPerKill", "mod_panel", "multiplicative_percent", "Shadow Haze: critBonusPerKill \u2014 Reap Augment: Increase Critical Chance by 50% on enemies inflicted with Death Ha\u2026"),
   ]),
-  shattered_storm: mod("shattered_storm", [], "wiki: Shattered Storm \u2014 Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength."),
+  shattered_storm: mod("shattered_storm", [
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "Shattered Storm: abilityStrength \u2014 Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength."),
+  ]),
   shattering_justice: mod("shattering_justice", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Shattering Justice: statusChance \u2014 +90% Status Chance, +1 'Justice'"),
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Shattering Justice: syndicatePower \u2014 +90% Status Chance, +1 'Justice'"),
@@ -952,6 +973,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Titanic Rumbler: damage \u2014 Rumblers Augment: Create a single rumbler with 300% Health and 400% Damage.\\\\nRe\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Titanic Rumbler: range \u2014 Rumblers Augment: Create a single rumbler with 300% Health and 400% Damage.\\\\nRe\u2026"),
   ]),
+  tribunal: mod("tribunal", [
+    line("allyEffectPercent", "mod_panel", "multiplicative_percent", "Tribunal: allyEffectPercent \u2014 Condemn Augment: allies trigger Penance/Thurible effects on chained enemies (40\u2013100% by rank; not affected by mods)."),
+  ]),
   toxic_blight: mod("toxic_blight", [
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Blight: syndicatePower \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
     line("toxin", "mod_panel", "multiplicative_percent", "Toxic Blight: toxin \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
@@ -974,7 +998,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("health", "mod_panel", "multiplicative_percent", "Vulcan Blitz: health \u2014 Enemies explode on death, dealing 300 <DT_EXPLOSION_COLOR>Blast Damage (+60% Ene\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Vulcan Blitz: range \u2014 Enemies explode on death, dealing 300 <DT_EXPLOSION_COLOR>Blast Damage (+60% Ene\u2026"),
   ]),
-  ward_recovery: mod("ward_recovery", [], "wiki: Ward Recovery \u2014 Warding Halo Augment: 50% of the casting cost returned based on how much protection is left."),
+  ward_recovery: mod("ward_recovery", [
+    line("abilityEfficiency", "mod_panel", "multiplicative_percent", "Ward Recovery: abilityEfficiency \u2014 Warding Halo Augment: 50% of the casting cost returned based on how much protection is left."),
+  ]),
   warding_thurible: mod("warding_thurible", [
     line("damage", "mod_panel", "multiplicative_percent", "Warding Thurible: damage \u2014 Thurible Augment: Allies in range take 50% less Damage while channeling Thurible\u2026"),
   ]),

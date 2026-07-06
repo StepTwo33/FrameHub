@@ -404,7 +404,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("fireRate", "weapon_dps", "multiplicative_percent", "Sudden Justice: fireRate \u2014 On 2 Hits within 0.2s:\\\\n+30% Fire Rate for 2s"),
   ]),
   tactical_reload_r3: mod("tactical_reload_r3", [
-    line("magazine", "weapon_dps", "multiplicative_percent", "Tactical Reload: magazine \u2014 +20% Magazine Reloaded/s when Holstered"),
+    line("holsterRate", "mod_panel", "multiplicative_percent", "Tactical Reload: holsterRate \u2014 +20% Magazine Reloaded/s when Holstered (arsenal display only)"),
   ]),
   tainted_mag: mod("tainted_mag", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Tainted Mag: magazine \u2014 +66% Magazine Capacity, -33% Reload Speed"),

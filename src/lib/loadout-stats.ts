@@ -16,6 +16,7 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calculator";
+import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/ttk";
 import type {
   CalculatedStats,
@@ -134,69 +135,6 @@ function getIncarnonStatChanges(
 }
 
 export const getIncarnonStatChangesForWeapon = getIncarnonStatChanges;
-
-function calculateCompanionBodyStats(
-  companion: Companion,
-  equippedMods: ModSlot[],
-): CompanionCalculatedStats {
-  const stats: CompanionCalculatedStats = {
-    baseHealth: companion.health,
-    baseShield: companion.shield,
-    baseArmor: companion.armor,
-    totalHealth: companion.health,
-    totalShield: companion.shield,
-    totalArmor: companion.armor,
-    healthBonus: 0,
-    shieldBonus: 0,
-    armorBonus: 0,
-    meleeDamageBonus: 0,
-    attackSpeedBonus: 0,
-    critChanceBonus: 0,
-    critDamageBonus: 0,
-    effectiveHealth: 0,
-    damageReduction: 0,
-  };
-
-  for (const em of equippedMods) {
-    const mod = modsMap.get(em.modId);
-    if (!mod) continue;
-    const multiplier = Math.min(Math.max(em.rank ?? 0, 0), mod.maxRank) + 1;
-    for (const [statName, value] of Object.entries(mod.stats)) {
-      const modValue = (value * multiplier) / 100;
-      switch (statName) {
-        case "health":
-          stats.healthBonus += modValue;
-          break;
-        case "shield":
-          stats.shieldBonus += modValue;
-          break;
-        case "armor":
-          stats.armorBonus += modValue;
-          break;
-        case "meleeDamage":
-          stats.meleeDamageBonus += modValue;
-          break;
-        case "attackSpeed":
-          stats.attackSpeedBonus += modValue;
-          break;
-        case "criticalChance":
-          stats.critChanceBonus += modValue;
-          break;
-        case "criticalDamage":
-          stats.critDamageBonus += modValue;
-          break;
-      }
-    }
-  }
-
-  stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus);
-  stats.totalShield = stats.baseShield * (1 + stats.shieldBonus);
-  stats.totalArmor = stats.baseArmor * (1 + stats.armorBonus);
-  const armor = stats.totalArmor;
-  stats.damageReduction = armor > 0 ? (armor / (armor + 300)) * 100 : 0;
-  stats.effectiveHealth = stats.totalHealth * (1 + armor / 300) + stats.totalShield;
-  return stats;
-}
 
 export type WeaponBuildPayload = {
   weaponId: string;
@@ -375,7 +313,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   if (loadout.companionBuild) {
     const c = companionsMap.get(loadout.companionBuild.companionId);
     if (c) {
-      const bodyStats = calculateCompanionBodyStats(c, loadout.companionBuild.mods || []);
+      const bodyStats = calculateCompanionBuild(c, loadout.companionBuild.mods || []);
       let weapon: LoadoutWeaponSlotStats | null = null;
       const weaponMods = loadout.companionBuild.weaponMods || [];
       if (weaponMods.length > 0) {

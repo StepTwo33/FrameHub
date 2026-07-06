@@ -167,7 +167,7 @@ export function generalModAppliesToWeaponCategory(
   return true;
 }
 
-const WEAPON_BUILDER_CATEGORIES = new Set(["primary", "secondary", "melee"]);
+const WEAPON_BUILDER_CATEGORIES = new Set(["primary", "secondary", "melee", "archgun"]);
 
 /** Category filter for weapon mod pickers (regular + typed categories). */
 export function modMatchesWeaponBuilderCategory(
@@ -238,16 +238,22 @@ export function modEligibleForWeaponSlot(
   if (!tomeModEligibleForWeaponSlot(mod, weaponId, slotType)) return false;
 
   if (slotType === "weapon_exilus_primary") {
-    return isPrimaryWeaponExilusMod(mod);
+    if (!isPrimaryWeaponExilusMod(mod)) return false;
+    if (weaponProfile && !modCompatibleWithWeaponProfile(mod.id, weaponProfile)) return false;
+    return true;
   }
   if (slotType === "weapon_exilus_secondary") {
     if (isTomeWeapon(weaponId)) {
       return isTomeCanticleMod(mod);
     }
-    return isSecondaryWeaponExilusMod(mod);
+    if (!isSecondaryWeaponExilusMod(mod)) return false;
+    if (weaponProfile && !modCompatibleWithWeaponProfile(mod.id, weaponProfile)) return false;
+    return true;
   }
   if (slotType === "weapon_exilus_melee") {
-    return isMeleeWeaponExilusMod(mod);
+    if (!isMeleeWeaponExilusMod(mod)) return false;
+    if (weaponProfile && !modCompatibleWithWeaponProfile(mod.id, weaponProfile)) return false;
+    return true;
   }
 
   if (!modMatchesExclusiveWeapon(mod.id, weaponId)) return false;

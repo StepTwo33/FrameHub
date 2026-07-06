@@ -606,7 +606,6 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Transient Fortitude: abilityDuration \u2014 +55% Ability Strength\\\\n-27.5% Ability Duration"),
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Transient Fortitude: abilityStrength \u2014 +55% Ability Strength\\\\n-27.5% Ability Duration"),
   ]),
-  tribunal: mod("tribunal", [], "wiki: Tribunal \u2014 Condemn Augment: Other players will trigger 100% of the effects of Penance and Thurible when attacking chained enemies."),
   umbra_fiber: mod("umbra_fiber", [
     line("armor", "warframe_totals", "multiplicative_percent", "Umbral Fiber: armor \u2014 +55% Armor, +11% Tau Resistance"),
     line("tauResistance", "mod_panel", "multiplicative_percent", "Umbral Fiber: tauResistance \u2014 +55% Armor, +11% Tau Resistance"),

@@ -8,6 +8,8 @@ import { allMods, modsMap } from "@/data/mods";
 import { allWeapons as allWeaponsData } from "@/data/weapons";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import { filterArchmeleeMods } from "@/lib/archmelee-mods";
+import { archgunModsForBuilder } from "@/lib/archgun-weapon-augment-mods";
+import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
@@ -181,19 +183,21 @@ export default function ArchwingBuilderPage() {
     }, 0);
   }, [weaponMods, weaponPolarities]);
 
-  // Mod categories
-  const frameModCategory = mode === "archwing" ? "archwing" : "necramech";
-
-  // Archwing mods filtered
+  // Archwing / necramech mod pools
   const filteredFrameMods = useMemo(() => {
-    return allMods.filter((m) => m.category === frameModCategory);
-  }, [frameModCategory]);
+    if (mode === "necramech") {
+      return allMods.filter((m) => m.category === "necramech");
+    }
+    return allMods.filter(
+      (m) => m.category === "archwing" || isArchwingAugment(m),
+    );
+  }, [mode]);
 
   // Archgun and arch-melee each use their own mod pools (not ground weapon mods).
   const filteredWeaponMods = useMemo(() => {
     if (!selectedWeapon) return [];
     if (selectedWeapon.category === "archgun") {
-      return allMods.filter((m) => m.category === "archgun");
+      return archgunModsForBuilder(selectedWeapon.id);
     }
     if (selectedWeapon.category === "archmelee") {
       return filterArchmeleeMods(allMods);
@@ -489,7 +493,8 @@ export default function ArchwingBuilderPage() {
         open={archwingModPickerOpen}
         onClose={() => setArchwingModPickerOpen(false)}
         mods={filteredFrameMods}
-        category="_prefiltered"
+        category="archwing"
+        archwingId={selectedArchwing?.id}
         equippedModIds={archwingMods.map((m) => m.modId)}
         onSelect={(mod, rank) => {
           setArchwingMods((prev) => {

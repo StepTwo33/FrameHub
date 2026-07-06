@@ -23,6 +23,7 @@ function isRivenMod(mod: Mod): boolean {
 import {
   warframeAugmentEligibleInBuilder,
 } from "@/lib/warframe-augment-mods";
+import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { isTomeMod } from "@/lib/mod-slot-categories";
 import { isTomeWeapon } from "@/lib/tome-weapons";
 
@@ -43,7 +44,7 @@ import {
 import { getWeaponModProfile } from "@/lib/weapon-mod-tags";
 import type { Weapon } from "@/lib/types";
 
-export type SlotType = WeaponModSlotType | "aura" | "exilus";
+export type SlotType = WeaponModSlotType | "aura" | "exilus" | "companion_precept";
 
 interface ModPickerProps {
   open: boolean;
@@ -58,13 +59,14 @@ interface ModPickerProps {
   /** When set, filters mods by beam / AoE / projectile wiki compatibility tags. */
   weapon?: Pick<Weapon, "id" | "name" | "category" | "triggerType">;
   warframeId?: string; // When set, augment mods are filtered to this warframe + universal
+  archwingId?: string; // When set, archwing augments are filtered to this archwing
   /** When provided, shows Mods / Arcanes tabs for browsing warframe arcanes. */
   arcaneCatalog?: Mod[];
   initialBrowseTab?: "mods" | "arcanes";
   equippedArcaneIds?: string[];
 }
 
-export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
+export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, archwingId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
   const [search, setSearch] = useState("");
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
@@ -136,6 +138,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         if (category === "melee") return m.category === "melee" || (m.category === "general" && !isArchmeleeMod(m));
         if (category === "archmelee") return isArchmeleeMod(m);
         if (category === "warframe") return m.category === "warframe" || m.category === "augment";
+        if (category === "archwing") return m.category === "archwing" || isArchwingAugment(m);
         if (category === "companion") return m.category === "companion";
         return m.category === category;
       });
@@ -153,6 +156,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       warframeAugmentEligibleInBuilder(m, category, warframeId),
     );
 
+    // Archwing ability augments: only in archwing builder for the selected archwing.
+    categoryMods = categoryMods.filter((m) =>
+      archwingAugmentEligibleInBuilder(m, category, archwingId),
+    );
+
     // Tome mods (canticles + invocations) only on tome weapons.
     const weaponId = weapon?.id;
     categoryMods = categoryMods.filter((m) => {
@@ -167,7 +175,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         m.name.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [mods, category, slotType, search, warframeId, weaponCategory, weaponModProfile, weapon?.id]);
+  }, [mods, category, slotType, search, warframeId, archwingId, weaponCategory, weaponModProfile, weapon?.id]);
 
   const filteredArcanes = useMemo(() => {
     if (!arcaneCatalog) return [];
@@ -236,7 +244,9 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                     ? "Select Secondary Exilus Mod"
                     : slotType === "weapon_exilus_melee"
                       ? "Select Melee Exilus Mod"
-                      : "Select Mod"}
+                      : slotType === "companion_precept"
+                        ? "Select Companion Precept"
+                        : "Select Mod"}
           </DialogTitle>
         </DialogHeader>
 

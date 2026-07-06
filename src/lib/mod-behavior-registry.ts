@@ -190,6 +190,144 @@ export type WarframeModAccumulators = {
   abilityRange: number;
 };
 
+export type CompanionModAccumulators = {
+  healthBonus: number;
+  shieldBonus: number;
+  armorBonus: number;
+  shieldRechargeBonus: number;
+  meleeDamageBonus: number;
+  attackSpeedBonus: number;
+  critChanceBonus: number;
+  critDamageBonus: number;
+  weakspotDamageBonus: number;
+  finisherDamageBonus: number;
+  damageReductionBonus: number;
+  pickupDoubleChance: number;
+  creditPickupDoubleChance: number;
+  resourcePickupDoubleChance: number;
+  impactStatusStacks: number;
+  reviveShieldHealth: number;
+  incapacitationTimerReduction: number;
+  healthRegenBonus: number;
+};
+
+const COMPANION_BODY_STAT_KEYS = new Set([
+  "health",
+  "shield",
+  "armor",
+  "meleeDamage",
+  "attackSpeed",
+  "criticalChance",
+  "criticalMultiplier",
+  "critChance",
+  "critDamage",
+  "shieldRecharge",
+]);
+
+const COMPANION_UTILITY_STAT_KEYS = new Set([
+  "weakspotDamage",
+  "finisherDamage",
+  "damageReduction",
+  "pickupDoubleChance",
+  "creditPickupDoubleChance",
+  "resourcePickupDoubleChance",
+  "impactStatusStacks",
+  "reviveShieldHealth",
+  "incapacitationTimerReduction",
+  "healthRegen",
+]);
+
+function appliesToCompanionTotals(
+  line: VerifiedItemStatLine | undefined,
+  statKey: string,
+  modCategory: string,
+): boolean {
+  if (line?.target === "companion_totals") return true;
+  if (modCategory !== "companion" && modCategory !== "augment") return false;
+  if (line?.target === "warframe_totals" && COMPANION_BODY_STAT_KEYS.has(statKey)) return true;
+  if (COMPANION_UTILITY_STAT_KEYS.has(statKey)) return true;
+  return false;
+}
+
+export function applyVerifiedModStatToCompanion(
+  stats: { modBonuses?: Record<string, number> },
+  modId: string,
+  statKey: string,
+  modValue: number,
+  acc: CompanionModAccumulators,
+  modCategory: string,
+): boolean {
+  const line = getVerifiedModStatLine(modId, statKey);
+  if (!line) return false;
+
+  if (!appliesToCompanionTotals(line, statKey, modCategory)) {
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
+  switch (statKey) {
+    case "health":
+      acc.healthBonus += modValue;
+      return true;
+    case "shield":
+      acc.shieldBonus += modValue;
+      return true;
+    case "armor":
+      acc.armorBonus += modValue;
+      return true;
+    case "shieldRecharge":
+      acc.shieldRechargeBonus += modValue;
+      return true;
+    case "meleeDamage":
+      acc.meleeDamageBonus += modValue;
+      return true;
+    case "attackSpeed":
+      acc.attackSpeedBonus += modValue;
+      return true;
+    case "criticalChance":
+    case "critChance":
+      acc.critChanceBonus += modValue;
+      return true;
+    case "criticalMultiplier":
+    case "critDamage":
+      acc.critDamageBonus += modValue;
+      return true;
+    case "weakspotDamage":
+      acc.weakspotDamageBonus += modValue;
+      return true;
+    case "finisherDamage":
+      acc.finisherDamageBonus += modValue;
+      return true;
+    case "damageReduction":
+      acc.damageReductionBonus += modValue;
+      return true;
+    case "pickupDoubleChance":
+      acc.pickupDoubleChance += modValue;
+      return true;
+    case "creditPickupDoubleChance":
+      acc.creditPickupDoubleChance += modValue;
+      return true;
+    case "resourcePickupDoubleChance":
+      acc.resourcePickupDoubleChance += modValue;
+      return true;
+    case "impactStatusStacks":
+      acc.impactStatusStacks += modValue;
+      return true;
+    case "reviveShieldHealth":
+      acc.reviveShieldHealth += modValue;
+      return true;
+    case "incapacitationTimerReduction":
+      acc.incapacitationTimerReduction += modValue;
+      return true;
+    case "healthRegen":
+      acc.healthRegenBonus += modValue;
+      return true;
+    default:
+      trackModPanel(stats, modId, statKey, modValue);
+      return true;
+  }
+}
+
 export function applyVerifiedModStatToWarframe(
   stats: { modBonuses?: Record<string, number> },
   modId: string,

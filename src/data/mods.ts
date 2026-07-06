@@ -8437,7 +8437,7 @@ export const allMods: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "magazine": 5
+      "holsterRate": 5
     },
     "description": "+20% Magazine Reloaded/s when Holstered",
     "rarity": "rare"
@@ -10135,7 +10135,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 5,
     "category": "melee",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 55
     },
@@ -10252,7 +10252,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "melee",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 20.0
     },
@@ -10409,14 +10409,13 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 5,
     "category": "augment",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 8.333333,
       "range": 2.0
     },
     "description": "While blocking, redirect 50% of damage taken by allies within 12m to yourself.",
-    "rarity": "uncommon",
-    "warframeId": "trinity"
+    "rarity": "uncommon"
   },
   {
     "id": "enduring_affliction",
@@ -12439,7 +12438,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyLeech": 6.25
+    },
     "description": "Soul Punch Augment: Depletes up to 25 Energy from the target.",
     "rarity": "rare",
     "warframeId": "nekros"
@@ -12630,7 +12631,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityProjectileCount": 2.0
+    },
     "description": "Tornado Augment: Creates 8 additional tornadoes. All tornadoes are 50% their original size and won't pick up enemies.",
     "rarity": "rare",
     "warframeId": "zephyr"
@@ -12730,7 +12733,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityDuration": 50.0
+    },
     "description": "Hallowed Ground Augment: Reactivate to deal all Remaining Damage and <DT_RADIATION_COLOR>Radiation Status.\\nPassive: +200% Hallowed Ground Duration.",
     "rarity": "rare",
     "warframeId": "oberon"
@@ -12866,7 +12871,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "damageReduction": 12.5
+    },
     "description": "Immolation Augment: Allies within Affinity range will receive 50% of Immolation's Damage Reduction.",
     "rarity": "rare",
     "warframeId": "ember"
@@ -12879,7 +12886,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "mutationStackChance": 15.0
+    },
     "description": "Ravenous Augment: Nidus has a chance for additional Mutation stacks while in the infestation. The base 60% chance increases with power strength, and multiple stacks are possible above 100%.",
     "rarity": "rare",
     "warframeId": "nidus"
@@ -12952,7 +12961,10 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "sprintSpeed": 10.0,
+      "flightSpeed": 25.0
+    },
     "description": "Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies.",
     "rarity": "rare",
     "warframeId": "zephyr"
@@ -13832,7 +13844,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "energyLeech": 6.25
+    },
     "description": "Pull Augment: Steals up to 25 Energy from the target.",
     "rarity": "rare",
     "warframeId": "mag"
@@ -13887,7 +13901,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityStrength": 25.0
+    },
     "description": "Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength.",
     "rarity": "rare",
     "warframeId": "gara"
@@ -14350,11 +14366,14 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "allyEffectPercent": 40
+    },
     "description": "Condemn Augment: Other players will trigger 100% of the effects of Penance and Thurible when attacking chained enemies.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "harrow"
   },
   {
     "id": "ulfruns_endurance",
@@ -14517,7 +14536,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "abilityEfficiency": 12.5
+    },
     "description": "Warding Halo Augment: 50% of the casting cost returned based on how much protection is left.",
     "rarity": "rare",
     "warframeId": "nezha"
@@ -16164,7 +16185,7 @@ export const allMods: Mod[] = [
     },
     "description": "Core Vent Augment: Blast damage ignites exhaust fumes for 12s. Enemies passing through the flames take 500 Heat damage at max rank.",
     "rarity": "rare",
-    "warframeId": "chroma"
+    "warframeId": "elytron"
   },
   {
     "id": "argon_plating",
@@ -16206,7 +16227,8 @@ export const allMods: Mod[] = [
       "duration": 1.25
     },
     "description": "Cosmic Crush Augment: The black hole saps the area of heat, freezing enemies in range. Enemies near the black hole are completely frozen for 5s.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "itzal"
   },
   {
     "id": "efficient_transferral",
@@ -16248,7 +16270,8 @@ export const allMods: Mod[] = [
       "range": 35.0
     },
     "description": "Energy Shell Augment: Energy Shell applies to allies within 140m.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "odenata"
   },
   {
     "id": "energy_inversion",
@@ -16286,7 +16309,9 @@ export const allMods: Mod[] = [
     "maxRank": 10,
     "category": "archwing",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "flightSpeed": 2.75
+    },
     "description": "+27.5% Flight Speed",
     "rarity": "rare"
   },
@@ -16341,7 +16366,8 @@ export const allMods: Mod[] = [
     "category": "archwing",
     "subCategory": "",
     "stats": {
-      "shield": -12.5
+      "shieldRecharge": 33.3333,
+      "shieldRechargeDelay": -16.6667
     },
     "description": "+100% Shield Recharge, -50% Shield Recharge Delay",
     "rarity": "uncommon"
@@ -16497,7 +16523,7 @@ export const allMods: Mod[] = [
     "polarity": "zenurik",
     "drain": -2,
     "maxRank": 3,
-    "category": "archgun",
+    "category": "general",
     "subCategory": "",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
@@ -17961,7 +17987,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "augment",
-    "subCategory": "archwing",
+    "subCategory": "weapon",
     "stats": {
       "projectileSpeed": 15.0,
       "ricochetBounces": 4.0
@@ -18741,7 +18767,7 @@ export const allMods: Mod[] = [
     "category": "general",
     "subCategory": "",
     "stats": {
-      "magazine": 5
+      "holsterRate": 5
     },
     "description": "+20% Magazine Reloaded/s when Holstered",
     "rarity": "rare"
@@ -22662,7 +22688,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "range": 3.0
+    },
     "description": "Dive Bomb Augment - Enemies within 12 meters of the point of impact are dragged into it.",
     "rarity": "rare",
     "warframeId": "zephyr"
@@ -22705,7 +22733,9 @@ export const allMods: Mod[] = [
     "maxRank": 3,
     "category": "augment",
     "subCategory": "",
-    "stats": {},
+    "stats": {
+      "knockdownChance": 25.0
+    },
     "description": "Firequake augment.",
     "rarity": "rare",
     "warframeId": "ember"

@@ -19,6 +19,170 @@ DAMAGE_KEYS = (
     "radiation", "viral", "corrosive", "blast", "gas", "magnetic", "tau",
 )
 
+# Innate explosions not modeled as AoE child attacks in Module:Weapons/data.
+MANUAL_RADIAL_ATTACKS: dict[str, list[dict]] = {
+    "ignis": [
+        {
+            "name": "Spherical Blast",
+            "heat": 33.0,
+            "totalDamage": 33.0,
+            "radius": 3.0,
+        },
+    ],
+    "ignis_wraith": [
+        {
+            "name": "Spherical Blast",
+            "heat": 35.0,
+            "totalDamage": 35.0,
+            "radius": 3.0,
+        },
+    ],
+    "embolist": [
+        {
+            "name": "Spherical Blast",
+            "toxin": 35.0,
+            "totalDamage": 35.0,
+            "radius": 1.0,
+        },
+    ],
+    # Alt-fire / charged profiles not flagged as AoE in Module:Weapons/data (per-shot contact radius).
+    "ballistica": [
+        {
+            "name": "Charged Shot",
+            "impact": 10.0,
+            "puncture": 80.0,
+            "slash": 10.0,
+            "totalDamage": 100.0,
+            "radius": 1.0,
+        },
+    ],
+    "ballistica_prime": [
+        {
+            "name": "Charged Shot",
+            "impact": 3.8,
+            "puncture": 41.8,
+            "slash": 30.4,
+            "totalDamage": 76.0,
+            "radius": 1.0,
+        },
+    ],
+    "rakta_ballistica": [
+        {
+            "name": "Charged Shot",
+            "impact": 15.0,
+            "puncture": 270.0,
+            "slash": 15.0,
+            "totalDamage": 300.0,
+            "radius": 1.0,
+        },
+    ],
+    "fusilai": [
+        {
+            "name": "Semi-Auto Mode",
+            "puncture": 30.8,
+            "slash": 46.2,
+            "totalDamage": 77.0,
+            "radius": 1.0,
+        },
+    ],
+    "hystrix": [
+        {
+            "name": "Poison Quill",
+            "impact": 2.16,
+            "puncture": 30.96,
+            "slash": 2.88,
+            "totalDamage": 36.0,
+            "radius": 1.0,
+        },
+    ],
+    "hystrix_prime": [
+        {
+            "name": "Poison Quill",
+            "impact": 2.76,
+            "puncture": 39.56,
+            "slash": 3.68,
+            "totalDamage": 46.0,
+            "radius": 1.0,
+        },
+    ],
+    "pandero": [
+        {
+            "name": "Alt-Fire",
+            "impact": 18.0,
+            "puncture": 18.0,
+            "slash": 36.0,
+            "totalDamage": 72.0,
+            "radius": 1.0,
+        },
+    ],
+    "pandero_prime": [
+        {
+            "name": "Alt-Fire",
+            "impact": 26.0,
+            "puncture": 26.0,
+            "slash": 52.0,
+            "totalDamage": 104.0,
+            "radius": 1.0,
+        },
+    ],
+    "tenet_diplos": [
+        {
+            "name": "Lock-on Mode",
+            "impact": 11.2,
+            "puncture": 9.0,
+            "slash": 7.8,
+            "totalDamage": 28.0,
+            "radius": 1.0,
+        },
+    ],
+}
+
+RADIAL_NAME_HINTS = (
+    "explosion",
+    "radial",
+    "blast",
+    "grenade",
+    "detonation",
+    "flak",
+    "rocket",
+    "napalm",
+    "aoe",
+    "orb",
+    "cluster",
+    "cryo",
+    "embed",
+    "air burst",
+    "cube",
+    "plasma",
+    "spear throw",
+    "glass",
+    "concentrated",
+    "initial blast",
+    "buckshot",
+    "bomblet",
+    "detonate",
+    "expiry",
+    "turret",
+)
+
+# Small blast when wiki omits Range on pure Blast attacks (e.g. Azima turret expiry).
+DEFAULT_BLAST_RADIUS = 3.0
+# Per-shot alt-fire contact display when wiki has no AoE radius.
+ALT_FIRE_CONTACT_RADIUS = 1.0
+
+
+def is_radial_attack(shot_type: str | None, attack_name: str, dmg: dict | None = None) -> bool:
+    an = attack_name.lower()
+    if shot_type == "AoE":
+        return True
+    if dmg and len(dmg) == 1 and dmg.get("blast"):
+        return True
+    if any(h in an for h in RADIAL_NAME_HINTS):
+        if "impact" in an and shot_type == "Projectile":
+            return False
+        return True
+    return False
+
 
 def slugify(name: str) -> str:
     s = name.lower()
@@ -36,76 +200,149 @@ def fetch_slot(slot: str) -> str:
     return data["parse"]["wikitext"]["*"]
 
 
+def extract_braced_block(text: str, start: int) -> str | None:
+    """Return substring for balanced `{...}` starting at `start` (must point at `{`)."""
+    if start >= len(text) or text[start] != "{":
+        return None
+    depth = 0
+    i = start
+    while i < len(text):
+        ch = text[i]
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : i + 1]
+        i += 1
+    return None
+
+
+def weapon_name_from_block(block: str, fallback: str) -> str:
+    link = re.search(r'Link\s*=\s*"([^"]+)"', block)
+    if link:
+        return link.group(1)
+    name = re.search(r'Name\s*=\s*"([^"]+)"', block)
+    if name:
+        return name.group(1)
+    return fallback
+
+
 def parse_lua_table(text: str) -> dict[str, list[dict]]:
     """Extract weapons with AoE / radial attacks from Lua module text."""
     results: dict[str, list[dict]] = {}
-    weapon_pattern = re.compile(r'\["([^"]+)"\]\s*=\s*\{', re.MULTILINE)
+    patterns = [
+        re.compile(r'^\t\["([^"]+)"\]\s*=\s*\{', re.MULTILINE),
+        re.compile(r"^\t([A-Za-z][A-Za-z0-9_]*)\s*=\s*\{", re.MULTILINE),
+    ]
 
-    for m in weapon_pattern.finditer(text):
-        name = m.group(1)
-        start = m.end() - 1
-        depth = 0
-        i = start
-        while i < len(text):
-            ch = text[i]
-            if ch == "{":
-                depth += 1
-            elif ch == "}":
-                depth -= 1
-                if depth == 0:
-                    block = text[start : i + 1]
-                    attacks = extract_aoe_attacks(block)
-                    if attacks:
-                        wid = slugify(name)
-                        results[wid] = attacks
-                    break
-            i += 1
+    for pattern in patterns:
+        for m in pattern.finditer(text):
+            fallback_name = m.group(1)
+            block = extract_braced_block(text, m.end() - 1)
+            if not block:
+                continue
+            attacks = extract_weapon_radial_attacks(block)
+            if not attacks:
+                continue
+            name = weapon_name_from_block(block, fallback_name)
+            wid = slugify(name)
+            results[wid] = attacks
     return results
 
 
-def extract_aoe_attacks(block: str) -> list[dict]:
+def extract_attacks_section(block: str) -> str:
     attacks_match = re.search(r"Attacks\s*=\s*\{", block)
     if not attacks_match:
+        return ""
+    braced = extract_braced_block(block, attacks_match.end() - 1)
+    if not braced or len(braced) < 2:
+        return ""
+    return braced[1:-1]
+
+
+def split_attack_blocks(section: str) -> list[str]:
+    blocks: list[str] = []
+    i = 0
+    while i < len(section):
+        while i < len(section) and section[i] != "{":
+            i += 1
+        if i >= len(section):
+            break
+        blk = extract_braced_block(section, i)
+        if not blk:
+            i += 1
+            continue
+        blocks.append(blk)
+        i += len(blk)
+    return blocks
+
+
+def attack_radius(ab: str, dmg: dict) -> float | None:
+    range_m = re.search(r"Range\s*=\s*([\d.]+)", ab)
+    if range_m:
+        return float(range_m.group(1))
+    end_range = re.search(r"EndRange\s*=\s*([\d.]+)", ab)
+    if end_range:
+        return float(end_range.group(1))
+    falloff_block = re.search(r"Falloff\s*=\s*\{([^}]+)\}", ab)
+    if falloff_block:
+        er = re.search(r"EndRange\s*=\s*([\d.]+)", falloff_block.group(1))
+        if er:
+            return float(er.group(1))
+    if dmg and len(dmg) == 1 and dmg.get("blast"):
+        return DEFAULT_BLAST_RADIUS
+    return None
+
+
+def attack_entry_from_block(ab: str, name: str) -> dict | None:
+    entry: dict = {"name": name}
+    dmg = parse_damage(ab)
+    if not dmg:
+        return None
+    entry.update(dmg)
+    entry["totalDamage"] = round(sum(dmg.values()), 4)
+    radius = attack_radius(ab, dmg)
+    if radius is not None:
+        entry["radius"] = radius
+    falloff = re.search(
+        r"Falloff\s*=\s*\{[^}]*Reduction\s*=\s*([\d.]+)", ab, re.DOTALL
+    )
+    if falloff:
+        entry["falloffReduction"] = float(falloff.group(1))
+    delay = re.search(r"ExplosionDelay\s*=\s*([\d.]+)", ab)
+    if delay:
+        entry["explosionDelay"] = float(delay.group(1))
+    embed = re.search(r"EmbedDelay\s*=\s*([\d.]+)", ab)
+    if embed:
+        entry["explosionDelay"] = float(embed.group(1))
+    if entry.get("totalDamage", 0) <= 0 or entry.get("radius") is None:
+        return None
+    return entry
+
+
+def extract_aoe_attacks(block: str) -> list[dict]:
+    section = extract_attacks_section(block)
+    if not section:
         return []
 
     attacks: list[dict] = []
-    # Split individual attack tables inside Attacks = { ... },
-    attack_blocks = re.findall(
-        r"\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}",
-        block[attacks_match.end() : block.find("Class", attacks_match.end())],
-    )
-    for ab in attack_blocks:
+    for ab in split_attack_blocks(section):
         shot_type = re.search(r'ShotType\s*=\s*"([^"]+)"', ab)
         attack_name = re.search(r'AttackName\s*=\s*"([^"]+)"', ab)
-        if not shot_type:
-            continue
-        st = shot_type.group(1)
+        st = shot_type.group(1) if shot_type else None
         an = attack_name.group(1) if attack_name else "Radial Attack"
-        if st != "AoE" and "Explosion" not in an and "Radial" not in an:
-            continue
-
-        entry: dict = {"name": an}
         dmg = parse_damage(ab)
-        entry.update(dmg)
-        entry["totalDamage"] = round(sum(dmg.values()), 4)
-
-        range_m = re.search(r"Range\s*=\s*([\d.]+)", ab)
-        if range_m:
-            entry["radius"] = float(range_m.group(1))
-
-        falloff = re.search(
-            r"Falloff\s*=\s*\{[^}]*Reduction\s*=\s*([\d.]+)", ab, re.DOTALL
-        )
-        if falloff:
-            entry["falloffReduction"] = float(falloff.group(1))
-
-        delay = re.search(r"ExplosionDelay\s*=\s*([\d.]+)", ab)
-        if delay:
-            entry["explosionDelay"] = float(delay.group(1))
-
-        if entry.get("totalDamage", 0) > 0 and entry.get("radius"):
+        if not is_radial_attack(st, an, dmg):
+            continue
+        entry = attack_entry_from_block(ab, an)
+        if entry:
             attacks.append(entry)
     return attacks
+
+
+def extract_weapon_radial_attacks(block: str) -> list[dict]:
+    return extract_aoe_attacks(block)
 
 
 def parse_damage(block: str) -> dict[str, float]:
@@ -131,6 +368,7 @@ def to_ts(data: dict[str, list[dict]]) -> str:
         " * Radial / AoE attack profiles sourced from https://wiki.warframe.com Module:Weapons/data.",
         " * Merged onto weapons in use-data.ts and loadout-stats.ts.",
         " * Regenerate: python scripts/generate_radial_attacks.py",
+        " * Manual overrides: MANUAL_RADIAL_ATTACKS in generate_radial_attacks.py",
         " */",
         "",
         "import type { WeaponRadialAttack } from \"@/lib/types\";",
@@ -157,6 +395,12 @@ def main() -> None:
                 merged[wid] = attacks
             else:
                 unmatched.append(wid)
+
+    for wid, attacks in MANUAL_RADIAL_ATTACKS.items():
+        if wid not in known_ids:
+            continue
+        if wid not in merged:
+            merged[wid] = attacks
 
     OUT.write_text(to_ts(merged), encoding="utf-8")
     print(f"Wrote {len(merged)} weapons with radial attacks to {OUT}")

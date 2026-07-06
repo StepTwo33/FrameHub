@@ -1,5 +1,6 @@
 import { modsMap } from "@/data/mods";
 import { warframesMap } from "@/data/warframes";
+import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
 import type { Mod } from "@/lib/types";
 
@@ -15,6 +16,7 @@ export function isWarframeAugment(
   mod: Pick<Mod, "category" | "subCategory" | "warframeId" | "id">,
 ): boolean {
   if (mod.category !== "augment") return false;
+  if (isArchwingAugment(mod)) return false;
   if (mod.subCategory === "weapon") return false;
   if (isWeaponExclusiveMod(mod.id)) return false;
   return Boolean(mod.warframeId);
