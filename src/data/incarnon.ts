@@ -41,9 +41,9 @@ function getRangedEvolutions(): IncarnonEvolution[] {
   return [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
     // Tier 2: Damage bonuses
-    { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: { damage: 1.0 } },
-    { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when only this weapon type is equipped.", statChanges: { damage: 0.6 } },
-    { tier: 2, slot: 2, name: "Rapid Wrath", description: "On kill: +20% Fire Rate for 4s.", statChanges: { fireRate: 0.2 } },
+    { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when only this weapon type is equipped.", statChanges: {} },
+    { tier: 2, slot: 2, name: "Rapid Wrath", description: "On kill: +20% Fire Rate for 4s.", statChanges: {} },
     // Tier 3: Utility/damage
     { tier: 3, slot: 0, name: "Elemental Excess", description: "+20% Elemental Damage per unique status type affecting the target.", statChanges: {} },
     { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Transmutation Buildup.", statChanges: {} },
@@ -51,7 +51,7 @@ function getRangedEvolutions(): IncarnonEvolution[] {
     // Tier 4: Offensive utility
     { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
     { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-    { tier: 4, slot: 2, name: "Hound's Flare", description: "On kill: +30% Critical Chance for 12s.", statChanges: { criticalChance: 0.3 } },
+    { tier: 4, slot: 2, name: "Hound's Flare", description: "On kill: +30% Critical Chance for 12s.", statChanges: {} },
     // Tier 5: Major tradeoffs
     { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
     { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },
@@ -83,7 +83,7 @@ function getMeleeEvolutions(): IncarnonEvolution[] {
 
 // Update 43 genesis weapons use weapon-specific evolution perks (wiki-verified).
 const WEAPON_SPECIFIC_EVOLUTION_IDS = new Set([
-  "felarx", "innodem", "laetum", "phenmor", "praedos", "onos", "ruvox", "thalys",
+  "felarx", "laetum",
   "vectis_incarnon", "stug_incarnon", "ballistica_incarnon", "destreza_incarnon", "obex_incarnon",
 ]);
 
@@ -91,11 +91,11 @@ function getVectisIncarnonEvolutions(): IncarnonEvolution[] {
   return [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire while unscoped to transform.", statChanges: {} },
     { tier: 2, slot: 0, name: "Inciting Incident", description: "On Headshot: +100% Ammo Efficiency for 4s.", statChanges: {} },
-    { tier: 2, slot: 1, name: "Lone Enforcer", description: "+75 Base Damage (+150 Vectis Prime) and +25% Multishot when no enemies are within range.", statChanges: { damage: 0.75, multishot: 0.25 } },
-    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {} },
+    { tier: 2, slot: 1, name: "Lone Enforcer", description: "+75 Base Damage (+150 Vectis Prime) and +25% Multishot when no enemies are within range.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: { reloadSpeed: 0.6 } },
     { tier: 3, slot: 1, name: "Marksman's Hand", description: "+60% Zoom while Aiming.", statChanges: {} },
     { tier: 3, slot: 2, name: "Silent Running", description: "100% Noise Reduction.", statChanges: {} },
-    { tier: 4, slot: 0, name: "Deadhead", description: "On Headshot Kill: +100% Damage for 8s.", statChanges: { damage: 1.0 } },
+    { tier: 4, slot: 0, name: "Deadhead", description: "On Headshot Kill: +100% Damage for 8s.", statChanges: {} },
     { tier: 4, slot: 1, name: "Critical Parallel", description: "+Critical Chance and +0.5x Critical Damage.", statChanges: { criticalChance: 0.2, criticalMultiplier: 0.5 } },
     { tier: 4, slot: 2, name: "Survivor's Edge", description: "+30% of Critical Chance as Status Chance, up to +40%.", statChanges: {} },
     { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
@@ -107,9 +107,9 @@ function getVectisIncarnonEvolutions(): IncarnonEvolution[] {
 function getStugIncarnonEvolutions(): IncarnonEvolution[] {
   return [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct hits charge Incarnon Transmutation. Alt-fire to unleash bouncing corrosive blobs.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Blazing Barrel", description: "+175 Base Damage. On hit: +5% Multishot for 3s, stacks up to 10x (resets on reload).", statChanges: { damage: 1.75, multishot: 0.05 } },
-    { tier: 2, slot: 1, name: "Overcharge Blast", description: "+300 Base Damage. Blast radius scales with max Warframe Energy above 700.", statChanges: { damage: 3.0 } },
-    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {} },
+    { tier: 2, slot: 0, name: "Blazing Barrel", description: "+175 Base Damage. On hit: +5% Multishot for 3s, stacks up to 10x (resets on reload).", statChanges: {} },
+    { tier: 2, slot: 1, name: "Overcharge Blast", description: "+300 Base Damage. Blast radius scales with max Warframe Energy above 700.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: { reloadSpeed: 0.5 } },
     { tier: 3, slot: 1, name: "Swift Deliverance", description: "+80% Projectile Speed.", statChanges: {} },
     { tier: 3, slot: 2, name: "Resonant Restore", description: "+10 Magazine Capacity. Reloading from empty grants +10 Magazine, stacks up to 3x.", statChanges: {} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "+15% Critical Chance and +15% Status Chance in both forms.", statChanges: { criticalChance: 0.15, statusChance: 0.15 } },
@@ -126,7 +126,7 @@ function getBallisticaIncarnonEvolutions(): IncarnonEvolution[] {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire for cross-shaped Slash projectiles.", statChanges: {} },
     { tier: 2, slot: 0, name: "Headcracker", description: "On Punch Through Hit: +7.5% Critical Chance for 3s. Stacks up to 10x.", statChanges: {} },
     { tier: 2, slot: 1, name: "Prolific Perforation", description: "On Punch Through Hit: +10% Critical Chance for 3s. Stacks up to 8x.", statChanges: {} },
-    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: { reloadSpeed: 0.5 } },
     { tier: 3, slot: 1, name: "Swift Deliverance", description: "+80% Projectile Speed.", statChanges: {} },
     { tier: 3, slot: 2, name: "Void's Guidance", description: "+40% Accuracy, -40% Recoil.", statChanges: {} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status per projectile and in Incarnon Form.", statChanges: {} },
@@ -148,7 +148,7 @@ function getDestrezaIncarnonEvolutions(): IncarnonEvolution[] {
     { tier: 3, slot: 1, name: "Adept Reflexes", description: "+20 Initial Combo.", statChanges: {} },
     { tier: 3, slot: 2, name: "Swift Transformation", description: "+50% Incarnon Transmutation Buildup.", statChanges: {} },
     { tier: 4, slot: 0, name: "Absolute Dominion", description: "+Status Chance.", statChanges: { statusChance: 0.25 } },
-    { tier: 4, slot: 1, name: "Critical Forte", description: "+Critical Damage in Incarnon Form.", statChanges: { criticalMultiplier: 0.35 } },
+    { tier: 4, slot: 1, name: "Critical Forte", description: "+Critical Damage in Incarnon Form.", statChanges: {} },
     { tier: 4, slot: 2, name: "Decisive Stature", description: "+25% Attack Speed, +35% Heavy Attack Speed.", statChanges: { fireRate: 0.25 } },
     { tier: 5, slot: 0, name: "Devouring Attrition", description: "-30% Critical Chance, but Critical Hits deal +250% Damage.", statChanges: { criticalChance: -0.3, criticalMultiplier: 2.5 } },
     { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to highest Elemental type.", statChanges: {} },

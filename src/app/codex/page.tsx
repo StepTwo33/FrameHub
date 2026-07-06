@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useMemo, useState, type ReactNode } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
@@ -126,11 +126,16 @@ function CodexPageContent() {
   const archwings = useArchwings();
   const necramechs = useNecramechs();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
   const [polarityFilter, setPolarityFilter] = useState<(typeof POLARITIES)[number]>("All");
   const [rarityFilter, setRarityFilter] = useState<(typeof RARITIES)[number]>("All");
   const [arcaneTrigger, setArcaneTrigger] = useState<string>("all");
   const [previewRank, setPreviewRank] = useState<number | null>(null);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null) setSearchQuery(q);
+  }, [searchParams]);
 
   const setParams = useCallback(
     (updates: Record<string, string | null>) => {

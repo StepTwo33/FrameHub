@@ -98,6 +98,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   expel_the_murmur: mod("expel_the_murmur", [
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Expel The Murmur: factionMurmur \u2014 x1.3 Damage to Murmur"),
   ]),
+  eximus_advantage: mod("eximus_advantage", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Eximus Advantage: damage \u2014 Headshots on Eximus enemies increase Secondary Damage by +600% for 10 secs."),
+  ]),
   fass_canticle: mod("fass_canticle", [
     line("duration", "mod_panel", "multiplicative_percent", "Fass Canticle: duration \u2014 Killing enemies grants Allies in Affinity Range 40% Shield Recharge Rate and <LO\u2026"),
     line("shield", "warframe_totals", "multiplicative_percent", "Fass Canticle: shield \u2014 Killing enemies grants Allies in Affinity Range 40% Shield Recharge Rate and <LO\u2026"),
@@ -267,6 +270,10 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   quickdraw_r3: mod("quickdraw_r3", [
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Quickdraw: reloadSpeed \u2014 +48% Reload Speed"),
   ]),
+  range_advantage: mod("range_advantage", [
+    line("damage", "weapon_dps", "multiplicative_percent", "Range Advantage: damage \u2014 +300% damage if no enemies are within 10m."),
+    line("range", "mod_panel", "multiplicative_percent", "Range Advantage: range \u2014 +300% damage if no enemies are within 10m. (arsenal display only)"),
+  ]),
   razor_munitions: mod("razor_munitions", [
     line("damage", "weapon_dps", "multiplicative_percent", "Razor Munitions: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
   ]),
@@ -368,6 +375,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   trick_mag_r3: mod("trick_mag_r3", [
     line("ammoMaximum", "mod_panel", "multiplicative_percent", "Trick Mag: ammoMaximum \u2014 +90% Ammo Maximum"),
+  ]),
+  vile_discharge: mod("vile_discharge", [
+    line("storedDamage", "mod_panel", "multiplicative_percent", "Vile Discharge: storedDamage \u2014 Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac\u2026"),
   ]),
   vome_invocation: mod("vome_invocation", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Vome Invocation: abilityStrength \u2014 Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stac\u2026"),

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit secondary weapon-exclusive augments: behaviors, stats, wiki sync, metadata."""
+"""Audit primary weapon-exclusive augments: behaviors, stats, wiki sync, metadata."""
 from __future__ import annotations
 
 import importlib.util
@@ -15,7 +15,7 @@ TAGS_TS = ROOT / "src/data/mod-weapon-tags.ts"
 WEAPONS_TS = ROOT / "src/data/weapons.ts"
 BEHAVIOR_DIR = ROOT / "src/data/mod-behaviors"
 
-SECONDARY_CATEGORIES = {"secondary", "pistol", "dual_pistols"}
+PRIMARY_CATEGORIES = {"primary", "rifle", "shotgun", "bow", "launcher"}
 
 MOD_ALIASES: dict[str, str] = {}
 
@@ -130,9 +130,9 @@ def resolve_weapon_ids(wiki_type: str, weapons: list[dict]) -> list[str]:
 
 def mod_slot_for_weapon_category(category: str) -> str | None:
     cat = category.lower()
-    if cat in {"rifle", "shotgun", "bow", "launcher", "primary"}:
+    if cat in PRIMARY_CATEGORIES:
         return "primary"
-    if cat in SECONDARY_CATEGORIES:
+    if cat in {"pistol", "secondary", "dual_pistols"}:
         return "secondary"
     if cat in {"melee", "archmelee", "zaw_strike"}:
         return "melee"
@@ -178,39 +178,36 @@ def weapon_ids_for_augment(
     return []
 
 
-def is_secondary_exclusive_mod(
-    mod_id: str,
-    exclusive: dict[str, list[str]],
-    secondary_ids: set[str],
-) -> bool:
+def is_primary_exclusive_mod(mod_id: str, exclusive: dict[str, list[str]], primary_ids: set[str]) -> bool:
     wids = exclusive.get(mod_id, [])
-    return any(w in secondary_ids for w in wids)
+    return any(w in primary_ids for w in wids)
 
 
-def is_secondary_weapon_augment(
+def is_primary_weapon_augment(
     m: dict,
     exclusive: dict[str, list[str]],
     wiki: dict,
     weapons: list[dict],
     weapon_cat: dict[str, str],
+    primary_ids: set[str],
 ) -> bool:
-    """Wiki/classified weapon augments for secondary weapons."""
+    """Wiki/classified weapon augments for primary weapons."""
     if not is_weapon_augment(m, exclusive, wiki):
         return False
     wids = weapon_ids_for_augment(m, exclusive, wiki, weapons)
     if wids:
         cats = {weapon_cat.get(wid) for wid in wids}
         cats.discard(None)
-        if cats and cats <= SECONDARY_CATEGORIES:
+        if cats and cats <= PRIMARY_CATEGORIES:
             return True
-        if cats and not cats <= SECONDARY_CATEGORIES:
+        if cats and not cats <= PRIMARY_CATEGORIES:
             return False
-    if m.get("subCategory") == "weapon" and m["category"] in SECONDARY_CATEGORIES:
+    if m.get("subCategory") == "weapon" and m["category"] in PRIMARY_CATEGORIES:
         return True
     entry = wiki_entry(wiki, m)
     if entry:
         wt = (entry.get("wikiType") or "").strip().lower()
-        if wt in {"pistol", "secondary"}:
+        if wt in {"rifle", "shotgun", "bow", "launcher", "primary"}:
             return True
     return False
 
@@ -219,9 +216,9 @@ def main() -> int:
     mods = load_mods()
     weapons = load_weapons()
     weapon_cat = {w["id"]: w["category"] for w in weapons}
-    secondary_ids = {
+    primary_ids = {
         w["id"] for w in weapons
-        if w.get("category") in SECONDARY_CATEGORIES and not w.get("isExalted")
+        if w.get("category") in PRIMARY_CATEGORIES and not w.get("isExalted")
     }
     exclusive = load_exclusive()
     behaviors = load_behaviors()
@@ -229,41 +226,41 @@ def main() -> int:
 
     pool = [
         m for m in mods
-        if is_secondary_exclusive_mod(m["id"], exclusive, secondary_ids)
+        if is_primary_exclusive_mod(m["id"], exclusive, primary_ids)
     ]
     wiki_aug_pool = [
         m for m in mods
-        if is_secondary_weapon_augment(m, exclusive, wiki, weapons, weapon_cat)
+        if is_primary_weapon_augment(m, exclusive, wiki, weapons, weapon_cat, primary_ids)
     ]
 
-    print("=== Secondary weapon-exclusive augment audit ===\n")
-    print(f"Secondary weapons in catalog: {len(secondary_ids)}")
-    print(f"Exclusive secondary mod pool: {len(pool)}")
+    print("=== Primary weapon-exclusive augment audit ===\n")
+    print(f"Primary weapons in catalog: {len(primary_ids)}")
+    print(f"Exclusive primary mod pool: {len(pool)}")
     print(f"Wiki/classified weapon augments (subset): {len(wiki_aug_pool)}")
     if pool:
         print(f"By category: {dict(Counter(m['category'] for m in pool))}")
         print(f"subCategory weapon: {sum(1 for m in pool if m.get('subCategory') == 'weapon')}")
 
-    wiki_secondary_augments = 0
+    wiki_primary_augments = 0
     for m in mods:
         entry = wiki_entry(wiki, m)
         if not entry or not entry.get("isWeaponAugment"):
             continue
         wtype = (entry.get("wikiType") or "").strip()
         wids = resolve_weapon_ids(wtype, weapons) if wtype else []
-        if wids and all(weapon_cat.get(w) in SECONDARY_CATEGORIES for w in wids):
-            wiki_secondary_augments += 1
-    print(f"Wiki IsWeaponAugment entries for secondary weapons: {wiki_secondary_augments}")
+        if wids and all(weapon_cat.get(w) in PRIMARY_CATEGORIES for w in wids):
+            wiki_primary_augments += 1
+    print(f"Wiki IsWeaponAugment entries for primary weapons: {wiki_primary_augments}")
 
     exclusive_touching = [
         (mod_id, wids)
         for mod_id, wids in exclusive.items()
-        if any(w in secondary_ids for w in wids)
+        if any(w in primary_ids for w in wids)
     ]
-    print(f"MOD_EXCLUSIVE_WEAPON_IDS entries for secondaries: {len(exclusive_touching)}")
+    print(f"MOD_EXCLUSIVE_WEAPON_IDS entries for primaries: {len(exclusive_touching)}")
     for mod_id, wids in sorted(exclusive_touching):
-        secondary_wids = [w for w in wids if w in secondary_ids]
-        print(f"  {mod_id}: {secondary_wids}")
+        primary_wids = [w for w in wids if w in primary_ids]
+        print(f"  {mod_id}: {primary_wids}")
 
     missing_behavior = [m for m in pool if m["id"] not in behaviors]
     print(f"\nBehavior coverage: {len(pool) - len(missing_behavior)}/{len(pool)}")
@@ -301,18 +298,18 @@ def main() -> int:
         if mod_id not in {m["id"] for m in pool}:
             continue
         for wid in wids:
-            if wid not in secondary_ids:
+            if wid not in primary_ids:
                 continue
             slot = mod_slot_for_weapon_category(weapon_cat.get(wid, ""))
-            if slot != "secondary":
+            if slot != "primary":
                 wrong_slot.append(f"{mod_id} -> {wid} ({weapon_cat.get(wid, '?')})")
 
     not_in_exclusive = [
-        m for m in wiki_aug_pool
-        if m["id"] not in exclusive
+        m for m in pool
+        if m["id"] not in exclusive and m.get("subCategory") == "weapon"
     ]
     if not_in_exclusive:
-        print(f"\nWiki weapon augments not in MOD_EXCLUSIVE_WEAPON_IDS ({len(not_in_exclusive)}):")
+        print(f"\nWeapon-tagged augments not in MOD_EXCLUSIVE_WEAPON_IDS ({len(not_in_exclusive)}):")
         for m in sorted(not_in_exclusive, key=lambda x: x["name"]):
             wids = weapon_ids_for_augment(m, exclusive, wiki, weapons)
             print(f"  {m['id']}: weapons={wids}")
@@ -323,10 +320,10 @@ def main() -> int:
             metadata_issues.append(f"{m['id']}: has warframeId={m['warframeId']!r}")
         if m["id"] in exclusive and m.get("subCategory") != "weapon":
             metadata_issues.append(
-                f"{m['id']}: exclusive secondary mod should have subCategory weapon (has {m.get('subCategory')!r})"
+                f"{m['id']}: exclusive primary mod should have subCategory weapon (has {m.get('subCategory')!r})"
             )
 
-    print(f"\nExclusive entries bound to non-secondary weapons: {len(wrong_slot)}")
+    print(f"\nExclusive entries bound to non-primary weapons: {len(wrong_slot)}")
     for line in sorted(wrong_slot):
         print(f"  {line}")
 

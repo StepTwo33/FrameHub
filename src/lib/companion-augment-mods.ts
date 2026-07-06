@@ -7,14 +7,15 @@ export const COMPANION_AFFECTING_WARFRAME_AUGMENT_IDS = new Set([
   "repair_dispensary",
 ]);
 
-/** In-game companions have four penjaga-polarity precept slots (top row). */
-export const COMPANION_PRECEPT_SLOT_COUNT = 4;
+/** All companions have ten mod slots (in-game: two rows of five). */
+export const COMPANION_MOD_SLOT_COUNT = 10;
 
-export function isCompanionPreceptSlot(slotIndex: number): boolean {
-  return slotIndex >= 0 && slotIndex < COMPANION_PRECEPT_SLOT_COUNT;
-}
+/** At most four penjaga precepts may be equipped at once (any slots). */
+export const COMPANION_MAX_PRECEPTS = 4;
 
-/** Penjaga-polarity companion precepts (companion ability mods). */
+/** @deprecated Use COMPANION_MAX_PRECEPTS — not a fixed slot range. */
+export const COMPANION_PRECEPT_SLOT_COUNT = COMPANION_MAX_PRECEPTS;
+
 export function isCompanionPrecept(
   mod: Pick<Mod, "category" | "polarity">,
 ): boolean {

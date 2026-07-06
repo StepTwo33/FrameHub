@@ -6334,7 +6334,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "zoom": -12.5
     },
@@ -6460,7 +6460,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 15
     },
@@ -6474,7 +6474,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "viral": 25,
       "statusChance": 25.0,
@@ -6490,7 +6490,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "ammoEfficiency": 25,
       "duration": 0.125
@@ -6576,7 +6576,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "duration": 0.5,
       "reloadSpeed": 20.0
@@ -6647,7 +6647,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 1.666667,
       "critBonusPerKill": 1.666667
@@ -6706,7 +6706,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "accuracy": 25
     },
@@ -6735,7 +6735,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 5.0,
       "duration": 0.5
@@ -6750,7 +6750,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "health": 3.333333
     },
@@ -6807,8 +6807,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "secondary",
+    "subCategory": "weapon",
     "stats": {
       "damage": 100.0
     },
@@ -6866,7 +6866,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 25,
       "duration": 0.05
@@ -6911,7 +6911,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "projectileSpeed": 20
     },
@@ -6940,7 +6940,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": 7.5,
       "duration": 0.75
@@ -6955,7 +6955,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "accuracy": 15
     },
@@ -7014,7 +7014,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "critBonusPerKill": 0.2
     },
@@ -7028,7 +7028,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 75
     },
@@ -7176,7 +7176,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": -15,
       "damage": 7.5
@@ -7205,7 +7205,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "magazine": 15,
       "ammoMaximum": 15,
@@ -7265,7 +7265,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "health": 3.333333
     },
@@ -7367,7 +7367,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 0,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "accuracy": 100,
       "projectileSpeed": 50
@@ -7382,7 +7382,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "duration": 1.25
     },
@@ -7625,8 +7625,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "secondary",
+    "subCategory": "weapon",
     "stats": {
       "damage": 50,
       "range": 1.666667
@@ -7757,7 +7757,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 50.0,
       "criticalMultiplier": 50.0
@@ -7901,7 +7901,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 15.0
     },
@@ -7958,7 +7958,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "fireRate": 7.5,
       "duration": 0.5
@@ -8059,7 +8059,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "magazine": -15
     },
@@ -8073,7 +8073,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 10,
       "duration": 0.05
@@ -8103,7 +8103,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalMultiplier": 29.166667,
       "duration": 0.833333
@@ -8133,8 +8133,8 @@ export const allMods: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 5,
-    "category": "primary",
-    "subCategory": "",
+    "category": "secondary",
+    "subCategory": "weapon",
     "stats": {
       "storedDamage": 5000.0
     },
@@ -8163,7 +8163,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "primary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "punchThrough": 0.5,
       "statusChance": 8.3333,
@@ -8608,7 +8608,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 5.0,
       "criticalMultiplier": 5.0
@@ -8623,7 +8623,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "viral": 40
     },
@@ -8637,7 +8637,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 100.0
     },
@@ -8651,7 +8651,7 @@ export const allMods: Mod[] = [
     "drain": 4,
     "maxRank": 3,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "statusChance": 50,
       "range": 2.0
@@ -8666,7 +8666,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "magazine": -15,
       "ammoMaximum": -15,
@@ -8961,7 +8961,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "gas": 50,
       "statusChance": 50.0,
@@ -9121,7 +9121,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "damage": 10.0,
       "duration": 0.833333
@@ -9467,7 +9467,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "criticalChance": 3.333333
     },
@@ -9511,7 +9511,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 0,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "multishot": 200,
       "damage": -66
@@ -9526,7 +9526,7 @@ export const allMods: Mod[] = [
     "drain": 10,
     "maxRank": 3,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "ammoEfficiency": 25,
       "duration": 0.5
@@ -9569,7 +9569,7 @@ export const allMods: Mod[] = [
     "drain": 6,
     "maxRank": 3,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "projectileSpeed": 12.5,
       "blastRange": -12.5,
@@ -9763,7 +9763,7 @@ export const allMods: Mod[] = [
     "drain": 2,
     "maxRank": 5,
     "category": "secondary",
-    "subCategory": "",
+    "subCategory": "weapon",
     "stats": {
       "ammoEfficiency": 12.5
     },
@@ -22452,8 +22452,7 @@ export const allMods: Mod[] = [
     "maxRank": 5,
     "category": "tektolyst",
     "stats": {
-      "ampMultishot": 10,
-      "multishot": 10.0
+      "ampMultishot": 10
     },
     "description": "+60% Amp Multishot",
     "rarity": "common"
@@ -22467,7 +22466,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampBonusDamage": 0.5,
-      "cooldown": 0.833333
+      "cooldown": 5
     },
     "description": "After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)",
     "rarity": "common"
@@ -22548,8 +22547,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampCriticalChance": 10,
-      "criticalChance": 10.0,
-      "criticalMultiplier": 1.666667
+      "ampCritDamage": 10
     },
     "description": "+60% Amp Critical Chance\\n+10% Amp Critical Damage for each Zenurik School Mod",
     "rarity": "uncommon"
@@ -22576,8 +22574,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampStatusChance": 10,
-      "statusChance": 10.0,
-      "damage": 2.5
+      "ampStatusDamage": 15
     },
     "description": "+60% Amp Status Chance\\n+15% Status Damage for each Vazarin School Mod",
     "rarity": "uncommon"
@@ -22605,7 +22602,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampDamage": 10,
-      "damage": 10.0
+      "ampSchoolDamage": 10
     },
     "description": "+60% Damage to Amps\\n+10% bonus for each Mod from a unique School",
     "rarity": "rare"
@@ -22632,7 +22629,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampEnergy": 5,
-      "energy": 0.833333
+      "ampEnergyRegen": 5
     },
     "description": "+30% Maximum Amp Energy\\n+5% Amp Energy Regen Rate for each Madurai School Mod",
     "rarity": "uncommon"
@@ -22646,8 +22643,7 @@ export const allMods: Mod[] = [
     "category": "tektolyst",
     "stats": {
       "ampFireRate": 5,
-      "ampAmmoEfficiency": 5,
-      "fireRate": 5.0
+      "ampAmmoEfficiency": 5
     },
     "description": "+30% Amp Fire Rate. +30% Amp Ammo Efficiency",
     "rarity": "common"

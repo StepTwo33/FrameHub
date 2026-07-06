@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users, Heart } from "lucide-react";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users, Heart, Search } from "lucide-react";
+import { useEffect, useState, useRef, useCallback, type FormEvent } from "react";
 import { ThemePicker } from "@/components/theme-picker";
 import { AvatarImage } from "@/components/game-asset-image";
+import { Input } from "@/components/ui/input";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
 
 interface SessionUser {
@@ -116,6 +118,34 @@ function AdminOpenReportsBadge({ count }: { count: number }) {
   );
 }
 
+function HeaderCodexSearch({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+
+  const submit = (e?: FormEvent) => {
+    e?.preventDefault();
+    const q = query.trim();
+    router.push(q ? `/codex?q=${encodeURIComponent(q)}` : "/codex");
+    onNavigate?.();
+  };
+
+  return (
+    <form onSubmit={submit} className={className}>
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search codex..."
+          aria-label="Search codex"
+          className="h-9 border-border/60 bg-background/40 pl-9 pr-3 text-sm backdrop-blur-sm"
+        />
+      </div>
+    </form>
+  );
+}
+
 export function Header() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -177,14 +207,14 @@ export function Header() {
   return (
     <header className="page-ambient-ignore sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-black/10 backdrop-blur-xl transition-colors duration-300">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight shrink-0">
+      <div className="flex h-14 w-full items-center gap-2 px-4 sm:px-5 lg:gap-3 lg:px-6">
+        <Link href="/" className="shrink-0 text-xl font-bold tracking-tight">
           <span className="text-primary">Frame</span>
           <span className="text-muted-foreground">Hub</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1">
+        {/* Desktop nav — sits left of center search */}
+        <nav className="hidden lg:flex items-center gap-1 shrink-0">
           <Link
             href="/discover"
             className="flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium text-primary hover:text-primary/90 transition-colors rounded-lg hover:bg-primary/10"
@@ -196,57 +226,66 @@ export function Header() {
           {NAV_GROUPS.map((group) => (
             <NavDropdown key={group.label} group={group} />
           ))}
+        </nav>
 
-          <span className="w-px h-5 bg-border mx-2" />
+        {/* Center search — grows on wide screens */}
+        <HeaderCodexSearch className="hidden md:block min-w-0 flex-1 max-w-md lg:max-w-lg mx-auto" />
 
-          <Link
-            href="/support"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-rose-400 hover:text-rose-300 transition-colors rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15"
-          >
-            <Heart className="h-3.5 w-3.5" />
-            Support
-          </Link>
+        {/* Right cluster — pinned to the right edge */}
+        <div className="ml-auto flex items-center gap-1 shrink-0">
+          <nav className="hidden lg:flex items-center gap-1">
+            <span className="w-px h-5 bg-border mx-1" />
 
-          <Link
-            href="/report-issue"
-            className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-amber-400/70 hover:text-amber-400 transition-colors rounded-lg hover:bg-amber-500/5"
-          >
-            <Flag className="h-3.5 w-3.5" />
-            Report
-          </Link>
-
-          {isAdmin && (
             <Link
-              href="/admin/reports"
-              className="relative flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-400/70 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/5"
+              href="/support"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-rose-400 hover:text-rose-300 transition-colors rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15"
             >
-              <Shield className="h-3.5 w-3.5" />
-              Admin
-              <AdminOpenReportsBadge count={openReportCount} />
+              <Heart className="h-3.5 w-3.5" />
+              Support
             </Link>
-          )}
 
-          <a
-            href={FRAME_HUB_GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
-            title="Open source on GitHub"
-          >
-            <Github className="h-4 w-4" />
-          </a>
+            <Link
+              href="/report-issue"
+              className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-amber-400/70 hover:text-amber-400 transition-colors rounded-lg hover:bg-amber-500/5"
+            >
+              <Flag className="h-3.5 w-3.5" />
+              Report
+            </Link>
 
-          <a
-            href="https://discord.gg/bqQXaYdTjS"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 text-muted-foreground hover:text-[#5865F2] transition-colors rounded-lg hover:bg-secondary/50"
-            title="Join Discord"
-          >
-            {DISCORD_SVG}
-          </a>
+            {isAdmin && (
+              <Link
+                href="/admin/reports"
+                className="relative flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-400/70 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/5"
+              >
+                <Shield className="h-3.5 w-3.5" />
+                Admin
+                <AdminOpenReportsBadge count={openReportCount} />
+              </Link>
+            )}
 
-          <span className="w-px h-5 bg-border mx-1" />
+            <a
+              href={FRAME_HUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
+              title="Open source on GitHub"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+
+            <a
+              href="https://discord.gg/bqQXaYdTjS"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-muted-foreground hover:text-[#5865F2] transition-colors rounded-lg hover:bg-secondary/50"
+              title="Join Discord"
+            >
+              {DISCORD_SVG}
+            </a>
+
+            <span className="w-px h-5 bg-border mx-1" />
+          </nav>
+
           <ThemePicker />
 
           {loading ? (
@@ -258,7 +297,7 @@ export function Header() {
               ) : (
                 <User className="w-5 h-5 text-muted-foreground" />
               )}
-              <span className="text-xs text-muted-foreground max-w-[80px] truncate">
+              <span className="hidden xl:inline text-xs text-muted-foreground max-w-[100px] truncate">
                 {user.name?.split(" ")[0]}
               </span>
             </Link>
@@ -270,29 +309,10 @@ export function Header() {
               <LogIn className="h-3.5 w-3.5" /> Sign in
             </a>
           )}
-        </nav>
 
-        {/* Mobile controls */}
-        <div className="flex items-center gap-3 lg:hidden">
-          <ThemePicker />
-          {loading ? (
-            <span className="w-7 h-7 rounded-full bg-muted animate-pulse" />
-          ) : user ? (
-            <Link href="/profile" className="hover:opacity-80 transition-opacity">
-              {user.image ? (
-                <AvatarImage src={user.image} alt="" size={28} className="w-7 h-7 rounded-full border border-border" />
-              ) : (
-                <User className="w-5 h-5 text-muted-foreground" />
-              )}
-            </Link>
-          ) : (
-            <a href="/signin" className="text-muted-foreground hover:text-foreground">
-              <LogIn className="h-5 w-5" />
-            </a>
-          )}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors lg:hidden"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -303,6 +323,7 @@ export function Header() {
       {/* Mobile nav drawer */}
       {mobileOpen && (
         <nav className="lg:hidden border-t border-border bg-card px-4 py-3 space-y-1 max-h-[70vh] overflow-y-auto">
+          <HeaderCodexSearch className="pb-2 md:hidden" onNavigate={() => setMobileOpen(false)} />
           <Link
             href="/discover"
             onClick={() => setMobileOpen(false)}

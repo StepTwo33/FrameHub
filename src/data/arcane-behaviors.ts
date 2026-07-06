@@ -539,45 +539,49 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_brave",
     customHandler: "exodia_brave",
     effects: [
-      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "Exodia Brave: custom handler"},
+      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "Exodia Brave: +1.25–5 Energy/s for 4s on Heavy Attack Kill, stacks 3x"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "Exodia Brave: buff duration 4s"},
     ],
   },
   "exodia_contagion": {
     arcaneId: "exodia_contagion",
     customHandler: "exodia_contagion",
     effects: [
-      {"statKey": "projectileOnAimGlide", "target": "arcane_panel", "mode": "custom", "source": "Exodia Contagion: custom handler"},
+      {"statKey": "contagionProjectileDamage", "target": "arcane_panel", "mode": "custom", "source": "Exodia Contagion: +100–400% projectile damage after 30m travel"},
+      {"statKey": "contagionExplosionRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Contagion: 8m explosion radius"},
     ],
   },
   "exodia_epidemic": {
     arcaneId: "exodia_epidemic",
     customHandler: "exodia_epidemic",
     effects: [
-      {"statKey": "shockwaveOnSlam", "target": "arcane_panel", "mode": "custom", "source": "Exodia Epidemic: custom handler"},
+      {"statKey": "epidemicSuspendDuration", "target": "arcane_panel", "mode": "custom", "source": "Exodia Epidemic: 1–4s enemy suspension after bullet-jump slam"},
     ],
   },
   "exodia_force": {
     arcaneId: "exodia_force",
     customHandler: "exodia_force",
     effects: [
-      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: custom handler"},
-      {"statKey": "procDamageMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: custom handler"},
+      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: 50% proc chance on status (constant all ranks)"},
+      {"statKey": "procDamageMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: 50–200% radial weapon damage"},
+      {"statKey": "procAuraRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: 6m blast radius"},
     ],
   },
   "exodia_hunt": {
     arcaneId: "exodia_hunt",
     customHandler: "exodia_hunt",
     effects: [
-      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: custom handler"},
-      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: custom handler"},
+      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: 50% pull chance on ground slam (constant all ranks)"},
+      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: 6–12m pull radius"},
     ],
   },
   "exodia_might": {
     arcaneId: "exodia_might",
     customHandler: "exodia_might",
     effects: [
-      {"statKey": "lifeStealChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: custom handler"},
-      {"statKey": "lifeSteal", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: custom handler"},
+      {"statKey": "lifeStealChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: 50% proc chance on finisher (constant all ranks)"},
+      {"statKey": "lifeSteal", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: 7.5–30% life steal"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: 8s buff duration"},
     ],
   },
   "exodia_triumph": {
@@ -834,28 +838,29 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "pax_bolt": {
     arcaneId: "pax_bolt",
     effects: [
-      {"statKey": "abilityEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: abilityEfficiency (always active while equipped)"},
-      {"statKey": "abilityStrength", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: abilityStrength (always active while equipped)"},
+      {"statKey": "abilityEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: +7.5–30% Ability Efficiency on next ability after headshot kill (4s)"},
+      {"statKey": "abilityStrength", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: +7.5–30% Ability Strength on next ability after headshot kill (4s)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "Pax Bolt: 4s window to cast buffed ability"},
     ],
   },
   "pax_charge": {
     arcaneId: "pax_charge",
     effects: [
-      {"statKey": "kitgunRecharge", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Charge: kitgunRecharge (conditional proc)"},
+      {"statKey": "kitgunRecharge", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Charge: +12.5–50% reload speed (battery recharge delay reduction)"},
     ],
   },
   "pax_seeker": {
     arcaneId: "pax_seeker",
     effects: [
-      {"statKey": "kitgunHoming", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Seeker: kitgunHoming (on headshot proc)"},
+      {"statKey": "kitgunHoming", "target": "arcane_panel", "mode": "flat", "source": "Pax Seeker: 1–4 homing bolts on headshot kill"},
     ],
   },
   "pax_soar": {
     arcaneId: "pax_soar",
     effects: [
-      {"statKey": "airborneAccuracy", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: airborneAccuracy (always active while equipped)"},
-      {"statKey": "airborneRecoilReduction", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: airborneRecoilReduction (always active while equipped)"},
-      {"statKey": "aimGlideDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: aimGlideDuration (always active while equipped)"},
+      {"statKey": "airborneAccuracy", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: +12.5–50% accuracy while airborne"},
+      {"statKey": "airborneRecoilReduction", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: -12.5–50% recoil while airborne"},
+      {"statKey": "aimGlideDuration", "target": "arcane_panel", "mode": "flat", "source": "Pax Soar: +1.3–5s aim glide / wall latch"},
     ],
   },
   "primary_blight": {
@@ -934,35 +939,37 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "residual_boils": {
     arcaneId: "residual_boils",
     effects: [
-      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneDuration (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneDamage (conditional proc)"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneRadius (conditional proc)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "flat", "source": "Residual Boils: 20% proc on kitgun kill"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "flat", "source": "Residual Boils: 3–12s volatile hive duration"},
+      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "flat", "source": "Residual Boils: 80 Heat damage explosion"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "flat", "source": "Residual Boils: 10m explosion radius"},
     ],
   },
   "residual_malodor": {
     arcaneId: "residual_malodor",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: healthRegenChance (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: buffDuration (conditional proc)"},
-      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: zoneDamagePerSec (conditional proc)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "flat", "source": "Residual Malodor: 20% proc on kitgun kill"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "flat", "source": "Residual Malodor: 3–12s frigid mist duration"},
+      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "flat", "source": "Residual Malodor: 40 Cold damage/s"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "flat", "source": "Residual Malodor: 9m mist radius"},
     ],
   },
   "residual_shock": {
     arcaneId: "residual_shock",
     effects: [
-      {"statKey": "electricZoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: electricZoneDuration (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: zoneDamage (conditional proc)"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: zoneRadius (conditional proc)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "flat", "source": "Residual Shock: 20% proc on kitgun kill"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "flat", "source": "Residual Shock: 3–12s electrified spike duration"},
+      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "flat", "source": "Residual Shock: 200 Electricity damage"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "flat", "source": "Residual Shock: 10m damage radius"},
     ],
   },
   "residual_viremia": {
     arcaneId: "residual_viremia",
     effects: [
-      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: zoneDamagePerSec (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: zoneDuration (conditional proc)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "flat", "source": "Residual Viremia: 20% proc on kitgun kill"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "flat", "source": "Residual Viremia: 3–12s toxic pool duration"},
+      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "flat", "source": "Residual Viremia: 40 Toxin damage/s"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "flat", "source": "Residual Viremia: 9m pool radius"},
     ],
   },
   "secondary_cryogenic": {

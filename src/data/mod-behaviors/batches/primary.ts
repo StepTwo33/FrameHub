@@ -120,9 +120,6 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Emergent Aftermath: duration \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Emergent Aftermath: reloadSpeed \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
   ]),
-  eximus_advantage: mod("eximus_advantage", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Eximus Advantage: damage \u2014 Headshots on Eximus enemies increase Secondary Damage by +600% for 10 secs."),
-  ]),
   fanged_fusillade: mod("fanged_fusillade", [
     line("slash", "weapon_dps", "multiplicative_percent", "Fanged Fusillade: slash \u2014 +120% <DT_SLASH_COLOR>Slash"),
   ]),
@@ -312,10 +309,6 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("radiation", "weapon_dps", "elemental_from_base_damage", "Radiated Reload: radiation \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Reload Speed"),
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Radiated Reload: reloadSpeed \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Reload Speed"),
   ]),
-  range_advantage: mod("range_advantage", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Range Advantage: damage \u2014 +300% damage if no enemies are within 10m."),
-    line("range", "mod_panel", "multiplicative_percent", "Range Advantage: range \u2014 +300% damage if no enemies are within 10m. (arsenal display only)"),
-  ]),
   recover: mod("recover", [
     line("duration", "mod_panel", "multiplicative_percent", "Recover: duration \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
     line("health", "warframe_totals", "multiplicative_percent", "Recover: health \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
@@ -438,9 +431,6 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Vanquished Prey: duration \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
     line("health", "warframe_totals", "multiplicative_percent", "Vanquished Prey: health \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
     line("shield", "warframe_totals", "multiplicative_percent", "Vanquished Prey: shield \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
-  ]),
-  vile_discharge: mod("vile_discharge", [
-    line("storedDamage", "mod_panel", "multiplicative_percent", "Vile Discharge: storedDamage \u2014 Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac\u2026"),
   ]),
   vile_precision: mod("vile_precision", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Vile Precision: fireRate \u2014 -90% Weapon Recoil, -36% Fire Rate (x2 for Bows)"),

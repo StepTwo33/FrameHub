@@ -58,6 +58,8 @@ CONSTANT_AT_ALL_RANKS = frozenset({
     "invisibilityDuration",
     "projectileOnAimGlide",
     "shockwaveOnSlam",
+    "contagionExplosionRadius",
+    "epidemicSuspendDuration",
     "removeShields",
     "utilityEffect",
     "coldStacksApplied",
@@ -75,6 +77,81 @@ CONSTANT_AT_ALL_RANKS = frozenset({
 
 # Arcane Persistence damage cap by rank (wiki).
 PERSISTENCE_CAP_BY_RANK = [750, 700, 650, 600, 550, 500]
+
+# Exodia arcanes — post Update 31.6 mixed constant/scaling stats (wiki rank tables).
+EXODIA_VALUES_BY_RANK: dict[str, dict[str, list[float]]] = {
+    "exodia_brave": {
+        "energyRegen": [1.25, 2.5, 3.75, 5.0],
+        "buffDuration": [4, 4, 4, 4],
+    },
+    "exodia_contagion": {
+        "contagionProjectileDamage": [100, 200, 300, 400],
+        "contagionExplosionRadius": [8, 8, 8, 8],
+    },
+    "exodia_epidemic": {
+        "epidemicSuspendDuration": [1, 2, 3, 4],
+    },
+    "exodia_force": {
+        "statusProcChance": [50, 50, 50, 50],
+        "procDamageMultiplier": [50, 100, 150, 200],
+        "procAuraRadius": [6, 6, 6, 6],
+    },
+    "exodia_hunt": {
+        "pullChance": [50, 50, 50, 50],
+        "pullRadius": [6, 8, 10, 12],
+    },
+    "exodia_might": {
+        "lifeStealChance": [50, 50, 50, 50],
+        "lifeSteal": [7.5, 15, 22.5, 30],
+        "buffDuration": [8, 8, 8, 8],
+    },
+    "exodia_triumph": {
+        "meleeComboChance": [12.5, 25, 37.5, 50],
+    },
+    "exodia_valor": {
+        "meleeComboChance": [50, 100, 150, 200],
+    },
+    "pax_bolt": {
+        "abilityEfficiency": [7.5, 15, 22.5, 30],
+        "abilityStrength": [7.5, 15, 22.5, 30],
+        "buffDuration": [4, 4, 4, 4],
+    },
+    "pax_charge": {
+        "kitgunRecharge": [12.5, 25, 37.5, 50],
+    },
+    "pax_seeker": {
+        "kitgunHoming": [1, 2, 3, 4],
+    },
+    "pax_soar": {
+        "airborneAccuracy": [12.5, 25, 37.5, 50],
+        "airborneRecoilReduction": [12.5, 25, 37.5, 50],
+        "aimGlideDuration": [1.3, 2.5, 3.8, 5],
+    },
+    "residual_boils": {
+        "killProcChance": [20, 20, 20, 20],
+        "zoneDuration": [3, 6, 9, 12],
+        "zoneDamage": [80, 80, 80, 80],
+        "zoneRadius": [10, 10, 10, 10],
+    },
+    "residual_malodor": {
+        "killProcChance": [20, 20, 20, 20],
+        "zoneDuration": [3, 6, 9, 12],
+        "zoneDamagePerSec": [40, 40, 40, 40],
+        "zoneRadius": [9, 9, 9, 9],
+    },
+    "residual_shock": {
+        "killProcChance": [20, 20, 20, 20],
+        "zoneDuration": [3, 6, 9, 12],
+        "zoneDamage": [200, 200, 200, 200],
+        "zoneRadius": [10, 10, 10, 10],
+    },
+    "residual_viremia": {
+        "killProcChance": [20, 20, 20, 20],
+        "zoneDuration": [3, 6, 9, 12],
+        "zoneDamagePerSec": [40, 40, 40, 40],
+        "zoneRadius": [9, 9, 9, 9],
+    },
+}
 
 
 def load_effects() -> dict:
@@ -116,6 +193,17 @@ def fix_line(line: dict, max_rank: int, arcane_id: str) -> tuple[dict, list[str]
         out["valuesByRank"] = PERSISTENCE_CAP_BY_RANK
         out["flat"] = True
         notes.append(f"{arcane_id}.{stat}: valuesByRank {PERSISTENCE_CAP_BY_RANK}")
+        return out, notes
+
+    exodia_ranks = EXODIA_VALUES_BY_RANK.get(arcane_id, {}).get(stat)
+    if exodia_ranks:
+        out["valuesByRank"] = exodia_ranks
+        out["maxValue"] = exodia_ranks[-1]
+        if line.get("flat"):
+            out["flat"] = True
+        if line.get("stacking"):
+            out["stacking"] = line["stacking"]
+        notes.append(f"{arcane_id}.{stat}: valuesByRank {exodia_ranks}")
         return out, notes
 
     should_constant = stat in CONSTANT_AT_ALL_RANKS

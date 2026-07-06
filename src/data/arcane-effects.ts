@@ -65,12 +65,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "fireRateOnCritChance",
         "maxValue": 48.0,
-        "baseValue": 18.0
+        "baseValue": 8.0
       },
       {
         "stat": "fireRateOnCrit",
         "maxValue": 39.0,
-        "baseValue": 9.0
+        "baseValue": 6.5
       }
     ]
   },
@@ -1187,7 +1187,23 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "maxValue": 5.0,
         "flat": false,
         "stacking": true,
-        "baseValue": 1.25
+        "valuesByRank": [
+          1.25,
+          2.5,
+          3.75,
+          5.0
+        ]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "valuesByRank": [
+          4,
+          4,
+          4,
+          4
+        ]
       }
     ],
     "stackCap": 3
@@ -1198,11 +1214,25 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "projectileOnAimGlide",
-        "maxValue": 1,
+        "stat": "contagionProjectileDamage",
+        "maxValue": 400,
+        "valuesByRank": [
+          100,
+          200,
+          300,
+          400
+        ]
+      },
+      {
+        "stat": "contagionExplosionRadius",
+        "maxValue": 8,
         "flat": true,
-        "stacking": false,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          8,
+          8,
+          8,
+          8
+        ]
       }
     ]
   },
@@ -1212,11 +1242,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 3,
     "effects": [
       {
-        "stat": "shockwaveOnSlam",
-        "maxValue": 1,
-        "flat": true,
-        "stacking": false,
-        "constantAtAllRanks": true
+        "stat": "epidemicSuspendDuration",
+        "maxValue": 4,
+        "valuesByRank": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
@@ -1227,13 +1260,34 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "statusProcChance",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          50,
+          50,
+          50,
+          50
+        ]
       },
       {
         "stat": "procDamageMultiplier",
-        "maxValue": 200.0,
-        "baseValue": 50.0
+        "maxValue": 200,
+        "valuesByRank": [
+          50,
+          100,
+          150,
+          200
+        ]
+      },
+      {
+        "stat": "procAuraRadius",
+        "maxValue": 6,
+        "flat": true,
+        "valuesByRank": [
+          6,
+          6,
+          6,
+          6
+        ]
       }
     ]
   },
@@ -1244,14 +1298,23 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "pullChance",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          50,
+          50,
+          50,
+          50
+        ]
       },
       {
         "stat": "pullRadius",
         "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          6,
+          8,
+          10,
+          12
+        ]
       }
     ]
   },
@@ -1262,13 +1325,34 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "lifeStealChance",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          50,
+          50,
+          50,
+          50
+        ]
       },
       {
         "stat": "lifeSteal",
-        "maxValue": 30.0,
-        "baseValue": 7.5
+        "maxValue": 30,
+        "valuesByRank": [
+          7.5,
+          15,
+          22.5,
+          30
+        ]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "valuesByRank": [
+          8,
+          8,
+          8,
+          8
+        ]
       }
     ]
   },
@@ -1279,10 +1363,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "meleeComboChance",
-        "maxValue": 50.0,
+        "maxValue": 50,
         "flat": false,
         "stacking": false,
-        "baseValue": 12.5
+        "valuesByRank": [
+          12.5,
+          25,
+          37.5,
+          50
+        ]
       }
     ]
   },
@@ -1293,10 +1382,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "meleeComboChance",
-        "maxValue": 200.0,
+        "maxValue": 200,
         "flat": false,
         "stacking": false,
-        "baseValue": 50.0
+        "valuesByRank": [
+          50,
+          100,
+          150,
+          200
+        ]
       }
     ]
   },
@@ -1851,30 +1945,56 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "pax_bolt": {
     "name": "Pax Bolt",
-    "trigger": "passive",
+    "trigger": "onHeadshot",
     "maxRank": 3,
     "effects": [
       {
         "stat": "abilityEfficiency",
-        "maxValue": 30.0,
-        "baseValue": 7.5
+        "maxValue": 30,
+        "valuesByRank": [
+          7.5,
+          15,
+          22.5,
+          30
+        ]
       },
       {
         "stat": "abilityStrength",
-        "maxValue": 30.0,
-        "baseValue": 7.5
+        "maxValue": 30,
+        "valuesByRank": [
+          7.5,
+          15,
+          22.5,
+          30
+        ]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "valuesByRank": [
+          4,
+          4,
+          4,
+          4
+        ]
       }
     ]
   },
   "pax_charge": {
     "name": "Pax Charge",
-    "trigger": "conditional",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "kitgunRecharge",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          12.5,
+          25,
+          37.5,
+          50
+        ]
       }
     ]
   },
@@ -1886,8 +2006,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "kitgunHoming",
         "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
@@ -1898,19 +2022,33 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "airborneAccuracy",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          12.5,
+          25,
+          37.5,
+          50
+        ]
       },
       {
         "stat": "airborneRecoilReduction",
-        "maxValue": 50.0,
-        "baseValue": 12.5
+        "maxValue": 50,
+        "valuesByRank": [
+          12.5,
+          25,
+          37.5,
+          50
+        ]
       },
       {
         "stat": "aimGlideDuration",
         "maxValue": 5,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          1.3,
+          2.5,
+          3.8,
+          5
+        ]
       }
     ]
   },
@@ -2161,104 +2299,189 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "residual_boils": {
     "name": "Residual Boils",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneDuration",
-        "maxValue": 12,
-        "constantAtAllRanks": true
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "valuesByRank": [
+          20,
+          20,
+          20,
+          20
+        ]
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "valuesByRank": [
+          3,
+          6,
+          9,
+          12
+        ]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 80,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          80,
+          80,
+          80,
+          80
+        ]
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          10,
+          10,
+          10,
+          10
+        ]
       }
     ]
   },
   "residual_malodor": {
     "name": "Residual Malodor",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "valuesByRank": [
+          20,
+          20,
+          20,
+          20
+        ]
       },
       {
-        "stat": "buffDuration",
+        "stat": "zoneDuration",
         "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          3,
+          6,
+          9,
+          12
+        ]
       },
       {
         "stat": "zoneDamagePerSec",
         "maxValue": 40,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "valuesByRank": [
+          9,
+          9,
+          9,
+          9
+        ]
       }
     ]
   },
   "residual_shock": {
     "name": "Residual Shock",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "electricZoneDuration",
-        "maxValue": 12.0,
-        "flat": true,
-        "baseValue": 3.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "valuesByRank": [
+          20,
+          20,
+          20,
+          20
+        ]
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "valuesByRank": [
+          3,
+          6,
+          9,
+          12
+        ]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          200,
+          200,
+          200,
+          200
+        ]
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          10,
+          10,
+          10,
+          10
+        ]
       }
     ]
   },
   "residual_viremia": {
     "name": "Residual Viremia",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "flat": true,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "valuesByRank": [
+          20,
+          20,
+          20,
+          20
+        ]
       },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "constantAtAllRanks": true
+        "valuesByRank": [
+          3,
+          6,
+          9,
+          12
+        ]
+      },
+      {
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "valuesByRank": [
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "valuesByRank": [
+          9,
+          9,
+          9,
+          9
+        ]
       }
     ]
   },

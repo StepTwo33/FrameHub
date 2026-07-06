@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +35,7 @@ ALT_AOE_HINTS = (
     "alt-fire",
     "alt fire",
     "alternate fire",
+    "secondary fire",
     "explodes in",
     "explosion",
     "radius",
@@ -42,15 +44,35 @@ ALT_AOE_HINTS = (
     "grenade",
     "bomblet",
     "detonat",
+    "airburst",
+    "charged shot",
+    "charged secondary",
+    "deploys",
+    "throws the weapon",
 )
 
 PASSIVE_WIKI_ARTIFACTS = ("|}", "{|", "wikitable", "|-", "! style=")
 
+INNATE_BLAST_HINTS = (
+    "spherical blast",
+    "explodes in",
+    "blast radius",
+    "explosion",
+    "explodes upon impact",
+    "explodes on impact",
+    "primary fire explodes",
+    "shots explode",
+)
+
+# From generate_radial_attacks.MANUAL_RADIAL_ATTACKS (innate profiles not in wiki AoE table).
+MANUAL_RADIAL_WEAPON_IDS = frozenset({"ignis", "ignis_wraith"})
+
+_WIKI_PRIMARY_AOE_IDS: set[str] = set()
+
 
 def load_weapons() -> list[dict]:
     text = WEAPONS_TS.read_text(encoding="utf-8")
-    weapons = json.loads(re.search(r"export const allWeapons: Weapon\[\] = (\[[\s\S]*?\n\]);", text).group(1))
-    return weapons
+    return json.loads(re.search(r"export const allWeapons: Weapon\[\] = (\[[\s\S]*?\n\]);", text).group(1))
 
 
 def load_passives() -> dict[str, str]:
@@ -59,7 +81,10 @@ def load_passives() -> dict[str, str]:
 
     def store(key: str, raw: str) -> None:
         val = raw.replace("\\n", "\n")
-        val = val.replace("${PROGENITOR_LINE}", "Progenitor bonus: extra elemental damage (typically 25–60% of base damage).")
+        val = val.replace(
+            "${PROGENITOR_LINE}",
+            "Progenitor bonus: extra elemental damage (typically 25–60% of base damage).",
+        )
         out[key] = val.strip()
 
     for m in re.finditer(r'^\s+([a-z0-9_&]+):\s*"((?:[^"\\]|\\.)*)"', text, re.M):
@@ -69,6 +94,18 @@ def load_passives() -> dict[str, str]:
     progenitor = "Progenitor bonus: extra elemental damage (typically 25–60% of base damage)."
     for m in re.finditer(r"^\s+([a-z0-9_&]+):\s*PROGENITOR_LINE\s*,?", text, re.M):
         store(m.group(1), progenitor)
+    ktc = re.search(
+        r"const KUVA_TENET_CODA: Record<string, string> = \{([\s\S]*?)\n\};",
+        text,
+    )
+    if ktc:
+        for m in re.finditer(
+            r"^\s+([a-z0-9_&]+):\s*(?:`\$\{PROGENITOR_LINE\}([^`]*)`|PROGENITOR_LINE)\s*,?",
+            ktc.group(1),
+            re.M,
+        ):
+            extra = m.group(2) or ""
+            store(m.group(1), progenitor + extra)
     return out
 
 
@@ -80,6 +117,35 @@ def load_radial_ids() -> dict[str, int]:
         block = text[m.start() : text.find("]", m.end()) + 1]
         out[wid] = block.count('"name"')
     return out
+
+
+def load_wiki_primary_aoe_ids() -> set[str]:
+    try:
+        import importlib.util
+        import urllib.parse
+        import urllib.request
+
+        spec = importlib.util.spec_from_file_location(
+            "gen_radial",
+            ROOT / "scripts/generate_radial_attacks.py",
+        )
+        gen = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(gen)
+        params = {
+            "action": "parse",
+            "page": "Module:Weapons/data/primary",
+            "prop": "wikitext",
+            "format": "json",
+        }
+        url = "https://wiki.warframe.com/api.php?" + urllib.parse.urlencode(params)
+        req = urllib.request.Request(url, headers={"User-Agent": "FrameHub/1.0 (primary audit)"})
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read())
+        text = data["parse"]["wikitext"]["*"]
+        return set(gen.parse_lua_table(text).keys())
+    except Exception:
+        return set()
 
 
 def is_primary(w: dict) -> bool:
@@ -105,15 +171,36 @@ def passive_corrupted(passive: str) -> bool:
     return any(a in passive for a in PASSIVE_WIKI_ARTIFACTS)
 
 
+def innate_blast_passive(passive: str) -> bool:
+    low = passive.lower()
+    return any(h in low for h in INNATE_BLAST_HINTS)
+
+
+def has_radial_profile(w: dict, radial: dict[str, int]) -> bool:
+    return w["id"] in radial or bool(w.get("radialAttacks")) or w["id"] in MANUAL_RADIAL_WEAPON_IDS
+
+
+def ips_mismatch(w: dict) -> bool:
+    ips = (w.get("impact") or 0) + (w.get("puncture") or 0) + (w.get("slash") or 0)
+    dmg = w.get("damage") or 0
+    if dmg <= 0 or ips <= 0:
+        return False
+    return abs(ips - dmg) > max(1.0, dmg * 0.05)
+
+
 def audit() -> int:
+    global _WIKI_PRIMARY_AOE_IDS
+    _WIKI_PRIMARY_AOE_IDS = load_wiki_primary_aoe_ids()
+
     weapons = load_weapons()
     passives = load_passives()
     radial = load_radial_ids()
     pool = [w for w in weapons if is_primary(w)]
+    pool_ids = {w["id"] for w in pool}
 
     print("=== Primary weapon audit ===\n")
     print(f"Pool size: {len(pool)}")
-    print(f"By category: {dict(__import__('collections').Counter(w['category'] for w in pool))}")
+    print(f"By category: {dict(Counter(w['category'] for w in pool))}")
 
     missing_stats: list[str] = []
     zero_damage: list[str] = []
@@ -137,7 +224,7 @@ def audit() -> int:
             print(f"  {wid}")
 
     no_passive = [w for w in pool if not passive_for(w, passives)]
-    print(f"\nMissing passive: {len(no_passive)}")
+    print(f"\nMissing passive: {len(no_passive)} (vanilla primaries — no wiki passive entry)")
     for w in sorted(no_passive, key=lambda x: x["name"]):
         print(f"  {w['id']}: {w['name']}")
 
@@ -149,42 +236,70 @@ def audit() -> int:
     for w in sorted(corrupted, key=lambda x: x["name"]):
         print(f"  {w['id']}")
 
-    with_radial = [w for w in pool if w["id"] in radial or w.get("radialAttacks")]
+    with_radial = [w for w in pool if has_radial_profile(w, radial)]
     print(f"\nRadial/AoE profiles: {len(with_radial)}/{len(pool)}")
+    print(f"Wiki AoE weapons parsed: {len(_WIKI_PRIMARY_AOE_IDS & pool_ids)}")
+
+    ips_bad = [w for w in pool if ips_mismatch(w)]
+    print(f"\nIPS sum != damage (>5%): {len(ips_bad)}")
+    for w in sorted(ips_bad, key=lambda x: x["name"])[:20]:
+        ips = (w.get("impact") or 0) + (w.get("puncture") or 0) + (w.get("slash") or 0)
+        print(f"  {w['id']}: damage={w['damage']} ips={ips}")
+    if len(ips_bad) > 20:
+        print(f"  ... +{len(ips_bad) - 20}")
+
+    innate_blast_no_radial = []
+    for w in pool:
+        p = passive_for(w, passives)
+        if not p or not innate_blast_passive(p):
+            continue
+        if not has_radial_profile(w, radial):
+            innate_blast_no_radial.append(w)
+
+    if innate_blast_no_radial:
+        print(f"\nInnate blast passive but no radial ({len(innate_blast_no_radial)}):")
+        for w in sorted(innate_blast_no_radial, key=lambda x: x["name"]):
+            p = passive_for(w, passives) or ""
+            print(f"  {w['id']}: {p[:90]}...")
 
     alt_hint_no_radial = []
+    alt_fire_non_aoe = []
     for w in pool:
         p = passive_for(w, passives)
         if not p or not hints_alt_aoe(p):
             continue
-        if w["id"] not in radial and not w.get("radialAttacks"):
-            alt_hint_no_radial.append(w)
+        if has_radial_profile(w, radial):
+            continue
+        alt_hint_no_radial.append(w)
+        if w["id"] not in _WIKI_PRIMARY_AOE_IDS:
+            alt_fire_non_aoe.append(w)
 
     print(f"\nPassive hints alt-fire/AoE but no radial profile: {len(alt_hint_no_radial)}")
-    for w in sorted(alt_hint_no_radial, key=lambda x: x["name"])[:40]:
-        print(f"  {w['id']}: {w['name']}")
-    if len(alt_hint_no_radial) > 40:
-        print(f"  ... +{len(alt_hint_no_radial) - 40}")
+    for w in sorted(alt_hint_no_radial, key=lambda x: x["name"]):
+        tag = "alt-fire only" if w["id"] not in _WIKI_PRIMARY_AOE_IDS else "wiki AoE — needs sync"
+        print(f"  {w['id']}: {w['name']} ({tag})")
 
-    radial_no_hint = [
-        w for w in pool
-        if w["id"] in radial
-        and not (p := passive_for(w, passives) or "")
-        or (w["id"] in radial and p and not hints_alt_aoe(p))
-    ]
-    # radial without passive mention — informational only
     radial_only = [
         w for w in pool
         if w["id"] in radial
         and not ((p := passive_for(w, passives)) and hints_alt_aoe(p))
     ]
-    print(f"\nRadial profile without alt/AoE passive mention: {len(radial_only)} (may be incarnon/slam)")
+    print(f"\nRadial profile without alt/AoE passive mention: {len(radial_only)} (may be innate/incarnon)")
 
-    issues = len(missing_stats) + len(zero_damage) + len(corrupted)
+    needs_sync = [w for w in alt_hint_no_radial if w["id"] in _WIKI_PRIMARY_AOE_IDS]
+    issues = (
+        len(missing_stats)
+        + len(zero_damage)
+        + len(corrupted)
+        + len(needs_sync)
+        + len(innate_blast_no_radial)
+    )
     print(f"\n--- Summary ---")
     print(f"  With passive: {len(pool) - len(no_passive)}/{len(pool)}")
     print(f"  With radial/AoE data: {len(with_radial)}/{len(pool)}")
-    print(f"  Actionable issues (stats/corruption): {issues}")
+    print(f"  Alt-fire passives without radial: {len(alt_hint_no_radial)} ({len(alt_fire_non_aoe)} alt-fire-only, {len(needs_sync)} wiki AoE gaps)")
+    print(f"  Innate blast passives without radial: {len(innate_blast_no_radial)}")
+    print(f"  Actionable issues (stats/corruption/wiki AoE sync/innate blast): {issues}")
     return issues
 
 

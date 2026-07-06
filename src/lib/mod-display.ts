@@ -25,6 +25,10 @@ const FLAT_STAT_KEYS = new Set([
   "impactStatusStacks",
   "reviveShieldHealth",
   "incapacitationTimerReduction",
+  "ampCritDamage",
+  "ampStatusDamage",
+  "ampSchoolDamage",
+  "ampEnergyRegen",
 ]);
 
 const PERCENT_LIKE_KEYS = new Set([
@@ -78,6 +82,9 @@ export function formatModStatValue(
 ): string {
   const total = modStatTotalAtRank(perRank, rank) * multiplier;
   const label = getModStatLabel(statKey);
+  if (statKey === "ampBonusDamage") {
+    return `x${total.toFixed(1)} ${label}`;
+  }
   if (statKey === "critDecayPerSecond") {
     return `${formatStatNumber(total)}%/s ${label}`;
   }

@@ -18,12 +18,14 @@ import { useCompanions, useWeapons } from "@/lib/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
 import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import {
-  COMPANION_PRECEPT_SLOT_COUNT,
-  isCompanionPreceptSlot,
+  COMPANION_MAX_PRECEPTS,
+  COMPANION_MOD_SLOT_COUNT,
+  isCompanionPrecept,
 } from "@/lib/companion-augment-mods";
 import {
   companionPreceptModsForBuilder,
   companionStatModsForBuilder,
+  companionPreceptEligibleForCompanion,
   isCataloguedCompanionPrecept,
 } from "@/lib/companion-precept-eligibility";
 import { Input } from "@/components/ui/input";
@@ -198,7 +200,6 @@ export default function CompanionBuilderPage() {
   const [activeWeaponSlotIndex, setActiveWeaponSlotIndex] = useState(0);
   const [hasCatalyst, setHasCatalyst] = useState(false);
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
-  const [companionPickerPrecepts, setCompanionPickerPrecepts] = useState(false);
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
 
   const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
@@ -324,7 +325,23 @@ export default function CompanionBuilderPage() {
     return companionStatModsForBuilder(selectedCompanion, allMods, subCats);
   }, [selectedCompanion]);
 
-  const companionPickerMods = companionPickerPrecepts ? companionPreceptMods : companionStatMods;
+  const companionPickerMods = useMemo(() => {
+    const seen = new Set<string>();
+    const merged: Mod[] = [];
+    for (const m of [...companionPreceptMods, ...companionStatMods]) {
+      if (seen.has(m.id)) continue;
+      seen.add(m.id);
+      merged.push(m);
+    }
+    return merged;
+  }, [companionPreceptMods, companionStatMods]);
+
+  const equippedPreceptCount = useMemo(() => {
+    return equippedMods.filter((e) => {
+      const m = modsMap.get(e.modId);
+      return m && isCataloguedCompanionPrecept(m);
+    }).length;
+  }, [equippedMods, modsMap]);
 
   const availableWeapons = useMemo(() => {
     if (!selectedCompanion) return [];
@@ -402,7 +419,6 @@ export default function CompanionBuilderPage() {
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
     setModPickerTarget("companion");
-    setCompanionPickerPrecepts(isCompanionPreceptSlot(slotIndex));
     setModPickerOpen(true);
   }, []);
 
@@ -422,9 +438,17 @@ export default function CompanionBuilderPage() {
         ];
       });
     } else {
-      const preceptSlot = isCompanionPreceptSlot(activeSlotIndex);
-      if (preceptSlot && !isCataloguedCompanionPrecept(mod)) return;
-      if (!preceptSlot && isCataloguedCompanionPrecept(mod)) return;
+      if (!selectedCompanion) return;
+      const isPrecept = isCataloguedCompanionPrecept(mod);
+      if (isPrecept) {
+        if (!companionPreceptEligibleForCompanion(selectedCompanion, mod)) return;
+        const replacing = equippedMods.find((m) => m.slotIndex === activeSlotIndex);
+        const replacingMod = replacing ? modsMap.get(replacing.modId) : undefined;
+        const replacingPrecept = replacingMod && isCataloguedCompanionPrecept(replacingMod);
+        if (equippedPreceptCount >= COMPANION_MAX_PRECEPTS && !replacingPrecept) return;
+      } else if (isCompanionPrecept(mod)) {
+        return;
+      }
       setEquippedMods((prev) => {
         const filtered = prev.filter((m) => m.slotIndex !== activeSlotIndex);
         return [
@@ -433,7 +457,7 @@ export default function CompanionBuilderPage() {
         ];
       });
     }
-  }, [activeSlotIndex, activeWeaponSlotIndex, modPickerTarget]);
+  }, [activeSlotIndex, activeWeaponSlotIndex, equippedMods, equippedPreceptCount, modPickerTarget, modsMap, selectedCompanion]);
 
   const handleRemoveMod = useCallback((slotIndex: number) => {
     setEquippedMods((prev) => prev.filter((m) => m.slotIndex !== slotIndex));
@@ -609,56 +633,33 @@ export default function CompanionBuilderPage() {
 
             <div className="grid lg:grid-cols-[1fr_320px] gap-6">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-sm font-semibold tracking-wider text-cyan-400/90">
-                    PRECEPTS
-                  </h2>
-                  <span className="text-[10px] text-muted-foreground">
-                    Penjaga · filtered for {selectedCompanion.name}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
-                  {Array.from({ length: COMPANION_PRECEPT_SLOT_COUNT }, (_, i) => {
-                    const equipped = equippedMods.find((m) => m.slotIndex === i);
-                    const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                    return (
-                      <ModSlotCard
-                        key={`precept-${i}`}
-                        mod={mod}
-                        rank={equipped?.rank ?? 0}
-                        slotIndex={i}
-                        label="Precept"
-                        slotPolarity={slotPolarities[i] ?? "penjaga"}
-                        onAdd={() => handleOpenModPicker(i)}
-                        onRemove={() => handleRemoveMod(i)}
-                        onPolarize={(p) => setSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
-                      />
-                    );
-                  })}
-                </div>
-
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-semibold tracking-wider text-muted-foreground">
                     MOD CONFIGURATION
                   </h2>
-                  <span className={cn(
-                    "text-xs font-mono",
-                    capacityUsed > baseCapacity ? "text-red-400" : "text-muted-foreground"
-                  )}>
-                    {capacityUsed} / {baseCapacity}
-                  </span>
+                  <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className="text-muted-foreground">
+                      {equippedPreceptCount}/{COMPANION_MAX_PRECEPTS} precepts
+                    </span>
+                    <span className={cn(
+                      capacityUsed > baseCapacity ? "text-red-400" : "text-muted-foreground"
+                    )}>
+                      {capacityUsed} / {baseCapacity}
+                    </span>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {Array.from({ length: 10 - COMPANION_PRECEPT_SLOT_COUNT }, (_, j) => {
-                    const i = j + COMPANION_PRECEPT_SLOT_COUNT;
+                <div className="grid grid-cols-5 gap-2">
+                  {Array.from({ length: COMPANION_MOD_SLOT_COUNT }, (_, i) => {
                     const equipped = equippedMods.find((m) => m.slotIndex === i);
                     const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
+                    const isPrecept = mod && isCataloguedCompanionPrecept(mod);
                     return (
                       <ModSlotCard
                         key={i}
                         mod={mod}
                         rank={equipped?.rank ?? 0}
                         slotIndex={i}
+                        label={isPrecept ? "Precept" : undefined}
                         slotPolarity={slotPolarities[i]}
                         onAdd={() => handleOpenModPicker(i)}
                         onRemove={() => handleRemoveMod(i)}
@@ -835,7 +836,7 @@ export default function CompanionBuilderPage() {
         onClose={() => setModPickerOpen(false)}
         mods={modPickerTarget === "weapon" ? weaponModPool : companionPickerMods}
         category="_prefiltered"
-        slotType={modPickerTarget === "companion" && companionPickerPrecepts ? "companion_precept" : "regular"}
+        slotType="regular"
         equippedModIds={equippedModIds}
         onSelect={handleSelectMod}
         onSelectRiven={modPickerTarget === "weapon" ? handleSelectWeaponRiven : undefined}

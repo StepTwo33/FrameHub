@@ -28,11 +28,10 @@ export const MOD_BEHAVIORS_TEKTOLYST: Record<string, VerifiedModBehavior> = {
   ]),
   hayan_dabor: mod("hayan_dabor", [
     line("ampMultishot", "mod_panel", "multiplicative_percent", "Hayan-Dabor: ampMultishot \u2014 +60% Amp Multishot"),
-    line("multishot", "weapon_dps", "multiplicative_percent", "Hayan-Dabor: multishot \u2014 +60% Amp Multishot"),
   ]),
   hok_kaal: mod("hok_kaal", [
-    line("ampBonusDamage", "mod_panel", "multiplicative_percent", "Hok-Kaal: ampBonusDamage \u2014 After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)"),
-    line("cooldown", "mod_panel", "multiplicative_percent", "Hok-Kaal: cooldown \u2014 After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)"),
+    line("ampBonusDamage", "mod_panel", "flat", "Hok-Kaal: ampBonusDamage \u2014 After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)"),
+    line("cooldown", "mod_panel", "flat", "Hok-Kaal: cooldown \u2014 After using Void Mode, the next Amp attack deals x3.0 bonus damage (cooldown 5s)"),
   ]),
   kaal_zidi: mod("kaal_zidi", [
     line("voidModeEfficiency", "mod_panel", "multiplicative_percent", "Kaal-Zidi: voidModeEfficiency \u2014 +30% Void Mode efficiency\\\\n+5% Movement Speed in Void Mode for each Naramon Sch\u2026"),
@@ -53,16 +52,14 @@ export const MOD_BEHAVIORS_TEKTOLYST: Record<string, VerifiedModBehavior> = {
   ]),
   omn_evi: mod("omn_evi", [
     line("ampCriticalChance", "mod_panel", "multiplicative_percent", "Omn-Evi: ampCriticalChance \u2014 +60% Amp Critical Chance\\\\n+10% Amp Critical Damage for each Zenurik School Mod"),
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Omn-Evi: criticalChance \u2014 +60% Amp Critical Chance\\\\n+10% Amp Critical Damage for each Zenurik School Mod"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Omn-Evi: criticalMultiplier \u2014 +60% Amp Critical Chance\\\\n+10% Amp Critical Damage for each Zenurik School Mod"),
+    line("ampCritDamage", "mod_panel", "multiplicative_percent", "Omn-Evi: ampCritDamage \u2014 +10% Amp Critical Damage for each Zenurik School Mod (flat per rank)"),
   ]),
   sey_taph: mod("sey_taph", [
     line("voidSlingEfficiency", "mod_panel", "multiplicative_percent", "Sey-Taph: voidSlingEfficiency \u2014 +30% Void Sling Efficiency"),
   ]),
   sil_tabol: mod("sil_tabol", [
     line("ampStatusChance", "mod_panel", "multiplicative_percent", "Sil-Tabol: ampStatusChance \u2014 +60% Amp Status Chance\\\\n+15% Status Damage for each Vazarin School Mod"),
-    line("damage", "weapon_dps", "multiplicative_percent", "Sil-Tabol: damage \u2014 +60% Amp Status Chance\\\\n+15% Status Damage for each Vazarin School Mod"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Sil-Tabol: statusChance \u2014 +60% Amp Status Chance\\\\n+15% Status Damage for each Vazarin School Mod"),
+    line("ampStatusDamage", "mod_panel", "multiplicative_percent", "Sil-Tabol: ampStatusDamage \u2014 +15% Status Damage for each Vazarin School Mod (flat per rank)"),
   ]),
   talsek_an: mod("talsek_an", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Talsek-An: cooldown \u2014 Gain knockdown immunity. When knockdown is blocked, enter Void Mode for 3s (cool\u2026"),
@@ -70,19 +67,18 @@ export const MOD_BEHAVIORS_TEKTOLYST: Record<string, VerifiedModBehavior> = {
   ]),
   ubri_kaneph: mod("ubri_kaneph", [
     line("ampDamage", "mod_panel", "multiplicative_percent", "Ubri-Kaneph: ampDamage \u2014 +60% Damage to Amps\\\\n+10% bonus for each Mod from a unique School"),
-    line("damage", "weapon_dps", "multiplicative_percent", "Ubri-Kaneph: damage \u2014 +60% Damage to Amps\\\\n+10% bonus for each Mod from a unique School"),
+    line("ampSchoolDamage", "mod_panel", "multiplicative_percent", "Ubri-Kaneph: ampSchoolDamage \u2014 +10% Amp Damage for each unique Focus School mod on the Artifact (flat per rank)"),
   ]),
   ulashta_shol: mod("ulashta_shol", [
     line("transferenceStaticDuration", "mod_panel", "multiplicative_percent", "Ulashta-Shol: transferenceStaticDuration \u2014 -60% Transference Static duration"),
   ]),
   vik_anam: mod("vik_anam", [
     line("ampEnergy", "mod_panel", "multiplicative_percent", "Vik-Anam: ampEnergy \u2014 +30% Maximum Amp Energy\\\\n+5% Amp Energy Regen Rate for each Madurai School Mod"),
-    line("energy", "warframe_totals", "multiplicative_percent", "Vik-Anam: energy \u2014 +30% Maximum Amp Energy\\\\n+5% Amp Energy Regen Rate for each Madurai School Mod"),
+    line("ampEnergyRegen", "mod_panel", "multiplicative_percent", "Vik-Anam: ampEnergyRegen \u2014 +5% Amp Energy Regen Rate for each Madurai School Mod (flat per rank)"),
   ]),
   vikla_safor: mod("vikla_safor", [
     line("ampAmmoEfficiency", "mod_panel", "multiplicative_percent", "Vikla-Safor: ampAmmoEfficiency \u2014 +30% Amp Fire Rate. +30% Amp Ammo Efficiency"),
     line("ampFireRate", "mod_panel", "multiplicative_percent", "Vikla-Safor: ampFireRate \u2014 +30% Amp Fire Rate. +30% Amp Ammo Efficiency"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Vikla-Safor: fireRate \u2014 +30% Amp Fire Rate. +30% Amp Ammo Efficiency"),
   ]),
   yar_dal: mod("yar_dal", [
     line("operatorHealth", "mod_panel", "multiplicative_percent", "Yar Dal: operatorHealth \u2014 +300 Operator Health"),
