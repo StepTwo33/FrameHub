@@ -27,14 +27,7 @@ import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/archw
 import { isTomeMod } from "@/lib/mod-slot-categories";
 import { isTomeWeapon } from "@/lib/tome-weapons";
 import { isSetBonusMod } from "@/lib/set-mod-catalog";
-
-const rarityColors: Record<string, string> = {
-  common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
-  uncommon: "bg-slate-500/20 text-slate-300 border-slate-500/50",
-  rare: "bg-yellow-500/20 text-yellow-300 border-yellow-500/50",
-  legendary: "bg-white/10 text-white border-white/30",
-};
-
+import { RARITY_BADGE_COLORS } from "@/lib/rarity-badge-colors";
 import {
   isWarframeExilusMod,
 } from "@/lib/mod-slot-categories";
@@ -268,7 +261,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                 />
                 <div className="flex-1 flex items-center justify-between">
                   <h4 className="font-semibold">{selectedMod.name}</h4>
-                  <Badge variant="outline" className={cn("text-[10px]", rarityColors[selectedMod.rarity])}>
+                  <Badge variant="outline" className={cn("text-[10px]", RARITY_BADGE_COLORS[selectedMod.rarity])}>
                     {selectedMod.rarity}
                   </Badge>
                 </div>
@@ -281,7 +274,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                   {getModStatDisplayLines(selectedMod, selectedRank).map((line) => (
                     <li key={line.statKey} className="flex justify-between gap-3 text-xs">
                       <span className="text-muted-foreground">{line.label}</span>
-                      <span className="font-mono text-blue-300 shrink-0 text-right">
+                      <span className="font-mono text-blue-800 shrink-0 text-right dark:text-blue-300">
                         {line.atRank}
                         {selectedRank < selectedMod.maxRank && (
                           <span className="text-muted-foreground/70"> ({line.atMax} max)</span>
@@ -297,7 +290,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
               const rivenPool = getRivenStatsForCategory(weaponCategory || category);
               return (
                 <div className="space-y-3">
-                  <div className="text-[10px] text-purple-300/60 uppercase tracking-wider">
+                  <div className="text-[10px] text-purple-700/70 uppercase tracking-wider dark:text-purple-300/60">
                     Configure Riven Stats (up to 4)
                   </div>
                   {Object.keys(rivenStats).length > 0 && (
@@ -462,7 +455,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                           <GameAssetImage src={getArcaneImage(arcane.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                           <span className="text-sm font-medium">{arcane.name}</span>
                         </div>
-                        <Badge variant="outline" className={cn("text-[10px]", rarityColors[arcane.rarity])}>
+                        <Badge variant="outline" className={cn("text-[10px]", RARITY_BADGE_COLORS[arcane.rarity])}>
                           {arcane.rarity}
                         </Badge>
                       </div>
@@ -501,7 +494,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                           {!hasStats && (
                             <span className="text-[10px] text-yellow-500/70">utility</span>
                           )}
-                          <Badge variant="outline" className={cn("text-[10px]", rarityColors[mod.rarity])}>
+                          <Badge variant="outline" className={cn("text-[10px]", RARITY_BADGE_COLORS[mod.rarity])}>
                             {mod.rarity}
                           </Badge>
                         </div>

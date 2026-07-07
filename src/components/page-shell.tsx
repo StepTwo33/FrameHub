@@ -36,108 +36,108 @@ const ACCENT: Record<
   { icon: string; hoverBorder: string; hoverBg: string; hoverText: string; shadow: string; badge: string }
 > = {
   blue: {
-    icon: "bg-blue-500/10 text-blue-400",
+    icon: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
     hoverBorder: "hover:border-blue-500/50",
     hoverBg: "hover:bg-blue-500/5",
-    hoverText: "group-hover:text-blue-400",
+    hoverText: "group-hover:text-blue-700 dark:group-hover:text-blue-400",
     shadow: "hover:shadow-blue-500/10",
-    badge: "bg-blue-500/10 text-blue-300 ring-blue-500/20",
+    badge: "bg-blue-500/10 text-blue-800 ring-blue-500/25 dark:text-blue-300 dark:ring-blue-500/20",
   },
   purple: {
-    icon: "bg-purple-500/10 text-purple-400",
+    icon: "bg-purple-500/10 text-purple-700 dark:text-purple-400",
     hoverBorder: "hover:border-purple-500/50",
     hoverBg: "hover:bg-purple-500/5",
-    hoverText: "group-hover:text-purple-400",
+    hoverText: "group-hover:text-purple-700 dark:group-hover:text-purple-400",
     shadow: "hover:shadow-purple-500/10",
-    badge: "bg-purple-500/10 text-purple-300 ring-purple-500/20",
+    badge: "bg-purple-500/10 text-purple-800 ring-purple-500/25 dark:text-purple-300 dark:ring-purple-500/20",
   },
   cyan: {
-    icon: "bg-cyan-500/10 text-cyan-400",
+    icon: "bg-cyan-500/10 text-cyan-800 dark:text-cyan-400",
     hoverBorder: "hover:border-cyan-500/50",
     hoverBg: "hover:bg-cyan-500/5",
-    hoverText: "group-hover:text-cyan-400",
+    hoverText: "group-hover:text-cyan-800 dark:group-hover:text-cyan-400",
     shadow: "hover:shadow-cyan-500/10",
-    badge: "bg-cyan-500/10 text-cyan-300 ring-cyan-500/20",
+    badge: "bg-cyan-500/10 text-cyan-900 ring-cyan-500/25 dark:text-cyan-300 dark:ring-cyan-500/20",
   },
   amber: {
-    icon: "bg-amber-500/10 text-amber-400",
+    icon: "bg-amber-500/10 text-amber-800 dark:text-amber-400",
     hoverBorder: "hover:border-amber-500/50",
     hoverBg: "hover:bg-amber-500/5",
-    hoverText: "group-hover:text-amber-400",
+    hoverText: "group-hover:text-amber-800 dark:group-hover:text-amber-400",
     shadow: "hover:shadow-amber-500/10",
-    badge: "bg-amber-500/10 text-amber-300 ring-amber-500/20",
+    badge: "bg-amber-500/10 text-amber-900 ring-amber-500/25 dark:text-amber-300 dark:ring-amber-500/20",
   },
   indigo: {
-    icon: "bg-indigo-500/10 text-indigo-400",
+    icon: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400",
     hoverBorder: "hover:border-indigo-500/50",
     hoverBg: "hover:bg-indigo-500/5",
-    hoverText: "group-hover:text-indigo-400",
+    hoverText: "group-hover:text-indigo-700 dark:group-hover:text-indigo-400",
     shadow: "hover:shadow-indigo-500/10",
-    badge: "bg-indigo-500/10 text-indigo-300 ring-indigo-500/20",
+    badge: "bg-indigo-500/10 text-indigo-800 ring-indigo-500/25 dark:text-indigo-300 dark:ring-indigo-500/20",
   },
   yellow: {
-    icon: "bg-yellow-500/10 text-yellow-400",
+    icon: "bg-yellow-500/10 text-yellow-800 dark:text-yellow-400",
     hoverBorder: "hover:border-yellow-500/50",
     hoverBg: "hover:bg-yellow-500/5",
-    hoverText: "group-hover:text-yellow-400",
+    hoverText: "group-hover:text-yellow-800 dark:group-hover:text-yellow-400",
     shadow: "hover:shadow-yellow-500/10",
-    badge: "bg-yellow-500/10 text-yellow-300 ring-yellow-500/20",
+    badge: "bg-yellow-500/10 text-yellow-900 ring-yellow-500/25 dark:text-yellow-300 dark:ring-yellow-500/20",
   },
   red: {
-    icon: "bg-red-500/10 text-red-400",
+    icon: "bg-red-500/10 text-red-700 dark:text-red-400",
     hoverBorder: "hover:border-red-500/50",
     hoverBg: "hover:bg-red-500/5",
-    hoverText: "group-hover:text-red-400",
+    hoverText: "group-hover:text-red-700 dark:group-hover:text-red-400",
     shadow: "hover:shadow-red-500/10",
-    badge: "bg-red-500/10 text-red-300 ring-red-500/20",
+    badge: "bg-red-500/10 text-red-800 ring-red-500/25 dark:text-red-300 dark:ring-red-500/20",
   },
   green: {
-    icon: "bg-green-500/10 text-green-400",
+    icon: "bg-green-500/10 text-green-700 dark:text-green-400",
     hoverBorder: "hover:border-green-500/50",
     hoverBg: "hover:bg-green-500/5",
-    hoverText: "group-hover:text-green-400",
+    hoverText: "group-hover:text-green-700 dark:group-hover:text-green-400",
     shadow: "hover:shadow-green-500/10",
-    badge: "bg-green-500/10 text-green-300 ring-green-500/20",
+    badge: "bg-green-500/10 text-green-800 ring-green-500/25 dark:text-green-300 dark:ring-green-500/20",
   },
   orange: {
-    icon: "bg-orange-500/10 text-orange-400",
+    icon: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
     hoverBorder: "hover:border-orange-500/50",
     hoverBg: "hover:bg-orange-500/5",
-    hoverText: "group-hover:text-orange-400",
+    hoverText: "group-hover:text-orange-700 dark:group-hover:text-orange-400",
     shadow: "hover:shadow-orange-500/10",
-    badge: "bg-orange-500/10 text-orange-300 ring-orange-500/20",
+    badge: "bg-orange-500/10 text-orange-800 ring-orange-500/25 dark:text-orange-300 dark:ring-orange-500/20",
   },
   rose: {
-    icon: "bg-rose-500/10 text-rose-400",
+    icon: "bg-rose-500/10 text-rose-700 dark:text-rose-400",
     hoverBorder: "hover:border-rose-500/50",
     hoverBg: "hover:bg-rose-500/5",
-    hoverText: "group-hover:text-rose-400",
+    hoverText: "group-hover:text-rose-700 dark:group-hover:text-rose-400",
     shadow: "hover:shadow-rose-500/10",
-    badge: "bg-rose-500/10 text-rose-300 ring-rose-500/20",
+    badge: "bg-rose-500/10 text-rose-800 ring-rose-500/25 dark:text-rose-300 dark:ring-rose-500/20",
   },
   teal: {
-    icon: "bg-teal-500/10 text-teal-400",
+    icon: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
     hoverBorder: "hover:border-teal-500/50",
     hoverBg: "hover:bg-teal-500/5",
-    hoverText: "group-hover:text-teal-400",
+    hoverText: "group-hover:text-teal-700 dark:group-hover:text-teal-400",
     shadow: "hover:shadow-teal-500/10",
-    badge: "bg-teal-500/10 text-teal-300 ring-teal-500/20",
+    badge: "bg-teal-500/10 text-teal-800 ring-teal-500/25 dark:text-teal-300 dark:ring-teal-500/20",
   },
   slate: {
-    icon: "bg-slate-500/10 text-slate-300",
+    icon: "bg-slate-500/10 text-slate-700 dark:text-slate-300",
     hoverBorder: "hover:border-slate-400/50",
     hoverBg: "hover:bg-slate-500/5",
-    hoverText: "group-hover:text-slate-200",
+    hoverText: "group-hover:text-slate-800 dark:group-hover:text-slate-200",
     shadow: "hover:shadow-slate-500/10",
-    badge: "bg-slate-500/10 text-slate-300 ring-slate-500/20",
+    badge: "bg-slate-500/10 text-slate-800 ring-slate-500/25 dark:text-slate-300 dark:ring-slate-500/20",
   },
   emerald: {
-    icon: "bg-emerald-500/10 text-emerald-400",
+    icon: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
     hoverBorder: "hover:border-emerald-500/50",
     hoverBg: "hover:bg-emerald-500/5",
-    hoverText: "group-hover:text-emerald-400",
+    hoverText: "group-hover:text-emerald-700 dark:group-hover:text-emerald-400",
     shadow: "hover:shadow-emerald-500/10",
-    badge: "bg-emerald-500/10 text-emerald-300 ring-emerald-500/20",
+    badge: "bg-emerald-500/10 text-emerald-800 ring-emerald-500/25 dark:text-emerald-300 dark:ring-emerald-500/20",
   },
   primary: {
     icon: "bg-primary/10 text-primary",
@@ -287,7 +287,7 @@ export function FeatureCard({
   const inner = (
     <div
       className={cn(
-        "group flex h-full flex-col rounded-xl border border-border/60 bg-card/50 p-6 backdrop-blur-sm",
+        "group flex h-full flex-col rounded-xl border border-border/60 surface-panel p-6",
         "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
         colors.hoverBorder,
         colors.hoverBg,
@@ -385,7 +385,7 @@ export function ContentPanel({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border border-border/60 bg-card/60 shadow-sm backdrop-blur-sm ring-1 ring-border/30",
+        "overflow-hidden rounded-xl border border-border/60 surface-panel shadow-sm ring-1 ring-border/30",
         padding && "p-4 sm:p-5",
         className,
       )}
@@ -490,7 +490,7 @@ export function EmptyState({
 /** Prose wrapper for legal / long-form pages. */
 export function ProsePanel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <ContentPanel className={cn("prose prose-invert prose-sm max-w-none", className)} padding>
+    <ContentPanel className={cn("prose prose-sm max-w-none dark:prose-invert", className)} padding>
       {children}
     </ContentPanel>
   );

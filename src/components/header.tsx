@@ -83,7 +83,7 @@ function NavDropdown({ group }: { group: typeof NAV_GROUPS[number] }) {
 
       {open && (
         <div className="absolute top-full left-0 pt-1 z-50" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
-          <div className="w-56 bg-card/90 backdrop-blur-xl border border-border/60 rounded-xl shadow-xl shadow-black/20 p-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="w-56 bg-popover backdrop-blur-xl border border-border/60 rounded-xl shadow-elevation p-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
             {group.links.map((link) => (
               <Link
                 key={link.href}
@@ -216,7 +216,7 @@ export function Header() {
   }, [isAdmin]);
 
   return (
-    <header className="page-ambient-ignore sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-black/10 backdrop-blur-xl transition-colors duration-300">
+    <header className="page-ambient-ignore sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-[var(--shadow-color)] backdrop-blur-xl transition-colors duration-300">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       <div className="flex h-14 w-full items-center gap-2 px-4 sm:px-5 lg:gap-3 lg:px-6">
         <Link href="/" className="shrink-0 text-xl font-bold tracking-tight">
@@ -249,7 +249,7 @@ export function Header() {
 
             <Link
               href="/support"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-rose-400 hover:text-rose-300 transition-colors rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-rose-800 hover:text-rose-700 transition-colors rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15 dark:text-rose-400 dark:hover:text-rose-300"
             >
               <Heart className="h-3.5 w-3.5" />
               Support
@@ -257,7 +257,7 @@ export function Header() {
 
             <Link
               href="/report-issue"
-              className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-amber-400/70 hover:text-amber-400 transition-colors rounded-lg hover:bg-amber-500/5"
+              className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-amber-800/80 hover:text-amber-900 transition-colors rounded-lg hover:bg-amber-500/5 dark:text-amber-400/70 dark:hover:text-amber-400"
             >
               <Flag className="h-3.5 w-3.5" />
               Report
@@ -266,7 +266,7 @@ export function Header() {
             {isAdmin && (
               <Link
                 href="/admin/reports"
-                className="relative flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-400/70 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/5"
+                className="relative flex items-center gap-1.5 px-2 py-1.5 text-sm text-red-700/80 hover:text-red-800 transition-colors rounded-lg hover:bg-red-500/5 dark:text-red-400/70 dark:hover:text-red-400"
               >
                 <Shield className="h-3.5 w-3.5" />
                 Admin
@@ -378,7 +378,7 @@ export function Header() {
             <Link
               href="/support"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-rose-800 hover:text-rose-700 hover:bg-rose-500/10 transition-colors dark:text-rose-400 dark:hover:text-rose-300"
             >
               <Heart className="h-4 w-4" />
               Support
@@ -386,7 +386,7 @@ export function Header() {
             <Link
               href="/report-issue"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-amber-400/70 hover:text-amber-400 hover:bg-secondary transition-colors"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-amber-800/80 hover:text-amber-900 hover:bg-secondary transition-colors dark:text-amber-400/70 dark:hover:text-amber-400"
             >
               <Flag className="h-4 w-4" />
               Report Issue
@@ -395,7 +395,7 @@ export function Header() {
               <Link
                 href="/admin/reports"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400/70 hover:text-red-400 hover:bg-secondary transition-colors"
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-700/80 hover:text-red-800 hover:bg-secondary transition-colors dark:text-red-400/70 dark:hover:text-red-400"
               >
                 <Shield className="h-4 w-4" />
                 Admin Reports

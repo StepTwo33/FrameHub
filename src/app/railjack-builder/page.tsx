@@ -305,7 +305,7 @@ export default function RailjackBuilderPage() {
         <p className="text-muted-foreground mb-4">Configure your Railjack components, armaments, and Plexus mods</p>
 
         <div className="mb-6 border border-rose-500/20 rounded-xl p-4 bg-rose-500/5">
-          <h2 className="text-xs font-semibold tracking-wider text-rose-300 mb-2">URANUS PROXIMA (UPDATE 43)</h2>
+          <h2 className="text-xs font-semibold tracking-wider text-rose-800 mb-2 dark:text-rose-300">URANUS PROXIMA (UPDATE 43)</h2>
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
             Jade Shadows: Constellations adds Pontis Tower, Steel Path Railjack, four new Arcanes, and two story missions with reference ship loadouts.
           </p>
@@ -322,7 +322,7 @@ export default function RailjackBuilderPage() {
               <button
                 key={p.id}
                 onClick={() => applyRailjackPreset(p.id)}
-                className="px-3 py-1.5 text-xs rounded-lg border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 transition-colors"
+                className="px-3 py-1.5 text-xs rounded-lg border border-rose-500/30 text-rose-800 hover:bg-rose-500/10 transition-colors dark:text-rose-300"
               >
                 Load {p.name} ({p.owner})
               </button>
@@ -754,7 +754,7 @@ export default function RailjackBuilderPage() {
             {/* Simulation toggles for conditional mods & active abilities */}
             {showSimulationPanel && (
               <div className="border border-amber-500/20 rounded-xl p-4 bg-amber-500/5">
-                <h3 className="text-xs font-semibold tracking-wider text-amber-300 mb-3">SIMULATION</h3>
+                <h3 className="text-xs font-semibold tracking-wider text-amber-800 mb-3 dark:text-amber-300">SIMULATION</h3>
                 <div className="space-y-3 text-xs">
                   {hasCrimsonFugue && (
                     <div>
@@ -768,7 +768,7 @@ export default function RailjackBuilderPage() {
                         onChange={(e) => setCrimsonFugueStacks(Number(e.target.value))}
                         className="w-full"
                       />
-                      <span className="font-mono text-amber-300">{crimsonFugueStacks}</span>
+                      <span className="font-mono text-amber-800 dark:text-amber-300">{crimsonFugueStacks}</span>
                     </div>
                   )}
                   {hasCruisingSpeed && (
@@ -802,7 +802,7 @@ export default function RailjackBuilderPage() {
                           onClick={() => { setActiveBattleAbilityId(null); setActiveTacticalAbilityId(null); }}
                           className={cn(
                             "px-2 py-1 rounded border text-[10px]",
-                            !activeBattleAbilityId && !activeTacticalAbilityId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                            !activeBattleAbilityId && !activeTacticalAbilityId ? "border-amber-500/50 text-amber-900 dark:text-amber-300" : "border-border text-muted-foreground",
                           )}
                         >
                           None
@@ -814,7 +814,7 @@ export default function RailjackBuilderPage() {
                             onClick={() => { setActiveBattleAbilityId(a.modId); setActiveTacticalAbilityId(null); }}
                             className={cn(
                               "px-2 py-1 rounded border text-[10px]",
-                              activeBattleAbilityId === a.modId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                              activeBattleAbilityId === a.modId ? "border-amber-500/50 text-amber-900 dark:text-amber-300" : "border-border text-muted-foreground",
                             )}
                           >
                             {a.name}
@@ -827,7 +827,7 @@ export default function RailjackBuilderPage() {
                             onClick={() => { setActiveTacticalAbilityId(a.modId); setActiveBattleAbilityId(null); }}
                             className={cn(
                               "px-2 py-1 rounded border text-[10px]",
-                              activeTacticalAbilityId === a.modId ? "border-amber-500/50 text-amber-300" : "border-border text-muted-foreground",
+                              activeTacticalAbilityId === a.modId ? "border-amber-500/50 text-amber-900 dark:text-amber-300" : "border-border text-muted-foreground",
                             )}
                           >
                             {a.name}

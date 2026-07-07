@@ -10,13 +10,7 @@ import { cn } from "@/lib/utils";
 import { getArcaneImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 
-const rarityColors: Record<string, string> = {
-  common: "bg-amber-900/30 text-amber-300 border-amber-900/50",
-  uncommon: "bg-slate-500/20 text-slate-300 border-slate-500/50",
-  rare: "bg-yellow-500/20 text-yellow-300 border-yellow-500/50",
-  legendary: "bg-white/10 text-white border-white/30",
-};
-
+import { RARITY_BADGE_COLORS } from "@/lib/rarity-badge-colors";
 interface ArcaneSlotProps {
   arcane: Mod | null;
   rank: number;
@@ -115,7 +109,7 @@ export function ArcanePicker({ open, onOpenChange, arcanes, equippedArcaneIds, o
                       <GameAssetImage src={getArcaneImage(arcane.name)} alt="" width={28} height={28} className="w-7 h-7 rounded object-contain bg-muted/20 shrink-0" hideOnError />
                       <span className="text-sm font-medium">{arcane.name}</span>
                     </div>
-                    <Badge variant="outline" className={cn("text-[10px]", rarityColors[arcane.rarity])}>
+                    <Badge variant="outline" className={cn("text-[10px]", RARITY_BADGE_COLORS[arcane.rarity])}>
                       {arcane.rarity}
                     </Badge>
                   </div>

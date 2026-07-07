@@ -16,10 +16,10 @@ import {
 import { cleanModDescription, formatModStatValue } from "@/lib/mod-display";
 
 const rarityBorderColors: Record<string, string> = {
-  common: "border-amber-900/50",
-  uncommon: "border-slate-400/50",
-  rare: "border-yellow-500/50",
-  legendary: "border-white/50",
+  common: "border-amber-700/40 dark:border-amber-900/50",
+  uncommon: "border-slate-400/60 dark:border-slate-400/50",
+  rare: "border-yellow-600/50 dark:border-yellow-500/50",
+  legendary: "border-violet-500/50 dark:border-white/50",
 };
 
 const ALL_POLARITIES = ["madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra", "universal"];
@@ -75,8 +75,8 @@ function FormaPolarizeButton({
           : cn(
               "h-7 gap-1 px-2 text-[10px] font-semibold leading-none",
               active
-                ? "border-yellow-400 bg-yellow-500/25 text-yellow-300 ring-1 ring-yellow-400/40"
-                : "border-yellow-500/50 bg-yellow-500/15 text-yellow-400 hover:bg-yellow-500/25 hover:border-yellow-400/70"
+                ? "border-yellow-600 bg-yellow-500/20 text-yellow-900 ring-1 ring-yellow-500/40 dark:border-yellow-400 dark:bg-yellow-500/25 dark:text-yellow-300 dark:ring-yellow-400/40"
+                : "border-yellow-600/60 bg-yellow-500/10 text-yellow-800 hover:bg-yellow-500/20 hover:border-yellow-600/80 dark:border-yellow-500/50 dark:bg-yellow-500/15 dark:text-yellow-400 dark:hover:bg-yellow-500/25 dark:hover:border-yellow-400/70"
             )
       )}
       title={
@@ -107,8 +107,8 @@ function PolarityPicker({
   onClose: () => void;
 }) {
   return (
-    <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-card border border-yellow-500/30 rounded-lg p-2 shadow-lg shadow-black/30">
-      <p className="text-[10px] font-medium text-yellow-400/90 mb-1.5 px-0.5">
+    <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-card border border-yellow-600/30 dark:border-yellow-500/30 rounded-lg p-2 shadow-lg shadow-[var(--shadow-color)]">
+      <p className="text-[10px] font-medium text-yellow-800/90 dark:text-yellow-400/90 mb-1.5 px-0.5">
         Forma — pick slot polarity
       </p>
       <div className="grid grid-cols-4 gap-1">
@@ -131,7 +131,7 @@ function PolarityPicker({
         <button
           type="button"
           onClick={() => { onPolarize(null); onClose(); }}
-          className="w-full mt-1.5 text-[10px] text-red-400 hover:text-red-300 py-1"
+          className="w-full mt-1.5 text-[10px] text-red-700 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 py-1"
         >
           Remove polarity
         </button>
@@ -222,16 +222,16 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
             </span>
           </div>
           {mod.subCategory === "riven" && rivenStats && Object.keys(rivenStats).length > 0 ? (
-            <div className="mt-0.5 space-y-0 text-[11px] leading-snug text-purple-300">
+            <div className="mt-0.5 space-y-0 text-[11px] leading-snug text-purple-800 dark:text-purple-300">
               {Object.entries(rivenStats).slice(0, 3).map(([k, v]) => {
                 const pool = weaponCategory ? getRivenStatsForCategory(weaponCategory) : [];
                 const lbl = pool.find(s => s.key === k)?.label || k;
                 return <div key={k} className="truncate">{v >= 0 ? "+" : ""}{(v * 100).toFixed(1)}% {lbl}</div>;
               })}
-              {Object.keys(rivenStats).length > 3 && <div className="text-purple-400/60">+{Object.keys(rivenStats).length - 3} more</div>}
+              {Object.keys(rivenStats).length > 3 && <div className="text-purple-600/70 dark:text-purple-400/60">+{Object.keys(rivenStats).length - 3} more</div>}
             </div>
           ) : statEntries.length > 0 ? (
-            <div className="mt-0.5 space-y-0.5 text-[11px] leading-snug text-cyan-300/80">
+            <div className="mt-0.5 space-y-0.5 text-[11px] leading-snug text-cyan-800/90 dark:text-cyan-300/80">
               {statEntries.map(([k, v]) => (
                 <div key={k} className={compact ? "line-clamp-1" : "line-clamp-2"}>{formatStat(k, v as number)}</div>
               ))}
@@ -252,16 +252,16 @@ export function ModSlotCard({ mod, rank, slotIndex, label, slotPolarity, rivenSt
             className={cn(
               "whitespace-nowrap text-[11px] font-medium",
               polarityEffect === "match"
-                ? "text-green-400"
+                ? "text-green-700 dark:text-green-400"
                 : polarityEffect === "mismatch"
-                  ? "text-red-400"
+                  ? "text-red-700 dark:text-red-400"
                   : "text-muted-foreground",
             )}
           >
             ⚡{effectiveDrain}
           </span>
           {mod.subCategory === "riven" && onEditRiven && (
-            <button onClick={(e) => { e.stopPropagation(); onEditRiven(); }} className="text-purple-400 transition-colors hover:text-purple-300" title="Edit Riven Stats">
+            <button onClick={(e) => { e.stopPropagation(); onEditRiven(); }} className="text-purple-700 transition-colors hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300" title="Edit Riven Stats">
               <Pencil className="h-3 w-3" />
             </button>
           )}

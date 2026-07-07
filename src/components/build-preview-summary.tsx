@@ -12,7 +12,7 @@ export function BuildPreviewSummary({ preview }: { preview: BuildPreviewData }) 
             alt={preview.itemName}
             width={56}
             height={56}
-            className="h-14 w-14 shrink-0 rounded-lg bg-black/20 object-contain p-1"
+            className="h-14 w-14 shrink-0 rounded-lg bg-muted/50 dark:bg-black/20 object-contain p-1"
             hideOnError
           />
         ) : (
@@ -59,7 +59,7 @@ export function BuildPreviewSummary({ preview }: { preview: BuildPreviewData }) 
             {preview.arcaneChips.map((chip) => (
               <span
                 key={chip.label}
-                className="inline-flex rounded-md border border-purple-500/25 bg-purple-500/10 px-2 py-1 text-xs font-medium text-purple-300"
+                className="inline-flex rounded-md border border-purple-500/25 bg-purple-500/10 px-2 py-1 text-xs font-medium text-purple-900 dark:text-purple-300"
               >
                 {chip.label}
               </span>

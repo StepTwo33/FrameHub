@@ -845,7 +845,7 @@ export default function WeaponBuilderPage() {
                                     className={cn(
                                       "flex-1 text-left p-2 rounded-lg border text-[10px] transition-all",
                                       selected === evo.slot
-                                        ? "border-orange-500/50 bg-orange-500/10 text-orange-300"
+                                        ? "border-orange-500/50 bg-orange-500/10 text-orange-900 dark:text-orange-300"
                                         : "border-border text-muted-foreground hover:border-orange-500/30"
                                     )}
                                   >

@@ -184,7 +184,7 @@ function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, f
 
       {exaltedWeapon && (
         <div className="mb-3 rounded-lg border border-purple-500/25 bg-purple-500/5 px-2.5 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-purple-300">Exalted weapon</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-purple-800 dark:text-purple-300">Exalted weapon</p>
           <p className="mt-0.5 text-xs font-medium">{exaltedWeapon.name}</p>
           <p className="text-[10px] text-muted-foreground">
             Mod this weapon in the Exalted Weapon section below.
@@ -208,7 +208,7 @@ function HelminthSubsumeButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-medium text-emerald-300 transition-colors hover:bg-emerald-500/20 hover:border-emerald-400/50"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-medium text-emerald-900 transition-colors hover:bg-emerald-500/20 hover:border-emerald-600/50 dark:text-emerald-300 dark:hover:border-emerald-400/50"
     >
       <RefreshCw className="h-3.5 w-3.5 shrink-0" />
       {label}
@@ -263,7 +263,7 @@ function HelminthAbilityCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-300 transition-colors hover:bg-rose-500/20"
+          className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-800 transition-colors hover:bg-rose-500/20 dark:text-rose-300"
         >
           Restore ability
         </button>

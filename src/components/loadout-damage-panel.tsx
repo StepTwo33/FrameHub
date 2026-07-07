@@ -84,7 +84,7 @@ function StatLine({ label, value, highlight }: { label: string; value: string; h
   return (
     <div className="flex justify-between items-center py-0.5">
       <span className="text-[10px] text-muted-foreground">{label}</span>
-      <span className={cn("text-[10px] font-mono tabular-nums", highlight && "text-amber-300 font-medium")}>{value}</span>
+      <span className={cn("text-[10px] font-mono tabular-nums", highlight && "text-amber-800 font-medium dark:text-amber-300")}>{value}</span>
     </div>
   );
 }
@@ -179,7 +179,7 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
         <div className="px-4 py-2 text-xs text-muted-foreground border-b border-border/30 flex items-center gap-1.5">
           <Target className="h-3.5 w-3.5 text-amber-400/80" />
           Best sustained: <span className="text-foreground font-medium">{best.slot}</span> ({best.name}) —{" "}
-          <span className="font-mono text-amber-300">{fmtDamageNum(best.sustainedDps)}</span>
+          <span className="font-mono text-amber-800 dark:text-amber-300">{fmtDamageNum(best.sustainedDps)}</span>
           {showTtk && scenario === "vsEnemy" && (
             <span className="text-[10px] ml-1">vs {enemy.name} L{enemyLevel}</span>
           )}
@@ -197,7 +197,7 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
               <div className="space-y-2">
                 {stats.warframe.forms.map((form) => (
                   <div key={form.id} className="rounded-md border border-purple-500/15 bg-background/30 px-2 py-1.5">
-                    <p className="text-[10px] font-semibold text-purple-300/90 mb-1">{form.label}</p>
+                    <p className="text-[10px] font-semibold text-purple-800/90 mb-1 dark:text-purple-300/90">{form.label}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
                       <MiniStat label="EHP" value={fmtDamageNum(form.stats.effectiveHealth)} />
                       <MiniStat label="Strength" value={`${(form.stats.abilityStrength * 100).toFixed(0)}%`} />

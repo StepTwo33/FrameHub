@@ -5,7 +5,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OverridesProvider } from "@/components/overrides-provider";
 import { Footer } from "@/components/footer";
-import { Toaster } from "sonner";
+import { ThemeAwareToaster } from "@/components/theme-aware-toaster";
 import { PWARegister } from "@/components/pwa-register";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import { DeployRefreshNotifier } from "@/components/deploy-refresh-notifier";
@@ -59,7 +59,7 @@ export default async function RootLayout({
       >
         <TooltipProvider>
           <OverridesProvider>
-          <Toaster theme="dark" position="bottom-right" richColors closeButton />
+          <ThemeAwareToaster />
           <PWARegister />
           <PWAInstallPrompt />
           <DeployRefreshNotifier />

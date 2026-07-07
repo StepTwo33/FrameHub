@@ -91,7 +91,7 @@ export function ArchonShardSlot({ shard, slotIndex, onEquip, onRemove }: ArchonS
       type="button"
       onClick={onRemove}
       className={cn(
-        "flex h-[4.75rem] w-16 flex-col items-center justify-between rounded-lg border bg-black/40 px-1 py-1.5 transition-all hover:bg-black/55",
+        "flex h-[4.75rem] w-16 flex-col items-center justify-between rounded-lg border bg-muted/60 px-1 py-1.5 transition-all hover:bg-muted dark:bg-black/40 dark:hover:bg-black/55",
         border,
         isTau && "shadow-[0_0_12px_-2px_rgba(251,191,36,0.35)]",
       )}

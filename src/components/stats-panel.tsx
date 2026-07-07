@@ -16,19 +16,19 @@ import {
 } from "@/lib/calculator";
 
 const ELEMENT_COLORS: Record<string, string> = {
-  heat: "text-orange-400",
-  cold: "text-cyan-300",
-  toxin: "text-green-400",
-  electricity: "text-blue-300",
-  blast: "text-yellow-400",
-  corrosive: "text-lime-400",
-  gas: "text-emerald-300",
-  magnetic: "text-indigo-300",
-  radiation: "text-amber-300",
-  viral: "text-teal-300",
-  impact: "text-slate-300",
-  puncture: "text-stone-300",
-  slash: "text-red-300",
+  heat: "text-orange-700 dark:text-orange-400",
+  cold: "text-cyan-800 dark:text-cyan-300",
+  toxin: "text-green-700 dark:text-green-400",
+  electricity: "text-blue-800 dark:text-blue-300",
+  blast: "text-yellow-700 dark:text-yellow-400",
+  corrosive: "text-lime-700 dark:text-lime-400",
+  gas: "text-emerald-800 dark:text-emerald-300",
+  magnetic: "text-indigo-800 dark:text-indigo-300",
+  radiation: "text-amber-800 dark:text-amber-300",
+  viral: "text-teal-800 dark:text-teal-300",
+  impact: "text-slate-700 dark:text-slate-300",
+  puncture: "text-stone-700 dark:text-stone-300",
+  slash: "text-red-700 dark:text-red-300",
 };
 
 const RADIAL_DAMAGE_KEYS = [

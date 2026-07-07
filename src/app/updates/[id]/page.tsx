@@ -66,7 +66,7 @@ export default async function SiteUpdatePage({
           </div>
 
           <ContentPanel>
-            <div className="prose prose-invert prose-sm max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90">
+            <div className="prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90 dark:prose-invert">
               {update.body}
             </div>
           </ContentPanel>

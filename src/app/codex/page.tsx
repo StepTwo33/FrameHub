@@ -82,6 +82,7 @@ import {
   NecramechDetailPanel,
 } from "@/components/codex-entity-panels";
 import { cn } from "@/lib/utils";
+import { accentTone } from "@/lib/accent-tones";
 import { getSetBonusPieces, isSetBonusMod } from "@/lib/set-mod-catalog";
 
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"] as const;
@@ -392,7 +393,7 @@ function CodexPageContent() {
                     className={cn(
                       "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors",
                       active
-                        ? "bg-amber-500/15 font-medium text-amber-300"
+                        ? accentTone.amber.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -416,7 +417,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       modCategory === cat.id
-                        ? "bg-indigo-500/15 font-medium text-indigo-300"
+                        ? accentTone.indigo.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -439,7 +440,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       weaponCategory === cat.id
-                        ? "bg-blue-500/15 font-medium text-blue-300"
+                        ? accentTone.blue.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -456,7 +457,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       !weaponAoeOnly
-                        ? "bg-blue-500/15 font-medium text-blue-300"
+                        ? accentTone.blue.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -468,7 +469,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       weaponAoeOnly
-                        ? "bg-orange-500/15 font-medium text-orange-300"
+                        ? accentTone.orange.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -491,7 +492,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       companionType === cat.id
-                        ? "bg-orange-500/15 font-medium text-orange-300"
+                        ? accentTone.orange.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -512,7 +513,7 @@ function CodexPageContent() {
                   className={cn(
                     "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                     arcaneSlot === "all"
-                      ? "bg-purple-500/15 font-medium text-purple-300"
+                      ? accentTone.purple.chipActive
                       : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                   )}
                 >
@@ -526,7 +527,7 @@ function CodexPageContent() {
                     className={cn(
                       "block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors",
                       arcaneSlot === f.id
-                        ? "bg-purple-500/15 font-medium text-purple-300"
+                        ? accentTone.purple.chipActive
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
@@ -555,7 +556,7 @@ function CodexPageContent() {
                       className={cn(
                         "rounded px-2 py-0.5 text-[10px] capitalize transition-colors",
                         polarityFilter === p
-                          ? "bg-indigo-500/20 text-indigo-300"
+                          ? accentTone.indigo.chipStrong
                           : "text-muted-foreground hover:bg-muted/50",
                       )}
                     >
@@ -725,7 +726,7 @@ function CodexDetailCard({ children, onClose }: { children: ReactNode; onClose: 
       <ContentPanel
         className={cn(
           "pointer-events-auto flex w-full max-w-sm flex-col overflow-hidden",
-          "max-h-[min(72vh,calc(100vh-5rem))] shadow-2xl shadow-black/40",
+          "max-h-[min(72vh,calc(100vh-5rem))] shadow-2xl shadow-[var(--shadow-color)]",
           "border-border/80 bg-card/95 backdrop-blur-md",
         )}
       >
@@ -790,7 +791,7 @@ function CodexModRow({
         </p>
       </div>
       {setBonus ? (
-        <span className="text-[10px] font-medium text-amber-300/90" title="Set pieces required">
+        <span className={cn("text-[10px] font-medium", accentTone.amber.textSoft)} title="Set pieces required">
           {pieces}-piece
         </span>
       ) : (
@@ -835,7 +836,7 @@ function CodexArcaneRow({
         <p className="truncate text-sm font-medium">{arcane.name}</p>
         <p className="text-[10px] text-muted-foreground">{getArcaneSlotLabel(arcane)}</p>
       </div>
-      {hasIssues && <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-400" />}
+      {hasIssues && <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />}
     </button>
   );
 }
@@ -909,7 +910,7 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
               {modBrowserCategoryLabel(mod)}
             </Badge>
             {aura && (
-              <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-300">
+              <Badge variant="outline" className={cn("text-[10px]", accentTone.amber.badge)}>
                 Aura
               </Badge>
             )}
@@ -918,31 +919,31 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
                 variant="outline"
                 className={cn(
                   "text-[10px]",
-                  slotCategory === "exilus" && "border-cyan-500/30 text-cyan-300",
-                  slotCategory === "tome" && "border-purple-500/30 text-purple-300",
-                  slotCategory === "historic" && "border-rose-500/30 text-rose-300",
+                  slotCategory === "exilus" && accentTone.cyan.badge,
+                  slotCategory === "tome" && accentTone.purple.badge,
+                  slotCategory === "historic" && accentTone.rose.badge,
                 )}
               >
                 {modSlotCategoryLabel(slotCategory)}
               </Badge>
             )}
             {exclusiveWeapons.length > 0 && (
-              <Badge variant="outline" className="text-[10px] border-orange-500/30 text-orange-300">
+              <Badge variant="outline" className={cn("text-[10px]", accentTone.orange.badge)}>
                 Weapon mod
               </Badge>
             )}
             {augmentWarframe && (
-              <Badge variant="outline" className="text-[10px] border-indigo-500/30 text-indigo-300">
+              <Badge variant="outline" className={cn("text-[10px]", accentTone.indigo.badge)}>
                 Warframe augment
               </Badge>
             )}
             {isUniversalAugment && (
-              <Badge variant="outline" className="text-[10px] border-indigo-500/30 text-indigo-300">
+              <Badge variant="outline" className={cn("text-[10px]", accentTone.indigo.badge)}>
                 Universal augment
               </Badge>
             )}
             {setBonus && (
-              <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-300">
+              <Badge variant="outline" className={cn("text-[10px]", accentTone.amber.badge)}>
                 Set bonus
               </Badge>
             )}
@@ -1178,7 +1179,7 @@ function ArcaneDetailPanel({
 
       {coverage.issues.length > 0 && (
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5">
-          <ul className="list-inside list-disc text-[11px] text-amber-200/80">
+          <ul className={cn("list-inside list-disc text-[11px]", accentTone.amber.textMuted)}>
             {coverage.issues.map((issue) => (
               <li key={issue}>{issue}</li>
             ))}
@@ -1193,7 +1194,7 @@ function ArcaneDetailPanel({
             {display.applied.map((line, idx) => (
               <li key={`applied-${idx}-${line.label}`} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{line.label}</span>
-                <span className="font-mono text-emerald-400">{line.value}</span>
+                <span className="font-mono text-emerald-700 dark:text-emerald-400">{line.value}</span>
               </li>
             ))}
           </ul>
@@ -1208,7 +1209,7 @@ function ArcaneDetailPanel({
               <li key={`cond-${idx}-${line.label}`}>
                 <div className="flex justify-between gap-2">
                   <span className="text-muted-foreground">{line.label}</span>
-                  <span className="font-mono text-amber-300/90">{line.value}</span>
+                  <span className={cn("font-mono", accentTone.amber.mono)}>{line.value}</span>
                 </div>
                 {line.note && (
                   <p className="text-[10px] text-muted-foreground/80">{line.note}</p>
@@ -1226,7 +1227,7 @@ function ArcaneDetailPanel({
             {behavior.effects.map((line) => (
               <li key={line.statKey} className="flex justify-between gap-2">
                 <span className="text-muted-foreground truncate">{getArcaneStatLabel(line.statKey)}</span>
-                <span className="shrink-0 text-[10px] text-purple-300/90">{itemApplyTargetLabel(line.target)}</span>
+                <span className={cn("shrink-0 text-[10px]", accentTone.purple.textSoft)}>{itemApplyTargetLabel(line.target)}</span>
               </li>
             ))}
           </ul>
@@ -1262,7 +1263,10 @@ function ArcaneDetailPanel({
               <button
                 type="button"
                 onClick={() => setEditValuesOpen(true)}
-                className="inline-flex items-center gap-1 rounded border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[10px] font-medium text-purple-300 hover:bg-purple-500/20"
+                className={cn(
+                  "inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-medium",
+                  accentTone.purple.button,
+                )}
               >
                 <Pencil className="h-2.5 w-2.5" />
                 Edit values
