@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
+import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site-metadata";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OverridesProvider } from "@/components/overrides-provider";
@@ -20,9 +21,41 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = getSiteUrl();
+const defaultTitle = `${SITE_NAME} - ${SITE_TAGLINE}`;
+
 export const metadata: Metadata = {
-  title: "Frame Hub - Warframe Build Planner",
-  description: "Plan and optimize your Warframe weapon and warframe builds with real-time stat calculations.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: defaultTitle,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "Warframe",
+    "build planner",
+    "build calculator",
+    "modding",
+    "loadout",
+    "DPS calculator",
+    "warframe builder",
+  ],
+  authors: [{ name: SITE_NAME, url: siteUrl }],
+  creator: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: SITE_NAME,
+    title: defaultTitle,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: SITE_DESCRIPTION,
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

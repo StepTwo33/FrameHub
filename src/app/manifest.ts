@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site-metadata";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Frame Hub - Warframe Build Planner",
-    short_name: "Frame Hub",
-    description:
-      "Plan and optimize your Warframe weapon and warframe builds with real-time stat calculations.",
+    name: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    short_name: SITE_NAME,
+    description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
     background_color: "#0a0a1a",
