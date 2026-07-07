@@ -1,4 +1,4 @@
-import { modsMap } from "@/data/mods";
+import { getEffectiveModsMap } from "@/lib/effective-data";
 import type { Companion, CompanionCalculatedStats, Mod, ModSlot } from "@/lib/types";
 import {
   applyVerifiedModStatToCompanion,
@@ -115,7 +115,7 @@ function applyLegacyCompanionStat(acc: CompanionModAccumulators, statKey: string
 export function calculateCompanionBuild(
   companion: Companion,
   equippedMods: EquippedCompanionMod[],
-  allMods: Map<string, Mod> = modsMap,
+  allMods: Map<string, Mod> = getEffectiveModsMap(),
 ): CompanionCalculatedStats {
   const acc = emptyAccumulators();
   const panel: { modBonuses?: Record<string, number> } = {};

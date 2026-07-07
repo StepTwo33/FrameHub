@@ -4,13 +4,12 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { allMods, modsMap } from "@/data/mods";
-import { allWeapons as allWeaponsData } from "@/data/weapons";
+import { useMods, useWeapons, useArchwings, useNecramechs } from "@/lib/use-data";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import { filterArchmeleeMods } from "@/lib/archmelee-mods";
 import { archgunModsForBuilder } from "@/lib/archgun-weapon-augment-mods";
 import { isArchwingAugment } from "@/lib/archwing-augment-mods";
-import { archwings, necramechs, Archwing, Necramech } from "@/data/archwing";
+import { Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { calculateArchwingBuild, calculateNecramechBuild } from "@/lib/archwing-calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
@@ -27,6 +26,10 @@ import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 type BuilderMode = "archwing" | "necramech";
 
 export default function ArchwingBuilderPage() {
+  const { mods: allMods, modsMap } = useMods();
+  const allWeaponsData = useWeapons();
+  const archwingList = useArchwings();
+  const necramechList = useNecramechs();
   const [mode, setMode] = useState<BuilderMode>("archwing");
 
   // Archwing state
@@ -113,11 +116,11 @@ export default function ArchwingBuilderPage() {
     const restoreMods = (slots: { modId: string; rank: number; slotIndex: number }[]) =>
       slots.map((m) => { const mod = modsMap.get(m.modId); return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain }; });
     if (d.mode === "archwing") {
-      setSelectedArchwing(archwings.find((a) => a.name === d.frameId) ?? null);
+      setSelectedArchwing(archwingList.find((a) => a.name === d.frameId) ?? null);
       setArchwingMods(restoreMods(d.frameMods));
       setArchwingPolarities(d.framePolarities || {});
     } else {
-      setSelectedNecramech(necramechs.find((n) => n.name === d.frameId) ?? null);
+      setSelectedNecramech(necramechList.find((n) => n.name === d.frameId) ?? null);
       setNecramechMods(restoreMods(d.frameMods));
       setNecramechPolarities(d.framePolarities || {});
     }
@@ -265,7 +268,7 @@ export default function ArchwingBuilderPage() {
                 {mode === "archwing" ? "SELECT ARCHWING" : "SELECT NECRAMECH"}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {mode === "archwing" ? archwings.map((aw) => (
+                {mode === "archwing" ? archwingList.map((aw) => (
                   <button
                     key={aw.id}
                     onClick={() => {
@@ -287,7 +290,7 @@ export default function ArchwingBuilderPage() {
                       HP {aw.health} • SH {aw.shield} • ARM {aw.armor}
                     </div>
                   </button>
-                )) : necramechs.map((nm) => (
+                )) : necramechList.map((nm) => (
                   <button
                     key={nm.id}
                     onClick={() => {

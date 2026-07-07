@@ -1,4 +1,4 @@
-import { modsMap } from "@/data/mods";
+import { getEffectiveModsMap } from "@/lib/effective-data";
 import {
   findRailjackArmament,
   findRailjackComponent,
@@ -256,7 +256,7 @@ export function computeRailjackArmamentStats(
 
 export function calculateRailjackBuild(
   input: RailjackBuildInput,
-  allMods: Map<string, Mod> = modsMap,
+  allMods: Map<string, Mod> = getEffectiveModsMap(),
 ): RailjackCalculatedStats {
   const base = { ...railjackBaseStats };
   let avionicsCapacity = 0;

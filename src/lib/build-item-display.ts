@@ -1,13 +1,16 @@
-import { archwings, necramechs } from "@/data/archwing";
-import { companionsMap } from "@/data/companions";
 import {
   ampPrisms,
   kitgunChambers,
   zawStrikes,
 } from "@/data/modular-weapons";
 import { reactors } from "@/data/railjack";
-import { warframesMap } from "@/data/warframes";
-import { weaponsMap } from "@/data/weapons";
+import {
+  getEffectiveArchwings,
+  getEffectiveCompanionsMap,
+  getEffectiveNecramechs,
+  getEffectiveWarframesMap,
+  getEffectiveWeaponsMap,
+} from "@/lib/effective-data";
 import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/images";
 
 export interface BuildItemDisplay {
@@ -50,6 +53,7 @@ function resolveModularDisplay(itemId: string): BuildItemDisplay {
   const typeLabel = MODULAR_TYPE_LABELS[modType] ?? "Modular";
   const itemName = partName ?? typeLabel;
 
+  const weaponsMap = getEffectiveWeaponsMap();
   const weapon = partId ? weaponsMap.get(partId) : undefined;
   const itemImage = weapon
     ? getWeaponImage(weapon.name, { category: weapon.category })
@@ -65,6 +69,12 @@ export function resolveBuildItemDisplay(type: string, itemId: string): BuildItem
   if (!itemId) {
     return { itemName: null, itemImage: null, typeLabel };
   }
+
+  const weaponsMap = getEffectiveWeaponsMap();
+  const warframesMap = getEffectiveWarframesMap();
+  const companionsMap = getEffectiveCompanionsMap();
+  const archwings = getEffectiveArchwings();
+  const necramechs = getEffectiveNecramechs();
 
   switch (type) {
     case "weapon": {

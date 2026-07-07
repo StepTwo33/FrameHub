@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { allMods, modsMap } from "@/data/mods";
+import { useMods } from "@/lib/use-data";
 import {
   allReactors, allShieldArrays, allEngines, allPlating,
   allTurrets, allOrdnance,
@@ -32,6 +32,7 @@ const BATTLE_SLOTS = 3;
 const TACTICAL_SLOTS = 3;
 
 export default function RailjackBuilderPage() {
+  const { mods: allMods, modsMap } = useMods();
   // Component state
   const [selectedReactor, setSelectedReactor] = useState<RailjackComponent | null>(null);
   const [selectedShield, setSelectedShield] = useState<RailjackComponent | null>(null);

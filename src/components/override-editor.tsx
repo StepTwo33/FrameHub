@@ -50,7 +50,7 @@ import {
   draftToRadialAttack,
   toRadialAttackDrafts,
 } from "@/components/override-field-editors";
-import { getEffectiveWeapons } from "@/lib/use-data";
+import { getEffectiveWeapons } from "@/lib/effective-data";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";

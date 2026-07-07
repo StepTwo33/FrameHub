@@ -1,5 +1,5 @@
 import { MOD_EXCLUSIVE_WEAPON_IDS } from "@/data/mod-weapon-tags";
-import { weaponsMap } from "@/data/weapons";
+import { getEffectiveWeaponsMap } from "@/lib/effective-data";
 import type { ModBrowserCategoryId } from "@/lib/mod-browser-categories";
 
 const PRIMARY_WEAPON_CATEGORIES = new Set([
@@ -17,7 +17,7 @@ const SECONDARY_WEAPON_CATEGORIES = new Set(["pistol", "secondary", "dual_pistol
 const MELEE_WEAPON_CATEGORIES = new Set(["melee", "archmelee", "zaw_strike"]);
 
 function weaponIdToModBrowserCategory(weaponId: string): ModBrowserCategoryId | null {
-  const weapon = weaponsMap.get(weaponId);
+  const weapon = getEffectiveWeaponsMap().get(weaponId);
   if (!weapon) return null;
   const category = weapon.category.toLowerCase();
   if (ARCHGUN_WEAPON_CATEGORIES.has(category)) return "archgun";
@@ -68,7 +68,7 @@ export function getExclusiveWeaponEntries(
   const weaponIds = MOD_EXCLUSIVE_WEAPON_IDS[modId];
   if (!weaponIds?.length) return [];
   return weaponIds.map((id) => {
-    const weapon = weaponsMap.get(id);
+    const weapon = getEffectiveWeaponsMap().get(id);
     return {
       id,
       name: weapon?.name ?? id.replace(/_/g, " "),

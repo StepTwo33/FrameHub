@@ -15,7 +15,7 @@ import {
 import { getWeaponImage, getWarframeImage, getCompanionImage, getModImage } from "@/lib/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
-import { modsMap } from "@/data/mods";
+import { useMods } from "@/lib/use-data";
 import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
 import { getAugmentModIdsForWarframe } from "@/lib/warframe-augment-mods";
 import { appendReturnTo } from "@/lib/nav-return";
@@ -302,6 +302,7 @@ function StatGrid({ items, compact }: { items: { label: string; value: string }[
 }
 
 export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapon; compact?: boolean; returnTo?: string }) {
+  const { modsMap } = useMods();
   const elements = weaponElementEntries(weapon);
   const radialAttacks = getWeaponRadialAttacks(weapon);
   const exclusiveModIds = getExclusiveModIdsForWeapon(weapon.id);
@@ -497,6 +498,7 @@ export function WarframeDetailPanel({
   compact?: boolean;
   returnTo?: string;
 }) {
+  const { modsMap } = useMods();
   const augmentModIds = getAugmentModIdsForWarframe(warframe.id);
   const augmentMods = augmentModIds
     .map((id) => modsMap.get(id))

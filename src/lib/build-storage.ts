@@ -1,11 +1,10 @@
 // Build storage utilities - localStorage fallback + cloud API when logged in
 import { ModSlot, EquippedArchonShard, Mod, ModularBuildData } from "./types";
-import { modsMap } from "@/data/mods";
-import { allArcanes } from "@/data/arcanes";
+import { resolveEffectiveModOrArcane } from "@/lib/effective-data";
 
-/** Arcanes are not in mods.ts; resolve from mods map first, then arcane list. */
+/** Arcanes are not in mods.ts; resolve from override-aware catalogs. */
 export function resolveArcaneById(id: string): Mod | null {
-  return modsMap.get(id) ?? allArcanes.find((a) => a.id === id) ?? null;
+  return resolveEffectiveModOrArcane(id);
 }
 
 /** Restore equipped arcane row from saved `arcaneIds` (cloud / localStorage). */

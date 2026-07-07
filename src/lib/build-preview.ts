@@ -1,9 +1,11 @@
 import { allHelminthAbilities } from "@/data/helminth";
 import { allArchonShards } from "@/data/archon-shards";
-import { companionsMap } from "@/data/companions";
-import { modsMap } from "@/data/mods";
-import { weaponsMap } from "@/data/weapons";
-import { warframesMap } from "@/data/warframes";
+import {
+  getEffectiveCompanionsMap,
+  getEffectiveModsMap,
+  getEffectiveWarframesMap,
+  getEffectiveWeaponsMap,
+} from "@/lib/effective-data";
 import { resolveArcaneById } from "@/lib/build-storage";
 import type { WarframeBuildData } from "@/lib/build-storage";
 import { dualFormModCountSummary } from "@/lib/dual-form-warframes";
@@ -25,7 +27,7 @@ export interface BuildPreviewData {
   modSummary: string;
 }
 
-function modChipsFromSlots(mods: ModSlot[] | undefined): BuildPreviewChip[] {
+function modChipsFromSlots(mods: ModSlot[] | undefined, modsMap = getEffectiveModsMap()): BuildPreviewChip[] {
   const chips: BuildPreviewChip[] = [];
   for (const m of mods ?? []) {
     const mod = modsMap.get(m.modId);
@@ -58,6 +60,10 @@ function shardSummary(shards: (EquippedArchonShard | null)[] | undefined): strin
 }
 
 export function summarizeBuildPreview(type: string, data: unknown): BuildPreviewData {
+  const modsMap = getEffectiveModsMap();
+  const weaponsMap = getEffectiveWeaponsMap();
+  const warframesMap = getEffectiveWarframesMap();
+  const companionsMap = getEffectiveCompanionsMap();
   const fallback: BuildPreviewData = {
     itemName: "Unknown item",
     itemImage: null,

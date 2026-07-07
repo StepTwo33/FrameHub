@@ -1,4 +1,4 @@
-import { modsMap } from "@/data/mods";
+import { getEffectiveModsMap } from "@/lib/effective-data";
 import type { Mod } from "@/lib/types";
 import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
 import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
@@ -11,7 +11,7 @@ const ARCHGUN_POOL_BLOCKLIST = new Set([
 /** Weapon-exclusive augments for this archgun (empty today — Warframe has none). */
 export function getArchgunWeaponAugmentModIds(weaponId: string): readonly string[] {
   return getExclusiveModIdsForWeapon(weaponId).filter((modId) => {
-    const mod = modsMap.get(modId);
+    const mod = getEffectiveModsMap().get(modId);
     return mod && isArchgunWeaponAugment(mod);
   });
 }
@@ -28,7 +28,7 @@ export function isArchgunWeaponAugment(
 export function archgunModsForBuilder(weaponId: string | undefined): Mod[] {
   const exclusiveIds = new Set(weaponId ? getArchgunWeaponAugmentModIds(weaponId) : []);
   const out: Mod[] = [];
-  for (const mod of modsMap.values()) {
+  for (const mod of getEffectiveModsMap().values()) {
     if (exclusiveIds.has(mod.id)) {
       out.push(mod);
       continue;

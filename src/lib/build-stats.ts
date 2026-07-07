@@ -1,7 +1,10 @@
-import { companionsMap } from "@/data/companions";
-import { modsMap } from "@/data/mods";
-import { allWeapons as allWeaponsData, weaponsMap } from "@/data/weapons";
-import { warframesMap } from "@/data/warframes";
+import {
+  getEffectiveCompanionsMap,
+  getEffectiveModsMap,
+  getEffectiveWarframesMap,
+  getEffectiveWeapons,
+  getEffectiveWeaponsMap,
+} from "@/lib/effective-data";
 import { allHelminthAbilities, type HelminthAbility } from "@/data/helminth";
 import {
   resolveSavedArcaneSlots,
@@ -74,7 +77,7 @@ function helminthToAbility(h: HelminthAbility): Ability {
 }
 
 function resolveBuildAbilities(data: WarframeBuildData): { ability: Ability; slot: number; helminth?: boolean }[] {
-  const wf = warframesMap.get(data.warframeId);
+  const wf = getEffectiveWarframesMap().get(data.warframeId);
   if (!wf) return [];
 
   const rows = wf.abilities.map((ability, i) => ({
@@ -121,14 +124,15 @@ function resolveExaltedPreview(
 
 export function resolvePublicBuildWarframePreview(
   data: unknown,
-  allWeapons: Weapon[] = allWeaponsData,
+  allWeapons: Weapon[] = getEffectiveWeapons(),
 ): PublicBuildWarframePreview | null {
   if (!data || typeof data !== "object") return null;
   const d = data as WarframeBuildData;
-  const wf = warframesMap.get(d.warframeId);
+  const wf = getEffectiveWarframesMap().get(d.warframeId);
   if (!wf) return null;
 
   const modSlots = d.mods ?? [];
+  const modsMap = getEffectiveModsMap();
   const baseStats = calculateWarframeBuild(wf, modSlots, modsMap);
   const stats = applyWarframeShardsAndArcanes(
     baseStats,
@@ -157,7 +161,7 @@ function baseWeaponStats(weapon: Weapon, incarnonEvolutions?: Record<number, num
   return calculateWeaponBuild(
     enrichWeapon(weapon),
     [],
-    modsMap,
+    getEffectiveModsMap(),
     incarnonChanges,
     scenarioSimParams("midFight"),
   );
@@ -167,9 +171,11 @@ function baseWeaponStats(weapon: Weapon, incarnonEvolutions?: Record<number, num
 export function resolvePublicBuildWeaponPreview(
   type: string,
   data: unknown,
-  allWeapons: Weapon[] = allWeaponsData,
+  allWeapons: Weapon[] = getEffectiveWeapons(),
 ): PublicBuildWeaponPreview | null {
   if (!data || typeof data !== "object") return null;
+  const modsMap = getEffectiveModsMap();
+  const weaponsMap = getEffectiveWeaponsMap();
 
   switch (type) {
     case "weapon": {
@@ -199,7 +205,7 @@ export function resolvePublicBuildWeaponPreview(
       const d = data as CompanionBuildData;
       const weaponMods = d.weaponMods ?? [];
       if (weaponMods.length === 0) return null;
-      const companion = companionsMap.get(d.companionId);
+      const companion = getEffectiveCompanionsMap().get(d.companionId);
       if (!companion) return null;
       const companionWeapon = resolveDefaultCompanionWeapon(companion, allWeapons);
       if (!companionWeapon) return null;

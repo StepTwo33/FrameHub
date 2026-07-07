@@ -1,10 +1,7 @@
-import { modsMap } from "@/data/mods";
-import { warframesMap } from "@/data/warframes";
+import { getEffectiveModsMap, getEffectiveWarframesMap } from "@/lib/effective-data";
 import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
 import type { Mod } from "@/lib/types";
-
-let warframeToAugments: Map<string, string[]> | null = null;
 
 /** Strip variant suffix so loki_prime matches augments tagged for loki. */
 export function normalizeWarframeId(warframeId: string): string {
@@ -56,6 +53,7 @@ export function warframeAugmentEligibleInBuilder(
 }
 
 function buildWarframeToAugmentsIndex(): Map<string, string[]> {
+  const modsMap = getEffectiveModsMap();
   const index = new Map<string, string[]>();
   for (const mod of modsMap.values()) {
     if (!isWarframeSpecificAugment(mod)) continue;
@@ -74,21 +72,16 @@ function buildWarframeToAugmentsIndex(): Map<string, string[]> {
   return index;
 }
 
-function getWarframeToAugmentsIndex(): Map<string, string[]> {
-  if (!warframeToAugments) warframeToAugments = buildWarframeToAugmentsIndex();
-  return warframeToAugments;
-}
-
 /** Ability augments for this warframe (prime/umbra variants included). */
 export function getAugmentModIdsForWarframe(warframeId: string): readonly string[] {
-  return getWarframeToAugmentsIndex().get(normalizeWarframeId(warframeId)) ?? [];
+  return buildWarframeToAugmentsIndex().get(normalizeWarframeId(warframeId)) ?? [];
 }
 
 export function getAugmentWarframeEntry(
   mod: Pick<Mod, "category" | "subCategory" | "warframeId" | "id">,
 ): { id: string; name: string } | null {
   if (!isWarframeSpecificAugment(mod) || !mod.warframeId) return null;
-  const wf = warframesMap.get(mod.warframeId);
+  const wf = getEffectiveWarframesMap().get(mod.warframeId);
   return {
     id: mod.warframeId,
     name: wf?.name ?? mod.warframeId.replace(/_/g, " "),

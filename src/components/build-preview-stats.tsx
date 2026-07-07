@@ -7,8 +7,7 @@ import {
   resolvePublicBuildWarframePreview,
   resolvePublicBuildWeaponPreview,
 } from "@/lib/build-stats";
-import { modsMap } from "@/data/mods";
-import { useWeapons } from "@/lib/use-data";
+import { useMods, useWeapons } from "@/lib/use-data";
 import type { EquippedMod } from "@/lib/types";
 
 function StatsDivider() {
@@ -45,6 +44,7 @@ function WeaponPreviewSection({
 
 export function BuildPreviewStats({ type, data }: { type: string; data: unknown }) {
   const allWeapons = useWeapons();
+  const { modsMap } = useMods();
 
   const warframePreview = useMemo(
     () => (type === "warframe" ? resolvePublicBuildWarframePreview(data, allWeapons) : null),
@@ -69,7 +69,7 @@ export function BuildPreviewStats({ type, data }: { type: string; data: unknown 
         drain: mod?.drain,
       };
     });
-  }, [warframePreview]);
+  }, [warframePreview, modsMap]);
 
   if (!warframePreview && !weaponPreview) return null;
 

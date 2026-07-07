@@ -9,8 +9,8 @@ import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/m
 import type { LoadoutWeaponSlot } from "@/lib/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
-import { weaponsMap } from "@/data/weapons";
 import { useWeapons } from "@/lib/use-data";
+import type { Weapon } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -92,7 +92,7 @@ function getWeaponSlotPayload(
   return { kind: "weapon", weaponId };
 }
 
-function getSlotLabelName(loadout: Loadout, slot: SlotType): string | null {
+function getSlotLabelName(loadout: Loadout, slot: SlotType, weaponsMap: Map<string, Weapon>): string | null {
   switch (slot) {
     case "warframe": {
       const id = loadout.warframeBuild?.warframeId;
@@ -159,7 +159,7 @@ function getSlotModLabel(loadout: Loadout, slot: SlotType): string {
   return `${count} mod${count === 1 ? "" : "s"} filled`;
 }
 
-function getSlotImage(slot: SlotType, name: string): string {
+function getSlotImage(slot: SlotType, name: string, weaponsMap: Map<string, Weapon>): string {
   switch (slot) {
     case "warframe":
       return getWarframeImage(name);
@@ -187,7 +187,7 @@ function getWeaponCategories(slot: SlotType): string[] {
   }
 }
 
-function listSavedBuildsForSlot(slot: SlotType): SavedBuild[] {
+function listSavedBuildsForSlot(slot: SlotType, weaponsMap: Map<string, Weapon>): SavedBuild[] {
   const all = getSavedBuilds();
   if (slot === "warframe") return all.filter((b) => b.type === "warframe");
   if (slot === "companion") return all.filter((b) => b.type === "companion");
@@ -225,6 +225,7 @@ function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warf
 
 export default function LoadoutsPage() {
   const weapons = useWeapons();
+  const weaponsMap = useMemo(() => new Map(weapons.map((w) => [w.id, w])), [weapons]);
   const [loadouts, setLoadouts] = useState<Loadout[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
@@ -424,7 +425,7 @@ export default function LoadoutsPage() {
       setPickerOpen(false);
       toast.success(`Attached “${build.name}”`, { description: SLOT_CONFIG[pickerSlot].label });
     },
-    [pickerLoadoutId, pickerSlot, loadouts, refresh]
+    [pickerLoadoutId, pickerSlot, loadouts, refresh, weaponsMap]
   );
 
   const handleAttachModularBuild = useCallback(
@@ -516,7 +517,7 @@ export default function LoadoutsPage() {
 
   const pickerSavedBuilds = useMemo(() => {
     const q = pickerSearch.toLowerCase();
-    return listSavedBuildsForSlot(pickerSlot).filter((b) => {
+    return listSavedBuildsForSlot(pickerSlot, weaponsMap).filter((b) => {
       if (!q) return true;
       if (b.name.toLowerCase().includes(q)) return true;
       if (b.type === "warframe") {
@@ -533,7 +534,7 @@ export default function LoadoutsPage() {
       }
       return false;
     });
-  }, [pickerSlot, pickerSearch]);
+  }, [pickerSlot, pickerSearch, weaponsMap]);
 
   const pickerModularBuilds = useMemo(() => {
     const q = pickerSearch.toLowerCase();
@@ -676,7 +677,7 @@ export default function LoadoutsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     {(["warframe", "primary", "secondary", "melee", "companion"] as SlotType[]).map((slot) => {
                       const cfg = SLOT_CONFIG[slot];
-                      const itemName = getSlotLabelName(loadout, slot);
+                      const itemName = getSlotLabelName(loadout, slot, weaponsMap);
                       const ws = pickerSlotToWeaponSlot(slot);
                       const isModularSlot = ws && getWeaponSlotPayload(loadout, ws)?.kind === "modular";
                       const cardStyle = SLOT_CARD_STYLES[slot];
@@ -709,7 +710,7 @@ export default function LoadoutsPage() {
                               </span>
                             ) : (
                             <GameAssetImage
-                              src={getSlotImage(slot, itemName ?? "")}
+                              src={getSlotImage(slot, itemName ?? "", weaponsMap)}
                               alt=""
                               width={40}
                               height={40}
@@ -886,7 +887,7 @@ export default function LoadoutsPage() {
                       className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-primary/5 transition-all flex items-center gap-3"
                     >
                       <GameAssetImage
-                        src={getSlotImage(pickerSlot, item.name)}
+                        src={getSlotImage(pickerSlot, item.name, weaponsMap)}
                         alt=""
                         width={36}
                         height={36}

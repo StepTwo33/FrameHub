@@ -13,8 +13,7 @@ import {
 } from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { allMods, modsMap } from "@/data/mods";
-import { useCompanions, useWeapons } from "@/lib/use-data";
+import { useCompanions, useWeapons, useMods } from "@/lib/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
 import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import {
@@ -74,7 +73,12 @@ function getCompanionModSubCategory(companionType: string): string[] {
 import { getCompanionWeapons } from "@/lib/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-function calculateWeaponStats(weapon: Weapon, mods: EquippedMod[], rivenStats?: Record<string, number> | null) {
+function calculateWeaponStats(
+  weapon: Weapon,
+  mods: EquippedMod[],
+  modsMap: Map<string, Mod>,
+  rivenStats?: Record<string, number> | null,
+) {
   let dmgMult = 1;
   let critChance = weapon.criticalChance;
   let critMult = weapon.criticalMultiplier;
@@ -177,6 +181,7 @@ export default function CompanionBuilderPage() {
 
   const allCompanions = useCompanions();
   const allWeapons = useWeapons();
+  const { mods: allMods, modsMap } = useMods();
   const [selectedCompanion, setSelectedCompanion] = useState<Companion | null>(null);
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
   const [modPickerOpen, setModPickerOpen] = useState(false);
@@ -362,7 +367,7 @@ export default function CompanionBuilderPage() {
         }
       }
     }
-    return calculateWeaponStats(selectedWeapon, weaponMods, rivenStats);
+    return calculateWeaponStats(selectedWeapon, weaponMods, modsMap, rivenStats);
   }, [selectedWeapon, weaponMods, weaponRivenStatsMap]);
 
   const weaponCapacity = hasCatalyst ? 60 : 30;

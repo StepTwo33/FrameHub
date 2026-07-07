@@ -1,9 +1,10 @@
-import { modsMap } from "@/data/mods";
-import { enrichWeapon } from "@/lib/weapon-enrich";
-import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
-import { warframesMap } from "@/data/warframes";
-import { weaponsMap, allWeapons as allWeaponsData } from "@/data/weapons";
-import { companionsMap } from "@/data/companions";
+import {
+  getEffectiveCompanionsMap,
+  getEffectiveModsMap,
+  getEffectiveWarframesMap,
+  getEffectiveWeapons,
+  getEffectiveWeaponsMap,
+} from "@/lib/effective-data";
 import { incarnonDataMap } from "@/data/incarnon";
 import type { WarframeBuildData } from "@/lib/build-storage";
 import { allDualFormMods, getDualFormConfig } from "@/lib/dual-form-warframes";
@@ -153,6 +154,8 @@ function calcWeaponSlotStats(
   enemyLevel?: number,
 ): LoadoutWeaponSlotStats | null {
   if (!build) return null;
+  const weaponsMap = getEffectiveWeaponsMap();
+  const modsMap = getEffectiveModsMap();
   const w = weaponsMap.get(build.weaponId);
   if (!w) return null;
   const base = weaponWithPassive(w);
@@ -201,6 +204,7 @@ function calcModularSlotStats(
   enemyLevel?: number,
 ): LoadoutWeaponSlotStats | null {
   if (loadout.modularBuild?.slot !== slot) return null;
+  const modsMap = getEffectiveModsMap();
   const data = loadout.modularBuild;
   let w = weaponFromModularData(data);
   if (!w) return null;
@@ -221,7 +225,10 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   const simParams = options.simParams ?? scenarioSimParams("midFight");
   const enemy = options.enemy ?? null;
   const enemyLevel = options.enemyLevel ?? 100;
-  const weaponList = options.allWeapons ?? allWeaponsData;
+  const weaponList = options.allWeapons ?? getEffectiveWeapons();
+  const warframesMap = getEffectiveWarframesMap();
+  const companionsMap = getEffectiveCompanionsMap();
+  const modsMap = getEffectiveModsMap();
   const setLinkage = setBonusLinkageFromLoadout(loadout);
 
   const result: LoadoutStatsResult = {
@@ -313,7 +320,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
   if (loadout.companionBuild) {
     const c = companionsMap.get(loadout.companionBuild.companionId);
     if (c) {
-      const bodyStats = calculateCompanionBuild(c, loadout.companionBuild.mods || []);
+      const bodyStats = calculateCompanionBuild(c, loadout.companionBuild.mods || [], modsMap);
       let weapon: LoadoutWeaponSlotStats | null = null;
       const weaponMods = loadout.companionBuild.weaponMods || [];
       if (weaponMods.length > 0) {

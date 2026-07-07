@@ -14,8 +14,7 @@ import {
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, type SlotType } from "@/components/mod-picker";
-import { allMods, modsMap } from "@/data/mods";
-import { useWeapons } from "@/lib/use-data";
+import { useWeapons, useMods } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
@@ -91,6 +90,7 @@ export default function WeaponBuilderPage() {
   }, [pathname, searchParams]);
 
   const allWeapons = useWeapons();
+  const { mods: allMods, modsMap } = useMods();
   const [selectedWeapon, setSelectedWeapon] = useState<Weapon | null>(null);
   const [equippedMods, setEquippedMods] = useState<EquippedMod[]>([]);
   const [modPickerOpen, setModPickerOpen] = useState(false);

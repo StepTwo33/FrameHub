@@ -3,8 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { PageShell, PageMain, PageHero, FilterChip, ContentPanel, EmptyState } from "@/components/page-shell";
 import { WeaponStatsPanel } from "@/components/stats-panel";
-import { useWeapons } from "@/lib/use-data";
-import { allMods, modsMap } from "@/data/mods";
+import { useWeapons, useMods } from "@/lib/use-data";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
-import { weaponsMap } from "@/data/weapons";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getLoadouts } from "@/lib/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
@@ -25,8 +23,8 @@ import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
 
 /* ─── Shared helpers ─── */
 
-function weaponImageForName(name: string): string {
-  const w = [...weaponsMap.values()].find((x) => x.name === name);
+function weaponImageForName(name: string, weapons: Weapon[]): string {
+  const w = weapons.find((x) => x.name === name);
   return getWeaponImage(name, w ? { category: w.category } : undefined);
 }
 
@@ -90,6 +88,7 @@ interface BuildSlot {
 
 function BuildCompareTab() {
   const allWeapons = useWeapons();
+  const { mods: allMods, modsMap } = useMods();
   const [builds, setBuilds] = useState<[BuildSlot, BuildSlot]>([
     { weapon: null, mods: [], stats: null },
     { weapon: null, mods: [], stats: null },
@@ -321,10 +320,11 @@ function sustainedDps(entry: LoadoutStatsResult["primary"]): number {
   return entry.ttk?.sustainedDps ?? entry.stats.sustainedDps;
 }
 
-function SlotSection({ slot, a, b }: {
+function SlotSection({ slot, a, b, weapons }: {
   slot: SlotType;
   a: LoadoutStatsResult;
   b: LoadoutStatsResult;
+  weapons: Weapon[];
 }) {
   const [open, setOpen] = useState(true);
   const meta = SLOT_META[slot];
@@ -458,12 +458,12 @@ function SlotSection({ slot, a, b }: {
         <div className="px-4 pb-4">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2 items-center">
             <div className="flex items-center gap-2 justify-end">
-              {wA && <GameAssetImage src={weaponImageForName(wA.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
+              {wA && <GameAssetImage src={weaponImageForName(wA.name, weapons)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
               <span className="text-xs font-medium">{wA?.name || "–"}</span>
             </div>
             <span className="text-[10px] text-muted-foreground">vs</span>
             <div className="flex items-center gap-2">
-              {wB && <GameAssetImage src={weaponImageForName(wB.name)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
+              {wB && <GameAssetImage src={weaponImageForName(wB.name, weapons)} alt="" width={32} height={32} className="w-8 h-8 rounded object-contain bg-muted/30 hidden sm:block" hideOnError />}
               <span className="text-xs font-medium">{wB?.name || "–"}</span>
             </div>
           </div>
@@ -581,7 +581,7 @@ function LoadoutCompareTab() {
       {statsA && statsB && (
         <div className="space-y-4">
           {(["warframe", "primary", "secondary", "melee", "exalted", "companion"] as SlotType[]).map((slot) => (
-            <SlotSection key={slot} slot={slot} a={statsA} b={statsB} />
+            <SlotSection key={slot} slot={slot} a={statsA} b={statsB} weapons={allWeapons} />
           ))}
         </div>
       )}

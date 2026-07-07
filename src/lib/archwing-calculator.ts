@@ -1,4 +1,4 @@
-import { modsMap } from "@/data/mods";
+import { getEffectiveModsMap } from "@/lib/effective-data";
 import type { Archwing, Necramech } from "@/data/archwing";
 import {
   applyVerifiedModStatToArchwing,
@@ -55,7 +55,7 @@ function applyArchwingMods(
 export function calculateArchwingBuild(
   archwing: Archwing,
   equippedMods: EquippedArchwingMod[],
-  allMods: Map<string, Mod> = modsMap,
+  allMods: Map<string, Mod> = getEffectiveModsMap(),
 ): ArchwingCalculatedStats {
   const { acc, panel } = applyArchwingMods(equippedMods, allMods);
 
@@ -117,7 +117,7 @@ function applyNecramechMods(
 export function calculateNecramechBuild(
   necramech: Necramech,
   equippedMods: EquippedArchwingMod[],
-  allMods: Map<string, Mod> = modsMap,
+  allMods: Map<string, Mod> = getEffectiveModsMap(),
 ): ArchwingCalculatedStats {
   const { acc, panel } = applyNecramechMods(equippedMods, allMods);
 

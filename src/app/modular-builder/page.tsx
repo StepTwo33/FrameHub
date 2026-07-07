@@ -5,7 +5,7 @@ import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
-import { allMods, modsMap } from "@/data/mods";
+import { useMods, useArcanes, useWeapons } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, ModularBuildData } from "@/lib/types";
@@ -25,13 +25,9 @@ import {
 } from "@/data/modular-weapons";
 import { cn } from "@/lib/utils";
 import { extractBuildFromUrl } from "@/lib/build-url";
-import { allArcanes } from "@/data/arcanes";
+import { resolveArcaneById } from "@/lib/build-storage";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-
-function resolveArcaneMod(id: string): Mod | null {
-  return modsMap.get(id) ?? allArcanes.find((m) => m.id === id) ?? null;
-}
 
 type ModularType = "kitgun" | "zaw" | "amp";
 
@@ -54,6 +50,7 @@ function StatDelta({ label, value, suffix = "" }: { label: string; value: number
 }
 
 export default function ModularBuilderPage() {
+  const { mods: allMods, modsMap } = useMods();
   const [modularType, setModularType] = useState<ModularType>("kitgun");
 
   // Kitgun state
@@ -183,7 +180,7 @@ export default function ModularBuilderPage() {
       setHasOrokinCatalyst(shared.hasOrokinCatalyst ?? false);
       setIsMR30(shared.isMR30 ?? false);
       if (shared.arcanes?.length) {
-        setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneMod(id) : null)));
+        setEquippedArcanes(shared.arcanes.map((id) => (id ? resolveArcaneById(id) : null)));
       } else {
         setEquippedArcanes([null, null]);
       }
@@ -283,8 +280,8 @@ export default function ModularBuilderPage() {
     setSlotPolarities(d.slotPolarities || {});
     const aid = d.arcaneIds ?? [];
     setEquippedArcanes([
-      aid[0] ? resolveArcaneMod(aid[0]) : null,
-      aid[1] ? resolveArcaneMod(aid[1]) : null,
+      aid[0] ? resolveArcaneById(aid[0]) : null,
+      aid[1] ? resolveArcaneById(aid[1]) : null,
     ]);
     setCurrentBuildId(build.id);
     setBuildName(build.name);
