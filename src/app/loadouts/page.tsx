@@ -307,13 +307,13 @@ export default function LoadoutsPage() {
     setPickerLoadoutId(loadoutId);
     setPickerSlot(slot);
     setPickerSearch("");
-    const saved = listSavedBuildsForSlot(slot);
+    const saved = listSavedBuildsForSlot(slot, weaponsMap);
     const modular = listModularBuildsForWeaponSlot(slot);
     if (saved.length > 0) setPickerTab("saved");
     else if (modular.length > 0) setPickerTab("modular");
     else setPickerTab("catalog");
     setPickerOpen(true);
-  }, []);
+  }, [weaponsMap]);
 
   const handlePickCatalogItem = useCallback(
     (itemId: string) => {
