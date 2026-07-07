@@ -15,6 +15,7 @@ import {
   getNestedRecordFields,
   getStructuredOverrideFields,
   getSelectOptions,
+  groupScalarFieldsForCategory,
   sortFieldsForCategory,
   STAT_RECORD_HELP,
   OVERRIDE_EDITOR_CATEGORIES,
@@ -40,7 +41,6 @@ import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
 import { toEffectDrafts, draftsToEffectsPayload } from "@/lib/arcane-effect-drafts";
 import {
   AbilitiesEditor,
-  AbilityDraft,
   ArcaneEffectLineDraft,
   ArcaneEffectsEditor,
   ArcaneTriggerPicker,
@@ -50,7 +50,10 @@ import {
   draftToRadialAttack,
   toRadialAttackDrafts,
 } from "@/components/override-field-editors";
+import type { AbilityDraft } from "@/lib/ability-override-fields";
+import { abilitiesToDrafts, draftsToAbilitiesPayload } from "@/lib/ability-override-fields";
 import { getEffectiveWeapons } from "@/lib/effective-data";
+import { enrichWeapon } from "@/lib/weapon-enrich";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
@@ -93,8 +96,10 @@ function getAllItems(category: OverrideCategory): { id: string; name: string; hi
 function getItemData(category: OverrideCategory, id: string): Record<string, unknown> | null {
   switch (category) {
     case "weapon": {
-      const weapon = applyWeaponOverrides(allWeapons).find((w) => w.id === id)
+      const base =
+        applyWeaponOverrides(allWeapons).find((w) => w.id === id)
         ?? getEffectiveWeapons().find((w) => w.id === id);
+      const weapon = base ? enrichWeapon(base) : null;
       return weapon ? (weapon as unknown as Record<string, unknown>) : null;
     }
     case "mod": {
@@ -177,8 +182,12 @@ function getOriginalAtPath(itemData: Record<string, unknown> | null | undefined,
   return original;
 }
 
-function inferInputType(key: string, value: unknown): "number" | "boolean" | "text" | "textarea" | "select" {
-  if (getSelectOptions(key)) return "select";
+function inferInputType(
+  key: string,
+  value: unknown,
+  category: OverrideCategory,
+): "number" | "boolean" | "text" | "textarea" | "select" {
+  if (getSelectOptions(key, category)) return "select";
   if (TEXTAREA_FIELDS.has(key)) return "textarea";
   if (typeof value === "boolean") return "boolean";
   if (typeof value === "number") return "number";
@@ -198,19 +207,11 @@ function parseScalarValue(raw: string, original: unknown): unknown {
 }
 
 function toAbilityDrafts(raw: unknown): AbilityDraft[] {
-  if (!Array.isArray(raw)) return [];
-  return raw.map((ab) => {
-    const o = ab as Record<string, unknown>;
-    return {
-      name: String(o.name ?? ""),
-      energyCost: Number(o.energyCost ?? 0),
-      description: String(o.description ?? ""),
-      damage: o.damage != null ? Number(o.damage) : undefined,
-      range: o.range != null ? Number(o.range) : undefined,
-      duration: o.duration != null ? Number(o.duration) : undefined,
-      radius: o.radius != null ? Number(o.radius) : undefined,
-    };
-  });
+  return abilitiesToDrafts(raw);
+}
+
+function abilitiesChanged(original: unknown, draft: AbilityDraft[]): boolean {
+  return JSON.stringify(abilitiesToDrafts(original)) !== JSON.stringify(draft);
 }
 
 function effectsChanged(original: unknown, draft: ArcaneEffectLineDraft[]): boolean {
@@ -220,10 +221,6 @@ function effectsChanged(original: unknown, draft: ArcaneEffectLineDraft[]): bool
 function radialAttacksChanged(original: unknown, draft: RadialAttackDraft[]): boolean {
   const origDrafts = toRadialAttackDrafts(original);
   return JSON.stringify(origDrafts) !== JSON.stringify(draft);
-}
-
-function abilitiesChanged(original: unknown, draft: AbilityDraft[]): boolean {
-  return JSON.stringify(toAbilityDrafts(original)) !== JSON.stringify(draft);
 }
 
 interface OverrideEditorProps {
@@ -291,9 +288,14 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     return ordered.map((key) => ({
       key,
       currentValue: itemData[key],
-      inputType: inferInputType(key, itemData[key]),
+      inputType: inferInputType(key, itemData[key], category),
     }));
   }, [itemData, nestedRecordFields, structuredFields, category]);
+
+  const scalarFieldSections = useMemo(
+    () => groupScalarFieldsForCategory(category, scalarFields),
+    [category, scalarFields],
+  );
 
   const nestedStatRows = useMemo(() => {
     if (!itemData) return [];
@@ -420,7 +422,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
       }
     }
     if (structuredFields.has("abilities") && (structuredTouched.abilities || abilitiesChanged(itemData?.abilities, abilities))) {
-      fields.abilities = abilities;
+      fields.abilities = draftsToAbilitiesPayload(abilities);
     }
     if (
       structuredFields.has("radialAttacks")
@@ -724,61 +726,63 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
             </>
           )}
 
-          {scalarFields.length > 0 && (
-            <div className="space-y-3">
-              <p className="text-xs font-medium text-foreground">
-                {category === "mod" || category === "arcane" ? "Other fields" : "Basic info"}
-              </p>
-              {scalarFields.map(({ key, currentValue, inputType }) => {
-                const overrideValue = fieldOverrides[key] ?? "";
-                const selectOptions = getSelectOptions(key);
-                return (
-                  <label key={key} className="block text-[11px]">
-                    <span className="text-muted-foreground">{formatOverrideFieldLabel(key)}</span>
-                    {inputType === "select" && selectOptions ? (
-                      <select
-                        value={overrideValue}
-                        onChange={(e) => handleFieldChange(key, e.target.value)}
-                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
-                      >
-                        <option value="">Leave as-is ({String(currentValue ?? "—")})</option>
-                        {selectOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
-                    ) : inputType === "textarea" ? (
-                      <textarea
-                        value={overrideValue}
-                        onChange={(e) => handleFieldChange(key, e.target.value)}
-                        onFocus={() => seedFieldOnFocus(key, currentValue)}
-                        placeholder={String(currentValue ?? "Leave as-is")}
-                        rows={3}
-                        className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-sm resize-y"
-                      />
-                    ) : inputType === "boolean" ? (
-                      <select
-                        value={overrideValue}
-                        onChange={(e) => handleFieldChange(key, e.target.value)}
-                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
-                      >
-                        <option value="">Leave as-is ({String(currentValue)})</option>
-                        <option value="true">Yes / True</option>
-                        <option value="false">No / False</option>
-                      </select>
-                    ) : (
-                      <input
-                        type={inputType === "number" ? "number" : "text"}
-                        step={inputType === "number" ? "any" : undefined}
-                        value={overrideValue}
-                        onChange={(e) => handleFieldChange(key, e.target.value)}
-                        onFocus={() => seedFieldOnFocus(key, currentValue)}
-                        placeholder={`Current: ${String(currentValue ?? "—")}`}
-                        className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
-                      />
-                    )}
-                  </label>
-                );
-              })}
+          {scalarFieldSections.some((s) => s.fields.length > 0) && (
+            <div className="space-y-5">
+              {scalarFieldSections.map((section) => (
+                <div key={section.title} className="space-y-3">
+                  <p className="text-xs font-medium text-foreground">{section.title}</p>
+                  {section.fields.map(({ key, currentValue, inputType }) => {
+                    const overrideValue = fieldOverrides[key] ?? "";
+                    const selectOptions = getSelectOptions(key, category);
+                    return (
+                      <label key={key} className="block text-[11px]">
+                        <span className="text-muted-foreground">{formatOverrideFieldLabel(key)}</span>
+                        {inputType === "select" && selectOptions ? (
+                          <select
+                            value={overrideValue}
+                            onChange={(e) => handleFieldChange(key, e.target.value)}
+                            className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                          >
+                            <option value="">Leave as-is ({String(currentValue ?? "—")})</option>
+                            {selectOptions.map((opt) => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                        ) : inputType === "textarea" ? (
+                          <textarea
+                            value={overrideValue}
+                            onChange={(e) => handleFieldChange(key, e.target.value)}
+                            onFocus={() => seedFieldOnFocus(key, currentValue)}
+                            placeholder={String(currentValue ?? "Leave as-is")}
+                            rows={3}
+                            className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-sm resize-y"
+                          />
+                        ) : inputType === "boolean" ? (
+                          <select
+                            value={overrideValue}
+                            onChange={(e) => handleFieldChange(key, e.target.value)}
+                            className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                          >
+                            <option value="">Leave as-is ({String(currentValue)})</option>
+                            <option value="true">Yes / True</option>
+                            <option value="false">No / False</option>
+                          </select>
+                        ) : (
+                          <input
+                            type={inputType === "number" ? "number" : "text"}
+                            step={inputType === "number" ? "any" : undefined}
+                            value={overrideValue}
+                            onChange={(e) => handleFieldChange(key, e.target.value)}
+                            onFocus={() => seedFieldOnFocus(key, currentValue)}
+                            placeholder={`Current: ${String(currentValue ?? "—")}`}
+                            className="mt-0.5 h-9 w-full rounded-lg border border-border bg-background px-2 text-sm"
+                          />
+                        )}
+                      </label>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           )}
 
@@ -797,9 +801,12 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
             />
           ))}
 
-          {structuredFields.has("abilities") && abilities.length > 0 && (
+          {structuredFields.has("abilities") && (
             <AbilitiesEditor
               abilities={abilities}
+              allowAddAbility={category === "warframe"}
+              allowRemoveAbility={action === "add" && category === "warframe"}
+              allowRename={action === "add" && category === "warframe"}
               onChange={(draft) => {
                 setAbilities(draft);
                 setStructuredTouched((s) => ({ ...s, abilities: true }));

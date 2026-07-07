@@ -1,4 +1,6 @@
 import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/data-overrides";
+import { CODEX_COMPANION_TYPE_FILTERS, CODEX_WEAPON_CATEGORY_LABELS } from "@/lib/codex-catalog";
+import { WEAPON_ELEMENT_KEYS } from "@/lib/codex-catalog";
 
 /** Record fields edited as individual stat rows (mods, arcanes, shards). */
 export const NESTED_RECORD_FIELDS: Partial<Record<OverrideCategory, string[]>> = {
@@ -28,6 +30,7 @@ export const HIDDEN_OVERRIDE_FIELDS = new Set([
 export const TEXTAREA_FIELDS = new Set([
   "description",
   "passive",
+  "precept",
   "note",
 ]);
 
@@ -89,6 +92,93 @@ export const SELECT_FIELD_OPTIONS: Record<string, { value: string; label: string
     { value: "topaz", label: "Topaz" },
     { value: "emerald", label: "Emerald" },
   ],
+  category: Object.entries(CODEX_WEAPON_CATEGORY_LABELS)
+    .filter(([id]) => id !== "all")
+    .map(([value, label]) => ({ value, label })),
+  type: CODEX_COMPANION_TYPE_FILTERS.filter((f) => f.id !== "all").map((f) => ({
+    value: f.id,
+    label: f.label,
+  })),
+  triggerType: [
+    { value: "Auto", label: "Auto" },
+    { value: "Semi", label: "Semi-auto" },
+    { value: "Burst", label: "Burst" },
+    { value: "Charge", label: "Charge" },
+    { value: "Duplex", label: "Duplex" },
+    { value: "Melee", label: "Melee" },
+    { value: "Active", label: "Active" },
+    { value: "Held", label: "Held" },
+  ],
+  modCategory: [
+    { value: "warframe", label: "Warframe" },
+    { value: "aura", label: "Aura" },
+    { value: "exilus", label: "Exilus" },
+    { value: "rifle", label: "Rifle" },
+    { value: "shotgun", label: "Shotgun" },
+    { value: "bow", label: "Bow" },
+    { value: "launcher", label: "Launcher" },
+    { value: "primary", label: "Primary" },
+    { value: "pistol", label: "Pistol" },
+    { value: "secondary", label: "Secondary" },
+    { value: "dual_pistols", label: "Dual pistols" },
+    { value: "melee", label: "Melee" },
+    { value: "stance", label: "Stance" },
+    { value: "companion", label: "Companion" },
+    { value: "archwing", label: "Archwing" },
+    { value: "archgun", label: "Archgun" },
+    { value: "archmelee", label: "Archmelee" },
+    { value: "necramech", label: "Necramech" },
+    { value: "arcane", label: "Arcane" },
+    { value: "kdrive", label: "K-Drive" },
+    { value: "amp", label: "Amp" },
+    { value: "kitgun", label: "Kitgun" },
+    { value: "zaw", label: "Zaw" },
+  ],
+  damageType: [
+    { value: "Impact", label: "Impact" },
+    { value: "Puncture", label: "Puncture" },
+    { value: "Slash", label: "Slash" },
+    { value: "Heat", label: "Heat" },
+    { value: "Cold", label: "Cold" },
+    { value: "Toxin", label: "Toxin" },
+    { value: "Electricity", label: "Electricity" },
+    { value: "Blast", label: "Blast" },
+    { value: "Corrosive", label: "Corrosive" },
+    { value: "Viral", label: "Viral" },
+    { value: "Gas", label: "Gas" },
+    { value: "Magnetic", label: "Magnetic" },
+    { value: "Radiation", label: "Radiation" },
+    { value: "Void", label: "Void" },
+    { value: "Finisher", label: "Finisher" },
+    { value: "True", label: "True" },
+  ],
+  arcaneType: [
+    { value: "primary", label: "Primary" },
+    { value: "secondary", label: "Secondary" },
+    { value: "melee", label: "Melee" },
+    { value: "kitgun", label: "Kitgun" },
+    { value: "exodia", label: "Exodia (Zaw)" },
+    { value: "archgun", label: "Archgun" },
+    { value: "amp", label: "Amp" },
+  ],
+  stanceType: [
+    { value: "sword", label: "Sword" },
+    { value: "heavy_blade", label: "Heavy blade" },
+    { value: "dual_swords", label: "Dual swords" },
+    { value: "dual_daggers", label: "Dual daggers" },
+    { value: "polearm", label: "Polearm" },
+    { value: "staff", label: "Staff" },
+    { value: "whip", label: "Whip" },
+    { value: "fist", label: "Fist" },
+    { value: "claws", label: "Claws" },
+    { value: "glaive", label: "Glaive" },
+    { value: "scythe", label: "Scythe" },
+    { value: "nunchaku", label: "Nunchaku" },
+    { value: "gunblade", label: "Gunblade" },
+    { value: "rapier", label: "Rapier" },
+    { value: "machete", label: "Machete" },
+    { value: "dagger", label: "Dagger" },
+  ],
 };
 
 /** Friendly labels moderators understand. */
@@ -127,6 +217,37 @@ export const FIELD_LABELS: Record<string, string> = {
   effects: "Effect stat values",
   abilities: "Abilities",
   radialAttacks: "Radial / AoE attacks",
+  impact: "Impact damage",
+  puncture: "Puncture damage",
+  slash: "Slash damage",
+  heat: "Heat damage",
+  cold: "Cold damage",
+  toxin: "Toxin damage",
+  electricity: "Electricity damage",
+  radiation: "Radiation damage",
+  viral: "Viral damage",
+  corrosive: "Corrosive damage",
+  blast: "Blast damage",
+  gas: "Gas damage",
+  magnetic: "Magnetic damage",
+  triggerType: "Trigger type",
+  hasPrimaryArcaneSlot: "Primary arcane slot",
+  hasSecondaryArcaneSlot: "Secondary arcane slot",
+  isIncarnon: "Incarnon weapon",
+  hasRivenSlot: "Riven slot",
+  arcaneSlots: "Arcane slots",
+  arcaneType: "Arcane type",
+  stanceType: "Melee stance type",
+  warframeId: "Warframe (exalted)",
+  abilityName: "Ability (exalted)",
+  isExalted: "Exalted weapon",
+  companionType: "Companion type",
+  weaponCategory: "Weapon category",
+  focusSchool: "Focus school",
+  kitgunChamberCategory: "Kitgun chamber",
+  type: "Companion type",
+  precept: "Precept",
+  speed: "Flight speed",
 };
 
 /** Help text for StatRowsEditor — mod vs arcane catalog stats use different scaling. */
@@ -232,11 +353,12 @@ export const ADD_ITEM_TEMPLATES: Partial<Record<OverrideCategory, Record<string,
   companion: {
     id: "",
     name: "New Companion",
-    category: "sentinel",
+    type: "sentinel",
     health: 100,
     shield: 100,
     armor: 100,
     description: "",
+    precept: "",
   },
   archwing: {
     id: "",
@@ -245,7 +367,7 @@ export const ADD_ITEM_TEMPLATES: Partial<Record<OverrideCategory, Record<string,
     shield: 400,
     armor: 100,
     energy: 100,
-    sprintSpeed: 1,
+    speed: 1,
     description: "",
   },
   necramech: {
@@ -275,8 +397,114 @@ export function formatOverrideFieldLabel(key: string): string {
     .replace(/_/g, " ");
 }
 
-export function getSelectOptions(fieldKey: string): { value: string; label: string }[] | null {
+export function getSelectOptions(
+  fieldKey: string,
+  category?: OverrideCategory,
+): { value: string; label: string }[] | null {
+  if (fieldKey === "category" && category === "mod") {
+    return SELECT_FIELD_OPTIONS.modCategory ?? null;
+  }
   return SELECT_FIELD_OPTIONS[fieldKey] ?? null;
+}
+
+/** Group scalar fields into moderator-friendly sections per item type. */
+export const CATEGORY_FIELD_SECTIONS: Partial<
+  Record<OverrideCategory, { title: string; fields: string[] }[]>
+> = {
+  weapon: [
+    { title: "Identity", fields: ["name", "category", "triggerType"] },
+    { title: "Base damage", fields: ["damage", "impact", "puncture", "slash"] },
+    { title: "Elements", fields: [...WEAPON_ELEMENT_KEYS] },
+    {
+      title: "Performance",
+      fields: [
+        "fireRate",
+        "criticalChance",
+        "criticalMultiplier",
+        "statusChance",
+        "magazine",
+        "reloadTime",
+        "multishot",
+      ],
+    },
+    {
+      title: "Slots & flags",
+      fields: [
+        "modSlots",
+        "hasPrimaryArcaneSlot",
+        "hasSecondaryArcaneSlot",
+        "isIncarnon",
+        "hasRivenSlot",
+        "arcaneSlots",
+        "arcaneType",
+        "stanceType",
+      ],
+    },
+    {
+      title: "Exalted / companion",
+      fields: [
+        "warframeId",
+        "abilityName",
+        "isExalted",
+        "companionType",
+        "weaponCategory",
+        "focusSchool",
+        "kitgunChamberCategory",
+      ],
+    },
+    { title: "Description", fields: ["passive"] },
+  ],
+  warframe: [
+    { title: "Stats", fields: ["name", "health", "shield", "armor", "energy", "sprintSpeed"] },
+    { title: "Description", fields: ["passive", "description"] },
+  ],
+  companion: [
+    { title: "Identity", fields: ["name", "type"] },
+    { title: "Stats", fields: ["health", "shield", "armor"] },
+    { title: "Description", fields: ["precept", "description"] },
+  ],
+  archwing: [
+    { title: "Identity", fields: ["name"] },
+    { title: "Stats", fields: ["health", "shield", "armor", "energy", "speed"] },
+    { title: "Description", fields: ["description"] },
+  ],
+  necramech: [
+    { title: "Identity", fields: ["name"] },
+    { title: "Stats", fields: ["health", "shield", "armor", "energy"] },
+    { title: "Description", fields: ["description"] },
+  ],
+  mod: [
+    { title: "Identity", fields: ["name", "category", "polarity", "rarity", "subCategory"] },
+    { title: "Values", fields: ["drain", "maxRank", "warframeId"] },
+    { title: "Description", fields: ["description"] },
+  ],
+  archon_shard: [
+    { title: "Identity", fields: ["name", "color", "tier", "isCoalescent"] },
+    { title: "Description", fields: ["description"] },
+  ],
+};
+
+export function groupScalarFieldsForCategory(
+  category: OverrideCategory,
+  fields: { key: string; currentValue: unknown; inputType: string }[],
+): { title: string; fields: typeof fields }[] {
+  const sections = CATEGORY_FIELD_SECTIONS[category];
+  if (!sections?.length) {
+    return [{ title: "Basic info", fields }];
+  }
+  const byKey = new Map(fields.map((f) => [f.key, f]));
+  const used = new Set<string>();
+  const grouped: { title: string; fields: typeof fields }[] = [];
+  for (const section of sections) {
+    const sectionFields = section.fields
+      .map((key) => byKey.get(key))
+      .filter((f): f is (typeof fields)[number] => Boolean(f));
+    sectionFields.forEach((f) => used.add(f.key));
+    if (sectionFields.length) grouped.push({ title: section.title, fields: sectionFields });
+  }
+  const rest = fields.filter((f) => !used.has(f.key));
+  if (rest.length) grouped.push({ title: "Other", fields: rest });
+  return grouped;
 }
 
 /** Arcane trigger types for override editors and Codex inline edit. */
@@ -288,8 +516,26 @@ export const FIELD_ORDER: Partial<Record<OverrideCategory, string[]>> = {
   arcane: ["name", "subCategory", "drain", "maxRank", "description", "stats", "trigger", "stackCap", "effects"],
   arcane_effect: ["name", "trigger", "maxRank", "stackCap", "effects"],
   archon_shard: ["name", "color", "tier", "description", "isCoalescent"],
-  warframe: ["name", "health", "shield", "armor", "energy", "sprintSpeed", "passive", "description"],
-  weapon: ["name", "damage", "fireRate", "criticalChance", "criticalMultiplier", "statusChance", "magazine", "reloadTime", "multishot"],
+  warframe: ["name", "health", "shield", "armor", "energy", "sprintSpeed", "passive", "description", "abilities"],
+  weapon: [
+    "name",
+    "category",
+    "triggerType",
+    "damage",
+    "impact",
+    "puncture",
+    "slash",
+    "fireRate",
+    "criticalChance",
+    "criticalMultiplier",
+    "statusChance",
+    "magazine",
+    "reloadTime",
+    "multishot",
+    "passive",
+  ],
+  companion: ["name", "type", "health", "shield", "armor", "precept", "description"],
+  archwing: ["name", "health", "shield", "armor", "energy", "speed", "description"],
 };
 
 export function sortFieldsForCategory(category: OverrideCategory, keys: string[]): string[] {
