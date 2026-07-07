@@ -189,6 +189,60 @@ function parseMiscStats(raw: Ability["miscStats"]): Record<string, number> | und
   return Object.keys(nums).length ? nums : undefined;
 }
 
+function pickScalarsFromAbility(ability: Ability): Pick<AbilityDraft, OptionalScalarKey> {
+  return {
+    damage: ability.damage,
+    directDamage: ability.directDamage,
+    aoeDamage: ability.aoeDamage,
+    damagePerSecond: ability.damagePerSecond,
+    range: ability.range,
+    duration: ability.duration,
+    radius: ability.radius,
+    health: ability.health,
+    armor: ability.armor,
+    shield: ability.shield,
+    damageReduction: ability.damageReduction,
+    damageBuff: ability.damageBuff,
+    statusChance: ability.statusChance,
+    damageType: ability.damageType,
+    castTime: ability.castTime,
+    cooldown: ability.cooldown,
+    maxTargets: ability.maxTargets,
+    chainRange: ability.chainRange,
+    chainLinks: ability.chainLinks,
+    comboMultiplier: ability.comboMultiplier,
+  };
+}
+
+function applyVisibleScalarsFromDraft(draft: AbilityDraft, ability: Ability): void {
+  const visible = new Set(draft.visibleFields);
+  if (visible.has("damage") && draft.damage !== undefined) ability.damage = draft.damage;
+  if (visible.has("directDamage") && draft.directDamage !== undefined) ability.directDamage = draft.directDamage;
+  if (visible.has("aoeDamage") && draft.aoeDamage !== undefined) ability.aoeDamage = draft.aoeDamage;
+  if (visible.has("damagePerSecond") && draft.damagePerSecond !== undefined) {
+    ability.damagePerSecond = draft.damagePerSecond;
+  }
+  if (visible.has("range") && draft.range !== undefined) ability.range = draft.range;
+  if (visible.has("duration") && draft.duration !== undefined) ability.duration = draft.duration;
+  if (visible.has("radius") && draft.radius !== undefined) ability.radius = draft.radius;
+  if (visible.has("health") && draft.health !== undefined) ability.health = draft.health;
+  if (visible.has("armor") && draft.armor !== undefined) ability.armor = draft.armor;
+  if (visible.has("shield") && draft.shield !== undefined) ability.shield = draft.shield;
+  if (visible.has("damageReduction") && draft.damageReduction !== undefined) {
+    ability.damageReduction = draft.damageReduction;
+  }
+  if (visible.has("damageBuff") && draft.damageBuff !== undefined) ability.damageBuff = draft.damageBuff;
+  if (visible.has("statusChance") && draft.statusChance !== undefined) ability.statusChance = draft.statusChance;
+  if (visible.has("damageType") && draft.damageType) ability.damageType = draft.damageType;
+  if (visible.has("castTime") && draft.castTime !== undefined) ability.castTime = draft.castTime;
+  if (visible.has("cooldown") && draft.cooldown !== undefined) ability.cooldown = draft.cooldown;
+  if (visible.has("maxTargets") && draft.maxTargets !== undefined) ability.maxTargets = draft.maxTargets;
+  if (visible.has("chainRange") && draft.chainRange !== undefined) ability.chainRange = draft.chainRange;
+  if (visible.has("chainLinks") && draft.chainLinks !== undefined) ability.chainLinks = draft.chainLinks;
+  if (visible.has("comboMultiplier") && draft.comboMultiplier !== undefined) {
+    ability.comboMultiplier = draft.comboMultiplier;
+  }
+}
 function collectVisibleFields(ability: Ability): string[] {
   const visible: string[] = [];
   for (const key of OPTIONAL_SCALAR_KEYS) {
@@ -202,22 +256,15 @@ function collectVisibleFields(ability: Ability): string[] {
 }
 
 export function abilityToDraft(ability: Ability): AbilityDraft {
-  const draft: AbilityDraft = {
+  return {
     name: ability.name,
     energyCost: ability.energyCost,
     description: ability.description,
     visibleFields: collectVisibleFields(ability),
+    ...pickScalarsFromAbility(ability),
+    subAbilities: ability.subAbilities?.length ? [...ability.subAbilities] : undefined,
+    miscStats: parseMiscStats(ability.miscStats),
   };
-  for (const key of OPTIONAL_SCALAR_KEYS) {
-    const val = ability[key];
-    if (val !== undefined && val !== null && val !== "") {
-      draft[key] = val as AbilityDraft[typeof key];
-    }
-  }
-  if (ability.subAbilities?.length) draft.subAbilities = [...ability.subAbilities];
-  const miscStats = parseMiscStats(ability.miscStats);
-  if (miscStats) draft.miscStats = miscStats;
-  return draft;
 }
 
 export function abilitiesToDrafts(raw: unknown): AbilityDraft[] {
@@ -231,13 +278,7 @@ export function draftToAbility(draft: AbilityDraft): Ability {
     energyCost: draft.energyCost,
     description: draft.description,
   };
-  for (const key of OPTIONAL_SCALAR_KEYS) {
-    if (!draft.visibleFields.includes(key)) continue;
-    const val = draft[key];
-    if (val !== undefined && val !== null && val !== "") {
-      ability[key] = val as Ability[typeof key];
-    }
-  }
+  applyVisibleScalarsFromDraft(draft, ability);
   if (draft.visibleFields.includes("subAbilities") && draft.subAbilities?.length) {
     ability.subAbilities = draft.subAbilities;
   }
