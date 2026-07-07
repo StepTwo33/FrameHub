@@ -206,24 +206,24 @@ export function summarizeEquippedAbilities(
   equipped: { modId: string; rank: number }[],
   tab: PlexusModTab,
 ): RailjackAbilitySummary[] {
-  return equipped
-    .map(({ modId, rank }) => {
-      const def = RAILJACK_PLEXUS_ABILITIES[modId];
-      if (!def || def.tab !== tab) return null;
-      return {
-        modId,
-        name: def.name,
-        tab: def.tab,
-        category: def.category,
-        description: def.description,
-        rank,
-        energyCost: def.energyCost,
-        cooldownSec: def.cooldownSec,
-        turretDamageWhileActive: def.turretDamageWhileActive,
-        scalesWith: def.scalesWith,
-      };
-    })
-    .filter((entry): entry is RailjackAbilitySummary => entry !== null);
+  const summaries: RailjackAbilitySummary[] = [];
+  for (const { modId, rank } of equipped) {
+    const def = RAILJACK_PLEXUS_ABILITIES[modId];
+    if (!def || def.tab !== tab) continue;
+    summaries.push({
+      modId,
+      name: def.name,
+      tab: def.tab,
+      category: def.category,
+      description: def.description,
+      rank,
+      energyCost: def.energyCost,
+      cooldownSec: def.cooldownSec,
+      turretDamageWhileActive: def.turretDamageWhileActive,
+      scalesWith: def.scalesWith,
+    });
+  }
+  return summaries;
 }
 
 /** Elite crew competency → passive Railjack bonuses (approximate in-game impact). */
