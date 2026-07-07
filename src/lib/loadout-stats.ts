@@ -12,6 +12,7 @@ import { resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import { weaponFromModularData } from "@/lib/modular-resolve";
 import { enrichWeapon } from "@/lib/weapon-enrich";
+import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
 import {
   applyWarframeShardsAndArcanes,
   calculateWarframeBuild,
