@@ -166,9 +166,28 @@ export interface AbilityDraft {
   miscStats?: Record<string, number>;
 }
 
-const OPTIONAL_SCALAR_KEYS = ABILITY_FIELD_DEFS
-  .filter((d) => d.key !== "miscStats" && d.key !== "subAbilities")
-  .map((d) => d.key as keyof Ability);
+type OptionalScalarKey = Exclude<
+  keyof AbilityDraft,
+  "name" | "energyCost" | "description" | "visibleFields" | "subAbilities" | "miscStats"
+>;
+
+const OPTIONAL_SCALAR_KEYS: OptionalScalarKey[] = ABILITY_FIELD_DEFS.filter(
+  (d): d is AbilityFieldDef & { key: OptionalScalarKey } =>
+    d.key !== "miscStats" && d.key !== "subAbilities",
+).map((d) => d.key);
+
+function parseMiscStats(raw: Ability["miscStats"]): Record<string, number> | undefined {
+  if (!raw) return undefined;
+  const nums: Record<string, number> = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === "number") nums[k] = v;
+    else if (typeof v === "string") {
+      const n = parseFloat(v.replace(/[^\d.-]/g, ""));
+      if (Number.isFinite(n)) nums[k] = n;
+    }
+  }
+  return Object.keys(nums).length ? nums : undefined;
+}
 
 function collectVisibleFields(ability: Ability): string[] {
   const visible: string[] = [];
@@ -191,22 +210,13 @@ export function abilityToDraft(ability: Ability): AbilityDraft {
   };
   for (const key of OPTIONAL_SCALAR_KEYS) {
     const val = ability[key];
-    if (val !== undefined && val !== null) {
-      (draft as Record<string, unknown>)[key] = val;
+    if (val !== undefined && val !== null && val !== "") {
+      draft[key] = val as AbilityDraft[typeof key];
     }
   }
   if (ability.subAbilities?.length) draft.subAbilities = [...ability.subAbilities];
-  if (ability.miscStats) {
-    const nums: Record<string, number> = {};
-    for (const [k, v] of Object.entries(ability.miscStats)) {
-      if (typeof v === "number") nums[k] = v;
-      else if (typeof v === "string") {
-        const n = parseFloat(v.replace(/[^\d.-]/g, ""));
-        if (Number.isFinite(n)) nums[k] = n;
-      }
-    }
-    if (Object.keys(nums).length) draft.miscStats = nums;
-  }
+  const miscStats = parseMiscStats(ability.miscStats);
+  if (miscStats) draft.miscStats = miscStats;
   return draft;
 }
 
@@ -223,9 +233,9 @@ export function draftToAbility(draft: AbilityDraft): Ability {
   };
   for (const key of OPTIONAL_SCALAR_KEYS) {
     if (!draft.visibleFields.includes(key)) continue;
-    const val = draft[key as keyof AbilityDraft];
+    const val = draft[key];
     if (val !== undefined && val !== null && val !== "") {
-      (ability as Record<string, unknown>)[key] = val;
+      ability[key] = val as Ability[typeof key];
     }
   }
   if (draft.visibleFields.includes("subAbilities") && draft.subAbilities?.length) {
