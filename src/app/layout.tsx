@@ -54,7 +54,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased overflow-x-hidden`}
         suppressHydrationWarning
       >
         <TooltipProvider>
@@ -63,7 +63,7 @@ export default async function RootLayout({
           <PWARegister />
           <PWAInstallPrompt />
           <DeployRefreshNotifier />
-          {children}
+          <div className="flex flex-1 flex-col">{children}</div>
           <Footer />
           </OverridesProvider>
         </TooltipProvider>

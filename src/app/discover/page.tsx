@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { PublicBuildRow } from "@/components/public-build-row";
 import {
   PageShell,
@@ -282,13 +281,11 @@ export default function DiscoverPage() {
           />
         ) : (
           <>
-            <ScrollArea className="max-h-[calc(100vh-22rem)]">
-              <div className="space-y-3 pr-3">
-                {builds.map((build) => (
-                  <PublicBuildRow key={build.id} build={build} />
-                ))}
-              </div>
-            </ScrollArea>
+            <div className="space-y-3">
+              {builds.map((build) => (
+                <PublicBuildRow key={build.id} build={build} />
+              ))}
+            </div>
             {nextCursor && (
               <div className="mt-6 flex justify-center">
                 <button

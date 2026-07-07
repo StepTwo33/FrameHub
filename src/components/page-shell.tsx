@@ -160,7 +160,7 @@ export function PageShell({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen flex flex-col", ambient && "page-ambient", className)}>
+    <div className={cn("flex flex-1 flex-col", ambient && "page-ambient", className)}>
       <Header />
       {children}
     </div>
