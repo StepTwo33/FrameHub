@@ -108,7 +108,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
                 { name: "Step-Bro_Prime", role: "Lead Developer", profileUrl: "/u/steptwo" },
-                { name: "Axel Shade", role: "Data & Design" },
+                { name: "Axel Shade", role: "Data & Design", profileUrl: "/u/axel-shade" },
               ].map((c) =>
                 c.profileUrl ? (
                   c.profileUrl.startsWith("/") ? (
