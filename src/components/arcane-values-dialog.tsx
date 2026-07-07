@@ -21,6 +21,7 @@ import {
   type ArcaneEffectLineDraft,
 } from "@/lib/arcane-effect-drafts";
 import { appendReturnTo } from "@/lib/nav-return";
+import { dataFixesHref } from "@/lib/data-fixes-url";
 
 type ArcaneValuesDialogProps = {
   open: boolean;
@@ -79,8 +80,9 @@ export function ArcaneValuesDialog({
     }
   };
 
-  const overrideBase = `/report-issue?tab=overrides&overrideCategory=arcane&overrideId=${encodeURIComponent(arcaneId)}`;
-  const advancedHref = returnTo ? appendReturnTo(overrideBase, returnTo) : overrideBase;
+  const advancedHref = returnTo
+    ? appendReturnTo(dataFixesHref({ category: "arcane", itemId: arcaneId }), returnTo)
+    : dataFixesHref({ category: "arcane", itemId: arcaneId });
 
   return (
     <Dialog open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>

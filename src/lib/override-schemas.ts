@@ -137,7 +137,25 @@ export const STAT_RECORD_HELP: Partial<Record<OverrideCategory, string>> = {
   archon_shard: "Bonus amount for each shard stat option.",
 };
 
-export const OVERRIDE_EDITOR_CATEGORIES = OVERRIDE_CATEGORIES.filter((c) => c !== "arcane_effect");
+export const OVERRIDE_EDITOR_CATEGORIES = OVERRIDE_CATEGORIES;
+
+export const OVERRIDE_CATEGORY_LABELS: Record<OverrideCategory, string> = {
+  weapon: "Weapons",
+  mod: "Mods",
+  warframe: "Warframes",
+  companion: "Companions",
+  arcane: "Arcanes (catalog + build effects)",
+  arcane_effect: "Arcane effect values only",
+  archon_shard: "Archon Shards",
+  archwing: "Archwings",
+  necramech: "Necramechs",
+};
+
+export const OVERRIDE_ACTION_LABELS: Record<"modify" | "add" | "remove", string> = {
+  modify: "Fix data",
+  add: "New item",
+  remove: "Hidden",
+};
 
 export const ADD_ITEM_TEMPLATES: Partial<Record<OverrideCategory, Record<string, unknown>>> = {
   mod: {

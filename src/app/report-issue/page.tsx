@@ -1,23 +1,21 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
-import {
-  DataOverride, getOverrides, deleteOverride, getOverrideForTarget,
-  exportOverrides, importOverrides, OverrideCategory, OVERRIDE_CATEGORIES,
-} from "@/lib/data-overrides";
-import { loadSharedOverrides, getLegacyLocalOverrideCount, uploadLegacyLocalOverrides, exportLegacyLocalOverrides } from "@/lib/data-overrides-client";
+import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/data-overrides";
+import { dataFixesHref } from "@/lib/data-fixes-url";
+import { DataFixesPanel, prefillFromReport } from "@/components/data-fixes-panel";
+import type { DataFixesPrefill } from "@/lib/data-fixes-url";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allCompanions } from "@/data/companions";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
-  Flag, Plus, Trash2, Download, Upload, Check, X, ChevronDown, ChevronUp,
+  Flag, Plus, Trash2, Download, Check, X, ChevronDown, ChevronUp,
   AlertTriangle, Search, Wrench, Edit3,
 } from "lucide-react";
-import { OverrideEditor } from "@/components/override-editor";
-import { formatOverrideFieldsSummary } from "@/lib/override-schemas";
 import { NavBack } from "@/components/nav-back";
 import { decodeReturnTo, returnLabel } from "@/lib/nav-return";
 
@@ -66,6 +64,7 @@ function emptyIssues() {
 }
 
 export default function ReportIssuePage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"reports" | "overrides">("reports");
   const [reports, setReports] = useState<ApiReport[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -75,20 +74,8 @@ export default function ReportIssuePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [userRole, setUserRole] = useState<string>("user");
   const isAdmin = userRole === "admin" || userRole === "moderator";
-  // Data overrides state
-  const [overrides, setOverrides] = useState<DataOverride[]>([]);
-  const [showOverrideForm, setShowOverrideForm] = useState(false);
-  const [ovrExpandedId, setOvrExpandedId] = useState<string | null>(null);
-  const [legacyLocalCount, setLegacyLocalCount] = useState(0);
-  const [legacyUploading, setLegacyUploading] = useState(false);
-  const [overridePrefill, setOverridePrefill] = useState<{
-    existingOverrideId?: string;
-    category?: OverrideCategory;
-    itemId?: string;
-    note?: string;
-    action?: "modify" | "add" | "remove";
-    fields?: Record<string, unknown>;
-  } | undefined>(undefined);
+  const [overridePrefill, setOverridePrefill] = useState<DataFixesPrefill | undefined>(undefined);
+  const [overrideCount, setOverrideCount] = useState(0);
 
   // Form state
   const [formType, setFormType] = useState<ItemType>("weapon");
@@ -108,66 +95,26 @@ export default function ReportIssuePage() {
     }).catch(() => {});
   }, []);
 
-  const refreshOverrides = useCallback(() => {
-    void loadSharedOverrides().then(() => {
-      setOverrides(getOverrides());
-      setLegacyLocalCount(getLegacyLocalOverrideCount());
-    });
-  }, []);
-
-  // Load session, reports, and shared overrides
+  // Load session and reports
   useEffect(() => {
     fetch("/api/auth/session").then((r) => r.json()).then((data) => {
       if (data.user?.role) setUserRole(data.user.role);
     }).catch(() => {});
-    queueMicrotask(() => {
-      refresh();
-      void loadSharedOverrides().then(() => {
-        setOverrides(getOverrides());
-        setLegacyLocalCount(getLegacyLocalOverrideCount());
-      });
-    });
+    queueMicrotask(() => refresh());
   }, [refresh]);
 
   useEffect(() => {
     const onUpdate = () => {
-      setOverrides(getOverrides());
-      setLegacyLocalCount(getLegacyLocalOverrideCount());
+      fetch("/api/data-overrides")
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data)) setOverrideCount(data.length);
+        })
+        .catch(() => {});
     };
+    onUpdate();
     window.addEventListener("framehub-data-overrides-updated", onUpdate);
     return () => window.removeEventListener("framehub-data-overrides-updated", onUpdate);
-  }, []);
-
-  const handleUploadLegacyOverrides = useCallback(async () => {
-    setLegacyUploading(true);
-    try {
-      const { imported, remaining } = await uploadLegacyLocalOverrides();
-      refreshOverrides();
-      if (remaining === 0) {
-        alert(`Uploaded ${imported} override(s) to the shared server. This browser's local copy was cleared.`);
-      } else {
-        alert(`Uploaded ${imported} override(s). ${remaining} still only exist in this browser — export JSON and send them to staff if needed.`);
-      }
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setLegacyUploading(false);
-    }
-  }, [refreshOverrides]);
-
-  const handleExportLegacyOverrides = useCallback(() => {
-    const data = exportLegacyLocalOverrides();
-    if (!data) {
-      alert("No browser-saved overrides found on this device.");
-      return;
-    }
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `framehub-browser-overrides-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
   }, []);
 
   // Pre-fill from URL query params (e.g. ?type=weapon&name=Braton&id=braton)
@@ -198,7 +145,6 @@ export default function ReportIssuePage() {
           itemId: qOverrideId,
           action: "modify",
         });
-        setShowOverrideForm(true);
       }
     });
   }, []);
@@ -290,132 +236,9 @@ export default function ReportIssuePage() {
     setFormIssues((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
   };
 
-  const handleOverrideSaved = useCallback(() => {
-    refreshOverrides();
-    setShowOverrideForm(false);
-    setOverridePrefill(undefined);
-  }, [refreshOverrides]);
-
-  const handleDeleteOverride = useCallback(async (id: string) => {
-    try {
-      await deleteOverride(id);
-      refreshOverrides();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete override");
-    }
-  }, [refreshOverrides]);
-
-  const handleExportOverrides = useCallback(async () => {
-    const data = await exportOverrides();
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `framehub-overrides-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, []);
-
-  const handleExportAsTypeScript = useCallback(() => {
-    const ovrs = getOverrides().filter((o) => o.action === "add");
-    if (ovrs.length === 0) { alert("No 'add' overrides to export."); return; }
-    const byType: Record<string, string[]> = {};
-    for (const o of ovrs) {
-      if (!byType[o.targetType]) byType[o.targetType] = [];
-      const fields = { ...o.fields };
-      const lines = JSON.stringify(fields, null, 2)
-        .split("\n")
-        .map((l) => "  " + l)
-        .join("\n");
-      byType[o.targetType].push(`  // ${o.note || "Added via override"}\n${lines},`);
-    }
-    let ts = `// Exported from Frame Hub Data Overrides - ${new Date().toISOString().slice(0, 10)}\n`;
-    ts += `// Paste these into src/data/custom-items.ts in the appropriate array\n\n`;
-    for (const [type, entries] of Object.entries(byType)) {
-      ts += `// ── ${type.toUpperCase()} ADDITIONS ──\n`;
-      ts += entries.join("\n") + "\n\n";
-    }
-    const blob = new Blob([ts], { type: "text/typescript" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `framehub-custom-items-${new Date().toISOString().slice(0, 10)}.ts`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, []);
-
-  const handleImportOverrides = useCallback(() => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        void importOverrides(reader.result as string).then((count) => {
-          refreshOverrides();
-          alert(`Imported ${count} new overrides (existing targets skipped).`);
-        });
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  }, [refreshOverrides]);
-
-  // Pre-fill override from a report's stat discrepancies
   const handleCreateOverrideFromReport = useCallback((report: ApiReport) => {
-    const typeMap: Record<string, OverrideCategory> = {
-      weapon: "weapon", mod: "mod", companion: "companion", warframe: "warframe",
-      arcane: "arcane", arcane_effect: "arcane_effect", archon_shard: "archon_shard",
-      archwing: "archwing", necramech: "necramech",
-    };
-    const issues = (() => { try { return JSON.parse(report.issues || "{}"); } catch { return {}; } })();
-    const discrepancies: { stat: string; currentValue: string; expectedValue: string }[] =
-      (() => { try { return JSON.parse(report.statDiscrepancies || "[]"); } catch { return []; } })();
-
-    const cat = typeMap[report.itemType] ?? "weapon";
-    let action: "modify" | "add" | "remove" = "modify";
-    const fields: Record<string, unknown> = {};
-    if (issues.doesNotExist) {
-      action = "remove";
-    } else if (discrepancies.length > 0) {
-      const statPrefix = cat === "mod" || cat === "arcane" ? "stats." : cat === "archon_shard" ? "statBonuses." : "";
-      for (const d of discrepancies) {
-        if (!d.stat || !d.expectedValue) continue;
-        const key = d.stat.includes(".") ? d.stat : statPrefix ? `${statPrefix}${d.stat}` : d.stat;
-        const num = Number(d.expectedValue);
-        fields[key] = Number.isNaN(num) ? d.expectedValue : num;
-      }
-    }
-
-    const itemId = report.itemId || "";
-    const existing = itemId ? getOverrideForTarget(cat, itemId) : undefined;
-
-    setOverridePrefill({
-      existingOverrideId: existing?.id,
-      category: cat,
-      itemId: itemId || undefined,
-      note: existing?.note ?? `From report: ${report.itemName} - ${report.comment || "no comment"}`,
-      action: existing?.action ?? action,
-      fields: existing?.fields ?? fields,
-    });
-    setActiveTab("overrides");
-    setShowOverrideForm(true);
-  }, []);
-
-  const handleEditOverride = useCallback((ovr: DataOverride) => {
-    setOverridePrefill({
-      existingOverrideId: ovr.id,
-      category: ovr.targetType,
-      itemId: ovr.targetId,
-      note: ovr.note,
-      action: ovr.action,
-      fields: ovr.fields,
-    });
-    setActiveTab("overrides");
-    setShowOverrideForm(true);
-  }, []);
+    router.push(dataFixesHref({ ...prefillFromReport(report), returnTo: returnTo ?? undefined }));
+  }, [router, returnTo]);
 
   const openCount = reports.filter((r) => r.status === "open").length;
 
@@ -440,7 +263,7 @@ export default function ReportIssuePage() {
                   onClick={() => setActiveTab("overrides")}
                   className={cn("flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg transition-colors", activeTab === "overrides" ? "bg-purple-600 text-white" : "text-muted-foreground hover:text-foreground")}
                 >
-                  <Wrench className="h-4 w-4" /> Data Fixes {overrides.length > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20">{overrides.length}</span>}
+                  <Wrench className="h-4 w-4" /> Data Fixes {overrideCount > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20">{overrideCount}</span>}
                 </button>
               )}
             </div>
@@ -457,26 +280,6 @@ export default function ReportIssuePage() {
                 >
                   {showForm ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
                   {showForm ? "Cancel" : "Report Issue"}
-                </button>
-              </div>
-            )}
-            {activeTab === "overrides" && (
-              <div className="sm:ml-auto flex gap-2 flex-wrap">
-                <button onClick={handleImportOverrides} className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground transition-colors">
-                  <Upload className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Import</span>
-                </button>
-                <button onClick={handleExportOverrides} className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground transition-colors">
-                  <Download className="h-3.5 w-3.5" /> <span className="hidden sm:inline">JSON</span>
-                </button>
-                <button onClick={handleExportAsTypeScript} className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-purple-500/50 text-purple-400 hover:text-purple-300 transition-colors">
-                  <Download className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Export .ts</span>
-                </button>
-                <button
-                  onClick={() => setShowOverrideForm(!showOverrideForm)}
-                  className={cn("flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg transition-colors", showOverrideForm ? "bg-red-600 text-white" : "bg-purple-600 text-white hover:bg-purple-700")}
-                >
-                  {showOverrideForm ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
-                  {showOverrideForm ? "Cancel" : "New Override"}
                 </button>
               </div>
             )}
@@ -760,100 +563,15 @@ export default function ReportIssuePage() {
           </div>
           </>)}
 
-          {/* ========== DATA OVERRIDES TAB ========== */}
-          {activeTab === "overrides" && (<>
-          {isAdmin && legacyLocalCount > 0 && (
-            <div className="mb-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
-              <p className="text-sm text-amber-200">
-                This browser still has <strong>{legacyLocalCount}</strong> data fix{legacyLocalCount === 1 ? "" : "es"} saved locally from before shared storage.
-                They are applied on this device but other staff will not see them until uploaded.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => void handleUploadLegacyOverrides()}
-                  disabled={legacyUploading}
-                  className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-700 disabled:opacity-60"
-                >
-                  {legacyUploading ? "Uploading…" : "Upload to shared server"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleExportLegacyOverrides}
-                  className="rounded-lg border border-amber-500/40 px-3 py-1.5 text-xs text-amber-200 hover:bg-amber-500/10"
-                >
-                  Export browser JSON
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Override Editor */}
-          {showOverrideForm && (
-            <OverrideEditor
-              prefill={overridePrefill}
-              onSave={handleOverrideSaved}
-              onCancel={() => { setShowOverrideForm(false); setOverridePrefill(undefined); }}
-              backLink={returnTo ? { href: returnTo, label: returnLabel(returnTo) } : undefined}
+          {/* ========== DATA FIXES TAB (staff) ========== */}
+          {activeTab === "overrides" && isAdmin && (
+            <DataFixesPanel
+              key={overridePrefill?.itemId ?? "default"}
+              compactHeader
+              initialPrefill={overridePrefill}
+              returnTo={returnTo}
             />
           )}
-
-          {/* Override List */}
-          <div className="space-y-2">
-            {overrides.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">
-                <Wrench className="h-8 w-8 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">No data overrides yet.</p>
-                <p className="text-xs mt-1">Shared across all staff — one fix per item. Pick an item, change wrong fields, and save.</p>
-              </div>
-            )}
-            {overrides.map((ovr) => {
-              const isExpanded = ovrExpandedId === ovr.id;
-              const actionColors = { modify: "text-blue-400 bg-blue-500/10", add: "text-green-400 bg-green-500/10", remove: "text-red-400 bg-red-500/10" };
-              return (
-                <div key={ovr.id} className="border border-border rounded-xl bg-card overflow-hidden">
-                  <button onClick={() => setOvrExpandedId(isExpanded ? null : ovr.id)} className="w-full text-left p-3 flex items-center gap-3">
-                    <span className={cn("text-[10px] px-1.5 py-0.5 rounded capitalize", actionColors[ovr.action])}>{ovr.action}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <code className="font-medium text-sm truncate">{ovr.targetId}</code>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted capitalize">{ovr.targetType}</span>
-                      </div>
-                      {ovr.note && <div className="text-[10px] text-muted-foreground mt-0.5 truncate">{ovr.note}</div>}
-                    </div>
-                    {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                  </button>
-                  {isExpanded && (
-                    <div className="border-t border-border p-3 space-y-3">
-                      <div className="text-[10px] text-muted-foreground">
-                        Updated: {new Date(ovr.timestamp).toLocaleString()}
-                        {ovr.updatedBy && <> · by {ovr.updatedBy}</>}
-                      </div>
-                      {Object.keys(ovr.fields).length > 0 && (
-                        <ul className="space-y-0.5 text-xs text-foreground/90">
-                          {formatOverrideFieldsSummary(ovr.fields).map((line) => (
-                            <li key={line}>{line}</li>
-                          ))}
-                        </ul>
-                      )}
-                      <div className="flex gap-2 pt-2 border-t border-border">
-                        <button
-                          onClick={() => handleEditOverride(ovr)}
-                          className="flex items-center gap-1 px-2 py-1 text-[10px] rounded bg-purple-500/10 text-purple-400 hover:bg-purple-500/20"
-                        >
-                          <Wrench className="h-3 w-3" /> Edit
-                        </button>
-                        <button onClick={() => handleDeleteOverride(ovr.id)} className="flex items-center gap-1 px-2 py-1 text-[10px] rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 ml-auto">
-                          <Trash2 className="h-3 w-3" /> Delete
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          </>)}
 
         </div>
 

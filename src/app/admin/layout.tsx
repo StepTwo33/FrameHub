@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isUserBanned } from "@/lib/admin";
-import { Flag, Users, Megaphone } from "lucide-react";
+import { Flag, Users, Megaphone, Wrench } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -32,6 +32,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             <Flag className="h-3.5 w-3.5" />
             Reports
+          </Link>
+          <Link
+            href="/admin/data-fixes"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+          >
+            <Wrench className="h-3.5 w-3.5" />
+            Data Fixes
           </Link>
           <Link
             href="/admin/users"

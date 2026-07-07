@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Flag, Wrench, ExternalLink, Crosshair } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { PanelHeading } from "@/components/page-shell";
@@ -18,6 +19,9 @@ import { modsMap } from "@/data/mods";
 import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
 import { getAugmentModIdsForWarframe } from "@/lib/warframe-augment-mods";
 import { appendReturnTo } from "@/lib/nav-return";
+import { dataFixesHref } from "@/lib/data-fixes-url";
+import { useStaffRole } from "@/lib/use-staff";
+import type { OverrideCategory } from "@/lib/data-overrides";
 import { cn } from "@/lib/utils";
 
 export function CodexActionLinks({
@@ -37,8 +41,13 @@ export function CodexActionLinks({
   returnTo?: string;
   editValuesLabel?: string;
 }) {
+  const isStaff = useStaffRole();
   const reportHref = `/report-issue?type=${encodeURIComponent(reportType)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
-  const overrideHref = `/report-issue?tab=overrides&overrideCategory=${encodeURIComponent(overrideCategory)}&overrideId=${encodeURIComponent(id)}`;
+  const overrideHref = dataFixesHref({
+    category: overrideCategory as OverrideCategory,
+    itemId: id,
+    returnTo,
+  });
 
   return (
     <div className="flex flex-wrap gap-2 border-t border-border pt-3">
@@ -47,23 +56,25 @@ export function CodexActionLinks({
           href={wikiUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-[10px] text-muted-foreground hover:border-purple-500/40 hover:text-purple-300"
+          className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-[10px] text-muted-foreground hover:border-purple-500/40 hover:text-purple-800 dark:hover:text-purple-300"
         >
           <ExternalLink className="h-2.5 w-2.5" /> Wiki
         </a>
       )}
       <a
         href={returnTo ? appendReturnTo(reportHref, returnTo) : reportHref}
-        className="inline-flex items-center gap-1 rounded border border-amber-500/30 px-2 py-1 text-[10px] text-amber-400/70 hover:bg-amber-500/5 hover:text-amber-400"
+        className="inline-flex items-center gap-1 rounded border border-amber-500/30 px-2 py-1 text-[10px] text-amber-800/80 hover:bg-amber-500/5 hover:text-amber-900 dark:text-amber-400/70 dark:hover:text-amber-400"
       >
         <Flag className="h-2.5 w-2.5" /> Report
       </a>
-      <a
-        href={returnTo ? appendReturnTo(overrideHref, returnTo) : overrideHref}
-        className="inline-flex items-center gap-1 rounded border border-purple-500/30 px-2 py-1 text-[10px] text-purple-400/70 hover:bg-purple-500/5 hover:text-purple-400"
-      >
-        <Wrench className="h-2.5 w-2.5" /> {editValuesLabel ?? "Override"}
-      </a>
+      {isStaff && (
+        <Link
+          href={returnTo ? appendReturnTo(overrideHref, returnTo) : overrideHref}
+          className="inline-flex items-center gap-1 rounded border border-purple-500/30 px-2 py-1 text-[10px] text-purple-800/80 hover:bg-purple-500/5 hover:text-purple-900 dark:text-purple-400/70 dark:hover:text-purple-400"
+        >
+          <Wrench className="h-2.5 w-2.5" /> {editValuesLabel ?? "Edit in Data Fixes"}
+        </Link>
+      )}
     </div>
   );
 }

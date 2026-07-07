@@ -8,6 +8,8 @@ import {
   ADD_ITEM_TEMPLATES,
   ARCANE_EFFECT_FIELD_KEYS,
   HIDDEN_OVERRIDE_FIELDS,
+  OVERRIDE_ACTION_LABELS,
+  OVERRIDE_CATEGORY_LABELS,
   TEXTAREA_FIELDS,
   formatOverrideFieldLabel,
   getNestedRecordFields,
@@ -17,17 +19,22 @@ import {
   STAT_RECORD_HELP,
   OVERRIDE_EDITOR_CATEGORIES,
 } from "@/lib/override-schemas";
-import { buildNestedPatch, flattenRecordFields } from "@/lib/override-merge";
+import { buildNestedPatch, deepMergeOverrideFields, flattenRecordFields } from "@/lib/override-merge";
 import {
   DataOverride,
   OverrideCategory,
-  OVERRIDE_CATEGORIES,
   generateOverrideId,
   getOverrides,
   getOverrideForTarget,
   saveOverride,
   applyModOverrides,
   applyArcaneOverrides,
+  applyWeaponOverrides,
+  applyWarframeOverrides,
+  applyCompanionOverrides,
+  applyArchonShardOverrides,
+  applyArchwingOverrides,
+  applyNecramechOverrides,
 } from "@/lib/data-overrides";
 import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
 import { toEffectDrafts, draftsToEffectsPayload } from "@/lib/arcane-effect-drafts";
@@ -58,48 +65,50 @@ import {
   getShardStatPickerOptions,
 } from "@/lib/override-stat-catalog";
 
-const CATEGORY_LABELS: Record<OverrideCategory, string> = {
-  weapon: "Weapons",
-  mod: "Mods",
-  warframe: "Warframes",
-  companion: "Companions",
-  arcane: "Arcanes (catalog + build effects)",
-  arcane_effect: "Arcane effect values only",
-  archon_shard: "Archon Shards",
-  archwing: "Archwings",
-  necramech: "Necramechs",
-};
+const CATEGORY_LABELS = OVERRIDE_CATEGORY_LABELS;
 
-function getAllItems(category: OverrideCategory): { id: string; name: string }[] {
+function getAllItems(category: OverrideCategory): { id: string; name: string; hidden?: boolean }[] {
+  let base: { id: string; name: string }[];
   switch (category) {
-    case "weapon": return allWeapons.map((w) => ({ id: w.id, name: w.name }));
-    case "mod": return allMods.map((m) => ({ id: m.id, name: m.name }));
-    case "warframe": return allWarframes.map((w) => ({ id: w.id, name: w.name }));
-    case "companion": return allCompanions.map((c) => ({ id: c.id, name: c.name }));
-    case "arcane": return allArcanes.map((a) => ({ id: a.id, name: a.name }));
+    case "weapon": base = allWeapons.map((w) => ({ id: w.id, name: w.name })); break;
+    case "mod": base = allMods.map((m) => ({ id: m.id, name: m.name })); break;
+    case "warframe": base = allWarframes.map((w) => ({ id: w.id, name: w.name })); break;
+    case "companion": base = allCompanions.map((c) => ({ id: c.id, name: c.name })); break;
+    case "arcane": base = allArcanes.map((a) => ({ id: a.id, name: a.name })); break;
     case "arcane_effect":
-      return Object.entries(ARCANE_EFFECTS).map(([id, def]) => ({ id, name: def.name }));
-    case "archon_shard": return allArchonShards.map((s) => ({ id: s.id, name: s.name }));
-    case "archwing": return archwings.map((a) => ({ id: a.id, name: a.name }));
-    case "necramech": return necramechs.map((n) => ({ id: n.id, name: n.name }));
-    default: return [];
+      base = Object.entries(ARCANE_EFFECTS).map(([id, def]) => ({ id, name: def.name }));
+      break;
+    case "archon_shard": base = allArchonShards.map((s) => ({ id: s.id, name: s.name })); break;
+    case "archwing": base = archwings.map((a) => ({ id: a.id, name: a.name })); break;
+    case "necramech": base = necramechs.map((n) => ({ id: n.id, name: n.name })); break;
+    default: base = [];
   }
+  const baseIds = new Set(base.map((i) => i.id));
+  const hidden = getOverrides()
+    .filter((o) => o.targetType === category && o.action === "remove" && !baseIds.has(o.targetId))
+    .map((o) => ({ id: o.targetId, name: `${o.targetId} (hidden)`, hidden: true }));
+  return [...base, ...hidden];
 }
 
 function getItemData(category: OverrideCategory, id: string): Record<string, unknown> | null {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let items: any[];
   switch (category) {
     case "weapon": {
-      const weapon = getEffectiveWeapons().find((w) => w.id === id);
+      const weapon = applyWeaponOverrides(allWeapons).find((w) => w.id === id)
+        ?? getEffectiveWeapons().find((w) => w.id === id);
       return weapon ? (weapon as unknown as Record<string, unknown>) : null;
     }
     case "mod": {
       const mod = applyModOverrides(allMods).find((m) => m.id === id);
       return mod ? (mod as unknown as Record<string, unknown>) : null;
     }
-    case "warframe": items = allWarframes; break;
-    case "companion": items = allCompanions; break;
+    case "warframe": {
+      const wf = applyWarframeOverrides(allWarframes).find((w) => w.id === id);
+      return wf ? (wf as unknown as Record<string, unknown>) : null;
+    }
+    case "companion": {
+      const c = applyCompanionOverrides(allCompanions).find((x) => x.id === id);
+      return c ? (c as unknown as Record<string, unknown>) : null;
+    }
     case "arcane": {
       const arcane = applyArcaneOverrides(allArcanes).find((a) => a.id === id);
       if (!arcane) return null;
@@ -115,12 +124,20 @@ function getItemData(category: OverrideCategory, id: string): Record<string, unk
       const def = applyArcaneEffectOverrides()[id];
       return def ? (def as unknown as Record<string, unknown>) : null;
     }
-    case "archon_shard": items = allArchonShards; break;
-    case "archwing": items = archwings; break;
-    case "necramech": items = necramechs; break;
+    case "archon_shard": {
+      const shard = applyArchonShardOverrides(allArchonShards).find((s) => s.id === id);
+      return shard ? (shard as unknown as Record<string, unknown>) : null;
+    }
+    case "archwing": {
+      const aw = applyArchwingOverrides(archwings).find((a) => a.id === id);
+      return aw ? (aw as unknown as Record<string, unknown>) : null;
+    }
+    case "necramech": {
+      const nm = applyNecramechOverrides(necramechs).find((n) => n.id === id);
+      return nm ? (nm as unknown as Record<string, unknown>) : null;
+    }
     default: return null;
   }
-  return items.find((i) => i.id === id) ?? null;
 }
 
 function findExistingOverrideId(
@@ -438,26 +455,49 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
         return;
       }
 
+      const timestamp = Date.now();
+      const trimmedNote = note.trim();
+      const trimmedId = targetId.trim();
+
+      if (action === "add") {
+        const template = { ...(ADD_ITEM_TEMPLATES[category] ?? {}), id: trimmedId };
+        const patch = buildFields();
+        const fields = deepMergeOverrideFields(template, patch);
+        fields.id = trimmedId;
+        if (Object.keys(fields).length <= 1) {
+          alert("Fill in at least one field for the new item.");
+          return;
+        }
+        await saveOverride({
+          id: prefill?.existingOverrideId ?? findExistingOverrideId(category, trimmedId) ?? generateOverrideId(),
+          targetType: category,
+          targetId: trimmedId,
+          action: "add",
+          fields,
+          note: trimmedNote,
+          timestamp,
+        });
+        onSave();
+        return;
+      }
+
       const fields = buildFields();
       if (Object.keys(fields).length === 0) {
         alert("Change at least one field before saving.");
         return;
       }
 
-      const timestamp = Date.now();
-      const trimmedNote = note.trim();
-      const trimmedId = targetId.trim();
-
       const persist = async (
         targetType: OverrideCategory,
         patch: Record<string, unknown>,
         existingOverrideId?: string,
+        saveAction: DataOverride["action"] = action,
       ) => {
         await saveOverride({
           id: existingOverrideId ?? findExistingOverrideId(targetType, trimmedId) ?? generateOverrideId(),
           targetType,
           targetId: trimmedId,
-          action: "modify",
+          action: saveAction,
           fields: patch,
           note: trimmedNote,
           timestamp,
@@ -555,9 +595,9 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
         <label className="mb-1.5 block text-xs text-muted-foreground">What do you want to do?</label>
         <div className="flex flex-wrap gap-1.5">
           {([
-            { id: "modify" as const, label: "Fix existing data" },
-            { id: "add" as const, label: "Add new item" },
-            { id: "remove" as const, label: "Hide item" },
+            { id: "modify" as const, label: OVERRIDE_ACTION_LABELS.modify },
+            { id: "add" as const, label: OVERRIDE_ACTION_LABELS.add },
+            { id: "remove" as const, label: OVERRIDE_ACTION_LABELS.remove },
           ]).map(({ id, label }) => (
             <button
               key={id}
@@ -641,10 +681,14 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
                       onClick={() => handleSelectItem(item.id)}
                       className={cn(
                         "flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted/50",
-                        selectedItemId === item.id && "bg-purple-500/10 text-purple-400",
+                        selectedItemId === item.id && "bg-purple-500/10 text-purple-800 dark:text-purple-400",
+                        item.hidden && "opacity-70 italic",
                       )}
                     >
                       <span className="truncate">{item.name}</span>
+                      {item.hidden && (
+                        <span className="ml-2 shrink-0 text-[10px] text-red-700 dark:text-red-400">hidden</span>
+                      )}
                     </button>
                   ))}
                 </div>
