@@ -325,14 +325,12 @@ export function AbilitiesEditor({
   const removeField = (index: number, fieldKey: string) => {
     const draft = abilities[index];
     if (!draft) return;
-    const next: AbilityDraft = {
+    const visibleFields = draft.visibleFields.filter((k) => k !== fieldKey);
+    const { [fieldKey as keyof AbilityDraft]: _removed, ...rest } = {
       ...draft,
-      visibleFields: draft.visibleFields.filter((k) => k !== fieldKey),
+      visibleFields,
     };
-    if (fieldKey === "miscStats") delete next.miscStats;
-    else if (fieldKey === "subAbilities") delete next.subAbilities;
-    else delete (next as Record<string, unknown>)[fieldKey];
-    update(index, next);
+    update(index, rest as AbilityDraft);
   };
 
   const addAbility = () => {
