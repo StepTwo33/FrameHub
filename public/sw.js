@@ -1,7 +1,7 @@
 /// Frame Hub Service Worker
-/// v3: icons only — never cache HTML or /_next (avoids stale bundles after deploy)
+/// v5: maskable-only rounded icons. Icons only — never cache HTML or /_next (avoids stale bundles after deploy).
 
-const CACHE_NAME = "framehub-v3";
+const CACHE_NAME = "framehub-v5";
 
 const PRECACHE_URLS = ["/icons/icon-192x192.png", "/icons/icon-512x512.png"];
 

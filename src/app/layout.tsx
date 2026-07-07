@@ -87,7 +87,7 @@ export default async function RootLayout({
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `(function(){var m=localStorage.getItem('framehub_mode')||'dark';if(m==='dark')document.documentElement.classList.add('dark');var t=localStorage.getItem('framehub_theme');if(t&&t!=='void')document.documentElement.classList.add('theme-'+t);})();`,
+            __html: `(function(){var m=localStorage.getItem('framehub_mode')||'dark';if(m==='dark')document.documentElement.classList.add('dark');var t=localStorage.getItem('framehub_theme')||'tenno';if(t&&t!=='void')document.documentElement.classList.add('theme-'+t);})();`,
           }}
         />
       </head>

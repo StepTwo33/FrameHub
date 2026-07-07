@@ -38,13 +38,13 @@ function applyMode(mode: "dark" | "light") {
 
 export function ThemePicker() {
   const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState("void");
+  const [current, setCurrent] = useState("tenno");
   const [mode, setMode] = useState<"dark" | "light">("dark");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     queueMicrotask(() => {
-      const savedTheme = localStorage.getItem("framehub_theme") || "void";
+      const savedTheme = localStorage.getItem("framehub_theme") || "tenno";
       const savedMode = (localStorage.getItem("framehub_mode") || "dark") as "dark" | "light";
       setCurrent(savedTheme);
       setMode(savedMode);
