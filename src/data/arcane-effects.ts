@@ -63,14 +63,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
-        "maxValue": 48.0,
-        "baseValue": 8.0
+        "stat": "fireRate",
+        "maxValue": 90.0,
+        "baseValue": 15.0
+      },
+      {
+        "stat": "holsterDamage",
+        "maxValue": 90.0,
+        "baseValue": 15.0
       },
       {
         "stat": "fireRateOnCrit",
-        "maxValue": 39.0,
-        "baseValue": 6.5
+        "maxValue": 30.0,
+        "baseValue": 5.0
       }
     ]
   },
@@ -1185,8 +1190,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "energyRegen",
         "maxValue": 5.0,
-        "flat": false,
-        "stacking": true,
         "valuesByRank": [
           1.25,
           2.5,
@@ -1277,17 +1280,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           150,
           200
         ]
-      },
-      {
-        "stat": "procAuraRadius",
-        "maxValue": 6,
-        "flat": true,
-        "valuesByRank": [
-          6,
-          6,
-          6,
-          6
-        ]
       }
     ]
   },
@@ -1309,6 +1301,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "pullRadius",
         "maxValue": 12,
+        "flat": true,
         "valuesByRank": [
           6,
           8,
@@ -1341,17 +1334,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           15,
           22.5,
           30
-        ]
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 8,
-        "flat": true,
-        "valuesByRank": [
-          8,
-          8,
-          8,
-          8
         ]
       }
     ]
@@ -1945,7 +1927,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "pax_bolt": {
     "name": "Pax Bolt",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -1967,23 +1949,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           22.5,
           30
         ]
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "valuesByRank": [
-          4,
-          4,
-          4,
-          4
-        ]
       }
     ]
   },
   "pax_charge": {
     "name": "Pax Charge",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
@@ -2006,6 +1977,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "kitgunHoming",
         "maxValue": 4,
+        "flat": true,
         "valuesByRank": [
           1,
           2,
@@ -2043,6 +2015,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "aimGlideDuration",
         "maxValue": 5,
+        "flat": true,
         "valuesByRank": [
           1.3,
           2.5,
@@ -2299,19 +2272,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "residual_boils": {
     "name": "Residual Boils",
-    "trigger": "onKill",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
-      {
-        "stat": "killProcChance",
-        "maxValue": 20,
-        "valuesByRank": [
-          20,
-          20,
-          20,
-          20
-        ]
-      },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
@@ -2321,6 +2284,11 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           9,
           12
         ]
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
         "stat": "zoneDamage",
@@ -2346,28 +2314,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "residual_malodor": {
     "name": "Residual Malodor",
-    "trigger": "onKill",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "killProcChance",
-        "maxValue": 20,
-        "valuesByRank": [
-          20,
-          20,
-          20,
-          20
-        ]
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
-        "stat": "zoneDuration",
+        "stat": "buffDuration",
         "maxValue": 12,
-        "valuesByRank": [
-          3,
-          6,
-          9,
-          12
-        ]
+        "flat": true,
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneDamagePerSec",
@@ -2378,47 +2337,29 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           40,
           40
         ]
-      },
-      {
-        "stat": "zoneRadius",
-        "maxValue": 9,
-        "valuesByRank": [
-          9,
-          9,
-          9,
-          9
-        ]
       }
     ]
   },
   "residual_shock": {
     "name": "Residual Shock",
-    "trigger": "onKill",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "killProcChance",
-        "maxValue": 20,
-        "valuesByRank": [
-          20,
-          20,
-          20,
-          20
-        ]
+        "stat": "electricZoneDuration",
+        "maxValue": 12.0,
+        "flat": true,
+        "baseValue": 3.0
       },
       {
-        "stat": "zoneDuration",
-        "maxValue": 12,
-        "valuesByRank": [
-          3,
-          6,
-          9,
-          12
-        ]
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
+        "flat": true,
         "valuesByRank": [
           200,
           200,
@@ -2429,6 +2370,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "zoneRadius",
         "maxValue": 10,
+        "flat": true,
         "valuesByRank": [
           10,
           10,
@@ -2440,18 +2382,24 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "residual_viremia": {
     "name": "Residual Viremia",
-    "trigger": "onKill",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "killProcChance",
-        "maxValue": 20,
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
         "valuesByRank": [
-          20,
-          20,
-          20,
-          20
+          40,
+          40,
+          40,
+          40
         ]
+      },
+      {
+        "stat": "healthRegenChance",
+        "maxValue": 20.0,
+        "baseValue": 5.0
       },
       {
         "stat": "zoneDuration",
@@ -2461,26 +2409,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           6,
           9,
           12
-        ]
-      },
-      {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "valuesByRank": [
-          40,
-          40,
-          40,
-          40
-        ]
-      },
-      {
-        "stat": "zoneRadius",
-        "maxValue": 9,
-        "valuesByRank": [
-          9,
-          9,
-          9,
-          9
         ]
       }
     ]
@@ -2732,7 +2660,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_forge": {
     "name": "Virtuos Forge",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2744,7 +2672,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_fury": {
     "name": "Virtuos Fury",
-    "trigger": "onStatus",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2756,18 +2684,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "damage",
         "maxValue": 30.0,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_ghost": {
     "name": "Virtuos Ghost",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2779,12 +2701,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "ampStatusChance",
         "maxValue": 60.0,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -2810,7 +2726,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_shadow": {
     "name": "Virtuos Shadow",
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2819,21 +2735,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "baseValue": 10.0
       },
       {
-        "stat": "ampCritChance",
+        "stat": "critChanceOnDamaged",
         "maxValue": 60.0,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_spike": {
     "name": "Virtuos Spike",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2845,7 +2755,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_strike": {
     "name": "Virtuos Strike",
-    "trigger": "conditional",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2857,12 +2767,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "ampCritDamage",
         "maxValue": 80.0,
         "baseValue": 20.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -2880,7 +2784,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_tempo": {
     "name": "Virtuos Tempo",
-    "trigger": "onKill",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2892,18 +2796,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "healthRegenChance",
         "maxValue": 60.0,
         "baseValue": 15.0
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 8,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_trojan": {
     "name": "Virtuos Trojan",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {

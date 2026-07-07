@@ -13,17 +13,19 @@
   },
   "arcane_acceleration": {
     "replace": true,
-    "trigger": "onHit",
     "effects": [
       {
-        "stat": "fireRateOnCritChance",
-        "maxValue": 48,
-        "baseValue": 18
+        "stat": "fireRate",
+        "maxValue": 90
+      },
+      {
+        "stat": "holsterDamage",
+        "maxValue": 90
       },
       {
         "stat": "fireRateOnCrit",
-        "maxValue": 39,
-        "baseValue": 9
+        "maxValue": 30,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -847,18 +849,12 @@
       {
         "stat": "statusProcChance",
         "maxValue": 50,
-        "constantAtAllRanks": true
+        "baseValue": 50
       },
       {
         "stat": "procDamageMultiplier",
         "maxValue": 200,
         "baseValue": 50
-      },
-      {
-        "stat": "procAuraRadius",
-        "maxValue": 6,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -869,11 +865,12 @@
       {
         "stat": "pullChance",
         "maxValue": 50,
-        "constantAtAllRanks": true
+        "baseValue": 50
       },
       {
         "stat": "pullRadius",
         "maxValue": 12,
+        "flat": true,
         "baseValue": 6
       }
     ]
@@ -885,18 +882,12 @@
       {
         "stat": "lifeStealChance",
         "maxValue": 50,
-        "constantAtAllRanks": true
+        "baseValue": 50
       },
       {
         "stat": "lifeSteal",
         "maxValue": 30,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 8,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1350,7 +1341,7 @@
   },
   "pax_bolt": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "abilityEfficiency",
@@ -1361,18 +1352,12 @@
         "stat": "abilityStrength",
         "maxValue": 30,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "pax_charge": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "kitgunRecharge",
@@ -1388,6 +1373,7 @@
       {
         "stat": "kitgunHoming",
         "maxValue": 4,
+        "flat": true,
         "baseValue": 1
       }
     ]
@@ -1409,6 +1395,7 @@
       {
         "stat": "aimGlideDuration",
         "maxValue": 5,
+        "flat": true,
         "baseValue": 1.3
       }
     ]
@@ -1584,105 +1571,100 @@
   },
   "residual_boils": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "conditional",
     "effects": [
-      {
-        "stat": "killProcChance",
-        "maxValue": 20,
-        "constantAtAllRanks": true
-      },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
         "baseValue": 3
       },
       {
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
+      },
+      {
         "stat": "zoneDamage",
         "maxValue": 80,
-        "constantAtAllRanks": true
+        "baseValue": 80
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "constantAtAllRanks": true
+        "baseValue": 10
       }
     ]
   },
   "residual_malodor": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "conditional",
     "effects": [
       {
-        "stat": "killProcChance",
+        "stat": "healthRegenChance",
         "maxValue": 20,
-        "constantAtAllRanks": true
+        "baseValue": 20
       },
       {
-        "stat": "zoneDuration",
+        "stat": "buffDuration",
         "maxValue": 12,
+        "flat": true,
         "baseValue": 3
       },
       {
         "stat": "zoneDamagePerSec",
         "maxValue": 40,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "zoneRadius",
-        "maxValue": 9,
-        "constantAtAllRanks": true
+        "baseValue": 40
       }
     ]
   },
   "residual_shock": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "conditional",
     "effects": [
       {
-        "stat": "killProcChance",
-        "maxValue": 20,
-        "constantAtAllRanks": true
+        "stat": "electricZoneDuration",
+        "maxValue": 12,
+        "flat": true,
+        "baseValue": 3
       },
       {
-        "stat": "zoneDuration",
-        "maxValue": 12,
-        "baseValue": 3
+        "stat": "healthRegenChance",
+        "maxValue": 20,
+        "baseValue": 20
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
-        "constantAtAllRanks": true
+        "flat": true,
+        "baseValue": 200
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "constantAtAllRanks": true
+        "flat": true,
+        "baseValue": 10
       }
     ]
   },
   "residual_viremia": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "conditional",
     "effects": [
       {
-        "stat": "killProcChance",
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
+        "baseValue": 40
+      },
+      {
+        "stat": "healthRegenChance",
         "maxValue": 20,
-        "constantAtAllRanks": true
+        "baseValue": 20
       },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
         "baseValue": 3
-      },
-      {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "constantAtAllRanks": true
-      },
-      {
-        "stat": "zoneRadius",
-        "maxValue": 9,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1854,7 +1836,7 @@
   },
   "virtuos_forge": {
     "replace": true,
-    "trigger": "onHit",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "voidConversion",
@@ -1865,7 +1847,7 @@
   },
   "virtuos_fury": {
     "replace": true,
-    "trigger": "onStatus",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1876,18 +1858,12 @@
         "stat": "damage",
         "maxValue": 30,
         "baseValue": 7.5
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_ghost": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1898,12 +1874,6 @@
         "stat": "ampStatusChance",
         "maxValue": 60,
         "baseValue": 15
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1927,7 +1897,7 @@
   },
   "virtuos_shadow": {
     "replace": true,
-    "trigger": "onHeadshot",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1935,21 +1905,15 @@
         "baseValue": 40
       },
       {
-        "stat": "ampCritChance",
+        "stat": "critChanceOnDamaged",
         "maxValue": 60,
         "baseValue": 15
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 12,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_spike": {
     "replace": true,
-    "trigger": "onHit",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "voidConversion",
@@ -1960,7 +1924,7 @@
   },
   "virtuos_strike": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "healthRegenChance",
@@ -1971,12 +1935,6 @@
         "stat": "ampCritDamage",
         "maxValue": 80,
         "baseValue": 20
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 4,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
@@ -1993,7 +1951,7 @@
   },
   "virtuos_tempo": {
     "replace": true,
-    "trigger": "onKill",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "ampFireRate",
@@ -2004,18 +1962,12 @@
         "stat": "healthRegenChance",
         "maxValue": 60,
         "baseValue": 60
-      },
-      {
-        "stat": "buffDuration",
-        "maxValue": 8,
-        "flat": true,
-        "constantAtAllRanks": true
       }
     ]
   },
   "virtuos_trojan": {
     "replace": true,
-    "trigger": "onHit",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "voidConversion",

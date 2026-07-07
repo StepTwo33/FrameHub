@@ -12133,7 +12133,7 @@ const RAW_MODS: Mod[] = [
     "name": "Biting Frost",
     "polarity": "zenurik",
     "drain": 6,
-    "maxRank": 3,
+    "maxRank": 9,
     "category": "Augment",
     "subCategory": "",
     "stats": {
