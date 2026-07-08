@@ -41,6 +41,7 @@ export const COMPANION_PRECEPT_COMPANION_IDS: Readonly<Record<string, readonly s
   "fatal_attraction": ["carrier", "carrier_prime", "dethcube", "dethcube_prime", "diriga", "djinn", "helios", "helios_prime", "nautilus", "nautilus_prime", "oxylus", "prisma_shade", "shade", "shade_prime", "taxon", "wyrm", "wyrm_prime"],
   "fear_sense": ["adarza", "smeeta", "vedica"],
   "ferocity": ["chesa", "helminth_charger", "huras", "raksa", "sahasa", "sunika"],
+  "fetch": ["adarza", "chesa", "crescent_vulpaphyla", "helminth_charger", "huras", "medjay_predasite", "panzer_vulpaphyla", "pharaoh_predasite", "raksa", "sahasa", "sly_vulpaphyla", "smeeta", "sunika", "vedica", "vizier_predasite"],
   "focused_prospectus": ["bhaira_hound", "dorma_hound", "hec_hound"],
   "ghost": ["prisma_shade", "shade", "shade_prime"],
   "guardian": ["carrier", "carrier_prime", "dethcube", "dethcube_prime", "diriga", "djinn", "helios", "helios_prime", "nautilus", "nautilus_prime", "oxylus", "prisma_shade", "shade", "shade_prime", "taxon", "wyrm", "wyrm_prime"],
@@ -99,7 +100,7 @@ export const COMPANION_PRECEPT_COMPANION_IDS: Readonly<Record<string, readonly s
   "vacuum": ["carrier", "carrier_prime", "dethcube", "dethcube_prime", "diriga", "djinn", "helios", "helios_prime", "nautilus", "nautilus_prime", "oxylus", "prisma_shade", "shade", "shade_prime", "taxon", "wyrm", "wyrm_prime"],
   "vaporize": ["carrier", "carrier_prime", "dethcube", "dethcube_prime", "diriga", "djinn", "helios", "helios_prime", "nautilus", "nautilus_prime", "oxylus", "prisma_shade", "shade", "shade_prime", "taxon", "wyrm", "wyrm_prime"],
   "viral_quills": ["crescent_vulpaphyla", "panzer_vulpaphyla", "sly_vulpaphyla"],
-  "volatile_parasite": ["chesa", "helminth_charger", "huras", "raksa", "sahasa", "sunika"],
+  "volatile_parasite": ["medjay_predasite", "pharaoh_predasite", "vizier_predasite"],
   "whiplash_mine_r3": ["lambeo", "nidus_moa", "olaro", "para"],
 } as const;
 

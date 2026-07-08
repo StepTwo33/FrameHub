@@ -22,13 +22,18 @@ SENTINEL_UNIVERSAL = {
     "vaporize",
 }
 
+# Beast precepts equippable on kubrow, kavat, predasite, and vulpaphyla.
+BEAST_UNIVERSAL = {
+    "fetch",
+}
+
 # Precept mod id -> companion type (family). Non-sentinel families share all precepts within type.
 FAMILY: dict[str, str] = {
     # Kubrow
     "dig": "kubrow", "ferocity": "kubrow", "howl": "kubrow", "hunt": "kubrow",
     "neutralize": "kubrow", "protect": "kubrow", "retrieve": "kubrow", "savagery": "kubrow",
     "stalk": "kubrow", "hunt": "kubrow", "trample": "kubrow", "unleashed": "kubrow",
-    "volatile_parasite": "kubrow", "helminth_ferocity": "kubrow", "helminth_hunt": "kubrow",
+    "helminth_ferocity": "kubrow", "helminth_hunt": "kubrow",
     "scavenge": "kubrow",
     # Kavat
     "cats_eye": "kavat", "charm": "kavat", "draining_bite": "kavat", "fear_sense": "kavat",
@@ -45,7 +50,7 @@ FAMILY: dict[str, str] = {
     # Predasite
     "acidic_spittle": "predasite", "anabolic_pollination": "predasite", "blast_shield": "predasite",
     "endoparasitic_vector": "predasite", "iatric_mycelium": "predasite", "paralytic_spores": "predasite",
-    "meditation": "predasite", "ocular_sentry": "predasite",
+    "meditation": "predasite", "ocular_sentry": "predasite", "volatile_parasite": "predasite",
     # Vulpaphyla
     "crescent_charge": "vulpaphyla", "crescent_devolution": "vulpaphyla",
     "infectious_bite": "vulpaphyla", "panzer_devolution": "vulpaphyla",
@@ -135,6 +140,13 @@ def main() -> None:
 
         if mid in SENTINEL_UNIVERSAL:
             eligibility[mid] = sorted(ids_by_type.get("sentinel", []))
+            continue
+
+        if mid in BEAST_UNIVERSAL:
+            beast_ids: list[str] = []
+            for beast_type in ("kubrow", "kavat", "predasite", "vulpaphyla"):
+                beast_ids.extend(ids_by_type.get(beast_type, []))
+            eligibility[mid] = sorted(set(beast_ids))
             continue
 
         if mid in sentinel_exclusive:

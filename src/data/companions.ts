@@ -229,7 +229,7 @@ export const allCompanions: Companion[] = [
     "shield": 330,
     "armor": 300,
     "description": "Infested strain kubrow with trample ability",
-    "precept": "Trample - Charge attack and Volatile Parasite - Toxic damage"
+    "precept": "Trample - Charge attack"
   },
   {
     "id": "adarza",

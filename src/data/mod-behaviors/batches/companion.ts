@@ -616,6 +616,10 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("pickupRange", "mod_panel", "multiplicative_percent", "Vacuum: pickupRange \u2014 13.5m Companion Gather-Link. Detects and collects items, including mods."),
     line("range", "mod_panel", "multiplicative_percent", "Vacuum: range \u2014 13.5m Companion Gather-Link. Detects and collects items, including mods. (arsenal display only)"),
   ]),
+  fetch: mod("fetch", [
+    line("pickupRange", "mod_panel", "multiplicative_percent", "Fetch: pickupRange \u2014 13.5m Companion Gather-Link. Detects and collects items, including mods."),
+    line("range", "mod_panel", "multiplicative_percent", "Fetch: range \u2014 13.5m Companion Gather-Link. Detects and collects items, including mods. (arsenal display only)"),
+  ]),
   vaporize: mod("vaporize", [
     line("duration", "mod_panel", "multiplicative_percent", "Vaporize: duration \u2014 Every 10s the sentinel will stun and inflict 600 damage to an enemy within 30m. \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Vaporize: range \u2014 Every 10s the sentinel will stun and inflict 600 damage to an enemy within 30m. \u2026 (arsenal display only)"),

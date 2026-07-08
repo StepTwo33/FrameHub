@@ -2221,6 +2221,21 @@ const RAW_MODS: Mod[] = [
     "rarity": "common"
   },
   {
+    "id": "fetch",
+    "name": "Fetch",
+    "polarity": "penjaga",
+    "drain": 2,
+    "maxRank": 5,
+    "category": "companion",
+    "subCategory": "beast",
+    "stats": {
+      "pickupRange": 13.5,
+      "range": 2.25
+    },
+    "description": "13.5m Companion Gather-Link. Detects and collects items, including mods.",
+    "rarity": "uncommon"
+  },
+  {
     "id": "regen",
     "name": "Regen",
     "polarity": "penjaga",
