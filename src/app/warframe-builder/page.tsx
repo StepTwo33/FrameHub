@@ -301,7 +301,7 @@ export default function WarframeBuilderPage() {
   const [helminthPickerOpen, setHelminthPickerOpen] = useState(false);
   const [helminthPickerSlot, setHelminthPickerSlot] = useState(0);
   const [helminthSearch, setHelminthSearch] = useState("");
-  const [modPickerBrowseTab, setModPickerBrowseTab] = useState<"mods" | "arcanes">("mods");
+  const [modPickerMode, setModPickerMode] = useState<"mods" | "arcanes">("mods");
   const [equippedArcanes, setEquippedArcanes] = useState<(Mod | null)[]>([null, null]);
   const [equippedArcaneRanks, setEquippedArcaneRanks] = useState<number[]>([5, 5]);
   const [activeArcaneSlot, setActiveArcaneSlot] = useState(0);
@@ -690,13 +690,13 @@ export default function WarframeBuilderPage() {
   const handleOpenModPicker = useCallback((slotIndex: number) => {
     setActiveSlotIndex(slotIndex);
     setActiveSlotType(getSlotType(slotIndex));
-    setModPickerBrowseTab("mods");
+    setModPickerMode("mods");
     setModPickerOpen(true);
   }, []);
 
   const handleOpenArcanePicker = useCallback((slotIndex: number) => {
     setActiveArcaneSlot(slotIndex);
-    setModPickerBrowseTab("arcanes");
+    setModPickerMode("arcanes");
     setModPickerOpen(true);
   }, []);
 
@@ -1284,8 +1284,8 @@ export default function WarframeBuilderPage() {
         equippedModIds={equippedModIds}
         onSelect={handleSelectFromPicker}
         warframeId={selectedWarframe?.id}
-        arcaneCatalog={warframeArcanes}
-        initialBrowseTab={modPickerBrowseTab}
+        arcaneCatalog={modPickerMode === "arcanes" ? warframeArcanes : undefined}
+        pickerMode={modPickerMode}
         equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}
       />
 

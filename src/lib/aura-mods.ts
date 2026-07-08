@@ -42,6 +42,7 @@ export const AURA_MOD_IDS = new Set([
   "summoners_wrath",
   "swift_momentum",
   "worthy_comradery",
+  "mecha_empowered",
 ]);
 
 export function isAuraMod(mod: Mod): boolean {

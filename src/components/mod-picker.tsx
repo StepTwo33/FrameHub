@@ -56,11 +56,13 @@ interface ModPickerProps {
   archwingId?: string; // When set, archwing augments are filtered to this archwing
   /** When provided, shows Mods / Arcanes tabs for browsing warframe arcanes. */
   arcaneCatalog?: Mod[];
+  /** Restrict picker to mods-only or arcanes-only (warframe builder). */
+  pickerMode?: "mods" | "arcanes";
   initialBrowseTab?: "mods" | "arcanes";
   equippedArcaneIds?: string[];
 }
 
-export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, archwingId, arcaneCatalog, initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
+export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, archwingId, arcaneCatalog, pickerMode = "mods", initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
   const [search, setSearch] = useState("");
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
@@ -79,7 +81,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
   const filteredMods = useMemo(() => {
     let categoryMods: Mod[];
-    if (slotType === "weapon_exilus_primary") {
+    if (slotType === "aura") {
+      categoryMods = mods.filter(isAuraMod);
+    } else if (slotType === "exilus") {
+      categoryMods = mods.filter(isWarframeExilusMod);
+    } else if (slotType === "weapon_exilus_primary") {
       categoryMods = mods.filter((m) =>
         modEligibleForWeaponSlot(m, "primary", weaponCategory, "weapon_exilus_primary", weaponModProfile),
       );
@@ -139,12 +145,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
       });
     }
 
-    // Filter by slot type
-    if (slotType === "aura") {
-      categoryMods = categoryMods.filter(isAuraMod);
-    } else if (slotType === "exilus") {
-      categoryMods = categoryMods.filter(isWarframeExilusMod);
-    }
+    categoryMods = categoryMods.filter((m) => m.category !== "arcane");
 
     // Warframe ability augments: only in warframe builder for the selected frame (+ universal).
     categoryMods = categoryMods.filter((m) =>
@@ -164,6 +165,16 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     });
 
     categoryMods = categoryMods.filter((m) => !isSetBonusMod(m));
+
+    if (category === "warframe") {
+      if (slotType === "regular") {
+        categoryMods = categoryMods.filter((m) => !isAuraMod(m) && !isWarframeExilusMod(m));
+      } else if (slotType === "aura") {
+        categoryMods = categoryMods.filter(isAuraMod);
+      } else if (slotType === "exilus") {
+        categoryMods = categoryMods.filter(isWarframeExilusMod);
+      }
+    }
 
     if (!search.trim()) return categoryMods;
     const q = search.toLowerCase();
@@ -185,11 +196,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     );
   }, [arcaneCatalog, search]);
 
-  const isArcaneBrowse = browseTab === "arcanes" && !!arcaneCatalog;
+  const isArcaneBrowse = pickerMode === "arcanes" && !!arcaneCatalog;
 
   useEffect(() => {
-    if (open) setBrowseTab(initialBrowseTab);
-  }, [open, initialBrowseTab]);
+    if (open) setBrowseTab(pickerMode === "arcanes" ? "arcanes" : initialBrowseTab);
+  }, [open, initialBrowseTab, pickerMode]);
 
   const handleSelectMod = (mod: Mod) => {
     setSelectedMod(mod);
@@ -390,7 +401,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         ) : (
           <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
             <div className="px-6 pb-3 shrink-0">
-              {arcaneCatalog && arcaneCatalog.length > 0 && (
+              {arcaneCatalog && arcaneCatalog.length > 0 && pickerMode !== "mods" && pickerMode !== "arcanes" && (
                 <div className="flex gap-1 mb-3 p-1 rounded-lg bg-secondary/40">
                   <button
                     type="button"

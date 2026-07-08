@@ -5275,7 +5275,7 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 5,
-    "category": "companion",
+    "category": "warframe",
     "subCategory": "",
     "stats": {
       "armorOnMarkKill": 30,
