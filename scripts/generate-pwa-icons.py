@@ -1,29 +1,42 @@
 #!/usr/bin/env python3
-"""Generate PWA icons from assets/app-icon-source.png (standard) and app-icon-maskable-source.png (Android maskable)."""
+"""Generate PWA icons, favicons, and OG image from assets/app-icon-source.png."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets" / "app-icon-source.png"
 MASKABLE_SOURCE = ROOT / "assets" / "app-icon-maskable-source.png"
 OUT_DIR = ROOT / "public" / "icons"
+PUBLIC_DIR = ROOT / "public"
 APP_DIR = ROOT / "src" / "app"
 
 # Matches manifest background_color / theme_color
 BG = (10, 10, 26, 255)
+OG_SIZE = (1200, 630)
 
 STANDARD_SIZES = (192, 512)
 MASKABLE_SIZES = (192, 512)
-MASKABLE_SCALE = 0.72
-FAVICON_CROP = 0.68
+FAVICON_CROP = 0.82
 
 
 def ensure_rgba(img: Image.Image) -> Image.Image:
     return img.convert("RGBA")
+
+
+def resize_contain(img: Image.Image, size: int, bg: tuple[int, int, int, int] = BG) -> Image.Image:
+    """Fit artwork inside a square without cropping (for circular logos)."""
+    img = ensure_rgba(img)
+    width, height = img.size
+    scale = min(size / width, size / height)
+    resized = img.resize((int(width * scale), int(height * scale)), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGBA", (size, size), bg)
+    offset = ((size - resized.width) // 2, (size - resized.height) // 2)
+    canvas.paste(resized, offset, resized)
+    return canvas
 
 
 def resize_cover(img: Image.Image, size: int) -> Image.Image:
@@ -45,19 +58,23 @@ def center_crop_fraction(img: Image.Image, fraction: float) -> Image.Image:
     return img.crop((left, top, left + crop, top + crop))
 
 
-def make_maskable(source: Image.Image, size: int) -> Image.Image:
-    """Pad square logo art for Android adaptive icon safe zone."""
-    inner = int(size * MASKABLE_SCALE)
-    logo = resize_cover(source, inner)
-    canvas = Image.new("RGBA", (size, size), BG)
-    offset = (size - inner) // 2
-    canvas.paste(logo, (offset, offset), logo)
+def make_og_image(source: Image.Image) -> Image.Image:
+    """Social / link preview card — logo centered on branded gradient."""
+    width, height = OG_SIZE
+    canvas = Image.new("RGBA", (width, height), BG)
+    draw = ImageDraw.Draw(canvas)
+    draw.ellipse((-140, -120, 520, 520), fill=(88, 28, 135, 48))
+    draw.ellipse((width - 420, height - 460, width + 80, height + 40), fill=(34, 211, 238, 32))
+
+    logo = ensure_rgba(source)
+    max_w = int(width * 0.62)
+    max_h = int(height * 0.88)
+    scale = min(max_w / logo.width, max_h / logo.height)
+    resized = logo.resize((int(logo.width * scale), int(logo.height * scale)), Image.Resampling.LANCZOS)
+    x = (width - resized.width) // 2
+    y = (height - resized.height) // 2
+    canvas.paste(resized, (x, y), resized)
     return canvas
-
-
-def make_maskable_from_rounded(source: Image.Image, size: int) -> Image.Image:
-    """Rounded source art is pre-composed for circular crops — use full bleed."""
-    return resize_cover(source, size)
 
 
 def save_png(img: Image.Image, path: Path) -> None:
@@ -72,34 +89,32 @@ def main() -> None:
 
     source = Image.open(SOURCE)
     maskable_source = Image.open(MASKABLE_SOURCE) if MASKABLE_SOURCE.is_file() else source
-    use_rounded_maskable = MASKABLE_SOURCE.is_file()
     favicon_source = center_crop_fraction(source, FAVICON_CROP)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print("Generating PWA icons...")
 
     for size in STANDARD_SIZES:
-        save_png(resize_cover(source, size), OUT_DIR / f"icon-{size}x{size}.png")
+        save_png(resize_contain(source, size), OUT_DIR / f"icon-{size}x{size}.png")
 
     for size in MASKABLE_SIZES:
-        if use_rounded_maskable:
-            save_png(make_maskable_from_rounded(maskable_source, size), OUT_DIR / f"maskable-{size}x{size}.png")
-        else:
-            save_png(make_maskable(source, size), OUT_DIR / f"maskable-{size}x{size}.png")
+        save_png(resize_contain(maskable_source, size), OUT_DIR / f"maskable-{size}x{size}.png")
 
-    save_png(resize_cover(source, 180), OUT_DIR / "apple-touch-icon.png")
+    save_png(resize_contain(source, 180), OUT_DIR / "apple-touch-icon.png")
     save_png(favicon_source.resize((32, 32), Image.Resampling.LANCZOS), OUT_DIR / "favicon-32x32.png")
     save_png(favicon_source.resize((16, 16), Image.Resampling.LANCZOS), OUT_DIR / "favicon-16x16.png")
 
-    # Next.js App Router metadata files
-    save_png(favicon_source.resize((48, 48), Image.Resampling.LANCZOS), APP_DIR / "icon.png")
-    save_png(resize_cover(source, 180), APP_DIR / "apple-icon.png")
+    # Next.js App Router metadata files (PC/browser tab + install icon)
+    save_png(resize_contain(source, 48), APP_DIR / "icon.png")
+    save_png(resize_contain(source, 180), APP_DIR / "apple-icon.png")
 
     favicon_32 = favicon_source.resize((32, 32), Image.Resampling.LANCZOS).convert("RGBA")
     favicon_16 = favicon_source.resize((16, 16), Image.Resampling.LANCZOS).convert("RGBA")
-    favicon_path = ROOT / "public" / "favicon.ico"
+    favicon_path = PUBLIC_DIR / "favicon.ico"
     favicon_32.save(favicon_path, format="ICO", sizes=[(32, 32)], append_images=[favicon_16])
     print(f"  {favicon_path.relative_to(ROOT)}")
+
+    save_png(make_og_image(source), PUBLIC_DIR / "og-image.png")
 
     print("\nDone.")
 

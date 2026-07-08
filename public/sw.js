@@ -1,9 +1,16 @@
 /// Frame Hub Service Worker
-/// v6: updated rounded maskable icon artwork. Icons only — never cache HTML or /_next (avoids stale bundles after deploy).
+/// v7: new frame hub brand icon + OG artwork. Icons only — never cache HTML or /_next.
 
-const CACHE_NAME = "framehub-v6";
+const CACHE_NAME = "framehub-v7";
 
-const PRECACHE_URLS = ["/icons/icon-192x192.png", "/icons/icon-512x512.png"];
+const PRECACHE_URLS = [
+  "/icons/icon-192x192.png",
+  "/icons/icon-512x512.png",
+  "/icons/maskable-192x192.png",
+  "/icons/maskable-512x512.png",
+  "/og-image.png",
+  "/favicon.ico",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
