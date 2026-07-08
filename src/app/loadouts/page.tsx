@@ -2,7 +2,14 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
-import { getLoadouts, saveLoadout, deleteLoadout, generateId } from "@/lib/loadouts";
+import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild } from "@/lib/loadouts";
+import { generateBuildId, saveCloudBuild, SavedBuild } from "@/lib/build-storage";
+import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
+import {
+  useCloudBuildFromUrl,
+  setCloudBuildInUrl,
+  markCloudBuildLoaded,
+} from "@/lib/use-cloud-build-from-url";
 import { getSavedBuilds, SavedBuild, WarframeBuildData, WeaponBuildData, CompanionBuildData, ModularBuildData } from "@/lib/build-storage";
 import { Loadout, EquippedArchonShard } from "@/lib/types";
 import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
@@ -33,6 +40,9 @@ import {
   Sparkles,
   Wrench,
   FolderOpen,
+  Save,
+  Share2,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
@@ -234,12 +244,113 @@ export default function LoadoutsPage() {
   const [pickerLoadoutId, setPickerLoadoutId] = useState<string | null>(null);
   const [pickerSearch, setPickerSearch] = useState("");
   const [pickerTab, setPickerTab] = useState<"saved" | "catalog" | "modular">("catalog");
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [saveDialogLoadoutId, setSaveDialogLoadoutId] = useState<string | null>(null);
+  const [saveDialogDefaultPublic, setSaveDialogDefaultPublic] = useState(false);
+  const [shareCopiedId, setShareCopiedId] = useState<string | null>(null);
+
+  const saveDialogLoadout = useMemo(
+    () => (saveDialogLoadoutId ? loadouts.find((l) => l.id === saveDialogLoadoutId) ?? null : null),
+    [loadouts, saveDialogLoadoutId],
+  );
 
   useEffect(() => {
     queueMicrotask(() => setLoadouts(getLoadouts()));
   }, []);
 
   const refresh = useCallback(() => setLoadouts(getLoadouts()), []);
+
+  const applyCloudLoadout = useCallback(
+    (build: SavedBuild, options?: { silent?: boolean }) => {
+      const imported = loadoutFromSavedBuild(build);
+      const existing = getLoadouts().find((l) => l.cloudId === build.id || l.id === build.id);
+      const loadout: Loadout = existing
+        ? { ...imported, id: existing.id, cloudId: build.id }
+        : imported;
+      saveLoadout(loadout);
+      refresh();
+      if (!options?.silent) {
+        toast.success(`Loaded “${build.name}”`, { description: "Loadout updated from your account." });
+      }
+    },
+    [refresh],
+  );
+
+  useCloudBuildFromUrl("loadout", (build) => applyCloudLoadout(build, { silent: true }));
+
+  const handleOpenSaveDialog = useCallback((loadoutId: string, defaultPublic = false) => {
+    setSaveDialogLoadoutId(loadoutId);
+    setSaveDialogDefaultPublic(defaultPublic);
+    setSaveDialogOpen(true);
+  }, []);
+
+  const handleSaveLoadoutConfirm = useCallback(
+    async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+      if (!saveDialogLoadoutId) return;
+      const loadout = loadouts.find((l) => l.id === saveDialogLoadoutId);
+      if (!loadout) return;
+
+      const build: SavedBuild = {
+        id: loadout.cloudId || generateBuildId(),
+        name,
+        description,
+        isPublic,
+        type: "loadout",
+        createdAt: loadout.createdAt,
+        updatedAt: Date.now(),
+        data: loadoutToBuildData(loadout),
+      };
+
+      const cloudResult = await saveCloudBuild(build);
+      if (!cloudResult) {
+        toast.error("Could not save loadout", { description: "Sign in to save loadouts to your account." });
+        return;
+      }
+
+      const updated: Loadout = {
+        ...loadout,
+        name,
+        description,
+        isPublic: cloudResult.isPublic ?? isPublic,
+        cloudId: cloudResult.id,
+        updatedAt: Date.now(),
+      };
+      saveLoadout(updated);
+      refresh();
+      setCloudBuildInUrl(cloudResult.id);
+      markCloudBuildLoaded(cloudResult.id);
+      toast.success("Loadout saved", {
+        description: isPublic ? "Listed in Community Builds." : "Saved to your account.",
+      });
+    },
+    [saveDialogLoadoutId, loadouts, refresh],
+  );
+
+  const handleShareLoadout = useCallback(
+    async (loadout: Loadout) => {
+      if (loadout.isPublic && loadout.cloudId) {
+        const url = `${window.location.origin}/build/${loadout.cloudId}`;
+        await navigator.clipboard.writeText(url);
+        setShareCopiedId(loadout.id);
+        setTimeout(() => setShareCopiedId(null), 2000);
+        toast.success("Share link copied!", { description: "Anyone can view and upvote this loadout." });
+        return;
+      }
+
+      if (loadout.cloudId) {
+        const url = `${window.location.origin}/loadouts?buildId=${encodeURIComponent(loadout.cloudId)}`;
+        await navigator.clipboard.writeText(url);
+        setShareCopiedId(loadout.id);
+        setTimeout(() => setShareCopiedId(null), 2000);
+        toast.success("Share link copied!", { description: "Private link — only you can open it when signed in." });
+        return;
+      }
+
+      handleOpenSaveDialog(loadout.id, true);
+      toast.info("Save to share", { description: "Save to your account first, then copy a share link." });
+    },
+    [handleOpenSaveDialog],
+  );
 
   const handleCreate = useCallback(() => {
     const list = getLoadouts();
@@ -260,6 +371,8 @@ export default function LoadoutsPage() {
         ...JSON.parse(JSON.stringify(loadout)) as Loadout,
         id: generateId(),
         name: `${loadout.name} (copy)`,
+        cloudId: undefined,
+        isPublic: false,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
@@ -583,7 +696,8 @@ export default function LoadoutsPage() {
                 tab for saved kitgun / zaw / amp builds.
               </p>
               <p>
-                <span className="font-medium text-foreground">3.</span> Loadouts stay on this device. Use Import/Export to back them up.
+                <span className="font-medium text-foreground">3.</span> Save to your account to sync across devices. Enable{" "}
+                <strong>List in Community Builds</strong> to share publicly on Discover.
               </p>
             </div>
           </div>
@@ -641,6 +755,11 @@ export default function LoadoutsPage() {
                     ) : (
                       <div className="flex items-center gap-2 min-w-0">
                         <h2 className="text-lg font-semibold truncate">{loadout.name}</h2>
+                        {loadout.isPublic && (
+                          <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">
+                            Public
+                          </span>
+                        )}
                         <button
                           type="button"
                           onClick={() => handleStartEdit(loadout)}
@@ -655,6 +774,35 @@ export default function LoadoutsPage() {
                       <span className="text-[10px] text-muted-foreground tabular-nums mr-2">
                         Updated {new Date(loadout.updatedAt).toLocaleDateString()}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenSaveDialog(loadout.id)}
+                        className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                        title="Save to account"
+                      >
+                        <Save className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleShareLoadout(loadout)}
+                        className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                        title="Copy share link"
+                      >
+                        {shareCopiedId === loadout.id ? (
+                          <Check className="h-4 w-4 text-green-400" />
+                        ) : (
+                          <Share2 className="h-4 w-4" />
+                        )}
+                      </button>
+                      {loadout.cloudId && (
+                        <a
+                          href={`/build/${loadout.cloudId}`}
+                          className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                          title="View build page"
+                        >
+                          <Globe className="h-4 w-4" />
+                        </a>
+                      )}
                       <button
                         type="button"
                         onClick={() => handleDuplicate(loadout)}
@@ -951,6 +1099,19 @@ export default function LoadoutsPage() {
           </Tabs>
         </DialogContent>
       </Dialog>
+
+      <SaveBuildDialog
+        open={saveDialogOpen}
+        onOpenChange={(open) => {
+          setSaveDialogOpen(open);
+          if (!open) setSaveDialogLoadoutId(null);
+        }}
+        defaultName={saveDialogLoadout?.name ?? "Loadout"}
+        defaultDescription={saveDialogLoadout?.description ?? ""}
+        defaultIsPublic={saveDialogDefaultPublic || (saveDialogLoadout?.isPublic ?? false)}
+        title="Save Loadout"
+        onSave={handleSaveLoadoutConfirm}
+      />
     </PageShell>
   );
 }

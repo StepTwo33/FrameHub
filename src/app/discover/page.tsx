@@ -29,6 +29,7 @@ const BUILD_TYPES = [
   { id: "modular", label: "Modular" },
   { id: "archwing", label: "Archwing" },
   { id: "railjack", label: "Railjack" },
+  { id: "loadout", label: "Loadouts" },
 ] as const;
 
 export default function DiscoverPage() {

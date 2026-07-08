@@ -23,7 +23,7 @@ export interface SavedBuild {
   name: string;
   description?: string;
   isPublic?: boolean;
-  type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack";
+  type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack" | "loadout";
   createdAt: number;
   updatedAt: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

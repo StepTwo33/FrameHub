@@ -10,9 +10,10 @@ interface BuildPageVoteProps {
   initialUpvoteCount: number;
   isPublic: boolean;
   builderUrl?: string;
+  openLabel?: string;
 }
 
-export function BuildPageVote({ buildId, initialUpvoteCount, isPublic, builderUrl }: BuildPageVoteProps) {
+export function BuildPageVote({ buildId, initialUpvoteCount, isPublic, builderUrl, openLabel = "Open in Builder" }: BuildPageVoteProps) {
   const [upvoteCount, setUpvoteCount] = useState(initialUpvoteCount);
   const [voted, setVoted] = useState(false);
 
@@ -42,7 +43,7 @@ export function BuildPageVote({ buildId, initialUpvoteCount, isPublic, builderUr
       )}
       {builderUrl && builderUrl !== "#" && (
         <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <Link href={builderUrl}>Open in Builder</Link>
+          <Link href={builderUrl}>{openLabel}</Link>
         </Button>
       )}
     </div>

@@ -27,6 +27,7 @@ interface SaveBuildDialogProps {
   defaultDescription?: string;
   defaultIsPublic?: boolean;
   showDescription?: boolean;
+  title?: string;
   onSave: (values: SaveBuildDialogValues) => Promise<void>;
 }
 
@@ -37,6 +38,7 @@ export function SaveBuildDialog({
   defaultDescription = "",
   defaultIsPublic = false,
   showDescription = true,
+  title = "Save Build",
   onSave,
 }: SaveBuildDialogProps) {
   const [name, setName] = useState(defaultName);
@@ -69,7 +71,7 @@ export function SaveBuildDialog({
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Save Build</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
               Save to your account. Optionally list it in Community Builds so others can find and upvote it.
             </DialogDescription>

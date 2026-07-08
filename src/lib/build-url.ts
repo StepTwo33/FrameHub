@@ -68,6 +68,7 @@ const BUILDER_PATHS: Record<string, string> = {
   modular: "/modular-builder",
   archwing: "/archwing-builder",
   railjack: "/railjack-builder",
+  loadout: "/loadouts",
 };
 
 /** Link from `/build/[id]` into the correct builder with full cloud build data. */

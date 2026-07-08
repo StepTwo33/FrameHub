@@ -6,6 +6,7 @@ export const ALLOWED_BUILD_TYPES = new Set([
   "modular",
   "archwing",
   "railjack",
+  "loadout",
 ]);
 
 export function isAllowedBuildType(type: unknown): type is string {
@@ -48,6 +49,13 @@ export function extractBuildItemId(type: string, data: unknown): string {
     case "railjack":
       if (typeof d.reactorId === "string" && d.reactorId) return d.reactorId;
       return "railjack";
+    case "loadout": {
+      const wf = d.warframeBuild as { warframeId?: string } | undefined;
+      if (typeof wf?.warframeId === "string" && wf.warframeId) return wf.warframeId;
+      const primary = d.primaryBuild as { weaponId?: string } | undefined;
+      if (typeof primary?.weaponId === "string" && primary.weaponId) return primary.weaponId;
+      return "loadout";
+    }
     default:
       return "";
   }

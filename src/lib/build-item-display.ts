@@ -26,6 +26,7 @@ const TYPE_LABELS: Record<string, string> = {
   modular: "Modular",
   archwing: "Archwing",
   railjack: "Railjack",
+  loadout: "Loadout",
 };
 
 const MODULAR_TYPE_LABELS: Record<string, string> = {
@@ -131,6 +132,17 @@ export function resolveBuildItemDisplay(type: string, itemId: string): BuildItem
       return {
         itemName: reactor?.name ?? "Railjack",
         itemImage: null,
+        typeLabel,
+      };
+    }
+    case "loadout": {
+      if (itemId === "loadout") {
+        return { itemName: "Full loadout", itemImage: null, typeLabel };
+      }
+      const wf = warframesMap.get(itemId);
+      return {
+        itemName: wf?.name ?? "Loadout",
+        itemImage: wf ? getWarframeImage(wf.name) : null,
         typeLabel,
       };
     }

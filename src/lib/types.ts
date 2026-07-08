@@ -524,6 +524,10 @@ export interface RailjackAbilityComputed {
 export interface Loadout {
   id: string;
   name: string;
+  description?: string;
+  isPublic?: boolean;
+  /** Cloud build id when saved to account (for share links and sync). */
+  cloudId?: string;
   createdAt: number;
   updatedAt: number;
   /** Matches warframe builder / saved build payload so mods, arcanes, helminth, etc. round-trip. */

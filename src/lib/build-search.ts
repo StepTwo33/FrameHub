@@ -19,6 +19,7 @@ const BUILD_ITEM_CATALOG: BuildSearchItem[] = (() => {
   }
   for (const wf of allWarframes) {
     items.push({ id: wf.id, name: wf.name, type: "warframe" });
+    items.push({ id: wf.id, name: `${wf.name} loadouts`, type: "loadout" });
   }
   for (const c of allCompanions) {
     items.push({ id: c.id, name: c.name, type: "companion" });

@@ -201,6 +201,40 @@ export function summarizeBuildPreview(type: string, data: unknown): BuildPreview
         modSummary: count === 0 ? "No mods equipped" : `${count} mod${count === 1 ? "" : "s"}`,
       };
     }
+    case "loadout": {
+      const ld = data as Record<string, unknown>;
+      const wfBuild = ld.warframeBuild as WarframeBuildData | undefined;
+      const wf = wfBuild ? warframesMap.get(wfBuild.warframeId) : undefined;
+      const slots: string[] = [];
+      if (wfBuild) {
+        const wfMods = wfBuild.mods?.length ?? 0;
+        slots.push(`Warframe: ${wf?.name ?? wfBuild.warframeId} (${wfMods} mods)`);
+      }
+      const countWeaponMods = (b: { mods?: ModSlot[] } | undefined) => b?.mods?.length ?? 0;
+      if (ld.primaryBuild) slots.push(`Primary: ${countWeaponMods(ld.primaryBuild as { mods?: ModSlot[] })} mods`);
+      if (ld.secondaryBuild) slots.push(`Secondary: ${countWeaponMods(ld.secondaryBuild as { mods?: ModSlot[] })} mods`);
+      if (ld.meleeBuild) slots.push(`Melee: ${countWeaponMods(ld.meleeBuild as { mods?: ModSlot[] })} mods`);
+      if (ld.modularBuild) slots.push(`Modular (${(ld.modularBuild as { slot?: string }).slot ?? "weapon"}): ${countWeaponMods(ld.modularBuild as { mods?: ModSlot[] })} mods`);
+      const comp = ld.companionBuild as { companionId?: string; mods?: ModSlot[] } | undefined;
+      if (comp?.companionId) {
+        const c = companionsMap.get(comp.companionId);
+        slots.push(`Companion: ${c?.name ?? comp.companionId} (${comp.mods?.length ?? 0} mods)`);
+      }
+      extraLines.push(...slots);
+      const filledSlots = slots.length;
+      return {
+        itemName: wf?.name ?? (filledSlots > 0 ? "Full loadout" : "Loadout"),
+        itemImage: wf ? getWarframeImage(wf.name) : null,
+        typeLabel: "Loadout",
+        modChips: wfBuild ? modChipsFromSlots(wfBuild.mods) : [],
+        arcaneChips: wfBuild ? arcaneChipsFromIds(wfBuild.arcaneIds) : [],
+        extraLines,
+        modSummary:
+          filledSlots === 0
+            ? "No slots filled"
+            : `${filledSlots} slot${filledSlots === 1 ? "" : "s"} configured`,
+      };
+    }
     default:
       return fallback;
   }

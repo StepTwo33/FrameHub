@@ -1,7 +1,49 @@
 import { Loadout, ModularBuildData, ModSlot } from "./types";
 import { inferModularLoadoutSlot } from "./modular-resolve";
+import type { SavedBuild } from "./build-storage";
 
 const STORAGE_KEY = "overframe_loadouts";
+
+/** Slot payloads only — name/description/isPublic live on SavedBuild when cloud-synced. */
+export type LoadoutBuildData = Omit<
+  Loadout,
+  "id" | "name" | "description" | "isPublic" | "cloudId" | "createdAt" | "updatedAt"
+>;
+
+export function loadoutToBuildData(loadout: Loadout): LoadoutBuildData {
+  const {
+    id: _id,
+    name: _name,
+    description: _description,
+    isPublic: _isPublic,
+    cloudId: _cloudId,
+    createdAt: _createdAt,
+    updatedAt: _updatedAt,
+    ...data
+  } = loadout;
+  return data;
+}
+
+export function loadoutFromSavedBuild(build: SavedBuild): Loadout {
+  return {
+    id: build.id,
+    cloudId: build.id,
+    name: build.name,
+    description: build.description,
+    isPublic: build.isPublic,
+    createdAt: build.createdAt,
+    updatedAt: build.updatedAt,
+    ...(build.data as LoadoutBuildData),
+  };
+}
+
+export function mergeCloudLoadout(local: Loadout, cloud: SavedBuild): Loadout {
+  return {
+    ...loadoutFromSavedBuild(cloud),
+    id: local.id,
+    cloudId: cloud.id,
+  };
+}
 
 function normalizeLoadout(raw: Loadout): Loadout {
   const m = raw.modularBuild as Record<string, unknown> | undefined;

@@ -14,6 +14,7 @@ import {
   Hammer,
   Plane,
   Rocket,
+  FolderOpen,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -117,6 +118,7 @@ const BUILD_TYPE_ICONS: Record<string, LucideIcon> = {
   modular: Hammer,
   archwing: Plane,
   railjack: Rocket,
+  loadout: FolderOpen,
 };
 
 function BuildItemThumbnail({

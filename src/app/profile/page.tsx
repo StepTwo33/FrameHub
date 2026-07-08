@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
-import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight } from "lucide-react";
+import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildOpenUrl } from "@/lib/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
@@ -54,6 +54,7 @@ const typeIcons: Record<string, typeof Crosshair> = {
   modular: Wrench,
   archwing: Plane,
   railjack: Crosshair,
+  loadout: FolderOpen,
 };
 
 const typeColors: Record<string, string> = {
@@ -63,6 +64,7 @@ const typeColors: Record<string, string> = {
   modular: "text-orange-400 border-orange-500/30",
   archwing: "text-teal-400 border-teal-500/30",
   railjack: "text-rose-400 border-rose-500/30",
+  loadout: "text-green-400 border-green-500/30",
 };
 
 export default function ProfilePage() {
@@ -763,7 +765,7 @@ export default function ProfilePage() {
             >
               All ({builds.length})
             </button>
-            {["weapon", "warframe", "companion", "modular", "archwing", "railjack"].map((t) => {
+            {["weapon", "warframe", "companion", "modular", "archwing", "railjack", "loadout"].map((t) => {
               const Icon = typeIcons[t] ?? Crosshair;
               return (
                 <button

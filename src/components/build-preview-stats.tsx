@@ -2,13 +2,15 @@
 
 import { useMemo } from "react";
 import { AbilityTTKPanel } from "@/components/ability-ttk-panel";
+import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
 import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
 import {
   resolvePublicBuildWarframePreview,
   resolvePublicBuildWeaponPreview,
 } from "@/lib/build-stats";
+import type { LoadoutBuildData } from "@/lib/loadouts";
 import { useMods, useWeapons } from "@/lib/use-data";
-import type { EquippedMod } from "@/lib/types";
+import type { EquippedMod, Loadout } from "@/lib/types";
 
 function StatsDivider() {
   return <div className="w-full h-px bg-border my-8" />;
@@ -51,8 +53,22 @@ export function BuildPreviewStats({ type, data }: { type: string; data: unknown 
     [type, data, allWeapons],
   );
 
+  const loadoutPreview = useMemo((): Loadout | null => {
+    if (type !== "loadout" || !data || typeof data !== "object") return null;
+    return {
+      id: "preview",
+      name: "Preview",
+      createdAt: 0,
+      updatedAt: 0,
+      ...(data as LoadoutBuildData),
+    };
+  }, [type, data]);
+
   const weaponPreview = useMemo(
-    () => (type !== "warframe" ? resolvePublicBuildWeaponPreview(type, data, allWeapons) : null),
+    () =>
+      type !== "warframe" && type !== "loadout"
+        ? resolvePublicBuildWeaponPreview(type, data, allWeapons)
+        : null,
     [type, data, allWeapons],
   );
 
@@ -71,11 +87,13 @@ export function BuildPreviewStats({ type, data }: { type: string; data: unknown 
     });
   }, [warframePreview, modsMap]);
 
-  if (!warframePreview && !weaponPreview) return null;
+  if (!warframePreview && !weaponPreview && !loadoutPreview) return null;
 
   return (
     <>
       <StatsDivider />
+
+      {loadoutPreview && <LoadoutDamagePanel loadout={loadoutPreview} />}
 
       {warframePreview && (
         <div className="space-y-6">

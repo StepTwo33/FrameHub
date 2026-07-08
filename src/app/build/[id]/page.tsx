@@ -138,6 +138,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
               initialUpvoteCount={build.upvoteCount ?? 0}
               isPublic={build.isPublic}
               builderUrl={builderUrl !== "#" ? builderUrl : undefined}
+              openLabel={build.type === "loadout" ? "Open in Loadouts" : "Open in Builder"}
             />
           </div>
 
