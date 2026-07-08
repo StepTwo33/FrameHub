@@ -24,7 +24,7 @@ const geistMono = Geist_Mono({
 const siteUrl = getSiteUrl();
 const defaultTitle = `${SITE_NAME} - ${SITE_TAGLINE}`;
 /** Bump when replacing the social preview image so Discord/Twitter re-scrape. */
-const OG_IMAGE_VERSION = "3";
+const OG_IMAGE_VERSION = "4";
 const ogImageUrl = `/og-embed.png?v=${OG_IMAGE_VERSION}`;
 
 export const metadata: Metadata = {

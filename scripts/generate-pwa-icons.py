@@ -130,14 +130,63 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, m
     return lines
 
 
+def _lerp(a: int, b: int, t: float) -> int:
+    return int(a + (b - a) * t)
+
+
+def make_card_background(width: int, height: int) -> Image.Image:
+    """linear-gradient(135deg, #0a0a1a 0%, #12122a 45%, #0a0a1a 100%)"""
+    c0 = (10, 10, 26)
+    c1 = (18, 18, 42)
+    img = Image.new("RGB", (width, height))
+    pixels = img.load()
+    for y in range(height):
+        for x in range(width):
+            t = (x / max(width - 1, 1) + y / max(height - 1, 1)) / 2
+            if t <= 0.45:
+                u = t / 0.45
+                rgb = (_lerp(c0[0], c1[0], u), _lerp(c0[1], c1[1], u), _lerp(c0[2], c1[2], u))
+            else:
+                u = (t - 0.45) / 0.55
+                rgb = (_lerp(c1[0], c0[0], u), _lerp(c1[1], c0[1], u), _lerp(c1[2], c0[2], u))
+            pixels[x, y] = rgb
+    return img.convert("RGBA")
+
+
+def add_radial_glow(
+    canvas: Image.Image,
+    cx: int,
+    cy: int,
+    radius: int,
+    rgb: tuple[int, int, int],
+    max_alpha: float,
+) -> Image.Image:
+    """Soft radial highlight that fades out (matches OG CSS radial-gradient)."""
+    overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    pixels = overlay.load()
+    w, h = canvas.size
+    max_a = int(max_alpha * 255)
+    for y in range(h):
+        for x in range(w):
+            dist = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+            if dist >= radius:
+                continue
+            t = 1 - dist / radius
+            alpha = int(max_a * t * t)
+            if alpha > 0:
+                pixels[x, y] = (*rgb, alpha)
+    return Image.alpha_composite(canvas, overlay)
+
+
 def make_og_embed(logo: Image.Image) -> Image.Image:
     """1200x630 social preview card — logo left, copy right."""
     width, height = 1200, 630
-    canvas = Image.new("RGBA", (width, height), BG)
-    draw = ImageDraw.Draw(canvas)
-    draw.ellipse((-120, -80, 400, 440), fill=(34, 211, 238, 46))
-    draw.ellipse((width - 360, height - 400, width + 80, height + 40), fill=(168, 85, 247, 36))
+    canvas = make_card_background(width, height)
+    # Subtle ambient glows (not solid dots) — same as original opengraph-image.tsx
+    canvas = add_radial_glow(canvas, 140, 180, 260, (34, 211, 238), 0.18)
+    canvas = add_radial_glow(canvas, width - 160, height - 60, 240, (168, 85, 247), 0.14)
 
+    draw = ImageDraw.Draw(canvas)
     icon = resize_contain(logo, 280)
     icon_y = (height - icon.height) // 2
     canvas.paste(icon, (72, icon_y), icon)
