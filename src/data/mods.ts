@@ -13464,7 +13464,7 @@ const RAW_MODS: Mod[] = [
     },
     "description": "Prismatic Gem Augment: The gem now attaches to your free-moving companion. \\nPassive : +50% Prismatic Gem Duration.",
     "rarity": "rare",
-    "warframeId": "mirage"
+    "warframeId": "citrine"
   },
   {
     "id": "prolonged_paralysis",
@@ -13659,13 +13659,14 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "range": 4.0
     },
     "description": "Crystallize Augment: Enemies killed by crystalline growths stagger and spread the crystals to enemies within 16m.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "citrine"
   },
   {
     "id": "reflection",

@@ -749,49 +749,67 @@ export const allWarframes: Warframe[] = [
     "energy": 130,
     "sprintSpeed": 1,
     "description": "Slash and stagger enemies with a crystal blast that inflicts <DT_SLASH_COLOR>Slash Status. Enemies afflicted with this Status Effect have an increased chance of dropping Health Orbs.",
-    "passive": "Citrine grants nearby allies |BASE| health regeneration per second. Pick up a Health Orb to increase regeneration by |HPS|, up to a maximum of |MAX|.",
+    "passive": "Citrine grants nearby allies within Affinity Range 5 health regeneration per second. Pick up a Health Orb to increase regeneration by 0.1, up to a maximum of 25.",
     "abilities": [
       {
         "name": "Fractured Blast",
         "energyCost": 25,
-        "description": "Slash and stagger enemies with a crystal blast that inflicts <DT_SLASH_COLOR>Slash Status. Enemies afflicted with this Status Effect have an increased chance of dropping Health Orbs.",
-        "damage": 300,
-        "range": 20,
-        "radius": 5,
-        "statusChance": 0.5,
-        "castTime": 0.4,
-        "damageType": "Slash"
+        "description": "Slash and stagger enemies with a crystal blast that inflicts <DT_SLASH_COLOR>Slash Status. Enemies afflicted with this Status Effect have an increased chance of dropping Health and Energy Orbs.",
+        "damage": 500,
+        "range": 14,
+        "damageType": "Slash",
+        "miscStats": {
+          "healthOrbChance": 0.5,
+          "energyOrbChance": 0.2
+        }
       },
       {
         "name": "Preserving Shell",
         "energyCost": 50,
         "description": "Citrine guards herself and nearby allies with a crystalline shell that gradually decays. Kills and assists increase the defensive power of the shell.",
-        "range": 15,
-        "duration": 30,
-        "radius": 15,
-        "castTime": 0.5
+        "damageReduction": 0.4,
+        "duration": 25,
+        "range": 50,
+        "radius": 8,
+        "miscStats": {
+          "drCap": 0.9,
+          "minDamageReduction": 0.25,
+          "drPerKill": 0.03,
+          "drPerAssist": 0.01,
+          "initialDecayDelay": 1,
+          "killAssistDecayDelay": 2
+        }
       },
       {
         "name": "Prismatic Gem",
         "energyCost": 75,
-        "description": "Deploy a gem that shoots prismatic beams. The gem targets enemies that are taking weapon damage from Citrine and her allies. Its beams inflict Heat, Cold, Toxin, and Electricity status.",
-        "damage": 150,
-        "range": 30,
-        "duration": 25,
+        "description": "Deploy a gem that shoots prismatic beams. The gem targets enemies that are taking weapon damage from Citrine and her allies. Its beams inflict Heat, Cold, Toxin, and Electricity Status Effects. Status Chance and Status Duration increase for nearby allies.",
+        "damage": 1000,
+        "duration": 30,
         "radius": 15,
-        "castTime": 0.6
+        "miscStats": {
+          "placementDistance": 5,
+          "statusChanceBonus": 1,
+          "statusDurationBonus": 1,
+          "beamsPerAlly": 1,
+          "retargetDelay": 0.4,
+          "statusTypes": 4,
+          "gemLimit": 1
+        }
       },
       {
         "name": "Crystallize",
         "energyCost": 100,
         "description": "Citrine summons crystal fractals. The fractals rush forward, seeking enemies. Enemies touched by the fractals are paralyzed by crystalline growths. Hit the growths to deal Critical Damage.",
-        "damage": 400,
+        "damage": 500,
         "range": 30,
-        "duration": 10,
-        "radius": 10,
-        "statusChance": 1,
-        "castTime": 0.8,
-        "damageType": "Puncture"
+        "duration": 8,
+        "damageType": "Puncture",
+        "miscStats": {
+          "sightCone": "190°",
+          "growthsPerEnemy": 1,
+          "absoluteCritChance": "300%"
+        }
       }
     ]
   },

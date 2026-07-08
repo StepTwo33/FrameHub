@@ -166,6 +166,24 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "voruna::Ulfrun's Descent": {
     speedBuff: { scale: "strength", cap: 1 },
   },
+
+  // wiki: Citrine — Fractured Blast (orb drop chances scale STR)
+  "citrine::Fractured Blast": {
+    healthOrbChance: { scale: "strength" },
+    energyOrbChance: { scale: "strength" },
+  },
+  // wiki: Citrine — Preserving Shell (per-kill/assist DR scales STR)
+  "citrine::Preserving Shell": {
+    drPerKill: { scale: "strength" },
+    drPerAssist: { scale: "strength" },
+    minDamageReduction: { scale: "strength" },
+  },
+  // wiki: Citrine — Prismatic Gem (status buffs scale STR/DUR; aurora radius scales RNG)
+  "citrine::Prismatic Gem": {
+    statusChanceBonus: { scale: "strength" },
+    statusDurationBonus: { scale: "duration" },
+    placementDistance: { scale: "range" },
+  },
 };
 
 /** Top-level ability field scaling (damageReduction, damageBuff on the Ability object). */
@@ -187,6 +205,10 @@ const VERIFIED_FIELD_SCALING: Record<string, VerifiedAbilityFields> = {
   "nidus::Parasitic Link": {
     damageBuff: { scale: "strength" },
     damageReduction: { scale: "strength", cap: 1 },
+  },
+  // wiki: Preserving Shell — initial DR scales STR; cap 90%
+  "citrine::Preserving Shell": {
+    damageReduction: { scale: "strength", useSiblingDrCap: true },
   },
 };
 

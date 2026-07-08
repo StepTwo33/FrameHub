@@ -37,6 +37,13 @@ import {
 } from "@/lib/mod-weapon-eligibility";
 import { getWeaponModProfile } from "@/lib/weapon-mod-tags";
 import type { Weapon } from "@/lib/types";
+import {
+  getModPickerStatFilters,
+  modMatchesStatFilter,
+  sortMods,
+  type ModSortId,
+  type ModStatFilterId,
+} from "@/lib/mod-stat-filters";
 
 export type SlotType = WeaponModSlotType | "aura" | "exilus" | "companion_precept";
 
@@ -71,6 +78,13 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
   const [rivenStats, setRivenStats] = useState<Record<string, number>>({});
   const [rivenStatKey, setRivenStatKey] = useState("");
   const [rivenStatValue, setRivenStatValue] = useState("");
+  const [statFilter, setStatFilter] = useState<ModStatFilterId>("all");
+  const [sortId, setSortId] = useState<ModSortId>("name");
+
+  const statFilterOptions = useMemo(
+    () => getModPickerStatFilters(category, slotType),
+    [category, slotType],
+  );
 
   const blockedByExclusion = useMemo(() => getBlockedModIds(equippedModIds), [equippedModIds]);
 
@@ -185,6 +199,14 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     );
   }, [mods, category, slotType, search, warframeId, archwingId, weaponCategory, weaponModProfile, weapon?.id]);
 
+  const displayedMods = useMemo(() => {
+    let list = filteredMods;
+    if (statFilter !== "all") {
+      list = list.filter((m) => modMatchesStatFilter(m, statFilter));
+    }
+    return sortMods(list, sortId);
+  }, [filteredMods, statFilter, sortId]);
+
   const filteredArcanes = useMemo(() => {
     if (!arcaneCatalog) return [];
     if (!search.trim()) return arcaneCatalog;
@@ -199,7 +221,11 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
   const isArcaneBrowse = pickerMode === "arcanes" && !!arcaneCatalog;
 
   useEffect(() => {
-    if (open) setBrowseTab(pickerMode === "arcanes" ? "arcanes" : initialBrowseTab);
+    if (open) {
+      setBrowseTab(pickerMode === "arcanes" ? "arcanes" : initialBrowseTab);
+      setStatFilter("all");
+      setSortId("name");
+    }
   }, [open, initialBrowseTab, pickerMode]);
 
   const handleSelectMod = (mod: Mod) => {
@@ -231,6 +257,8 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
     setRivenStatKey("");
     setRivenStatValue("");
     setSearch("");
+    setStatFilter("all");
+    setSortId("name");
     setBrowseTab(initialBrowseTab);
     onClose();
   };
@@ -435,10 +463,49 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                   autoFocus
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {isArcaneBrowse ? filteredArcanes.length : filteredMods.length}{" "}
-                {isArcaneBrowse ? "arcanes" : "mods"} available
-              </p>
+              {!isArcaneBrowse && statFilterOptions.length > 1 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {statFilterOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setStatFilter(option.id)}
+                      className={cn(
+                        "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ring-1",
+                        statFilter === option.id
+                          ? "bg-primary text-primary-foreground ring-primary/40"
+                          : "bg-secondary/40 text-muted-foreground ring-border hover:text-foreground hover:bg-secondary/70",
+                      )}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {!isArcaneBrowse && (
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <p className="text-xs text-muted-foreground">
+                    {displayedMods.length} mods available
+                  </p>
+                  <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                    Sort
+                    <select
+                      value={sortId}
+                      onChange={(e) => setSortId(e.target.value as ModSortId)}
+                      className="rounded-md border border-border bg-background px-2 py-1 text-[11px] text-foreground"
+                    >
+                      <option value="name">Name (A–Z)</option>
+                      <option value="drain-asc">Drain (low → high)</option>
+                      <option value="drain-desc">Drain (high → low)</option>
+                    </select>
+                  </label>
+                </div>
+              )}
+              {isArcaneBrowse && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  {filteredArcanes.length} arcanes available
+                </p>
+              )}
             </div>
 
             <div
@@ -478,7 +545,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
                       )}
                     </button>
                   );
-                }) : filteredMods.map((mod) => {
+                }) : displayedMods.map((mod) => {
                   const isEquipped = equippedModIds.includes(mod.id);
                   const isBlocked = blockedByExclusion.has(mod.id);
                   const isDisabled = isEquipped || isBlocked;

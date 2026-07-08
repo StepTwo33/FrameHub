@@ -91,6 +91,20 @@ const LABELS: Record<string, string> = {
   killDamageBonus: "Kill Damage Bonus",
   critChancePerKill: "Crit Chance per Kill",
   critDamagePerKill: "Crit Damage per Kill",
+  drPerKill: "DR per Kill",
+  drPerAssist: "DR per Assist",
+  minDamageReduction: "Min Damage Reduction",
+  initialDecayDelay: "Initial Decay Delay",
+  killAssistDecayDelay: "Kill/Assist Decay Delay",
+  statusChanceBonus: "Status Chance Bonus",
+  statusDurationBonus: "Status Duration Bonus",
+  placementDistance: "Placement Distance",
+  beamsPerAlly: "Beams per Ally",
+  retargetDelay: "Retarget Delay",
+  gemLimit: "Gem Limit",
+  sightCone: "Sight Cone",
+  growthsPerEnemy: "Growths per Enemy",
+  absoluteCritChance: "Growth Crit Chance",
 };
 
 function humanizeKey(key: string): string {
