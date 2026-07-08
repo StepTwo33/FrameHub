@@ -1,6 +1,35 @@
 import type { Companion, Weapon } from "./types";
 
-/** Map companion names to their specific claw weapon IDs (wiki Module:Companions/data). */
+/** Breed-specific claw weapon per companion id (not interchangeable within a family). */
+export const COMPANION_CLAW_BY_ID: Record<string, string> = {
+  chesa: "chesa_claws",
+  huras: "huras_claws",
+  raksa: "raksa_claws",
+  sahasa: "sahasa_claws",
+  sunika: "sunika_claws",
+  helminth_charger: "helminth_claws",
+  adarza: "adarza_claws",
+  smeeta: "smeeta_claws",
+  vizier_predasite: "vizier_claws",
+  pharaoh_predasite: "pharaoh_claws",
+  medjay_predasite: "medjay_claws",
+  sly_vulpaphyla: "sly_claws",
+  crescent_vulpaphyla: "crescent_claws",
+  panzer_vulpaphyla: "panzer_claws",
+};
+
+/** Legacy name map for companions not keyed by id (e.g. Venari). */
+export const COMPANION_CLAW_BY_NAME: Record<string, string> = {
+  "Vasca Kavat": "vasca_claws",
+  Venari: "venari_claws",
+  "Venari Prime": "venari_prime_claws",
+};
+
+export function resolveCompanionClawId(companion: Companion): string | undefined {
+  return COMPANION_CLAW_BY_ID[companion.id] ?? COMPANION_CLAW_BY_NAME[companion.name];
+}
+
+/** @deprecated Use COMPANION_CLAW_BY_ID / resolveCompanionClawId */
 export const COMPANION_CLAW_MAP: Record<string, string> = {
   "Chesa Kubrow": "chesa_claws",
   "Huras Kubrow": "huras_claws",
@@ -10,9 +39,7 @@ export const COMPANION_CLAW_MAP: Record<string, string> = {
   "Helminth Charger": "helminth_claws",
   "Adarza Kavat": "adarza_claws",
   "Smeeta Kavat": "smeeta_claws",
-  "Vasca Kavat": "vasca_claws",
-  "Venari": "venari_claws",
-  "Venari Prime": "venari_prime_claws",
+  ...COMPANION_CLAW_BY_NAME,
   "Vizier Predasite": "vizier_claws",
   "Pharaoh Predasite": "pharaoh_claws",
   "Medjay Predasite": "medjay_claws",
@@ -27,12 +54,10 @@ export function getCompanionWeapons(companion: Companion, weaponList: Weapon[]):
     return weaponList.filter((w) => w.category === "sentinel_weapon");
   }
   if (type === "kubrow" || type === "predasite" || type === "kavat" || type === "vulpaphyla") {
-    const specificClawId = COMPANION_CLAW_MAP[companion.name];
+    const specificClawId = resolveCompanionClawId(companion);
     const allClaws = weaponList.filter((w) => w.category === "beast_claw");
     if (specificClawId) {
-      const specific = allClaws.filter((w) => w.id === specificClawId);
-      const others = allClaws.filter((w) => w.id !== specificClawId && w.companionType === type);
-      return [...specific, ...others];
+      return allClaws.filter((w) => w.id === specificClawId);
     }
     return allClaws.filter((w) => w.companionType === type || w.companionType === "kubrow");
   }
