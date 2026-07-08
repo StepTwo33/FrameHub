@@ -6,7 +6,7 @@ from __future__ import annotations
 import collections
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets" / "app-icon-source.png"
@@ -14,6 +14,24 @@ MASKABLE_SOURCE = ROOT / "assets" / "app-icon-maskable-source.png"
 OUT_DIR = ROOT / "public" / "icons"
 PUBLIC_DIR = ROOT / "public"
 APP_DIR = ROOT / "src" / "app"
+
+SITE_NAME = "Frame Hub"
+SITE_TAGLINE = "Warframe Build Planner"
+SITE_DESCRIPTION = (
+    "Plan and optimize Warframe builds with real-time stat calculations for "
+    "weapons, warframes, companions, arcanes, and full loadouts."
+)
+
+FONT_CANDIDATES = (
+    "C:/Windows/Fonts/segoeuib.ttf",
+    "C:/Windows/Fonts/segoeui.ttf",
+    "C:/Windows/Fonts/arialbd.ttf",
+    "C:/Windows/Fonts/arial.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+)
 
 # Fallback fill when a platform requires an opaque icon (favicon .ico)
 BG = (10, 10, 26, 255)
@@ -81,6 +99,65 @@ def center_crop_fraction(img: Image.Image, fraction: float) -> Image.Image:
     return img.crop((left, top, left + crop, top + crop))
 
 
+def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    if bold:
+        candidates = [p for p in FONT_CANDIDATES if "Bold" in p or "bd" in p.lower()]
+        candidates += [p for p in FONT_CANDIDATES if p not in candidates]
+    else:
+        candidates = list(FONT_CANDIDATES)
+    for path in candidates:
+        font_path = Path(path)
+        if font_path.is_file():
+            return ImageFont.truetype(str(font_path), size)
+    return ImageFont.load_default()
+
+
+def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_width: int) -> list[str]:
+    words = text.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        trial = f"{current} {word}".strip()
+        bbox = draw.textbbox((0, 0), trial, font=font)
+        if bbox[2] - bbox[0] <= max_width:
+            current = trial
+        else:
+            if current:
+                lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
+
+
+def make_og_embed(logo: Image.Image) -> Image.Image:
+    """1200x630 social preview card — logo left, copy right."""
+    width, height = 1200, 630
+    canvas = Image.new("RGBA", (width, height), BG)
+    draw = ImageDraw.Draw(canvas)
+    draw.ellipse((-120, -80, 400, 440), fill=(34, 211, 238, 46))
+    draw.ellipse((width - 360, height - 400, width + 80, height + 40), fill=(168, 85, 247, 36))
+
+    icon = resize_contain(logo, 280)
+    icon_y = (height - icon.height) // 2
+    canvas.paste(icon, (72, icon_y), icon)
+
+    text_x = 72 + 280 + 56
+    title_font = load_font(72, bold=True)
+    tagline_font = load_font(34, bold=True)
+    body_font = load_font(26)
+
+    draw.text((text_x, 150), SITE_NAME, fill=(224, 247, 255, 255), font=title_font)
+    draw.text((text_x, 250), SITE_TAGLINE, fill=(103, 232, 249, 255), font=tagline_font)
+
+    body_y = 320
+    for line in wrap_text(draw, SITE_DESCRIPTION, body_font, width - text_x - 72):
+        draw.text((text_x, body_y), line, fill=(148, 163, 184, 255), font=body_font)
+        body_y += 38
+
+    return canvas.convert("RGB")
+
+
 def save_png(img: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     ensure_rgba(img).save(path, format="PNG", optimize=True)
@@ -119,6 +196,8 @@ def main() -> None:
     favicon_path = PUBLIC_DIR / "favicon.ico"
     favicon_32.save(favicon_path, format="ICO", sizes=[(32, 32)], append_images=[favicon_16])
     print(f"  {favicon_path.relative_to(ROOT)}")
+
+    save_png(make_og_embed(source), PUBLIC_DIR / "og-embed.png")
 
     print("\nDone.")
 

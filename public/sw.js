@@ -1,13 +1,14 @@
 /// Frame Hub Service Worker
-/// v8: transparent circular brand icons + restored OG card layout.
+/// v9: static og-embed.png for social previews (Discord cache bust).
 
-const CACHE_NAME = "framehub-v8";
+const CACHE_NAME = "framehub-v9";
 
 const PRECACHE_URLS = [
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
   "/icons/maskable-192x192.png",
   "/icons/maskable-512x512.png",
+  "/og-embed.png",
   "/favicon.ico",
 ];
 

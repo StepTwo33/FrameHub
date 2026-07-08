@@ -23,6 +23,9 @@ const geistMono = Geist_Mono({
 
 const siteUrl = getSiteUrl();
 const defaultTitle = `${SITE_NAME} - ${SITE_TAGLINE}`;
+/** Bump when replacing the social preview image so Discord/Twitter re-scrape. */
+const OG_IMAGE_VERSION = "3";
+const ogImageUrl = `/og-embed.png?v=${OG_IMAGE_VERSION}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -50,11 +53,20 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: defaultTitle,
     description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: defaultTitle,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultTitle,
     description: SITE_DESCRIPTION,
+    images: [ogImageUrl],
   },
   appleWebApp: {
     capable: true,
