@@ -71,6 +71,7 @@ export const WARFRAME_EXILUS_MOD_IDS = new Set([
   "heavy_impact",
   "shock_absorbers",
   "warm_coat",
+  "mecha_pulse_r3",
 ]);
 
 /** Primary weapon Exilus slot (utility — ammo mutation, terminal velocity, etc.). */
@@ -167,7 +168,6 @@ export const MELEE_WEAPON_EXILUS_MOD_IDS = new Set([
   "guardian_derision",
   "electromagnetic_shielding",
   "whirlwind",
-  "mecha_pulse_r3",
 ]);
 
 export function isWarframeExilusMod(mod: Pick<Mod, "id" | "category" | "polarity">): boolean {
