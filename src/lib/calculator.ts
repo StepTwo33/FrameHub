@@ -2,6 +2,10 @@
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard } from './types';
 import { avgCritMultiplier } from './crit-utils';
 import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
+import {
+  applyMeleeComboToStats,
+  resolveEffectiveComboCount,
+} from './melee-combo';
 
 export { avgCritMultiplier } from './crit-utils';
 import {
@@ -162,43 +166,6 @@ const GLADIATOR_MOD_IDS = [
 ];
 
 const vigilanteIdList = VIGILANTE_MOD_IDS as unknown as string[];
-
-// ── Melee combo (current system, wiki: Melee Combo) ─────────────────────
-// Blood Rush / Weeping Wounds / Gladiator use the "Melee Damage Multiplier" column.
-// Legacy pre–Melee 3.0 steps (5→1.5x, 15→2x, …) are obsolete in-game.
-
-function getMeleeScalingMultiplier(comboCount: number, weaponId?: string): number {
-  if (weaponId === "venka_prime" && comboCount >= 240) return 4.0;
-  if (comboCount < 20) return 1.0;
-  if (comboCount < 40) return 1.25;
-  if (comboCount < 60) return 1.5;
-  if (comboCount < 80) return 1.75;
-  if (comboCount < 100) return 2.0;
-  if (comboCount < 120) return 2.25;
-  if (comboCount < 140) return 2.5;
-  if (comboCount < 160) return 2.75;
-  if (comboCount < 180) return 3.0;
-  if (comboCount < 200) return 3.25;
-  if (comboCount < 220) return 3.5;
-  return 3.75;
-}
-
-/** Heavy attacks use the "Heavy Attack Multiplier" column (2x at 20 hits, +1x per 20 to 12x at 220+). */
-function getHeavyAttackComboMultiplier(comboCount: number, weaponId?: string): number {
-  if (weaponId === "venka_prime" && comboCount >= 240) return 13.0;
-  if (comboCount < 20) return 1.0;
-  if (comboCount < 40) return 2.0;
-  if (comboCount < 60) return 3.0;
-  if (comboCount < 80) return 4.0;
-  if (comboCount < 100) return 5.0;
-  if (comboCount < 120) return 6.0;
-  if (comboCount < 140) return 7.0;
-  if (comboCount < 160) return 8.0;
-  if (comboCount < 180) return 9.0;
-  if (comboCount < 200) return 10.0;
-  if (comboCount < 220) return 11.0;
-  return 12.0;
-}
 
 function applyRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
   const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(baseWeapon, stats);
@@ -537,36 +504,23 @@ export function calculateWeaponBuild(
 
   // Melee-specific: combo system, heavy attacks, blood rush, weeping wounds, gladiator set
   if (isMelee) {
-    stats.comboCount = sim.comboCount;
-    stats.comboMultiplier = getMeleeScalingMultiplier(stats.comboCount, baseWeapon.id);
-    stats.heavyAttackComboMultiplier = getHeavyAttackComboMultiplier(stats.comboCount, baseWeapon.id);
-
-    // Blood Rush + Gladiator Set: additive with each other, multiplicative with modded crit
-    // Wiki: Final CC = Modded CC × (1 + Blood Rush × (Melee Damage Multiplier − 1) + …)
-    let comboScaling = 0;
-    if (hasBloodRush) {
-      stats.bloodRushStacks = bloodRushValue;
-      comboScaling += bloodRushValue * (stats.comboMultiplier - 1);
-    }
-    // Per Gladiator piece: +10% crit per combo scaling tier; at 6 pieces +15% more (wiki full set).
-    if (gladiatorCount > 0 && stats.comboMultiplier > 1) {
-      let gladPerTier = 0.10 * gladiatorCount;
-      if (gladiatorCount >= 6) gladPerTier += 0.15;
-      comboScaling += gladPerTier * (stats.comboMultiplier - 1);
-    }
-    if (comboScaling > 0) {
-      stats.criticalChance *= (1 + comboScaling);
-    }
-
-    // Weeping Wounds: +X% status chance per combo multiplier tier
-    if (hasWeepingWounds) {
-      stats.weepingWoundsBonus = weepingWoundsValue;
-      stats.statusChance *= (1 + weepingWoundsValue * (stats.comboMultiplier - 1));
-    }
-
-    // Heavy attacks can crit: fold in the average crit multiplier
-    stats.heavyAttackDamage = stats.totalDamage * stats.heavyAttackComboMultiplier
-      * avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+    stats.preComboCriticalChance = stats.criticalChance;
+    stats.preComboStatusChance = stats.statusChance;
+    const comboContext = {
+      hasBloodRush,
+      bloodRushValue,
+      hasWeepingWounds,
+      weepingWoundsValue,
+      gladiatorCount,
+    };
+    stats.meleeComboModContext = comboContext;
+    const effectiveCombo = resolveEffectiveComboCount(
+      sim.comboCount,
+      baseWeapon.id,
+      equippedMods,
+      allMods,
+    );
+    applyMeleeComboToStats(stats, effectiveCombo, baseWeapon.id, comboContext);
   }
 
   // Vigilante: +5% per equipped set mod to upgrade primary crit tier (not secondaries / melee)
@@ -908,9 +862,19 @@ export function calculateWeaponBuildWithArcanes(
   rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
   const sim = simParams || DEFAULT_SIM_PARAMS;
+  const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
   const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions, linkage, rivenStatChanges);
+  const preArcaneHeavy = stats.heavyAttackDamage;
+  const preArcaneCombo = stats.comboCount;
   for (const arcane of arcanes) {
     applyArcaneToWeapon(stats, arcane, effectiveWeaponArcaneStacks(arcane, sim.arcaneStacks), baseWeapon);
+  }
+  if (isMelee && stats.meleeComboModContext && stats.comboCount !== preArcaneCombo) {
+    const arcaneHeavyFactor = preArcaneHeavy > 0 ? stats.heavyAttackDamage / preArcaneHeavy : 1;
+    applyMeleeComboToStats(stats, stats.comboCount, baseWeapon.id, stats.meleeComboModContext);
+    if (arcaneHeavyFactor !== 1) {
+      stats.heavyAttackDamage *= arcaneHeavyFactor;
+    }
   }
   setStatusChancePerShot(stats, baseWeapon);
   stats.burstDps = calculateBurstDps(stats);

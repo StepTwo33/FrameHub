@@ -359,15 +359,22 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
       {/* Melee-specific */}
       {isMelee && stats.heavyAttackDamage > 0 && (
         <CollapsibleSection title="MELEE" defaultOpen>
+          {stats.comboCount !== simParams?.comboCount && (
+            <StatRow
+              label="Effective combo hits"
+              value={String(stats.comboCount)}
+              tooltip="Sim slider + innate weapon combo + Corrupt Charge initial combo (and arcane bonuses when equipped)."
+            />
+          )}
           <StatRow
             label="Combo scaling (BR/WW)"
             value={`${stats.comboMultiplier.toFixed(2)}x`}
-            tooltip="Melee Damage Multiplier tier from combo counter (1.0 below 20 hits, then 1.25x at 20, +0.25x per 20 hits). Blood Rush & Weeping use (CM−1) in their formulas."
+            tooltip="Melee Damage Multiplier tier from combo counter (1.0 below first tier, then +0.25× per tier). Blood Rush & Weeping use (CM−1) in their formulas."
           />
           <StatRow
             label="Heavy attack mult"
             value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`}
-            tooltip="Separate heavy-attack combo tier (2x from 20 hits, +1x per 20 to 12x). Heavy damage shown uses this × total damage as a simple model."
+            tooltip="Heavy Attack Multiplier tier (2× at first tier, +1× per tier to 12× at 220+ hits on standard weapons)."
           />
           <StatRow label="Combo Duration" value={`${stats.comboDuration.toFixed(0)}s`} />
           <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted />

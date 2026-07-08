@@ -69,7 +69,10 @@ function WeaponRow({
           <StatLine label="Crit" value={`${(stats.criticalChance * 100).toFixed(1)}% / ${stats.criticalMultiplier.toFixed(1)}x`} />
           <StatLine label="Status" value={`${(stats.statusChance * 100).toFixed(1)}%`} />
           {isMelee && stats.heavyAttackDamage > 0 && (
-            <StatLine label="Heavy attack" value={fmtDamageNum(stats.heavyAttackDamage)} />
+            <>
+              <StatLine label="Heavy attack mult" value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`} />
+              <StatLine label="Heavy attack" value={fmtDamageNum(stats.heavyAttackDamage)} />
+            </>
           )}
           {!isMelee && (
             <StatLine label="Fire rate" value={stats.fireRate.toFixed(2)} />

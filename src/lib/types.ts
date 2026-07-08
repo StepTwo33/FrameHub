@@ -310,6 +310,11 @@ export interface CalculatedStats {
   arcaneBonuses?: Record<string, number>;
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
   modBonuses?: Record<string, number>;
+  /** Crit/status before Blood Rush / Weeping; used when combo count changes after arcanes. */
+  preComboCriticalChance?: number;
+  preComboStatusChance?: number;
+  /** Inputs for recomputing combo scaling after arcanes adjust combo count. */
+  meleeComboModContext?: import("@/lib/melee-combo").MeleeComboModContext;
 }
 
 export interface WarframeCalculatedStats {

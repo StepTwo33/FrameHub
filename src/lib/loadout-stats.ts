@@ -55,7 +55,7 @@ export const SCENARIO_PRESETS: Record<Exclude<DamageScenario, "vsEnemy">, Simula
   },
   fullRamp: {
     ...DEFAULT_SIM_PARAMS,
-    comboCount: 120,
+    comboCount: 220,
     killStacks: 5,
     statusTypesOnTarget: 4,
     arcaneStacks: 12,
