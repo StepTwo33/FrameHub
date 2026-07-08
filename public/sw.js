@@ -1,14 +1,13 @@
 /// Frame Hub Service Worker
-/// v7: new frame hub brand icon + OG artwork. Icons only — never cache HTML or /_next.
+/// v8: transparent circular brand icons + restored OG card layout.
 
-const CACHE_NAME = "framehub-v7";
+const CACHE_NAME = "framehub-v8";
 
 const PRECACHE_URLS = [
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
   "/icons/maskable-192x192.png",
   "/icons/maskable-512x512.png",
-  "/og-image.png",
   "/favicon.ico",
 ];
 
