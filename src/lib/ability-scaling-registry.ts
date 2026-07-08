@@ -152,6 +152,20 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     minRadius: { scale: "range" },
     maxRadius: { scale: "range" },
   },
+
+  // wiki: Voruna — Shroud of Dynar
+  "voruna::Shroud Of Dynar": {
+    speedBuff: { scale: "strength", cap: 1 },
+    durationExtension: { scale: "duration" },
+  },
+  // wiki: Voruna — Lycath's Hunt
+  "voruna::Lycath's Hunt": {
+    durationExtension: { scale: "duration" },
+  },
+  // wiki: Voruna — Ulfrun's Descent
+  "voruna::Ulfrun's Descent": {
+    speedBuff: { scale: "strength", cap: 1 },
+  },
 };
 
 /** Top-level ability field scaling (damageReduction, damageBuff on the Ability object). */

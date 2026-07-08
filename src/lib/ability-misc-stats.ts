@@ -80,7 +80,17 @@ const LABELS: Record<string, string> = {
   healPerMeter: "Heal per Meter",
   stunRadius: "Stun Radius",
   armorCap: "Armor Cap",
-  armorDuration: "Armor Duration",
+  parkourVelocity: "Parkour Velocity",
+  meleeBuffDuration: "Melee Buff Duration",
+  statusTypes: "Status Types",
+  statusStacks: "Stacks per Status",
+  healthOrbChance: "Health Orb Chance",
+  energyOrbChance: "Energy Orb Chance",
+  charges: "Charges",
+  heavyAttackEfficiency: "Heavy Attack Efficiency",
+  killDamageBonus: "Kill Damage Bonus",
+  critChancePerKill: "Crit Chance per Kill",
+  critDamagePerKill: "Crit Damage per Kill",
 };
 
 function humanizeKey(key: string): string {

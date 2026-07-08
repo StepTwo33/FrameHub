@@ -5490,22 +5490,61 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Shroud Of Dynar",
         "energyCost": 25,
-        "description": "(TAP) Dynar shrouds Voruna with invisibility and accelerates her speed. Invisibility ends when Voruna attacks. For a short time after invisibility ends, melee attacks have incre..."
+        "description": "(TAP) Dynar shrouds Voruna with invisibility and accelerates her speed. Invisibility ends when Voruna attacks. For a short time after invisibility ends, melee attacks have increased Critical Damage, Status Chance, Critical Chance and inflict Slash Status Effects. Melee kill an enemy during this time to extend the melee buff once per cast.(HOLD) Dynar guards Voruna, increasing her Parkour Velocity.",
+        "duration": 14,
+        "miscStats": {
+          "speedBuff": 1,
+          "meleeBuffDuration": 3,
+          "durationExtension": 5,
+          "criticalChanceBonus": 1,
+          "statusChance": 1,
+          "critDamageBonus": "+2.0x",
+          "parkourVelocity": 0.5
+        }
       },
       {
         "name": "Fangs Of Raksh",
-        "energyCost": 25,
-        "description": "(TAP) Raksh's fangs tear into your enemies. 5 random Status Effects are applied at 10 Stacks each on an enemy. On target's death, spread the Status Effects to other nearby ene..."
+        "energyCost": 50,
+        "description": "(TAP) Raksh's fangs tear into your enemies. 5 random Status Effects are applied at 10 Stacks each on an enemy. On target's death, spread the Status Effects to other nearby enemies.(HOLD) Raksh guards Voruna with Status Effect resistance.",
+        "damage": 250,
+        "range": 30,
+        "radius": 7,
+        "damageType": "Slash",
+        "miscStats": {
+          "statusTypes": 5,
+          "statusStacks": 10
+        }
       },
       {
         "name": "Lycath's Hunt",
-        "energyCost": 25,
-        "description": "(TAP) Lycath hunts to sustain the pack. Enemies killed by melee attacks drop health orbs and enemies killed by headshots drop energy orbs. Increase the duration of Lycath\u2019s hunt..."
+        "energyCost": 75,
+        "description": "(TAP) Lycath hunts to sustain the pack. Enemies killed by melee attacks drop health orbs and enemies killed by headshots drop energy orbs. Increase the duration of Lycath's hunt by killing enemies affected by 5 or more Status Effects.(HOLD) Lycath guards Voruna with increased Heavy Attack efficiency.",
+        "duration": 20,
+        "miscStats": {
+          "healthOrbChance": 1,
+          "energyOrbChance": 1,
+          "durationExtension": 5,
+          "maxDuration": 60,
+          "heavyAttackEfficiency": 1
+        }
       },
       {
         "name": "Ulfrun's Descent",
-        "energyCost": 25,
-        "description": "(TAP) Voruna drops to all fours and prepares 5 brutal charges that lock onto enemies. Ulfrun, the most powerful wolf, leads the attack as Voruna dashes toward her target. The pa..."
+        "energyCost": 100,
+        "description": "(TAP) Voruna drops to all fours and prepares 5 brutal charges that lock onto enemies. Ulfrun, the most powerful wolf, leads the attack as Voruna dashes toward her target. The pack deals increased damage to targets and nearby enemies that are inflicted by Status Effects. Lethal attacks double the damage of Voruna's remaining charges.(HOLD) Ulfrun guards Voruna. If Voruna falls during this time, Ulfrun dies in her place.",
+        "damage": 5000,
+        "damagePerSecond": 1000,
+        "duration": 4,
+        "range": 30,
+        "radius": 10,
+        "damageType": "Slash",
+        "miscStats": {
+          "charges": 5,
+          "speedBuff": 0.5,
+          "killDamageBonus": 2,
+          "critChancePerKill": 0.05,
+          "critDamagePerKill": "+0.1x"
+        }
       }
     ]
   },
@@ -5523,22 +5562,61 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Shroud Of Dynar",
         "energyCost": 25,
-        "description": "(TAP) Dynar shrouds Voruna with invisibility and accelerates her speed. Invisibility ends when Voruna attacks. For a short time after invisibility ends, melee attacks have incre..."
+        "description": "(TAP) Dynar shrouds Voruna with invisibility and accelerates her speed. Invisibility ends when Voruna attacks. For a short time after invisibility ends, melee attacks have increased Critical Damage, Status Chance, Critical Chance and inflict Slash Status Effects. Melee kill an enemy during this time to extend the melee buff once per cast.(HOLD) Dynar guards Voruna, increasing her Parkour Velocity.",
+        "duration": 14,
+        "miscStats": {
+          "speedBuff": 1,
+          "meleeBuffDuration": 3,
+          "durationExtension": 5,
+          "criticalChanceBonus": 1,
+          "statusChance": 1,
+          "critDamageBonus": "+2.0x",
+          "parkourVelocity": 0.5
+        }
       },
       {
         "name": "Fangs Of Raksh",
-        "energyCost": 25,
-        "description": "(TAP) Raksh's fangs tear into your enemies. 5 random Status Effects are applied at 10 Stacks each on an enemy. On target's death, spread the Status Effects to other nearby ene..."
+        "energyCost": 50,
+        "description": "(TAP) Raksh's fangs tear into your enemies. 5 random Status Effects are applied at 10 Stacks each on an enemy. On target's death, spread the Status Effects to other nearby enemies.(HOLD) Raksh guards Voruna with Status Effect resistance.",
+        "damage": 250,
+        "range": 30,
+        "radius": 7,
+        "damageType": "Slash",
+        "miscStats": {
+          "statusTypes": 5,
+          "statusStacks": 10
+        }
       },
       {
         "name": "Lycath's Hunt",
-        "energyCost": 25,
-        "description": "(TAP) Lycath hunts to sustain the pack. Enemies killed by melee attacks drop health orbs and enemies killed by headshots drop energy orbs. Increase the duration of Lycath\u2019s hunt..."
+        "energyCost": 75,
+        "description": "(TAP) Lycath hunts to sustain the pack. Enemies killed by melee attacks drop health orbs and enemies killed by headshots drop energy orbs. Increase the duration of Lycath's hunt by killing enemies affected by 5 or more Status Effects.(HOLD) Lycath guards Voruna with increased Heavy Attack efficiency.",
+        "duration": 20,
+        "miscStats": {
+          "healthOrbChance": 1,
+          "energyOrbChance": 1,
+          "durationExtension": 5,
+          "maxDuration": 60,
+          "heavyAttackEfficiency": 1
+        }
       },
       {
         "name": "Ulfrun's Descent",
-        "energyCost": 25,
-        "description": "(TAP) Voruna drops to all fours and prepares 5 brutal charges that lock onto enemies. Ulfrun, the most powerful wolf, leads the attack as Voruna dashes toward her target. The pa..."
+        "energyCost": 100,
+        "description": "(TAP) Voruna drops to all fours and prepares 5 brutal charges that lock onto enemies. Ulfrun, the most powerful wolf, leads the attack as Voruna dashes toward her target. The pack deals increased damage to targets and nearby enemies that are inflicted by Status Effects. Lethal attacks double the damage of Voruna's remaining charges.(HOLD) Ulfrun guards Voruna. If Voruna falls during this time, Ulfrun dies in her place.",
+        "damage": 5000,
+        "damagePerSecond": 1000,
+        "duration": 4,
+        "range": 30,
+        "radius": 10,
+        "damageType": "Slash",
+        "miscStats": {
+          "charges": 5,
+          "speedBuff": 0.5,
+          "killDamageBonus": 2,
+          "critChancePerKill": 0.05,
+          "critDamagePerKill": "+0.1x"
+        }
       }
     ]
   },
