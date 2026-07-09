@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogIn, User, Menu, X, ChevronDown, Swords, Wrench, LayoutGrid, Flag, Shield, Github, Users, Heart, Search } from "lucide-react";
-import { useEffect, useState, useRef, useCallback, type FormEvent } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo, type FormEvent } from "react";
 import { ThemePicker } from "@/components/theme-picker";
+import { BrandMark } from "@/components/brand-mark";
 import { AvatarImage } from "@/components/game-asset-image";
 import { Input } from "@/components/ui/input";
 import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
-import { bestBuildCatalogMatch, buildDiscoverUrl } from "@/lib/build-search";
+import { bestBuildCatalogMatch, buildDiscoverUrl, searchBuildCatalog, type BuildSearchItem } from "@/lib/build-search";
+import type { PublicBuildSummary } from "@/lib/build-types";
 
 interface SessionUser {
   id: string;
@@ -119,39 +121,270 @@ function AdminOpenReportsBadge({ count }: { count: number }) {
   );
 }
 
+const BUILD_TYPE_LABELS: Record<string, string> = {
+  weapon: "Weapon",
+  warframe: "Warframe",
+  companion: "Companion",
+  modular: "Modular",
+  archwing: "Archwing",
+  railjack: "Railjack",
+  loadout: "Loadout",
+};
+
 function HeaderBuildSearch({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [communityBuilds, setCommunityBuilds] = useState<PublicBuildSummary[]>([]);
+  const [loadingBuilds, setLoadingBuilds] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const catalogMatches = searchBuildCatalog(query, 5);
+  const trimmed = query.trim();
+  const showSuggestions = open && trimmed.length >= 2;
+
+  const suggestions = useMemo(() => {
+    const rows: Array<
+      | { kind: "catalog"; item: BuildSearchItem }
+      | { kind: "build"; build: PublicBuildSummary }
+      | { kind: "action"; label: string; href: string }
+    > = [];
+
+    for (const item of catalogMatches) {
+      rows.push({ kind: "catalog", item });
+    }
+    for (const build of communityBuilds) {
+      rows.push({ kind: "build", build });
+    }
+    if (trimmed.length >= 2) {
+      rows.push({
+        kind: "action",
+        label: `Search all builds for “${trimmed}”`,
+        href: buildDiscoverUrl({ q: trimmed }),
+      });
+    }
+
+    return rows;
+  }, [catalogMatches, communityBuilds, trimmed]);
+
+  useEffect(() => {
+    if (trimmed.length < 2) {
+      setCommunityBuilds([]);
+      setLoadingBuilds(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setLoadingBuilds(true);
+      try {
+        const params = new URLSearchParams({ q: trimmed, limit: "5", sort: "popular" });
+        const res = await fetch(`/api/builds/public?${params}`, { signal: controller.signal });
+        if (!res.ok) return;
+        const data = (await res.json()) as { builds?: PublicBuildSummary[] };
+        setCommunityBuilds(data.builds ?? []);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") setCommunityBuilds([]);
+      } finally {
+        if (!controller.signal.aborted) setLoadingBuilds(false);
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [trimmed]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query, communityBuilds.length, catalogMatches.length]);
+
+  useEffect(() => {
+    if (!showSuggestions) return;
+    const onPointerDown = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [showSuggestions]);
+
+  const navigate = useCallback(
+    (href: string) => {
+      router.push(href);
+      setOpen(false);
+      onNavigate?.();
+    },
+    [router, onNavigate],
+  );
+
+  const selectSuggestion = useCallback(
+    (index: number) => {
+      const row = suggestions[index];
+      if (!row) return;
+      if (row.kind === "catalog") {
+        navigate(buildDiscoverUrl({ type: row.item.type, itemId: row.item.id }));
+      } else if (row.kind === "build") {
+        navigate(`/build/${row.build.id}`);
+      } else {
+        navigate(row.href);
+      }
+    },
+    [navigate, suggestions],
+  );
 
   const submit = (e?: FormEvent) => {
     e?.preventDefault();
-    const q = query.trim();
+    if (showSuggestions && suggestions.length > 0) {
+      selectSuggestion(activeIndex);
+      return;
+    }
+    const q = trimmed;
     if (!q) {
-      router.push("/discover");
-      onNavigate?.();
+      navigate("/discover");
       return;
     }
     const match = bestBuildCatalogMatch(q);
-    router.push(
+    navigate(
       match
         ? buildDiscoverUrl({ type: match.type, itemId: match.id })
         : buildDiscoverUrl({ q }),
     );
-    onNavigate?.();
   };
 
   return (
     <form onSubmit={submit} className={className}>
-      <div className="relative">
+      <div ref={rootRef} className="relative">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
+          ref={inputRef}
           type="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={(e) => {
+            if (!showSuggestions || suggestions.length === 0) return;
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setActiveIndex((i) => (i + 1) % suggestions.length);
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setActiveIndex((i) => (i - 1 + suggestions.length) % suggestions.length);
+            } else if (e.key === "Escape") {
+              setOpen(false);
+            }
+          }}
           placeholder="Search builds by frame or weapon..."
           aria-label="Search community builds"
+          aria-expanded={showSuggestions}
+          aria-autocomplete="list"
+          aria-controls="header-build-search-listbox"
+          role="combobox"
           className="h-9 border-border/60 bg-background/40 pl-9 pr-3 text-sm backdrop-blur-sm"
         />
+
+        {showSuggestions && (
+          <div
+            id="header-build-search-listbox"
+            role="listbox"
+            className="absolute top-full z-50 mt-1.5 w-full overflow-hidden rounded-xl border border-border/60 bg-popover shadow-elevation backdrop-blur-xl animate-in fade-in slide-in-from-top-1 duration-150"
+          >
+            {catalogMatches.length > 0 && (
+              <div className="px-2 pt-2">
+                <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  Items
+                </p>
+                {catalogMatches.map((item) => {
+                  const idx = suggestions.findIndex((s) => s.kind === "catalog" && s.item.id === item.id && s.item.type === item.type);
+                  return (
+                    <button
+                      key={`${item.type}:${item.id}`}
+                      type="button"
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      onClick={() => selectSuggestion(idx)}
+                      className={`flex w-full items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-sm transition-colors ${
+                        idx === activeIndex ? "bg-secondary/80 text-foreground" : "hover:bg-secondary/50"
+                      }`}
+                    >
+                      <span className="truncate font-medium">{item.name}</span>
+                      <span className="shrink-0 text-[10px] capitalize text-muted-foreground">
+                        {BUILD_TYPE_LABELS[item.type] ?? item.type}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {(loadingBuilds || communityBuilds.length > 0) && (
+              <div className="px-2 pt-2">
+                <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  Community builds
+                </p>
+                {loadingBuilds && communityBuilds.length === 0 ? (
+                  <p className="px-2 py-2 text-xs text-muted-foreground">Searching…</p>
+                ) : (
+                  communityBuilds.map((build) => {
+                    const idx = suggestions.findIndex((s) => s.kind === "build" && s.build.id === build.id);
+                    return (
+                      <button
+                        key={build.id}
+                        type="button"
+                        role="option"
+                        aria-selected={idx === activeIndex}
+                        onMouseEnter={() => setActiveIndex(idx)}
+                        onClick={() => selectSuggestion(idx)}
+                        className={`flex w-full flex-col gap-0.5 rounded-lg px-2 py-2 text-left transition-colors ${
+                          idx === activeIndex ? "bg-secondary/80" : "hover:bg-secondary/50"
+                        }`}
+                      >
+                        <span className="truncate text-sm font-medium">{build.name}</span>
+                        <span className="truncate text-[10px] text-muted-foreground">
+                          by {build.author.username}
+                          {" · "}
+                          {BUILD_TYPE_LABELS[build.type] ?? build.type}
+                          {build.upvoteCount > 0 ? ` · ${build.upvoteCount} upvotes` : ""}
+                        </span>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            )}
+
+            {!loadingBuilds && catalogMatches.length === 0 && communityBuilds.length === 0 && (
+              <p className="px-3 py-3 text-xs text-muted-foreground">No matches yet — press Enter to search Discover.</p>
+            )}
+
+            <div className="border-t border-border/50 p-2">
+              {(() => {
+                const idx = suggestions.findIndex((s) => s.kind === "action");
+                if (idx < 0) return null;
+                return (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    onClick={() => selectSuggestion(idx)}
+                    className={`w-full rounded-lg px-2 py-2 text-left text-xs text-muted-foreground transition-colors ${
+                      idx === activeIndex ? "bg-secondary/80 text-foreground" : "hover:bg-secondary/50"
+                    }`}
+                  >
+                    Search all builds for “{trimmed}”
+                  </button>
+                );
+              })()}
+            </div>
+          </div>
+        )}
       </div>
     </form>
   );
@@ -219,9 +452,12 @@ export function Header() {
     <header className="page-ambient-ignore sticky top-0 z-50 border-b border-border/60 bg-card/70 shadow-sm shadow-[var(--shadow-color)] backdrop-blur-xl transition-colors duration-300">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       <div className="flex h-14 w-full items-center gap-2 px-4 sm:px-5 lg:gap-3 lg:px-6">
-        <Link href="/" className="shrink-0 text-xl font-bold tracking-tight">
-          <span className="text-primary">Frame</span>
-          <span className="text-muted-foreground">Hub</span>
+        <Link href="/" className="flex shrink-0 items-center gap-2 text-xl font-bold tracking-tight">
+          <BrandMark size={28} className="ring-1 ring-primary/20" />
+          <span>
+            <span className="text-primary">Frame</span>
+            <span className="text-muted-foreground">Hub</span>
+          </span>
         </Link>
 
         {/* Desktop nav — sits left of center search */}

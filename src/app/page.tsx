@@ -31,6 +31,7 @@ import {
   HOME_SIDEBAR_INLINE_CLASS,
 } from "@/lib/home-sidebar-layout";
 import { cn } from "@/lib/utils";
+import { BrandMark } from "@/components/brand-mark";
 
 export default function Home() {
   return (
@@ -46,6 +47,13 @@ export default function Home() {
           {/* Center: hero + feature grid */}
           <div className={HOME_CENTER_CLASS}>
             <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
+              <div className="mb-5 flex justify-center sm:mb-6">
+                <BrandMark
+                  size={64}
+                  priority
+                  className="ring-2 ring-primary/25 shadow-lg shadow-primary/15 sm:h-20 sm:w-20"
+                />
+              </div>
               <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
                 Build. Calculate. <span className="text-primary">Dominate.</span>
               </h1>
