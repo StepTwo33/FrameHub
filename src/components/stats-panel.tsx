@@ -113,6 +113,7 @@ const CONTRIBUTION_CATEGORY_COLORS: Record<DpsContributionCategory, string> = {
   conditional: "text-purple-400",
   arcane: "text-amber-400",
   external: "text-cyan-400",
+  set: "text-lime-400",
   other: "text-muted-foreground",
 };
 

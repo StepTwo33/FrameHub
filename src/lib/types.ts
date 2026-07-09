@@ -200,16 +200,27 @@ export interface ModularBuildData {
   customName?: string;
 }
 
+export interface WeaponExternalBuffElemental {
+  type: string;
+  /** Fraction of base weapon damage, same as mod elemental (+0.6 = +60%). */
+  bonusFraction: number;
+}
+
 /** Buff from warframe abilities, archon shards, or other loadout-wide sources. */
 export interface WeaponExternalBuff {
   id: string;
   label: string;
-  category: "ability" | "shard" | "other";
+  category: "ability" | "shard" | "companion" | "warframe_mod" | "set" | "other";
   /** Additive damage bonus fraction (+0.5 = +50% damage). */
   damageBonus?: number;
   critChanceBonus?: number;
   critMultBonus?: number;
+  /** Flat add to final crit multiplier after percent bonuses (+1.2 = +1.2×). */
+  critMultFlatBonus?: number;
   statusBonus?: number;
+  fireRateBonus?: number;
+  multishotBonus?: number;
+  elemental?: WeaponExternalBuffElemental[];
   nominal?: string;
 }
 
@@ -254,6 +265,10 @@ export interface SimulationParams {
   applyTekSetVsMarkedDamage?: boolean;
   /** Warframe ability names treated as active weapon damage buffs (e.g. "Roar", "Eclipse"). */
   activeWeaponAbilityBuffs?: string[];
+  /** Tenacious Bond: +1.2× crit damage when companion crit > 50%. Default on in loadout calcs. */
+  applyTenaciousBondCrit?: boolean;
+  /** Reinforced Bond: +60% fire rate when companion shields exceed threshold. Default on in loadout calcs. */
+  applyReinforcedBondFireRate?: boolean;
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {

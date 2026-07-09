@@ -57,6 +57,8 @@ export const SCENARIO_PRESETS: Record<Exclude<DamageScenario, "vsEnemy">, Simula
     killStacks: 3,
     statusTypesOnTarget: 2,
     arcaneStacks: 6,
+    applyTenaciousBondCrit: true,
+    applyReinforcedBondFireRate: true,
   },
   fullRamp: {
     ...DEFAULT_SIM_PARAMS,
@@ -330,6 +332,8 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         warframeId: loadout.warframeBuild.warframeId,
         warframeStats: result.warframe!.stats,
         warframeAbilities: wf.abilities,
+        warframeModSlots: setLinkage.warframeMods,
+        allMods: modsMap,
       };
 
       const exaltedWeapon = getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList);
@@ -377,6 +381,35 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         const contributions = computeDpsContributions(contributionContext);
         result.exalted = { name: base.name, stats: statsEx, ttk, isMelee, contributions };
       }
+    }
+  }
+
+  if (loadout.companionBuild) {
+    const c = companionsMap.get(loadout.companionBuild.companionId);
+    if (c) {
+      let companionWeaponCritChance: number | undefined;
+      const weaponMods = loadout.companionBuild.weaponMods || [];
+      if (weaponMods.length > 0) {
+        const companionWeapon = resolveDefaultCompanionWeapon(c, weaponList);
+        if (companionWeapon) {
+          const cwStats = calculateWeaponBuild(
+            weaponWithPassive(companionWeapon),
+            weaponMods,
+            modsMap,
+            undefined,
+            simParams,
+            undefined,
+            setLinkage,
+          );
+          companionWeaponCritChance = cwStats.criticalChance;
+        }
+      }
+      buffContext = {
+        ...buffContext,
+        companionModSlots: loadout.companionBuild.mods ?? [],
+        companionWeaponCritChance,
+        allMods: modsMap,
+      };
     }
   }
 

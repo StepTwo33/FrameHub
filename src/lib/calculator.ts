@@ -179,13 +179,27 @@ function applyRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
   }
 }
 
-function applyWeaponExternalBuffs(acc: WeaponModAccumulators, buffs?: WeaponExternalBuff[]): void {
+function applyWeaponExternalBuffs(
+  acc: WeaponModAccumulators,
+  buffs?: WeaponExternalBuff[],
+  elementalMods?: { type: string; value: number }[],
+  baseWeaponDamage?: number,
+  critMultFlat?: { critEventBonus: number },
+): void {
   if (!buffs?.length) return;
   for (const buff of buffs) {
     if (buff.damageBonus) acc.damageBonus += buff.damageBonus;
     if (buff.critChanceBonus) acc.critChanceBonus += buff.critChanceBonus;
     if (buff.critMultBonus) acc.critMultBonus += buff.critMultBonus;
+    if (buff.critMultFlatBonus && critMultFlat) critMultFlat.critEventBonus += buff.critMultFlatBonus;
     if (buff.statusBonus) acc.statusBonus += buff.statusBonus;
+    if (buff.fireRateBonus) acc.fireRateBonus += buff.fireRateBonus;
+    if (buff.multishotBonus) acc.multishotBonus += buff.multishotBonus;
+    if (buff.elemental?.length && elementalMods && baseWeaponDamage) {
+      for (const e of buff.elemental) {
+        elementalMods.push({ type: e.type, value: baseWeaponDamage * e.bonusFraction });
+      }
+    }
   }
 }
 
@@ -266,7 +280,12 @@ export function calculateWeaponBuild(
   // Count set mods for set bonuses
   const sacCount = equippedMods.filter(s => SACRIFICIAL_MOD_IDS.includes(s.modId)).length;
   const sacSetBonus = getSacrificialSetBonus(sacCount);
-  const gladiatorCount = equippedMods.filter(s => GLADIATOR_MOD_IDS.includes(s.modId)).length + (sim.extraGladiatorMods || 0);
+  const gladiatorFromLinkedWf =
+    linkage?.warframeMods?.filter((s) => GLADIATOR_MOD_IDS.includes(s.modId)).length ?? 0;
+  const gladiatorCount =
+    equippedMods.filter((s) => GLADIATOR_MOD_IDS.includes(s.modId)).length +
+    gladiatorFromLinkedWf +
+    (sim.extraGladiatorMods || 0);
   const vigOnWeapon = equippedMods.filter((s) => vigilanteIdList.includes(s.modId)).length;
   const vigFromLinkedWf = linkage?.warframeMods?.filter((s) => vigilanteIdList.includes(s.modId)).length ?? 0;
   const vigFromSimFallback = linkage ? 0 : (sim.extraVigilanteModsFromWarframe ?? 0);
@@ -319,7 +338,14 @@ export function calculateWeaponBuild(
     }
   }
 
-  applyWeaponExternalBuffs(weaponModAcc, calcOptions?.externalBuffs);
+  const critMultFlatBonus = { critEventBonus: 0 };
+  applyWeaponExternalBuffs(
+    weaponModAcc,
+    calcOptions?.externalBuffs,
+    elementalMods,
+    baseWeapon.damage,
+    critMultFlatBonus,
+  );
 
   damageBonus = weaponModAcc.damageBonus;
   critChanceBonus = weaponModAcc.critChanceBonus;
@@ -381,6 +407,9 @@ export function calculateWeaponBuild(
   // Apply other bonuses
   stats.criticalChance *= (1 + critChanceBonus);
   stats.criticalMultiplier *= (1 + critMultBonus);
+  if (critMultFlatBonus.critEventBonus > 0) {
+    stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
+  }
   stats.fireRate *= (1 + fireRateBonus);
   stats.multishot += multishotBonus;
   stats.statusChance *= (1 + statusBonus);

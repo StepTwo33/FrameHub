@@ -14,6 +14,14 @@ import {
   type WeaponCalculationOptions,
 } from "@/lib/types";
 import { mergeWeaponCalcOptions, resolveWeaponExternalBuffs, type WeaponBuffContext } from "@/lib/weapon-external-buffs";
+import {
+  countSetModsInSlots,
+  countSynthSetPieces,
+  SYNTH_SET_MOD_IDS,
+  VIGILANTE_MOD_IDS,
+  weaponAcceptsSynthReloadBonus,
+  weaponSupportsPrimaryStyleSets,
+} from "@/lib/set-bonuses";
 
 export type DpsContributionCategory =
   | "damage"
@@ -24,6 +32,7 @@ export type DpsContributionCategory =
   | "conditional"
   | "arcane"
   | "external"
+  | "set"
   | "other";
 
 export interface DpsContribution {
@@ -67,8 +76,20 @@ const CATEGORY_ORDER: DpsContributionCategory[] = [
   "conditional",
   "arcane",
   "external",
+  "set",
   "other",
 ];
+
+function cloneLinkage(linkage?: SetBonusLinkage): SetBonusLinkage | undefined {
+  if (!linkage) return undefined;
+  return {
+    warframeMods: linkage.warframeMods ? [...linkage.warframeMods] : undefined,
+    primaryMods: linkage.primaryMods ? [...linkage.primaryMods] : undefined,
+    secondaryMods: linkage.secondaryMods ? [...linkage.secondaryMods] : undefined,
+    meleeMods: linkage.meleeMods ? [...linkage.meleeMods] : undefined,
+    companionMods: linkage.companionMods ? [...linkage.companionMods] : undefined,
+  };
+}
 
 function cloneCtx(ctx: WeaponDpsCalcContext): WeaponDpsCalcContext {
   return {
@@ -84,7 +105,7 @@ function cloneCtx(ctx: WeaponDpsCalcContext): WeaponDpsCalcContext {
             : undefined,
         }
       : undefined,
-    linkage: ctx.linkage,
+    linkage: cloneLinkage(ctx.linkage),
     incarnonStatChanges: ctx.incarnonStatChanges ? { ...ctx.incarnonStatChanges } : undefined,
     rivenStatChanges: ctx.rivenStatChanges ? { ...ctx.rivenStatChanges } : undefined,
   };
@@ -151,6 +172,15 @@ function inferModCategory(mod: Mod): DpsContributionCategory {
 function modNominalLine(mod: Mod, rank: number): string {
   const lines = getModStatDisplayLines(mod, rank);
   return lines.map((l) => l.atRank).join(", ");
+}
+
+function externalBuffContributionCategory(buff: import("@/lib/types").WeaponExternalBuff): DpsContributionCategory {
+  if (buff.elemental?.length) return "elemental";
+  if (buff.critChanceBonus || buff.critMultBonus || buff.critMultFlatBonus) return "crit";
+  if (buff.fireRateBonus) return "rate";
+  if (buff.multishotBonus) return "multishot";
+  if (buff.damageBonus || buff.statusBonus) return "damage";
+  return "external";
 }
 
 function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
@@ -242,7 +272,10 @@ function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
         const opts = next.calcOptions;
         if (!opts) return next;
         next.calcOptions = mergeWeaponCalcOptions(
-          undefined,
+          {
+            progenitorElement: undefined,
+            progenitorBonusPercent: undefined,
+          },
           opts.externalBuffs ?? [],
         );
         return next;
@@ -254,14 +287,20 @@ function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
     sources.push({
       id: buff.id,
       label: buff.label,
-      category: "external",
+      category: externalBuffContributionCategory(buff),
       nominal: buff.nominal,
       tooltip:
         buff.category === "ability"
           ? "Warframe ability weapon damage buff at current strength."
           : buff.category === "shard"
             ? "Archon shard bonus applied to this weapon type."
-            : undefined,
+            : buff.category === "companion"
+              ? "Companion bond mod buff applied to your weapons."
+              : buff.category === "warframe_mod"
+                ? "Warframe mod (stance augment / ability augment) applied to this weapon."
+                : buff.category === "set"
+                  ? "Set bonus from other loadout slots."
+                  : undefined,
       apply: (base) => {
         const next = cloneCtx(base);
         const opts = next.calcOptions;
@@ -354,6 +393,59 @@ function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
         return next;
       },
     });
+  }
+
+  if (ctx.linkage?.warframeMods && weaponSupportsPrimaryStyleSets(ctx.baseWeapon)) {
+    const vigSet = new Set<string>(VIGILANTE_MOD_IDS);
+    const vigFromWf = countSetModsInSlots(ctx.linkage.warframeMods, vigSet);
+    if (vigFromWf > 0) {
+      sources.push({
+        id: "linkage-wf-vigilante",
+        label: "Warframe Vigilante (loadout)",
+        category: "set",
+        nominal: `${vigFromWf} Vigilante mod(s) on frame`,
+        tooltip: "Vigilante mods on warframe improve primary crit tier (+5% per piece).",
+        apply: (base) => {
+          const next = cloneCtx(base);
+          if (!next.linkage?.warframeMods) return null;
+          next.linkage = {
+            ...next.linkage,
+            warframeMods: next.linkage.warframeMods.filter((s) => !vigSet.has(s.modId)),
+          };
+          return next;
+        },
+      });
+    }
+  }
+
+  if (ctx.linkage && weaponAcceptsSynthReloadBonus(ctx.baseWeapon)) {
+    const synthSet = new Set<string>(SYNTH_SET_MOD_IDS);
+    const totalSynth = countSynthSetPieces(ctx.linkage, ctx.modSlots);
+    const onWeaponSynth = countSetModsInSlots(ctx.modSlots, synthSet);
+    const offWeaponSynth = totalSynth - onWeaponSynth;
+    if (offWeaponSynth > 0 && totalSynth >= 4) {
+      sources.push({
+        id: "linkage-synth-reload",
+        label: "Synth 4-set reload (loadout)",
+        category: "set",
+        nominal: `${offWeaponSynth} off-weapon Synth piece(s)`,
+        tooltip: "Synth 4-set grants +15% reload speed on pistols when complete across the loadout.",
+        apply: (base) => {
+          const next = cloneCtx(base);
+          if (!next.linkage) return null;
+          const stripSynth = (slots?: ModSlot[]) =>
+            slots?.filter((s) => !synthSet.has(s.modId) || next.modSlots.some((w) => w.modId === s.modId && w.slotIndex === s.slotIndex));
+          next.linkage = {
+            warframeMods: stripSynth(next.linkage.warframeMods),
+            primaryMods: stripSynth(next.linkage.primaryMods),
+            secondaryMods: stripSynth(next.linkage.secondaryMods),
+            meleeMods: stripSynth(next.linkage.meleeMods),
+            companionMods: stripSynth(next.linkage.companionMods),
+          };
+          return next;
+        },
+      });
+    }
   }
 
   return sources;

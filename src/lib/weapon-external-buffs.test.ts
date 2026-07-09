@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { calculateWeaponBuild } from "@/lib/calculator";
+import { computeDpsContributions } from "@/lib/dps-contributions";
 import { resolveWeaponExternalBuffs } from "@/lib/weapon-external-buffs";
-import type { Ability, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
+import { allMods } from "@/data/mods";
+import type { Ability, ModSlot, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
+
+const modsMap = new Map(allMods.map((m) => [m.id, m]));
 
 const testRifle: Weapon = {
   id: "test_rifle",
@@ -13,8 +17,8 @@ const testRifle: Weapon = {
   puncture: 0,
   slash: 0,
   fireRate: 1,
-  criticalChance: 0,
-  criticalMultiplier: 1.5,
+  criticalChance: 0.25,
+  criticalMultiplier: 2,
   statusChance: 0,
   magazine: 30,
   reloadTime: 2,
@@ -25,6 +29,16 @@ const testRifle: Weapon = {
   hasSecondaryArcaneSlot: false,
   isIncarnon: false,
   hasRivenSlot: true,
+};
+
+const testMelee: Weapon = {
+  ...testRifle,
+  id: "test_melee",
+  name: "Test Melee",
+  category: "melee",
+  triggerType: "Melee",
+  fireRate: 1.2,
+  hasPrimaryArcaneSlot: false,
 };
 
 const roarAbility: Ability = {
@@ -105,5 +119,128 @@ describe("resolveWeaponExternalBuffs", () => {
     const withRoar = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim, { externalBuffs: buffs });
 
     expect(withRoar.burstDps).toBeGreaterThan(base.burstDps * 1.6);
+  });
+
+  it("applies Voltaic Strike from warframe mod bar as external elemental", () => {
+    const sim = DEFAULT_SIM_PARAMS;
+    const wfMods: ModSlot[] = [{ modId: "voltaic_strike", rank: 3, slotIndex: 0 }];
+    const buffs = resolveWeaponExternalBuffs(testMelee, {
+      warframeModSlots: wfMods,
+      allMods: modsMap,
+    }, sim);
+
+    const voltaic = buffs.find((b) => b.id === "wf-mod:voltaic_strike");
+    expect(voltaic).toBeDefined();
+    expect(voltaic!.elemental?.some((e) => e.type === "electricity" && e.bonusFraction > 0.5)).toBe(true);
+
+    const shocking = modsMap.get("shocking_touch_r3")!;
+    const modSlots: ModSlot[] = [
+      { modId: shocking.id, rank: 10, slotIndex: 0 },
+    ];
+    const withExternal = calculateWeaponBuild(
+      testMelee,
+      modSlots,
+      modsMap,
+      undefined,
+      sim,
+      { externalBuffs: buffs },
+    );
+    const withModOnly = calculateWeaponBuild(testMelee, modSlots, modsMap, undefined, sim);
+    const withBothManual = calculateWeaponBuild(
+      testMelee,
+      [...modSlots, { modId: "voltaic_strike", rank: 3, slotIndex: 1 }],
+      modsMap,
+      undefined,
+      sim,
+    );
+
+    expect(withExternal.burstDps).toBeCloseTo(withBothManual.burstDps, 0);
+    expect(withExternal.burstDps).toBeGreaterThan(withModOnly.burstDps);
+  });
+
+  it("applies Tenacious Bond crit mult when companion crit exceeds 50%", () => {
+    const sim: SimulationParams = { ...DEFAULT_SIM_PARAMS, applyTenaciousBondCrit: true };
+    const buffs = resolveWeaponExternalBuffs(testRifle, {
+      companionModSlots: [{ modId: "tenacious_bond", rank: 5, slotIndex: 0 }],
+      companionWeaponCritChance: 0.6,
+      allMods: modsMap,
+    }, sim);
+
+    const tenacious = buffs.find((b) => b.id === "companion:tenacious_bond");
+    expect(tenacious?.critMultFlatBonus).toBe(1.2);
+
+    const critMod = modsMap.get("point_strike_r3")!;
+    const modSlots: ModSlot[] = [{ modId: critMod.id, rank: 5, slotIndex: 0 }];
+    const withBond = calculateWeaponBuild(testRifle, modSlots, modsMap, undefined, sim, { externalBuffs: buffs });
+    const withoutBond = calculateWeaponBuild(testRifle, modSlots, modsMap, undefined, sim);
+
+    expect(withBond.burstDps).toBeGreaterThan(withoutBond.burstDps * 1.05);
+  });
+
+  it("skips Tenacious Bond when companion crit is below 50%", () => {
+    const sim: SimulationParams = { ...DEFAULT_SIM_PARAMS, applyTenaciousBondCrit: true };
+    const buffs = resolveWeaponExternalBuffs(testRifle, {
+      companionModSlots: [{ modId: "tenacious_bond", rank: 5, slotIndex: 0 }],
+      companionWeaponCritChance: 0.3,
+      allMods: modsMap,
+    }, sim);
+
+    expect(buffs.find((b) => b.id === "companion:tenacious_bond")).toBeUndefined();
+  });
+});
+
+describe("computeDpsContributions with external sources", () => {
+  it("shows lower marginal efficiency for duplicate electricity when Voltaic Strike is external", () => {
+    const sim = DEFAULT_SIM_PARAMS;
+    const wfMods: ModSlot[] = [{ modId: "voltaic_strike", rank: 3, slotIndex: 0 }];
+    const buffs = resolveWeaponExternalBuffs(testMelee, { warframeModSlots: wfMods, allMods: modsMap }, sim);
+    const shocking = modsMap.get("shocking_touch_r3")!;
+    const modSlots: ModSlot[] = [{ modId: shocking.id, rank: 10, slotIndex: 0 }];
+
+    const contributions = computeDpsContributions({
+      baseWeapon: testMelee,
+      modSlots,
+      allMods: modsMap,
+      simParams: sim,
+      calcOptions: { externalBuffs: buffs },
+    });
+
+    const shockingContrib = contributions.find((c) => c.label === shocking.name);
+    const voltaicContrib = contributions.find((c) => c.id === "wf-mod:voltaic_strike");
+
+    expect(voltaicContrib).toBeDefined();
+    expect(shockingContrib).toBeDefined();
+    // With external electricity already present, the weapon mod adds less marginal DPS than Voltaic would alone.
+    expect(shockingContrib!.burstMarginalPct).toBeLessThan(voltaicContrib!.burstMarginalPct);
+  });
+
+  it("shows crit chance mod gains more marginal value with Tenacious Bond active", () => {
+    const sim: SimulationParams = { ...DEFAULT_SIM_PARAMS, applyTenaciousBondCrit: true };
+    const critMod = modsMap.get("point_strike_r3")!;
+    const modSlots: ModSlot[] = [{ modId: critMod.id, rank: 5, slotIndex: 0 }];
+
+    const withoutBond = computeDpsContributions({
+      baseWeapon: testRifle,
+      modSlots,
+      allMods: modsMap,
+      simParams: sim,
+    });
+    const bondBuffs = resolveWeaponExternalBuffs(testRifle, {
+      companionModSlots: [{ modId: "tenacious_bond", rank: 5, slotIndex: 0 }],
+      companionWeaponCritChance: 0.6,
+      allMods: modsMap,
+    }, sim);
+    const withBond = computeDpsContributions({
+      baseWeapon: testRifle,
+      modSlots,
+      allMods: modsMap,
+      simParams: sim,
+      calcOptions: { externalBuffs: bondBuffs },
+    });
+
+    const critWithout = withoutBond.find((c) => c.label === critMod.name)!.burstMarginalPct;
+    const critWith = withBond.find((c) => c.label === critMod.name)!.burstMarginalPct;
+
+    expect(critWith).toBeGreaterThan(critWithout);
   });
 });
