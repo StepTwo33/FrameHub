@@ -42,6 +42,7 @@ import { getWeaponImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
+import { DualFormTabs } from "@/components/dual-form-tabs";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
