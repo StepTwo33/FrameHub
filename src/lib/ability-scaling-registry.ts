@@ -197,6 +197,14 @@ const VERIFIED_FIELD_SCALING: Record<string, VerifiedAbilityFields> = {
     damageReduction: { scale: "strength", cap: 0.9 },
     damageBuff: { scale: "strength" },
   },
+  // wiki: Roar — weapon damage bonus scales STR
+  "rhino::Roar": {
+    damageBuff: { scale: "strength" },
+  },
+  // wiki: Shooting Gallery — ally weapon damage scales STR
+  "mesa::Shooting Gallery": {
+    damageBuff: { scale: "strength" },
+  },
   // wiki: Shatter Shield — DR cap 95%
   "mesa::Shatter Shield": {
     damageReduction: { scale: "strength", useSiblingDrCap: true },

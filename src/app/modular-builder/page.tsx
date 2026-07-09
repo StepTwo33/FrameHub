@@ -109,6 +109,17 @@ export default function ModularBuilderPage() {
     return calculateWeaponBuild(assembledWeapon, modSlots, modsMap, undefined, simParams);
   }, [assembledWeapon, equippedMods, equippedArcanes, simParams]);
 
+  const contributionContext = useMemo(() => {
+    if (!assembledWeapon) return null;
+    return {
+      baseWeapon: assembledWeapon,
+      modSlots: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      allMods: modsMap,
+      arcanes: equippedArcanes.filter((a): a is Mod => a !== null),
+      simParams,
+    };
+  }, [assembledWeapon, equippedMods, equippedArcanes, simParams, modsMap]);
+
   const modCategory = useMemo(() => {
     if (!assembledWeapon) return "primary";
     if (assembledWeapon.category === "melee") return "melee";
@@ -723,6 +734,7 @@ export default function ModularBuilderPage() {
                   isMelee={assembledWeapon.category === "melee"}
                   simParams={simParams}
                   onSimParamsChange={setSimParams}
+                  contributionContext={contributionContext}
                 />
               ) : (
                 <div className="space-y-2 text-sm text-muted-foreground">

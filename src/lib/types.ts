@@ -200,12 +200,27 @@ export interface ModularBuildData {
   customName?: string;
 }
 
+/** Buff from warframe abilities, archon shards, or other loadout-wide sources. */
+export interface WeaponExternalBuff {
+  id: string;
+  label: string;
+  category: "ability" | "shard" | "other";
+  /** Additive damage bonus fraction (+0.5 = +50% damage). */
+  damageBonus?: number;
+  critChanceBonus?: number;
+  critMultBonus?: number;
+  statusBonus?: number;
+  nominal?: string;
+}
+
 /** Extra weapon calculation options (Kuva/Tenet/Coda progenitor bonus, etc.). */
 export interface WeaponCalculationOptions {
   /** Innate element key, e.g. heat, viral, corrosive */
   progenitorElement?: string;
   /** Bonus damage as percent of base weapon damage (typical 25–60%). */
   progenitorBonusPercent?: number;
+  /** Loadout-wide buffs applied after weapon mods (abilities, shards, …). */
+  externalBuffs?: WeaponExternalBuff[];
 }
 
 export interface ElementalDamage {
@@ -237,6 +252,8 @@ export interface SimulationParams {
   extraTekSetPiecesOffWeapon?: number;
   /** If Tek 4-set is complete and this is enabled, apply +60% damage vs marked enemies to primary DPS. */
   applyTekSetVsMarkedDamage?: boolean;
+  /** Warframe ability names treated as active weapon damage buffs (e.g. "Roar", "Eclipse"). */
+  activeWeaponAbilityBuffs?: string[];
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {

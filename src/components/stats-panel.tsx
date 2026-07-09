@@ -14,6 +14,12 @@ import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,
 } from "@/lib/calculator";
+import {
+  computeDpsContributions,
+  formatMarginalPct,
+  type DpsContributionCategory,
+  type WeaponDpsCalcContext,
+} from "@/lib/dps-contributions";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-700 dark:text-orange-400",
@@ -98,11 +104,29 @@ function SimSlider({ label, value, min, max, onChange, suffix, tooltip }: {
   );
 }
 
-export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEvolutions, allEvolutions, simParams, onSimParamsChange }: {
+const CONTRIBUTION_CATEGORY_COLORS: Record<DpsContributionCategory, string> = {
+  damage: "text-orange-400",
+  crit: "text-red-400",
+  rate: "text-yellow-400",
+  multishot: "text-blue-400",
+  elemental: "text-teal-400",
+  conditional: "text-purple-400",
+  arcane: "text-amber-400",
+  external: "text-cyan-400",
+  other: "text-muted-foreground",
+};
+
+export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEvolutions, allEvolutions, simParams, onSimParamsChange, contributionContext }: {
   stats: CalculatedStats | null; baseStats?: CalculatedStats | null; weapon?: Weapon | null; isMelee?: boolean;
   selectedEvolutions?: Record<number, number>; allEvolutions?: IncarnonEvolution[];
   simParams?: SimulationParams; onSimParamsChange?: (p: SimulationParams) => void;
+  contributionContext?: WeaponDpsCalcContext | null;
 }) {
+  const dpsContributions = useMemo(
+    () => (contributionContext ? computeDpsContributions(contributionContext) : []),
+    [contributionContext],
+  );
+
   if (!stats) {
     return (
       <div className="border border-border rounded-xl p-4 bg-card">
@@ -115,6 +139,10 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
   const hasConditionals = stats.conditionOverloadBonus > 0 || stats.bloodRushStacks > 0
     || stats.galvanizedMultishotOnKill > 0 || stats.galvanizedDamagePerStatus > 0
     || stats.berserkerFuryBonus > 0 || stats.weepingWoundsBonus > 0;
+
+  const showSustainedColumn = dpsContributions.some(
+    (c) => Math.abs(c.sustainedMarginalPct - c.burstMarginalPct) > 0.5,
+  );
 
   return (
     <div className="border border-border rounded-xl p-4 bg-card space-y-1">
@@ -436,6 +464,45 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           );
         })()}
       </CollapsibleSection>
+
+      {dpsContributions.length > 0 && (
+        <CollapsibleSection title="DPS CONTRIBUTIONS" defaultOpen={false}>
+          <p className="text-[9px] text-muted-foreground/70 pb-1.5 leading-relaxed">
+            Effective DPS gain from each source with everything else equipped. Additive stats show diminishing returns when stacked.
+          </p>
+          <div className="space-y-0.5">
+            {dpsContributions.map((row) => {
+              const color = CONTRIBUTION_CATEGORY_COLORS[row.category];
+              const tooltip = [
+                row.nominal ? `Nominal: ${row.nominal}` : null,
+                row.tooltip,
+                `Burst: ${formatMarginalPct(row.burstMarginalPct)} DPS`,
+                showSustainedColumn ? `Sustained: ${formatMarginalPct(row.sustainedMarginalPct)} DPS` : null,
+              ]
+                .filter(Boolean)
+                .join(" · ");
+              return (
+                <div key={row.id} className="flex items-start justify-between gap-2 py-0.5" title={tooltip}>
+                  <div className="min-w-0 flex-1">
+                    <div className={`text-xs truncate ${color}`}>{row.label}</div>
+                    {row.nominal && (
+                      <div className="text-[9px] text-muted-foreground/60 truncate">{row.nominal}</div>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-xs font-mono text-blue-400">{formatMarginalPct(row.burstMarginalPct)}</div>
+                    {showSustainedColumn && (
+                      <div className="text-[9px] font-mono text-muted-foreground">
+                        sus {formatMarginalPct(row.sustainedMarginalPct)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* Status Procs */}
       {stats.statusProcs && stats.statusProcs.length > 0 && (

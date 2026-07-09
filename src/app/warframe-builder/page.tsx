@@ -598,6 +598,18 @@ export default function WarframeBuilderPage() {
     return calculateWeaponBuild(exaltedWeapon, [], modsMap);
   }, [exaltedWeapon]);
 
+  const exaltedContributionContext = useMemo(() => {
+    if (!exaltedWeapon) return null;
+    return {
+      baseWeapon: exaltedWeapon,
+      modSlots: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      allMods: modsMap,
+      arcanes: exaltedArcanes
+        .slice(0, exaltedArcaneConfig.slots)
+        .filter((a): a is Mod => a !== null),
+    };
+  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap]);
+
   const exaltedCapacity = useMemo(() => {
     return exaltedMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
@@ -1292,6 +1304,7 @@ export default function WarframeBuilderPage() {
                           baseStats={exaltedBaseStats}
                           weapon={exaltedWeapon}
                           isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
+                          contributionContext={exaltedContributionContext}
                         />
                       </div>
                     )}

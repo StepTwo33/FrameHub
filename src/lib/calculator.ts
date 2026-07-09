@@ -1,5 +1,5 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from './types';
 import { avgCritMultiplier } from './crit-utils';
 import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
 import {
@@ -179,6 +179,16 @@ function applyRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
   }
 }
 
+function applyWeaponExternalBuffs(acc: WeaponModAccumulators, buffs?: WeaponExternalBuff[]): void {
+  if (!buffs?.length) return;
+  for (const buff of buffs) {
+    if (buff.damageBonus) acc.damageBonus += buff.damageBonus;
+    if (buff.critChanceBonus) acc.critChanceBonus += buff.critChanceBonus;
+    if (buff.critMultBonus) acc.critMultBonus += buff.critMultBonus;
+    if (buff.statusBonus) acc.statusBonus += buff.statusBonus;
+  }
+}
+
 // ── Main Weapon Calculator ──────────────────────────────────────────────
 export function calculateWeaponBuild(
   baseWeapon: Weapon,
@@ -308,6 +318,8 @@ export function calculateWeaponBuild(
       });
     }
   }
+
+  applyWeaponExternalBuffs(weaponModAcc, calcOptions?.externalBuffs);
 
   damageBonus = weaponModAcc.damageBonus;
   critChanceBonus = weaponModAcc.critChanceBonus;

@@ -11,6 +11,7 @@ import { archgunModsForBuilder } from "@/lib/archgun-weapon-augment-mods";
 import { isArchwingAugment } from "@/lib/archwing-augment-mods";
 import { Archwing, Necramech } from "@/data/archwing";
 import { calculateWeaponBuild } from "@/lib/calculator";
+import { buildWeaponContributionContext } from "@/lib/dps-contributions";
 import { calculateArchwingBuild, calculateNecramechBuild } from "@/lib/archwing-calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { WeaponStatsPanel, ArchwingStatsPanel } from "@/components/stats-panel";
@@ -161,6 +162,15 @@ export default function ArchwingBuilderPage() {
     if (!selectedWeapon) return null;
     return calculateWeaponBuild(selectedWeapon, weaponMods, modsMap);
   }, [selectedWeapon, weaponMods]);
+
+  const weaponContributionContext = useMemo(() => {
+    if (!selectedWeapon) return null;
+    return buildWeaponContributionContext({
+      weapon: selectedWeapon,
+      modSlots: weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      allMods: modsMap,
+    });
+  }, [selectedWeapon, weaponMods, modsMap]);
 
   const frameStats = useMemo<ArchwingCalculatedStats | null>(() => {
     if (mode === "archwing" && selectedArchwing) {
@@ -477,6 +487,7 @@ export default function ArchwingBuilderPage() {
                       stats={weaponStats}
                       weapon={selectedWeapon ?? undefined}
                       isMelee={selectedWeapon?.category === "archmelee"}
+                      contributionContext={weaponContributionContext}
                     />
                   </div>
                 )}

@@ -12,6 +12,9 @@ import {
 import type { Loadout } from "@/lib/types";
 import type { LoadoutStatsResult, LoadoutWeaponSlotStats } from "@/lib/loadout-stats";
 import { useWeapons } from "@/lib/use-data";
+import { allWarframes } from "@/data/warframes";
+import { weaponDamageBuffAbilities } from "@/lib/weapon-external-buffs";
+import { formatMarginalPct, type DpsContribution } from "@/lib/dps-contributions";
 import { ChevronDown, ChevronRight, Crosshair, Dog, Shield, Swords, Sparkles, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +24,46 @@ const SCENARIO_LABELS: Record<DamageScenario, string> = {
   fullRamp: "Full ramp",
   vsEnemy: "vs Enemy",
 };
+
+function ContributionsList({ contributions }: { contributions?: DpsContribution[] }) {
+  if (!contributions?.length) return null;
+  const showSustained = contributions.some(
+    (c) => Math.abs(c.sustainedMarginalPct - c.burstMarginalPct) > 0.5,
+  );
+
+  return (
+    <div className="pt-2 mt-1 border-t border-border/40">
+      <p className="text-[9px] font-semibold tracking-wider text-muted-foreground/80 mb-1.5">DPS contributions</p>
+      <div className="space-y-1">
+        {contributions.slice(0, 8).map((row) => (
+          <div
+            key={row.id}
+            className="flex items-start justify-between gap-2"
+            title={[row.nominal, row.tooltip].filter(Boolean).join(" · ")}
+          >
+            <div className="min-w-0">
+              <div className="text-[10px] truncate">{row.label}</div>
+              {row.nominal && (
+                <div className="text-[9px] text-muted-foreground/60 truncate">{row.nominal}</div>
+              )}
+            </div>
+            <div className="shrink-0 text-right">
+              <div className="text-[10px] font-mono text-blue-400">{formatMarginalPct(row.burstMarginalPct)}</div>
+              {showSustained && (
+                <div className="text-[9px] font-mono text-muted-foreground">
+                  sus {formatMarginalPct(row.sustainedMarginalPct)}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        {contributions.length > 8 && (
+          <p className="text-[9px] text-muted-foreground/60">+{contributions.length - 8} more in weapon builder</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function WeaponRow({
   label,
@@ -77,6 +120,7 @@ function WeaponRow({
           {!isMelee && (
             <StatLine label="Fire rate" value={stats.fireRate.toFixed(2)} />
           )}
+          <ContributionsList contributions={entry.contributions} />
         </div>
       )}
     </div>
@@ -97,6 +141,14 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
   const [scenario, setScenario] = useState<DamageScenario>("midFight");
   const [enemyId, setEnemyId] = useState<string>("heavy_gunner");
   const [enemyLevel, setEnemyLevel] = useState(100);
+  const [activeAbilityBuffs, setActiveAbilityBuffs] = useState<string[]>([]);
+
+  const abilityBuffOptions = useMemo(() => {
+    const wfId = loadout.warframeBuild?.warframeId;
+    if (!wfId) return [];
+    const wf = allWarframes.find((w) => w.id === wfId);
+    return weaponDamageBuffAbilities(wf?.abilities);
+  }, [loadout.warframeBuild?.warframeId]);
 
   const enemy = useMemo(
     () => ENEMY_TYPES.find((e) => e.id === enemyId) ?? ENEMY_TYPES[0],
@@ -104,14 +156,17 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
   );
 
   const stats = useMemo((): LoadoutStatsResult => {
-    const simParams = scenarioSimParams(scenario);
+    const simParams = {
+      ...scenarioSimParams(scenario),
+      activeWeaponAbilityBuffs: activeAbilityBuffs,
+    };
     return calcLoadoutStats(loadout, {
       simParams,
       allWeapons,
       enemy: scenario === "vsEnemy" ? enemy : null,
       enemyLevel: scenario === "vsEnemy" ? enemyLevel : undefined,
     });
-  }, [loadout, scenario, enemy, enemyLevel, allWeapons]);
+  }, [loadout, scenario, enemy, enemyLevel, allWeapons, activeAbilityBuffs]);
 
   const best = useMemo(() => bestSustainedDps(stats), [stats]);
   const showTtk = scenario === "vsEnemy";
@@ -174,6 +229,40 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
               onChange={(e) => setEnemyLevel(parseInt(e.target.value, 10) || 1)}
               className="w-full bg-background border border-border rounded-md px-2 py-1 text-xs font-mono"
             />
+          </div>
+        </div>
+      )}
+
+      {abilityBuffOptions.length > 0 && (
+        <div className="px-4 py-2 border-b border-border/40 bg-card/20">
+          <p className="text-[10px] text-muted-foreground mb-1.5">Active weapon buffs (warframe abilities)</p>
+          <div className="flex flex-wrap gap-1.5">
+            {abilityBuffOptions.map((ability) => {
+              const active = activeAbilityBuffs.includes(ability.name);
+              return (
+                <button
+                  key={ability.name}
+                  type="button"
+                  onClick={() =>
+                    setActiveAbilityBuffs((prev) =>
+                      active ? prev.filter((n) => n !== ability.name) : [...prev, ability.name],
+                    )
+                  }
+                  className={cn(
+                    "px-2 py-0.5 text-[10px] rounded-md border transition-colors",
+                    active
+                      ? "border-purple-500/50 bg-purple-500/15 text-purple-200"
+                      : "border-border/60 text-muted-foreground hover:text-foreground",
+                  )}
+                  title={ability.description}
+                >
+                  {ability.name}
+                  {ability.damageBuff != null && (
+                    <span className="opacity-70"> (+{(ability.damageBuff * 100).toFixed(0)}%)</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

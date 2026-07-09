@@ -386,6 +386,24 @@ export default function WeaponBuilderPage() {
     return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
   }, [selectedWeapon, equippedMods, equippedArcanes, incarnonStatChanges, rivenStatChanges, simParams, weaponCalcOptions]);
 
+  const contributionContext = useMemo(() => {
+    if (!selectedWeapon) return null;
+    return {
+      baseWeapon: selectedWeapon,
+      modSlots: equippedMods.map((m) => ({
+        modId: m.modId,
+        rank: m.rank,
+        slotIndex: m.slotIndex,
+      })),
+      allMods: modsMap,
+      arcanes: equippedArcanes.filter((a): a is Mod => a !== null),
+      incarnonStatChanges,
+      simParams,
+      calcOptions: weaponCalcOptions,
+      rivenStatChanges,
+    };
+  }, [selectedWeapon, equippedMods, equippedArcanes, incarnonStatChanges, simParams, weaponCalcOptions, rivenStatChanges, modsMap]);
+
   const baseStats = useMemo<CalculatedStats | null>(() => {
     if (!selectedWeapon) return null;
     return calculateWeaponBuild(selectedWeapon, [], modsMap, undefined, simParams, weaponCalcOptions);
@@ -890,6 +908,7 @@ export default function WeaponBuilderPage() {
                   allEvolutions={incarnonData?.evolutions}
                   simParams={simParams}
                   onSimParamsChange={setSimParams}
+                  contributionContext={contributionContext}
                 />
               </div>
             </div>

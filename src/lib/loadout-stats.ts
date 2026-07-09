@@ -21,6 +21,12 @@ import {
 } from "@/lib/calculator";
 import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/ttk";
+import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/dps-contributions";
+import {
+  mergeWeaponCalcOptions,
+  resolveWeaponExternalBuffs,
+  type WeaponBuffContext,
+} from "@/lib/weapon-external-buffs";
 import type {
   CalculatedStats,
   Companion,
@@ -32,7 +38,6 @@ import type {
   SimulationParams,
   WarframeCalculatedStats,
   Weapon,
-  WeaponCalculationOptions,
 } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 
@@ -72,6 +77,7 @@ export interface LoadoutWeaponSlotStats {
   stats: CalculatedStats;
   ttk?: TTKResult;
   isMelee: boolean;
+  contributions?: DpsContribution[];
 }
 
 export interface LoadoutWarframeStats {
@@ -154,6 +160,7 @@ function calcWeaponSlotStats(
   setLinkage: SetBonusLinkage,
   enemy?: EnemyType | null,
   enemyLevel?: number,
+  buffContext?: WeaponBuffContext,
 ): LoadoutWeaponSlotStats | null {
   if (!build) return null;
   const weaponsMap = getEffectiveWeaponsMap();
@@ -161,12 +168,14 @@ function calcWeaponSlotStats(
   const w = weaponsMap.get(build.weaponId);
   if (!w) return null;
   const base = weaponWithPassive(w);
-  const calcOptions: WeaponCalculationOptions | undefined =
+  const progenitorOpts =
     build.progenitorElement &&
     build.progenitorBonusPercent != null &&
     build.progenitorBonusPercent > 0
       ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
       : undefined;
+  const externalBuffs = resolveWeaponExternalBuffs(base, buffContext, simParams);
+  const calcOptions = mergeWeaponCalcOptions(progenitorOpts, externalBuffs);
   const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions);
   const arcaneMods = resolveSavedArcaneSlots(build.arcaneIds, 2).filter((m): m is Mod => m != null);
   const modSlots = build.mods || [];
@@ -194,7 +203,20 @@ function calcWeaponSlotStats(
   const isMelee = base.category === "melee" || base.triggerType === "Melee";
   const ttk =
     enemy && enemyLevel != null && enemyLevel > 0 ? calculateTTK(stats, enemy, enemyLevel) : undefined;
-  return { name: base.name, stats, ttk, isMelee };
+  const contributionContext = buildWeaponContributionContext({
+    weapon: base,
+    modSlots,
+    allMods: modsMap,
+    arcanes: arcaneMods,
+    incarnonStatChanges: incarnonChanges,
+    simParams,
+    progenitorElement: build.progenitorElement,
+    progenitorBonusPercent: build.progenitorBonusPercent,
+    linkage: setLinkage,
+    buffContext,
+  });
+  const contributions = computeDpsContributions(contributionContext);
+  return { name: base.name, stats, ttk, isMelee, contributions };
 }
 
 function calcModularSlotStats(
@@ -204,6 +226,7 @@ function calcModularSlotStats(
   setLinkage: SetBonusLinkage,
   enemy?: EnemyType | null,
   enemyLevel?: number,
+  buffContext?: WeaponBuffContext,
 ): LoadoutWeaponSlotStats | null {
   if (loadout.modularBuild?.slot !== slot) return null;
   const modsMap = getEffectiveModsMap();
@@ -213,14 +236,26 @@ function calcModularSlotStats(
   w = weaponWithPassive(w);
   const modSlots = data.mods || [];
   const arcaneMods = resolveSavedArcaneSlots(data.arcaneIds, 2).filter((m): m is Mod => m != null);
+  const externalBuffs = resolveWeaponExternalBuffs(w, buffContext, simParams);
+  const calcOptions = mergeWeaponCalcOptions(undefined, externalBuffs);
   const stats =
     arcaneMods.length > 0
-      ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods, undefined, simParams, undefined, setLinkage)
-      : calculateWeaponBuild(w, modSlots, modsMap, undefined, simParams, undefined, setLinkage);
+      ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods, undefined, simParams, calcOptions, setLinkage)
+      : calculateWeaponBuild(w, modSlots, modsMap, undefined, simParams, calcOptions, setLinkage);
   const isMelee = w.category === "melee" || w.triggerType === "Melee";
   const ttk =
     enemy && enemyLevel != null && enemyLevel > 0 ? calculateTTK(stats, enemy, enemyLevel) : undefined;
-  return { name: w.name, stats, ttk, isMelee };
+  const contributionContext = buildWeaponContributionContext({
+    weapon: w,
+    modSlots,
+    allMods: modsMap,
+    arcanes: arcaneMods,
+    simParams,
+    linkage: setLinkage,
+    buffContext,
+  });
+  const contributions = computeDpsContributions(contributionContext);
+  return { name: w.name, stats, ttk, isMelee, contributions };
 }
 
 export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOptions = {}): LoadoutStatsResult {
@@ -241,6 +276,8 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
     exalted: null,
     companion: null,
   };
+
+  let buffContext: WeaponBuffContext | undefined;
 
   if (loadout.warframeBuild) {
     const wf = warframesMap.get(loadout.warframeBuild.warframeId);
@@ -289,6 +326,12 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         result.warframe = { name: wf.name, stats };
       }
 
+      buffContext = {
+        warframeId: loadout.warframeBuild.warframeId,
+        warframeStats: result.warframe!.stats,
+        warframeAbilities: wf.abilities,
+      };
+
       const exaltedWeapon = getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList);
       if (exaltedWeapon && ((loadout.warframeBuild.exaltedMods?.length ?? 0) > 0 || (loadout.warframeBuild.exaltedArcaneIds?.some(Boolean)))) {
         const base = weaponWithPassive(exaltedWeapon);
@@ -296,6 +339,8 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
           (m): m is Mod => m != null,
         );
         const modSlots = loadout.warframeBuild.exaltedMods || [];
+        const externalBuffs = resolveWeaponExternalBuffs(base, buffContext, simParams);
+        const calcOptions = mergeWeaponCalcOptions(undefined, externalBuffs);
         const statsEx =
           exaltedArcanes.length > 0
             ? calculateWeaponBuildWithArcanes(
@@ -305,7 +350,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
                 exaltedArcanes,
                 undefined,
                 simParams,
-                undefined,
+                calcOptions,
                 setLinkage,
               )
             : calculateWeaponBuild(
@@ -314,26 +359,36 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
                 modsMap,
                 undefined,
                 simParams,
-                undefined,
+                calcOptions,
                 setLinkage,
               );
         const isMelee = base.category === "melee" || base.triggerType === "Melee";
         const ttk =
           enemy && enemyLevel > 0 ? calculateTTK(statsEx, enemy, enemyLevel) : undefined;
-        result.exalted = { name: base.name, stats: statsEx, ttk, isMelee };
+        const contributionContext = buildWeaponContributionContext({
+          weapon: base,
+          modSlots,
+          allMods: modsMap,
+          arcanes: exaltedArcanes,
+          simParams,
+          linkage: setLinkage,
+          buffContext,
+        });
+        const contributions = computeDpsContributions(contributionContext);
+        result.exalted = { name: base.name, stats: statsEx, ttk, isMelee, contributions };
       }
     }
   }
 
   result.primary =
-    calcModularSlotStats(loadout, "primary", simParams, setLinkage, enemy, enemyLevel) ??
-    calcWeaponSlotStats(loadout.primaryBuild, simParams, setLinkage, enemy, enemyLevel);
+    calcModularSlotStats(loadout, "primary", simParams, setLinkage, enemy, enemyLevel, buffContext) ??
+    calcWeaponSlotStats(loadout.primaryBuild, simParams, setLinkage, enemy, enemyLevel, buffContext);
   result.secondary =
-    calcModularSlotStats(loadout, "secondary", simParams, setLinkage, enemy, enemyLevel) ??
-    calcWeaponSlotStats(loadout.secondaryBuild, simParams, setLinkage, enemy, enemyLevel);
+    calcModularSlotStats(loadout, "secondary", simParams, setLinkage, enemy, enemyLevel, buffContext) ??
+    calcWeaponSlotStats(loadout.secondaryBuild, simParams, setLinkage, enemy, enemyLevel, buffContext);
   result.melee =
-    calcModularSlotStats(loadout, "melee", simParams, setLinkage, enemy, enemyLevel) ??
-    calcWeaponSlotStats(loadout.meleeBuild, simParams, setLinkage, enemy, enemyLevel);
+    calcModularSlotStats(loadout, "melee", simParams, setLinkage, enemy, enemyLevel, buffContext) ??
+    calcWeaponSlotStats(loadout.meleeBuild, simParams, setLinkage, enemy, enemyLevel, buffContext);
 
   if (loadout.companionBuild) {
     const c = companionsMap.get(loadout.companionBuild.companionId);
