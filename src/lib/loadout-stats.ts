@@ -290,17 +290,33 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
       }
 
       const exaltedWeapon = getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList);
-      if (exaltedWeapon && (loadout.warframeBuild.exaltedMods?.length ?? 0) > 0) {
+      if (exaltedWeapon && ((loadout.warframeBuild.exaltedMods?.length ?? 0) > 0 || (loadout.warframeBuild.exaltedArcaneIds?.some(Boolean)))) {
         const base = weaponWithPassive(exaltedWeapon);
-        const statsEx = calculateWeaponBuild(
-          base,
-          loadout.warframeBuild.exaltedMods || [],
-          modsMap,
-          undefined,
-          simParams,
-          undefined,
-          setLinkage,
+        const exaltedArcanes = resolveSavedArcaneSlots(loadout.warframeBuild.exaltedArcaneIds, 2).filter(
+          (m): m is Mod => m != null,
         );
+        const modSlots = loadout.warframeBuild.exaltedMods || [];
+        const statsEx =
+          exaltedArcanes.length > 0
+            ? calculateWeaponBuildWithArcanes(
+                base,
+                modSlots,
+                modsMap,
+                exaltedArcanes,
+                undefined,
+                simParams,
+                undefined,
+                setLinkage,
+              )
+            : calculateWeaponBuild(
+                base,
+                modSlots,
+                modsMap,
+                undefined,
+                simParams,
+                undefined,
+                setLinkage,
+              );
         const isMelee = base.category === "melee" || base.triggerType === "Melee";
         const ttk =
           enemy && enemyLevel > 0 ? calculateTTK(statsEx, enemy, enemyLevel) : undefined;

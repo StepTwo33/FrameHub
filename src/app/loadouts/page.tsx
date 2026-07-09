@@ -237,6 +237,7 @@ function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warf
     slotPolarities: d.slotPolarities ?? {},
     exaltedMods: d.exaltedMods ?? [],
     exaltedSlotPolarities: d.exaltedSlotPolarities ?? {},
+    exaltedArcaneIds: d.exaltedArcaneIds ?? [null, null],
     dualFormBuilds: d.dualFormBuilds,
   };
 }

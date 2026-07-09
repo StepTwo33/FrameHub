@@ -105,20 +105,23 @@ function resolveExaltedPreview(
   allWeapons: Weapon[],
 ): PublicBuildWeaponPreview | null {
   const exaltedMods = data.exaltedMods ?? [];
-  if (exaltedMods.length === 0) return null;
+  const exaltedArcanes = resolveSavedArcaneSlots(data.exaltedArcaneIds, 2).filter((m): m is Mod => m != null);
+  if (exaltedMods.length === 0 && exaltedArcanes.length === 0) return null;
   const exaltedWeapon = getPrimaryExaltedWeapon(data.warframeId, allWeapons);
   if (!exaltedWeapon) return null;
-  const entry = calcSavedWeaponBuildStats({
-    weaponId: exaltedWeapon.id,
-    mods: exaltedMods,
-  });
-  if (!entry) return null;
+  const modsMap = getEffectiveModsMap();
+  const base = enrichWeapon(exaltedWeapon);
+  const stats =
+    exaltedArcanes.length > 0
+      ? calculateWeaponBuildWithArcanes(base, exaltedMods, modsMap, exaltedArcanes, undefined, scenarioSimParams("midFight"))
+      : calculateWeaponBuild(base, exaltedMods, modsMap, undefined, scenarioSimParams("midFight"));
+  const isMelee = base.category === "melee" || base.triggerType === "Melee";
   return {
-    label: `Exalted — ${entry.name}`,
-    weapon: enrichWeapon(exaltedWeapon),
-    stats: entry.stats,
+    label: `Exalted — ${base.name}`,
+    weapon: base,
+    stats,
     baseStats: baseWeaponStats(exaltedWeapon),
-    isMelee: entry.isMelee,
+    isMelee,
   };
 }
 

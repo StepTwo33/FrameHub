@@ -14,7 +14,7 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
 import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
-import { calculateWarframeBuild, calculateWeaponBuild, applyWarframeShardsAndArcanes } from "@/lib/calculator";
+import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, Zap, Flag, RefreshCw, Gem, Sparkles, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";
-import { ArcaneSlotCard } from "@/components/arcane-picker";
+import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
-import { DualFormTabs } from "@/components/dual-form-tabs";
+import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
   getDualFormConfig,
@@ -309,6 +309,9 @@ export default function WarframeBuilderPage() {
   const [exaltedModPickerOpen, setExaltedModPickerOpen] = useState(false);
   const [exaltedActiveSlot, setExaltedActiveSlot] = useState(0);
   const [exaltedSlotPolarities, setExaltedSlotPolarities] = useState<Record<number, string>>({});
+  const [exaltedArcanes, setExaltedArcanes] = useState<(Mod | null)[]>([null]);
+  const [exaltedArcanePickerOpen, setExaltedArcanePickerOpen] = useState(false);
+  const [exaltedActiveArcaneSlot, setExaltedActiveArcaneSlot] = useState(0);
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const [activeDualFormId, setActiveDualFormId] = useState("sirius");
   const [dualFormBuilds, setDualFormBuilds] = useState<Record<string, DualFormBuildSlice>>({});
@@ -440,8 +443,9 @@ export default function WarframeBuilderPage() {
       helminthAbilityId: helminthAbility?.id ?? null,
       exaltedMods: exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       exaltedSlotPolarities,
+      exaltedArcaneIds: exaltedArcanes.map((a) => a?.id ?? null),
     };
-  }, [selectedWarframe, buildWarframePayload, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities]);
+  }, [selectedWarframe, buildWarframePayload, hasOrokinReactor, isMR30, helminthSlot, helminthAbility, exaltedMods, exaltedSlotPolarities, exaltedArcanes]);
 
   const applyLoadedBuild = useCallback((build: SavedBuild, options?: { silent?: boolean }) => {
     const d = build.data as WarframeBuildData;
@@ -478,6 +482,7 @@ export default function WarframeBuilderPage() {
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
     setExaltedSlotPolarities(d.exaltedSlotPolarities || {});
+    setExaltedArcanes(resolveSavedArcaneSlots(d.exaltedArcaneIds, 2));
     if (d.helminthSlot != null) {
       setHelminthSlot(d.helminthSlot);
       if (d.helminthAbilityId) {
@@ -571,11 +576,22 @@ export default function WarframeBuilderPage() {
     return getPrimaryExaltedWeapon(selectedWarframe.id, allWeaponsData);
   }, [selectedWarframe, allWeaponsData]);
 
+  const exaltedArcaneConfig = useMemo(
+    () => (exaltedWeapon ? getWeaponArcanes(exaltedWeapon) : { arcanes: [] as Mod[], slots: 0, label: "" }),
+    [exaltedWeapon],
+  );
+
   const exaltedStats = useMemo<CalculatedStats | null>(() => {
     if (!exaltedWeapon) return null;
     const slots = exaltedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex }));
+    const activeArcanes = exaltedArcanes
+      .slice(0, exaltedArcaneConfig.slots)
+      .filter((a): a is Mod => a !== null);
+    if (activeArcanes.length > 0) {
+      return calculateWeaponBuildWithArcanes(exaltedWeapon, slots, modsMap, activeArcanes);
+    }
     return calculateWeaponBuild(exaltedWeapon, slots, modsMap);
-  }, [exaltedWeapon, exaltedMods]);
+  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap]);
 
   const exaltedBaseStats = useMemo<CalculatedStats | null>(() => {
     if (!exaltedWeapon) return null;
@@ -674,6 +690,7 @@ export default function WarframeBuilderPage() {
     setEquippedArcaneRanks([5, 5]);
     setExaltedMods([]);
     setExaltedSlotPolarities({});
+    setExaltedArcanes([null]);
     setHelminthSlot(null);
     setHelminthAbility(null);
     setSlotPolarities({});
@@ -1234,6 +1251,40 @@ export default function WarframeBuilderPage() {
                       })}
                     </div>
 
+                    {exaltedArcaneConfig.slots > 0 && (
+                      <div className="mt-4 border-t border-violet-500/15 pt-4">
+                        <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {exaltedArcaneConfig.label}
+                        </h3>
+                        <div
+                          className={cn(
+                            "grid gap-2",
+                            exaltedArcaneConfig.slots === 2 ? "grid-cols-2" : "grid-cols-1",
+                          )}
+                        >
+                          {Array.from({ length: exaltedArcaneConfig.slots }).map((_, i) => (
+                            <ArcaneSlotCard
+                              key={`exalted-arcane-${i}`}
+                              arcane={exaltedArcanes[i] ?? null}
+                              rank={exaltedArcanes[i]?.maxRank ?? 0}
+                              label={`${exaltedArcaneConfig.label}${exaltedArcaneConfig.slots > 1 ? ` ${i + 1}` : ""}`}
+                              onAdd={() => {
+                                setExaltedActiveArcaneSlot(i);
+                                setExaltedArcanePickerOpen(true);
+                              }}
+                              onRemove={() =>
+                                setExaltedArcanes((prev) => {
+                                  const next = [...prev];
+                                  next[i] = null;
+                                  return next;
+                                })
+                              }
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {exaltedStats && (
                       <div className="mt-4 border-t border-violet-500/15 pt-4 [&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-violet-300/80">
                         <WeaponStatsPanel
@@ -1419,6 +1470,25 @@ export default function WarframeBuilderPage() {
               return [...filtered, { modId: mod.id, modName: mod.name, rank, slotIndex: exaltedActiveSlot, polarity: mod.polarity, drain: mod.drain }];
             });
           }}
+        />
+      )}
+
+      {exaltedWeapon && exaltedArcaneConfig.slots > 0 && (
+        <ArcanePicker
+          open={exaltedArcanePickerOpen}
+          onOpenChange={setExaltedArcanePickerOpen}
+          arcanes={exaltedArcaneConfig.arcanes}
+          equippedArcaneIds={exaltedArcanes.filter(Boolean).map((a) => a!.id)}
+          onSelect={(arcane) => {
+            setExaltedArcanes((prev) => {
+              const next = [...prev];
+              while (next.length < exaltedArcaneConfig.slots) next.push(null);
+              next[exaltedActiveArcaneSlot] = arcane;
+              return next;
+            });
+            setExaltedArcanePickerOpen(false);
+          }}
+          title={`Select ${exaltedArcaneConfig.label}`}
         />
       )}
 

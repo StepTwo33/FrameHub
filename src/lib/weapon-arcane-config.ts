@@ -19,6 +19,15 @@ export function getWeaponArcanes(weapon: Weapon): { arcanes: Mod[]; slots: numbe
     return { arcanes: ampArcanes, slots: 2, label: "Amp Arcane" };
   }
   if (cat === "archgun") return { arcanes: primaryArcanes, slots: 2, label: "Archgun Arcane" };
+  if (weapon.isExalted) {
+    if (weapon.triggerType === "Melee" || cat === "melee" || cat === "archmelee") {
+      return { arcanes: meleeArcanes, slots: 1, label: "Melee Arcane" };
+    }
+    if (["pistol", "secondary", "dual_pistols"].includes(cat)) {
+      return { arcanes: secondaryArcanes, slots: 1, label: "Secondary Arcane" };
+    }
+    return { arcanes: primaryArcanes, slots: 1, label: "Primary Arcane" };
+  }
   if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(cat)) {
     return { arcanes: primaryArcanes, slots: 1, label: "Primary Arcane" };
   }
