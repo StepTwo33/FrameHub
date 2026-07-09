@@ -3,14 +3,15 @@ import {
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calculator";
 import { getModStatDisplayLines } from "@/lib/mod-display";
-import type {
-  CalculatedStats,
-  Mod,
-  ModSlot,
-  SetBonusLinkage,
-  SimulationParams,
-  Weapon,
-  WeaponCalculationOptions,
+import {
+  DEFAULT_SIM_PARAMS,
+  type CalculatedStats,
+  type Mod,
+  type ModSlot,
+  type SetBonusLinkage,
+  type SimulationParams,
+  type Weapon,
+  type WeaponCalculationOptions,
 } from "@/lib/types";
 import { mergeWeaponCalcOptions, resolveWeaponExternalBuffs, type WeaponBuffContext } from "@/lib/weapon-external-buffs";
 
