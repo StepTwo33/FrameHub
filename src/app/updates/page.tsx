@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Megaphone } from "lucide-react";
 import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
 import { fetchPublishedSiteUpdates } from "@/lib/site-updates-server";
 import { formatSiteUpdateTime } from "@/lib/site-updates";
@@ -19,7 +18,7 @@ export default async function UpdatesPage() {
           title="What's"
           highlight="New"
           description="Updates and announcements from the Frame Hub team."
-          icon={Megaphone}
+          iconName="megaphone"
           accent="amber"
         />
 

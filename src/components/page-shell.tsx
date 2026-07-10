@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Header } from "@/components/header";
+import { resolvePageIcon, type PageIconName } from "@/lib/page-icons";
 import { cn } from "@/lib/utils";
 
 const MAX_WIDTH = {
@@ -198,7 +199,8 @@ export function PageHero({
   title,
   highlight,
   description,
-  icon: Icon,
+  icon,
+  iconName,
   accent = "primary",
   actions,
   centered = false,
@@ -207,12 +209,16 @@ export function PageHero({
   title: string;
   highlight?: string;
   description?: string;
+  /** Client-only pages: pass the Lucide component directly. */
   icon?: LucideIcon;
+  /** Server pages: pass a serializable icon key instead of `icon`. */
+  iconName?: PageIconName;
   accent?: AccentColor;
   actions?: React.ReactNode;
   centered?: boolean;
   className?: string;
 }) {
+  const Icon = resolvePageIcon(icon, iconName);
   const colors = ACCENT[accent];
   return (
     <div
@@ -269,7 +275,8 @@ export function FeatureCard({
   external,
   title,
   description,
-  icon: Icon,
+  icon,
+  iconName,
   accent,
   badges,
   subtitle,
@@ -278,11 +285,16 @@ export function FeatureCard({
   external?: boolean;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  iconName?: PageIconName;
   accent: AccentColor;
   badges?: string[];
   subtitle?: string;
 }) {
+  const Icon = resolvePageIcon(icon, iconName);
+  if (!Icon) {
+    throw new Error("FeatureCard requires icon or iconName");
+  }
   const colors = ACCENT[accent];
   const inner = (
     <div
@@ -456,18 +468,24 @@ export function CalloutBanner({
 
 /** Empty state block for lists and search results. */
 export function EmptyState({
-  icon: Icon,
+  icon,
+  iconName,
   title,
   description,
   children,
   className,
 }: {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  iconName?: PageIconName;
   title: string;
   description?: string;
   children?: React.ReactNode;
   className?: string;
 }) {
+  const Icon = resolvePageIcon(icon, iconName);
+  if (!Icon) {
+    throw new Error("EmptyState requires icon or iconName");
+  }
   return (
     <div
       className={cn(
