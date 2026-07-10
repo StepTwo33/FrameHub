@@ -22,6 +22,7 @@ import { buildOpenUrl } from "@/lib/build-url";
 import type { PublicBuildSummary } from "@/lib/build-types";
 import { resolveBuildItemDisplay } from "@/lib/build-item-display";
 import { AvatarImage, GameAssetImage } from "@/components/game-asset-image";
+import { tagLabel } from "@/lib/build-tags";
 
 interface BuildVoteButtonProps {
   buildId: string;
@@ -204,6 +205,18 @@ export function PublicBuildRow({
           <div className="font-medium truncate group-hover:text-primary transition-colors">{build.name}</div>
           {!compact && build.description && (
             <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{build.description}</p>
+          )}
+          {!compact && (build.tags?.length ?? 0) > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {build.tags!.slice(0, 4).map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full border border-border/60 bg-muted/30 px-1.5 py-0 text-[9px] text-muted-foreground"
+                >
+                  {tagLabel(t)}
+                </span>
+              ))}
+            </div>
           )}
           <div className="text-[10px] text-muted-foreground mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
             {build.author.image && (

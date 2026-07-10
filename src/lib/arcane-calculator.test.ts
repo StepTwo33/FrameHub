@@ -38,7 +38,8 @@ describe("proc uptime", () => {
     const def = getArcaneEffectDef("virtuos_tempo")!;
     const uptime = getArcaneProcUptime(def, 3, 6, braton.fireRate);
     expect(uptime).toBeGreaterThan(0.2);
-    expect(uptime).toBeLessThan(1);
+    // At high fire rate / stacks, modeled uptime can saturate at 1.0
+    expect(uptime).toBeLessThanOrEqual(1);
   });
 
   it("onHit arcanes apply full uptime when sim active", () => {
@@ -88,7 +89,8 @@ describe("arcane DPS integration", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 6 },
     );
     expect(withTempo.fireRate).toBeGreaterThan(base.fireRate);
-    expect(withTempo.fireRate).toBeLessThan(base.fireRate * 1.6);
+    // Full +60% when uptime saturates; partial uptime stays at or below that cap
+    expect(withTempo.fireRate).toBeLessThanOrEqual(base.fireRate * 1.6 + 1e-9);
   });
 });
 

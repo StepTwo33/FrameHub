@@ -294,7 +294,7 @@ export default function LoadoutsPage() {
   }, []);
 
   const handleSaveLoadoutConfirm = useCallback(
-    async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+    async ({ name, description, isPublic, tags }: SaveBuildDialogValues) => {
       if (!saveDialogLoadoutId) return;
       const loadout = loadouts.find((l) => l.id === saveDialogLoadoutId);
       if (!loadout) return;
@@ -304,6 +304,7 @@ export default function LoadoutsPage() {
         name,
         description,
         isPublic,
+        tags,
         type: "loadout",
         createdAt: loadout.createdAt,
         updatedAt: Date.now(),

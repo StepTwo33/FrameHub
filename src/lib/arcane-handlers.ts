@@ -155,7 +155,8 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
 
     case "primary_overcharge": {
       const ms = scaledLine(def, findEffect(def, "multishot"), rank, stacks);
-      stats.multishot += ms / 100;
+      const baseMs = ctx.baseWeapon?.multishot ?? 1;
+      stats.multishot += baseMs * (ms / 100);
       trackBonus(stats, "multishot", ms);
       return true;
     }

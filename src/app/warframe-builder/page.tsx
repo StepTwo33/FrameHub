@@ -504,7 +504,7 @@ export default function WarframeBuilderPage() {
     }
   }, [modSlotsToEquipped]);
 
-  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic, tags }: SaveBuildDialogValues) => {
     const data = buildWarframeData();
     if (!data || !selectedWarframe) return;
     const build: SavedBuild = {
@@ -512,6 +512,7 @@ export default function WarframeBuilderPage() {
       name,
       description,
       isPublic,
+      tags,
       type: "warframe",
       createdAt: Date.now(),
       updatedAt: Date.now(),

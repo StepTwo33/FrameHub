@@ -343,9 +343,9 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "weapon",
     "stats": {
+      // Max rank: +155% damage (14.0909×11), +55% slide speed (5×11). No sprint bonus.
       "damage": 14.0909,
-      "slideSpeed": 5,
-      "sprintSpeed": 2.272727
+      "slideSpeed": 5
     },
     "description": "+11% Damage, +5% Slide Speed per rank",
     "rarity": "rare"
@@ -7688,8 +7688,8 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "punchThrough": 0.1,
-      "damage": 15.0
+      "statusDamage": 15,
+      "punchThrough": 0.1
     },
     "description": "+90% Status Damage, +0.6 Punch Through",
     "rarity": "uncommon"
@@ -9183,8 +9183,8 @@ const RAW_MODS: Mod[] = [
     "category": "secondary",
     "subCategory": "",
     "stats": {
-      "reloadSpeed": 10,
-      "damage": 15.0
+      "statusDamage": 15,
+      "reloadSpeed": 10
     },
     "description": "+90% Status Damage, +60% Reload Speed",
     "rarity": "uncommon"
@@ -10544,8 +10544,8 @@ const RAW_MODS: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
+      "statusDamage": 7.272727,
       "statusChance": 2.7273,
-      "damage": 7.272727,
       "duration": 1.818182
     },
     "description": "+80% Status Damage\\nOn Melee Kill:\\n+30% Status Chance for 20s. Stacks up to 4x.",
@@ -10808,8 +10808,8 @@ const RAW_MODS: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
+      "statusDamage": 15,
       "heavyAttackSpeed": 10,
-      "damage": 15.0,
       "heavyAttackEfficiency": 10.0
     },
     "description": "+90% Status Damage, +60% Heavy Attack Wind Up Speed",
@@ -20962,8 +20962,8 @@ const RAW_MODS: Mod[] = [
     "category": "general",
     "subCategory": "",
     "stats": {
-      "magazine": 10,
-      "damage": 15.0
+      "statusDamage": 15,
+      "magazine": 10
     },
     "description": "+90% Status Damage, +60% Magazine Capacity",
     "rarity": "uncommon"

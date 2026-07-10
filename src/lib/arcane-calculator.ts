@@ -107,7 +107,8 @@ function applyWeaponStatToBuild(
       break;
     case "multishot":
     case "ampMultishot":
-      stats.multishot += scaled;
+      // Multishot mods/arcanes are % of base pellets, not flat pellet adds.
+      stats.multishot += (baseWeapon?.multishot ?? 1) * scaled;
       break;
     case "statusChance":
     case "ampStatusChance":

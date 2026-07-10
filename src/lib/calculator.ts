@@ -31,9 +31,16 @@ import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
 import {
   applyVerifiedModStatToWarframe,
   applyVerifiedModStatToWeapon,
+  sumSlideSpeedBonusFromModSlots,
   type WarframeModAccumulators,
   type WeaponModAccumulators,
 } from '@/lib/mod-behavior-registry';
+import {
+  combatDamageMultiplier,
+  factionBonusFromStats,
+  factionDotMultiplier,
+  resolveStanceDamageMultiplier,
+} from '@/lib/combat-multipliers';
 
 /** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
 export function getWarframeEnergyModBase(warframe: Warframe): number {
@@ -102,7 +109,7 @@ const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: strin
   heat:        { duration: 6, ticks: 7, desc: 'Ignite (50% base damage/tick, panic)' },
   cold:        { duration: 6, ticks: 1, desc: '-50% movement/fire rate' },
   toxin:       { duration: 6, ticks: 7, desc: 'Poison (bypasses shields)' },
-  electricity: { duration: 6, ticks: 1, desc: 'Chain stun to nearby enemies' },
+  electricity: { duration: 6, ticks: 7, desc: 'Chain DoT (50% base/tick) + stun' },
   blast:       { duration: 6, ticks: 1, desc: 'Detonate: 30% base dmg/stack after 1.5s, AoE at 10 stacks' },
   corrosive:   { duration: 8, ticks: 1, desc: '-26% armor per stack (max 10)' },
   gas:         { duration: 6, ticks: 7, desc: 'Toxin AoE cloud' },
@@ -111,7 +118,48 @@ const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: strin
   viral:       { duration: 6, ticks: 1, desc: '+100% health damage per stack (max 10)' },
 };
 
-function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): StatusProc[] {
+/** Damage types that deal DoT; tick fraction of modded base (before type-specific bonuses). */
+const DOT_TICK_FRACTION: Record<string, number> = {
+  slash: 0.35,
+  heat: 0.5,
+  toxin: 0.5,
+  electricity: 0.5,
+  gas: 0.5,
+};
+
+/**
+ * DoT tick base per proc: modded base damage (Serration-style only) × avg crit.
+ * Multishot is NOT included here — each pellet procs independently and
+ * statusChancePerShot / procs-per-second already accounts for extra pellets.
+ * Type-specific elemental bonuses (Heat/Toxin/Elec/Gas mods) multiply after.
+ * Wiki: DoT ignores elemental/physical type composition bonuses on the base.
+ */
+function statusDotTickBase(stats: CalculatedStats, moddedBaseDamage: number, sim?: SimulationParams): number {
+  const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+  const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
+  const factionBonus = factionBonusFromStats(stats.factionBonuses, sim?.targetFaction);
+  const factionDot = factionDotMultiplier(factionBonus);
+  // Headshot multi applies to the proccing hit (and thus DoT) when enabled
+  const head =
+    sim?.applyHeadshots
+      ? 2 * (1 + (stats.headshotDamageBonus ?? 0))
+      : 1;
+  return moddedBaseDamage * avgCrit * statusDmg * factionDot * head;
+}
+
+/** Elemental type bonus fraction from that type's share of modded base (e.g. +90% Heat → 0.9). */
+function elementalTypeBonus(stats: CalculatedStats, type: string, moddedBaseDamage: number): number {
+  if (moddedBaseDamage <= 0) return 0;
+  const el = stats.elements.find((e) => e.type === type);
+  if (!el || el.value <= 0) return 0;
+  return el.value / moddedBaseDamage;
+}
+
+function calculateStatusProcs(
+  stats: CalculatedStats,
+  moddedBaseDamage: number,
+  sim?: SimulationParams,
+): StatusProc[] {
   const allDamageTypes: { type: string; value: number }[] = [];
   if (stats.impact > 0) allDamageTypes.push({ type: 'impact', value: stats.impact });
   if (stats.puncture > 0) allDamageTypes.push({ type: 'puncture', value: stats.puncture });
@@ -123,14 +171,19 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
   const totalDmg = allDamageTypes.reduce((sum, d) => sum + d.value, 0);
   if (totalDmg === 0) return [];
 
+  const dotBase = statusDotTickBase(stats, moddedBaseDamage, sim);
+
   return allDamageTypes.map(d => {
     const info = STATUS_INFO[d.type] || { duration: 6, ticks: 1, desc: 'Unknown' };
     const weight = d.value / totalDmg;
     const chance = stats.statusChance * weight;
-    // DoT procs: slash = 35% base/tick, heat = 50% base/tick, toxin = 50% base/tick, gas = 50% base/tick
+    const frac = DOT_TICK_FRACTION[d.type];
     let dpt = 0;
-    if (['slash'].includes(d.type)) dpt = baseDamage * 0.35;
-    else if (['heat', 'toxin', 'gas'].includes(d.type)) dpt = baseDamage * 0.50;
+    if (frac != null) {
+      // Slash has no type-damage bonus mult; Heat/Toxin/Elec/Gas use (1 + type%).
+      const typeMult = d.type === 'slash' ? 1 : 1 + elementalTypeBonus(stats, d.type, moddedBaseDamage);
+      dpt = frac * dotBase * typeMult;
+    }
     return {
       type: d.type,
       chance,
@@ -141,6 +194,26 @@ function calculateStatusProcs(stats: CalculatedStats, baseDamage: number): Statu
       description: info.desc,
     };
   });
+}
+
+// ── Damage quantization (1/32 of modded base) ───────────────────────────
+/** Round each damage type to the nearest multiple of scale (moddedBase / 32). */
+export function quantizeDamageValue(value: number, scale: number): number {
+  if (scale <= 0 || !Number.isFinite(value)) return value;
+  return Math.round(value / scale) * scale;
+}
+
+function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): void {
+  const scale = moddedBaseDamage / 32;
+  if (scale <= 0) return;
+  stats.impact = quantizeDamageValue(stats.impact, scale);
+  stats.puncture = quantizeDamageValue(stats.puncture, scale);
+  stats.slash = quantizeDamageValue(stats.slash, scale);
+  for (const e of stats.elements) e.value = quantizeDamageValue(e.value, scale);
+  for (const e of stats.rawElements) e.value = quantizeDamageValue(e.value, scale);
+  const physicalDmg = stats.impact + stats.puncture + stats.slash;
+  const elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
+  stats.totalDamage = physicalDmg + elementalDmg;
 }
 
 // ── Set Bonus Detection ─────────────────────────────────────────────────
@@ -251,6 +324,7 @@ export function calculateWeaponBuild(
     galvanizedDamagePerStatus: 0,
     berserkerFuryBonus: 0,
     weepingWoundsBonus: 0,
+    slideSpeedBonus: 0,
   };
 
   // Collect elemental mods in order and other stat bonuses
@@ -303,6 +377,9 @@ export function calculateWeaponBuild(
     impactBonus: 0,
     punctureBonus: 0,
     slashBonus: 0,
+    statusDamageBonus: 0,
+    headshotDamageBonus: 0,
+    factionBonuses: {},
     hasBloodRush: false,
     bloodRushValue: 0,
     hasConditionOverload: false,
@@ -368,6 +445,9 @@ export function calculateWeaponBuild(
   berserkerFuryPerStack = weaponModAcc.berserkerFuryPerStack;
   galvMultishotOnKillPerStack = weaponModAcc.galvMultishotOnKillPerStack;
   galvDamagePerStatusPerStack = weaponModAcc.galvDamagePerStatusPerStack;
+  stats.statusDamageBonus = weaponModAcc.statusDamageBonus;
+  stats.headshotDamageBonus = weaponModAcc.headshotDamageBonus;
+  stats.factionBonuses = { ...weaponModAcc.factionBonuses };
 
   // Apply Condition Overload: multiplicative damage per status type on target
   if (hasConditionOverload && sim.statusTypesOnTarget > 0) {
@@ -411,7 +491,8 @@ export function calculateWeaponBuild(
     stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
   }
   stats.fireRate *= (1 + fireRateBonus);
-  stats.multishot += multishotBonus;
+  // Multishot is a % of base pellets: total = base × (1 + multishot mods).
+  stats.multishot = baseWeapon.multishot * (1 + multishotBonus);
   stats.statusChance *= (1 + statusBonus);
   stats.magazine = Math.round(stats.magazine * (1 + magBonus));
 
@@ -470,6 +551,9 @@ export function calculateWeaponBuild(
   const elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
   stats.totalDamage = physicalDmg + elementalDmg;
 
+  // Track full damage mult for DoT base / quantization scale (Serration + damage rivens/incarnon).
+  let damageMultTotal = dmgMult;
+
   // Apply Incarnon evolution / riven stat changes.
   // relativeCritStatus: riven crit/status/critMult bonuses are relative fractions on
   // the base stat (they join the mod bonus pool); apply them multiplicatively like
@@ -478,7 +562,17 @@ export function calculateWeaponBuild(
   const applyStatChanges = (changes: Record<string, number>, relativeCritStatus: boolean) => {
     for (const [stat, value] of Object.entries(changes)) {
       switch (stat) {
-        case 'damage': stats.totalDamage *= (1 + value); stats.impact *= (1 + value); stats.puncture *= (1 + value); stats.slash *= (1 + value); break;
+        case 'damage': {
+          const dm = 1 + value;
+          damageMultTotal *= dm;
+          stats.totalDamage *= dm;
+          stats.impact *= dm;
+          stats.puncture *= dm;
+          stats.slash *= dm;
+          for (const e of stats.elements) e.value *= dm;
+          for (const e of stats.rawElements) e.value *= dm;
+          break;
+        }
         case 'criticalChance':
           if (relativeCritStatus) stats.criticalChance *= (1 + value);
           else stats.criticalChance += value;
@@ -492,11 +586,15 @@ export function calculateWeaponBuild(
           else stats.statusChance += value;
           break;
         case 'fireRate': stats.fireRate *= (1 + value); break;
-        case 'multishot': stats.multishot += value; break;
+        case 'multishot':
+          // Riven multishot is % of base pellets; incarnon may pass flat pellet adds.
+          if (relativeCritStatus) stats.multishot += baseWeapon.multishot * value;
+          else stats.multishot += value;
+          break;
         case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
         case 'reloadSpeed': stats.reloadTime /= (1 + value); break;
         case 'heat': case 'cold': case 'toxin': case 'electricity':
-          elementalMods.push({ type: stat, value: baseWeapon.damage * dmgMult * value });
+          elementalMods.push({ type: stat, value: baseWeapon.damage * damageMultTotal * value });
           // Re-resolve elements with new additions
           stats.rawElements = elementalMods.map(e => ({ ...e }));
           stats.elements = resolveElementalCombos(elementalMods);
@@ -543,6 +641,11 @@ export function calculateWeaponBuild(
     stats.totalDamage = physTek + eleTek;
   }
 
+  // Quantize IPS + elements to nearest 1/32 of modded base damage (game network precision).
+  const moddedBaseDamage = baseWeapon.damage * damageMultTotal;
+  stats.moddedBaseDamage = moddedBaseDamage;
+  quantizeStatsDamage(stats, moddedBaseDamage);
+
   // Melee-specific: combo system, heavy attacks, blood rush, weeping wounds, gladiator set
   if (isMelee) {
     stats.preComboCriticalChance = stats.criticalChance;
@@ -561,7 +664,14 @@ export function calculateWeaponBuild(
       equippedMods,
       allMods,
     );
-    applyMeleeComboToStats(stats, effectiveCombo, baseWeapon.id, comboContext);
+    applyMeleeComboToStats(
+      stats,
+      effectiveCombo,
+      baseWeapon.id,
+      comboContext,
+      baseWeapon.criticalChance,
+      baseWeapon.statusChance,
+    );
   }
 
   // Vigilante: +5% per equipped set mod to upgrade primary crit tier (not secondaries / melee)
@@ -569,13 +679,20 @@ export function calculateWeaponBuild(
     stats.vigilanteCritBonus = 0.05 * vigilanteCount;
   }
 
+  // Stance average damage mult (melee light attacks)
+  if (isMelee && (sim.applyStanceMultiplier !== false)) {
+    stats.stanceDamageMultiplier = resolveStanceDamageMultiplier(equippedMods);
+  } else {
+    stats.stanceDamageMultiplier = 1;
+  }
+
   // Multishot-adjusted status chance (arsenal-style display).
   setStatusChancePerShot(stats, baseWeapon);
 
-  // Status procs
-  stats.statusProcs = calculateStatusProcs(stats, baseWeapon.damage * dmgMult);
+  // Status procs (DoT base = modded base × avg crit; Elementalist + faction² on ticks)
+  stats.statusProcs = calculateStatusProcs(stats, moddedBaseDamage, sim);
 
-  // DPS (direct hits)
+  // DPS (direct hits) — includes optional faction / headshot / stance
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats);
 
@@ -603,6 +720,7 @@ export function calculateWarframeBuild(
     armorBonus: 0,
     energyBonus: 0,
     sprintSpeedBonus: 0,
+    slideSpeedBonus: 0,
     flowBonus: 0,
     flatHealthBonus: 0,
     flatShieldBonus: 0,
@@ -639,6 +757,7 @@ export function calculateWarframeBuild(
     armorBonus: 0,
     energyBonus: 0,
     sprintSpeedBonus: 0,
+    slideSpeedBonus: 0,
     flowBonus: 0,
     parkourVelocityBonus: 0,
     abilityStrength: 0,
@@ -668,12 +787,20 @@ export function calculateWarframeBuild(
   stats.armorBonus = wfModAcc.armorBonus;
   stats.energyBonus = wfModAcc.energyBonus;
   stats.sprintSpeedBonus = wfModAcc.sprintSpeedBonus;
+  stats.slideSpeedBonus = wfModAcc.slideSpeedBonus;
   stats.flowBonus = wfModAcc.flowBonus;
   stats.parkourVelocityBonus = wfModAcc.parkourVelocityBonus;
   stats.abilityStrength = 1.0 + wfModAcc.abilityStrength;
   stats.abilityDuration = 1.0 + wfModAcc.abilityDuration;
   stats.abilityEfficiency = 1.0 + wfModAcc.abilityEfficiency;
   stats.abilityRange = 1.0 + wfModAcc.abilityRange;
+
+  // Cross-slot slide speed from equipped weapons (Amalgam Serration on primary, etc.)
+  if (linkage) {
+    stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.primaryMods, allMods);
+    stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.secondaryMods, allMods);
+    stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.meleeMods, allMods);
+  }
 
   // Calculate derived stats
   stats.totalHealth = stats.baseHealth * (1 + stats.healthBonus);
@@ -912,7 +1039,14 @@ export function calculateWeaponBuildWithArcanes(
   }
   if (isMelee && stats.meleeComboModContext && stats.comboCount !== preArcaneCombo) {
     const arcaneHeavyFactor = preArcaneHeavy > 0 ? stats.heavyAttackDamage / preArcaneHeavy : 1;
-    applyMeleeComboToStats(stats, stats.comboCount, baseWeapon.id, stats.meleeComboModContext);
+    applyMeleeComboToStats(
+      stats,
+      stats.comboCount,
+      baseWeapon.id,
+      stats.meleeComboModContext,
+      baseWeapon.criticalChance,
+      baseWeapon.statusChance,
+    );
     if (arcaneHeavyFactor !== 1) {
       stats.heavyAttackDamage *= arcaneHeavyFactor;
     }
@@ -926,7 +1060,16 @@ export function calculateWeaponBuildWithArcanes(
 
 function calculateBurstDps(stats: CalculatedStats): number {
   const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
-  const totalDamage = stats.totalDamage * stats.multishot;
+  const sim = stats.simParams ?? DEFAULT_SIM_PARAMS;
+  const factionBonus = factionBonusFromStats(stats.factionBonuses, sim.targetFaction);
+  const combatMult = combatDamageMultiplier({
+    factionBonus,
+    applyHeadshots: sim.applyHeadshots,
+    headshotDamageBonus: stats.headshotDamageBonus ?? 0,
+    stanceMultiplier:
+      sim.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1),
+  });
+  const totalDamage = stats.totalDamage * stats.multishot * combatMult;
   return totalDamage * stats.fireRate * avgCrit;
 }
 

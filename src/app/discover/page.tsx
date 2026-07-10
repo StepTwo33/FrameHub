@@ -12,7 +12,7 @@ import {
   ContentPanel,
   EmptyState,
 } from "@/components/page-shell";
-import { Search, Loader2, Users, X } from "lucide-react";
+import { Search, Loader2, Users, X, Sparkles } from "lucide-react";
 import type { PublicBuildSummary } from "@/lib/build-types";
 import {
   buildDiscoverUrl,
@@ -20,6 +20,7 @@ import {
   searchBuildCatalog,
   type BuildSearchItem,
 } from "@/lib/build-search";
+import { BUILD_TAG_OPTIONS, tagLabel } from "@/lib/build-tags";
 
 const BUILD_TYPES = [
   { id: "all", label: "All" },
@@ -39,6 +40,7 @@ export default function DiscoverPage() {
   const urlQ = searchParams.get("q") ?? "";
   const urlItemId = searchParams.get("itemId");
   const urlType = searchParams.get("type");
+  const urlTag = searchParams.get("tag") ?? "";
   const urlSort = searchParams.get("sort") === "popular" ? "popular" : "recent";
 
   const urlItem = useMemo(() => {
@@ -50,11 +52,13 @@ export default function DiscoverPage() {
   const [typeFilter, setTypeFilter] = useState(
     urlItem ? urlItem.type : urlType && urlType !== "all" ? urlType : "all",
   );
+  const [tagFilter, setTagFilter] = useState(urlTag);
   const [searchQuery, setSearchQuery] = useState(urlQ);
   const [itemFilter, setItemFilter] = useState<BuildSearchItem | null>(urlItem);
   const [itemSearch, setItemSearch] = useState("");
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
   const [builds, setBuilds] = useState<(PublicBuildSummary & { voted?: boolean })[]>([]);
+  const [featured, setFeatured] = useState<(PublicBuildSummary & { voted?: boolean })[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -63,10 +67,11 @@ export default function DiscoverPage() {
     setSearchQuery(urlQ);
     setItemFilter(urlItem);
     setSort(urlSort);
+    setTagFilter(urlTag);
     setTypeFilter(urlItem ? urlItem.type : urlType && urlType !== "all" ? urlType : "all");
     setItemSearch("");
     setShowItemSuggestions(false);
-  }, [urlQ, urlItem, urlSort, urlType]);
+  }, [urlQ, urlItem, urlSort, urlType, urlTag]);
 
   const itemSuggestions = useMemo(
     () => searchBuildCatalog(itemSearch, 8),
@@ -79,11 +84,13 @@ export default function DiscoverPage() {
       typeFilter?: string;
       itemFilter?: BuildSearchItem | null;
       searchQuery?: string;
+      tagFilter?: string;
     }) => {
       const resolvedSort = next.sort ?? sort;
       const resolvedItem = next.itemFilter !== undefined ? next.itemFilter : itemFilter;
       const resolvedType = next.typeFilter ?? typeFilter;
       const resolvedQ = next.searchQuery !== undefined ? next.searchQuery : searchQuery;
+      const resolvedTag = next.tagFilter !== undefined ? next.tagFilter : tagFilter;
 
       router.replace(
         buildDiscoverUrl({
@@ -91,10 +98,11 @@ export default function DiscoverPage() {
           type: resolvedItem ? resolvedItem.type : resolvedType !== "all" ? resolvedType : undefined,
           itemId: resolvedItem?.id,
           q: !resolvedItem && resolvedQ.trim() ? resolvedQ.trim() : undefined,
+          tag: resolvedTag || undefined,
         }),
       );
     },
-    [router, sort, typeFilter, itemFilter, searchQuery],
+    [router, sort, typeFilter, itemFilter, searchQuery, tagFilter],
   );
 
   const fetchBuilds = useCallback(
@@ -113,6 +121,7 @@ export default function DiscoverPage() {
           if (typeFilter === "all") params.set("type", itemFilter.type);
         }
         if (searchQuery.trim() && !itemFilter) params.set("q", searchQuery.trim());
+        if (tagFilter) params.set("tag", tagFilter);
         if (cursor) params.set("cursor", cursor);
 
         const res = await fetch(`/api/builds/public?${params}`);
@@ -125,12 +134,29 @@ export default function DiscoverPage() {
         setLoadingMore(false);
       }
     },
-    [sort, typeFilter, itemFilter, searchQuery],
+    [sort, typeFilter, itemFilter, searchQuery, tagFilter],
   );
 
   useEffect(() => {
     fetchBuilds();
   }, [fetchBuilds]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/builds/public?featured=1&limit=3&sort=popular");
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        if (!cancelled) setFeatured(data.builds ?? []);
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const heroTitle = itemFilter
     ? `Builds for ${itemFilter.name}`
@@ -152,6 +178,23 @@ export default function DiscoverPage() {
           description={heroDescription}
         />
 
+        {featured.length > 0 && !itemFilter && !searchQuery.trim() && !tagFilter && (
+          <ContentPanel className="mb-6 space-y-3 border-primary/20 bg-primary/5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <Sparkles className="h-4 w-4" />
+              Rising builds
+              <span className="text-[11px] font-normal text-muted-foreground">
+                Top-voted public builds from the last 2 weeks
+              </span>
+            </div>
+            <div className="space-y-2">
+              {featured.map((b) => (
+                <PublicBuildRow key={`feat-${b.id}`} build={b} showVote />
+              ))}
+            </div>
+          </ContentPanel>
+        )}
+
         <ContentPanel className="mb-6 space-y-4">
           <div className="flex flex-wrap gap-2">
             {(["recent", "popular"] as const).map((s) => (
@@ -164,6 +207,31 @@ export default function DiscoverPage() {
                 }}
               >
                 {s === "recent" ? "Most Recent" : "Top Rated"}
+              </FilterChip>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-1.5">
+            <FilterChip
+              active={!tagFilter}
+              onClick={() => {
+                setTagFilter("");
+                syncUrl({ tagFilter: "" });
+              }}
+            >
+              All tags
+            </FilterChip>
+            {BUILD_TAG_OPTIONS.map((t) => (
+              <FilterChip
+                key={t.id}
+                active={tagFilter === t.id}
+                onClick={() => {
+                  const next = tagFilter === t.id ? "" : t.id;
+                  setTagFilter(next);
+                  syncUrl({ tagFilter: next });
+                }}
+              >
+                {t.label}
               </FilterChip>
             ))}
           </div>

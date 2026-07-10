@@ -269,6 +269,15 @@ export interface SimulationParams {
   applyTenaciousBondCrit?: boolean;
   /** Reinforced Bond: +60% fire rate when companion shields exceed threshold. Default on in loadout calcs. */
   applyReinforcedBondFireRate?: boolean;
+  /**
+   * Target faction for Bane/Expel/Smite damage (e.g. "Grineer", "Corpus").
+   * Empty/undefined = paper DPS without faction mult.
+   */
+  targetFaction?: string;
+  /** Apply headshot / weak-point multiplier (default body shots). */
+  applyHeadshots?: boolean;
+  /** Include approximate stance damage multiplier on melee DPS. Default true. */
+  applyStanceMultiplier?: boolean;
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {
@@ -281,6 +290,9 @@ export const DEFAULT_SIM_PARAMS: SimulationParams = {
   extraSynthSetPiecesOffWeapon: 0,
   extraTekSetPiecesOffWeapon: 0,
   applyTekSetVsMarkedDamage: false,
+  targetFaction: undefined,
+  applyHeadshots: false,
+  applyStanceMultiplier: true,
 };
 
 export interface CalculatedStats {
@@ -311,10 +323,18 @@ export interface CalculatedStats {
   comboCount: number;
   comboDuration: number;
   heavyAttackEfficiency: number; // from mods like Killing Blow
-  /** Melee Damage Multiplier tier for Blood Rush / Weeping Wounds / Gladiator (current game: first bonus at 20 hits). */
+  /**
+   * Combo multiplier for Blood Rush / Weeping Wounds / Gladiator and heavy attacks
+   * (1× below first tier, then 2×…12× on standard weapons).
+   */
   comboMultiplier: number;
-  /** Heavy Attack combo damage tier (2x–12x+ from combo counter; separate from BR scaling mult). */
+  /** Heavy Attack combo damage tier — same track as comboMultiplier (2×–12×+). */
   heavyAttackComboMultiplier: number;
+  /**
+   * Serration-style modded base damage only (unmodded base × damage mults).
+   * Used for DoT ticks and damage quantization scale; excludes elemental/IPS type bonuses.
+   */
+  moddedBaseDamage?: number;
   // Conditional mod tracking
   conditionOverloadBonus: number; // per unique status
   bloodRushStacks: number; // crit from combo
@@ -342,6 +362,19 @@ export interface CalculatedStats {
   arcaneBonuses?: Record<string, number>;
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
   modBonuses?: Record<string, number>;
+  /**
+   * Slide speed fraction from weapon mods that buff Warframe movement
+   * (e.g. Amalgam Serration +55% at max → 0.55).
+   */
+  slideSpeedBonus?: number;
+  /** Elementalist-style status effect damage bonus (fraction). */
+  statusDamageBonus?: number;
+  /** Acuity / headshot damage bonus (fraction on top of base head multi). */
+  headshotDamageBonus?: number;
+  /** Normalized faction id → Bane-style damage bonus fraction. */
+  factionBonuses?: Record<string, number>;
+  /** Average stance damage mult applied to melee light DPS (1 = no stance). */
+  stanceDamageMultiplier?: number;
   /** Crit/status before Blood Rush / Weeping; used when combo count changes after arcanes. */
   preComboCriticalChance?: number;
   preComboStatusChance?: number;
@@ -361,6 +394,8 @@ export interface WarframeCalculatedStats {
   armorBonus: number;
   energyBonus: number;
   sprintSpeedBonus: number;
+  /** Additive slide speed fraction (Maglev, Amalgam Serration via loadout, etc.). */
+  slideSpeedBonus: number;
   flowBonus: number;
   // Flat additions from Archon Shards (Azure, Topaz)
   flatHealthBonus: number;

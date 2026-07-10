@@ -1,3 +1,14 @@
+/**
+ * Sentinel meaning "remove this key from the base item".
+ * Used so staff can strip bogus wiki-parsed stats without replacing the whole record.
+ * JSON null in override fields is treated the same way.
+ */
+export const OVERRIDE_DELETE = "__DELETE__" as const;
+
+export function isOverrideDelete(value: unknown): boolean {
+  return value === null || value === OVERRIDE_DELETE;
+}
+
 /** Deep-merge override patches onto item records (objects merge; arrays replace). */
 export function deepMergeOverrideFields<T extends object>(
   base: T,
@@ -7,6 +18,12 @@ export function deepMergeOverrideFields<T extends object>(
 
   for (const [key, value] of Object.entries(patch)) {
     if (value === undefined) continue;
+
+    // Explicit deletion — strip bogus wiki keys from nested stats / top-level fields.
+    if (isOverrideDelete(value)) {
+      delete result[key];
+      continue;
+    }
 
     const existing = result[key];
 

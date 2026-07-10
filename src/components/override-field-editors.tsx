@@ -588,6 +588,9 @@ export function AbilitiesEditor({
   );
 }
 
+/** Marker stored in override field values when a nested stat should be stripped. */
+export const STAT_ROW_DELETE_MARKER = "__DELETE__";
+
 export function StatRowsEditor({
   title,
   rows,
@@ -596,6 +599,7 @@ export function StatRowsEditor({
   onFocusField,
   isFieldChanged,
   onAddKey,
+  onRemoveKey,
   helperText,
   statOptions = [],
 }: {
@@ -606,6 +610,8 @@ export function StatRowsEditor({
   onFocusField?: (path: string, current: unknown) => void;
   isFieldChanged?: (path: string, current: unknown) => boolean;
   onAddKey: (key: string) => void;
+  /** Mark a bogus wiki-parsed stat for removal from the item. */
+  onRemoveKey?: (path: string) => void;
   helperText?: string;
   statOptions?: StatPickerOption[];
 }) {
@@ -617,43 +623,77 @@ export function StatRowsEditor({
     <div>
       <p className="mb-1 text-xs font-medium text-foreground">{title}</p>
       <p className="mb-2 text-[11px] text-muted-foreground">
-        {helperText ?? "Per-rank base from data — enter a new number only where in-game differs. Max in build = base × (max rank + 1)."}
+        {helperText ??
+          "Per-rank base from data — enter a new number only where in-game differs. Max in build = base × (max rank + 1). Use the trash icon to strip bogus stats from the mass wiki parse."}
       </p>
       {rows.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">No stats on this item.</p>
       ) : (
         <div className="overflow-hidden rounded-lg border border-border">
-          <div className="grid grid-cols-[1fr_auto_auto] gap-2 bg-muted/30 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:grid-cols-[1fr_1fr_1fr]">
+          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 bg-muted/30 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:grid-cols-[1fr_1fr_1fr_auto]">
             <span>Stat</span>
             <span className="hidden sm:block">Current</span>
             <span>New value</span>
+            <span className="w-8" />
           </div>
           <div className="max-h-64 divide-y divide-border overflow-y-auto">
             {rows.map(({ path, key, value }) => {
               const overrideValue = overrideValues[path] ?? "";
+              const isDeleted = overrideValue === STAT_ROW_DELETE_MARKER;
               const isChanged = isFieldChanged?.(path, value) ?? overrideValue !== "";
               return (
                 <div
                   key={path}
                   className={cn(
-                    "grid grid-cols-[1fr_auto] items-center gap-2 px-3 py-2 sm:grid-cols-[1fr_1fr_1fr]",
-                    isChanged && "bg-purple-500/5",
+                    "grid grid-cols-[1fr_auto_auto] items-center gap-2 px-3 py-2 sm:grid-cols-[1fr_1fr_1fr_auto]",
+                    isDeleted && "bg-red-500/10",
+                    !isDeleted && isChanged && "bg-purple-500/5",
                   )}
                 >
-                  <span className="text-sm">{labelForKey(key)}</span>
-                  <span className="hidden text-sm text-muted-foreground sm:block">{String(value ?? "—")}</span>
-                  <input
-                    type="number"
-                    step="any"
-                    value={overrideValue}
-                    onChange={(e) => onChange(path, e.target.value)}
-                    onFocus={() => onFocusField?.(path, value)}
-                    placeholder={String(value ?? "—")}
-                    className={cn(
-                      "h-8 w-full min-w-[100px] rounded border bg-background px-2 text-sm sm:min-w-0",
-                      isChanged ? "border-purple-500" : "border-border",
+                  <span className={cn("text-sm", isDeleted && "text-red-400 line-through")}>
+                    {labelForKey(key)}
+                    {isDeleted && (
+                      <span className="ml-1.5 text-[10px] font-normal no-underline text-red-400/90">
+                        will remove
+                      </span>
                     )}
-                  />
+                  </span>
+                  <span className="hidden text-sm text-muted-foreground sm:block">
+                    {String(value ?? "—")}
+                  </span>
+                  {isDeleted ? (
+                    <button
+                      type="button"
+                      onClick={() => onChange(path, "")}
+                      className="h-8 rounded border border-red-500/40 bg-background px-2 text-xs text-red-400 hover:bg-red-500/10"
+                    >
+                      Undo remove
+                    </button>
+                  ) : (
+                    <input
+                      type="number"
+                      step="any"
+                      value={overrideValue}
+                      onChange={(e) => onChange(path, e.target.value)}
+                      onFocus={() => onFocusField?.(path, value)}
+                      placeholder={String(value ?? "—")}
+                      className={cn(
+                        "h-8 w-full min-w-[100px] rounded border bg-background px-2 text-sm sm:min-w-0",
+                        isChanged ? "border-purple-500" : "border-border",
+                      )}
+                    />
+                  )}
+                  {onRemoveKey && !isDeleted && (
+                    <button
+                      type="button"
+                      onClick={() => onRemoveKey(path)}
+                      title="Remove this stat (bogus wiki parse)"
+                      className="flex h-8 w-8 items-center justify-center rounded border border-border text-muted-foreground hover:border-red-500/50 hover:text-red-400"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                  {isDeleted && <span className="w-8" />}
                 </div>
               );
             })}

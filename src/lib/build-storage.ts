@@ -24,6 +24,8 @@ export interface SavedBuild {
   description?: string;
   isPublic?: boolean;
   type: "weapon" | "warframe" | "companion" | "modular" | "archwing" | "railjack" | "loadout";
+  /** Community meta tags (steel_path, budget, …). */
+  tags?: string[];
   createdAt: number;
   updatedAt: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

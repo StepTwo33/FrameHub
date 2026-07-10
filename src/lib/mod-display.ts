@@ -48,6 +48,7 @@ const PERCENT_LIKE_KEYS = new Set([
   "armor",
   "energy",
   "sprintSpeed",
+  "slideSpeed",
   "critBonusPerKill",
   "damageReductionPerKill",
   "tributeEfficiency",

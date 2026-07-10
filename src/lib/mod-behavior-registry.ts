@@ -1,5 +1,6 @@
 import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/item-behavior-types";
 import { VERIFIED_MOD_BEHAVIORS } from "@/data/mod-behaviors";
+import { FACTION_STAT_TO_ID } from "@/lib/combat-multipliers";
 
 export type WeaponModAccumulators = {
   damageBonus: number;
@@ -13,6 +14,12 @@ export type WeaponModAccumulators = {
   impactBonus: number;
   punctureBonus: number;
   slashBonus: number;
+  /** Status Effect damage (Elementalist mods) — multiplies DoT ticks. */
+  statusDamageBonus: number;
+  /** Headshot / weak-point damage bonus (Acuity, etc.). */
+  headshotDamageBonus: number;
+  /** Normalized faction id → bonus fraction (Bane / Expel / Smite / Cleanse). */
+  factionBonuses: Record<string, number>;
   hasBloodRush: boolean;
   bloodRushValue: number;
   hasConditionOverload: boolean;
@@ -90,8 +97,23 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
         case "slash":
           acc.slashBonus += modValue;
           return true;
-        default:
+        case "statusDamage":
+        case "statusDamageBonus":
+          acc.statusDamageBonus += modValue;
+          return true;
+        case "headshotDamage":
+        case "headshotMultiplier":
+        case "weakPointDamage":
+          acc.headshotDamageBonus += modValue;
+          return true;
+        default: {
+          const factionId = FACTION_STAT_TO_ID[statKey];
+          if (factionId) {
+            acc.factionBonuses[factionId] = (acc.factionBonuses[factionId] ?? 0) + modValue;
+            return true;
+          }
           return false;
+        }
       }
     case "elemental_from_base_damage":
       elementalMods.push({ type: statKey, value: baseWeaponDamage * modValue });
@@ -149,13 +171,40 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
 
 /** Apply a single mod stat line when that mod has a verified per-item entry. Returns true if handled. */
 export function applyVerifiedModStatToWeapon(
-  stats: { modBonuses?: Record<string, number> },
+  stats: { modBonuses?: Record<string, number>; slideSpeedBonus?: number },
   ctx: ModApplyWeaponContext,
 ): boolean {
   const line = getVerifiedModStatLine(ctx.modId, ctx.statKey);
+
+  // Always apply combat-relevant keys even when unverified or tagged mod_panel.
+  const combatKey =
+    ctx.statKey.startsWith("faction") ||
+    ctx.statKey === "statusDamage" ||
+    ctx.statKey === "statusDamageBonus" ||
+    ctx.statKey === "headshotDamage" ||
+    ctx.statKey === "headshotMultiplier" ||
+    ctx.statKey === "weakPointDamage";
+
+  if (ctx.statKey === "slideSpeed") {
+    stats.slideSpeedBonus = (stats.slideSpeedBonus ?? 0) + ctx.modValue;
+    trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
+    return true;
+  }
+
   if (!line) {
+    if (combatKey && applyModeToWeaponAcc("multiplicative_percent", ctx)) {
+      trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
+      return true;
+    }
     trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
     return false;
+  }
+
+  if (combatKey && line.mode === "multiplicative_percent") {
+    if (applyModeToWeaponAcc(line.mode, ctx)) {
+      trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
+      return true;
+    }
   }
 
   if (line.target === "mod_panel" || line.target === "pending") {
@@ -182,6 +231,8 @@ export type WarframeModAccumulators = {
   armorBonus: number;
   energyBonus: number;
   sprintSpeedBonus: number;
+  /** Fraction bonus to slide speed (e.g. Maglev, Amalgam Serration). */
+  slideSpeedBonus: number;
   flowBonus: number;
   parkourVelocityBonus: number;
   abilityStrength: number;
@@ -346,6 +397,14 @@ export function applyVerifiedModStatToWarframe(
     return false;
   }
 
+  // Slide speed is real movement math even when the batch script tagged it mod_panel.
+  // (Maglev, Cunning Drift, Streamlined Form, Air Thrusters, Armored Recovery, …)
+  if (statKey === "slideSpeed" && line.mode === "multiplicative_percent") {
+    acc.slideSpeedBonus += modValue;
+    trackModPanel(stats, modId, statKey, modValue);
+    return true;
+  }
+
   if (line.target === "mod_panel" || line.target === "pending" || line.target !== "warframe_totals") {
     trackModPanel(stats, modId, statKey, modValue);
     return true;
@@ -380,6 +439,9 @@ export function applyVerifiedModStatToWarframe(
     case "sprintSpeed":
       acc.sprintSpeedBonus += modValue;
       return true;
+    case "slideSpeed":
+      acc.slideSpeedBonus += modValue;
+      return true;
     case "flow":
     case "flowEnergyMax":
       acc.flowBonus += modValue;
@@ -391,6 +453,31 @@ export function applyVerifiedModStatToWarframe(
       trackModPanel(stats, modId, statKey, modValue);
       return true;
   }
+}
+
+/**
+ * Sum slide-speed fraction from equipped weapon mods (Amalgam Serration, etc.)
+ * for warframe / loadout display.
+ */
+export function sumSlideSpeedBonusFromModSlots(
+  slots: { modId: string; rank?: number }[] | undefined,
+  allMods: Map<string, { maxRank: number; stats?: Record<string, number>; category?: string }>,
+): number {
+  if (!slots?.length) return 0;
+  let total = 0;
+  for (const slot of slots) {
+    const mod = allMods.get(slot.modId);
+    const perRank = mod?.stats?.slideSpeed;
+    if (perRank == null || !mod) continue;
+    // Only weapon-slot mods contribute here (warframe mods are applied in calculateWarframeBuild).
+    const cat = (mod.category ?? "").toLowerCase();
+    if (cat === "warframe" || cat === "aura" || cat === "exilus" || cat === "augment") continue;
+    const line = getVerifiedModStatLine(slot.modId, "slideSpeed");
+    if (line && line.mode !== "multiplicative_percent") continue;
+    const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod.maxRank);
+    total += (perRank * (rank + 1)) / 100;
+  }
+  return total;
 }
 
 export function applyVerifiedModStatToNecramech(

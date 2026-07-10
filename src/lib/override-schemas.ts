@@ -251,10 +251,10 @@ export const FIELD_LABELS: Record<string, string> = {
 
 /** Help text for StatRowsEditor — mod vs arcane catalog stats use different scaling. */
 export const STAT_RECORD_HELP: Partial<Record<OverrideCategory, string>> = {
-  mod: "Per-rank base from data. Max in build = base × (max rank + 1).",
+  mod: "Per-rank base from data. Max in build = base × (max rank + 1). Trash icon removes bogus wiki-parsed stats permanently for this fix.",
   arcane:
-    "Legacy catalog stats on the arcane card (display / fallback). Values are at max rank and scale linearly by rank — not the mod formula. Build math uses effect lines below.",
-  archon_shard: "Bonus amount for each shard stat option.",
+    "Legacy catalog stats on the arcane card (display / fallback). Values are at max rank and scale linearly by rank — not the mod formula. Build math uses effect lines below. Trash strips junk stats.",
+  archon_shard: "Bonus amount for each shard stat option. Trash removes incorrect bonus keys.",
 };
 
 export const OVERRIDE_EDITOR_CATEGORIES = OVERRIDE_CATEGORIES;

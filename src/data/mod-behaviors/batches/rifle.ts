@@ -15,9 +15,9 @@ function mod(modId: string, stats: VerifiedItemStatLine[], descriptionOnly?: str
 
 export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
   amalgam_serration: mod("amalgam_serration", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Amalgam Serration: damage \u2014 +11% Damage, +5% Slide Speed per rank"),
-    line("slideSpeed", "mod_panel", "multiplicative_percent", "Amalgam Serration: slideSpeed \u2014 +11% Damage, +5% Slide Speed per rank"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Amalgam Serration: sprintSpeed \u2014 +11% Damage, +5% Slide Speed per rank"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Amalgam Serration: damage — +11% Damage per rank (max +155%)"),
+    // Slide speed is a Warframe movement buff from a rifle mod (cross-slot while equipped).
+    line("slideSpeed", "warframe_totals", "multiplicative_percent", "Amalgam Serration: slideSpeed — +5% Slide Speed per rank (max +55%)"),
   ]),
   argon_scope: mod("argon_scope", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Argon Scope: criticalChance \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),

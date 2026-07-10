@@ -7,9 +7,11 @@ import { BuildPreviewStats } from "@/components/build-preview-stats";
 import { buildOpenUrl } from "@/lib/build-url";
 import { summarizeBuildPreview } from "@/lib/build-preview";
 import { BuildPageVote } from "@/components/build-page-vote";
+import { BuildShareCard } from "@/components/build-share-card";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { safeParseBuildJson } from "@/lib/build-types";
+import { getSiteUrl } from "@/lib/site-metadata";
 import Image from "next/image";
 
 interface SharedBuild {
@@ -69,9 +71,29 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!build) return { title: "Build Not Found - Frame Hub" };
 
+  const preview = summarizeBuildPreview(build.type, build.data);
+  const desc =
+    build.description?.trim() ||
+    `${preview.itemName} ${build.type} build by ${build.author.username}` +
+      (preview.modSummary ? ` · ${preview.modSummary}` : "");
+  const title = `${build.name} — ${preview.itemName} | Frame Hub`;
+
   return {
-    title: `${build.name} by ${build.author.username} - Frame Hub`,
-    description: build.description || `A ${build.type} build by ${build.author.username}`,
+    title,
+    description: desc.slice(0, 200),
+    openGraph: {
+      title,
+      description: desc.slice(0, 200),
+      type: "article",
+      siteName: "Frame Hub",
+      images: [{ url: "/og-embed.png", width: 1200, height: 630, alt: "Frame Hub" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: desc.slice(0, 200),
+      images: ["/og-embed.png"],
+    },
   };
 }
 
@@ -86,6 +108,7 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
   const builderUrl = buildOpenUrl(build.type, build.id);
   const preview = summarizeBuildPreview(build.type, build.data);
   const profileSlug = build.author.profileSlug ?? build.author.username;
+  const pageUrl = `${getSiteUrl()}/build/${build.id}`;
 
   return (
     <PageShell>
@@ -147,6 +170,17 @@ export default async function SharedBuildPage({ params }: { params: Promise<{ id
           <BuildPreviewSummary preview={preview} />
 
           <BuildPreviewStats type={build.type} data={build.data} />
+
+          <div className="mt-6">
+            <BuildShareCard
+              buildName={build.name}
+              author={build.author.username}
+              type={build.type}
+              itemName={preview.itemName}
+              description={build.description}
+              pageUrl={pageUrl}
+            />
+          </div>
 
           {build.description && (
             <>

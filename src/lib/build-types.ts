@@ -70,6 +70,8 @@ export interface PublicBuildSummary {
   upvoteCount: number;
   createdAt: number;
   updatedAt: number;
+  /** Meta tags (steel_path, budget, …). */
+  tags?: string[];
   author: {
     username: string;
     profileSlug?: string | null;

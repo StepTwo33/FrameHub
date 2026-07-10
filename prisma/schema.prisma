@@ -111,6 +111,8 @@ model Build {
   type        String      // 'weapon' | 'warframe' | 'companion' | 'modular' | 'archwing' | 'railjack'
   itemId      String      @default("")
   upvoteCount Int         @default(0)
+  /** JSON string array of meta tags, e.g. ["steel_path","budget"]. */
+  tags        String      @default("[]")
   data        String      // JSON string of build data
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

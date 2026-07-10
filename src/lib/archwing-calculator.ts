@@ -16,6 +16,7 @@ function emptyAccumulators(): ArchwingModAccumulators {
     armorBonus: 0,
     energyBonus: 0,
     sprintSpeedBonus: 0,
+    slideSpeedBonus: 0,
     flowBonus: 0,
     parkourVelocityBonus: 0,
     abilityStrength: 0,

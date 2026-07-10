@@ -13,11 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BUILD_TAG_OPTIONS } from "@/lib/build-tags";
 
 export interface SaveBuildDialogValues {
   name: string;
   description: string;
   isPublic: boolean;
+  tags: string[];
 }
 
 interface SaveBuildDialogProps {
@@ -26,6 +28,7 @@ interface SaveBuildDialogProps {
   defaultName: string;
   defaultDescription?: string;
   defaultIsPublic?: boolean;
+  defaultTags?: string[];
   showDescription?: boolean;
   title?: string;
   onSave: (values: SaveBuildDialogValues) => Promise<void>;
@@ -37,6 +40,7 @@ export function SaveBuildDialog({
   defaultName,
   defaultDescription = "",
   defaultIsPublic = false,
+  defaultTags = [],
   showDescription = true,
   title = "Save Build",
   onSave,
@@ -44,6 +48,7 @@ export function SaveBuildDialog({
   const [name, setName] = useState(defaultName);
   const [description, setDescription] = useState(defaultDescription);
   const [isPublic, setIsPublic] = useState(defaultIsPublic);
+  const [tags, setTags] = useState<string[]>(defaultTags);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -51,15 +56,20 @@ export function SaveBuildDialog({
       setName(defaultName);
       setDescription(defaultDescription);
       setIsPublic(defaultIsPublic);
+      setTags(defaultTags);
     }
-  }, [open, defaultName, defaultDescription, defaultIsPublic]);
+  }, [open, defaultName, defaultDescription, defaultIsPublic, defaultTags]);
+
+  const toggleTag = (id: string) => {
+    setTags((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     setSaving(true);
     try {
-      await onSave({ name: name.trim(), description: description.trim(), isPublic });
+      await onSave({ name: name.trim(), description: description.trim(), isPublic, tags });
       onOpenChange(false);
     } finally {
       setSaving(false);
@@ -128,6 +138,35 @@ export function SaveBuildDialog({
                 </p>
               </div>
             </label>
+
+            {isPublic && (
+              <div className="space-y-2">
+                <div className="text-sm font-medium">Meta tags</div>
+                <p className="text-[11px] text-muted-foreground">
+                  Help others find this build (Steel Path, budget, boss, …).
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {BUILD_TAG_OPTIONS.map((t) => {
+                    const on = tags.includes(t.id);
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => toggleTag(t.id)}
+                        className={cn(
+                          "rounded-full border px-2.5 py-0.5 text-[11px] transition-colors",
+                          on
+                            ? "border-primary bg-primary/15 text-primary"
+                            : "border-border text-muted-foreground hover:border-primary/40",
+                        )}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

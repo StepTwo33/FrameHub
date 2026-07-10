@@ -222,7 +222,7 @@ export default function WeaponBuilderPage() {
     }
   }, [allWeapons]);
 
-  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic, tags }: SaveBuildDialogValues) => {
     const data = buildWeaponData();
     if (!data || !selectedWeapon) return;
     const build: SavedBuild = {
@@ -230,6 +230,7 @@ export default function WeaponBuilderPage() {
       name,
       description,
       isPublic,
+      tags,
       type: "weapon",
       createdAt: Date.now(),
       updatedAt: Date.now(),

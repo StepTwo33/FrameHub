@@ -20,7 +20,12 @@ import {
   STAT_RECORD_HELP,
   OVERRIDE_EDITOR_CATEGORIES,
 } from "@/lib/override-schemas";
-import { buildNestedPatch, deepMergeOverrideFields, flattenRecordFields } from "@/lib/override-merge";
+import {
+  buildNestedPatch,
+  deepMergeOverrideFields,
+  flattenRecordFields,
+  OVERRIDE_DELETE,
+} from "@/lib/override-merge";
 import {
   DataOverride,
   OverrideCategory,
@@ -47,6 +52,7 @@ import {
   RadialAttackDraft,
   RadialAttacksEditor,
   StatRowsEditor,
+  STAT_ROW_DELETE_MARKER,
   draftToRadialAttack,
   toRadialAttackDrafts,
 } from "@/components/override-field-editors";
@@ -327,7 +333,11 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
       const walk = (obj: Record<string, unknown>, prefix = "") => {
         for (const [key, value] of Object.entries(obj)) {
           const path = prefix ? `${prefix}.${key}` : key;
-          if (nestedRecordFields.includes(prefix ? prefix.split(".")[0] : key) && typeof value === "object" && value !== null && !Array.isArray(value)) {
+          if (value === null || value === OVERRIDE_DELETE) {
+            flat[path] = STAT_ROW_DELETE_MARKER;
+            continue;
+          }
+          if (nestedRecordFields.includes(prefix ? prefix.split(".")[0] : key) && typeof value === "object" && !Array.isArray(value)) {
             walk(value as Record<string, unknown>, path);
           } else if (key === "effects" && Array.isArray(value)) {
             setEffectLines(toEffectDrafts(value));
@@ -338,7 +348,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
           } else if (key === "radialAttacks" && Array.isArray(value)) {
             setRadialAttacks(toRadialAttackDrafts(value));
             setStructuredTouched((s) => ({ ...s, radialAttacks: true }));
-          } else if (typeof value !== "object" || value === null) {
+          } else if (typeof value !== "object") {
             flat[path] = String(value);
           }
         }
@@ -398,6 +408,10 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     handleFieldChange(`${recordField}.${trimmed}`, fieldOverrides[`${recordField}.${trimmed}`] ?? "0");
   };
 
+  const handleRemoveStatKey = (path: string) => {
+    handleFieldChange(path, STAT_ROW_DELETE_MARKER);
+  };
+
   const statPickerOptions = useMemo(() => {
     if (category === "mod") return getModStatPickerOptions();
     if (category === "arcane") return getArcaneCatalogStatPickerOptions();
@@ -409,6 +423,11 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
     const flat: Record<string, unknown> = {};
     for (const [path, rawValue] of Object.entries(fieldOverrides)) {
       if (rawValue === "") continue;
+      // Strip bogus nested stats (and top-level fields) from mass wiki parse.
+      if (rawValue === STAT_ROW_DELETE_MARKER) {
+        flat[path] = OVERRIDE_DELETE;
+        continue;
+      }
       const original = getOriginalAtPath(itemData, path);
       const parsed = parseScalarValue(rawValue, original);
       if (valuesEqual(parsed, original)) continue;
@@ -564,6 +583,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
   const isFieldChanged = (path: string, current: unknown) => {
     const raw = fieldOverrides[path];
     if (raw === undefined || raw === "") return false;
+    if (raw === STAT_ROW_DELETE_MARKER) return true;
     return !valuesEqual(parseScalarValue(raw, current), current);
   };
   const canEditFields = Boolean(selectedItemId && action !== "remove") || action === "add";
@@ -797,6 +817,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
               onFocusField={seedFieldOnFocus}
               isFieldChanged={isFieldChanged}
               onAddKey={(key) => handleAddStatKey(recordField, key)}
+              onRemoveKey={handleRemoveStatKey}
               statOptions={statPickerOptions}
             />
           ))}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { extractBuildItemId, isAllowedBuildType, safeParseBuildJson } from "@/lib/build-types";
+import { parseBuildTags, serializeBuildTags } from "@/lib/build-tags";
 
 const BUILD_NAME_MAX = 200;
 
@@ -62,7 +63,8 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  const { id, name, description, isPublic, type, data } = body;
+  const { id, name, description, isPublic, type, data, tags: rawTags } = body;
+  const tagsJson = serializeBuildTags(parseBuildTags(rawTags));
 
   if (!name || !type || !data) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -97,6 +99,7 @@ export async function POST(req: NextRequest) {
         data: {
           name: String(name).trim(),
           description: typeof description === "string" ? description.slice(0, 2000) : "",
+          tags: tagsJson,
           isPublic: typeof isPublic === "boolean" ? isPublic : existing.isPublic,
           itemId,
           data: JSON.stringify(data),
@@ -122,6 +125,7 @@ export async function POST(req: NextRequest) {
       userId: session.user.id,
       name: String(name).trim(),
       description: typeof description === "string" ? description.slice(0, 2000) : "",
+      tags: tagsJson,
       isPublic: isPublic ?? false,
       type,
       itemId,

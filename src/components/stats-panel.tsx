@@ -163,7 +163,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               <SimSlider
                 label="Combo Hits" value={simParams.comboCount} min={0} max={260}
                 onChange={(v) => onSimParamsChange({ ...simParams, comboCount: v })}
-                tooltip="Consecutive melee combo counter. BR/WW use scaling tiers starting at 20 hits (1.25x, then +0.25x per 20 hits to 3.75x at 220+). Heavy attacks use a separate 2x–12x tier table."
+                tooltip="Consecutive melee combo counter. Blood Rush, Weeping Wounds, Gladiator, and heavy attacks share one track: 1× below 20 hits, then 2×…12× every 20 hits (220+ = 12×). Bonus = mod% × (CM−1), additive with other chance mods."
               />
             )}
             <SimSlider
@@ -225,6 +225,67 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 onChange={(v) => onSimParamsChange({ ...simParams, extraSynthSetPiecesOffWeapon: v })}
                 tooltip="Synth Fiber + Deconstruct on companion and Synth Reflex on Warframe (max 3 off this pistol). At 4 total with Synth Charge here, +15% reload speed applies."
               />
+            )}
+            <div className="pt-1 space-y-1.5">
+              <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
+                Target faction
+                <select
+                  value={simParams.targetFaction ?? ""}
+                  onChange={(e) =>
+                    onSimParamsChange({
+                      ...simParams,
+                      targetFaction: e.target.value || undefined,
+                    })
+                  }
+                  className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                >
+                  <option value="">None (paper DPS)</option>
+                  <option value="Grineer">Grineer</option>
+                  <option value="Corpus">Corpus</option>
+                  <option value="Infested">Infested</option>
+                  <option value="Corrupted">Corrupted / Orokin</option>
+                  <option value="Murmur">The Murmur</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={!!simParams.applyHeadshots}
+                  onChange={(e) =>
+                    onSimParamsChange({ ...simParams, applyHeadshots: e.target.checked })
+                  }
+                  className="h-3.5 w-3.5 rounded border-border accent-primary"
+                />
+                Headshots (2× weak point × Acuity)
+              </label>
+              {isMelee && (
+                <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={simParams.applyStanceMultiplier !== false}
+                    onChange={(e) =>
+                      onSimParamsChange({ ...simParams, applyStanceMultiplier: e.target.checked })
+                    }
+                    className="h-3.5 w-3.5 rounded border-border accent-primary"
+                  />
+                  Stance avg mult
+                  {(stats.stanceDamageMultiplier ?? 1) > 1 && (
+                    <span className="text-cyan-400 font-mono">
+                      ×{(stats.stanceDamageMultiplier ?? 1).toFixed(2)}
+                    </span>
+                  )}
+                </label>
+              )}
+            </div>
+            {(stats.statusDamageBonus ?? 0) > 0 && (
+              <div className="text-[10px] text-amber-400">
+                Status damage: +{((stats.statusDamageBonus ?? 0) * 100).toFixed(0)}% (Elementalist)
+              </div>
+            )}
+            {simParams.targetFaction && Object.keys(stats.factionBonuses ?? {}).length > 0 && (
+              <div className="text-[10px] text-orange-400">
+                Faction mods active vs {simParams.targetFaction}
+              </div>
             )}
           </div>
           {/* Active conditional summary */}
@@ -383,6 +444,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
         {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
         {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
+        {(stats.slideSpeedBonus ?? 0) !== 0 && (
+          <StatRow
+            label="Slide Speed"
+            value={`${(stats.slideSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.slideSpeedBonus ?? 0) * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Warframe slide speed while this weapon is equipped (Amalgam Serration, etc.)."
+          />
+        )}
       </CollapsibleSection>
 
       {/* Melee-specific */}
@@ -396,14 +465,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             />
           )}
           <StatRow
-            label="Combo scaling (BR/WW)"
-            value={`${stats.comboMultiplier.toFixed(2)}x`}
-            tooltip="Melee Damage Multiplier tier from combo counter (1.0 below first tier, then +0.25× per tier). Blood Rush & Weeping use (CM−1) in their formulas."
+            label="Combo mult (BR/WW)"
+            value={`${stats.comboMultiplier.toFixed(1)}x`}
+            tooltip="Combo counter multiplier used by Blood Rush, Weeping Wounds, and Gladiator (1× below first tier, then 2×…12×). Bonus = mod% × (CM−1), additive with other chance mods."
           />
           <StatRow
             label="Heavy attack mult"
             value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`}
-            tooltip="Heavy Attack Multiplier tier (2× at first tier, +1× per tier to 12× at 220+ hits on standard weapons)."
+            tooltip="Heavy Attack Multiplier (same track as combo mult: 2× at first tier, +1× per tier to 12× at 220+ hits on standard weapons)."
           />
           <StatRow label="Combo Duration" value={`${stats.comboDuration.toFixed(0)}s`} />
           <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted />
@@ -428,8 +497,18 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
 
       {/* DPS */}
       <CollapsibleSection title="DPS" defaultOpen>
-        <StatRow label="Burst DPS" value={stats.burstDps.toFixed(0)} highlighted />
-        <StatRow label="Sustained DPS" value={stats.sustainedDps.toFixed(0)} highlighted />
+        <StatRow
+          label="Burst DPS"
+          value={stats.burstDps.toFixed(0)}
+          highlighted
+          tooltip="dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled). No charge-time or attenuation."
+        />
+        <StatRow
+          label="Sustained DPS"
+          value={stats.sustainedDps.toFixed(0)}
+          highlighted
+          tooltip="Burst DPS × (mag time / mag+reload cycle). Melee uses burst (no reload)."
+        />
         {(stats.radialBurstDps ?? 0) > 0 && (
           <>
             <StatRow
@@ -669,6 +748,14 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
         <StatRow label="Armor" value={stats.totalArmor.toFixed(0)} />
         <StatRow label="Energy" value={stats.totalEnergy.toFixed(0)} />
         <StatRow label="Sprint Speed" value={stats.totalSprint.toFixed(2)} />
+        {stats.slideSpeedBonus !== 0 && (
+          <StatRow
+            label="Slide Speed"
+            value={`${stats.slideSpeedBonus > 0 ? "+" : ""}${(stats.slideSpeedBonus * 100).toFixed(0)}%`}
+            color={stats.slideSpeedBonus > 0 ? "text-cyan-400" : "text-red-400"}
+            tooltip="From Maglev / Cunning Drift / Streamlined Form / Amalgam Serration (linked weapons), etc."
+          />
+        )}
         {stats.parkourVelocityBonus > 0 && (
           <StatRow label="Parkour Velocity" value={`+${(stats.parkourVelocityBonus * 100).toFixed(0)}%`} color="text-cyan-400" />
         )}

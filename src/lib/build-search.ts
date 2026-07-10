@@ -106,12 +106,14 @@ export function buildDiscoverUrl(opts: {
   type?: string;
   itemId?: string;
   sort?: "recent" | "popular";
+  tag?: string;
 }): string {
   const params = new URLSearchParams();
   if (opts.sort && opts.sort !== "recent") params.set("sort", opts.sort);
   if (opts.type) params.set("type", opts.type);
   if (opts.itemId) params.set("itemId", opts.itemId);
   if (opts.q?.trim()) params.set("q", opts.q.trim());
+  if (opts.tag?.trim()) params.set("tag", opts.tag.trim());
   const qs = params.toString();
   return qs ? `/discover?${qs}` : "/discover";
 }

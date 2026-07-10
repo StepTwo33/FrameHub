@@ -13,7 +13,7 @@ describe("calculateRailjackBuild", () => {
     expect(stats.hull).toBe(3000 + 1500);
     expect(stats.armor).toBe(300 + 100);
     expect(stats.shield).toBe(1500 + 800);
-    expect(stats.shieldRecharge).toBe(40);
+    expect(stats.shieldRecharge).toBe(50); // Lavan Shield Mk III
     expect(stats.speed).toBe(100 + 80);
     expect(stats.boostSpeed).toBe(200 + 100);
     expect(stats.fluxCapacity).toBe(200 + 200);

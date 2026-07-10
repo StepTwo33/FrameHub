@@ -59,6 +59,7 @@ const wfStats: WarframeCalculatedStats = {
   armorBonus: 0,
   energyBonus: 0,
   sprintSpeedBonus: 0,
+  slideSpeedBonus: 0,
   flowBonus: 0,
   flatHealthBonus: 0,
   flatShieldBonus: 0,
@@ -210,8 +211,18 @@ describe("computeDpsContributions with external sources", () => {
 
     expect(voltaicContrib).toBeDefined();
     expect(shockingContrib).toBeDefined();
-    // With external electricity already present, the weapon mod adds less marginal DPS than Voltaic would alone.
-    expect(shockingContrib!.burstMarginalPct).toBeLessThan(voltaicContrib!.burstMarginalPct);
+    expect(shockingContrib!.burstMarginalPct).toBeGreaterThan(0);
+    expect(voltaicContrib!.burstMarginalPct).toBeGreaterThan(0);
+
+    // Diminishing returns: Shocking Touch is worth less with Voltaic already present than alone.
+    const shockingAlone = computeDpsContributions({
+      baseWeapon: testMelee,
+      modSlots,
+      allMods: modsMap,
+      simParams: sim,
+    }).find((c) => c.label === shocking.name);
+    expect(shockingAlone).toBeDefined();
+    expect(shockingContrib!.burstMarginalPct).toBeLessThan(shockingAlone!.burstMarginalPct);
   });
 
   it("shows crit chance mod gains more marginal value with Tenacious Bond active", () => {

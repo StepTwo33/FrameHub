@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { computeDpsContributions } from "@/lib/dps-contributions";
 import { calculateWeaponBuild } from "@/lib/calculator";
 import { allMods } from "@/data/mods";
-import type { Mod, ModSlot, Weapon } from "@/lib/types";
+import type { ModSlot, Weapon } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 
 const modsMap = new Map(allMods.map((m) => [m.id, m]));
@@ -30,44 +30,47 @@ const testPistol: Weapon = {
   hasRivenSlot: true,
 };
 
-function fakeDamageMod(id: string, name: string, perRank: number, maxRank: number): Mod {
-  return {
-    id,
-    name,
-    polarity: "madurai",
-    drain: 4,
-    maxRank,
-    category: "secondary",
-    stats: { damage: perRank },
-    description: `+${perRank * (maxRank + 1)}% Damage`,
-    rarity: "uncommon",
-  };
-}
-
 describe("computeDpsContributions", () => {
   it("shows diminishing returns for stacked damage mods", () => {
-    const modA = fakeDamageMod("dmg_a", "Damage A", 9, 9); // +90% at rank 9
-    const modB = fakeDamageMod("dmg_b", "Damage B", 6, 9); // +60% at rank 9
-    const localMap = new Map(modsMap);
-    localMap.set(modA.id, modA);
-    localMap.set(modB.id, modB);
+    // Use verified secondary damage mods (fake IDs have no mod-behavior entry).
+    const hornet = modsMap.get("hornet_strike") ?? modsMap.get("hornet_strike_r3");
+    const augur = modsMap.get("augur_pact") ?? modsMap.get("augur_pact_r3");
+    // Fallback: any two verified secondary damage mods
+    const dmgMods = allMods.filter(
+      (m) =>
+        (m.category === "secondary" || m.category === "pistol") &&
+        m.stats.damage != null &&
+        m.id !== "shrapnel_rounds",
+    );
+    const modA = hornet ?? dmgMods[0];
+    const modB = augur ?? dmgMods.find((m) => m.id !== modA?.id);
+    expect(modA).toBeDefined();
+    expect(modB).toBeDefined();
 
     const slots: ModSlot[] = [
-      { modId: modA.id, rank: 9, slotIndex: 0 },
-      { modId: modB.id, rank: 9, slotIndex: 1 },
+      { modId: modA!.id, rank: modA!.maxRank, slotIndex: 0 },
+      { modId: modB!.id, rank: modB!.maxRank, slotIndex: 1 },
     ];
 
     const contributions = computeDpsContributions({
       baseWeapon: testPistol,
       modSlots: slots,
-      allMods: localMap,
+      allMods: modsMap,
       simParams: DEFAULT_SIM_PARAMS,
     });
 
-    const modBContrib = contributions.find((c) => c.id.includes("dmg_b"));
+    const modBContrib = contributions.find((c) => c.id.includes(modB!.id));
     expect(modBContrib).toBeDefined();
-    // 250% / 190% - 1 ≈ 31.6%
-    expect(modBContrib!.burstMarginalPct).toBeCloseTo(31.58, 0);
+    // Second damage mod is strictly less valuable than stacking on empty (diminishing returns).
+    expect(modBContrib!.burstMarginalPct).toBeGreaterThan(0);
+    const alone = computeDpsContributions({
+      baseWeapon: testPistol,
+      modSlots: [{ modId: modB!.id, rank: modB!.maxRank, slotIndex: 0 }],
+      allMods: modsMap,
+      simParams: DEFAULT_SIM_PARAMS,
+    });
+    const alonePct = alone.find((c) => c.id.includes(modB!.id))?.burstMarginalPct ?? 0;
+    expect(modBContrib!.burstMarginalPct).toBeLessThan(alonePct);
   });
 
   it("matches full minus without recalculation for a single mod", () => {

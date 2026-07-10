@@ -1,14 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { PageShell } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
-import { Crosshair, Shield, Heart, Flame, Plus, X, ChevronDown, ChevronRight, Zap } from "lucide-react";
+import { Crosshair, Shield, Heart, Flame, Plus, X, ChevronDown, ChevronRight, Zap, FolderOpen } from "lucide-react";
 import {
   EnemyType, ENEMY_TYPES,
   HEALTH_MODIFIERS, ARMOR_MODIFIERS, SHIELD_MODIFIERS,
   getMod, scaleArmor, scaleHealth, scaleShield, avgCritMult,
 } from "@/lib/ttk";
+import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/build-storage";
+import { calcSavedWeaponBuildStats } from "@/lib/loadout-stats";
+import { calculatedStatsToSimInputs } from "@/lib/damage-sim-load";
+import { DEFAULT_SIM_PARAMS } from "@/lib/types";
+import {
+  combatDamageMultiplier,
+  factionBonusFromStats,
+  factionDotMultiplier,
+} from "@/lib/combat-multipliers";
 
 const FACTION_COLORS: Record<string, string> = {
   Grineer: "#FF6B35", Corpus: "#00B4D8", Infested: "#2ECC71",
@@ -132,11 +141,76 @@ export default function DamageSimulatorPage() {
   const [magazine, setMagazine] = useState(30);
   const [reloadTime, setReloadTime] = useState(2);
   const [addingType, setAddingType] = useState("");
+  const [statusDamageBonus, setStatusDamageBonus] = useState(0);
+  const [headshotDamageBonus, setHeadshotDamageBonus] = useState(0);
+  const [factionBonuses, setFactionBonuses] = useState<Record<string, number>>({});
+  const [applyHeadshots, setApplyHeadshots] = useState(false);
+  const [loadedBuildLabel, setLoadedBuildLabel] = useState<string | null>(null);
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>([]);
 
   // Enemy
   const [selectedEnemy, setSelectedEnemy] = useState<EnemyType | null>(null);
   const [enemyLevel, setEnemyLevel] = useState(100);
   const [selectedFaction, setSelectedFaction] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const local = getSavedBuilds("weapon");
+      let cloud: SavedBuild[] = [];
+      try {
+        cloud = await getCloudBuilds("weapon");
+      } catch {
+        /* offline / signed out */
+      }
+      if (cancelled) return;
+      const byId = new Map<string, SavedBuild>();
+      for (const b of [...local, ...cloud]) byId.set(b.id, b);
+      setSavedBuilds(
+        Array.from(byId.values()).sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 40),
+      );
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const loadFromBuild = useCallback((build: SavedBuild) => {
+    const data = build.data as {
+      weaponId?: string;
+      mods?: { modId: string; rank: number; slotIndex: number }[];
+      arcaneIds?: (string | null)[];
+      progenitorElement?: string;
+      progenitorBonusPercent?: number;
+      incarnonEvolutions?: Record<number, number>;
+    };
+    if (!data?.weaponId) return;
+    const entry = calcSavedWeaponBuildStats(
+      {
+        weaponId: data.weaponId,
+        mods: data.mods ?? [],
+        arcaneIds: data.arcaneIds,
+        progenitorElement: data.progenitorElement,
+        progenitorBonusPercent: data.progenitorBonusPercent,
+        incarnonEvolutions: data.incarnonEvolutions,
+      },
+      { ...DEFAULT_SIM_PARAMS, killStacks: 5, statusTypesOnTarget: 3, arcaneStacks: 12 },
+    );
+    if (!entry) return;
+    const inputs = calculatedStatsToSimInputs(entry.stats);
+    setDmgTypes(inputs.dmgTypes);
+    setFireRate(inputs.fireRate);
+    setCritChance(inputs.critChance);
+    setCritMulti(inputs.critMulti);
+    setMultishot(inputs.multishot);
+    setStatusChance(inputs.statusChance);
+    setMagazine(inputs.magazine);
+    setReloadTime(inputs.reloadTime);
+    setStatusDamageBonus(inputs.statusDamageBonus);
+    setHeadshotDamageBonus(inputs.headshotDamageBonus);
+    setFactionBonuses(inputs.factionBonuses);
+    setLoadedBuildLabel(`${build.name} (${entry.name})`);
+  }, []);
 
   const factions = useMemo(() => ["all", ...new Set(ENEMY_TYPES.map((e) => e.faction))], []);
   const filteredEnemies = selectedFaction && selectedFaction !== "all"
@@ -202,21 +276,31 @@ export default function DamageSimulatorPage() {
       return { type, raw, vsShield, vsHealth, weight };
     });
 
-    // Aggregate per-shot
+    // Aggregate per-shot — faction / headshot from loaded build
     const acm = avgCritMult(critChance, critMulti);
     const shieldSum = typeBreakdown.reduce((s, t) => s + t.vsShield, 0);
     const healthSum = typeBreakdown.reduce((s, t) => s + t.vsHealth, 0);
+    const factionBonus = factionBonusFromStats(factionBonuses, selectedEnemy.faction);
+    const combatMult = combatDamageMultiplier({
+      factionBonus,
+      applyHeadshots,
+      headshotDamageBonus,
+    });
+    const factionDot = factionDotMultiplier(factionBonus);
+    const statusDmg = 1 + statusDamageBonus;
+    const head = applyHeadshots ? 2 * (1 + headshotDamageBonus) : 1;
+    const dotMult = statusDmg * factionDot * head;
 
-    const rawPerShot = totalRaw * multishot * acm;
-    const shieldDmgPerShot = shieldSum * multishot * acm;
-    const healthDmgPerShot = healthSum * multishot * acm;
+    const rawPerShot = totalRaw * multishot * acm * combatMult;
+    const shieldDmgPerShot = shieldSum * multishot * acm * combatMult;
+    const healthDmgPerShot = healthSum * multishot * acm * combatMult;
 
-    // DoT DPS
+    // DoT DPS (modded base ≈ totalRaw for hand-entered stats)
     let slashDotDps = 0;
     const slashRaw = dmgTypes["slash"] ?? 0;
     if (slashRaw > 0 && procsPerSec > 0) {
       const pps = procsPerSec * (slashRaw / totalRaw);
-      const tickDmg = totalRaw * 0.35;
+      const tickDmg = totalRaw * 0.35 * acm * dotMult;
       const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "slash");
       slashDotDps = pps * tickDmg * (7 / 6) * (1 + hm) * viralMult;
     }
@@ -225,7 +309,7 @@ export default function DamageSimulatorPage() {
     const heatRaw = dmgTypes["heat"] ?? 0;
     if (heatRaw > 0 && procsPerSec > 0) {
       const pps = procsPerSec * (heatRaw / totalRaw);
-      const tickDmg = totalRaw * 0.5;
+      const tickDmg = totalRaw * 0.5 * acm * dotMult;
       const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "heat");
       heatDotDps = pps * tickDmg * (1 + hm) * (1 - armorDR);
     }
@@ -234,7 +318,7 @@ export default function DamageSimulatorPage() {
     const toxinRaw = dmgTypes["toxin"] ?? 0;
     if (toxinRaw > 0 && procsPerSec > 0) {
       const pps = procsPerSec * (toxinRaw / totalRaw);
-      const tickDmg = totalRaw * 0.5;
+      const tickDmg = totalRaw * 0.5 * acm * dotMult;
       const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "toxin");
       toxinDotDps = pps * tickDmg * (1 + hm) * (1 - armorDR);
     }
@@ -281,7 +365,11 @@ export default function DamageSimulatorPage() {
       shieldTime, healthTime, ttk,
       shotsToKill: Math.max(1, stk),
     };
-  }, [selectedEnemy, enemyLevel, dmgTypes, totalRaw, fireRate, critChance, critMulti, multishot, statusChance, magazine, reloadTime]);
+  }, [
+    selectedEnemy, enemyLevel, dmgTypes, totalRaw, fireRate, critChance, critMulti,
+    multishot, statusChance, magazine, reloadTime, statusDamageBonus, headshotDamageBonus,
+    factionBonuses, applyHeadshots,
+  ]);
 
   const setDmg = (type: string, val: number) => setDmgTypes((prev) => ({ ...prev, [type]: val }));
   const removeDmg = (type: string) => setDmgTypes((prev) => { const n = { ...prev }; delete n[type]; return n; });
@@ -292,14 +380,65 @@ export default function DamageSimulatorPage() {
     <PageShell>
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-lg sm:text-2xl font-bold mb-6 flex items-center gap-2">
+          <h1 className="text-lg sm:text-2xl font-bold mb-2 flex items-center gap-2">
             <Zap className="h-6 w-6 text-primary" />
             Damage Simulator
           </h1>
+          <p className="text-xs text-muted-foreground mb-6 max-w-2xl">
+            Enter stats by hand or load a saved weapon build. TTK uses post-U32 enemy scaling, Viral/Corrosive averages,
+            Elementalist status damage, Bane (hit + DoT²), and optional headshots.
+          </p>
 
           <div className="grid lg:grid-cols-[1fr_420px] gap-6">
             {/* Left: Inputs */}
             <div className="space-y-4">
+              <Section title="LOAD FROM BUILD" icon={<FolderOpen className="h-3.5 w-3.5" />} defaultOpen>
+                {savedBuilds.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    No saved weapon builds found. Save one in the Weapon Builder (local or account), then return here.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    <select
+                      className="w-full h-9 rounded-lg border border-border bg-background px-2 text-xs"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const b = savedBuilds.find((x) => x.id === e.target.value);
+                        if (b) loadFromBuild(b);
+                      }}
+                    >
+                      <option value="">Select a weapon build…</option>
+                      {savedBuilds.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+                    {loadedBuildLabel && (
+                      <p className="text-[11px] text-cyan-400">
+                        Loaded: {loadedBuildLabel}
+                        {(statusDamageBonus > 0 || Object.keys(factionBonuses).length > 0) && (
+                          <span className="text-muted-foreground">
+                            {" "}
+                            · status dmg +{(statusDamageBonus * 100).toFixed(0)}%
+                            {Object.keys(factionBonuses).length > 0 && " · faction mods active"}
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={applyHeadshots}
+                        onChange={(e) => setApplyHeadshots(e.target.checked)}
+                        className="h-3.5 w-3.5 rounded border-border accent-primary"
+                      />
+                      Headshots (2× × Acuity bonuses from build)
+                    </label>
+                  </div>
+                )}
+              </Section>
+
               {/* Weapon Core Stats */}
               <Section title="WEAPON STATS" icon={<Crosshair className="h-3.5 w-3.5" />}>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">

@@ -84,7 +84,7 @@ function calculateWeaponStats(
   let critMult = weapon.criticalMultiplier;
   let statusChance = weapon.statusChance;
   let fireRate = weapon.fireRate;
-  let multishot = weapon.multishot ?? 1;
+  let multishotBonus = 0;
   let magazineBonus = 0;
   let reloadBonus = 0;
   let damagePerStatusBonus = 0;
@@ -107,7 +107,7 @@ function calculateWeaponStats(
           break;
         case "statusChance": statusChance += weapon.statusChance * v; break;
         case "fireRate": case "attackSpeed": fireRate += weapon.fireRate * v; break;
-        case "multishot": multishot += v; break;
+        case "multishot": multishotBonus += v; break;
         case "magazine": case "magazineSize": magazineBonus += v; break;
         case "reload": case "reloadSpeed": reloadBonus += v; break;
         case "damagePerStatus": damagePerStatusBonus += v; break;
@@ -129,13 +129,14 @@ function calculateWeaponStats(
           break;
         case "statusChance": statusChance += weapon.statusChance * val; break;
         case "fireRate": fireRate += weapon.fireRate * val; break;
-        case "multishot": multishot += val; break;
+        case "multishot": multishotBonus += val; break;
         case "magazine": magazineBonus += val; break;
         case "reloadSpeed": reloadBonus += val; break;
       }
     }
   }
 
+  const multishot = (weapon.multishot ?? 1) * (1 + multishotBonus);
   const totalDmg = weapon.damage * dmgMult;
   const avgHit = totalDmg * multishot;
   const avgCritMult = 1 + critChance * (critMult - 1);
@@ -207,7 +208,7 @@ export default function CompanionBuilderPage() {
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
 
-  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic }: SaveBuildDialogValues) => {
+  const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic, tags }: SaveBuildDialogValues) => {
     if (!selectedCompanion) return;
     const data: CompanionBuildData = {
       companionId: selectedCompanion.id,
@@ -224,6 +225,7 @@ export default function CompanionBuilderPage() {
       name,
       description,
       isPublic,
+      tags,
       type: "companion",
       createdAt: Date.now(),
       updatedAt: Date.now(),

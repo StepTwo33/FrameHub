@@ -2,6 +2,11 @@
 // Post-Update 32 S-curve scaling, proper armor/shield/health type interactions,
 // Viral/Corrosive status accounting, Slash/Heat/Toxin DoT damage, reload cycles
 import { CalculatedStats } from "./types";
+import {
+  combatDamageMultiplier,
+  factionBonusFromStats,
+  factionDotMultiplier,
+} from "./combat-multipliers";
 
 export interface EnemyType {
   id: string;
@@ -229,41 +234,93 @@ export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: nu
   }
   healthRatio *= viralMult;
 
-  // DoT DPS contributions (apply during health phase)
+  // DoT DPS contributions (apply during health phase).
+  // Per-proc tick base = modded base (Serration-style only) × avg crit.
+  // Multishot is NOT in the tick — procsPerSec already uses multishot-aware
+  // statusChancePerShot. Heat/Toxin/Elec/Gas then × (1 + type%).
   let dotDps = 0;
+  const acm = avgCritMult(stats.criticalChance, stats.criticalMultiplier);
+  const moddedBase =
+    stats.moddedBaseDamage != null && stats.moddedBaseDamage > 0
+      ? stats.moddedBaseDamage
+      : totalRaw; // fallback when stats were built without calculator
+  const sim = stats.simParams;
+  const factionBonus = factionBonusFromStats(
+    stats.factionBonuses,
+    sim?.targetFaction ?? enemy.faction,
+  );
+  const factionDot = factionDotMultiplier(factionBonus);
+  const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
+  const head =
+    sim?.applyHeadshots ? 2 * (1 + (stats.headshotDamageBonus ?? 0)) : 1;
+  const stance =
+    sim?.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1);
+  const combatMult = combatDamageMultiplier({
+    factionBonus,
+    applyHeadshots: sim?.applyHeadshots,
+    headshotDamageBonus: stats.headshotDamageBonus ?? 0,
+    stanceMultiplier: stance,
+  });
+  const dotBase = moddedBase * acm * statusDmg * factionDot * head;
 
-  // Slash DoT: 35% base per tick, 7 ticks over 6s, bypasses armor
+  const typeBonus = (type: string): number => {
+    const el = dmgTypes.find((d) => d.type === type);
+    if (!el || moddedBase <= 0) return 0;
+    return el.value / moddedBase;
+  };
+
+  // Slash DoT: 35% base/tick, 7 ticks over 6s, bypasses armor (True/cinematic)
   if (stats.slash > 0 && procsPerSec > 0) {
     const slashPPS = procsPerSec * (stats.slash / totalRaw);
-    const tickDmg = totalRaw * 0.35;
-    const dpsPerProc = tickDmg * (7 / 6); // sustained DPS per active proc
+    const tickDmg = dotBase * 0.35;
+    const dpsPerProc = tickDmg * (7 / 6);
     const slashHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "slash");
     dotDps += slashPPS * dpsPerProc * (1 + slashHM) * viralMult;
   }
 
-  // Heat DoT: 50% base per tick, 7 ticks over 6s, doesn't bypass armor
+  // Heat DoT: 50% × (1+heat%) base/tick, armor-affected
   const heatDmg = dmgTypes.find((d) => d.type === "heat");
   if (heatDmg && procsPerSec > 0) {
     const heatPPS = procsPerSec * (heatDmg.value / totalRaw);
-    const tickDmg = totalRaw * 0.5;
-    const dpsPerProc = tickDmg * (7 / 6); // sustained DPS per active proc
+    const tickDmg = dotBase * 0.5 * (1 + typeBonus("heat"));
+    const dpsPerProc = tickDmg * (7 / 6);
     const heatHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "heat");
     dotDps += heatPPS * dpsPerProc * (1 + heatHM) * (1 - armorDR);
   }
 
-  // Toxin DoT: 50% base per tick, 7 ticks over 6s, bypasses shields
+  // Toxin DoT: 50% × (1+toxin%) base/tick, armor-affected, bypasses shields
   const toxinDmg = dmgTypes.find((d) => d.type === "toxin");
   if (toxinDmg && procsPerSec > 0) {
     const toxinPPS = procsPerSec * (toxinDmg.value / totalRaw);
-    const tickDmg = totalRaw * 0.5;
-    const dpsPerProc = tickDmg * (7 / 6); // sustained DPS per active proc
+    const tickDmg = dotBase * 0.5 * (1 + typeBonus("toxin"));
+    const dpsPerProc = tickDmg * (7 / 6);
     const toxinHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "toxin");
     dotDps += toxinPPS * dpsPerProc * (1 + toxinHM) * (1 - armorDR);
   }
 
-  // Shot-level calculations
-  const acm = avgCritMult(stats.criticalChance, stats.criticalMultiplier);
-  const rawPerShot = totalRaw * multishot * acm;
+  // Electricity DoT: 50% × (1+elec%) base/tick, armor-affected
+  const elecDmg = dmgTypes.find((d) => d.type === "electricity");
+  if (elecDmg && procsPerSec > 0) {
+    const elecPPS = procsPerSec * (elecDmg.value / totalRaw);
+    const tickDmg = dotBase * 0.5 * (1 + typeBonus("electricity"));
+    const dpsPerProc = tickDmg * (7 / 6);
+    const elecHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "electricity");
+    dotDps += elecPPS * dpsPerProc * (1 + elecHM) * (1 - armorDR);
+  }
+
+  // Gas DoT cloud: 50% × (1+gas%) base/tick
+  const gasDmg = dmgTypes.find((d) => d.type === "gas");
+  if (gasDmg && procsPerSec > 0) {
+    const gasPPS = procsPerSec * (gasDmg.value / totalRaw);
+    const tickDmg = dotBase * 0.5 * (1 + typeBonus("gas"));
+    const dpsPerProc = tickDmg * (7 / 6);
+    const gasHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "gas");
+    // Gas cloud deals toxin-like damage; treat as armor-affected health damage
+    dotDps += gasPPS * dpsPerProc * (1 + gasHM) * (1 - armorDR) * viralMult;
+  }
+
+  // Shot-level calculations (faction hit ×1; headshot/stance; DoTs use faction² via dotBase)
+  const rawPerShot = totalRaw * multishot * acm * combatMult;
   const shieldPerShot = rawPerShot * shieldRatio;
   const healthPerShot = rawPerShot * healthRatio;
 
