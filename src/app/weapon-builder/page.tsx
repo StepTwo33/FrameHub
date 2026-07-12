@@ -46,6 +46,7 @@ import { getWeaponImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 
@@ -210,11 +211,16 @@ export default function WeaponBuilderPage() {
       setProgenitorElement("heat");
       setProgenitorBonusPercent(PROGENITOR_BONUS_DEFAULT);
     }
-    setCurrentBuildId(build.id);
+    setCurrentBuildId(build.id || null);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
     setBuildIsPublic(build.isPublic ?? false);
     setSelectedEvolutions(d.incarnonEvolutions ?? {});
+    const rivens: Record<number, Record<string, number>> = {};
+    for (const m of d.mods) {
+      if (m.rivenStats && Object.keys(m.rivenStats).length > 0) rivens[m.slotIndex] = m.rivenStats;
+    }
+    setRivenStatsMap(rivens);
     setShowSavedBuilds(false);
     setShowWeaponList(false);
     if (!options?.silent) {
@@ -275,6 +281,11 @@ export default function WeaponBuilderPage() {
   }, [applyLoadedBuild]);
 
   useCloudBuildFromUrl("weapon", (build) => applyLoadedBuild(build, { silent: true }));
+  useLoadoutSlotFromUrl(
+    "weapon",
+    useCallback((build) => applyLoadedBuild(build, { silent: true }), [applyLoadedBuild]),
+    allWeapons.length > 0,
+  );
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

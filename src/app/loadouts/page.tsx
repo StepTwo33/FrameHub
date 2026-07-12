@@ -897,7 +897,7 @@ export default function LoadoutsPage() {
                           </div>
                           <div className="flex flex-col gap-1.5 mt-auto pt-1">
                             <a
-                              href={isModularSlot ? "/modular-builder" : cfg.builderPath}
+                              href={`${isModularSlot ? "/modular-builder" : cfg.builderPath}?loadout=${encodeURIComponent(loadout.id)}&slot=${slot}`}
                               className="inline-flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-background/60 border border-border/60 hover:border-primary/35 hover:text-primary transition-colors"
                             >
                               Open builder <ExternalLink className="h-3 w-3 opacity-70" />

@@ -28,6 +28,7 @@ import { extractBuildFromUrl } from "@/lib/build-url";
 import { resolveArcaneById } from "@/lib/build-storage";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
 
 type ModularType = "kitgun" | "zaw" | "amp";
 
@@ -302,6 +303,7 @@ export default function ModularBuilderPage() {
   }, []);
 
   useCloudBuildFromUrl("modular", handleLoadBuild);
+  useLoadoutSlotFromUrl("modular", handleLoadBuild);
 
   const handleDeleteBuild = (id: string) => {
     deleteBuild(id);

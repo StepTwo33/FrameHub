@@ -73,6 +73,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
 import { getCompanionWeapons } from "@/lib/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
 function calculateWeaponStats(
   weapon: Weapon,
   mods: EquippedMod[],
@@ -285,6 +286,7 @@ export default function CompanionBuilderPage() {
   }, [allCompanions, allWeapons]);
 
   useCloudBuildFromUrl("companion", handleLoadBuild);
+  useLoadoutSlotFromUrl("companion", handleLoadBuild, allCompanions.length > 0);
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);

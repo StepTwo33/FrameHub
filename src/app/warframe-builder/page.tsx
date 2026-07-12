@@ -44,6 +44,7 @@ import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-b
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { DualFormTabs } from "@/components/dual-form-tabs";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
@@ -557,6 +558,11 @@ export default function WarframeBuilderPage() {
   }, [applyLoadedBuild]);
 
   useCloudBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
+  useLoadoutSlotFromUrl(
+    "warframe",
+    useCallback((build) => applyLoadedBuild(build, { silent: true }), [applyLoadedBuild]),
+    allWarframes.length > 0,
+  );
 
   const handleDeleteBuild = useCallback((id: string) => {
     deleteBuild(id);
