@@ -14,6 +14,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  /** WFCD packages are ESM + large; resolve from node_modules at runtime on the server. */
+  serverExternalPackages: ["@wfcd/arsenal-parser", "@wfcd/items", "warframe-worldstate-data"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
