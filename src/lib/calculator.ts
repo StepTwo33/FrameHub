@@ -518,7 +518,7 @@ export function calculateWeaponBuild(
 
   // Add innate weapon elements (kitgun chambers, Kuva/Tenet bonuses, etc.)
   // Innate elements go BEFORE mod elements in combo ordering
-  const innateElemTypes = ['heat', 'cold', 'toxin', 'electricity', 'radiation', 'viral', 'corrosive', 'gas', 'magnetic', 'blast'] as const;
+  const innateElemTypes = ['heat', 'cold', 'toxin', 'electricity', 'radiation', 'viral', 'corrosive', 'gas', 'magnetic', 'blast', 'tau'] as const;
   const innateElements: { type: string; value: number }[] = [];
   for (const elem of innateElemTypes) {
     const baseVal = (baseWeapon as unknown as Record<string, unknown>)[elem] as number | undefined;

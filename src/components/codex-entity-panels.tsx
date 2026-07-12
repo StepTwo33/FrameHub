@@ -386,9 +386,15 @@ export function WeaponDetailPanel({ weapon, compact, returnTo }: { weapon: Weapo
       <div>
         <PanelHeading>Damage types</PanelHeading>
         <div className="mt-1 flex flex-wrap gap-1 font-mono text-[10px]">
-          <span className="rounded bg-muted px-1.5 py-0.5">Impact {Math.round(weapon.impact)}</span>
-          <span className="rounded bg-muted px-1.5 py-0.5">Puncture {Math.round(weapon.puncture)}</span>
-          <span className="rounded bg-muted px-1.5 py-0.5">Slash {Math.round(weapon.slash)}</span>
+          {weapon.impact > 0 && (
+            <span className="rounded bg-muted px-1.5 py-0.5">Impact {Math.round(weapon.impact)}</span>
+          )}
+          {weapon.puncture > 0 && (
+            <span className="rounded bg-muted px-1.5 py-0.5">Puncture {Math.round(weapon.puncture)}</span>
+          )}
+          {weapon.slash > 0 && (
+            <span className="rounded bg-muted px-1.5 py-0.5">Slash {Math.round(weapon.slash)}</span>
+          )}
           {elements.map(({ label, value }) => (
             <span key={label} className="rounded bg-muted px-1.5 py-0.5 capitalize">
               {label} {Math.round(value)}

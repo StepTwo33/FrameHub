@@ -572,24 +572,25 @@ export const customWeapons: Weapon[] = [
     hasRivenSlot: true,
   },
 
-  // ── TENNOCON 2026 (Upcoming) ───────────────────────────────────────────
-  // Source: https://wiki.warframe.com/w/Haalvu
-  // Sentient multi-barreled rifle; TennoCon 2026 Twitch drop (MR 8).
+  // ── TENNOCON 2026 ───────────────────────────────────────────────────────
+  // Source: https://wiki.warframe.com/w/Haalvu (Hotfix 43.0.7)
+  // Sentient rifle; TennoCon 2026 Twitch drop (MR 14). Pure Tau primary fire.
 
   {
     id: "haalvu",
     name: "Haalvu",
     category: "primary",
-    damage: 90,
-    impact: 23.4,
-    puncture: 23.4,
-    slash: 43.2,
-    fireRate: 15,
-    criticalChance: 0.22,
-    criticalMultiplier: 2.2,
-    statusChance: 0.22,
-    magazine: 200,
-    reloadTime: 13.83,
+    damage: 33,
+    impact: 0,
+    puncture: 0,
+    slash: 0,
+    tau: 33,
+    fireRate: 13,
+    criticalChance: 0.25,
+    criticalMultiplier: 2.5,
+    statusChance: 0.19,
+    magazine: 150,
+    reloadTime: 1,
     multishot: 1,
     triggerType: "Auto",
     modSlots: 8,
@@ -597,6 +598,8 @@ export const customWeapons: Weapon[] = [
     hasSecondaryArcaneSlot: false,
     isIncarnon: false,
     hasRivenSlot: true,
+    passive:
+      "Alt-fire splits into 8 burst rifles that auto-target up to 4 enemies within 10m (34 Tau, burst x2, 12 fire rate, 1.5 ammo per shot). Ammo regenerates after 0.5s idle at 300/s; fully depleted magazine reloads in 2s.",
   },
 ];
 

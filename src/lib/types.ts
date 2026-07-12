@@ -33,6 +33,7 @@ export interface Weapon {
   blast?: number;
   gas?: number;
   magnetic?: number;
+  tau?: number;
   fireRate: number;
   criticalChance: number;
   criticalMultiplier: number;

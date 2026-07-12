@@ -777,7 +777,7 @@ function CodexModRow({
         selected ? "border-indigo-500/50 bg-indigo-500/5" : "border-border/60 hover:border-indigo-500/30",
       )}
     >
-      <CodexModImage name={mod.name} polarity={mod.polarity} size={36} className="h-9 w-9" />
+      <CodexModImage name={mod.name} polarity={mod.polarity} size={44} className="h-11 w-11" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{mod.name}</p>
         <p className="text-[10px] text-muted-foreground">
