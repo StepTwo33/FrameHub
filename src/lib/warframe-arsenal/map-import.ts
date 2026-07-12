@@ -22,6 +22,7 @@ import {
   readRawWeaponFields,
   resolveHelminthOverride,
 } from "@/lib/warframe-arsenal/lotus-resolve";
+import { resolveRivenUpgrade } from "@/lib/warframe-arsenal/riven-resolve";
 
 export interface ArsenalImportWarning {
   kind: "warframe" | "weapon" | "companion" | "mod" | "arcane" | "helminth" | "modular" | "archwing";
@@ -54,6 +55,10 @@ function modRank(mod: ModUnion): number {
   return typeof rank === "number" ? rank : 0;
 }
 
+function normalizeCompanionLabel(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
 function mapUpgradeMods(
   mods: ModUnion[],
   warnings: ArsenalImportWarning[],
@@ -63,6 +68,18 @@ function mapUpgradeMods(
   let slotIndex = 0;
 
   for (const entry of mods) {
+    const riven = resolveRivenUpgrade(entry);
+    if (riven) {
+      slots.push({
+        modId: riven.modId,
+        rank: riven.rank,
+        slotIndex,
+        ...(Object.keys(riven.rivenStats).length > 0 ? { rivenStats: riven.rivenStats } : {}),
+      });
+      slotIndex += 1;
+      continue;
+    }
+
     const name = labelFromUnknown(entry);
     if (!name) continue;
 
@@ -308,15 +325,17 @@ export function mapArsenalToImportPayload(
     const companionRaw = rawPayload?.loadOuts as { SENTINEL?: { companion?: unknown } } | undefined;
     const rawCompanion = companionRaw?.SENTINEL?.companion;
     const rawFields = readRawWeaponFields(rawCompanion);
+    const companionUniqueName =
+      loadout.companion.uniqueName ?? rawFields.uniqueName;
+    const companionItemName = rawFields.itemName;
+    const petCustomName = companionItemName
+      ? parseCustomItemName(companionItemName)
+      : loadout.companion.name;
 
     const fhCompanion =
-      findCompanionByLotusPath(
-        loadout.companion.uniqueName ?? rawFields.uniqueName,
-        loadout.companion.name ?? rawFields.itemName,
-      ) ??
+      findCompanionByLotusPath(companionUniqueName, companionItemName) ??
       findCompanionByName(
-        loadout.companion.name ||
-          labelFromUnknown(loadout.companion.companion) ||
+        labelFromUnknown(loadout.companion.companion) ||
           labelFromUnknown(loadout.companion) ||
           "Companion",
       );
@@ -324,7 +343,7 @@ export function mapArsenalToImportPayload(
     if (!fhCompanion) {
       warnings.push({
         kind: "companion",
-        label: loadout.companion.name || labelFromUnknown(loadout.companion.companion) || "Companion",
+        label: petCustomName || labelFromUnknown(loadout.companion.companion) || "Companion",
       });
     } else {
       const body = mapUpgradeMods(loadout.companion.upgrades.mods, warnings);
@@ -332,8 +351,14 @@ export function mapArsenalToImportPayload(
         ? mapUpgradeMods(loadout.roboticweapon.upgrades.mods, warnings).mods
         : [];
       const companionArcanes = mapArcaneIds(loadout.companion.upgrades.arcanes, warnings);
+      const catalogName = fhCompanion.name;
+      const customName =
+        petCustomName && normalizeCompanionLabel(petCustomName) !== normalizeCompanionLabel(catalogName)
+          ? petCustomName
+          : undefined;
       companionBuild = {
         companionId: fhCompanion.id,
+        customName,
         mods: body.mods,
         weaponMods,
         arcaneIds: companionArcanes.arcaneIds,

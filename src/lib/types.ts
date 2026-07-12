@@ -151,6 +151,8 @@ export interface ModSlot {
   modId: string;
   rank: number;
   slotIndex: number;
+  /** Imported riven stat rolls (decimal fractions, e.g. 0.44 = +44%). */
+  rivenStats?: Record<string, number>;
 }
 
 /** Optional other loadout slots so cross-slot mod sets (Augur, Hunter, Synth, …) count correctly. */
@@ -655,6 +657,8 @@ export interface Loadout {
   };
   companionBuild?: {
     companionId: string;
+    /** Custom pet name from the arsenal payload (not the breed catalog name). */
+    customName?: string;
     mods: ModSlot[];
     weaponMods: ModSlot[];
     arcaneIds?: (string | null)[];

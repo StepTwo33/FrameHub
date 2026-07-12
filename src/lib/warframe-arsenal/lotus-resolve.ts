@@ -134,9 +134,54 @@ export function findWeaponByLotusPath(uniqueName?: string, itemName?: string) {
 }
 
 export function findCompanionByLotusPath(uniqueName?: string, itemName?: string) {
-  const name = itemName?.trim() || (uniqueName ? lotusItemName(uniqueName) : undefined);
-  if (!name) return undefined;
-  return findCompanionByName(name);
+  if (uniqueName) {
+    const resolved = lotusItemName(uniqueName);
+    if (resolved) {
+      const byResolved = findCompanionByName(resolved);
+      if (byResolved) return byResolved;
+    }
+    const byHint = findCompanionByPathHint(uniqueName);
+    if (byHint) return byHint;
+  }
+
+  if (itemName) {
+    const parsed = parseCustomItemName(itemName);
+    if (parsed) {
+      const byParsed = findCompanionByName(parsed);
+      if (byParsed) return byParsed;
+    }
+    const byItem = findCompanionByName(itemName);
+    if (byItem) return byItem;
+  }
+
+  return undefined;
+}
+
+/** Match breed-specific companions when lotusItemName is unavailable (e.g. predasites). */
+function findCompanionByPathHint(uniqueName: string): ReturnType<typeof findCompanionByName> {
+  const path = uniqueName.toLowerCase();
+  const hints: Array<{ pattern: RegExp; name: string }> = [
+    { pattern: /pharaoh|predasitepharaoh/, name: "Pharaoh Predasite" },
+    { pattern: /vizier|predasitevizier/, name: "Vizier Predasite" },
+    { pattern: /medjay|predasitemedjay/, name: "Medjay Predasite" },
+    { pattern: /sly|vulpaphylasly/, name: "Sly Vulpaphyla" },
+    { pattern: /crescent|vulpaphylacrescent/, name: "Crescent Vulpaphyla" },
+    { pattern: /panzer|vulpaphylapanzer/, name: "Panzer Vulpaphyla" },
+    { pattern: /sahasa/, name: "Sahasa Kubrow" },
+    { pattern: /huras/, name: "Huras Kubrow" },
+    { pattern: /chesa/, name: "Chesa Kubrow" },
+    { pattern: /raksa/, name: "Raksa Kubrow" },
+    { pattern: /sunika/, name: "Sunika Kubrow" },
+    { pattern: /helminthcharger|helminth.?charger/, name: "Helminth Charger" },
+    { pattern: /smeeta/, name: "Smeeta Kavat" },
+    { pattern: /adarza/, name: "Adarza Kavat" },
+    { pattern: /vedica/, name: "Vedica Venari" },
+  ];
+
+  for (const { pattern, name } of hints) {
+    if (pattern.test(path)) return findCompanionByName(name);
+  }
+  return undefined;
 }
 
 export function findArchwingByLotusPath(uniqueName?: string) {

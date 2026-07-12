@@ -22,6 +22,7 @@ import {
 import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/ttk";
 import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/dps-contributions";
+import { rivenStatChangesFromModSlots } from "@/lib/warframe-arsenal/riven-resolve";
 import {
   mergeWeaponCalcOptions,
   resolveWeaponExternalBuffs,
@@ -181,6 +182,7 @@ function calcWeaponSlotStats(
   const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions);
   const arcaneMods = resolveSavedArcaneSlots(build.arcaneIds, 2).filter((m): m is Mod => m != null);
   const modSlots = build.mods || [];
+  const rivenStatChanges = rivenStatChangesFromModSlots(modSlots);
   const stats =
     arcaneMods.length > 0
       ? calculateWeaponBuildWithArcanes(
@@ -192,6 +194,7 @@ function calcWeaponSlotStats(
           simParams,
           calcOptions,
           setLinkage,
+          rivenStatChanges,
         )
       : calculateWeaponBuild(
           base,
@@ -201,6 +204,7 @@ function calcWeaponSlotStats(
           simParams,
           calcOptions,
           setLinkage,
+          rivenStatChanges,
         );
   const isMelee = base.category === "melee" || base.triggerType === "Melee";
   const ttk =
@@ -237,13 +241,33 @@ function calcModularSlotStats(
   if (!w) return null;
   w = weaponWithPassive(w);
   const modSlots = data.mods || [];
+  const rivenStatChanges = rivenStatChangesFromModSlots(modSlots);
   const arcaneMods = resolveSavedArcaneSlots(data.arcaneIds, 2).filter((m): m is Mod => m != null);
   const externalBuffs = resolveWeaponExternalBuffs(w, buffContext, simParams);
   const calcOptions = mergeWeaponCalcOptions(undefined, externalBuffs);
   const stats =
     arcaneMods.length > 0
-      ? calculateWeaponBuildWithArcanes(w, modSlots, modsMap, arcaneMods, undefined, simParams, calcOptions, setLinkage)
-      : calculateWeaponBuild(w, modSlots, modsMap, undefined, simParams, calcOptions, setLinkage);
+      ? calculateWeaponBuildWithArcanes(
+          w,
+          modSlots,
+          modsMap,
+          arcaneMods,
+          undefined,
+          simParams,
+          calcOptions,
+          setLinkage,
+          rivenStatChanges,
+        )
+      : calculateWeaponBuild(
+          w,
+          modSlots,
+          modsMap,
+          undefined,
+          simParams,
+          calcOptions,
+          setLinkage,
+          rivenStatChanges,
+        );
   const isMelee = w.category === "melee" || w.triggerType === "Melee";
   const ttk =
     enemy && enemyLevel != null && enemyLevel > 0 ? calculateTTK(stats, enemy, enemyLevel) : undefined;
