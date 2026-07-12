@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { OverridesProvider } from "@/components/overrides-provider";
 import { Footer } from "@/components/footer";
 import { ThemeAwareToaster } from "@/components/theme-aware-toaster";
+import { ConfirmDialogProvider } from "@/components/confirm-dialog-provider";
 import { PWARegister } from "@/components/pwa-register";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import { DeployRefreshNotifier } from "@/components/deploy-refresh-notifier";
@@ -110,6 +111,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <TooltipProvider>
+          <ConfirmDialogProvider>
           <OverridesProvider>
           <ThemeAwareToaster />
           <PWARegister />
@@ -118,6 +120,7 @@ export default async function RootLayout({
           <div className="flex flex-1 flex-col">{children}</div>
           <Footer />
           </OverridesProvider>
+          </ConfirmDialogProvider>
         </TooltipProvider>
       </body>
     </html>

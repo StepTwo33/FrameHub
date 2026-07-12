@@ -114,6 +114,18 @@ function weaponWithPassive(w: Weapon): Weapon {
   return enrichWeapon(w);
 }
 
+function resolveCompanionWeaponForLoadout(
+  companionBuild: NonNullable<Loadout["companionBuild"]>,
+  companion: Companion,
+  weaponList: Weapon[],
+): Weapon | null {
+  if (companionBuild.weaponId) {
+    const explicit = weaponList.find((w) => w.id === companionBuild.weaponId);
+    if (explicit) return explicit;
+  }
+  return resolveDefaultCompanionWeapon(companion, weaponList);
+}
+
 export function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
   const m = loadout.modularBuild;
   const wfMods = loadout.warframeBuild
@@ -339,7 +351,10 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         });
         result.warframe = {
           name: wf.name,
-          stats: formStats.find((f) => f.id === dualConfig.defaultFormId)!.stats,
+          stats:
+            formStats.find((f) => f.id === dualConfig.defaultFormId)?.stats ??
+            formStats[0]?.stats ??
+            calculateWarframeBuild(wf, wb.mods || [], modsMap, setLinkage),
           forms: formStats,
         };
       } else {
@@ -414,7 +429,11 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
       let companionWeaponCritChance: number | undefined;
       const weaponMods = loadout.companionBuild.weaponMods || [];
       if (weaponMods.length > 0) {
-        const companionWeapon = resolveDefaultCompanionWeapon(c, weaponList);
+        const companionWeapon = resolveCompanionWeaponForLoadout(
+          loadout.companionBuild,
+          c,
+          weaponList,
+        );
         if (companionWeapon) {
           const cwStats = calculateWeaponBuild(
             weaponWithPassive(companionWeapon),
@@ -454,7 +473,11 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
       let weapon: LoadoutWeaponSlotStats | null = null;
       const weaponMods = loadout.companionBuild.weaponMods || [];
       if (weaponMods.length > 0) {
-        const companionWeapon = resolveDefaultCompanionWeapon(c, weaponList);
+        const companionWeapon = resolveCompanionWeaponForLoadout(
+          loadout.companionBuild,
+          c,
+          weaponList,
+        );
         if (companionWeapon) {
           const base = weaponWithPassive(companionWeapon);
           const stats = calculateWeaponBuild(

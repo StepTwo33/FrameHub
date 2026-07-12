@@ -10,6 +10,66 @@ export type LoadoutBuildData = Omit<
   "id" | "name" | "description" | "isPublic" | "cloudId" | "createdAt" | "updatedAt"
 >;
 
+/** Ensure cloud-safe defaults on slot payloads before POST /api/builds. */
+export function normalizeLoadoutBuildData(data: LoadoutBuildData): LoadoutBuildData {
+  const out = JSON.parse(JSON.stringify(data)) as LoadoutBuildData;
+
+  if (out.warframeBuild) {
+    const wb = out.warframeBuild;
+    out.warframeBuild = {
+      ...wb,
+      slotPolarities: wb.slotPolarities ?? {},
+      shards: wb.shards ?? [null, null, null, null, null],
+      hasOrokinReactor: wb.hasOrokinReactor ?? false,
+      isMR30: wb.isMR30 ?? false,
+      mods: wb.mods ?? [],
+      arcaneIds: wb.arcaneIds ?? [null, null],
+    };
+  }
+
+  const normalizeWeapon = (build: LoadoutBuildData["primaryBuild"]) => {
+    if (!build) return build;
+    return {
+      ...build,
+      hasOrokinCatalyst: build.hasOrokinCatalyst ?? false,
+      isMR30: build.isMR30 ?? false,
+      slotPolarities: build.slotPolarities ?? {},
+      arcaneIds: build.arcaneIds ?? [null, null],
+      mods: build.mods ?? [],
+    };
+  };
+
+  out.primaryBuild = normalizeWeapon(out.primaryBuild);
+  out.secondaryBuild = normalizeWeapon(out.secondaryBuild);
+  out.meleeBuild = normalizeWeapon(out.meleeBuild);
+
+  if (out.companionBuild) {
+    const cb = out.companionBuild;
+    out.companionBuild = {
+      ...cb,
+      hasReactor: cb.hasReactor ?? false,
+      hasCatalyst: cb.hasCatalyst ?? false,
+      mods: cb.mods ?? [],
+      weaponMods: cb.weaponMods ?? [],
+      slotPolarities: cb.slotPolarities ?? {},
+      weaponSlotPolarities: cb.weaponSlotPolarities ?? {},
+    };
+  }
+
+  if (out.modularBuild) {
+    const mb = out.modularBuild;
+    out.modularBuild = {
+      ...mb,
+      hasOrokinCatalyst: mb.hasOrokinCatalyst ?? false,
+      slotPolarities: mb.slotPolarities ?? {},
+      arcaneIds: mb.arcaneIds ?? [null, null],
+      mods: mb.mods ?? [],
+    };
+  }
+
+  return out;
+}
+
 export function loadoutToBuildData(loadout: Loadout): LoadoutBuildData {
   const {
     id: _id,
@@ -21,7 +81,7 @@ export function loadoutToBuildData(loadout: Loadout): LoadoutBuildData {
     updatedAt: _updatedAt,
     ...data
   } = loadout;
-  return data;
+  return normalizeLoadoutBuildData(data);
 }
 
 export function loadoutFromSavedBuild(build: SavedBuild): Loadout {

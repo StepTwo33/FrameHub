@@ -17,8 +17,6 @@ import {
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import {
   useCloudBuildFromUrl,
-  setCloudBuildInUrl,
-  markCloudBuildLoaded,
 } from "@/lib/use-cloud-build-from-url";
 import { Loadout, EquippedArchonShard } from "@/lib/types";
 import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
@@ -57,6 +55,7 @@ import { cn } from "@/lib/utils";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
 import { dualFormModCountSummary, emptyDualFormBuilds, isDualFormWarframe } from "@/lib/dual-form-warframes";
 
@@ -244,6 +243,7 @@ function normalizeWarframeBuild(d: WarframeBuildData): NonNullable<Loadout["warf
 }
 
 export default function LoadoutsPage() {
+  const { confirm } = useConfirmDialog();
   const weapons = useWeapons();
   const weaponsMap = useMemo(() => new Map(weapons.map((w) => [w.id, w])), [weapons]);
   const [loadouts, setLoadouts] = useState<Loadout[]>([]);
@@ -300,39 +300,42 @@ export default function LoadoutsPage() {
       const loadout = loadouts.find((l) => l.id === saveDialogLoadoutId);
       if (!loadout) return;
 
-      const build: SavedBuild = {
-        id: loadout.cloudId || generateBuildId(),
-        name,
-        description,
-        isPublic,
-        tags,
-        type: "loadout",
-        createdAt: loadout.createdAt,
-        updatedAt: Date.now(),
-        data: loadoutToBuildData(loadout),
-      };
+      try {
+        const build: SavedBuild = {
+          id: loadout.cloudId || generateBuildId(),
+          name,
+          description,
+          isPublic,
+          tags,
+          type: "loadout",
+          createdAt: loadout.createdAt,
+          updatedAt: Date.now(),
+          data: loadoutToBuildData(loadout),
+        };
 
-      const cloudResult = await saveCloudBuild(build);
-      if (!cloudResult) {
-        toast.error("Could not save loadout", { description: "Sign in to save loadouts to your account." });
-        return;
+        const cloudResult = await saveCloudBuild(build);
+        if (!cloudResult) {
+          toast.error("Could not save loadout", { description: "Sign in to save loadouts to your account." });
+          return;
+        }
+
+        const updated: Loadout = {
+          ...loadout,
+          name,
+          description,
+          isPublic: cloudResult.isPublic ?? isPublic,
+          cloudId: cloudResult.id,
+          updatedAt: Date.now(),
+        };
+        saveLoadout(updated);
+        refresh();
+        toast.success("Loadout saved", {
+          description: isPublic ? "Listed in Community Builds." : "Saved to your account.",
+        });
+      } catch (err) {
+        console.error("Failed to save loadout", err);
+        toast.error("Could not save loadout", { description: "Something went wrong while saving. Try again." });
       }
-
-      const updated: Loadout = {
-        ...loadout,
-        name,
-        description,
-        isPublic: cloudResult.isPublic ?? isPublic,
-        cloudId: cloudResult.id,
-        updatedAt: Date.now(),
-      };
-      saveLoadout(updated);
-      refresh();
-      setCloudBuildInUrl(cloudResult.id);
-      markCloudBuildLoaded(cloudResult.id);
-      toast.success("Loadout saved", {
-        description: isPublic ? "Listed in Community Builds." : "Saved to your account.",
-      });
     },
     [saveDialogLoadoutId, loadouts, refresh],
   );
@@ -395,13 +398,19 @@ export default function LoadoutsPage() {
   );
 
   const handleDelete = useCallback(
-    (id: string) => {
-      if (!confirm("Delete this loadout permanently?")) return;
+    async (id: string) => {
+      const ok = await confirm({
+        title: "Delete loadout?",
+        description: "This loadout will be permanently removed from this device.",
+        confirmLabel: "Delete",
+        destructive: true,
+      });
+      if (!ok) return;
       deleteLoadout(id);
       refresh();
       toast.success("Loadout deleted");
     },
-    [refresh]
+    [confirm, refresh],
   );
 
   const handleStartEdit = useCallback((loadout: Loadout) => {
@@ -581,8 +590,14 @@ export default function LoadoutsPage() {
   );
 
   const handleClearSlot = useCallback(
-    (loadoutId: string, slot: SlotType) => {
-      if (!confirm(`Remove ${SLOT_CONFIG[slot].label} from this loadout?`)) return;
+    async (loadoutId: string, slot: SlotType) => {
+      const ok = await confirm({
+        title: `Remove ${SLOT_CONFIG[slot].label}?`,
+        description: "This slot will be cleared from the loadout. The saved build itself is not deleted.",
+        confirmLabel: "Remove",
+        destructive: true,
+      });
+      if (!ok) return;
       const loadout = loadouts.find((l) => l.id === loadoutId);
       if (!loadout) return;
       const updated = { ...loadout };
@@ -610,7 +625,7 @@ export default function LoadoutsPage() {
       refresh();
       toast.info(`${SLOT_CONFIG[slot].label} cleared`);
     },
-    [loadouts, refresh]
+    [confirm, loadouts, refresh],
   );
 
   const pickerCatalogItems = useMemo(() => {

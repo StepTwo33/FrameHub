@@ -155,21 +155,28 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
     [enemyId],
   );
 
-  const stats = useMemo((): LoadoutStatsResult => {
-    const simParams = {
-      ...scenarioSimParams(scenario),
-      activeWeaponAbilityBuffs: activeAbilityBuffs,
-    };
-    return calcLoadoutStats(loadout, {
-      simParams,
-      allWeapons,
-      enemy: scenario === "vsEnemy" ? enemy : null,
-      enemyLevel: scenario === "vsEnemy" ? enemyLevel : undefined,
-    });
+  const stats = useMemo((): LoadoutStatsResult | null => {
+    try {
+      const simParams = {
+        ...scenarioSimParams(scenario),
+        activeWeaponAbilityBuffs: activeAbilityBuffs,
+      };
+      return calcLoadoutStats(loadout, {
+        simParams,
+        allWeapons,
+        enemy: scenario === "vsEnemy" ? enemy : null,
+        enemyLevel: scenario === "vsEnemy" ? enemyLevel : undefined,
+      });
+    } catch (err) {
+      console.warn("Loadout damage estimate failed", err);
+      return null;
+    }
   }, [loadout, scenario, enemy, enemyLevel, allWeapons, activeAbilityBuffs]);
 
-  const best = useMemo(() => bestSustainedDps(stats), [stats]);
+  const best = useMemo(() => (stats ? bestSustainedDps(stats) : null), [stats]);
   const showTtk = scenario === "vsEnemy";
+
+  if (!stats) return null;
 
   const hasAnyWeapon = stats.primary || stats.secondary || stats.melee || stats.exalted;
 

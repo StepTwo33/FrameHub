@@ -63,6 +63,11 @@ export function useCloudBuildFromUrl(
       return;
     }
     if (loadedInMountRef.current === buildId) return;
+    // Skip when a save/load in-page already applied this build (see markCloudBuildLoaded).
+    if (cloudBuildLoadedIdRef.current === buildId) {
+      loadedInMountRef.current = buildId;
+      return;
+    }
     // Mark as attempted up-front so failures aren't retried (and toasts aren't
     // duplicated) by StrictMode's double mount
     loadedInMountRef.current = buildId;
@@ -89,7 +94,6 @@ export function useCloudBuildFromUrl(
     queueMicrotask(() => { void syncFromUrl(); });
     return () => {
       loadedInMountRef.current = null;
-      cloudBuildLoadedIdRef.current = null;
     };
   }, [syncFromUrl]);
 
