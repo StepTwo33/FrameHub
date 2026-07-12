@@ -33,6 +33,7 @@ import {
 } from "@/lib/codex-catalog";
 import { weaponHasRadialAttacks } from "@/lib/weapon-radial-utils";
 import {
+  isCodexListedMod,
   matchesModBrowserCategory,
   modBrowserCategoryLabel,
   type ModBrowserCategoryId,
@@ -169,7 +170,7 @@ function CodexPageContent() {
   };
 
   const filteredMods = useMemo(() => {
-    let list = [...mods];
+    let list = mods.filter(isCodexListedMod);
     const hasSearch = searchQuery.trim().length > 0;
     // When searching, scan all mods — don't hide augments because Aura tab is selected.
     if (!hasSearch && modCategory !== "all") {

@@ -79,6 +79,11 @@ export function isKDriveMod(mod: Mod): boolean {
   return mod.category === "kdrive" || KDRIVE_MOD_IDS.has(mod.id) || /k-drive/i.test(mod.description);
 }
 
+/** Internal calculator placeholders — not equippable mods (e.g. Incarnon evolutions live on weapons). */
+export function isCodexListedMod(mod: Mod): boolean {
+  return mod.category !== "evolution";
+}
+
 /** Mods that belong to a dedicated special slot (Aura / Exilus / Tome / Historic). */
 function hasSpecialSlot(mod: Mod): boolean {
   return isAuraMod(mod) || getModSlotCategory(mod) !== null;
