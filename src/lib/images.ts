@@ -13,6 +13,10 @@ const WEAPON_IMAGE_STEM_BY_NAME: Record<string, string> = {
   "Ax-52": "Ax-52",
   "Efv-5 Jupiter": "Efv-5_Jupiter",
   "Efv-8 Mars": "Efv-8_Mars",
+  "Shadow Clones Prime": "Shadow_Clones",
+  "Shattered Lash Prime": "Shattered_Lash",
+  "Landslide Fists Prime": "Landslide_Fists",
+  "Whipclaw Prime": "Whipclaw",
 };
 
 const WARFRAME_IMAGE_STEM_BY_NAME: Record<string, string> = {

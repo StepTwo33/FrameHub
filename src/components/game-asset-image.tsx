@@ -15,16 +15,57 @@ type GameAssetImageProps = {
   className?: string;
   /** Hide broken thumbnails (missing /public file) */
   hideOnError?: boolean;
+  /** Hide solid white CDN placeholders that load successfully but render blank */
+  rejectBlank?: boolean;
   onError?: React.ReactEventHandler<HTMLImageElement>;
+  onBlank?: React.ReactEventHandler<HTMLImageElement>;
 };
+
+function isMostlyBlankWhite(img: HTMLImageElement): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 8;
+    canvas.height = 8;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return false;
+    ctx.drawImage(img, 0, 0, 8, 8);
+    const data = ctx.getImageData(0, 0, 8, 8).data;
+    let whitePixels = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] > 250 && data[i + 1] > 250 && data[i + 2] > 250) whitePixels++;
+    }
+    return whitePixels >= 60;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Local /public item art (mods, weapons, frames, …).
  * Uses a native img element so missing PNGs skip next/image optimization (which logs "received null" on 404/empty bodies).
  */
-export function GameAssetImage({ src, alt, width, height, className, hideOnError, onError }: GameAssetImageProps) {
+export function GameAssetImage({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  hideOnError,
+  rejectBlank,
+  onError,
+  onBlank,
+}: GameAssetImageProps) {
   const handleError: React.ReactEventHandler<HTMLImageElement> = (e) => {
     if (hideOnError) hideOnImageError(e);
+    onError?.(e);
+  };
+
+  const handleLoad: React.ReactEventHandler<HTMLImageElement> = (e) => {
+    if (!rejectBlank) return;
+    const img = e.target as HTMLImageElement;
+    if (!isMostlyBlankWhite(img)) return;
+    if (hideOnError) hideOnImageError(e);
+    onBlank?.(e);
     onError?.(e);
   };
 
@@ -36,6 +77,7 @@ export function GameAssetImage({ src, alt, width, height, className, hideOnError
       height={height}
       className={className}
       onError={hideOnError || onError ? handleError : undefined}
+      onLoad={rejectBlank ? handleLoad : undefined}
       loading="lazy"
       decoding="async"
     />

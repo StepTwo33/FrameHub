@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { GameAssetImage } from "@/components/game-asset-image";
+import { CodexModImage } from "@/components/codex-mod-image";
 import { PageShell, ContentPanel, PanelHeading } from "@/components/page-shell";
 import {
   CODEX_SECTIONS,
@@ -48,7 +49,7 @@ import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
 import { getModSlotCategory, modSlotCategoryLabel } from "@/lib/mod-slot-categories";
 import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
-import { getModImage, getArcaneImage, getWeaponImage, getWarframeImage } from "@/lib/images";
+import { getArcaneImage, getWeaponImage, getWarframeImage } from "@/lib/images";
 import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
 import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
 import { getArcaneStatLabel } from "@/lib/arcane-display";
@@ -776,14 +777,7 @@ function CodexModRow({
         selected ? "border-indigo-500/50 bg-indigo-500/5" : "border-border/60 hover:border-indigo-500/30",
       )}
     >
-      <GameAssetImage
-        src={getModImage(mod.name)}
-        alt=""
-        width={36}
-        height={36}
-        className="h-9 w-9 shrink-0 rounded object-contain bg-muted/20"
-        hideOnError
-      />
+      <CodexModImage name={mod.name} polarity={mod.polarity} size={36} className="h-9 w-9" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{mod.name}</p>
         <p className="text-[10px] text-muted-foreground">
@@ -894,13 +888,11 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
   return (
     <div className={cn("space-y-3", compact && "space-y-2")}>
       <div className="flex items-start gap-2.5">
-        <GameAssetImage
-          src={getModImage(mod.name)}
-          alt={mod.name}
-          width={compact ? 48 : 64}
-          height={compact ? 48 : 64}
-          className={cn("rounded object-contain bg-muted/20", compact ? "h-12 w-12" : "h-16 w-16")}
-          hideOnError
+        <CodexModImage
+          name={mod.name}
+          polarity={mod.polarity}
+          size={compact ? 48 : 64}
+          className={compact ? "h-12 w-12" : "h-16 w-16"}
         />
         <div className="min-w-0 flex-1">
           <h2 className={cn("font-semibold leading-tight", compact && "text-sm")}>{mod.name}</h2>
