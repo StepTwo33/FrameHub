@@ -1,6 +1,8 @@
 import type ArsenalData from "@wfcd/arsenal-parser";
 import type { ModUnion } from "@wfcd/items";
-import type { Loadout, ModSlot, ModularBuildData } from "@/lib/types";
+import { find } from "@wfcd/items/utilities";
+import type { Companion, Loadout, ModSlot, ModularBuildData } from "@/lib/types";
+import { resolveCompanionClawId } from "@/lib/companion-weapons";
 import {
   findArcaneByName,
   findCompanionByName,
@@ -40,6 +42,14 @@ export interface ArsenalImportPayload {
   warnings: ArsenalImportWarning[];
 }
 
+type RawSentinelSlot = {
+  companion?: unknown;
+  roboticweapon?: unknown;
+  exalted?: unknown;
+  exalted2?: unknown;
+  exalted3?: unknown;
+};
+
 type RawLoadouts = {
   NORMAL?: {
     warframe?: unknown;
@@ -48,7 +58,83 @@ type RawLoadouts = {
     melee?: unknown;
     heavy?: unknown;
   };
+  SENTINEL?: RawSentinelSlot;
 };
+
+const BEAST_COMPANION_TYPES = new Set(["kubrow", "kavat", "predasite", "vulpaphyla"]);
+
+function rawUpgradesToModUnion(upgrades: unknown): ModUnion[] {
+  if (!Array.isArray(upgrades)) return [];
+  const out: ModUnion[] = [];
+  for (const entry of upgrades) {
+    if (!entry || typeof entry !== "object") continue;
+    const rec = entry as { uniqueName?: string; rank?: number };
+    if (!rec.uniqueName) continue;
+    const rank = typeof rec.rank === "number" ? rec.rank : 0;
+    const item = find.findItem(rec.uniqueName);
+    if (item) {
+      out.push({ ...item, rank } as ModUnion);
+    } else {
+      out.push({
+        uniqueName: rec.uniqueName,
+        rank,
+        name: labelFromUnknown({ uniqueName: rec.uniqueName }),
+      } as ModUnion);
+    }
+  }
+  return out;
+}
+
+function pickRawCompanionWeapon(sentinel: RawSentinelSlot | undefined, companionType: string): unknown {
+  if (!sentinel) return undefined;
+  if (BEAST_COMPANION_TYPES.has(companionType)) {
+    for (const key of ["exalted2", "exalted", "exalted3"] as const) {
+      const candidate = sentinel[key];
+      if (readRawWeaponFields(candidate).uniqueName) return candidate;
+    }
+  }
+  return sentinel.roboticweapon;
+}
+
+function parsedWeaponUniqueName(weapon?: ArsenalWeapon): string | undefined {
+  if (!weapon) return undefined;
+  if (typeof weapon.uniqueName === "string") return weapon.uniqueName;
+  const nested = weapon.weapon;
+  if (nested && typeof nested === "object" && typeof (nested as { uniqueName?: string }).uniqueName === "string") {
+    return (nested as { uniqueName: string }).uniqueName;
+  }
+  return undefined;
+}
+
+function mapCompanionWeaponMods(
+  rawWeapon: unknown,
+  parsedRoboticWeapon: ArsenalWeapon | undefined,
+  warnings: ArsenalImportWarning[],
+): ModSlot[] {
+  const raw = readRawWeaponFields(rawWeapon);
+  if (!raw.uniqueName && !raw.upgrades) return [];
+
+  const parsedUnique = parsedWeaponUniqueName(parsedRoboticWeapon);
+  if (
+    parsedRoboticWeapon &&
+    raw.uniqueName &&
+    parsedUnique === raw.uniqueName &&
+    parsedRoboticWeapon.upgrades?.mods?.length
+  ) {
+    return mapUpgradeMods(parsedRoboticWeapon.upgrades.mods, warnings, { keepStances: true }).mods;
+  }
+
+  return mapUpgradeMods(rawUpgradesToModUnion(raw.upgrades), warnings, { keepStances: true }).mods;
+}
+
+function resolveCompanionWeaponId(companion: Companion, weaponUniqueName?: string): string | undefined {
+  const fromLotus = weaponUniqueName ? findWeaponByLotusPath(weaponUniqueName)?.id : undefined;
+  if (fromLotus) return fromLotus;
+  if (BEAST_COMPANION_TYPES.has(companion.type)) {
+    return resolveCompanionClawId(companion);
+  }
+  return undefined;
+}
 
 function modRank(mod: ModUnion): number {
   const rank = (mod as { rank?: number }).rank;
@@ -62,6 +148,7 @@ function normalizeCompanionLabel(value: string): string {
 function mapUpgradeMods(
   mods: ModUnion[],
   warnings: ArsenalImportWarning[],
+  options?: { keepStances?: boolean },
 ): { mods: ModSlot[]; stanceModId?: string } {
   const slots: ModSlot[] = [];
   let stanceModId: string | undefined;
@@ -89,7 +176,7 @@ function mapUpgradeMods(
       continue;
     }
 
-    if (fhMod.category === "stance" && !stanceModId) {
+    if (fhMod.category === "stance" && !options?.keepStances && !stanceModId) {
       stanceModId = fhMod.id;
       continue;
     }
@@ -322,8 +409,8 @@ export function mapArsenalToImportPayload(
 
   let companionBuild: Loadout["companionBuild"];
   if (loadout.companion) {
-    const companionRaw = rawPayload?.loadOuts as { SENTINEL?: { companion?: unknown } } | undefined;
-    const rawCompanion = companionRaw?.SENTINEL?.companion;
+    const sentinelRaw = rawPayload?.loadOuts?.SENTINEL;
+    const rawCompanion = sentinelRaw?.companion;
     const rawFields = readRawWeaponFields(rawCompanion);
     const companionUniqueName =
       loadout.companion.uniqueName ?? rawFields.uniqueName;
@@ -347,9 +434,14 @@ export function mapArsenalToImportPayload(
       });
     } else {
       const body = mapUpgradeMods(loadout.companion.upgrades.mods, warnings);
-      const weaponMods = loadout.roboticweapon
-        ? mapUpgradeMods(loadout.roboticweapon.upgrades.mods, warnings).mods
-        : [];
+      const rawCompanionWeapon = pickRawCompanionWeapon(sentinelRaw, fhCompanion.type);
+      const rawCompanionWeaponFields = readRawWeaponFields(rawCompanionWeapon);
+      const weaponMods = mapCompanionWeaponMods(
+        rawCompanionWeapon,
+        loadout.roboticweapon,
+        warnings,
+      );
+      const weaponId = resolveCompanionWeaponId(fhCompanion, rawCompanionWeaponFields.uniqueName);
       const companionArcanes = mapArcaneIds(loadout.companion.upgrades.arcanes, warnings);
       const catalogName = fhCompanion.name;
       const customName =
@@ -360,6 +452,7 @@ export function mapArsenalToImportPayload(
         companionId: fhCompanion.id,
         customName,
         mods: body.mods,
+        weaponId,
         weaponMods,
         arcaneIds: companionArcanes.arcaneIds,
         hasReactor: false,

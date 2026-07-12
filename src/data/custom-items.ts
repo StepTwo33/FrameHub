@@ -6,7 +6,7 @@
 // eventually merged into the main data files or the Dart source.
 //
 // Stats sourced from: https://wiki.warframe.com  (WARFRAME Wiki)
-// Last verified: 2026-06
+// Last verified: 2026-07
 // ==========================================================================
 
 import { Weapon } from "@/lib/types";
@@ -394,10 +394,10 @@ export const customWeapons: Weapon[] = [
     companionType: "kavat",
   },
 
-  // Predasites
+  // Predasites — https://wiki.warframe.com/w/Claws_(Beast) (2025 rebalance)
   {
     id: "vizier_claws", name: "Vizier Claws", category: "beast_claw",
-    damage: 300, impact: 150, puncture: 0, slash: 0,
+    damage: 300, impact: 150, puncture: 0, slash: 0, toxin: 150,
     fireRate: 1.0, criticalChance: 0.05, criticalMultiplier: 3.0, statusChance: 0.30,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
@@ -405,7 +405,7 @@ export const customWeapons: Weapon[] = [
   },
   {
     id: "pharaoh_claws", name: "Pharaoh Claws", category: "beast_claw",
-    damage: 324, impact: 0, puncture: 162, slash: 0,
+    damage: 325, impact: 0, puncture: 162.5, slash: 0, gas: 162.5,
     fireRate: 1.0, criticalChance: 0.075, criticalMultiplier: 2.5, statusChance: 0.25,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
@@ -413,7 +413,7 @@ export const customWeapons: Weapon[] = [
   },
   {
     id: "medjay_claws", name: "Medjay Claws", category: "beast_claw",
-    damage: 350, impact: 0, puncture: 0, slash: 175,
+    damage: 350, impact: 0, puncture: 0, slash: 175, radiation: 175,
     fireRate: 1.0, criticalChance: 0.10, criticalMultiplier: 3.0, statusChance: 0.20,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,

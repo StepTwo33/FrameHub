@@ -70,7 +70,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
   }
 }
 
-import { getCompanionWeapons } from "@/lib/companion-weapons";
+import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
@@ -264,10 +264,13 @@ export default function CompanionBuilderPage() {
       const mod = modsMap.get(m.modId);
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
+    const weaponCandidates = getCompanionWeapons(comp, allWeapons);
     if (d.weaponId) {
-      // Restore the companion weapon so the weapon-mod grid shows the saved mods
-      const weapon = getCompanionWeapons(comp, allWeapons).find((w) => w.id === d.weaponId) ?? null;
-      setSelectedWeapon(weapon);
+      setSelectedWeapon(weaponCandidates.find((w) => w.id === d.weaponId) ?? null);
+    } else if ((d.weaponMods || []).length > 0) {
+      setSelectedWeapon(resolveDefaultCompanionWeapon(comp, allWeapons));
+    } else {
+      setSelectedWeapon(null);
     }
     setWeaponMods((d.weaponMods || []).map((m) => {
       const mod = modsMap.get(m.modId);

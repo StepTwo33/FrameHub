@@ -306,7 +306,7 @@ export const allCompanions: Companion[] = [
     "name": "Vizier Predasite",
     "type": "predasite",
     "health": 710,
-    "shield": 0,
+    "shield": 350,
     "armor": 300,
     "description": "Toxin specialist with acid attacks",
     "precept": ""
@@ -316,7 +316,7 @@ export const allCompanions: Companion[] = [
     "name": "Pharaoh Predasite",
     "type": "predasite",
     "health": 710,
-    "shield": 0,
+    "shield": 350,
     "armor": 300,
     "description": "Healing specialist with spore clouds",
     "precept": ""
@@ -326,7 +326,7 @@ export const allCompanions: Companion[] = [
     "name": "Medjay Predasite",
     "type": "predasite",
     "health": 710,
-    "shield": 0,
+    "shield": 350,
     "armor": 300,
     "description": "Defense specialist with shielding",
     "precept": ""

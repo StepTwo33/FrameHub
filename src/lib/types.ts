@@ -660,6 +660,7 @@ export interface Loadout {
     /** Custom pet name from the arsenal payload (not the breed catalog name). */
     customName?: string;
     mods: ModSlot[];
+    weaponId?: string;
     weaponMods: ModSlot[];
     arcaneIds?: (string | null)[];
     hasReactor: boolean;
