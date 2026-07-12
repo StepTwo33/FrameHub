@@ -1,6 +1,5 @@
 import type ArsenalData from "@wfcd/arsenal-parser";
 import type { ModUnion } from "@wfcd/items";
-import { find } from "@wfcd/items/utilities";
 import type { Companion, Loadout, ModSlot, ModularBuildData } from "@/lib/types";
 import { resolveCompanionClawId } from "@/lib/companion-weapons";
 import {
@@ -18,6 +17,7 @@ import {
   findNecramechByLotusPath,
   findWarframeByLotusPath,
   findWeaponByLotusPath,
+  lotusItemName,
   mapModularPartsFromArsenal,
   parseProgenitorFromRawWeapon,
   readAbilityOverride,
@@ -71,15 +71,15 @@ function rawUpgradesToModUnion(upgrades: unknown): ModUnion[] {
     const rec = entry as { uniqueName?: string; rank?: number };
     if (!rec.uniqueName) continue;
     const rank = typeof rec.rank === "number" ? rec.rank : 0;
-    const item = find.findItem(rec.uniqueName);
-    if (item) {
-      out.push({ ...item, rank } as ModUnion);
+    const name = lotusItemName(rec.uniqueName);
+    if (name) {
+      out.push({ name, uniqueName: rec.uniqueName, rank } as unknown as ModUnion);
     } else {
       out.push({
         uniqueName: rec.uniqueName,
         rank,
         name: labelFromUnknown({ uniqueName: rec.uniqueName }),
-      } as ModUnion);
+      } as unknown as ModUnion);
     }
   }
   return out;
