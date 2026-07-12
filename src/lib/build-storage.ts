@@ -155,8 +155,10 @@ export interface CompanionBuildData {
   mods: ModSlot[];
   weaponId?: string;
   weaponMods: ModSlot[];
+  weaponSlotPolarities?: Record<number, string>;
   arcaneIds: (string | null)[];
   hasReactor: boolean;
+  hasCatalyst?: boolean;
   isMR30: boolean;
   slotPolarities: Record<number, string>;
 }

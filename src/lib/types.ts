@@ -662,6 +662,7 @@ export interface Loadout {
     mods: ModSlot[];
     weaponId?: string;
     weaponMods: ModSlot[];
+    weaponSlotPolarities?: Record<number, string>;
     arcaneIds?: (string | null)[];
     hasReactor: boolean;
     hasCatalyst: boolean;

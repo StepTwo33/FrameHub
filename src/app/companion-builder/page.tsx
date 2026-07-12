@@ -206,6 +206,7 @@ export default function CompanionBuilderPage() {
   const [weaponMods, setWeaponMods] = useState<EquippedMod[]>([]);
   const [activeWeaponSlotIndex, setActiveWeaponSlotIndex] = useState(0);
   const [hasCatalyst, setHasCatalyst] = useState(false);
+  const [weaponSlotPolarities, setWeaponSlotPolarities] = useState<Record<number, string>>({});
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
 
@@ -216,8 +217,10 @@ export default function CompanionBuilderPage() {
       mods: equippedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       weaponId: selectedWeapon?.id,
       weaponMods: weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      weaponSlotPolarities,
       arcaneIds: [],
       hasReactor,
+      hasCatalyst,
       isMR30,
       slotPolarities,
     };
@@ -253,7 +256,7 @@ export default function CompanionBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedCompanion, equippedMods, selectedWeapon, weaponMods, hasReactor, isMR30, slotPolarities, currentBuildId]);
+  }, [selectedCompanion, equippedMods, selectedWeapon, weaponMods, weaponSlotPolarities, hasReactor, hasCatalyst, isMR30, slotPolarities, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as CompanionBuildData;
@@ -277,8 +280,10 @@ export default function CompanionBuilderPage() {
       return { ...m, modName: mod?.name ?? "", polarity: mod?.polarity, drain: mod?.drain };
     }));
     setHasReactor(d.hasReactor);
+    setHasCatalyst(d.hasCatalyst ?? false);
     setIsMR30(d.isMR30);
     setSlotPolarities(d.slotPolarities || {});
+    setWeaponSlotPolarities(d.weaponSlotPolarities || {});
     setCurrentBuildId(build.id);
     setBuildName(build.name);
     setBuildDescription(build.description || "");
@@ -382,9 +387,11 @@ export default function CompanionBuilderPage() {
     return weaponMods.reduce((sum, m) => {
       const mod = modsMap.get(m.modId);
       if (!mod) return sum;
-      return sum + mod.drain + m.rank;
+      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
+      const slotPol = weaponSlotPolarities[m.slotIndex];
+      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
     }, 0);
-  }, [weaponMods]);
+  }, [weaponMods, weaponSlotPolarities]);
 
   const weaponModPool = useMemo(() => {
     if (!selectedWeapon) return [];
@@ -420,6 +427,7 @@ export default function CompanionBuilderPage() {
     setSelectedWeapon(null);
     setWeaponMods([]);
     setHasCatalyst(false);
+    setWeaponSlotPolarities({});
     setWeaponRivenStatsMap(undefined);
     setSlotPolarities({});
     setCurrentBuildId(null);
@@ -750,7 +758,7 @@ export default function CompanionBuilderPage() {
                       availableWeapons.map((w) => (
                         <button
                           key={w.id}
-                          onClick={() => { setSelectedWeapon(w); setWeaponMods([]); setHasCatalyst(false); }}
+                          onClick={() => { setSelectedWeapon(w); setWeaponMods([]); setHasCatalyst(false); setWeaponSlotPolarities({}); }}
                           className="w-full text-left p-2.5 rounded-lg border border-border hover:border-orange-500/50 hover:bg-orange-500/5 transition-all"
                         >
                           <div className="flex items-center justify-between">
@@ -773,7 +781,7 @@ export default function CompanionBuilderPage() {
                       <Crosshair className="h-4 w-4 text-orange-400" />
                       <span className="font-medium text-sm">{selectedWeapon.name}</span>
                       <span className="text-[10px] text-muted-foreground capitalize">{selectedWeapon.category.replace('_', ' ')}</span>
-                      <button onClick={() => { setSelectedWeapon(null); setWeaponMods([]); }} className="ml-auto text-xs text-muted-foreground hover:text-foreground">Change</button>
+                      <button onClick={() => { setSelectedWeapon(null); setWeaponMods([]); setWeaponSlotPolarities({}); }} className="ml-auto text-xs text-muted-foreground hover:text-foreground">Change</button>
                     </div>
 
                     <div className="space-y-6">
@@ -797,8 +805,10 @@ export default function CompanionBuilderPage() {
                                 mod={mod}
                                 rank={equipped?.rank ?? 0}
                                 slotIndex={i}
+                                slotPolarity={weaponSlotPolarities[i]}
                                 onAdd={() => handleOpenWeaponModPicker(i)}
                                 onRemove={() => handleRemoveWeaponMod(i)}
+                                onPolarize={(p) => setWeaponSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
                               />
                             );
                           })}
