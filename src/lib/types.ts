@@ -604,6 +604,7 @@ export interface Loadout {
     mods: ModSlot[];
     shards: (EquippedArchonShard | null)[];
     arcaneIds?: (string | null)[];
+    arcaneRanks?: number[];
     hasOrokinReactor: boolean;
     isMR30?: boolean;
     slotPolarities?: Record<number, string>;

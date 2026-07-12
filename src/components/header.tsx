@@ -48,6 +48,7 @@ const NAV_GROUPS = [
     icon: LayoutGrid,
     links: [
       { href: "/loadouts", label: "Loadouts", desc: "Saved builds & loadouts" },
+      { href: "/player-sync", label: "Player Sync", desc: "Import from Warframe account" },
       { href: "/compare", label: "Compare", desc: "Compare items side-by-side" },
       { href: "/import-export", label: "Import / Export", desc: "Share build codes" },
     ],

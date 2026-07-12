@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
 import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild } from "@/lib/loadouts";
@@ -708,6 +709,13 @@ export default function LoadoutsPage() {
               <p>
                 <span className="font-medium text-foreground">3.</span> Save to your account to sync across devices. Enable{" "}
                 <strong>List in Community Builds</strong> to share publicly on Discover.
+              </p>
+              <p>
+                <span className="font-medium text-foreground">Tip:</span>{" "}
+                <Link href="/player-sync" className="text-primary hover:underline">
+                  Player Sync
+                </Link>{" "}
+                can import your in-game loadout from your Warframe account (Twitch extension data).
               </p>
             </div>
           </div>
