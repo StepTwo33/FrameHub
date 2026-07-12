@@ -4,6 +4,7 @@ import {
   type WarframePlatform,
 } from "@/lib/warframe-arsenal/platforms";
 import { loadoutHasImportableContent, mapArsenalToImportPayload } from "@/lib/warframe-arsenal/map-import";
+import { getWarframeArsenalJwt, warframeArsenalRequestHeaders } from "@/lib/warframe-arsenal/twitch-auth";
 
 const FETCH_TIMEOUT_MS = 20_000;
 
@@ -35,23 +36,47 @@ export async function fetchAndMapWarframeArsenal(platform: WarframePlatform, acc
 
   let raw: unknown;
   try {
+    let jwt: string;
+    try {
+      jwt = await getWarframeArsenalJwt();
+    } catch {
+      throw new ArsenalFetchError(
+        "Player Sync is not configured for arsenal access. The server needs TWITCH_ARSENAL_CHANNEL_ID (a Twitch channel with the Warframe Arsenal extension installed) or WARFRAME_ARSENAL_JWT.",
+        "upstream",
+      );
+    }
+
     const res = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "FrameHub/1.0 (Warframe Arsenal Twitch Extension)",
-      },
+      headers: warframeArsenalRequestHeaders(jwt),
       cache: "no-store",
     });
-    if (!res.ok) {
+
+    const contentType = res.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+      throw new ArsenalFetchError(
+        res.status === 404
+          ? "Account not found or loadout sharing is disabled."
+          : `Warframe servers returned ${res.status}. Try again in a moment.`,
+        res.status === 404 ? "not_found" : "upstream",
+      );
+    }
+
+    raw = await res.json();
+
+    if (!res.ok && raw && typeof raw === "object" && "errors" in (raw as object)) {
+      // Fall through to shared error handling below.
+    } else if (!res.ok) {
       throw new ArsenalFetchError(
         `Warframe servers returned ${res.status}. Try again in a moment.`,
         res.status === 404 ? "not_found" : "upstream",
       );
     }
-    raw = await res.json();
   } catch (err) {
     if (err instanceof ArsenalFetchError) throw err;
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ArsenalFetchError("Warframe loadout request timed out. Try again.", "upstream");
+    }
     throw new ArsenalFetchError(
       "Could not reach Warframe loadout servers. Check your connection and try again.",
       "upstream",
