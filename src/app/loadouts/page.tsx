@@ -1165,7 +1165,7 @@ export default function LoadoutsPage() {
         </DialogContent>
       </Dialog>
 
-      <LoadoutSectionErrorBoundary label="save dialog">
+      <LoadoutSectionErrorBoundary label="save dialog" resetKey={`${saveDialogLoadoutId}:${saveDialogOpen}`}>
         <SaveBuildDialog
           open={saveDialogOpen}
           onOpenChange={(open) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -51,14 +51,22 @@ export function SaveBuildDialog({
   const [tags, setTags] = useState<string[]>(defaultTags);
   const [saving, setSaving] = useState(false);
 
+  // Snapshot defaults in a ref so the reset effect runs only when the dialog
+  // opens. Inline props like `defaultTags={[]}` create a new reference every
+  // render; depending on them directly caused an infinite setState loop
+  // ("Maximum update depth exceeded") that crashed the page on open.
+  const defaultsRef = useRef({ defaultName, defaultDescription, defaultIsPublic, defaultTags });
+  defaultsRef.current = { defaultName, defaultDescription, defaultIsPublic, defaultTags };
+
   useEffect(() => {
     if (open) {
-      setName(defaultName);
-      setDescription(defaultDescription);
-      setIsPublic(defaultIsPublic);
-      setTags(defaultTags);
+      const d = defaultsRef.current;
+      setName(d.defaultName);
+      setDescription(d.defaultDescription);
+      setIsPublic(d.defaultIsPublic);
+      setTags(d.defaultTags);
     }
-  }, [open, defaultName, defaultDescription, defaultIsPublic, defaultTags]);
+  }, [open]);
 
   const toggleTag = (id: string) => {
     setTags((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
