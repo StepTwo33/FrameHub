@@ -68,6 +68,17 @@ export interface Weapon {
   passive?: string;
   /** AoE / radial attacks (merged from data/weapon-radial-attacks when present). */
   radialAttacks?: WeaponRadialAttack[];
+  /**
+   * Base charge time in seconds (unmodded). Used for charge / bow effective fire rate.
+   * Populated by weapon-enrich from WEAPON_FIRE_TIMING when known.
+   */
+  chargeTime?: number;
+  /** Charge FR mode: standard | bow | lanka (wiki Fire Rate). */
+  chargeMode?: "standard" | "bow" | "lanka";
+  /** Shots per burst (burst trigger weapons). */
+  burstCount?: number;
+  /** Delay between shots inside a burst (seconds). */
+  burstDelay?: number;
 }
 
 /** Secondary AoE profile (explosion, slam radial, cube blast, etc.). */
@@ -214,8 +225,17 @@ export interface WeaponExternalBuff {
   id: string;
   label: string;
   category: "ability" | "shard" | "companion" | "warframe_mod" | "set" | "other";
-  /** Additive damage bonus fraction (+0.5 = +50% damage). */
+  /**
+   * Additive base-damage bonus fraction (+0.5 = +50% with Serration-style mods).
+   * Prefer {@link damageMultBonus} for Roar / Eclipse-style ability buffs.
+   */
   damageBonus?: number;
+  /**
+   * Multiplicative damage bonus applied after additive base-damage mods
+   * (wiki: Roar/Eclipse stack multiplicatively with Serration).
+   * +0.5 = ×1.5 on total IPS + elemental.
+   */
+  damageMultBonus?: number;
   critChanceBonus?: number;
   critMultBonus?: number;
   /** Flat add to final crit multiplier after percent bonuses (+1.2 = +1.2×). */
@@ -307,7 +327,15 @@ export interface CalculatedStats {
   elements: ElementalDamage[];
   rawElements: { type: string; value: number }[]; // before combo resolution, for UI ordering
   // Core stats
+  /** Arsenal-style modded fire rate (base × (1+FR%)). */
   fireRate: number;
+  /**
+   * True shots/sec for DPS after charge/bow/burst timing (wiki effective fire rate).
+   * Falls back to fireRate when no special timing applies.
+   */
+  effectiveFireRate?: number;
+  /** Sum of fire-rate mod bonuses as a fraction (for charge-time scaling). */
+  fireRateBonus?: number;
   criticalChance: number;
   criticalMultiplier: number;
   statusChance: number;

@@ -1,11 +1,13 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from './types';
 import { avgCritMultiplier } from './crit-utils';
+import { resolveEffectiveFireRate } from './effective-fire-rate';
 import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
 import {
   applyMeleeComboToStats,
   resolveEffectiveComboCount,
 } from './melee-combo';
+import { enrichWeapon } from './weapon-enrich';
 
 export { avgCritMultiplier } from './crit-utils';
 import {
@@ -102,20 +104,20 @@ function findCombo(a: string, b: string): string | null {
 
 // ── Status Proc Calculations ────────────────────────────────────────────
 const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: string }> = {
-  impact:      { duration: 1, ticks: 1, desc: 'Stagger' },
-  puncture:    { duration: 6, ticks: 1, desc: '-30% damage dealt' },
-  // DoTs tick immediately plus once per second for 6s = 7 ticks over 6s
-  slash:       { duration: 6, ticks: 7, desc: 'Bleed (True damage, bypasses armor)' },
-  heat:        { duration: 6, ticks: 7, desc: 'Ignite (50% base damage/tick, panic)' },
-  cold:        { duration: 6, ticks: 1, desc: '-50% movement/fire rate' },
-  toxin:       { duration: 6, ticks: 7, desc: 'Poison (bypasses shields)' },
+  impact:      { duration: 1, ticks: 1, desc: 'Stagger + mercy threshold (max 5)' },
+  puncture:    { duration: 10, ticks: 1, desc: '-40% dmg dealt (stacks to -80%), +crit received' },
+  // DoTs: tick at application + once per second for 6s → 7 ticks
+  slash:       { duration: 6, ticks: 7, desc: 'Bleed (35% base/tick, cinematic/True, ignores armor)' },
+  heat:        { duration: 6, ticks: 7, desc: 'Ignite (50% base/tick), panic, armor strip to 50%' },
+  cold:        { duration: 6, ticks: 1, desc: '-50% move/fire/attack (stacks to -90%), +crit mult received' },
+  toxin:       { duration: 6, ticks: 7, desc: 'Poison (50% base/tick, bypasses shields)' },
   electricity: { duration: 6, ticks: 7, desc: 'Chain DoT (50% base/tick) + stun' },
-  blast:       { duration: 6, ticks: 1, desc: 'Detonate: 30% base dmg/stack after 1.5s, AoE at 10 stacks' },
-  corrosive:   { duration: 8, ticks: 1, desc: '-26% armor per stack (max 10)' },
-  gas:         { duration: 6, ticks: 7, desc: 'Toxin AoE cloud' },
-  magnetic:    { duration: 6, ticks: 1, desc: '-75% shields, +100% shield damage' },
-  radiation:   { duration: 12, ticks: 1, desc: 'Confusion (friendly fire)' },
-  viral:       { duration: 6, ticks: 1, desc: '+100% health damage per stack (max 10)' },
+  blast:       { duration: 6, ticks: 1, desc: 'Detonate: 30% base/stack after 1.5s; AoE on max stacks/death' },
+  corrosive:   { duration: 8, ticks: 1, desc: '-26% armor first stack, -6% each after (max -80% at 10)' },
+  gas:         { duration: 6, ticks: 7, desc: 'Gas cloud DoT (50% base/tick, AoE)' },
+  magnetic:    { duration: 6, ticks: 1, desc: '+100% dmg to shields/overguard (stacks to +325%)' },
+  radiation:   { duration: 12, ticks: 1, desc: 'Confusion + friendly-fire dmg (stacks to +550%)' },
+  viral:       { duration: 6, ticks: 1, desc: '+100% health dmg first stack, +25% each after (max +325%)' },
 };
 
 /** Damage types that deal DoT; tick fraction of modded base (before type-specific bonuses). */
@@ -206,6 +208,11 @@ export function quantizeDamageValue(value: number, scale: number): number {
 function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): void {
   const scale = moddedBaseDamage / 32;
   if (scale <= 0) return;
+  // Preserve unallocated residual (weapons missing IPS/element breakdown) before re-summing.
+  const prePhys = stats.impact + stats.puncture + stats.slash;
+  const preElem = stats.elements.reduce((sum, e) => sum + e.value, 0);
+  const residual = Math.max(0, stats.totalDamage - prePhys - preElem);
+
   stats.impact = quantizeDamageValue(stats.impact, scale);
   stats.puncture = quantizeDamageValue(stats.puncture, scale);
   stats.slash = quantizeDamageValue(stats.slash, scale);
@@ -213,7 +220,7 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
   for (const e of stats.rawElements) e.value = quantizeDamageValue(e.value, scale);
   const physicalDmg = stats.impact + stats.puncture + stats.slash;
   const elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
-  stats.totalDamage = physicalDmg + elementalDmg;
+  stats.totalDamage = physicalDmg + elementalDmg + residual;
 }
 
 // ── Set Bonus Detection ─────────────────────────────────────────────────
@@ -258,10 +265,15 @@ function applyWeaponExternalBuffs(
   elementalMods?: { type: string; value: number }[],
   baseWeaponDamage?: number,
   critMultFlat?: { critEventBonus: number },
+  /** Product of (1 + damageMultBonus) for Roar/Eclipse-style mults. */
+  multDamage?: { product: number },
 ): void {
   if (!buffs?.length) return;
   for (const buff of buffs) {
     if (buff.damageBonus) acc.damageBonus += buff.damageBonus;
+    if (buff.damageMultBonus && multDamage) {
+      multDamage.product *= 1 + buff.damageMultBonus;
+    }
     if (buff.critChanceBonus) acc.critChanceBonus += buff.critChanceBonus;
     if (buff.critMultBonus) acc.critMultBonus += buff.critMultBonus;
     if (buff.critMultFlatBonus && critMultFlat) critMultFlat.critEventBonus += buff.critMultFlatBonus;
@@ -278,7 +290,7 @@ function applyWeaponExternalBuffs(
 
 // ── Main Weapon Calculator ──────────────────────────────────────────────
 export function calculateWeaponBuild(
-  baseWeapon: Weapon,
+  rawWeapon: Weapon,
   equippedMods: ModSlot[],
   allMods: Map<string, Mod>,
   incarnonStatChanges?: Record<string, number>,
@@ -288,6 +300,8 @@ export function calculateWeaponBuild(
   /** Riven stat fractions (1.2 = +120%); crit/status apply relative to the modded stat, unlike flat incarnon changes. */
   rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
+  // Pure-element fills + charge/burst timing (idempotent if already enriched).
+  const baseWeapon = enrichWeapon(rawWeapon);
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
 
@@ -392,7 +406,10 @@ export function calculateWeaponBuild(
     galvDamagePerStatusPerStack: 0,
   };
 
-  for (const modSlot of equippedMods) {
+  // Elemental combo order follows mod slot order: left→right, top→bottom (slotIndex).
+  const orderedMods = [...equippedMods].sort((a, b) => a.slotIndex - b.slotIndex);
+
+  for (const modSlot of orderedMods) {
     const mod = allMods.get(modSlot.modId);
     if (!mod) continue;
 
@@ -416,12 +433,14 @@ export function calculateWeaponBuild(
   }
 
   const critMultFlatBonus = { critEventBonus: 0 };
+  const externalDamageMult = { product: 1 };
   applyWeaponExternalBuffs(
     weaponModAcc,
     calcOptions?.externalBuffs,
     elementalMods,
     baseWeapon.damage,
     critMultFlatBonus,
+    externalDamageMult,
   );
 
   damageBonus = weaponModAcc.damageBonus;
@@ -491,6 +510,7 @@ export function calculateWeaponBuild(
     stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
   }
   stats.fireRate *= (1 + fireRateBonus);
+  stats.fireRateBonus = fireRateBonus;
   // Multishot is a % of base pellets: total = base × (1 + multishot mods).
   stats.multishot = baseWeapon.multishot * (1 + multishotBonus);
   stats.statusChance *= (1 + statusBonus);
@@ -516,8 +536,7 @@ export function calculateWeaponBuild(
     e.value *= dmgMult;
   }
 
-  // Add innate weapon elements (kitgun chambers, Kuva/Tenet bonuses, etc.)
-  // Innate elements go BEFORE mod elements in combo ordering
+  // Innate weapon elements + progenitor: applied LAST in combo order (wiki Calculating Bonuses).
   const innateElemTypes = ['heat', 'cold', 'toxin', 'electricity', 'radiation', 'viral', 'corrosive', 'gas', 'magnetic', 'blast', 'tau'] as const;
   const innateElements: { type: string; value: number }[] = [];
   for (const elem of innateElemTypes) {
@@ -540,19 +559,47 @@ export function calculateWeaponBuild(
     else if (pe === "slash") stats.slash += bonus;
     else innateElements.push({ type: pe, value: bonus });
   }
-  elementalMods.unshift(...innateElements);
+  elementalMods.push(...innateElements);
 
-  // Resolve elemental combos
+  // Resolve elemental combos (mod order first, innate last)
   stats.rawElements = elementalMods.map(e => ({ ...e }));
   stats.elements = resolveElementalCombos(elementalMods);
 
-  // Recalculate totalDamage including elements
-  const physicalDmg = stats.impact + stats.puncture + stats.slash;
-  const elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
-  stats.totalDamage = physicalDmg + elementalDmg;
+  // Recalculate totalDamage including elements.
+  // Residual: some weapons store total damage without IPS/element breakdown
+  // (e.g. pure Amprex electricity missing the electricity field). Preserve
+  // unallocated base so paper DPS is not zeroed until data is fixed.
+  const ipsBaseUnmod =
+    baseWeapon.impact + baseWeapon.puncture + baseWeapon.slash;
+  let innateElBaseUnmod = 0;
+  for (const elem of innateElemTypes) {
+    const baseVal = (baseWeapon as unknown as Record<string, unknown>)[elem] as number | undefined;
+    if (baseVal && baseVal > 0) innateElBaseUnmod += baseVal;
+  }
+  const residualBase = Math.max(0, baseWeapon.damage - ipsBaseUnmod - innateElBaseUnmod);
 
-  // Track full damage mult for DoT base / quantization scale (Serration + damage rivens/incarnon).
+  let physicalDmg = stats.impact + stats.puncture + stats.slash;
+  let elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
+  let residualDmg = residualBase * dmgMult;
+  stats.totalDamage = physicalDmg + elementalDmg + residualDmg;
+
+  // Track full damage mult for DoT base / quantization scale (Serration + damage rivens/incarnon + ability mults).
   let damageMultTotal = dmgMult;
+
+  // Roar / Eclipse / etc.: multiply after additive base-damage mods (wiki Calculating Bonuses).
+  const extMult = externalDamageMult.product;
+  if (extMult !== 1 && extMult > 0) {
+    damageMultTotal *= extMult;
+    residualDmg *= extMult;
+    stats.impact *= extMult;
+    stats.puncture *= extMult;
+    stats.slash *= extMult;
+    for (const e of stats.elements) e.value *= extMult;
+    for (const e of stats.rawElements) e.value *= extMult;
+    physicalDmg = stats.impact + stats.puncture + stats.slash;
+    elementalDmg = stats.elements.reduce((sum, e) => sum + e.value, 0);
+    stats.totalDamage = physicalDmg + elementalDmg + residualDmg;
+  }
 
   // Apply Incarnon evolution / riven stat changes.
   // relativeCritStatus: riven crit/status/critMult bonuses are relative fractions on
@@ -692,9 +739,23 @@ export function calculateWeaponBuild(
   // Status procs (DoT base = modded base × avg crit; Elementalist + faction² on ticks)
   stats.statusProcs = calculateStatusProcs(stats, moddedBaseDamage, sim);
 
+  // Effective shots/sec after charge / bow / burst timing (wiki Fire Rate)
+  stats.effectiveFireRate = resolveEffectiveFireRate({
+    triggerType: baseWeapon.triggerType,
+    baseFireRate: baseWeapon.fireRate,
+    moddedFireRate: stats.fireRate,
+    fireRateBonus: stats.fireRateBonus ?? 0,
+    reloadTime: stats.reloadTime,
+    chargeTime: baseWeapon.chargeTime,
+    chargeMode: baseWeapon.chargeMode,
+    burstCount: baseWeapon.burstCount,
+    burstDelay: baseWeapon.burstDelay,
+    weaponId: baseWeapon.id,
+  });
+
   // DPS (direct hits) — includes optional faction / headshot / stance
   stats.burstDps = calculateBurstDps(stats);
-  stats.sustainedDps = calculateSustainedDps(stats);
+  stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
@@ -1019,7 +1080,7 @@ export function applyWarframeShardsAndArcanes(
 
 // Calculate weapon build with optional arcanes (enhanced version)
 export function calculateWeaponBuildWithArcanes(
-  baseWeapon: Weapon,
+  rawWeapon: Weapon,
   equippedMods: ModSlot[],
   allMods: Map<string, Mod>,
   arcanes: Mod[],
@@ -1029,6 +1090,7 @@ export function calculateWeaponBuildWithArcanes(
   linkage?: SetBonusLinkage,
   rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
+  const baseWeapon = enrichWeapon(rawWeapon);
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
   const stats = calculateWeaponBuild(baseWeapon, equippedMods, allMods, incarnonStatChanges, sim, calcOptions, linkage, rivenStatChanges);
@@ -1052,10 +1114,29 @@ export function calculateWeaponBuildWithArcanes(
     }
   }
   setStatusChancePerShot(stats, baseWeapon);
+  stats.effectiveFireRate = resolveEffectiveFireRate({
+    triggerType: baseWeapon.triggerType,
+    baseFireRate: baseWeapon.fireRate,
+    moddedFireRate: stats.fireRate,
+    fireRateBonus: stats.fireRateBonus ?? 0,
+    reloadTime: stats.reloadTime,
+    chargeTime: baseWeapon.chargeTime,
+    chargeMode: baseWeapon.chargeMode,
+    burstCount: baseWeapon.burstCount,
+    burstDelay: baseWeapon.burstDelay,
+    weaponId: baseWeapon.id,
+  });
   stats.burstDps = calculateBurstDps(stats);
-  stats.sustainedDps = calculateSustainedDps(stats);
+  stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
   applyRadialAttacks(baseWeapon, stats);
   return stats;
+}
+
+/** Shots per second used for DPS (charge/bow/burst-aware). */
+function dpsFireRate(stats: CalculatedStats): number {
+  const efr = stats.effectiveFireRate;
+  if (efr != null && efr > 0) return efr;
+  return Math.max(0, stats.fireRate);
 }
 
 function calculateBurstDps(stats: CalculatedStats): number {
@@ -1070,14 +1151,19 @@ function calculateBurstDps(stats: CalculatedStats): number {
       sim.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1),
   });
   const totalDamage = stats.totalDamage * stats.multishot * combatMult;
-  return totalDamage * stats.fireRate * avgCrit;
+  return totalDamage * dpsFireRate(stats) * avgCrit;
 }
 
-function calculateSustainedDps(stats: CalculatedStats): number {
+function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): number {
   if (stats.magazine === 0) return calculateBurstDps(stats); // Melee
-  if (stats.fireRate <= 0) return 0;
+  const efr = dpsFireRate(stats);
+  if (efr <= 0) return 0;
   const burstDps = calculateBurstDps(stats);
-  const magTime = stats.magazine / stats.fireRate;
+  // Bow cycle already includes reload in effective FR — don't double-count.
+  if (baseWeapon?.chargeMode === "bow" || baseWeapon?.triggerType === "Bow") {
+    return burstDps;
+  }
+  const magTime = stats.magazine / efr;
   const cycleTime = magTime + stats.reloadTime;
   if (cycleTime <= 0) return burstDps;
   return burstDps * (magTime / cycleTime);

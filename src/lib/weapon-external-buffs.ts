@@ -279,11 +279,12 @@ function resolveAbilityBuffs(
     const bonus = scaledAbilityDamageBuff(ctx.warframeId, ability.name, ability.damageBuff, strength);
     if (bonus <= 0) continue;
 
+    // Roar / Eclipse / etc. multiply after Serration (wiki Calculating Bonuses).
     buffs.push({
       id: `ability:${ability.name}`,
       label: ability.name,
       category: "ability",
-      damageBonus: bonus,
+      damageMultBonus: bonus,
       nominal: `+${(ability.damageBuff * 100).toFixed(0)}% weapon damage`,
     });
   }

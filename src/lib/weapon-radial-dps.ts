@@ -24,24 +24,32 @@ function isAltFireOrDelayed(attack: WeaponRadialAttack): boolean {
   return /alt[- ]?fire|charged|semi-auto mode|incarnon form|poison quill|semi-auto mode/i.test(attack.name);
 }
 
+function shotsPerSecond(stats: Pick<CalculatedStats, "fireRate" | "effectiveFireRate">): number {
+  if (stats.effectiveFireRate != null && stats.effectiveFireRate > 0) {
+    return stats.effectiveFireRate;
+  }
+  return Math.max(0, stats.fireRate);
+}
+
 /** Infer how often this radial fires alongside the primary attack pattern. */
 export function radialAttacksPerSecond(
   attack: WeaponRadialAttack,
-  stats: Pick<CalculatedStats, "fireRate" | "multishot">,
+  stats: Pick<CalculatedStats, "fireRate" | "effectiveFireRate" | "multishot">,
   isMelee: boolean,
 ): number {
   if (isManualSlam(attack.name)) return 0;
-  if (isAltFireOrDelayed(attack)) return stats.fireRate;
+  const efr = shotsPerSecond(stats);
+  if (isAltFireOrDelayed(attack)) return efr;
   if (isMelee) return 0;
   // Innate per-projectile / per-pellet explosions scale with multishot.
-  return stats.fireRate * stats.multishot;
+  return efr * stats.multishot;
 }
 
 export function computeRadialBurstDps(
   attack: WeaponRadialAttack,
   stats: Pick<
     CalculatedStats,
-    "criticalChance" | "criticalMultiplier" | "fireRate" | "multishot"
+    "criticalChance" | "criticalMultiplier" | "fireRate" | "effectiveFireRate" | "multishot"
   >,
   isMelee: boolean,
 ): number {
@@ -96,8 +104,9 @@ export function scaleRadialAttacksWithDps(
   });
 
   let radialSustainedDps = radialBurstDps;
-  if (!isMelee && stats.magazine > 0 && stats.fireRate > 0) {
-    const magTime = stats.magazine / stats.fireRate;
+  const efr = shotsPerSecond(stats);
+  if (!isMelee && stats.magazine > 0 && efr > 0) {
+    const magTime = stats.magazine / efr;
     const cycleTime = magTime + stats.reloadTime;
     if (cycleTime > 0) {
       radialSustainedDps = radialBurstDps * (magTime / cycleTime);

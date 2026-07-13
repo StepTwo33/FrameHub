@@ -434,11 +434,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
         <StatRow
           label={isMelee ? "Attack Speed" : "Fire Rate"}
-          value={stats.fireRate.toFixed(2)}
+          value={(stats.effectiveFireRate ?? stats.fireRate).toFixed(2)}
           tooltip={
             isMelee
               ? "Melee attacks per second (same field as fire rate for guns in the build engine)."
-              : undefined
+              : stats.effectiveFireRate != null &&
+                  Math.abs(stats.effectiveFireRate - stats.fireRate) > 0.01
+                ? `Effective shots/sec (charge/bow/burst timing). Arsenal FR component: ${stats.fireRate.toFixed(2)}`
+                : "Shots per second used for DPS."
           }
         />
         {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
@@ -526,7 +529,8 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           </>
         )}
         {stats.statusProcs && stats.statusProcs.length > 0 && (() => {
-          const procsPerSec = stats.fireRate * stats.statusChance * stats.multishot;
+          const efr = stats.effectiveFireRate ?? stats.fireRate;
+          const procsPerSec = efr * stats.statusChance * stats.multishot;
           const dotProcs = stats.statusProcs.filter(p => p.totalDamage > 0);
           const statusDps = dotProcs.reduce((sum, p) => {
             const pps = procsPerSec * p.chance / stats.statusChance;

@@ -93,6 +93,46 @@ export function scaleArmor(base: number, level: number): number {
   return Math.max(base, Math.min(s, 2700));
 }
 
+/**
+ * Enemy armor damage reduction (wiki Armor § Enemy Damage Reduction).
+ * DR = 0.9 × NetArmor / 2700  (max 90% at the 2700 armor soft-cap).
+ * Tenno armor still uses armor/(armor+300) — see calculator warframe EHP.
+ */
+export function enemyArmorDamageReduction(armor: number): number {
+  if (armor <= 0) return 0;
+  return Math.min(0.9, (0.9 * armor) / 2700);
+}
+
+/**
+ * Corrosive status armor remaining fraction (wiki Status Effect).
+ * Stack 1: −26%; stacks 2–10: −6% each of original; max −80% at 10 stacks.
+ * Fractional stacks (TTK estimates) are linearly interpolated.
+ */
+export function corrosiveArmorRemaining(stacks: number): number {
+  if (stacks <= 0) return 1;
+  const s = Math.min(10, stacks);
+  const reductionAt = (n: number) => {
+    if (n <= 0) return 0;
+    return Math.min(0.8, 0.26 + 0.06 * Math.max(0, n - 1));
+  };
+  const lo = Math.floor(s);
+  const hi = Math.ceil(s);
+  if (lo === hi) return 1 - reductionAt(lo);
+  const t = s - lo;
+  return 1 - (reductionAt(lo) * (1 - t) + reductionAt(hi) * t);
+}
+
+/**
+ * Average status procs per shot (wiki Status Effect § Multishot).
+ * Avg procs = Multishot × Status Chance (SC may exceed 100% for multi-procs).
+ * Not the same as arsenal "chance of at least one proc" = 1−(1−SC)^MS.
+ */
+export function averageProcsPerShot(statusChance: number, multishot: number): number {
+  const sc = Math.max(0, statusChance);
+  const ms = Math.max(0, multishot);
+  return sc * ms;
+}
+
 export function scaleHealth(base: number, level: number, faction?: string): number {
   const d = level - 1;
   if (d <= 0) return base;
@@ -138,6 +178,24 @@ export function avgCritMult(cc: number, cm: number): number {
   return (1 - rem) * currentTierDmg + rem * nextTierDmg;
 }
 
+// ── Viral stack multiplier (wiki Status Effect) ───────────────────────
+/** Health damage mult from viral stacks (1 = no viral). Stack1=+100%, +25%/stack → max 4.25×. */
+export function viralHealthMultiplier(stacks: number): number {
+  if (stacks <= 0) return 1;
+  const s = Math.min(10, stacks);
+  const lo = Math.floor(s);
+  const hi = Math.ceil(s);
+  const multAt = (n: number) => (n <= 0 ? 1 : 2.0 + Math.min(n - 1, 9) * 0.25);
+  if (lo === hi) return multAt(lo);
+  const t = s - lo;
+  return multAt(lo) * (1 - t) + multAt(hi) * t;
+}
+
+/** Heat status gradually strips up to 50% armor while active. */
+export function heatArmorRemaining(heatActive: boolean): number {
+  return heatActive ? 0.5 : 1;
+}
+
 // ── Main TTK interface & calculator ───────────────────────────────────
 export interface TTKResult {
   enemy: EnemyType;
@@ -151,14 +209,29 @@ export interface TTKResult {
   sustainedDps: number;
   ttk: number;
   shotsToKill: number;
+  /** Peak viral stacks reached during discrete sim (0–10). */
+  peakViralStacks?: number;
+  /** Peak corrosive stacks reached during discrete sim (0–10). */
+  peakCorrosiveStacks?: number;
+  /** Whether discrete shot-by-shot sim was used. */
+  discrete?: boolean;
 }
 
-export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: number): TTKResult {
-  const hp = scaleHealth(enemy.baseHealth, level, enemy.faction);
-  let armor = scaleArmor(enemy.baseArmor, level);
-  const shield = scaleShield(enemy.baseShield, level);
+export interface DotInstance {
+  /** Absolute time of next tick. */
+  nextTick: number;
+  remainingTicks: number;
+  damagePerTick: number;
+  type: string;
+  /** Bypass armor (slash cinematic). */
+  ignoreArmor: boolean;
+  /** Bypass shields (toxin). */
+  ignoreShields: boolean;
+  /** Apply viral mult (slash/gas). */
+  useViral: boolean;
+}
 
-  // Collect all damage types from weapon stats
+function collectDamageTypes(stats: CalculatedStats): { type: string; value: number }[] {
   const dmgTypes: { type: string; value: number }[] = [];
   if (stats.impact > 0) dmgTypes.push({ type: "impact", value: stats.impact });
   if (stats.puncture > 0) dmgTypes.push({ type: "puncture", value: stats.puncture });
@@ -168,100 +241,133 @@ export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: nu
       if (e.value > 0) dmgTypes.push({ type: e.type, value: e.value });
     }
   }
+  return dmgTypes;
+}
 
+function shotsPerSecond(stats: CalculatedStats): number {
+  if (stats.effectiveFireRate != null && stats.effectiveFireRate > 0) {
+    return stats.effectiveFireRate;
+  }
+  return Math.max(0, stats.fireRate);
+}
+
+/**
+ * Direct-hit damage through current armor/viral for one damage type value
+ * against a given health/shield layer.
+ */
+function typeHitDamage(
+  type: string,
+  value: number,
+  enemy: EnemyType,
+  currentArmor: number,
+  viralMult: number,
+  layer: "shield" | "health",
+): number {
+  if (layer === "shield") {
+    if (type === "toxin") return 0; // toxin bypasses — applied to health separately
+    const sm = getMod(SHIELD_MODIFIERS, enemy.shieldType, type);
+    return value * (1 + sm);
+  }
+  // health
+  const hm = getMod(HEALTH_MODIFIERS, enemy.healthType, type);
+  let dmg = value * (1 + hm) * viralMult;
+  if (currentArmor > 0 && enemy.armorType !== "none" && type !== "slash") {
+    // slash direct hits still hit armor; only slash DoT is cinematic
+    const am = getMod(ARMOR_MODIFIERS, enemy.armorType, type);
+    const effArmor = currentArmor * Math.max(0, 1 - am);
+    dmg *= 1 - enemyArmorDamageReduction(effArmor);
+  } else if (currentArmor > 0 && enemy.armorType !== "none" && type === "slash") {
+    const am = getMod(ARMOR_MODIFIERS, enemy.armorType, type);
+    const effArmor = currentArmor * Math.max(0, 1 - am);
+    dmg *= 1 - enemyArmorDamageReduction(effArmor);
+  }
+  return dmg;
+}
+
+function currentArmorFromStrips(
+  baseArmor: number,
+  corrosiveStacks: number,
+  heatActive: boolean,
+): number {
+  return baseArmor * corrosiveArmorRemaining(corrosiveStacks) * heatArmorRemaining(heatActive);
+}
+
+/**
+ * Discrete shot-by-shot TTK with expected-value Viral/Corrosive stacking,
+ * Heat armor strip, DoT ticks, and reload cycles.
+ *
+ * Uses expected procs per shot (MS × SC × weight) — deterministic, not Monte Carlo.
+ */
+export function simulateDiscreteTTK(
+  stats: CalculatedStats,
+  enemy: EnemyType,
+  level: number,
+  opts?: { maxTime?: number; maxShots?: number },
+): TTKResult {
+  const maxTime = opts?.maxTime ?? 600;
+  const maxShots = opts?.maxShots ?? 50_000;
+
+  const scaledHp = scaleHealth(enemy.baseHealth, level, enemy.faction);
+  const baseArmor = scaleArmor(enemy.baseArmor, level);
+  const scaledShield = scaleShield(enemy.baseShield, level);
+
+  const dmgTypes = collectDamageTypes(stats);
   const totalRaw = dmgTypes.reduce((s, d) => s + d.value, 0);
   const zero: TTKResult = {
-    enemy, level, effectiveHealth: hp + shield, scaledArmor: armor,
-    scaledShield: shield, scaledHealth: hp, armorDR: 0,
-    burstDps: 0, sustainedDps: 0, ttk: Infinity, shotsToKill: Infinity,
+    enemy,
+    level,
+    effectiveHealth: scaledHp + scaledShield,
+    scaledArmor: baseArmor,
+    scaledShield,
+    scaledHealth: scaledHp,
+    armorDR: enemyArmorDamageReduction(baseArmor) * 100,
+    burstDps: 0,
+    sustainedDps: 0,
+    ttk: Infinity,
+    shotsToKill: Infinity,
+    peakViralStacks: 0,
+    peakCorrosiveStacks: 0,
+    discrete: true,
   };
   if (totalRaw <= 0) return zero;
 
-  // Status procs per second — arsenal-style per-shot chance aggregated across
-  // pellets (setStatusChancePerShot in calculator.ts), with a local fallback.
-  // Clamp inputs so riven curses can't produce negative proc rates.
+  const efr = shotsPerSecond(stats);
+  if (efr <= 0) return zero;
+
   const multishot = Math.max(0, stats.multishot);
-  const statusChance = Math.min(1, Math.max(0, stats.statusChance));
-  const statusChancePerShot = stats.statusChancePerShot != null
-    ? Math.min(1, Math.max(0, stats.statusChancePerShot))
-    : multishot > 1.0001
-      ? 1 - Math.pow(1 - statusChance, multishot)
-      : statusChance;
-  const procsPerSec = Math.max(0, stats.fireRate) * statusChancePerShot;
+  const statusChance = Math.max(0, stats.statusChance);
+  const procsPerShot = averageProcsPerShot(statusChance, multishot);
+  const shotInterval = 1 / efr;
 
-  // Corrosive armor strip: 26% per stack (multiplicative), max 10 stacks
-  // Estimate average stacks during a ~3s engagement window
-  const corrosiveDmg = dmgTypes.find((d) => d.type === "corrosive");
-  if (corrosiveDmg && armor > 0 && procsPerSec > 0) {
-    const corrosiveProcsPerSec = procsPerSec * (corrosiveDmg.value / totalRaw);
-    const avgStacks = Math.min(10, corrosiveProcsPerSec * 3);
-    armor *= Math.pow(0.74, avgStacks);
-  }
-
-  // Viral health multiplier: stack 1 = +100%, stacks 2-10 = +25% each (max 325%)
-  let viralMult = 1.0;
-  const viralDmg = dmgTypes.find((d) => d.type === "viral");
-  if (viralDmg && procsPerSec > 0) {
-    const viralProcsPerSec = procsPerSec * (viralDmg.value / totalRaw);
-    const avgStacks = Math.min(10, viralProcsPerSec * 3);
-    if (avgStacks >= 1) viralMult = 2.0 + Math.min(avgStacks - 1, 9) * 0.25;
-  }
-
-  const armorDR = armor > 0 ? armor / (armor + 300) : 0;
-
-  // Effective damage ratio vs shields
-  let shieldRatio = 0;
-  if (shield > 0 && enemy.shieldType !== "none") {
-    for (const d of dmgTypes) {
-      shieldRatio += (d.value / totalRaw) * (1 + getMod(SHIELD_MODIFIERS, enemy.shieldType, d.type));
-    }
-  } else {
-    shieldRatio = 1;
-  }
-
-  // Effective damage ratio vs health (through armor)
-  let healthRatio = 0;
-  for (const d of dmgTypes) {
-    const hm = getMod(HEALTH_MODIFIERS, enemy.healthType, d.type);
-    let typeDmg = (d.value / totalRaw) * (1 + hm);
-    if (armor > 0 && enemy.armorType !== "none") {
-      const am = getMod(ARMOR_MODIFIERS, enemy.armorType, d.type);
-      const effArmor = armor * Math.max(0, 1 - am);
-      const effDR = effArmor > 0 ? effArmor / (effArmor + 300) : 0;
-      typeDmg *= (1 - effDR);
-    }
-    healthRatio += typeDmg;
-  }
-  healthRatio *= viralMult;
-
-  // DoT DPS contributions (apply during health phase).
-  // Per-proc tick base = modded base (Serration-style only) × avg crit.
-  // Multishot is NOT in the tick — procsPerSec already uses multishot-aware
-  // statusChancePerShot. Heat/Toxin/Elec/Gas then × (1 + type%).
-  let dotDps = 0;
   const acm = avgCritMult(stats.criticalChance, stats.criticalMultiplier);
   const moddedBase =
     stats.moddedBaseDamage != null && stats.moddedBaseDamage > 0
       ? stats.moddedBaseDamage
-      : totalRaw; // fallback when stats were built without calculator
+      : totalRaw;
   const sim = stats.simParams;
   const factionBonus = factionBonusFromStats(
     stats.factionBonuses,
     sim?.targetFaction ?? enemy.faction,
   );
-  const factionDot = factionDotMultiplier(factionBonus);
-  const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
-  const head =
-    sim?.applyHeadshots ? 2 * (1 + (stats.headshotDamageBonus ?? 0)) : 1;
-  const stance =
-    sim?.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1);
-  const combatMult = combatDamageMultiplier({
+  const factionHit = combatDamageMultiplier({
     factionBonus,
     applyHeadshots: sim?.applyHeadshots,
     headshotDamageBonus: stats.headshotDamageBonus ?? 0,
-    stanceMultiplier: stance,
+    stanceMultiplier:
+      sim?.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1),
   });
-  const dotBase = moddedBase * acm * statusDmg * factionDot * head;
+  // factionHit already includes faction once; DoT needs faction²
+  const factionDot = factionDotMultiplier(factionBonus);
+  const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
+  const head = sim?.applyHeadshots ? 2 * (1 + (stats.headshotDamageBonus ?? 0)) : 1;
+  // combatMult for hits uses factionHit; for DoT tick base rebuild without double head/stance
+  const dotBase =
+    moddedBase *
+    acm *
+    statusDmg *
+    factionDot *
+    head *
+    (sim?.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1));
 
   const typeBonus = (type: string): number => {
     const el = dmgTypes.find((d) => d.type === type);
@@ -269,101 +375,238 @@ export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: nu
     return el.value / moddedBase;
   };
 
-  // Slash DoT: 35% base/tick, 7 ticks over 6s, bypasses armor (True/cinematic)
-  if (stats.slash > 0 && procsPerSec > 0) {
-    const slashPPS = procsPerSec * (stats.slash / totalRaw);
-    const tickDmg = dotBase * 0.35;
-    const dpsPerProc = tickDmg * (7 / 6);
-    const slashHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "slash");
-    dotDps += slashPPS * dpsPerProc * (1 + slashHM) * viralMult;
+  const weight = (type: string): number => {
+    const el = dmgTypes.find((d) => d.type === type);
+    return el ? el.value / totalRaw : 0;
+  };
+
+  // Expected procs of each type per shot
+  const expectedProcs = (type: string) => procsPerShot * weight(type);
+
+  let health = scaledHp;
+  let shield = scaledShield;
+  let viralStacks = 0;
+  let corrosiveStacks = 0;
+  let heatActive = false;
+  let heatExpire = 0;
+  let peakViral = 0;
+  let peakCorrosive = 0;
+  let time = 0;
+  let shots = 0;
+  let ammo = stats.magazine > 0 ? stats.magazine : Infinity;
+  const dots: DotInstance[] = [];
+
+  const tickDot = (t: number) => {
+    for (const d of dots) {
+      while (d.remainingTicks > 0 && d.nextTick <= t + 1e-12) {
+        const armorNow = currentArmorFromStrips(baseArmor, corrosiveStacks, heatActive && heatExpire > d.nextTick);
+        const viralMult = d.useViral ? viralHealthMultiplier(viralStacks) : 1;
+        let dmg = d.damagePerTick * viralMult;
+        if (!d.ignoreArmor && armorNow > 0 && enemy.armorType !== "none") {
+          dmg *= 1 - enemyArmorDamageReduction(armorNow);
+        }
+        // DoTs apply to health (toxin always; others after shields or through)
+        if (d.ignoreShields || shield <= 0) {
+          health -= dmg;
+        } else {
+          // non-toxin DoTs typically don't apply to shields in our model — apply to health
+          health -= dmg;
+        }
+        d.remainingTicks -= 1;
+        d.nextTick += 1; // 1s tick interval
+        if (health <= 0) return;
+      }
+    }
+    // prune finished
+    for (let i = dots.length - 1; i >= 0; i--) {
+      if (dots[i].remainingTicks <= 0) dots.splice(i, 1);
+    }
+  };
+
+  const spawnDot = (
+    type: string,
+    expectedCount: number,
+    frac: number,
+    optsDot: { ignoreArmor: boolean; ignoreShields: boolean; useViral: boolean; typeMult: number },
+  ) => {
+    if (expectedCount <= 0 || frac <= 0) return;
+    const perTick = frac * dotBase * optsDot.typeMult;
+    if (perTick <= 0) return;
+    // Spawn floor(expected) full procs + fractional expected as partial damage
+    const full = Math.floor(expectedCount);
+    const fracPart = expectedCount - full;
+    const addOne = (scale: number) => {
+      if (scale <= 0) return;
+      dots.push({
+        nextTick: time, // first tick on application (wiki: immediate + 6 more)
+        remainingTicks: 7,
+        damagePerTick: perTick * scale,
+        type,
+        ignoreArmor: optsDot.ignoreArmor,
+        ignoreShields: optsDot.ignoreShields,
+        useViral: optsDot.useViral,
+      });
+    };
+    for (let i = 0; i < full; i++) addOne(1);
+    if (fracPart > 0.01) addOne(fracPart);
+  };
+
+  while (health > 0 && time < maxTime && shots < maxShots) {
+    // Reload if needed
+    if (ammo <= 0 && stats.magazine > 0 && stats.reloadTime > 0) {
+      time += stats.reloadTime;
+      ammo = stats.magazine;
+      tickDot(time);
+      if (health <= 0) break;
+    }
+
+    // Process DoTs up to this shot
+    tickDot(time);
+    if (health <= 0) break;
+
+    // Expire heat strip
+    if (heatActive && time >= heatExpire) heatActive = false;
+
+    const armorNow = currentArmorFromStrips(baseArmor, corrosiveStacks, heatActive);
+    const viralMult = viralHealthMultiplier(viralStacks);
+
+    // Direct hit (expected damage per shot)
+    let shieldHit = 0;
+    let healthHit = 0;
+    let toxinBypass = 0;
+    for (const d of dmgTypes) {
+      const base = d.value * multishot * acm * factionHit;
+      if (d.type === "toxin") {
+        // toxin bypasses shields → health
+        toxinBypass += typeHitDamage(d.type, base, enemy, armorNow, viralMult, "health");
+      } else if (shield > 0 && enemy.shieldType !== "none") {
+        shieldHit += typeHitDamage(d.type, base, enemy, armorNow, 1, "shield");
+      } else {
+        healthHit += typeHitDamage(d.type, base, enemy, armorNow, viralMult, "health");
+      }
+    }
+
+    if (shield > 0 && enemy.shieldType !== "none") {
+      const absorbed = Math.min(shield, shieldHit);
+      shield -= absorbed;
+      // overkill to health when shield breaks on this shot
+      if (shield <= 0 && shieldHit > absorbed) {
+        const overflowFrac = (shieldHit - absorbed) / Math.max(shieldHit, 1e-9);
+        healthHit += overflowFrac * healthHit; // approximate
+      }
+    }
+    health -= healthHit + toxinBypass;
+
+    // Status stack gains (expected)
+    const viralGain = expectedProcs("viral");
+    const corrGain = expectedProcs("corrosive");
+    const heatGain = expectedProcs("heat");
+    viralStacks = Math.min(10, viralStacks + viralGain);
+    corrosiveStacks = Math.min(10, corrosiveStacks + corrGain);
+    peakViral = Math.max(peakViral, viralStacks);
+    peakCorrosive = Math.max(peakCorrosive, corrosiveStacks);
+    if (heatGain > 0.05) {
+      heatActive = true;
+      heatExpire = time + 6; // heat proc duration
+    }
+
+    // DoT procs from this shot
+    spawnDot("slash", expectedProcs("slash"), 0.35, {
+      ignoreArmor: true,
+      ignoreShields: false,
+      useViral: true,
+      typeMult: 1,
+    });
+    spawnDot("heat", expectedProcs("heat"), 0.5, {
+      ignoreArmor: false,
+      ignoreShields: false,
+      useViral: false,
+      typeMult: 1 + typeBonus("heat"),
+    });
+    spawnDot("toxin", expectedProcs("toxin"), 0.5, {
+      ignoreArmor: false,
+      ignoreShields: true,
+      useViral: false,
+      typeMult: 1 + typeBonus("toxin"),
+    });
+    spawnDot("electricity", expectedProcs("electricity"), 0.5, {
+      ignoreArmor: false,
+      ignoreShields: false,
+      useViral: false,
+      typeMult: 1 + typeBonus("electricity"),
+    });
+    spawnDot("gas", expectedProcs("gas"), 0.5, {
+      ignoreArmor: false,
+      ignoreShields: false,
+      useViral: true,
+      typeMult: 1 + typeBonus("gas"),
+    });
+
+    shots += 1;
+    ammo -= 1;
+    time += shotInterval;
+
+    // Apply immediate DoT tick at shot time
+    tickDot(time);
   }
 
-  // Heat DoT: 50% × (1+heat%) base/tick, armor-affected
-  const heatDmg = dmgTypes.find((d) => d.type === "heat");
-  if (heatDmg && procsPerSec > 0) {
-    const heatPPS = procsPerSec * (heatDmg.value / totalRaw);
-    const tickDmg = dotBase * 0.5 * (1 + typeBonus("heat"));
-    const dpsPerProc = tickDmg * (7 / 6);
-    const heatHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "heat");
-    dotDps += heatPPS * dpsPerProc * (1 + heatHM) * (1 - armorDR);
-  }
-
-  // Toxin DoT: 50% × (1+toxin%) base/tick, armor-affected, bypasses shields
-  const toxinDmg = dmgTypes.find((d) => d.type === "toxin");
-  if (toxinDmg && procsPerSec > 0) {
-    const toxinPPS = procsPerSec * (toxinDmg.value / totalRaw);
-    const tickDmg = dotBase * 0.5 * (1 + typeBonus("toxin"));
-    const dpsPerProc = tickDmg * (7 / 6);
-    const toxinHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "toxin");
-    dotDps += toxinPPS * dpsPerProc * (1 + toxinHM) * (1 - armorDR);
-  }
-
-  // Electricity DoT: 50% × (1+elec%) base/tick, armor-affected
-  const elecDmg = dmgTypes.find((d) => d.type === "electricity");
-  if (elecDmg && procsPerSec > 0) {
-    const elecPPS = procsPerSec * (elecDmg.value / totalRaw);
-    const tickDmg = dotBase * 0.5 * (1 + typeBonus("electricity"));
-    const dpsPerProc = tickDmg * (7 / 6);
-    const elecHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "electricity");
-    dotDps += elecPPS * dpsPerProc * (1 + elecHM) * (1 - armorDR);
-  }
-
-  // Gas DoT cloud: 50% × (1+gas%) base/tick
-  const gasDmg = dmgTypes.find((d) => d.type === "gas");
-  if (gasDmg && procsPerSec > 0) {
-    const gasPPS = procsPerSec * (gasDmg.value / totalRaw);
-    const tickDmg = dotBase * 0.5 * (1 + typeBonus("gas"));
-    const dpsPerProc = tickDmg * (7 / 6);
-    const gasHM = getMod(HEALTH_MODIFIERS, enemy.healthType, "gas");
-    // Gas cloud deals toxin-like damage; treat as armor-affected health damage
-    dotDps += gasPPS * dpsPerProc * (1 + gasHM) * (1 - armorDR) * viralMult;
-  }
-
-  // Shot-level calculations (faction hit ×1; headshot/stance; DoTs use faction² via dotBase)
-  const rawPerShot = totalRaw * multishot * acm * combatMult;
-  const shieldPerShot = rawPerShot * shieldRatio;
-  const healthPerShot = rawPerShot * healthRatio;
-
-  // Burst DPS (no reload)
-  const shieldBurstDps = shieldPerShot * stats.fireRate;
-  const healthBurstDps = healthPerShot * stats.fireRate + dotDps;
-
-  // Time through each layer
-  const shieldTime = shield > 0 && shieldBurstDps > 0 ? shield / shieldBurstDps : 0;
-  const healthTime = healthBurstDps > 0 ? hp / healthBurstDps : Infinity;
-  let rawTTK = shieldTime + healthTime;
-
-  // Reload cycles
-  if (stats.magazine > 0 && stats.reloadTime > 0 && stats.fireRate > 0) {
-    const magDur = stats.magazine / stats.fireRate;
-    if (rawTTK > magDur) {
-      const totalShots = rawTTK * stats.fireRate;
-      const fullReloads = Math.floor(totalShots / stats.magazine);
-      rawTTK += fullReloads * stats.reloadTime;
+  // Drain remaining DoTs if still alive but DoTs would finish (up to 6s)
+  if (health > 0 && dots.length > 0) {
+    const drainEnd = Math.min(maxTime, time + 7);
+    tickDot(drainEnd);
+    if (health <= 0) {
+      // find when health crossed 0 — approximate end time
+      time = Math.min(drainEnd, time + 3);
     }
   }
 
-  // Sustained DPS factor
-  const sustainFactor = stats.magazine > 0 && stats.reloadTime > 0 && stats.fireRate > 0
-    ? (stats.magazine / stats.fireRate) / (stats.magazine / stats.fireRate + stats.reloadTime)
-    : 1;
+  const killed = health <= 0;
+  const ttk = killed ? time : Infinity;
 
-  // Shots to kill
-  const stk = shieldPerShot > 0 && healthPerShot > 0
-    ? Math.ceil(shield / shieldPerShot) + Math.ceil(hp / healthPerShot)
-    : Infinity;
+  // Paper DPS at end-state stacks (for UI comparison)
+  const endArmor = currentArmorFromStrips(baseArmor, corrosiveStacks, heatActive);
+  const endViral = viralHealthMultiplier(viralStacks);
+  const endArmorDR = enemyArmorDamageReduction(endArmor);
+  let endHealthRatio = 0;
+  for (const d of dmgTypes) {
+    const hm = getMod(HEALTH_MODIFIERS, enemy.healthType, d.type);
+    let typeDmg = (d.value / totalRaw) * (1 + hm);
+    if (endArmor > 0 && enemy.armorType !== "none") {
+      const am = getMod(ARMOR_MODIFIERS, enemy.armorType, d.type);
+      typeDmg *= 1 - enemyArmorDamageReduction(endArmor * Math.max(0, 1 - am));
+    }
+    endHealthRatio += typeDmg;
+  }
+  endHealthRatio *= endViral;
+  const rawPerShot = totalRaw * multishot * acm * factionHit;
+  const healthPerShot = rawPerShot * endHealthRatio;
+  const burstDps = healthPerShot * efr + (killed && ttk > 0 ? (scaledHp + scaledShield) / ttk * 0 : 0);
+  // Prefer sim-derived average DPS when killed
+  const avgDps = killed && ttk > 0 ? (scaledHp + scaledShield) / ttk : healthPerShot * efr;
+  const sustainFactor =
+    stats.magazine > 0 && stats.reloadTime > 0 && efr > 0
+      ? stats.magazine / efr / (stats.magazine / efr + stats.reloadTime)
+      : 1;
 
   return {
     enemy,
     level,
-    effectiveHealth: hp + shield,
-    scaledArmor: armor,
-    scaledShield: shield,
-    scaledHealth: hp,
-    armorDR: armorDR * 100,
-    burstDps: healthBurstDps,
-    sustainedDps: healthBurstDps * sustainFactor,
-    ttk: rawTTK,
-    shotsToKill: Math.max(1, stk),
+    effectiveHealth: scaledHp + scaledShield,
+    scaledArmor: endArmor,
+    scaledShield,
+    scaledHealth: scaledHp,
+    armorDR: endArmorDR * 100,
+    burstDps: Math.max(avgDps, healthPerShot * efr),
+    sustainedDps: Math.max(avgDps * sustainFactor, healthPerShot * efr * sustainFactor),
+    ttk,
+    shotsToKill: killed ? Math.max(1, shots) : Infinity,
+    peakViralStacks: peakViral,
+    peakCorrosiveStacks: peakCorrosive,
+    discrete: true,
   };
+}
+
+/** Main entry — discrete Viral/Corrosive-aware TTK sim. */
+export function calculateTTK(stats: CalculatedStats, enemy: EnemyType, level: number): TTKResult {
+  return simulateDiscreteTTK(stats, enemy, level);
 }

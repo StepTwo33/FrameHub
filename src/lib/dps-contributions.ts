@@ -179,7 +179,7 @@ function externalBuffContributionCategory(buff: import("@/lib/types").WeaponExte
   if (buff.critChanceBonus || buff.critMultBonus || buff.critMultFlatBonus) return "crit";
   if (buff.fireRateBonus) return "rate";
   if (buff.multishotBonus) return "multishot";
-  if (buff.damageBonus || buff.statusBonus) return "damage";
+  if (buff.damageBonus || buff.damageMultBonus || buff.statusBonus) return "damage";
   return "external";
 }
 

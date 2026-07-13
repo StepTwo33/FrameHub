@@ -102,7 +102,9 @@ describe("resolveWeaponExternalBuffs", () => {
 
     expect(buffs).toHaveLength(1);
     expect(buffs[0].label).toBe("Roar");
-    expect(buffs[0].damageBonus).toBeCloseTo(0.65, 5);
+    // Multiplicative with Serration (not additive base-damage pool)
+    expect(buffs[0].damageMultBonus).toBeCloseTo(0.65, 5);
+    expect(buffs[0].damageBonus).toBeUndefined();
   });
 
   it("increases weapon DPS when applied via calc options", () => {
@@ -119,7 +121,28 @@ describe("resolveWeaponExternalBuffs", () => {
     const base = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim);
     const withRoar = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim, { externalBuffs: buffs });
 
-    expect(withRoar.burstDps).toBeGreaterThan(base.burstDps * 1.6);
+    // 130% strength Roar = +65% → ×1.65
+    expect(withRoar.burstDps).toBeCloseTo(base.burstDps * 1.65, 5);
+  });
+
+  it("multiplies Roar with Serration instead of adding", () => {
+    const serration = allMods.find((m) => m.id === "serration" || m.id === "serration_r3");
+    if (!serration) return;
+    const sim: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Roar"],
+    };
+    const buffs = resolveWeaponExternalBuffs(testRifle, {
+      warframeId: "rhino",
+      warframeStats: wfStats,
+      warframeAbilities: [roarAbility],
+    }, sim);
+    const slots = [{ modId: serration.id, rank: serration.maxRank, slotIndex: 0 }];
+    const withBoth = calculateWeaponBuild(testRifle, slots, modsMap, undefined, sim, { externalBuffs: buffs });
+    const serBonus = (serration.stats.damage * (serration.maxRank + 1)) / 100;
+    // base × (1+Serration) × (1+Roar) — not × (1+Serration+Roar)
+    const expected = testRifle.damage * (1 + serBonus) * 1.65;
+    expect(withBoth.totalDamage).toBeCloseTo(expected, 5);
   });
 
   it("applies Voltaic Strike from warframe mod bar as external elemental", () => {
