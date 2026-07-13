@@ -58,6 +58,69 @@ model User {
   donationEvents DonationEvent[]
   siteUpdates   SiteUpdate[]
   dataOverrides DataOverride[]
+  discordLink   DiscordUserLink?
+}
+
+// ── FrameHub Discord bot (worldstate alerts config) ───────────────────
+
+model DiscordUserLink {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  discordId    String    @unique
+  username     String?
+  discriminator String?
+  avatar       String?
+  accessToken  String?
+  refreshToken String?
+  tokenExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DiscordGuild {
+  id          String   @id // Discord snowflake
+  name        String
+  icon        String?
+  installedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  config      DiscordGuildConfig?
+  alertRoutes AlertRoute[]
+}
+
+model DiscordGuildConfig {
+  id       String @id @default(cuid())
+  guildId  String @unique
+  platform String @default("pc") // pc | ps4 | xb1 | swi
+  timezone String @default("UTC")
+  guild    DiscordGuild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+/// When eventType fires, post to channelId (one row per guild+channel+event).
+model AlertRoute {
+  id            String  @id @default(cuid())
+  guildId       String
+  channelId     String
+  eventType     String  // sortie | archon | arbitration | baro | cetus | vallis | …
+  enabled       Boolean @default(true)
+  mentionRoleId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  guild         DiscordGuild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, channelId, eventType])
+  @@index([guildId, eventType, enabled])
+}
+
+/// Last-seen fingerprints for worldstate transition detection (bot poller).
+model WorldstateFingerprint {
+  id          String   @id @default(cuid())
+  platform    String
+  eventType   String
+  fingerprint String
+  updatedAt   DateTime @updatedAt
+
+  @@unique([platform, eventType])
 }
 
 model DonationEvent {

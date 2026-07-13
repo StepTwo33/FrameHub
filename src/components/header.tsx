@@ -41,6 +41,7 @@ const NAV_GROUPS = [
       { href: "/codex", label: "Codex", desc: "Browse mods, arcanes, and shards" },
       { href: "/riven-calculator", label: "Riven Calculator", desc: "Riven stat ranges" },
       { href: "/damage-simulator", label: "Damage Simulator", desc: "Simulate damage output" },
+      { href: "/bot", label: "Discord Bot", desc: "World-state alerts & channel config" },
     ],
   },
   {
