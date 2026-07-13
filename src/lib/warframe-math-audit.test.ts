@@ -442,6 +442,23 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 });
 
+describe("Animal Instinct radar values (wiki: Animal Instinct stats)", () => {
+  it.each([
+    ["animal_instinct", 5, 30, 18],
+    ["primed_animal_instinct", 10, 55, 33],
+  ] as const)(
+    "%s stores per-rank radar values without a bogus range stat",
+    (modId, maxRank, expectedLootRadar, expectedEnemyRadar) => {
+      const mod = allMods.find((candidate) => candidate.id === modId)!;
+
+      expect(mod.maxRank).toBe(maxRank);
+      expect(mod.stats.lootRadar * (maxRank + 1)).toBe(expectedLootRadar);
+      expect(mod.stats.enemyRadar * (maxRank + 1)).toBe(expectedEnemyRadar);
+      expect(mod.stats).not.toHaveProperty("range");
+    },
+  );
+});
+
 describe("enemy level scaling smoke checks", () => {
   it("caps armor at 2700", () => {
     expect(scaleArmor(500, 200)).toBeLessThanOrEqual(2700);

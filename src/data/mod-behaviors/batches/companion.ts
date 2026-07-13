@@ -38,9 +38,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Anabolic Pollination: duration \u2014 Release a cloud of spores that persists for 10s increasing <DT_POISON_COLOR>Toxi\u2026"),
   ]),
   animal_instinct: mod("animal_instinct", [
-    line("enemyRadar", "mod_panel", "multiplicative_percent", "Animal Instinct: enemyRadar \u2014 +30m Loot Radar\\\\n+18m Enemy Radar"),
-    line("lootRadar", "mod_panel", "multiplicative_percent", "Animal Instinct: lootRadar \u2014 +30m Loot Radar\\\\n+18m Enemy Radar"),
-    line("range", "mod_panel", "multiplicative_percent", "Animal Instinct: range \u2014 +30m Loot Radar\\\\n+18m Enemy Radar (arsenal display only)"),
+    line("enemyRadar", "mod_panel", "flat", "Animal Instinct: +3m Enemy Radar per rank, +18m at rank 5"),
+    line("lootRadar", "mod_panel", "flat", "Animal Instinct: +5m Loot Radar per rank, +30m at rank 5"),
   ]),
   anti_grav_array: mod("anti_grav_array", [
     line("gravityReduction", "mod_panel", "multiplicative_percent", "Anti-Grav Array: gravityReduction \u2014 Increase height of owner's jumps by +40%."),
@@ -387,9 +386,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Pounce: damage \u2014 The Kavat pounces at an enemy, dealing 90% Damage and stunning them for a short \u2026"),
   ]),
   primed_animal_instinct: mod("primed_animal_instinct", [
-    line("enemyRadar", "mod_panel", "multiplicative_percent", "Primed Animal Instinct: enemyRadar \u2014 Loot and enemy radar (Legendary)"),
-    line("lootRadar", "mod_panel", "multiplicative_percent", "Primed Animal Instinct: lootRadar \u2014 Loot and enemy radar (Legendary)"),
-    line("range", "mod_panel", "multiplicative_percent", "Primed Animal Instinct: range \u2014 Loot and enemy radar (Legendary) (arsenal display only)"),
+    line("enemyRadar", "mod_panel", "flat", "Primed Animal Instinct: +3m Enemy Radar per rank, +33m at rank 10"),
+    line("lootRadar", "mod_panel", "flat", "Primed Animal Instinct: +5m Loot Radar per rank, +55m at rank 10"),
   ]),
   primed_pack_leader: mod("primed_pack_leader", [
     line("healOnMelee", "mod_panel", "multiplicative_percent", "Primed Pack Leader: healOnMelee \u2014 Heal your Companion with Melee hits. Excess healing grants Overguard.\\\\n+183 Hea\u2026"),

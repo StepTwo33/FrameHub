@@ -1652,9 +1652,8 @@ const RAW_MODS: Mod[] = [
     "category": "companion",
     "subCategory": "universal",
     "stats": {
-      "lootRadar": 30,
-      "enemyRadar": 30,
-      "range": 3.0
+      "lootRadar": 5,
+      "enemyRadar": 3
     },
     "description": "+30m Loot Radar\\n+18m Enemy Radar",
     "rarity": "rare"
@@ -1668,11 +1667,10 @@ const RAW_MODS: Mod[] = [
     "category": "companion",
     "subCategory": "universal",
     "stats": {
-      "lootRadar": 55,
-      "enemyRadar": 55,
-      "range": 3.0
+      "lootRadar": 5,
+      "enemyRadar": 3
     },
-    "description": "Loot and enemy radar (Legendary)",
+    "description": "+55m Loot Radar\\n+33m Enemy Radar",
     "rarity": "legendary"
   },
   {

@@ -1,9 +1,9 @@
-import ArsenalData, { type BaseArsenalData } from "@wfcd/arsenal-parser";
 import {
   WARFRAME_ARSENAL_LOADOUT_URL,
   type WarframePlatform,
 } from "@/lib/warframe-arsenal/platforms";
 import { loadoutHasImportableContent, mapArsenalToImportPayload } from "@/lib/warframe-arsenal/map-import";
+import { buildArsenalData } from "@/lib/warframe-arsenal/normalize-payload";
 import { getWarframeArsenalJwt, warframeArsenalRequestHeaders } from "@/lib/warframe-arsenal/twitch-auth";
 
 const FETCH_TIMEOUT_MS = 20_000;
@@ -105,8 +105,19 @@ export async function fetchAndMapWarframeArsenal(platform: WarframePlatform, acc
     throw new ArsenalFetchError("No loadout data returned for this account.", "not_found");
   }
 
-  const arsenal = new ArsenalData(payload as unknown as BaseArsenalData);
-  const mapped = mapArsenalToImportPayload(arsenal, { loadOuts: payload.loadOuts as never });
+  let arsenal;
+  let mapped;
+  try {
+    arsenal = buildArsenalData(payload);
+    mapped = mapArsenalToImportPayload(arsenal, { loadOuts: payload.loadOuts as never });
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : "parse failed";
+    console.error("[warframe/arsenal] Failed to parse loadout for", normalized, detail);
+    throw new ArsenalFetchError(
+      "Loadout data was retrieved but could not be parsed. The account may have an unsupported slot configuration — try again after a deploy update.",
+      "upstream",
+    );
+  }
 
   if (!loadoutHasImportableContent(mapped.loadout)) {
     throw new ArsenalFetchError(

@@ -31,6 +31,17 @@ export interface ArsenalImportWarning {
   label: string;
 }
 
+function toIsoTimestamp(value: unknown): string {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString();
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
+  }
+  return new Date().toISOString();
+}
+
 export interface ArsenalImportPayload {
   account: {
     playerName: string;
@@ -518,7 +529,7 @@ export function mapArsenalToImportPayload(
     account: {
       playerName,
       masteryRank: account.masteryRank,
-      lastUpdated: account.lastUpdated.toISOString(),
+      lastUpdated: toIsoTimestamp(account.lastUpdated),
       focusSchool: account.focusSchool,
     },
     loadout: resultLoadout,

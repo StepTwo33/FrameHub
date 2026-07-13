@@ -43,14 +43,27 @@ export function WarframePlayerSync({ onImported, className }: WarframePlayerSync
     try {
       const params = new URLSearchParams({ platform, account: trimmed });
       const res = await fetch(`/api/warframe/arsenal?${params.toString()}`);
-      const data = await res.json();
+      const raw = await res.text();
+      let data: { error?: string } & Partial<ArsenalImportPayload> = {};
+      if (raw) {
+        try {
+          data = JSON.parse(raw) as typeof data;
+        } catch {
+          setError(
+            res.ok
+              ? "FrameHub returned an invalid response. Try again in a moment."
+              : `FrameHub request failed (${res.status}). Try again in a moment.`,
+          );
+          return;
+        }
+      }
       if (!res.ok) {
-        setError(data.error || "Failed to retrieve loadout.");
+        setError(data.error || `Failed to retrieve loadout (${res.status}).`);
         return;
       }
       setResult(data as ArsenalImportPayload);
     } catch {
-      setError("Network error while contacting FrameHub.");
+      setError("Could not reach FrameHub. Check your connection and try again.");
     } finally {
       setLoading(false);
     }
