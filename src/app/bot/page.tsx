@@ -100,7 +100,7 @@ export default function BotLandingPage() {
         </div>
 
         <p className="mt-10 text-xs text-muted-foreground">
-          Fan project — not affiliated with Digital Extremes or the Altair Discord bot. Worldstate data via{" "}
+          Fan project — not affiliated with Digital Extremes. Worldstate data via{" "}
           <a
             href="https://docs.warframestat.us/"
             className="underline underline-offset-2 hover:text-foreground inline-flex items-center gap-0.5"
