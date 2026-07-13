@@ -54,7 +54,7 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "criticalChance": 22.5,
+      "criticalChanceOnHeadshot": 22.5,
       "duration": 1.5
     },
     "description": "On Headshot:\\n+135% Critical Chance when Aiming for 9s",
@@ -69,7 +69,8 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "criticalChance": 3.636364,
+      "criticalChanceOnHeadshot": 10.909091,
+      "criticalChanceOnHeadshotKill": 3.636364,
       "duration": 1.090909
     },
     "description": "On Headshot:\\n+120% Critical Chance when Aiming for 12s\\nOn Headshot Kill:\\n+40% Critical Chance when Aiming for 12s. Stacks up to 5x.",
@@ -143,10 +144,9 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "punchThrough": 0.4,
       "puncture": 20.0
     },
-    "description": "+0.4m Punch Through per rank",
+    "description": "+20% Puncture per rank (+120% at max)",
     "rarity": "rare"
   },
   {
@@ -158,7 +158,6 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "criticalMultiplierOnKill": 10,
       "criticalMultiplier": 20.0,
       "duration": 1.5
     },
@@ -203,8 +202,8 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "multishot": 2.7273,
-      "multishotOnKill": 3.6,
+      "multishot": 7.272727,
+      "multishotOnKill": 2.727273,
       "duration": 1.818182
     },
     "description": "+80% Multishot\\nOn Kill:\\n+30% Multishot for 20s. Stacks up to 5x.",
@@ -219,9 +218,8 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "statusChance": 7.2727,
-      "damagePerStatus": 3.6,
-      "damage": 3.636364,
+      "statusChance": 7.272727,
+      "damagePerStatus": 3.636364,
       "duration": 1.818182
     },
     "description": "+80% Status Chance\\nOn Kill:\\n+40% Direct Damage per Status Type affecting the target for 20s. Stacks up to 2x.",
@@ -236,9 +234,8 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "statusChance": 7.2727,
-      "damagePerStatus": 3.6,
-      "damage": 3.636364,
+      "statusChance": 7.272727,
+      "damagePerStatus": 3.636364,
       "duration": 1.818182
     },
     "description": "+80% Status Chance\\nOn Kill:\\n+40% Direct Damage per Status Type affecting the target for 20s. Stacks up to 2x.",
@@ -295,13 +292,13 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 6,
     "maxRank": 3,
-    "category": "rifle",
+    "category": "pistol",
     "subCategory": "",
     "stats": {
       "cold": 10,
       "magazine": 10
     },
-    "description": "+15% Cold, +5% Magazine per rank",
+    "description": "+40% Magazine Capacity, +40% Cold at max rank",
     "rarity": "rare"
   },
   {
@@ -316,7 +313,7 @@ const RAW_MODS: Mod[] = [
       "heat": 15,
       "statusChance": 15
     },
-    "description": "+15% Heat, +10% Status Chance per rank",
+    "description": "+60% Heat, +60% Status Chance at max rank",
     "rarity": "rare"
   },
   {
@@ -347,7 +344,7 @@ const RAW_MODS: Mod[] = [
       "damage": 14.0909,
       "slideSpeed": 5
     },
-    "description": "+11% Damage, +5% Slide Speed per rank",
+    "description": "+155% Damage, +55% Slide Speed at max rank",
     "rarity": "rare"
   },
   {
@@ -377,7 +374,7 @@ const RAW_MODS: Mod[] = [
       "damage": 15,
       "accuracy": -5.0
     },
-    "description": "+6% Damage, -3% Accuracy per rank",
+    "description": "+165% Damage, -55% Accuracy at max rank",
     "rarity": "rare"
   },
   {
@@ -405,7 +402,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "criticalChance": 17
     },
-    "description": "+22% Critical Chance per rank (Primed)",
+    "description": "+187% Critical Chance at max rank (Primed)",
     "rarity": "legendary"
   },
   {
@@ -417,7 +414,7 @@ const RAW_MODS: Mod[] = [
     "category": "pistol",
     "subCategory": "",
     "stats": {
-      "criticalChance": 22.5,
+      "criticalChanceOnHeadshot": 22.5,
       "duration": 1.5
     },
     "description": "On Headshot:\\n+135% Critical Chance when Aiming for 9s",
@@ -432,7 +429,8 @@ const RAW_MODS: Mod[] = [
     "category": "pistol",
     "subCategory": "",
     "stats": {
-      "criticalChance": 3.636364,
+      "criticalChanceOnHeadshot": 10.909091,
+      "criticalChanceOnHeadshotKill": 3.636364,
       "duration": 1.090909
     },
     "description": "On Headshot:\\n+120% Critical Chance when Aiming for 12s\\nOn Headshot Kill:\\n+40% Critical Chance when Aiming for 12s. Stacks up to 5x.",
@@ -449,7 +447,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "criticalMultiplier": 10
     },
-    "description": "+15% Critical Damage per rank (Primed)",
+    "description": "+110% Critical Damage at max rank (Primed)",
     "rarity": "legendary"
   },
   {
@@ -490,9 +488,8 @@ const RAW_MODS: Mod[] = [
     "category": "pistol",
     "subCategory": "",
     "stats": {
-      "statusChance": 7.2727,
-      "damagePerStatus": 3.6,
-      "damage": 3.636364,
+      "statusChance": 7.272727,
+      "damagePerStatus": 3.636364,
       "duration": 1.272727
     },
     "description": "+80% Status Chance\\nOn Kill:\\n+40% Direct Damage per Status Type affecting the target for 14s. Stacks up to 3x.",
@@ -626,7 +623,7 @@ const RAW_MODS: Mod[] = [
       "spread": 10,
       "accuracy": -10.0
     },
-    "description": "+10% Damage, +10% Spread per rank",
+    "description": "+90% Damage, +60% Spread at max rank",
     "rarity": "rare"
   },
   {
@@ -654,7 +651,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "criticalMultiplier": 10
     },
-    "description": "+20% Critical Damage per rank (Primed)",
+    "description": "+110% Critical Damage at max rank (Primed)",
     "rarity": "legendary"
   },
   {
@@ -722,8 +719,8 @@ const RAW_MODS: Mod[] = [
     "category": "shotgun",
     "subCategory": "",
     "stats": {
-      "multishot": 2.7273,
-      "multishotOnKill": 3.6,
+      "multishot": 10,
+      "multishotOnKill": 2.727273,
       "duration": 1.818182
     },
     "description": "+110% Multishot\\nOn Kill:\\n+30% Multishot for 20s. Stacks up to 4x.",
@@ -784,7 +781,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "damage": 15
     },
-    "description": "+20% Damage per rank (Primed)",
+    "description": "+165% Damage at max rank (Primed)",
     "rarity": "legendary"
   },
   {
@@ -2384,10 +2381,9 @@ const RAW_MODS: Mod[] = [
     "category": "companion",
     "subCategory": "beast",
     "stats": {
-      "meleeDamage": 110,
       "damage": 30.0
     },
-    "description": "+110% Melee Damage",
+    "description": "+330% Melee Damage",
     "rarity": "uncommon"
   },
   {
@@ -2677,7 +2673,6 @@ const RAW_MODS: Mod[] = [
     "category": "companion_weapon",
     "subCategory": "beast_weapon",
     "stats": {
-      "attackSpeed": 30,
       "punchThrough": 1.2,
       "fireRate": 5.0
     },
@@ -5192,7 +5187,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "criticalMultiplier": 10
     },
-    "description": "+7.5% Critical Damage per rank (Set)",
+    "description": "+60% Critical Damage at max rank (Set)",
     "rarity": "uncommon"
   },
   {
@@ -5219,9 +5214,9 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "",
     "stats": {
-      "slashOnCrit": 7.5
+      "slashOnCrit": 5
     },
-    "description": "+7.5% chance for Slash proc on Crit per rank",
+    "description": "+30% chance for Slash proc on Critical Hits",
     "rarity": "uncommon"
   },
   {
@@ -6565,8 +6560,7 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "damage": 10,
-      "magazine": 6.666667
+      "damageFirstShot": 6.666667
     },
     "description": "+40% Damage on first shot in Magazine",
     "rarity": "uncommon"
@@ -7075,7 +7069,7 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "fireRate": 5.833333
+      "slashOnImpactProc": 5.833333
     },
     "description": " <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COLOR>Slash Status Effect (x2 when Fire Rate is below 2.5)",
     "rarity": "rare"
@@ -7414,8 +7408,8 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "damage": 31.818182,
-      "multishot": 31.818182
+      "weakPointDamage": 31.818182,
+      "criticalChanceOnHeadshot": 31.818182
     },
     "description": "+350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be modified.",
     "rarity": "rare"
@@ -7499,8 +7493,7 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "damage": 25,
-      "magazine": 25.0
+      "damageFirstShot": 25.0
     },
     "description": "+100% Damage on first shot in Magazine",
     "rarity": "rare"
@@ -7514,7 +7507,7 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
-      "damage": 10
+      "damageFirstShot": 10
     },
     "description": "+110% Damage on first shot in Magazine",
     "rarity": "legendary"
@@ -8831,8 +8824,8 @@ const RAW_MODS: Mod[] = [
     "category": "secondary",
     "subCategory": "",
     "stats": {
-      "multishot": 2.7273,
-      "multishotOnKill": 3.6,
+      "multishot": 10,
+      "multishotOnKill": 2.727273,
       "duration": 1.818182
     },
     "description": "+110% Multishot, On Kill:\\n+30% Multishot for 20s. Stacks up to 4x.",
@@ -8877,7 +8870,7 @@ const RAW_MODS: Mod[] = [
     "category": "secondary",
     "subCategory": "",
     "stats": {
-      "fireRate": 5.833333
+      "slashOnImpactProc": 5.833333
     },
     "description": " <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COLOR>Slash Status Effect (x2 when Fire Rate is below 2.5)",
     "rarity": "rare"
@@ -9168,8 +9161,8 @@ const RAW_MODS: Mod[] = [
     "category": "secondary",
     "subCategory": "",
     "stats": {
-      "damage": 31.818182,
-      "multishot": 31.818182
+      "weakPointDamage": 31.818182,
+      "criticalChanceOnHeadshot": 31.818182
     },
     "description": "+350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be modified.",
     "rarity": "rare"
@@ -10241,7 +10234,8 @@ const RAW_MODS: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "damage": 10.0
+      "damage": 15.0,
+      "statusDamage": 10.0
     },
     "description": "+90% Melee Damage\\n+60% Status Damage",
     "rarity": "rare"
@@ -11326,7 +11320,6 @@ const RAW_MODS: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "punchThrough": 25.0,
       "explosionChance": 25.0,
       "ricochetBounces": -4.0
     },
@@ -11342,7 +11335,6 @@ const RAW_MODS: Mod[] = [
     "category": "melee",
     "subCategory": "",
     "stats": {
-      "punchThrough": 25.0,
       "explosionChance": 25.0
     },
     "description": "+100% Chance to explode on Bounce (Disables Punch Through)",
@@ -15551,7 +15543,7 @@ const RAW_MODS: Mod[] = [
     "category": "companion",
     "subCategory": "",
     "stats": {
-      "damage": 12.5
+      "statusDamage": 12.5
     },
     "description": "+50% Status Damage",
     "rarity": "common"

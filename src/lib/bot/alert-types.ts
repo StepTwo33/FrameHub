@@ -15,6 +15,24 @@ export interface BotEventTypeDef {
 export const BOT_EVENT_TYPES: BotEventTypeDef[] = [
   // Missions
   {
+    id: "alerts",
+    label: "Alerts",
+    category: "missions",
+    description: "New alert missions (Gifts of the Lotus, tactical alerts, item rewards)",
+  },
+  {
+    id: "invasions",
+    label: "Invasions",
+    category: "missions",
+    description: "New invasions with faction rewards (Fieldron, Detonite, Mutagen, weapon parts)",
+  },
+  {
+    id: "fissures",
+    label: "Void Fissures",
+    category: "missions",
+    description: "New void fissure missions (chatty — new fissures appear every few minutes)",
+  },
+  {
     id: "sortie",
     label: "Sortie",
     category: "missions",
@@ -31,6 +49,24 @@ export const BOT_EVENT_TYPES: BotEventTypeDef[] = [
     label: "Arbitration",
     category: "missions",
     description: "Current arbitration node changes",
+  },
+  {
+    id: "archimedea",
+    label: "Archimedea",
+    category: "missions",
+    description: "Weekly Deep / Temporal Archimedea rotations (modifiers and missions)",
+  },
+  {
+    id: "sentient_outpost",
+    label: "Sentient Anomaly",
+    category: "missions",
+    description: "Sentient anomaly appearances in the Veil Proxima",
+  },
+  {
+    id: "construction",
+    label: "Fomorian / Razorback",
+    category: "missions",
+    description: "Balor Fomorian and Razorback Armada construction progress milestones",
   },
   // Vendors
   {
@@ -106,6 +142,25 @@ export const BOT_EVENT_TYPES: BotEventTypeDef[] = [
     label: "Earth cycle",
     category: "cycles",
     description: "Earth day/night cycle",
+  },
+  {
+    id: "zariman",
+    label: "Zariman",
+    category: "cycles",
+    description: "Grineer ↔ Corpus control shifts aboard the Zariman",
+  },
+  // Other
+  {
+    id: "events",
+    label: "Events & goals",
+    category: "other",
+    description: "Operations and community events (Thermia Fractures, Plague Star, …)",
+  },
+  {
+    id: "news",
+    label: "News",
+    category: "other",
+    description: "Official Warframe news posts (updates, Prime Access, streams)",
   },
 ];
 

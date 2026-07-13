@@ -7,6 +7,8 @@ export interface ScaledRadialAttack extends WeaponRadialAttack {
   avgDamage: number;
   /** Estimated burst DPS when the radial procs at the inferred rate; 0 for manual slams. */
   burstDps: number;
+  /** True when this explosion is already part of the weapon's damage stat (launchers) — not re-added to DPS. */
+  includedInDirect?: boolean;
 }
 
 /** Linear falloff average: center full damage, edge reduced by falloffReduction. */
@@ -19,9 +21,26 @@ function isManualSlam(name: string): boolean {
   return /\bslam attack\b|\bheavy slam\b|\bground slam\b/i.test(name);
 }
 
-function isAltFireOrDelayed(attack: WeaponRadialAttack): boolean {
-  if ((attack.explosionDelay ?? 0) > 0) return true;
-  return /alt[- ]?fire|charged|semi-auto mode|incarnon form|poison quill|semi-auto mode/i.test(attack.name);
+/**
+ * Situational radials that do NOT accompany every primary shot: alt/secondary
+ * fire modes, manual detonations, reload/turret/headshot triggers, deployed
+ * cubes, ramping attack stages. Shown in the panel but excluded from auto DPS
+ * (counting them at primary fire rate massively overstates DPS).
+ */
+const SITUATIONAL_RADIAL =
+  /alt[- ]?fire|alternate fire|secondary fire|semi-auto mode|lock[- ]?on|shot by player|\bcube\b|reload|turret|headshot|homing|mid-flight|embedded|buckshot|expiry|orb merging|attraction field|bounce|recall|\b\d(?:st|nd|rd|th) attack\b|poison quill|plasma bomb|cluster bombs |infested orb|orb explosion|grenade aoe|air burst/i;
+
+function isSituationalRadial(name: string, chargeIsPrimary: boolean): boolean {
+  if (SITUATIONAL_RADIAL.test(name)) return true;
+  // "Charged …" modes are alt-fire on regular weapons, but the primary fire on
+  // bows/charge weapons (e.g. Proboscis Cernos Charged Shot Explosion).
+  if (/charged/i.test(name) && !chargeIsPrimary) return true;
+  return false;
+}
+
+/** Radials that only exist in Incarnon form — excluded from DPS unless Incarnon is active. */
+function isIncarnonFormAttack(attack: WeaponRadialAttack): boolean {
+  return /incarnon form/i.test(attack.name);
 }
 
 function shotsPerSecond(stats: Pick<CalculatedStats, "fireRate" | "effectiveFireRate">): number {
@@ -36,12 +55,20 @@ export function radialAttacksPerSecond(
   attack: WeaponRadialAttack,
   stats: Pick<CalculatedStats, "fireRate" | "effectiveFireRate" | "multishot">,
   isMelee: boolean,
+  chargeIsPrimary = false,
 ): number {
   if (isManualSlam(attack.name)) return 0;
-  const efr = shotsPerSecond(stats);
-  if (isAltFireOrDelayed(attack)) return efr;
+  // Melee radials (glaive throws, slam shockwaves) are manual actions —
+  // never fire at attack-speed rate, so keep them out of sustained DPS.
   if (isMelee) return 0;
-  // Innate per-projectile / per-pellet explosions scale with multishot.
+  // Alt-fires, manual detonations, reload/headshot triggers etc. don't
+  // accompany the primary fire — panel-only.
+  if (isSituationalRadial(attack.name, chargeIsPrimary)) return 0;
+  const efr = shotsPerSecond(stats);
+  // Incarnon-form radials fire once per trigger pull.
+  if (isIncarnonFormAttack(attack)) return efr;
+  // Innate per-projectile / per-pellet explosions (delayed or not) scale with
+  // multishot — each projectile explodes (e.g. Kompressa bubbles).
   return efr * stats.multishot;
 }
 
@@ -52,8 +79,9 @@ export function computeRadialBurstDps(
     "criticalChance" | "criticalMultiplier" | "fireRate" | "effectiveFireRate" | "multishot"
   >,
   isMelee: boolean,
+  chargeIsPrimary = false,
 ): number {
-  const rate = radialAttacksPerSecond(attack, stats, isMelee);
+  const rate = radialAttacksPerSecond(attack, stats, isMelee, chargeIsPrimary);
   if (rate <= 0) return 0;
   const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
   return avgRadialDamage(attack) * rate * avgCrit;
@@ -62,6 +90,8 @@ export function computeRadialBurstDps(
 export function scaleRadialAttacksWithDps(
   baseWeapon: Weapon,
   stats: CalculatedStats,
+  /** Whether Incarnon form is active (evolutions selected) — gates Incarnon-only radials. */
+  incarnonActive = false,
 ): { attacks: ScaledRadialAttack[]; radialBurstDps: number; radialSustainedDps: number } {
   const attacks = getWeaponRadialAttacks(baseWeapon);
   if (!attacks.length || !baseWeapon.damage) {
@@ -70,8 +100,25 @@ export function scaleRadialAttacksWithDps(
 
   const isMelee =
     baseWeapon.category === "melee" || baseWeapon.triggerType === "Melee";
+  // Bows / charge-trigger weapons: their "Charged …" radial IS the primary fire.
+  const chargeIsPrimary =
+    baseWeapon.triggerType === "Bow" ||
+    baseWeapon.triggerType === "Charge" ||
+    baseWeapon.chargeMode != null ||
+    (baseWeapon.chargeTime ?? 0) > 0;
+  // Launchers (Bramma, Tonkor, Zarr, …) fold the explosion into the weapon's
+  // damage stat: damage − (IPS + elements) ≈ the radial's damage. Adding such
+  // a radial to DPS again would double-count the explosion.
+  const partsSum =
+    (baseWeapon.impact ?? 0) + (baseWeapon.puncture ?? 0) + (baseWeapon.slash ?? 0) +
+    (["heat", "cold", "toxin", "electricity", "blast", "radiation", "gas", "magnetic", "viral", "corrosive"] as const)
+      .reduce((sum, key) => sum + ((baseWeapon as unknown as Record<string, number>)[key] ?? 0), 0);
+  let directResidual = Math.max(0, baseWeapon.damage - partsSum);
   const mult = stats.totalDamage / baseWeapon.damage;
-  const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+  const avgCrit = avgCritMultiplier(
+    stats.criticalChance + (stats.vigilanteCritBonus ?? 0),
+    stats.criticalMultiplier,
+  );
 
   let radialBurstDps = 0;
   const scaled: ScaledRadialAttack[] = attacks.map((attack) => {
@@ -96,11 +143,30 @@ export function scaleRadialAttacksWithDps(
     }
 
     const avgDamage = avgRadialDamage(scaledAttack);
-    const rate = radialAttacksPerSecond(scaledAttack, stats, isMelee);
+    // Incarnon-form radials don't fire in normal form — exclude from DPS
+    // unless Incarnon evolutions are active in the build.
+    const gatedOut = isIncarnonFormAttack(scaledAttack) && !incarnonActive;
+    // Match this radial against the weapon's residual damage: if the residual
+    // roughly equals the explosion, it's already counted in direct DPS.
+    let includedInDirect = false;
+    if (
+      !gatedOut &&
+      directResidual > 0 &&
+      attack.totalDamage > 0 &&
+      attack.totalDamage >= directResidual * 0.5 &&
+      attack.totalDamage <= directResidual * 2.5
+    ) {
+      includedInDirect = true;
+      directResidual = 0;
+    }
+    const rate =
+      gatedOut || includedInDirect
+        ? 0
+        : radialAttacksPerSecond(scaledAttack, stats, isMelee, chargeIsPrimary);
     const burstDps = rate > 0 ? avgDamage * rate * avgCrit : 0;
     radialBurstDps += burstDps;
 
-    return { ...scaledAttack, avgDamage, burstDps };
+    return { ...scaledAttack, avgDamage, burstDps, includedInDirect };
   });
 
   let radialSustainedDps = radialBurstDps;

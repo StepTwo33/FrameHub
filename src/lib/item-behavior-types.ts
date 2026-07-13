@@ -23,8 +23,19 @@ export type ItemApplyMode =
   | "conditional_combo_status"
   | "conditional_damage_per_status"
   | "conditional_multishot_on_kill"
+  | "conditional_crit_on_headshot"
   | "conditional_damage_per_status_on_kill"
   | "conditional_attack_speed_on_kill"
+  /** Non-stacking buff active while sim kill stacks > 0 (Bladed Rounds, Gorgon Frenzy, …). */
+  | "conditional_stat_on_kill"
+  /** Buff from an aim/reload/cast/latch trigger, gated by the sim trigger-buffs toggle. */
+  | "conditional_stat_on_trigger"
+  /** Hunter Munitions-style chance to force a Slash proc on critical hits. */
+  | "slash_on_crit"
+  /** Internal Bleeding-style chance for Impact procs to add a Slash proc (×2 under 2.5 fire rate). */
+  | "slash_on_impact_proc"
+  /** Charged/Primed Chamber: bonus damage on the first shot of each magazine (averaged over mag for DPS). */
+  | "first_shot_damage"
   | "custom";
 
 export interface VerifiedItemStatLine {

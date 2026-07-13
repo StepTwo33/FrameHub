@@ -1367,7 +1367,7 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "laetum": [
     {
-      "name": "Auto Radial Attack",
+      "name": "Incarnon Form Auto Radial Attack",
       "radiation": 300.0,
       "totalDamage": 300.0,
       "radius": 2.0,
@@ -5434,7 +5434,7 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "cortege": [
     {
-      "name": "Radial Attack",
+      "name": "Alt-Fire Explosion",
       "blast": 1000.0,
       "totalDamage": 1000.0,
       "radius": 4.0,
@@ -5453,8 +5453,8 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   "kuva_ayanga": [
     {
       "name": "Explosion",
-      "blast": 280.0,
-      "totalDamage": 280.0,
+      "blast": 187.0,
+      "totalDamage": 187.0,
       "radius": 6.0,
       "falloffReduction": 0.5
     }
@@ -5462,15 +5462,15 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   "kuva_grattler": [
     {
       "name": "Explosion",
-      "blast": 235.0,
-      "totalDamage": 235.0,
+      "blast": 155.0,
+      "totalDamage": 155.0,
       "radius": 9.0,
       "falloffReduction": 0.7
     }
   ],
   "larkspur": [
     {
-      "name": "Explosion",
+      "name": "Alt-Fire Explosion",
       "blast": 400.0,
       "radiation": 400.0,
       "totalDamage": 800.0,
@@ -5480,10 +5480,10 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "larkspur_prime": [
     {
-      "name": "Explosion",
-      "blast": 800.0,
-      "radiation": 800.0,
-      "totalDamage": 1600.0,
+      "name": "Alt-Fire Explosion",
+      "blast": 400.0,
+      "radiation": 400.0,
+      "totalDamage": 800.0,
       "radius": 9.6,
       "falloffReduction": 0.6
     }

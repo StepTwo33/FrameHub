@@ -79,6 +79,39 @@ export interface Weapon {
   burstCount?: number;
   /** Delay between shots inside a burst (seconds). */
   burstDelay?: number;
+  /**
+   * Gravimag (Atmosphere) mode overrides for archguns. Base stats are the
+   * Archwing (space) values; enabling Gravimag mode replaces these fields
+   * (and radial attacks, when provided) with the atmospheric values.
+   */
+  atmosphereStats?: WeaponAtmosphereStats;
+}
+
+/** Stat overrides applied when an archgun is deployed via Gravimag (atmosphere). */
+export interface WeaponAtmosphereStats {
+  damage?: number;
+  impact?: number;
+  puncture?: number;
+  slash?: number;
+  heat?: number;
+  cold?: number;
+  toxin?: number;
+  electricity?: number;
+  radiation?: number;
+  viral?: number;
+  corrosive?: number;
+  blast?: number;
+  gas?: number;
+  magnetic?: number;
+  fireRate?: number;
+  criticalChance?: number;
+  criticalMultiplier?: number;
+  statusChance?: number;
+  magazine?: number;
+  reloadTime?: number;
+  multishot?: number;
+  /** Atmosphere-specific radial attack profiles (replace the Archwing ones). */
+  radialAttacks?: WeaponRadialAttack[];
 }
 
 /** Secondary AoE profile (explosion, slam radial, cube blast, etc.). */
@@ -301,6 +334,12 @@ export interface SimulationParams {
   applyHeadshots?: boolean;
   /** Include approximate stance damage multiplier on melee DPS. Default true. */
   applyStanceMultiplier?: boolean;
+  /**
+   * Treat aim/reload/cast/wall-latch trigger buffs as active
+   * (Catalyzer Link, Spring-Loaded Chamber, Deadly Efficiency, …). Default false —
+   * the in-game arsenal never includes them.
+   */
+  applyTriggerBuffs?: boolean;
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {
@@ -316,6 +355,7 @@ export const DEFAULT_SIM_PARAMS: SimulationParams = {
   targetFaction: undefined,
   applyHeadshots: false,
   applyStanceMultiplier: true,
+  applyTriggerBuffs: false,
 };
 
 export interface CalculatedStats {
@@ -366,6 +406,17 @@ export interface CalculatedStats {
    * Used for DoT ticks and damage quantization scale; excludes elemental/IPS type bonuses.
    */
   moddedBaseDamage?: number;
+  /**
+   * Unquantized per-shot damage matching the in-game arsenal display
+   * (total excludes multishot; the arsenal multiplies total × multishot).
+   */
+  arsenalDamage?: {
+    totalDamage: number;
+    impact: number;
+    puncture: number;
+    slash: number;
+    elements: ElementalDamage[];
+  };
   // Conditional mod tracking
   conditionOverloadBonus: number; // per unique status
   bloodRushStacks: number; // crit from combo
@@ -374,9 +425,29 @@ export interface CalculatedStats {
   simParams: SimulationParams;
   galvanizedMultishotOnKill: number; // per-stack bonus from Galvanized Chamber/Hell/Diffusion
   galvanizedDamagePerStatus: number; // per-status bonus from Galvanized Aptitude/Savvy/Shot
+  /** In-game stack cap for the equipped galvanized multishot mod (Chamber 5, Hell/Diffusion 4). */
+  galvanizedMultishotStackCap?: number;
+  /** In-game stack cap for the equipped galvanized condition mod (Aptitude/Savvy 2, Shot 3). */
+  galvanizedDamagePerStatusStackCap?: number;
+  /** Galvanized Scope/Crosshairs: crit chance while aiming after a headshot (sim-gated). */
+  galvanizedCritOnHeadshot?: number;
+  /** Galvanized Scope/Crosshairs: extra crit chance per headshot-kill stack. */
+  galvanizedCritOnHeadshotPerStack?: number;
+  /** Non-stacking on-kill buffs (Bladed Rounds, Gorgon Frenzy, …), statKey → bonus. */
+  onKillStatBonuses?: Record<string, number>;
+  /** Aim/reload/cast trigger buffs (sim-gated), statKey → bonus. */
+  triggerStatBonuses?: Record<string, number>;
+  /** Chance to force a Slash proc on critical hits (Hunter Munitions). */
+  slashOnCritChance?: number;
+  /** Chance for Impact procs to add a Slash proc (Internal Bleeding / Hemorrhage). */
+  slashOnImpactProcChance?: number;
+  /** Bonus damage on first shot of each magazine (Charged/Primed Chamber), averaged into DPS. */
+  firstShotDamageBonus?: number;
   berserkerFuryBonus: number; // per-stack attack speed bonus
   weepingWoundsBonus: number; // status chance bonus per combo tier
   vigilanteCritBonus?: number; // Vigilante set: chance to enhance crit tier (0.05 per mod)
+  /** Incarnon Devouring/Devastating Attrition: avg bonus damage multiplier on non-crit hits (0.5 × +2000% = 10). */
+  devouringAttritionBonus?: number;
   /** Synth 4-set: +0.15 reload speed bonus applied to secondaries when complete. */
   synthSetReloadBonusApplied?: number;
   /** Tek 4-set: damage multiplier vs marked when sim + set complete (primary only). */
@@ -402,6 +473,12 @@ export interface CalculatedStats {
   statusDamageBonus?: number;
   /** Acuity / headshot damage bonus (fraction on top of base head multi). */
   headshotDamageBonus?: number;
+  /** Status duration bonus (fraction) — extends DoT proc duration/ticks. */
+  statusDurationBonus?: number;
+  /** Acuity equipped: multishot cannot be modified by any source. */
+  multishotLocked?: boolean;
+  /** Cannonade equipped: fire rate cannot be modified by any source. */
+  fireRateLocked?: boolean;
   /** Normalized faction id → Bane-style damage bonus fraction. */
   factionBonuses?: Record<string, number>;
   /** Average stance damage mult applied to melee light DPS (1 = no stance). */

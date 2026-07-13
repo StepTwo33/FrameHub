@@ -30,20 +30,20 @@ export const MOD_BEHAVIORS_PISTOL: Record<string, VerifiedModBehavior> = {
   ]),
   embedded_catalyzer: mod("embedded_catalyzer", [
     line("duration", "mod_panel", "multiplicative_percent", "Embedded Catalyzer: duration \u2014 On Ability Cast:\\\\n+90% Status Chance when Aiming for 9s"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Embedded Catalyzer: statusChance \u2014 On Ability Cast:\\\\n+90% Status Chance when Aiming for 9s"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Embedded Catalyzer \u2014 On Ability Cast: +90% Status Chance when Aiming for 9s"),
   ]),
   galvanized_crosshairs: mod("galvanized_crosshairs", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Galvanized Crosshairs: criticalChance \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 12s\\\\nOn Headshot Kill:\\\\n+\u2026"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Galvanized Crosshairs \u2014 +120% Critical Chance when Aiming for 12s on Headshot"),
+    line("criticalChanceOnHeadshotKill", "weapon_dps", "conditional_crit_on_headshot", "wiki: Galvanized Crosshairs \u2014 +40% Critical Chance per Headshot Kill stack (5x)"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Crosshairs: duration \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 12s\\\\nOn Headshot Kill:\\\\n+\u2026"),
   ]),
   galvanized_shot: mod("galvanized_shot", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Galvanized Shot: damage \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Shot: damagePerStatus \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Shot: duration \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Shot: statusChance \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
   ]),
   hydraulic_crosshairs: mod("hydraulic_crosshairs", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Hydraulic Crosshairs: criticalChance \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Hydraulic Crosshairs \u2014 On Headshot: +135% Critical Chance when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Hydraulic Crosshairs: duration \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),
   ]),
   lethal_torment: mod("lethal_torment", [

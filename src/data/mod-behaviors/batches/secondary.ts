@@ -137,7 +137,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Heavy Warhead: projectileSpeed \u2014 +100% Blast Radius, -50% Projectile Speed"),
   ]),
   hemorrhage: mod("hemorrhage", [
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Hemorrhage: fireRate \u2014  <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COL\u2026"),
+    line("slashOnImpactProc", "weapon_dps", "slash_on_impact_proc", "wiki: Hemorrhage \u2014 Impact procs have 35% chance to add a Slash proc (x2 when fire rate < 2.5)"),
   ]),
   hollow_point: mod("hollow_point", [
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Hollow Point: criticalMultiplier \u2014 +60% Critical Damage, -15% Damage"),
@@ -215,11 +215,11 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Pathogen Rounds: toxin \u2014 +90% <DT_POISON_COLOR>Toxin"),
   ]),
   perpetual_agony: mod("perpetual_agony", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Perpetual Agony: statusDuration \u2014 +90% Status Duration"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Perpetual Agony: statusDuration \u2014 +90% Status Duration (extends DoT ticks)"),
   ]),
   pistol_acuity: mod("pistol_acuity", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Pistol Acuity: damage \u2014 +350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be m\u2026"),
-    line("multishot", "weapon_dps", "multiplicative_percent", "Pistol Acuity: multishot \u2014 +350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be m\u2026"),
+    line("weakPointDamage", "weapon_dps", "multiplicative_percent", "wiki: Pistol Acuity \u2014 +350% Weak Point Damage (headshot-gated)"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Pistol Acuity \u2014 +350% Weak Point Critical Chance"),
   ]),
   pistol_elementalist: mod("pistol_elementalist", [
     line("damage", "weapon_dps", "multiplicative_percent", "Pistol Elementalist: damage \u2014 +90% Status Damage, +60% Reload Speed"),
@@ -234,7 +234,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   pressurized_magazine: mod("pressurized_magazine", [
     line("duration", "mod_panel", "multiplicative_percent", "Pressurized Magazine: duration \u2014 On Reload:\\\\n+90% Fire Rate when Aiming for 9s"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Pressurized Magazine: fireRate \u2014 On Reload:\\\\n+90% Fire Rate when Aiming for 9s"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Pressurized Magazine \u2014 On Reload: +90% Fire Rate when Aiming for 9s"),
   ]),
   primed_expel_corpus: mod("primed_expel_corpus", [
     line("factionCorpus", "mod_panel", "multiplicative_percent", "Primed Expel Corpus: factionCorpus \u2014 x1.55 Damage to Corpus"),
@@ -304,7 +304,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   secondary_wind: mod("secondary_wind", [
     line("duration", "mod_panel", "multiplicative_percent", "Secondary Wind: duration \u2014 On Kill:\\\\n+50% Reload Speed for 4s"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Secondary Wind: reloadSpeed \u2014 On Kill:\\\\n+50% Reload Speed for 4s"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_kill", "wiki: Secondary Wind \u2014 On Kill: +50% Reload Speed for 4s"),
   ]),
   seeker_r3: mod("seeker_r3", [
     line("punchThrough", "mod_panel", "multiplicative_percent", "Seeker: punchThrough \u2014 +2.1 Punch Through (arsenal display only)"),
@@ -317,7 +317,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Sentient Surge: criticalChance \u2014 Each target eliminated refills 20% of Ocucor's magazine. Status Chance and Criti\u2026"),
   ]),
   sharpened_bullets: mod("sharpened_bullets", [
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Sharpened Bullets: criticalMultiplier \u2014 On Kill:\\\\n+75% Critical Damage when Aiming for 9s"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_kill", "wiki: Sharpened Bullets \u2014 On Kill: +75% Critical Damage when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Sharpened Bullets: duration \u2014 On Kill:\\\\n+75% Critical Damage when Aiming for 9s"),
   ]),
   shrapnel_rounds: mod("shrapnel_rounds", [

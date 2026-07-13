@@ -146,8 +146,8 @@ function marginalPct(full: number, without: number): number {
 
 function inferModCategory(mod: Mod): DpsContributionCategory {
   const keys = Object.keys(mod.stats);
-  if (keys.some((k) => k === "damage")) return "damage";
-  if (keys.some((k) => k === "criticalChance" || k === "criticalMultiplier")) return "crit";
+  if (keys.some((k) => k === "damage" || k === "damageFirstShot" || k === "weakPointDamage")) return "damage";
+  if (keys.some((k) => k === "criticalChance" || k === "criticalMultiplier" || k === "criticalChanceOnHeadshot")) return "crit";
   if (keys.some((k) => k === "fireRate" || k === "attackSpeed")) return "rate";
   if (keys.some((k) => k === "multishot" || k === "multishotOnKill")) return "multishot";
   if (

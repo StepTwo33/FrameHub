@@ -108,11 +108,16 @@ const STAT_KEY_FILTERS: Record<string, ModStatFilterId[]> = {
   viral: ["damage"],
   corrosive: ["damage"],
   criticalChance: ["crit"],
+  criticalChanceOnHeadshot: ["crit"],
+  criticalChanceOnHeadshotKill: ["crit"],
   criticalMultiplier: ["crit"],
   criticalChancePerCombo: ["crit"],
   statusChance: ["status"],
   statusChancePerCombo: ["status"],
   damagePerStatus: ["status"],
+  slashOnCrit: ["status", "crit"],
+  slashOnImpactProc: ["status"],
+  damageFirstShot: ["damage"],
   multishot: ["multishot"],
   multishotOnKill: ["multishot"],
   fireRate: ["speed"],
@@ -131,6 +136,7 @@ const STAT_KEY_FILTERS: Record<string, ModStatFilterId[]> = {
   finisherDamage: ["damage"],
   slideAttack: ["damage"],
   weakspotDamage: ["damage"],
+  weakPointDamage: ["damage"],
 };
 
 const WEAPON_CATEGORIES = new Set([

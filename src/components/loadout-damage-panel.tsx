@@ -108,7 +108,13 @@ function WeaponRow({
               <StatLine label="Shots to kill" value={ttk.shotsToKill === Infinity ? "∞" : String(ttk.shotsToKill)} />
             </>
           )}
-          <StatLine label="Total damage" value={(stats.totalDamage ?? 0).toFixed(1)} />
+          <StatLine
+            label="Total damage"
+            value={(
+              (stats.arsenalDamage?.totalDamage ?? stats.totalDamage ?? 0)
+              * Math.max(1, stats.multishot ?? 1)
+            ).toFixed(1)}
+          />
           <StatLine label="Crit" value={`${((stats.criticalChance ?? 0) * 100).toFixed(1)}% / ${(stats.criticalMultiplier ?? 0).toFixed(1)}x`} />
           <StatLine label="Status" value={`${((stats.statusChance ?? 0) * 100).toFixed(1)}%`} />
           {isMelee && (stats.heavyAttackDamage ?? 0) > 0 && (

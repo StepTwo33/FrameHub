@@ -57,6 +57,7 @@ function emptyWeaponAcc(): WeaponModAccumulators {
     slashBonus: 0,
     statusDamageBonus: 0,
     headshotDamageBonus: 0,
+    statusDurationBonus: 0,
     factionBonuses: {},
     hasBloodRush: false,
     bloodRushValue: 0,
@@ -68,6 +69,15 @@ function emptyWeaponAcc(): WeaponModAccumulators {
     berserkerFuryPerStack: 0,
     galvMultishotOnKillPerStack: 0,
     galvDamagePerStatusPerStack: 0,
+    galvMultishotStackCap: 5,
+    galvDamagePerStatusStackCap: 5,
+    galvCritOnHeadshotBase: 0,
+    galvCritOnHeadshotPerStack: 0,
+    onKillStatBonuses: {},
+    triggerStatBonuses: {},
+    slashOnCritChance: 0,
+    slashOnImpactProcChance: 0,
+    firstShotDamageBonus: 0,
   };
 }
 

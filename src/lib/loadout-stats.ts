@@ -151,7 +151,8 @@ function getIncarnonStatChanges(
     const tier = Number(tierStr);
     const evo = data.evolutions.find((e) => e.tier === tier && e.slot === slot);
     if (!evo) continue;
-    for (const [stat, val] of Object.entries(evo.statChanges)) {
+    const changes = evo.variantStatChanges?.[weaponId] ?? evo.statChanges;
+    for (const [stat, val] of Object.entries(changes)) {
       merged[stat] = (merged[stat] ?? 0) + val;
     }
   }

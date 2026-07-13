@@ -137,7 +137,11 @@ const DOT_TICK_FRACTION: Record<string, number> = {
  * Wiki: DoT ignores elemental/physical type composition bonuses on the base.
  */
 function statusDotTickBase(stats: CalculatedStats, moddedBaseDamage: number, sim?: SimulationParams): number {
-  const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+  // Vigilante crit-tier enhance also applies to the proccing hit (linear in CC).
+  const effCC = stats.criticalChance + (stats.vigilanteCritBonus ?? 0);
+  let avgCrit = avgCritMultiplier(effCC, stats.criticalMultiplier);
+  // Devouring Attrition double-dips into DoTs on non-crit proccing hits.
+  avgCrit += Math.max(0, 1 - effCC) * (stats.devouringAttritionBonus ?? 0);
   const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
   const factionBonus = factionBonusFromStats(stats.factionBonuses, sim?.targetFaction);
   const factionDot = factionDotMultiplier(factionBonus);
@@ -174,12 +178,17 @@ function calculateStatusProcs(
   if (totalDmg === 0) return [];
 
   const dotBase = statusDotTickBase(stats, moddedBaseDamage, sim);
+  // Status duration mods (Continuous Misery, etc.) extend proc duration;
+  // DoTs tick once per second, so extra duration adds ticks (ticks = floor(dur) + 1).
+  const durMult = 1 + (stats.statusDurationBonus ?? 0);
 
-  return allDamageTypes.map(d => {
+  const procs: StatusProc[] = allDamageTypes.map(d => {
     const info = STATUS_INFO[d.type] || { duration: 6, ticks: 1, desc: 'Unknown' };
     const weight = d.value / totalDmg;
     const chance = stats.statusChance * weight;
     const frac = DOT_TICK_FRACTION[d.type];
+    const duration = info.duration * durMult;
+    const ticks = frac != null ? Math.floor(duration) + 1 : info.ticks;
     let dpt = 0;
     if (frac != null) {
       // Slash has no type-damage bonus mult; Heat/Toxin/Elec/Gas use (1 + type%).
@@ -190,12 +199,53 @@ function calculateStatusProcs(
       type: d.type,
       chance,
       damagePerTick: dpt,
-      duration: info.duration,
-      ticks: info.ticks,
-      totalDamage: dpt * info.ticks,
+      duration,
+      ticks,
+      totalDamage: dpt * ticks,
       description: info.desc,
     };
   });
+
+  // Hunter Munitions: forced Slash proc on crits, independent of status chance.
+  const slashOnCrit = stats.slashOnCritChance ?? 0;
+  if (slashOnCrit > 0 && stats.criticalChance > 0) {
+    const duration = STATUS_INFO.slash.duration * durMult;
+    const ticks = Math.floor(duration) + 1;
+    const dpt = DOT_TICK_FRACTION.slash * dotBase;
+    const chance = slashOnCrit * Math.min(stats.criticalChance, 1);
+    procs.push({
+      type: 'slash',
+      chance,
+      damagePerTick: dpt,
+      duration,
+      ticks,
+      totalDamage: dpt * ticks,
+      description: 'Forced Slash on crit (Hunter Munitions)',
+    });
+  }
+
+  // Internal Bleeding / Hemorrhage: each Impact proc has a chance to also
+  // apply a Slash proc; the chance is doubled when fire rate is below 2.5.
+  const slashOnImpact = stats.slashOnImpactProcChance ?? 0;
+  const impactProc = procs.find((p) => p.type === 'impact');
+  if (slashOnImpact > 0 && impactProc && impactProc.chance > 0) {
+    const rateMult = stats.fireRate < 2.5 ? 2 : 1;
+    const duration = STATUS_INFO.slash.duration * durMult;
+    const ticks = Math.floor(duration) + 1;
+    const dpt = DOT_TICK_FRACTION.slash * dotBase;
+    const chance = impactProc.chance * Math.min(slashOnImpact * rateMult, 1);
+    procs.push({
+      type: 'slash',
+      chance,
+      damagePerTick: dpt,
+      duration,
+      ticks,
+      totalDamage: dpt * ticks,
+      description: `Slash on Impact proc (Internal Bleeding${rateMult === 2 ? ', x2 low fire rate' : ''})`,
+    });
+  }
+
+  return procs;
 }
 
 // ── Damage quantization (1/32 of modded base) ───────────────────────────
@@ -226,7 +276,7 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 // ── Set Bonus Detection ─────────────────────────────────────────────────
 // Implemented: Umbral (×stats on Vit/Fiber/Int; Tau unscaled), Sacrificial (1.5× on both mods when 2),
 // Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only;
-//   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe).
+//   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe; folded into avg crit for DPS).
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
 // Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % when complete.
 // Not modeled in DPS: Augur shield sustain from casts, Hunter proc timing, Mecha explosion burst.
@@ -247,8 +297,12 @@ const GLADIATOR_MOD_IDS = [
 
 const vigilanteIdList = VIGILANTE_MOD_IDS as unknown as string[];
 
-function applyRadialAttacks(baseWeapon: Weapon, stats: CalculatedStats): void {
-  const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(baseWeapon, stats);
+function applyRadialAttacks(
+  baseWeapon: Weapon,
+  stats: CalculatedStats,
+  incarnonActive = false,
+): void {
+  const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(baseWeapon, stats, incarnonActive);
   if (!attacks.length) return;
   stats.radialAttacks = attacks;
   stats.radialBurstDps = radialBurstDps;
@@ -393,6 +447,7 @@ export function calculateWeaponBuild(
     slashBonus: 0,
     statusDamageBonus: 0,
     headshotDamageBonus: 0,
+    statusDurationBonus: 0,
     factionBonuses: {},
     hasBloodRush: false,
     bloodRushValue: 0,
@@ -404,6 +459,15 @@ export function calculateWeaponBuild(
     berserkerFuryPerStack: 0,
     galvMultishotOnKillPerStack: 0,
     galvDamagePerStatusPerStack: 0,
+    galvMultishotStackCap: 5,
+    galvDamagePerStatusStackCap: 5,
+    galvCritOnHeadshotBase: 0,
+    galvCritOnHeadshotPerStack: 0,
+    onKillStatBonuses: {},
+    triggerStatBonuses: {},
+    slashOnCritChance: 0,
+    slashOnImpactProcChance: 0,
+    firstShotDamageBonus: 0,
   };
 
   // Elemental combo order follows mod slot order: left→right, top→bottom (slotIndex).
@@ -416,9 +480,14 @@ export function calculateWeaponBuild(
     const rank = Math.min(Math.max(modSlot.rank ?? 0, 0), mod.maxRank);
     const multiplier = rank + 1;
     const setMult = SACRIFICIAL_MOD_IDS.includes(modSlot.modId) ? (1 + sacSetBonus) : 1;
+    // Fire rate mods tagged "(x2 for Bows)" double on bows (wiki Fire Rate).
+    const isBow = baseWeapon.chargeMode === "bow" || baseWeapon.triggerType === "Bow";
+    const bowFireRateMult =
+      isBow && /x2 for Bows/i.test(mod.description ?? "") ? 2 : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
-      const modValue = (value * multiplier * setMult) / 100.0;
+      let modValue = (value * multiplier * setMult) / 100.0;
+      if (statName === "fireRate") modValue *= bowFireRateMult;
       applyVerifiedModStatToWeapon(stats, {
         modId: modSlot.modId,
         statKey: statName,
@@ -466,6 +535,7 @@ export function calculateWeaponBuild(
   galvDamagePerStatusPerStack = weaponModAcc.galvDamagePerStatusPerStack;
   stats.statusDamageBonus = weaponModAcc.statusDamageBonus;
   stats.headshotDamageBonus = weaponModAcc.headshotDamageBonus;
+  stats.statusDurationBonus = weaponModAcc.statusDurationBonus;
   stats.factionBonuses = { ...weaponModAcc.factionBonuses };
 
   // Apply Condition Overload: multiplicative damage per status type on target
@@ -475,16 +545,57 @@ export function calculateWeaponBuild(
   stats.conditionOverloadBonus = conditionOverloadPerStatus;
 
   // Apply Galvanized Condition (Aptitude/Savvy/Shot): damage per status on target per kill stack
-  if (galvDamagePerStatusPerStack > 0 && sim.killStacks > 0 && sim.statusTypesOnTarget > 0) {
-    damageBonus += galvDamagePerStatusPerStack * sim.killStacks * sim.statusTypesOnTarget;
+  const galvConditionStacks = Math.min(sim.killStacks, weaponModAcc.galvDamagePerStatusStackCap);
+  if (galvDamagePerStatusPerStack > 0 && galvConditionStacks > 0 && sim.statusTypesOnTarget > 0) {
+    damageBonus += galvDamagePerStatusPerStack * galvConditionStacks * sim.statusTypesOnTarget;
   }
   stats.galvanizedDamagePerStatus = galvDamagePerStatusPerStack;
+  stats.galvanizedDamagePerStatusStackCap = weaponModAcc.galvDamagePerStatusStackCap;
 
-  // Apply Galvanized Multishot on-kill stacks
-  if (galvMultishotOnKillPerStack > 0 && sim.killStacks > 0) {
-    multishotBonus += galvMultishotOnKillPerStack * sim.killStacks;
+  // Apply Galvanized Multishot on-kill stacks (Chamber caps at 5, Hell/Diffusion at 4)
+  const galvMultishotStacks = Math.min(sim.killStacks, weaponModAcc.galvMultishotStackCap);
+  if (galvMultishotOnKillPerStack > 0 && galvMultishotStacks > 0) {
+    multishotBonus += galvMultishotOnKillPerStack * galvMultishotStacks;
   }
   stats.galvanizedMultishotOnKill = galvMultishotOnKillPerStack;
+  stats.galvanizedMultishotStackCap = weaponModAcc.galvMultishotStackCap;
+
+  // Non-stacking on-kill buffs (Bladed Rounds, Gorgon Frenzy, Secondary Wind, …):
+  // active at full value whenever the sim has any kill stacks.
+  const onKill = weaponModAcc.onKillStatBonuses;
+  const trigger = weaponModAcc.triggerStatBonuses;
+  const activeBuffPools: Record<string, number>[] = [];
+  if (sim.killStacks > 0) activeBuffPools.push(onKill);
+  if (sim.applyTriggerBuffs) activeBuffPools.push(trigger);
+  for (const pool of activeBuffPools) {
+    damageBonus += pool.damage ?? 0;
+    critChanceBonus += pool.criticalChance ?? 0;
+    critMultBonus += pool.criticalMultiplier ?? 0;
+    fireRateBonus += pool.fireRate ?? 0;
+    statusBonus += pool.statusChance ?? 0;
+    multishotBonus += pool.multishot ?? 0;
+    reloadBonus += pool.reloadSpeed ?? 0;
+  }
+  stats.onKillStatBonuses = { ...onKill };
+  stats.triggerStatBonuses = { ...trigger };
+
+  // Hunter Munitions-style forced Slash procs on crits (adds to status proc DPS below).
+  stats.slashOnCritChance = weaponModAcc.slashOnCritChance;
+  // Internal Bleeding / Hemorrhage: Impact procs can add a Slash proc.
+  stats.slashOnImpactProcChance = weaponModAcc.slashOnImpactProcChance;
+  // Charged/Primed Chamber: first-shot damage, averaged over the magazine for DPS.
+  stats.firstShotDamageBonus = weaponModAcc.firstShotDamageBonus;
+
+  // Apply Galvanized Scope/Crosshairs: crit while aiming only after headshots (sim toggle);
+  // headshot-kill stacks reuse the kill-stacks slider (in-game cap 5).
+  const galvCritOnHeadshotBase = weaponModAcc.galvCritOnHeadshotBase;
+  const galvCritOnHeadshotPerStack = weaponModAcc.galvCritOnHeadshotPerStack;
+  if (galvCritOnHeadshotBase > 0 && sim.applyHeadshots) {
+    const galvCritStacks = Math.min(sim.killStacks, 5);
+    critChanceBonus += galvCritOnHeadshotBase + galvCritOnHeadshotPerStack * galvCritStacks;
+  }
+  stats.galvanizedCritOnHeadshot = galvCritOnHeadshotBase;
+  stats.galvanizedCritOnHeadshotPerStack = galvCritOnHeadshotPerStack;
 
   // Apply Berserker Fury on-kill stacks (max 2 stacks)
   if (hasBerserkerFury && sim.killStacks > 0) {
@@ -509,8 +620,26 @@ export function calculateWeaponBuild(
   if (critMultFlatBonus.critEventBonus > 0) {
     stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
   }
+  // Cannonade mods: "Fire Rate cannot be modified" — all fire rate bonuses are nulled.
+  const fireRateLocked = equippedMods.some((s) =>
+    s.modId === "semi_rifle_cannonade" ||
+    s.modId === "semi_pistol_cannonade" ||
+    s.modId === "semi_shotgun_cannonade",
+  );
+  if (fireRateLocked) {
+    fireRateBonus = 0;
+    stats.fireRateLocked = true;
+  }
   stats.fireRate *= (1 + fireRateBonus);
   stats.fireRateBonus = fireRateBonus;
+  // Acuity mods: "Multishot cannot be modified" — all multishot bonuses are nulled.
+  const multishotLocked = equippedMods.some(
+    (s) => s.modId === "primary_acuity" || s.modId === "pistol_acuity",
+  );
+  if (multishotLocked) {
+    multishotBonus = 0;
+    stats.multishotLocked = true;
+  }
   // Multishot is a % of base pellets: total = base × (1 + multishot mods).
   stats.multishot = baseWeapon.multishot * (1 + multishotBonus);
   stats.statusChance *= (1 + statusBonus);
@@ -633,6 +762,27 @@ export function calculateWeaponBuild(
           else stats.statusChance += value;
           break;
         case 'fireRate': stats.fireRate *= (1 + value); break;
+        // Devouring/Devastating Attrition: 50% chance for non-crit hits to
+        // deal +value×100% damage. Store the average non-crit bonus (0.5 × value).
+        case 'devouringAttrition':
+          stats.devouringAttritionBonus = (stats.devouringAttritionBonus ?? 0) + value * 0.5;
+          break;
+        // Incarnon "Increase Base Damage by +N": flat add to the weapon's base
+        // damage before mods. All modded damage scales proportionally with base,
+        // so this is exactly a (base + N) / base multiplier.
+        case 'flatBaseDamage': {
+          if (baseWeapon.damage > 0) {
+            const dm = 1 + value / baseWeapon.damage;
+            damageMultTotal *= dm;
+            stats.totalDamage *= dm;
+            stats.impact *= dm;
+            stats.puncture *= dm;
+            stats.slash *= dm;
+            for (const e of stats.elements) e.value *= dm;
+            for (const e of stats.rawElements) e.value *= dm;
+          }
+          break;
+        }
         case 'multishot':
           // Riven multishot is % of base pellets; incarnon may pass flat pellet adds.
           if (relativeCritStatus) stats.multishot += baseWeapon.multishot * value;
@@ -687,6 +837,16 @@ export function calculateWeaponBuild(
     const eleTek = stats.elements.reduce((sum, e) => sum + e.value, 0);
     stats.totalDamage = physTek + eleTek;
   }
+
+  // Snapshot arsenal-style display damage before quantization (the in-game arsenal
+  // shows theoretical values; actual hits are quantized below).
+  stats.arsenalDamage = {
+    totalDamage: stats.totalDamage,
+    impact: stats.impact,
+    puncture: stats.puncture,
+    slash: stats.slash,
+    elements: stats.elements.map((e) => ({ ...e })),
+  };
 
   // Quantize IPS + elements to nearest 1/32 of modded base damage (game network precision).
   const moddedBaseDamage = baseWeapon.damage * damageMultTotal;
@@ -759,7 +919,7 @@ export function calculateWeaponBuild(
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
-  applyRadialAttacks(baseWeapon, stats);
+  applyRadialAttacks(baseWeapon, stats, incarnonStatChanges != null);
 
   return stats;
 }
@@ -1128,7 +1288,7 @@ export function calculateWeaponBuildWithArcanes(
   });
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
-  applyRadialAttacks(baseWeapon, stats);
+  applyRadialAttacks(baseWeapon, stats, incarnonStatChanges != null);
   return stats;
 }
 
@@ -1140,7 +1300,14 @@ function dpsFireRate(stats: CalculatedStats): number {
 }
 
 function calculateBurstDps(stats: CalculatedStats): number {
-  const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+  // Vigilante set: chance per hit to upgrade the crit tier by one. Average
+  // damage is linear in crit chance across tiers, so this is exactly +v CC.
+  const effectiveCritChance = stats.criticalChance + (stats.vigilanteCritBonus ?? 0);
+  let avgCrit = avgCritMultiplier(effectiveCritChance, stats.criticalMultiplier);
+  // Devouring/Devastating Attrition: non-crit hits average +bonus damage.
+  // Only the non-crit fraction of hits benefits; at ≥100% CC there are none.
+  const nonCritFraction = Math.max(0, 1 - effectiveCritChance);
+  avgCrit += nonCritFraction * (stats.devouringAttritionBonus ?? 0);
   const sim = stats.simParams ?? DEFAULT_SIM_PARAMS;
   const factionBonus = factionBonusFromStats(stats.factionBonuses, sim.targetFaction);
   const combatMult = combatDamageMultiplier({
@@ -1150,7 +1317,13 @@ function calculateBurstDps(stats: CalculatedStats): number {
     stanceMultiplier:
       sim.applyStanceMultiplier === false ? 1 : (stats.stanceDamageMultiplier ?? 1),
   });
-  const totalDamage = stats.totalDamage * stats.multishot * combatMult;
+  // Charged/Primed Chamber: first shot of each magazine deals bonus damage →
+  // average multiplier over a full magazine is 1 + bonus / magazine.
+  const firstShotMult =
+    (stats.firstShotDamageBonus ?? 0) > 0 && stats.magazine > 0
+      ? 1 + (stats.firstShotDamageBonus ?? 0) / stats.magazine
+      : 1;
+  const totalDamage = stats.totalDamage * stats.multishot * combatMult * firstShotMult;
   return totalDamage * dpsFireRate(stats) * avgCrit;
 }
 

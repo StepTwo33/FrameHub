@@ -51,10 +51,11 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Body Count: duration \u2014 +2s Combo Duration per rank"),
   ]),
   boreals_contempt: mod("boreals_contempt", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Boreal's Contempt: damage \u2014 +90% Melee Damage\\\\n+60% Status Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "wiki: Boreal's Contempt \u2014 +90% Melee Damage at max"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Boreal's Contempt \u2014 +60% Status Damage at max (DoT ticks)"),
   ]),
   burning_hate: mod("burning_hate", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Burning Hate: damage \u2014 When Hate damages enemies inflicted with <DT_FIRE_COLOR>Heat Status, they become\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Burning Hate \u2014 target vulnerability vs Heat-statused enemies only, not flat weapon damage (panel only)"),
   ]),
   buzz_kill: mod("buzz_kill", [
     line("slash", "weapon_dps", "multiplicative_percent", "Buzz Kill: slash \u2014 +120% <DT_SLASH_COLOR>Slash"),
@@ -141,9 +142,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("attackSpeed", "weapon_dps", "multiplicative_percent", "Fury: attackSpeed \u2014 +30% Attack Speed"),
   ]),
   galvanized_elementalist: mod("galvanized_elementalist", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Galvanized Elementalist: damage \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Elementalist: duration \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
-    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Elementalist: statusChance \u2014 +80% Status Damage\\\\nOn Melee Kill:\\\\n+30% Status Chance for 20s. Stacks up to 4\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Elementalist: duration \u2014 buff duration 20s (panel only)"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_kill", "wiki: Galvanized Elementalist \u2014 +30% Status Chance per melee kill (stacks 4x; modeled as flat on-kill buff)"),
   ]),
   galvanized_reflex: mod("galvanized_reflex", [
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Reflex: duration \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
@@ -155,7 +155,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Steel: duration \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
   ]),
   gladiator_ailment: mod("gladiator_ailment", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Gladiator Ailment: statusDuration \u2014 +15% Status Duration per rank (Set)"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Gladiator Ailment: statusDuration \u2014 +15% Status Duration per rank (Set, extends DoT ticks)"),
   ]),
   gladiator_might: mod("gladiator_might", [
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Gladiator Might: criticalMultiplier \u2014 +7.5% Critical Damage per rank (Set)"),
@@ -199,7 +199,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Killing Blow: heavyAttackEfficiency \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
   ]),
   lasting_sting: mod("lasting_sting", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Lasting Sting: statusDuration \u2014 +110% Status Duration"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Lasting Sting: statusDuration \u2014 +110% Status Duration (extends DoT ticks)"),
   ]),
   life_strike: mod("life_strike", [
     line("lifeSteal", "mod_panel", "multiplicative_percent", "Life Strike: lifeSteal \u2014 Heavy Attacks have +5% Life Steal per rank"),
@@ -212,9 +212,9 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Maiming Strike: criticalChance \u2014 +150% Critical Chance for Slide Attack"),
   ]),
   mark_of_the_beast: mod("mark_of_the_beast", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Mark Of The Beast: criticalChance \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Mark Of The Beast: duration \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Mark Of The Beast: statusChance \u2014 On 6 Melee Kills within 6s:\\\\n\\\\n+120% Status and Critical Chance for Secondary \u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast \u2014 buffs the SECONDARY weapon on melee kills, not this melee (panel only)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Mark Of The Beast: duration \u2014 On 6 Melee Kills within 6s: +120% Status/Crit for Secondary"),
+    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast \u2014 buffs the SECONDARY weapon on melee kills, not this melee (panel only)"),
   ]),
   martial_fury: mod("martial_fury", [
     line("attackSpeed", "weapon_dps", "multiplicative_percent", "Martial Fury: attackSpeed \u2014 +20% Attack Speed, -50% Energy Rate"),
@@ -260,8 +260,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Organ Shatter: criticalMultiplier \u2014 +90% Critical Damage"),
   ]),
   power_throw: mod("power_throw", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Power Throw: damage \u2014 +2 Punch Through, On Consecutive throw (Max stacks 3):\\\\n+100% Throw Damage"),
-    line("punchThrough", "mod_panel", "multiplicative_percent", "Power Throw: punchThrough \u2014 +2 Punch Through, On Consecutive throw (Max stacks 3):\\\\n+100% Throw Damage (arsenal display only)"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Power Throw \u2014 +100% Throw Damage on consecutive throws only (thrown attacks not in melee DPS; panel only)"),
+    line("punchThrough", "mod_panel", "multiplicative_percent", "Power Throw: punchThrough \u2014 +2 Punch Through (arsenal display only)"),
   ]),
   pressure_point_r3: mod("pressure_point_r3", [
     line("damage", "weapon_dps", "multiplicative_percent", "Pressure Point: damage \u2014 +200% Melee Damage, +120% COMBO COUNT CHANCE"),
@@ -297,9 +297,9 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Primed Smite The Murmur: factionMurmur \u2014 x1.55 Damage to Murmur"),
   ]),
   proton_snap: mod("proton_snap", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Proton Snap: damage \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap \u2014 Hold Wall Latch for 2s: +100% Toxin Damage for 20s"),
     line("duration", "mod_panel", "multiplicative_percent", "Proton Snap: duration \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Proton Snap: statusChance \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap \u2014 Hold Wall Latch for 2s: +50% Status Chance for 20s"),
   ]),
   quick_return: mod("quick_return", [
     line("ricochetBounces", "mod_panel", "multiplicative_percent", "Quick Return: ricochetBounces \u2014 -4 Bounce"),

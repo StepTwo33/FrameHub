@@ -19,8 +19,8 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
   ]),
   archgun_ace: mod("archgun_ace", [
     line("duration", "mod_panel", "multiplicative_percent", "Archgun Ace: duration \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Archgun Ace: fireRate \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Archgun Ace: reloadSpeed \u2014 On Headshot Kill: +50% Fire/Charge Rate, +100% Reload Speed for 9s"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_kill", "wiki: Archgun Ace \u2014 On Headshot Kill: +50% Fire/Charge Rate for 9s"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_kill", "wiki: Archgun Ace \u2014 On Headshot Kill: +100% Reload Speed for 9s"),
   ]),
   archgun_riven_mod: mod("archgun_riven_mod", [], "wiki: Archgun Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
   automatic_trigger: mod("automatic_trigger", [
@@ -48,11 +48,11 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Contamination Casing: toxin \u2014 +60% <DT_POISON_COLOR>Toxin, +60% Status Chance"),
   ]),
   critical_focus: mod("critical_focus", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Critical Focus: criticalChance \u2014 +60% Critical Chance and Damage when Aiming"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Critical Focus: criticalMultiplier \u2014 +60% Critical Chance and Damage when Aiming"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Focus \u2014 +60% Critical Chance when Aiming"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Focus \u2014 +60% Critical Damage when Aiming"),
   ]),
   deadly_efficiency: mod("deadly_efficiency", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Deadly Efficiency: damage \u2014 On Reload From Empty:\\\\n+120% Damage for 9s"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Deadly Efficiency \u2014 On Reload From Empty: +120% Damage for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Deadly Efficiency: duration \u2014 On Reload From Empty:\\\\n+120% Damage for 9s"),
   ]),
   dual_rounds: mod("dual_rounds", [
@@ -80,7 +80,7 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
     line("magnetic", "weapon_dps", "elemental_from_base_damage", "Magnetized Cycle: magnetic \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +30% Fire Rate"),
   ]),
   marked_target: mod("marked_target", [
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Marked Target: statusChance \u2014 +120% Status Chance when Aiming"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Marked Target \u2014 +120% Status Chance when Aiming"),
   ]),
   modified_munitions: mod("modified_munitions", [
     line("statusChance", "weapon_dps", "multiplicative_percent", "Modified Munitions: statusChance \u2014 +60% Status Chance"),
@@ -98,7 +98,7 @@ export const MOD_BEHAVIORS_ARCHGUN: Record<string, VerifiedModBehavior> = {
     line("heat", "weapon_dps", "elemental_from_base_damage", "Primed Combustion Rounds: heat \u2014 +187% <DT_FIRE_COLOR>Heat"),
   ]),
   primed_deadly_efficiency: mod("primed_deadly_efficiency", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Primed Deadly Efficiency: damage \u2014 On Reload From Empty:\\\\n+220% Damage for 16.5s"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Primed Deadly Efficiency \u2014 On Reload From Empty: +220% Damage for 16.5s"),
     line("duration", "mod_panel", "multiplicative_percent", "Primed Deadly Efficiency: duration \u2014 On Reload From Empty:\\\\n+220% Damage for 16.5s"),
   ]),
   primed_dual_rounds: mod("primed_dual_rounds", [

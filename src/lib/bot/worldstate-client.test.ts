@@ -1,13 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
+  addedFingerprintIds,
   fingerprintEvent,
   type WorldstateSnapshot,
 } from "@/lib/bot/worldstate-client";
 import { BOT_EVENT_TYPE_IDS } from "@/lib/bot/alert-types";
 import {
+  embedAlerts,
+  embedArchimedea,
   embedBaro,
   embedBounties,
+  embedConstruction,
   embedDarvo,
+  embedFissures,
+  embedInvasions,
+  embedNews,
+  embedSentientOutpost,
   embedSortie,
   embedTeshin,
   embedVarzia,
@@ -93,6 +101,103 @@ const sample: WorldstateSnapshot = {
   cambionCycle: { active: "fass", state: "fass" },
   duviriCycle: { state: "joy" },
   earthCycle: { state: "night", isDay: false },
+  zarimanCycle: { state: "corpus" },
+  alerts: [
+    {
+      id: "alert-1",
+      expiry: "2030-01-01T00:00:00.000Z",
+      mission: {
+        description: "Gift From The Lotus",
+        node: "Apollo (Lua)",
+        type: "Disruption",
+        faction: "Corpus",
+        reward: { items: ["Orokin Catalyst Blueprint"], credits: 25000 },
+        minEnemyLevel: 10,
+        maxEnemyLevel: 15,
+      },
+    },
+  ],
+  invasions: [
+    {
+      id: "inv-1",
+      node: "Acheron (Pluto)",
+      desc: "Grineer Offensive",
+      attacker: { faction: "Grineer", reward: { countedItems: [{ count: 3, type: "Detonite Injector" }] } },
+      defender: { faction: "Corpus", reward: { countedItems: [{ count: 3, type: "Fieldron" }] } },
+      completed: false,
+      completion: 42,
+    },
+    {
+      id: "inv-done",
+      node: "Ose (Europa)",
+      completed: true,
+    },
+  ],
+  fissures: [
+    {
+      id: "fis-1",
+      node: "Hepit (Void)",
+      missionType: "Capture",
+      tier: "Lith",
+      tierNum: 1,
+      expiry: "2030-01-01T00:30:00.000Z",
+    },
+    {
+      id: "fis-2",
+      node: "Mot (Void)",
+      missionType: "Survival",
+      tier: "Axi",
+      tierNum: 4,
+      isHard: true,
+      expiry: "2030-01-01T00:45:00.000Z",
+    },
+  ],
+  events: [
+    {
+      id: "event-1",
+      description: "Thermia Fractures",
+      tooltip: "Seal fractures across the Orb Vallis",
+      node: "Orb Vallis (Venus)",
+      currentScore: 10,
+      maximumScore: 100,
+      rewards: [{ items: ["Opticor Vandal"] }],
+      expiry: "2030-01-14T00:00:00.000Z",
+    },
+  ],
+  news: [
+    {
+      id: "news-old",
+      message: "Evergreen link",
+      date: "1970-01-01T00:00:00.000Z",
+    },
+    {
+      id: "news-1",
+      message: "Update 40 is live!",
+      link: "https://forums.warframe.com",
+      date: "2026-07-01T00:00:00.000Z",
+      update: true,
+    },
+  ],
+  archimedeas: [
+    {
+      id: "arch-1",
+      type: "Deep Archimedea",
+      expiry: "2030-01-08T00:00:00.000Z",
+      missions: [
+        {
+          missionType: "Extermination",
+          deviation: { name: "Sealed Armor" },
+          risks: [{ name: "Bolstered Belligerents" }],
+        },
+      ],
+    },
+  ],
+  sentientOutposts: {
+    id: "outpost-1",
+    active: true,
+    mission: { node: "H-2 Cloud (Veil)", faction: "Grineer", type: "Skirmish" },
+  },
+  constructionProgress: { fomorianProgress: "40.35", razorbackProgress: "79.99" },
 };
 
 describe("fingerprintEvent", () => {
@@ -119,6 +224,38 @@ describe("fingerprintEvent", () => {
       expect(fingerprintEvent(id, sample), id).toBeTruthy();
     }
   });
+
+  it("list fingerprints diff to only newly added ids", () => {
+    const before = fingerprintEvent("fissures", sample)!;
+    const withNew = {
+      ...sample,
+      fissures: [
+        ...sample.fissures,
+        { id: "fis-3", node: "Ukko (Void)", missionType: "Capture", tier: "Meso", tierNum: 2 },
+      ],
+    };
+    const after = fingerprintEvent("fissures", withNew)!;
+    expect(addedFingerprintIds(before, after)).toEqual(["fis-3"]);
+    // Pure expiry (removal) adds nothing → poller stays silent
+    const withRemoval = { ...sample, fissures: sample.fissures.slice(1) };
+    const removed = fingerprintEvent("fissures", withRemoval)!;
+    expect(addedFingerprintIds(before, removed)).toEqual([]);
+  });
+
+  it("excludes completed invasions and undated news from fingerprints", () => {
+    expect(fingerprintEvent("invasions", sample)).toBe("invasions:inv-1");
+    expect(fingerprintEvent("news", sample)).toBe("news:news-1");
+  });
+
+  it("construction fingerprints round to 10% milestones", () => {
+    expect(fingerprintEvent("construction", sample)).toBe("construction:fomorian40:razorback70");
+    const bumped = {
+      ...sample,
+      constructionProgress: { fomorianProgress: "49.9", razorbackProgress: "79.99" },
+    };
+    // Same 10% bucket → same fingerprint (no notification churn)
+    expect(fingerprintEvent("construction", bumped)).toBe(fingerprintEvent("construction", sample));
+  });
 });
 
 describe("embeds", () => {
@@ -130,5 +267,31 @@ describe("embeds", () => {
     expect(embedTeshin(sample.steelPath).title).toContain("Teshin");
     expect(embedBounties(sample).fields?.length).toBeGreaterThan(0);
     expect(embedWorldstate(sample).fields?.length).toBeGreaterThan(0);
+  });
+
+  it("builds alert/invasion/fissure/news embeds", () => {
+    const alerts = embedAlerts(sample.alerts);
+    expect(alerts.fields?.[0]?.name).toContain("Apollo");
+    expect(alerts.fields?.[0]?.value).toContain("Orokin Catalyst");
+
+    const inv = embedInvasions(sample.invasions);
+    expect(inv.fields?.length).toBe(1); // completed invasion excluded
+    expect(inv.fields?.[0]?.value).toContain("Fieldron");
+
+    const fis = embedFissures(sample.fissures);
+    expect(fis.description).toContain("Lith");
+    expect(fis.description).toContain("Steel Path");
+
+    // Highlight-only-new mode
+    const onlyNew = embedFissures(sample.fissures, ["fis-2"]);
+    expect(onlyNew.description).not.toContain("Hepit");
+    expect(onlyNew.description).toContain("Mot");
+
+    const news = embedNews(sample.news.filter((n) => n.id === "news-1"));
+    expect(news.description).toContain("Update 40");
+
+    expect(embedArchimedea(sample.archimedeas).fields?.[0]?.value).toContain("Sealed Armor");
+    expect(embedSentientOutpost(sample.sentientOutposts).fields?.[0]?.value).toContain("H-2 Cloud");
+    expect(embedConstruction(sample.constructionProgress).fields?.length).toBe(2);
   });
 });

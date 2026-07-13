@@ -66,12 +66,11 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   catalyzer_link: mod("catalyzer_link", [
     line("duration", "mod_panel", "multiplicative_percent", "Catalyzer Link: duration \u2014 On Ability Cast:\\\\n+60% Status Chance when Aiming for 9s"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Catalyzer Link: statusChance \u2014 On Ability Cast:\\\\n+60% Status Chance when Aiming for 9s"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Catalyzer Link \u2014 On Ability Cast: +60% Status Chance when Aiming for 9s"),
   ]),
   cautious_shot: mod("cautious_shot", [], "wiki: Cautious Shot \u2014 +100% chance to reduce the Stagger effect from self-imposed Radial Attacks"),
   charged_chamber: mod("charged_chamber", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Charged Chamber: damage \u2014 +40% Damage on first shot in Magazine"),
-    line("magazine", "weapon_dps", "multiplicative_percent", "Charged Chamber: magazine \u2014 +40% Damage on first shot in Magazine"),
+    line("damageFirstShot", "weapon_dps", "first_shot_damage", "wiki: Charged Chamber \u2014 +40% Damage on first shot in Magazine (averaged over mag for DPS)"),
   ]),
   combat_reload: mod("combat_reload", [
     line("duration", "mod_panel", "multiplicative_percent", "Combat Reload: duration \u2014 If 5 pellets are headshots, increase reload speed by +120% for 3s."),
@@ -84,7 +83,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Comet Rounds: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
   ]),
   continuous_misery: mod("continuous_misery", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Continuous Misery: statusDuration \u2014 +100% Status Duration"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Continuous Misery: statusDuration \u2014 +100% Status Duration (extends DoT ticks)"),
   ]),
   crash_course: mod("crash_course", [
     line("impact", "weapon_dps", "multiplicative_percent", "Crash Course: impact \u2014 +120% <DT_IMPACT_COLOR>Impact"),
@@ -118,7 +117,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   emergent_aftermath: mod("emergent_aftermath", [
     line("duration", "mod_panel", "multiplicative_percent", "Emergent Aftermath: duration \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Emergent Aftermath: reloadSpeed \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_kill", "wiki: Emergent Aftermath \u2014 On Kill: +50% Reload Speed for 3s"),
   ]),
   fanged_fusillade: mod("fanged_fusillade", [
     line("slash", "weapon_dps", "multiplicative_percent", "Fanged Fusillade: slash \u2014 +120% <DT_SLASH_COLOR>Slash"),
@@ -143,7 +142,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   gorgon_frenzy: mod("gorgon_frenzy", [
     line("duration", "mod_panel", "multiplicative_percent", "Gorgon Frenzy: duration \u2014 On Kill:\\\\n+30% Fire Rate for 3s"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Gorgon Frenzy: fireRate \u2014 On Kill:\\\\n+30% Fire Rate for 3s"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_kill", "wiki: Gorgon Frenzy \u2014 On Kill: +30% Fire Rate for 3s"),
   ]),
   grinloked: mod("grinloked", [
     line("accuracy", "mod_panel", "multiplicative_percent", "Grinloked: accuracy \u2014 +60% Accuracy when Aiming (arsenal display only)"),
@@ -184,10 +183,10 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Infected Clip: toxin \u2014 +90% <DT_POISON_COLOR>Toxin"),
   ]),
   internal_bleeding: mod("internal_bleeding", [
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Internal Bleeding: fireRate \u2014  <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_SLASH_COL\u2026"),
+    line("slashOnImpactProc", "weapon_dps", "slash_on_impact_proc", "wiki: Internal Bleeding \u2014 Impact procs have 35% chance to add a Slash proc (x2 when fire rate < 2.5)"),
   ]),
   lie_in_wait: mod("lie_in_wait", [
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Lie In Wait: fireRate \u2014 +20% Fire Rate when Crouching, +100% Weapon Recoil"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Lie In Wait \u2014 +20% Fire Rate when Crouching"),
     line("recoil", "mod_panel", "multiplicative_percent", "Lie In Wait: recoil \u2014 +20% Fire Rate when Crouching, +100% Weapon Recoil (arsenal display only)"),
   ]),
   loose_hatch: mod("loose_hatch", [
@@ -256,8 +255,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Precision Strike: duration \u2014 Hitting an enemy directly with the grenade increases Reload Speed by 150% for 5s\u2026"),
   ]),
   primary_acuity: mod("primary_acuity", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Primary Acuity: damage \u2014 +350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be m\u2026"),
-    line("multishot", "weapon_dps", "multiplicative_percent", "Primary Acuity: multishot \u2014 +350% Weak Point Damage, +350% Weak Point Critical Chance. Multishot cannot be m\u2026"),
+    line("weakPointDamage", "weapon_dps", "multiplicative_percent", "wiki: Primary Acuity \u2014 +350% Weak Point Damage (headshot-gated)"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Primary Acuity \u2014 +350% Weak Point Critical Chance"),
   ]),
   primed_bane_of_corpus: mod("primed_bane_of_corpus", [
     line("factionCorpus", "mod_panel", "multiplicative_percent", "Primed Bane Of Corpus: factionCorpus \u2014 x1.55 Damage to Corpus"),
@@ -275,11 +274,10 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Primed Bane Of The Murmur: factionMurmur \u2014 x1.55 Damage to Murmur"),
   ]),
   primed_chamber: mod("primed_chamber", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Primed Chamber: damage \u2014 +100% Damage on first shot in Magazine"),
-    line("magazine", "weapon_dps", "multiplicative_percent", "Primed Chamber: magazine \u2014 +100% Damage on first shot in Magazine"),
+    line("damageFirstShot", "weapon_dps", "first_shot_damage", "wiki: Primed Chamber \u2014 +100% Damage on first shot in Magazine (averaged over mag for DPS)"),
   ]),
   primed_charged_chamber: mod("primed_charged_chamber", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Primed Charged Chamber: damage \u2014 +110% Damage on first shot in Magazine"),
+    line("damageFirstShot", "weapon_dps", "first_shot_damage", "wiki: Primed Charged Chamber \u2014 +110% Damage on first shot in Magazine (averaged over mag for DPS)"),
   ]),
   primed_firestorm: mod("primed_firestorm", [
     line("blastRange", "mod_panel", "multiplicative_percent", "Primed Firestorm: blastRange \u2014 Improves the Blast Radius of weapons with Radial Attacks.\\\\n+44% Blast Range"),
@@ -302,8 +300,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("recoil", "mod_panel", "multiplicative_percent", "Primed Stabilizer: recoil \u2014 -85% Weapon Recoil (arsenal display only)"),
   ]),
   proton_jet: mod("proton_jet", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Proton Jet: criticalChance \u2014 During a Wall Latch gain +120% Status Chance and Critical Chance."),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Proton Jet: statusChance \u2014 During a Wall Latch gain +120% Status Chance and Critical Chance."),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Jet \u2014 During a Wall Latch gain +120% Status Chance and Critical Chance."),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Jet \u2014 During a Wall Latch gain +120% Status Chance and Critical Chance."),
   ]),
   radiated_reload: mod("radiated_reload", [
     line("radiation", "weapon_dps", "elemental_from_base_damage", "Radiated Reload: radiation \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Reload Speed"),
@@ -341,8 +339,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Semi-Rifle Cannonade: punchThrough \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+240% Da\u2026 (arsenal display only)"),
   ]),
   sentient_barrage: mod("sentient_barrage", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Sentient Barrage: criticalChance \u2014 Discharge from Alt-Fire now has infinite Body Punch Through but no longer explod\u2026"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Sentient Barrage: criticalMultiplier \u2014 Discharge from Alt-Fire now has infinite Body Punch Through but no longer explod\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Sentient Barrage \u2014 +300% CC applies only to the next full-charge Alt-Fire discharge (panel only)"),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Sentient Barrage \u2014 +300% CD applies only to the next full-charge Alt-Fire discharge (panel only)"),
   ]),
   serrated_rounds: mod("serrated_rounds", [
     line("damage", "weapon_dps", "multiplicative_percent", "Serrated Rounds: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
@@ -384,7 +382,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   spring_loaded_chamber: mod("spring_loaded_chamber", [
     line("duration", "mod_panel", "multiplicative_percent", "Spring-Loaded Chamber: duration \u2014 On Reload:\\\\n+75% Fire Rate when Aiming for 9s"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Spring-Loaded Chamber: fireRate \u2014 On Reload:\\\\n+75% Fire Rate when Aiming for 9s"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Spring-Loaded Chamber \u2014 On Reload: +75% Fire Rate when Aiming for 9s"),
   ]),
   stabilizer: mod("stabilizer", [
     line("recoil", "mod_panel", "multiplicative_percent", "Stabilizer: recoil \u2014 -60% Weapon Recoil (arsenal display only)"),

@@ -249,7 +249,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Iatric Mycelium: duration \u2014 Release a trail of spores every <LOWER_IS_BETTER>8s that heal the companion and \u2026"),
   ]),
   immunity_resistance: mod("immunity_resistance", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Immunity Resistance: damage \u2014 +50% Status Damage"),
+    line("statusDamage", "mod_panel", "multiplicative_percent", "wiki: Immunity Resistance \u2014 +50% Status Damage (companion; was wrongly flat damage)"),
   ]),
   infectious_bite: mod("infectious_bite", [
     line("damage", "mod_panel", "multiplicative_percent", "Infectious Bite: damage \u2014 An attack that deals +200% Finisher Damage and infects the target with a Virus t\u2026"),
@@ -302,8 +302,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Martyr Symbiosis: range \u2014 Drains and stores 20 health from corpses within 25m up to 40% of your health. If\u2026 (arsenal display only)"),
   ]),
   maul: mod("maul", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Maul: damage \u2014 +110% Melee Damage"),
-    line("meleeDamage", "weapon_dps", "multiplicative_percent", "Maul: meleeDamage \u2014 +110% Melee Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Maul: damage \u2014 +330% Melee Damage (duplicate meleeDamage key removed)"),
   ]),
   mecha_empowered: mod("mecha_empowered", [
     line("armorOnMarkKill", "mod_panel", "multiplicative_percent", "Mecha Empowered: armorOnMarkKill \u2014 Increased Pistol Ammo recovery.\\\\nSquad deals +150% extra Damage against a Marke\u2026"),

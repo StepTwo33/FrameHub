@@ -73,6 +73,13 @@ function applyWeaponDamage(stats: CalculatedStats, scaled: number): void {
   stats.slash *= 1 + scaled;
   for (const e of stats.elements) e.value *= 1 + scaled;
   for (const e of stats.rawElements) e.value *= 1 + scaled;
+  if (stats.arsenalDamage) {
+    stats.arsenalDamage.totalDamage *= 1 + scaled;
+    stats.arsenalDamage.impact *= 1 + scaled;
+    stats.arsenalDamage.puncture *= 1 + scaled;
+    stats.arsenalDamage.slash *= 1 + scaled;
+    for (const e of stats.arsenalDamage.elements) e.value *= 1 + scaled;
+  }
 }
 
 function applyWeaponStatToBuild(
@@ -99,7 +106,10 @@ function applyWeaponStatToBuild(
       break;
     case "fireRate":
     case "ampFireRate":
-      stats.fireRate *= 1 + scaled;
+      // Cannonade locks fire rate against all modification.
+      if (!stats.fireRateLocked) {
+        stats.fireRate *= 1 + scaled;
+      }
       break;
     case "damage":
     case "ampDamage":
@@ -108,7 +118,10 @@ function applyWeaponStatToBuild(
     case "multishot":
     case "ampMultishot":
       // Multishot mods/arcanes are % of base pellets, not flat pellet adds.
-      stats.multishot += (baseWeapon?.multishot ?? 1) * scaled;
+      // Acuity locks multishot against all modification.
+      if (!stats.multishotLocked) {
+        stats.multishot += (baseWeapon?.multishot ?? 1) * scaled;
+      }
       break;
     case "statusChance":
     case "ampStatusChance":

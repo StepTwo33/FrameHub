@@ -291,7 +291,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   lashing_coil: mod("lashing_coil", [], "wiki: Lashing Coil \u2014 Fighting form devised for Conclave."),
   last_herald: mod("last_herald", [], "wiki: Last Herald \u2014 Fighting form devised for Conclave."),
   lingering_torment: mod("lingering_torment", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Lingering Torment: statusDuration \u2014 +90% Status Duration"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Lingering Torment: statusDuration \u2014 +90% Status Duration (extends DoT ticks)"),
   ]),
   live_wire: mod("live_wire", [
     line("range", "mod_panel", "multiplicative_percent", "Live Wire: range \u2014 Shock enemies within 20m while Hacking (arsenal display only)"),

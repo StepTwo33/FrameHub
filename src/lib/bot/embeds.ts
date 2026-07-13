@@ -4,19 +4,28 @@
  */
 
 import type {
+  AlertData,
   ArbitrationData,
+  ArchimedeaData,
   ArchonHuntData,
   BaroData,
+  ConstructionProgressData,
   CycleData,
   DailyDeal,
+  EventGoalData,
+  FissureData,
+  InvasionData,
+  NewsData,
   NightwaveData,
+  SentientOutpostData,
   SimarisData,
   SortieData,
   SteelPathData,
   VaultTraderData,
+  WorldstateReward,
   WorldstateSnapshot,
 } from "./worldstate-client";
-import { openWorldBounties } from "./worldstate-client";
+import { activeInvasions, datedNews, openWorldBounties } from "./worldstate-client";
 
 export interface EmbedField {
   name: string;
@@ -48,6 +57,14 @@ const COLORS = {
   cycle: 0x1abc9c,
   worldstate: 0x5865f2,
   test: 0x95a5a6,
+  alerts: 0xd35400,
+  invasions: 0x7f8c8d,
+  fissures: 0x00bcd4,
+  events: 0xf39c12,
+  news: 0x34495e,
+  archimedea: 0x6c5ce7,
+  outpost: 0xb71540,
+  construction: 0x636e72,
 };
 
 function missionLines(missions?: { node?: string; missionType?: string; modifier?: string }[]): string {
@@ -182,6 +199,7 @@ export function embedCycles(snap: WorldstateSnapshot): EmbedPayload {
       cycleField("Cambion Drift", snap.cambionCycle),
       cycleField("Duviri", snap.duviriCycle),
       cycleField("Earth", snap.earthCycle),
+      cycleField("Zariman", snap.zarimanCycle),
     ],
     footer: { text: `FrameHub Bot · ${snap.platform.toUpperCase()}` },
     timestamp: new Date().toISOString(),
@@ -383,6 +401,248 @@ export function embedBounties(snap: WorldstateSnapshot): EmbedPayload {
   };
 }
 
+function rewardText(r?: WorldstateReward | null): string {
+  if (!r) return "";
+  const parts: string[] = [];
+  for (const item of r.items ?? []) parts.push(item);
+  for (const ci of r.countedItems ?? []) {
+    if (!ci.type) continue;
+    parts.push(ci.count && ci.count > 1 ? `${ci.count}× ${ci.type}` : ci.type);
+  }
+  if (r.credits) parts.push(`${r.credits.toLocaleString()}cr`);
+  return parts.join(", ");
+}
+
+/** Keep only the given ids when provided (used to highlight new items in alerts). */
+function onlyIds<T extends { id?: string }>(list: T[], ids?: string[]): T[] {
+  if (!ids?.length) return list;
+  const set = new Set(ids);
+  const filtered = list.filter((x) => x.id && set.has(x.id));
+  return filtered.length > 0 ? filtered : list;
+}
+
+export function embedAlerts(alerts: AlertData[], newIds?: string[]): EmbedPayload {
+  const list = onlyIds(alerts, newIds);
+  if (!list.length) {
+    return { title: "Alerts", description: "No active alerts.", color: COLORS.alerts };
+  }
+  const fields: EmbedField[] = list.slice(0, 10).map((a) => {
+    const m = a.mission ?? {};
+    const lvl =
+      m.minEnemyLevel != null && m.maxEnemyLevel != null
+        ? ` · Lv${m.minEnemyLevel}–${m.maxEnemyLevel}`
+        : "";
+    const reward = rewardText(m.reward);
+    return {
+      name: `${m.type ?? "Mission"} @ ${m.node ?? "?"}`,
+      value: [
+        m.description ? `_${m.description}_` : "",
+        `${m.faction ?? "?"}${lvl}${m.nightmare ? " · Nightmare" : ""}${m.archwingRequired ? " · Archwing" : ""}`,
+        reward ? `**Reward:** ${reward}` : "",
+        `Ends ${fmtTime(a.expiry)}`,
+      ]
+        .filter(Boolean)
+        .join("\n")
+        .slice(0, 1024),
+    };
+  });
+  return {
+    title: newIds?.length ? "New alert" + (list.length > 1 ? "s" : "") : "Alerts",
+    color: COLORS.alerts,
+    fields,
+    footer: { text: "FrameHub Bot · Alerts" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedInvasions(invasions: InvasionData[], newIds?: string[]): EmbedPayload {
+  const list = onlyIds(invasions.filter((i) => !i.completed), newIds);
+  if (!list.length) {
+    return { title: "Invasions", description: "No active invasions.", color: COLORS.invasions };
+  }
+  const fields: EmbedField[] = list.slice(0, 12).map((inv) => {
+    const atk = rewardText(inv.attacker?.reward);
+    const def = rewardText(inv.defender?.reward);
+    const pct =
+      inv.completion != null ? `${Math.round(Math.min(100, Math.max(-100, inv.completion)))}%` : "?";
+    const sides = inv.vsInfestation
+      ? `${inv.defender?.faction ?? "?"} vs Infestation`
+      : `${inv.attacker?.faction ?? "?"} vs ${inv.defender?.faction ?? "?"}`;
+    return {
+      name: `${inv.node ?? "?"} — ${inv.desc ?? sides}`,
+      value: [
+        sides,
+        atk ? `**${inv.attacker?.faction ?? "Attacker"}:** ${atk}` : "",
+        def ? `**${inv.defender?.faction ?? "Defender"}:** ${def}` : "",
+        `Progress: ${pct}${inv.eta ? ` · ETA ${inv.eta}` : ""}`,
+      ]
+        .filter(Boolean)
+        .join("\n")
+        .slice(0, 1024),
+    };
+  });
+  return {
+    title: newIds?.length ? "New invasion" + (list.length > 1 ? "s" : "") : "Invasions",
+    color: COLORS.invasions,
+    fields,
+    footer: { text: "FrameHub Bot · Invasions" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+const FISSURE_TIER_ORDER = ["Lith", "Meso", "Neo", "Axi", "Requiem", "Omnia"];
+
+export function embedFissures(fissures: FissureData[], newIds?: string[]): EmbedPayload {
+  const list = onlyIds(fissures, newIds);
+  if (!list.length) {
+    return { title: "Void Fissures", description: "No active fissures.", color: COLORS.fissures };
+  }
+  const sorted = [...list].sort(
+    (a, b) =>
+      (a.tierNum ?? FISSURE_TIER_ORDER.indexOf(a.tier ?? "") + 1) -
+      (b.tierNum ?? FISSURE_TIER_ORDER.indexOf(b.tier ?? "") + 1),
+  );
+  const line = (f: FissureData) => {
+    const tags = [f.isHard ? "Steel Path" : "", f.isStorm ? "Void Storm" : ""].filter(Boolean).join(", ");
+    return `**${f.tier ?? "?"}** — ${f.missionType ?? "?"} @ ${f.node ?? "?"}${tags ? ` _(${tags})_` : ""} · ends ${fmtTime(f.expiry)}`;
+  };
+  const lines = sorted.slice(0, 25).map(line);
+  return {
+    title: newIds?.length ? "New void fissure" + (list.length > 1 ? "s" : "") : "Void Fissures",
+    description: lines.join("\n").slice(0, 4096),
+    color: COLORS.fissures,
+    footer: { text: "FrameHub Bot · Fissures" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedEvents(events: EventGoalData[], newIds?: string[]): EmbedPayload {
+  const list = onlyIds(events, newIds);
+  if (!list.length) {
+    return { title: "Events", description: "No active events.", color: COLORS.events };
+  }
+  const fields: EmbedField[] = list.slice(0, 8).map((e) => {
+    const progress =
+      e.maximumScore != null && e.currentScore != null
+        ? `Progress: ${e.currentScore}/${e.maximumScore}`
+        : "";
+    const rewards = (e.rewards ?? []).map((r) => rewardText(r)).filter(Boolean).join("; ");
+    return {
+      name: e.description ?? "Event",
+      value: [
+        e.tooltip ? `_${e.tooltip}_` : "",
+        e.node ? `Location: ${e.node}` : "",
+        progress,
+        rewards ? `**Rewards:** ${rewards}` : "",
+        e.expiry ? `Ends ${fmtTime(e.expiry)}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n")
+        .slice(0, 1024),
+    };
+  });
+  return {
+    title: newIds?.length ? "New event" + (list.length > 1 ? "s" : "") : "Events & goals",
+    color: COLORS.events,
+    fields,
+    footer: { text: "FrameHub Bot · Events" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedNews(news: NewsData[], newIds?: string[]): EmbedPayload {
+  const list = onlyIds(news, newIds);
+  if (!list.length) {
+    return { title: "Warframe news", description: "No recent news.", color: COLORS.news };
+  }
+  const lines = list.slice(0, 10).map((n) => {
+    const tag = n.update ? "[Update] " : n.primeAccess ? "[Prime Access] " : n.stream ? "[Stream] " : "";
+    const when = n.date ? ` · ${fmtTime(n.date)}` : "";
+    return n.link
+      ? `• ${tag}[${n.message ?? "News"}](${n.link})${when}`
+      : `• ${tag}${n.message ?? "News"}${when}`;
+  });
+  return {
+    title: newIds?.length ? "Warframe news" : "Latest Warframe news",
+    description: lines.join("\n").slice(0, 4096),
+    color: COLORS.news,
+    footer: { text: "FrameHub Bot · News" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedArchimedea(archimedeas: ArchimedeaData[]): EmbedPayload {
+  if (!archimedeas.length) {
+    return {
+      title: "Archimedea",
+      description: "No Archimedea data available.",
+      color: COLORS.archimedea,
+    };
+  }
+  const fields: EmbedField[] = [];
+  for (const a of archimedeas.slice(0, 2)) {
+    const label = (a.type ?? "Archimedea").replace(/_/g, " ").replace(/\s+/g, " ").trim();
+    const missions = (a.missions ?? [])
+      .map((m, i) => {
+        const risks = (m.risks ?? []).map((r) => r.name).filter(Boolean).join(", ");
+        return `**${i + 1}. ${m.missionType ?? "Mission"}**${m.deviation?.name ? ` — ${m.deviation.name}` : ""}${risks ? `\n  Risks: ${risks}` : ""}`;
+      })
+      .join("\n");
+    fields.push({
+      name: `${label} · resets ${fmtTime(a.expiry)}`,
+      value: (missions || "_no mission data_").slice(0, 1024),
+    });
+  }
+  return {
+    title: "Archimedea — weekly rotation",
+    color: COLORS.archimedea,
+    fields,
+    footer: { text: "FrameHub Bot · Archimedea" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedSentientOutpost(o: SentientOutpostData | null): EmbedPayload {
+  if (!o || !o.active || !o.mission?.node) {
+    return {
+      title: "Sentient Anomaly",
+      description: "No sentient anomaly currently active.",
+      color: COLORS.outpost,
+    };
+  }
+  return {
+    title: "Sentient Anomaly detected",
+    color: COLORS.outpost,
+    fields: [
+      { name: "Location", value: o.mission.node, inline: true },
+      { name: "Mission", value: o.mission.type ?? "Skirmish", inline: true },
+      ...(o.expiry ? [{ name: "Despawns", value: fmtTime(o.expiry), inline: true }] : []),
+    ],
+    footer: { text: "FrameHub Bot · Veil Proxima" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function embedConstruction(c: ConstructionProgressData | null): EmbedPayload {
+  if (!c) {
+    return {
+      title: "Fomorian / Razorback",
+      description: "No construction data available.",
+      color: COLORS.construction,
+    };
+  }
+  return {
+    title: "Enemy construction progress",
+    color: COLORS.construction,
+    fields: [
+      { name: "Balor Fomorian", value: `${c.fomorianProgress ?? "?"}%`, inline: true },
+      { name: "Razorback Armada", value: `${c.razorbackProgress ?? "?"}%`, inline: true },
+    ],
+    footer: { text: "FrameHub Bot · Construction" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
 export function embedSimaris(s: SimarisData | null): EmbedPayload {
   if (!s) {
     return {
@@ -472,8 +732,29 @@ export function embedWorldstate(snap: WorldstateSnapshot): EmbedPayload {
   };
 }
 
-export function embedForEventType(eventType: string, snap: WorldstateSnapshot): EmbedPayload {
+export function embedForEventType(
+  eventType: string,
+  snap: WorldstateSnapshot,
+  /** For list-type events: only show these newly-appeared ids. */
+  newIds?: string[],
+): EmbedPayload {
   switch (eventType) {
+    case "alerts":
+      return embedAlerts(snap.alerts, newIds);
+    case "invasions":
+      return embedInvasions(snap.invasions, newIds);
+    case "fissures":
+      return embedFissures(snap.fissures, newIds);
+    case "events":
+      return embedEvents(snap.events, newIds);
+    case "news":
+      return embedNews(datedNews(snap), newIds);
+    case "archimedea":
+      return embedArchimedea(snap.archimedeas);
+    case "sentient_outpost":
+      return embedSentientOutpost(snap.sentientOutposts);
+    case "construction":
+      return embedConstruction(snap.constructionProgress);
     case "sortie":
       return embedSortie(snap.sortie);
     case "archon":
@@ -499,6 +780,7 @@ export function embedForEventType(eventType: string, snap: WorldstateSnapshot): 
     case "cambion":
     case "duviri":
     case "earth":
+    case "zariman":
       return {
         ...embedCycles(snap),
         title: `Cycle update — ${eventType}`,

@@ -62,9 +62,17 @@ export default function BotLandingPage() {
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/worldstate</code> — snapshot
             </li>
             <li>
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/alerts</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/invasions</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/fissures</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/events</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/news</code>
+            </li>
+            <li>
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/sortie</code>,{" "}
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/archon</code>,{" "}
-              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/arbitration</code>
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/arbitration</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/archimedea</code>
             </li>
             <li>
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/baro</code>,{" "}
@@ -75,10 +83,12 @@ export default function BotLandingPage() {
             <li>
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/nightwave</code>,{" "}
               <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/bounties</code>,{" "}
-              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/simaris</code>
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/simaris</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/outpost</code>,{" "}
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/construction</code>
             </li>
             <li>
-              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/cycles</code> — open-world timers
+              <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">/cycles</code> — open-world timers (incl. Zariman)
             </li>
           </ul>
           <p className="pt-2">

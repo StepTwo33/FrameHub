@@ -8,6 +8,7 @@ import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
 import { IncarnonEvolution } from "@/data/incarnon";
 import { formatAbilityDescription } from "@/lib/ability-text";
 import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
+import { getModStatLabel } from "@/lib/override-stat-catalog";
 import { buildShardBonusLines } from "@/lib/shard-display";
 import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 import {
@@ -137,9 +138,16 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
     );
   }
 
+  const onKillBuffTotal = Object.values(stats.onKillStatBonuses ?? {}).reduce((s, v) => s + v, 0);
+  const triggerBuffTotal = Object.values(stats.triggerStatBonuses ?? {}).reduce((s, v) => s + v, 0);
   const hasConditionals = stats.conditionOverloadBonus > 0 || stats.bloodRushStacks > 0
     || stats.galvanizedMultishotOnKill > 0 || stats.galvanizedDamagePerStatus > 0
-    || stats.berserkerFuryBonus > 0 || stats.weepingWoundsBonus > 0;
+    || (stats.galvanizedCritOnHeadshot ?? 0) > 0
+    || onKillBuffTotal > 0 || triggerBuffTotal > 0
+    || stats.berserkerFuryBonus > 0 || stats.weepingWoundsBonus > 0
+    || (stats.firstShotDamageBonus ?? 0) > 0
+    || (stats.slashOnImpactProcChance ?? 0) > 0
+    || (stats.vigilanteCritBonus ?? 0) > 0;
 
   const showSustainedColumn = dpsContributions.some(
     (c) => Math.abs(c.sustainedMarginalPct - c.burstMarginalPct) > 0.5,
@@ -169,7 +177,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             <SimSlider
               label="Kill Stacks" value={simParams.killStacks} min={0} max={5}
               onChange={(v) => onSimParamsChange({ ...simParams, killStacks: v })}
-              tooltip="On-kill stacks — Galvanized mods (max 5), Berserker Fury (max 2)"
+              tooltip="On-kill stacks — Galvanized Chamber/Scope (max 5), Hell/Diffusion (max 4), Aptitude/Savvy (max 2), Shot (max 3), Berserker Fury (max 2). Any stacks also activate non-stacking on-kill buffs (Bladed Rounds etc.)"
             />
             <SimSlider
               label="Status Types" value={simParams.statusTypesOnTarget} min={0} max={5}
@@ -258,6 +266,19 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 />
                 Headshots (2× weak point × Acuity)
               </label>
+              {(Object.keys(stats.triggerStatBonuses ?? {}).length > 0) && (
+                <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!!simParams.applyTriggerBuffs}
+                    onChange={(e) =>
+                      onSimParamsChange({ ...simParams, applyTriggerBuffs: e.target.checked })
+                    }
+                    className="h-3.5 w-3.5 rounded border-border accent-primary"
+                  />
+                  Trigger buffs (aim / reload / cast / latch)
+                </label>
+              )}
               {isMelee && (
                 <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
                   <input
@@ -301,18 +322,55 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               {stats.conditionOverloadBonus > 0 && (
                 <div className="text-[10px] text-purple-400">Condition Overload: +{(stats.conditionOverloadBonus * stats.simParams.statusTypesOnTarget * 100).toFixed(0)}% DMG ({stats.simParams.statusTypesOnTarget} types)</div>
               )}
-              {stats.galvanizedMultishotOnKill > 0 && (
-                <div className="text-[10px] text-blue-400">Galv. Multishot: +{(stats.galvanizedMultishotOnKill * stats.simParams.killStacks * 100).toFixed(0)}% MS ({stats.simParams.killStacks} stacks)</div>
+              {stats.galvanizedMultishotOnKill > 0 && (() => {
+                const msCap = stats.galvanizedMultishotStackCap ?? 5;
+                const msStacks = Math.min(stats.simParams.killStacks, msCap);
+                return (
+                  <div className="text-[10px] text-blue-400">Galv. Multishot: +{(stats.galvanizedMultishotOnKill * msStacks * 100).toFixed(0)}% MS ({msStacks}/{msCap} stacks)</div>
+                );
+              })()}
+              {stats.galvanizedDamagePerStatus > 0 && (() => {
+                const cdCap = stats.galvanizedDamagePerStatusStackCap ?? 5;
+                const cdStacks = Math.min(stats.simParams.killStacks, cdCap);
+                return (
+                  <div className="text-[10px] text-blue-400">Galv. Condition: +{(stats.galvanizedDamagePerStatus * cdStacks * stats.simParams.statusTypesOnTarget * 100).toFixed(0)}% DMG ({cdStacks}/{cdCap} stacks × {stats.simParams.statusTypesOnTarget} status)</div>
+                );
+              })()}
+              {onKillBuffTotal > 0 && (
+                <div className={stats.simParams.killStacks > 0 ? "text-[10px] text-blue-400" : "text-[10px] text-muted-foreground/70"}>
+                  On-kill buffs{stats.simParams.killStacks > 0 ? ": " : " (inactive — needs kill stacks): "}
+                  {Object.entries(stats.onKillStatBonuses ?? {}).map(([k, v]) => `+${(v * 100).toFixed(0)}% ${getModStatLabel(k)}`).join(", ")}
+                </div>
               )}
-              {stats.galvanizedDamagePerStatus > 0 && (
-                <div className="text-[10px] text-blue-400">Galv. Condition: +{(stats.galvanizedDamagePerStatus * stats.simParams.killStacks * stats.simParams.statusTypesOnTarget * 100).toFixed(0)}% DMG ({stats.simParams.killStacks}×{stats.simParams.statusTypesOnTarget})</div>
+              {triggerBuffTotal > 0 && (
+                <div className={stats.simParams.applyTriggerBuffs ? "text-[10px] text-blue-400" : "text-[10px] text-muted-foreground/70"}>
+                  Trigger buffs{stats.simParams.applyTriggerBuffs ? ": " : " (inactive — enable Trigger buffs): "}
+                  {Object.entries(stats.triggerStatBonuses ?? {}).map(([k, v]) => `+${(v * 100).toFixed(0)}% ${getModStatLabel(k)}`).join(", ")}
+                </div>
+              )}
+              {(stats.galvanizedCritOnHeadshot ?? 0) > 0 && (
+                stats.simParams.applyHeadshots ? (
+                  <div className="text-[10px] text-blue-400">Galv. Crit: +{(((stats.galvanizedCritOnHeadshot ?? 0) + (stats.galvanizedCritOnHeadshotPerStack ?? 0) * Math.min(stats.simParams.killStacks, 5)) * 100).toFixed(0)}% CC while aiming ({Math.min(stats.simParams.killStacks, 5)} headshot-kill stacks)</div>
+                ) : (
+                  <div className="text-[10px] text-muted-foreground/70">Galv. Crit: inactive — enable Headshots to model on-headshot crit</div>
+                )
               )}
               {stats.berserkerFuryBonus > 0 && (
                 <div className="text-[10px] text-yellow-400">Berserker Fury: +{(stats.berserkerFuryBonus * Math.min(stats.simParams.killStacks, 2) * 100).toFixed(0)}% AS ({Math.min(stats.simParams.killStacks, 2)}/2 stacks)</div>
               )}
               {stats.vigilanteCritBonus && stats.vigilanteCritBonus > 0 && (
-                <div className="text-[10px] text-orange-400" title="Primary rifles/shotguns/bows/archguns only — does not apply to secondaries or melee">
-                  Vigilante Set: {(stats.vigilanteCritBonus * 100).toFixed(0)}% crit tier enhance chance
+                <div className="text-[10px] text-orange-400" title="Primary rifles/shotguns/bows/archguns only — does not apply to secondaries or melee. Averaged into DPS as bonus crit chance.">
+                  Vigilante Set: {(stats.vigilanteCritBonus * 100).toFixed(0)}% crit tier enhance chance (in DPS)
+                </div>
+              )}
+              {(stats.firstShotDamageBonus ?? 0) > 0 && (
+                <div className="text-[10px] text-blue-400">
+                  First shot: +{((stats.firstShotDamageBonus ?? 0) * 100).toFixed(0)}% damage on first shot in magazine (averaged into DPS)
+                </div>
+              )}
+              {(stats.slashOnImpactProcChance ?? 0) > 0 && (
+                <div className="text-[10px] text-red-400">
+                  Internal Bleeding: {((stats.slashOnImpactProcChance ?? 0) * 100).toFixed(0)}% Slash on Impact procs{stats.fireRate < 2.5 ? " (x2 — fire rate < 2.5)" : ""}
                 </div>
               )}
               {stats.synthSetReloadBonusApplied != null && stats.synthSetReloadBonusApplied > 0 && (
@@ -346,34 +404,45 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         </CollapsibleSection>
       )}
 
-      {/* Physical Damage */}
-      <CollapsibleSection title="DAMAGE" defaultOpen>
-        <StatRow label="Total Damage" value={stats.totalDamage.toFixed(1)} highlighted />
-        {(stats.impact > 0 || (baseStats && baseStats.impact > 0)) && (
-          <StatRow label="Impact" value={stats.impact.toFixed(1)} color="text-slate-400" />
-        )}
-        {(stats.puncture > 0 || (baseStats && baseStats.puncture > 0)) && (
-          <StatRow label="Puncture" value={stats.puncture.toFixed(1)} color="text-stone-400" />
-        )}
-        {(stats.slash > 0 || (baseStats && baseStats.slash > 0)) && (
-          <StatRow label="Slash" value={stats.slash.toFixed(1)} color="text-red-400" />
-        )}
+      {/* Physical Damage — arsenal-style: unquantized, total × multishot like in-game */}
+      {(() => {
+        const dmg = stats.arsenalDamage ?? stats;
+        const arsenalTotal = dmg.totalDamage * Math.max(1, stats.multishot);
+        return (
+          <CollapsibleSection title="DAMAGE" defaultOpen>
+            <StatRow label="Total Damage" value={arsenalTotal.toFixed(1)} highlighted />
+            {stats.multishot > 1 && (
+              <div className="text-[9px] text-muted-foreground/60 -mt-0.5 mb-0.5">
+                {dmg.totalDamage.toFixed(1)} per pellet × {stats.multishot.toFixed(2)} multishot
+              </div>
+            )}
+            {(dmg.impact > 0 || (baseStats && baseStats.impact > 0)) && (
+              <StatRow label="Impact" value={dmg.impact.toFixed(1)} color="text-slate-400" />
+            )}
+            {(dmg.puncture > 0 || (baseStats && baseStats.puncture > 0)) && (
+              <StatRow label="Puncture" value={dmg.puncture.toFixed(1)} color="text-stone-400" />
+            )}
+            {(dmg.slash > 0 || (baseStats && baseStats.slash > 0)) && (
+              <StatRow label="Slash" value={dmg.slash.toFixed(1)} color="text-red-400" />
+            )}
 
-        {/* Elemental Damage */}
-        {stats.elements && stats.elements.length > 0 && (
-          <>
-            <div className="border-t border-border/50 my-1" />
-            {stats.elements.map((e, i) => (
-              <StatRow
-                key={i}
-                label={ELEMENT_LABELS[e.type] || e.type}
-                value={e.value.toFixed(1)}
-                color={ELEMENT_COLORS[e.type]}
-              />
-            ))}
-          </>
-        )}
-      </CollapsibleSection>
+            {/* Elemental Damage */}
+            {dmg.elements && dmg.elements.length > 0 && (
+              <>
+                <div className="border-t border-border/50 my-1" />
+                {dmg.elements.map((e, i) => (
+                  <StatRow
+                    key={i}
+                    label={ELEMENT_LABELS[e.type] || e.type}
+                    value={e.value.toFixed(1)}
+                    color={ELEMENT_COLORS[e.type]}
+                  />
+                ))}
+              </>
+            )}
+          </CollapsibleSection>
+        );
+      })()}
 
       {stats.radialAttacks && stats.radialAttacks.length > 0 && (
         <CollapsibleSection title="RADIAL ATTACK" defaultOpen>
@@ -420,6 +489,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   label="Burst DPS"
                   value="Manual"
                   tooltip="Slam radials are player-triggered; not included in weapon burst/sustained DPS totals."
+                />
+              )}
+              {"includedInDirect" in attack && attack.includedInDirect === true && (
+                <StatRow
+                  label="Burst DPS"
+                  value="In weapon DPS"
+                  tooltip="This explosion is already part of the weapon's listed damage, so it's counted in the main DPS instead of added again."
                 />
               )}
             </div>
@@ -530,10 +606,15 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         )}
         {stats.statusProcs && stats.statusProcs.length > 0 && (() => {
           const efr = stats.effectiveFireRate ?? stats.fireRate;
-          const procsPerSec = efr * stats.statusChance * stats.multishot;
+          // Per-proc rate = shots/sec × pellets × that proc's chance (works for
+          // status-weighted procs and forced procs like Hunter Munitions alike).
+          const procsPerSec = stats.statusProcs.reduce(
+            (sum, p) => sum + efr * stats.multishot * p.chance,
+            0,
+          );
           const dotProcs = stats.statusProcs.filter(p => p.totalDamage > 0);
           const statusDps = dotProcs.reduce((sum, p) => {
-            const pps = procsPerSec * p.chance / stats.statusChance;
+            const pps = efr * stats.multishot * p.chance;
             return sum + pps * p.totalDamage / p.duration;
           }, 0);
           return (
@@ -626,9 +707,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   <span className="text-[10px] text-orange-400 font-medium">T{tier}: {evo.name}</span>
                   {hasStats && (
                     <span className="text-[9px] font-mono text-orange-300/80">
-                      {Object.entries(evo.statChanges).map(([s, v]) =>
-                        `${s}: ${(v as number) > 0 ? "+" : ""}${((v as number) * 100).toFixed(0)}%`
-                      ).join(", ")}
+                      {Object.entries(evo.statChanges).map(([s, v]) => {
+                        const n = v as number;
+                        if (s === "flatBaseDamage") return `baseDamage: +${n}`;
+                        if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
+                        if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
+                        return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                      }).join(", ")}
                     </span>
                   )}
                 </div>

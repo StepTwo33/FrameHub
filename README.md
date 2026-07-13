@@ -68,6 +68,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 `start.sh` loads `.env`, runs `prisma migrate deploy`, and optionally a Cloudflare tunnel (`SKIP_TUNNEL=1` to disable).
 
+**Updating the server:** do not run `npm install` on the server — it changes `package-lock.json` and blocks `git pull`. Use:
+
+```bash
+git fetch origin dev
+git reset --hard origin/dev
+npm ci
+npm run build
+# then restart: ./start.sh (or your process manager)
+```
+
+Or run `./scripts/deploy.sh` (same steps, default branch `dev`).
+
 ## Scripts
 
 | Command | Description |

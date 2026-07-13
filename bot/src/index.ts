@@ -23,19 +23,30 @@ import { PrismaClient } from "../../src/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { BOT_EVENT_TYPE_IDS } from "../../src/lib/bot/alert-types";
 import {
+  addedFingerprintIds,
   allEventFingerprints,
+  datedNews,
   fetchWorldstateSnapshot,
+  LIST_EVENT_TYPES,
   type WorldstatePlatform,
 } from "../../src/lib/bot/worldstate-client";
 import {
+  embedAlerts,
+  embedArchimedea,
   embedArchon,
   embedArbitration,
   embedBaro,
   embedBounties,
+  embedConstruction,
   embedCycles,
   embedDarvo,
+  embedEvents,
+  embedFissures,
   embedForEventType,
+  embedInvasions,
+  embedNews,
   embedNightwave,
+  embedSentientOutpost,
   embedSimaris,
   embedSortie,
   embedTeshin,
@@ -185,8 +196,85 @@ async function handleCycles(interaction: ChatInputCommandInteraction) {
   await interaction.editReply({ embeds: [embedBuilder(embedCycles(snap))] });
 }
 
+async function handleAlerts(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedAlerts(snap.alerts))] });
+}
+
+async function handleInvasions(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedInvasions(snap.invasions))] });
+}
+
+async function handleFissures(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  const steelPath = interaction.options.getBoolean("steel_path");
+  const storms = interaction.options.getBoolean("void_storms");
+  let fissures = snap.fissures;
+  if (steelPath != null) fissures = fissures.filter((f) => !!f.isHard === steelPath);
+  if (storms != null) fissures = fissures.filter((f) => !!f.isStorm === storms);
+  await interaction.editReply({ embeds: [embedBuilder(embedFissures(fissures))] });
+}
+
+async function handleEvents(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedEvents(snap.events))] });
+}
+
+async function handleNews(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedNews(datedNews(snap)))] });
+}
+
+async function handleArchimedea(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedArchimedea(snap.archimedeas))] });
+}
+
+async function handleOutpost(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedSentientOutpost(snap.sentientOutposts))] });
+}
+
+async function handleConstruction(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+  const platform = await platformForGuild(interaction.guildId);
+  const snap = await fetchWorldstateSnapshot(platform);
+  await interaction.editReply({ embeds: [embedBuilder(embedConstruction(snap.constructionProgress))] });
+}
+
 const commands = [
   new SlashCommandBuilder().setName("worldstate").setDescription("Warframe worldstate snapshot"),
+  new SlashCommandBuilder().setName("alerts").setDescription("Active alert missions"),
+  new SlashCommandBuilder().setName("invasions").setDescription("Active invasions and rewards"),
+  new SlashCommandBuilder()
+    .setName("fissures")
+    .setDescription("Active void fissures")
+    .addBooleanOption((o) =>
+      o.setName("steel_path").setDescription("Only Steel Path fissures (false = only normal)"),
+    )
+    .addBooleanOption((o) =>
+      o.setName("void_storms").setDescription("Only Railjack void storms (false = exclude)"),
+    ),
+  new SlashCommandBuilder().setName("events").setDescription("Active events and community goals"),
+  new SlashCommandBuilder().setName("news").setDescription("Latest Warframe news"),
+  new SlashCommandBuilder().setName("archimedea").setDescription("Weekly Archimedea rotation"),
+  new SlashCommandBuilder().setName("outpost").setDescription("Sentient anomaly status (Veil Proxima)"),
+  new SlashCommandBuilder().setName("construction").setDescription("Fomorian / Razorback construction progress"),
   new SlashCommandBuilder().setName("sortie").setDescription("Current Sortie"),
   new SlashCommandBuilder().setName("archon").setDescription("Current Archon Hunt"),
   new SlashCommandBuilder().setName("arbitration").setDescription("Current Arbitration"),
@@ -227,6 +315,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
     switch (interaction.commandName) {
       case "worldstate":
         await handleWorldstate(interaction);
+        break;
+      case "alerts":
+        await handleAlerts(interaction);
+        break;
+      case "invasions":
+        await handleInvasions(interaction);
+        break;
+      case "fissures":
+        await handleFissures(interaction);
+        break;
+      case "events":
+        await handleEvents(interaction);
+        break;
+      case "news":
+        await handleNews(interaction);
+        break;
+      case "archimedea":
+        await handleArchimedea(interaction);
+        break;
+      case "outpost":
+        await handleOutpost(interaction);
+        break;
+      case "construction":
+        await handleConstruction(interaction);
         break;
       case "sortie":
         await handleSortie(interaction);
@@ -342,6 +454,14 @@ function startPoller(c: Client) {
           });
           if (isFirst) continue;
 
+          // List events (alerts, invasions, fissures, …): only notify when NEW
+          // items appear — expirations update the fingerprint silently.
+          let newIds: string[] | undefined;
+          if (LIST_EVENT_TYPES.has(eventType)) {
+            newIds = addedFingerprintIds(prev!.fingerprint, fingerprint);
+            if (newIds.length === 0) continue;
+          }
+
           const matching = routes.filter((r) => {
             if (r.eventType !== eventType) return false;
             const gp = platformByGuild.get(r.guildId) ?? "pc";
@@ -349,7 +469,7 @@ function startPoller(c: Client) {
             return norm === platform;
           });
 
-          const embed = embedBuilder(embedForEventType(eventType, snap));
+          const embed = embedBuilder(embedForEventType(eventType, snap, newIds));
           for (const route of matching) {
             try {
               const channel = await c.channels.fetch(route.channelId).catch(() => null);

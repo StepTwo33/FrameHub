@@ -20,12 +20,11 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("slideSpeed", "warframe_totals", "multiplicative_percent", "Amalgam Serration: slideSpeed — +5% Slide Speed per rank (max +55%)"),
   ]),
   argon_scope: mod("argon_scope", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Argon Scope: criticalChance \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Argon Scope \u2014 On Headshot: +135% Critical Chance when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Argon Scope: duration \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),
   ]),
   bladed_rounds: mod("bladed_rounds", [
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Bladed Rounds: criticalMultiplier \u2014 On Kill:\\\\n+120% Critical Damage when Aiming for 9s"),
-    line("criticalMultiplierOnKill", "mod_panel", "multiplicative_percent", "Bladed Rounds: criticalMultiplierOnKill \u2014 On Kill:\\\\n+120% Critical Damage when Aiming for 9s"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_kill", "wiki: Bladed Rounds \u2014 On Kill: +120% Critical Damage when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Bladed Rounds: duration \u2014 On Kill:\\\\n+120% Critical Damage when Aiming for 9s"),
   ]),
   critical_deceleration: mod("critical_deceleration", [
@@ -41,7 +40,6 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("fireRate", "weapon_dps", "multiplicative_percent", "Frail Momentum: fireRate \u2014 +15% Fire Rate, -2.5% Damage per rank"),
   ]),
   galvanized_aptitude: mod("galvanized_aptitude", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Galvanized Aptitude: damage \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Aptitude: damagePerStatus \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Aptitude: duration \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Aptitude: statusChance \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
@@ -52,13 +50,13 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("multishotOnKill", "weapon_dps", "conditional_multishot_on_kill", "Galvanized Chamber: multishotOnKill \u2014 +80% Multishot\\\\nOn Kill:\\\\n+30% Multishot for 20s. Stacks up to 5x."),
   ]),
   galvanized_savvy: mod("galvanized_savvy", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Galvanized Savvy: damage \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Savvy: damagePerStatus \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Savvy: duration \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
     line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Savvy: statusChance \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
   ]),
   galvanized_scope: mod("galvanized_scope", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Galvanized Scope: criticalChance \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 12s\\\\nOn Headshot Kill:\\\\n+\u2026"),
+    line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Galvanized Scope \u2014 +120% Critical Chance when Aiming for 12s on Headshot"),
+    line("criticalChanceOnHeadshotKill", "weapon_dps", "conditional_crit_on_headshot", "wiki: Galvanized Scope \u2014 +40% Critical Chance per Headshot Kill stack (5x)"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Scope: duration \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 12s\\\\nOn Headshot Kill:\\\\n+\u2026"),
   ]),
   hammer_shot: mod("hammer_shot", [
@@ -70,15 +68,14 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Heavy Caliber: damage \u2014 +15% Damage, -5% Accuracy per rank"),
   ]),
   hunter_munitions: mod("hunter_munitions", [
-    line("slashOnCrit", "mod_panel", "multiplicative_percent", "Hunter Munitions: slashOnCrit \u2014 +7.5% chance for Slash proc on Crit per rank"),
+    line("slashOnCrit", "weapon_dps", "slash_on_crit", "wiki: Hunter Munitions \u2014 +30% chance for Slash proc on Critical Hits"),
   ]),
   ice_storm: mod("ice_storm", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Ice Storm: cold \u2014 +15% Cold, +5% Magazine per rank"),
     line("magazine", "weapon_dps", "multiplicative_percent", "Ice Storm: magazine \u2014 +15% Cold, +5% Magazine per rank"),
   ]),
   piercing_caliber: mod("piercing_caliber", [
-    line("punchThrough", "mod_panel", "multiplicative_percent", "Piercing Caliber: punchThrough \u2014 +0.4m Punch Through per rank (arsenal display only)"),
-    line("puncture", "weapon_dps", "multiplicative_percent", "Piercing Caliber: puncture \u2014 +0.4m Punch Through per rank"),
+    line("puncture", "weapon_dps", "multiplicative_percent", "wiki: Piercing Caliber \u2014 +120% Puncture at max (no punch through)"),
   ]),
   primed_cryo_rounds: mod("primed_cryo_rounds", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Primed Cryo Rounds: cold \u2014 +15% Cold per rank (Primed)"),

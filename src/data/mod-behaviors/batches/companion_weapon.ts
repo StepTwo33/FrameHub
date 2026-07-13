@@ -42,9 +42,8 @@ export const MOD_BEHAVIORS_COMPANION_WEAPON: Record<string, VerifiedModBehavior>
     line("damage", "weapon_dps", "multiplicative_percent", "Maul (Claws): damage \u2014 +330% Melee Damage"),
   ]),
   claw_shred: mod("claw_shred", [
-    line("attackSpeed", "weapon_dps", "multiplicative_percent", "Shred (Claws): attackSpeed \u2014 +30% Fire Rate (x2 for Bows)\\\\n+1.2 Punch Through"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Shred (Claws): fireRate \u2014 +30% Fire Rate (x2 for Bows)\\\\n+1.2 Punch Through"),
-    line("punchThrough", "mod_panel", "multiplicative_percent", "Shred (Claws): punchThrough \u2014 +30% Fire Rate (x2 for Bows)\\\\n+1.2 Punch Through (arsenal display only)"),
+    line("fireRate", "weapon_dps", "multiplicative_percent", "Shred (Claws): fireRate \u2014 +30% Fire Rate (duplicate attackSpeed key removed)"),
+    line("punchThrough", "mod_panel", "multiplicative_percent", "Shred (Claws): punchThrough \u2014 +1.2 Punch Through (arsenal display only)"),
   ]),
   claw_swipe: mod("claw_swipe", [
     line("range", "mod_panel", "multiplicative_percent", "Swipe (Claws): range \u2014 Strikes 4 additional enemies and increases Attack Range by 2m. (arsenal display only)"),

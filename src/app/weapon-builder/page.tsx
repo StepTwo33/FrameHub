@@ -18,6 +18,7 @@ import { useWeapons, useMods } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
+import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapon-gravimag";
 import {
   weaponSupportsProgenitor,
   PROGENITOR_ELEMENT_IDS,
@@ -29,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Crosshair } from "lucide-react";
+import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Crosshair, Orbit } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
 import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
 import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
@@ -123,6 +124,14 @@ export default function WeaponBuilderPage() {
   const [simParams, setSimParams] = useState<SimulationParams>({ ...DEFAULT_SIM_PARAMS });
   const [progenitorElement, setProgenitorElement] = useState<string>("heat");
   const [progenitorBonusPercent, setProgenitorBonusPercent] = useState(PROGENITOR_BONUS_DEFAULT);
+  const [gravimagMode, setGravimagMode] = useState(false);
+
+  /** Archgun with Gravimag on → atmosphere stat profile; otherwise the base (Archwing) weapon. */
+  const activeWeapon = useMemo<Weapon | null>(() => {
+    if (!selectedWeapon) return null;
+    if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) return applyGravimagMode(selectedWeapon);
+    return selectedWeapon;
+  }, [selectedWeapon, gravimagMode]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
     if (!selectedWeapon || !weaponSupportsProgenitor(selectedWeapon)) return undefined;
@@ -363,13 +372,14 @@ export default function WeaponBuilderPage() {
       const tier = Number(tierStr);
       const evo = incarnonData.evolutions.find((e) => e.tier === tier && e.slot === slot);
       if (evo) {
-        for (const [stat, val] of Object.entries(evo.statChanges)) {
+        const changes = evo.variantStatChanges?.[selectedWeapon?.id ?? ""] ?? evo.statChanges;
+        for (const [stat, val] of Object.entries(changes)) {
           merged[stat] = (merged[stat] ?? 0) + val;
         }
       }
     }
     return Object.keys(merged).length > 0 ? merged : undefined;
-  }, [incarnonData, selectedEvolutions]);
+  }, [incarnonData, selectedEvolutions, selectedWeapon?.id]);
 
   // Gather riven stat changes from any slot that has a riven equipped (applied multiplicatively by the calculator)
   const rivenStatChanges = useMemo<Record<string, number> | undefined>(() => {
@@ -385,7 +395,7 @@ export default function WeaponBuilderPage() {
   }, [rivenStatsMap, equippedMods]);
 
   const calculatedStats = useMemo<CalculatedStats | null>(() => {
-    if (!selectedWeapon) return null;
+    if (!activeWeapon) return null;
     const modSlots = equippedMods.map((m) => ({
       modId: m.modId,
       rank: m.rank,
@@ -393,15 +403,15 @@ export default function WeaponBuilderPage() {
     }));
     const activeArcanes = equippedArcanes.filter((a): a is Mod => a !== null);
     if (activeArcanes.length > 0) {
-      return calculateWeaponBuildWithArcanes(selectedWeapon, modSlots, modsMap, activeArcanes, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
+      return calculateWeaponBuildWithArcanes(activeWeapon, modSlots, modsMap, activeArcanes, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
     }
-    return calculateWeaponBuild(selectedWeapon, modSlots, modsMap, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
-  }, [selectedWeapon, equippedMods, equippedArcanes, incarnonStatChanges, rivenStatChanges, simParams, weaponCalcOptions]);
+    return calculateWeaponBuild(activeWeapon, modSlots, modsMap, incarnonStatChanges, simParams, weaponCalcOptions, undefined, rivenStatChanges);
+  }, [activeWeapon, equippedMods, equippedArcanes, incarnonStatChanges, rivenStatChanges, simParams, weaponCalcOptions]);
 
   const contributionContext = useMemo(() => {
-    if (!selectedWeapon) return null;
+    if (!activeWeapon) return null;
     return {
-      baseWeapon: selectedWeapon,
+      baseWeapon: activeWeapon,
       modSlots: equippedMods.map((m) => ({
         modId: m.modId,
         rank: m.rank,
@@ -414,15 +424,16 @@ export default function WeaponBuilderPage() {
       calcOptions: weaponCalcOptions,
       rivenStatChanges,
     };
-  }, [selectedWeapon, equippedMods, equippedArcanes, incarnonStatChanges, simParams, weaponCalcOptions, rivenStatChanges, modsMap]);
+  }, [activeWeapon, equippedMods, equippedArcanes, incarnonStatChanges, simParams, weaponCalcOptions, rivenStatChanges, modsMap]);
 
   const baseStats = useMemo<CalculatedStats | null>(() => {
-    if (!selectedWeapon) return null;
-    return calculateWeaponBuild(selectedWeapon, [], modsMap, undefined, simParams, weaponCalcOptions);
-  }, [selectedWeapon, simParams, weaponCalcOptions]);
+    if (!activeWeapon) return null;
+    return calculateWeaponBuild(activeWeapon, [], modsMap, undefined, simParams, weaponCalcOptions);
+  }, [activeWeapon, simParams, weaponCalcOptions]);
 
   const handleSelectWeapon = useCallback((weapon: Weapon) => {
     setSelectedWeapon(weapon);
+    setGravimagMode(false);
     setEquippedMods([]);
     setHasOrokinCatalyst(false);
     setSelectedEvolutions({});
@@ -666,6 +677,23 @@ export default function WeaponBuilderPage() {
                     <Zap className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Catalyst</span>
                   </button>
+                  {weaponHasGravimagMode(selectedWeapon) && (
+                    <button
+                      onClick={() => setGravimagMode((v) => !v)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                        gravimagMode
+                          ? "bg-cyan-500/10 text-cyan-400"
+                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      )}
+                      title={gravimagMode
+                        ? "Gravimag deployed — showing atmosphere stats. Click for Archwing (space) stats."
+                        : "Showing Archwing (space) stats. Click to deploy via Gravimag (atmosphere stats)."}
+                    >
+                      <Orbit className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Gravimag</span>
+                    </button>
+                  )}
                 </BuilderActionGroup>
 
                 {selectedWeapon && weaponSupportsProgenitor(selectedWeapon) && (
@@ -914,8 +942,8 @@ export default function WeaponBuilderPage() {
                 <WeaponStatsPanel
                   stats={calculatedStats}
                   baseStats={baseStats}
-                  weapon={selectedWeapon}
-                  isMelee={selectedWeapon?.category === 'melee' || selectedWeapon?.triggerType === 'Melee'}
+                  weapon={activeWeapon}
+                  isMelee={activeWeapon?.category === 'melee' || activeWeapon?.triggerType === 'Melee'}
                   selectedEvolutions={isIncarnon ? selectedEvolutions : undefined}
                   allEvolutions={incarnonData?.evolutions}
                   simParams={simParams}

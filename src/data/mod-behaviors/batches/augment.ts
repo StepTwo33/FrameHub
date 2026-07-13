@@ -981,7 +981,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("toxin", "mod_panel", "multiplicative_percent", "Toxic Blight: toxin \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
   ]),
   toxic_sequence: mod("toxic_sequence", [
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Toxic Sequence: statusDuration \u2014 +200% Status Duration, +1 'Sequence'"),
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Toxic Sequence: statusDuration \u2014 +200% Status Duration (extends DoT ticks)"),
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Sequence: syndicatePower \u2014 +200% Status Duration, +1 'Sequence'"),
   ]),
   ulfruns_endurance: mod("ulfruns_endurance", [

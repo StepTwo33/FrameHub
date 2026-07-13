@@ -155,6 +155,110 @@ export interface CycleData {
   active?: string;
 }
 
+export interface WorldstateReward {
+  items?: string[];
+  countedItems?: { count?: number; type?: string; key?: string }[];
+  credits?: number;
+  asString?: string;
+}
+
+export interface AlertData {
+  id?: string;
+  activation?: string;
+  expiry?: string;
+  mission?: {
+    description?: string;
+    node?: string;
+    type?: string;
+    faction?: string;
+    reward?: WorldstateReward;
+    minEnemyLevel?: number;
+    maxEnemyLevel?: number;
+    nightmare?: boolean;
+    archwingRequired?: boolean;
+  };
+  rewardTypes?: string[];
+  tag?: string;
+}
+
+export interface InvasionData {
+  id?: string;
+  activation?: string;
+  node?: string;
+  desc?: string;
+  attacker?: { reward?: WorldstateReward | null; faction?: string };
+  defender?: { reward?: WorldstateReward | null; faction?: string };
+  vsInfestation?: boolean;
+  completion?: number;
+  completed?: boolean;
+  eta?: string;
+}
+
+export interface FissureData {
+  id?: string;
+  activation?: string;
+  expiry?: string;
+  node?: string;
+  missionType?: string;
+  enemy?: string;
+  tier?: string;
+  tierNum?: number;
+  isStorm?: boolean;
+  isHard?: boolean;
+}
+
+export interface EventGoalData {
+  id?: string;
+  activation?: string;
+  expiry?: string;
+  description?: string;
+  tooltip?: string;
+  node?: string;
+  maximumScore?: number;
+  currentScore?: number;
+  rewards?: WorldstateReward[];
+}
+
+export interface NewsData {
+  id?: string;
+  message?: string;
+  link?: string;
+  date?: string;
+  update?: boolean;
+  primeAccess?: boolean;
+  stream?: boolean;
+  priority?: boolean;
+}
+
+export interface ArchimedeaMission {
+  missionType?: string;
+  faction?: string;
+  deviation?: { name?: string; description?: string };
+  risks?: { name?: string; description?: string; isHard?: boolean }[];
+}
+
+export interface ArchimedeaData {
+  id?: string;
+  activation?: string;
+  expiry?: string;
+  type?: string;
+  missions?: ArchimedeaMission[];
+}
+
+export interface SentientOutpostData {
+  id?: string;
+  activation?: string;
+  expiry?: string;
+  active?: boolean;
+  mission?: { node?: string; faction?: string; type?: string };
+}
+
+export interface ConstructionProgressData {
+  id?: string;
+  fomorianProgress?: string;
+  razorbackProgress?: string;
+}
+
 export interface WorldstateSnapshot {
   platform: WorldstatePlatform;
   fetchedAt: string;
@@ -174,6 +278,15 @@ export interface WorldstateSnapshot {
   cambionCycle: CycleData | null;
   duviriCycle: CycleData | null;
   earthCycle: CycleData | null;
+  zarimanCycle: CycleData | null;
+  alerts: AlertData[];
+  invasions: InvasionData[];
+  fissures: FissureData[];
+  events: EventGoalData[];
+  news: NewsData[];
+  archimedeas: ArchimedeaData[];
+  sentientOutposts: SentientOutpostData | null;
+  constructionProgress: ConstructionProgressData | null;
 }
 
 type RawWorldstate = Record<string, unknown>;
@@ -234,6 +347,15 @@ export async function fetchWorldstateSnapshot(
       cambionCycle: asObj<CycleData>(full.cambionCycle),
       duviriCycle: asObj<CycleData>(full.duviriCycle),
       earthCycle: asObj<CycleData>(full.earthCycle),
+      zarimanCycle: asObj<CycleData>(full.zarimanCycle),
+      alerts: asArray<AlertData>(full.alerts),
+      invasions: asArray<InvasionData>(full.invasions),
+      fissures: asArray<FissureData>(full.fissures),
+      events: asArray<EventGoalData>(full.events),
+      news: asArray<NewsData>(full.news),
+      archimedeas: asArray<ArchimedeaData>(full.archimedeas),
+      sentientOutposts: asObj<SentientOutpostData>(full.sentientOutposts),
+      constructionProgress: asObj<ConstructionProgressData>(full.constructionProgress),
     };
   }
 
@@ -260,7 +382,31 @@ function emptySnapshot(p: WorldstatePlatform): WorldstateSnapshot {
     cambionCycle: null,
     duviriCycle: null,
     earthCycle: null,
+    zarimanCycle: null,
+    alerts: [],
+    invasions: [],
+    fissures: [],
+    events: [],
+    news: [],
+    archimedeas: [],
+    sentientOutposts: null,
+    constructionProgress: null,
   };
+}
+
+/** Invasions still in progress (API keeps completed ones around for a while). */
+export function activeInvasions(snap: WorldstateSnapshot): InvasionData[] {
+  return snap.invasions.filter((i) => !i.completed);
+}
+
+/** News items that represent real posts (the API includes undated evergreen links). */
+export function datedNews(snap: WorldstateSnapshot): NewsData[] {
+  return snap.news
+    .filter((n) => {
+      const t = n.date ? Date.parse(n.date) : NaN;
+      return !Number.isNaN(t) && t > Date.parse("2000-01-01T00:00:00Z");
+    })
+    .sort((a, b) => Date.parse(b.date ?? "") - Date.parse(a.date ?? ""));
 }
 
 /** Open-world bounty boards we care about for alerts. */
@@ -269,6 +415,26 @@ export function openWorldBounties(snap: WorldstateSnapshot): SyndicateMission[] 
     const name = s.syndicate ?? s.syndicateKey ?? "";
     return OPEN_WORLD_BOUNTY_SYNDICATES.has(name);
   });
+}
+
+/**
+ * Event types whose fingerprint is a set of item IDs. For these, the poller
+ * only notifies when NEW ids appear (expirations update silently), and embeds
+ * can highlight just the additions.
+ */
+export const LIST_EVENT_TYPES = new Set(["alerts", "invasions", "fissures", "events", "news"]);
+
+/** Extract the id set from a list-type fingerprint ("alerts:id1,id2"). */
+export function fingerprintIdSet(fingerprint: string): Set<string> {
+  const idx = fingerprint.indexOf(":");
+  const body = idx === -1 ? "" : fingerprint.slice(idx + 1);
+  return new Set(body.split(",").filter(Boolean));
+}
+
+/** IDs present in `next` but not in `prev` (new items since last poll). */
+export function addedFingerprintIds(prev: string, next: string): string[] {
+  const prevSet = fingerprintIdSet(prev);
+  return [...fingerprintIdSet(next)].filter((id) => !prevSet.has(id));
 }
 
 /** Stable fingerprint string for transition detection. */
@@ -384,6 +550,56 @@ export function fingerprintEvent(
       const c = snap.earthCycle;
       if (!c) return null;
       return `earth:${c.state ?? (c.isDay ? "day" : "night")}`;
+    }
+    case "zariman": {
+      const c = snap.zarimanCycle;
+      if (!c) return null;
+      return `zariman:${c.state ?? ""}`;
+    }
+    case "alerts": {
+      const ids = snap.alerts.map((a) => a.id ?? "").filter(Boolean).sort();
+      return `alerts:${ids.join(",")}`;
+    }
+    case "invasions": {
+      const ids = activeInvasions(snap)
+        .map((i) => i.id ?? "")
+        .filter(Boolean)
+        .sort();
+      return `invasions:${ids.join(",")}`;
+    }
+    case "fissures": {
+      const ids = snap.fissures.map((f) => f.id ?? "").filter(Boolean).sort();
+      return `fissures:${ids.join(",")}`;
+    }
+    case "events": {
+      const ids = snap.events.map((e) => e.id ?? "").filter(Boolean).sort();
+      return `events:${ids.join(",")}`;
+    }
+    case "news": {
+      const ids = datedNews(snap).map((n) => n.id ?? "").filter(Boolean).sort();
+      return `news:${ids.join(",")}`;
+    }
+    case "archimedea": {
+      if (!snap.archimedeas.length) return null;
+      return (
+        "archimedea:" +
+        snap.archimedeas
+          .map((a) => `${a.id ?? a.type ?? ""}:${a.expiry ?? ""}`)
+          .sort()
+          .join("|")
+      );
+    }
+    case "sentient_outpost": {
+      const o = snap.sentientOutposts;
+      if (!o || !o.active || !o.mission?.node) return null;
+      return `outpost:${o.id ?? o.mission.node}`;
+    }
+    case "construction": {
+      const c = snap.constructionProgress;
+      if (!c) return null;
+      // Notify on 10% milestones instead of every decimal tick.
+      const step = (v?: string) => Math.floor(Number(v ?? 0) / 10) * 10;
+      return `construction:fomorian${step(c.fomorianProgress)}:razorback${step(c.razorbackProgress)}`;
     }
     default:
       return null;

@@ -18,6 +18,8 @@ export type WeaponModAccumulators = {
   statusDamageBonus: number;
   /** Headshot / weak-point damage bonus (Acuity, etc.). */
   headshotDamageBonus: number;
+  /** Status duration bonus (Continuous Misery, etc.) — extends DoT ticks. */
+  statusDurationBonus: number;
   /** Normalized faction id → bonus fraction (Bane / Expel / Smite / Cleanse). */
   factionBonuses: Record<string, number>;
   hasBloodRush: boolean;
@@ -30,6 +32,24 @@ export type WeaponModAccumulators = {
   berserkerFuryPerStack: number;
   galvMultishotOnKillPerStack: number;
   galvDamagePerStatusPerStack: number;
+  /** In-game stack cap for the equipped galvanized multishot mod (Chamber 5, Hell/Diffusion 4). */
+  galvMultishotStackCap: number;
+  /** In-game stack cap for the equipped galvanized condition mod (Aptitude/Savvy 2, Shot 3). */
+  galvDamagePerStatusStackCap: number;
+  /** Galvanized Scope/Crosshairs: flat crit chance while aiming after a headshot. */
+  galvCritOnHeadshotBase: number;
+  /** Galvanized Scope/Crosshairs: extra crit chance per headshot-kill stack. */
+  galvCritOnHeadshotPerStack: number;
+  /** Non-stacking buffs active while kill stacks > 0 (statKey → summed bonus). */
+  onKillStatBonuses: Record<string, number>;
+  /** Aim/reload/cast/latch buffs gated by sim.applyTriggerBuffs (statKey → summed bonus). */
+  triggerStatBonuses: Record<string, number>;
+  /** Chance to force a Slash proc on crits (Hunter Munitions). */
+  slashOnCritChance: number;
+  /** Chance for Impact procs to add a Slash proc (Internal Bleeding / Hemorrhage; ×2 under 2.5 fire rate). */
+  slashOnImpactProcChance: number;
+  /** Bonus damage on the first shot of each magazine (Charged/Primed Chamber). */
+  firstShotDamageBonus: number;
 };
 
 export type ModApplyWeaponContext = {
@@ -57,6 +77,18 @@ function trackModPanel(stats: { modBonuses?: Record<string, number> }, modId: st
   const key = `${modId}::${statKey}`;
   stats.modBonuses[key] = (stats.modBonuses[key] ?? 0) + value * 100;
 }
+
+/** In-game stack caps for galvanized on-kill effects (wiki mod pages). */
+const GALV_STACK_CAPS: Record<string, number> = {
+  galvanized_chamber: 5,
+  galvanized_hell: 4,
+  galvanized_diffusion: 4,
+  galvanized_aptitude: 2,
+  galvanized_savvy: 2,
+  galvanized_shot: 3,
+  galvanized_scope: 5,
+  galvanized_crosshairs: 5,
+};
 
 function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): boolean {
   const { acc, modValue, statKey, elementalMods, baseWeaponDamage } = ctx;
@@ -106,6 +138,9 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
         case "weakPointDamage":
           acc.headshotDamageBonus += modValue;
           return true;
+        case "statusDuration":
+          acc.statusDurationBonus += modValue;
+          return true;
         default: {
           const factionId = FACTION_STAT_TO_ID[statKey];
           if (factionId) {
@@ -137,6 +172,17 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       }
       if (statKey === "multishotOnKill") {
         acc.galvMultishotOnKillPerStack = modValue;
+        acc.galvMultishotStackCap = GALV_STACK_CAPS[ctx.modId] ?? 5;
+        return true;
+      }
+      return false;
+    case "conditional_crit_on_headshot":
+      if (statKey === "criticalChanceOnHeadshot") {
+        acc.galvCritOnHeadshotBase += modValue;
+        return true;
+      }
+      if (statKey === "criticalChanceOnHeadshotKill") {
+        acc.galvCritOnHeadshotPerStack = modValue;
         return true;
       }
       return false;
@@ -147,12 +193,28 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       }
       if (statKey === "damagePerStatus") {
         acc.galvDamagePerStatusPerStack = modValue;
+        acc.galvDamagePerStatusStackCap = GALV_STACK_CAPS[ctx.modId] ?? 5;
         return true;
       }
       return false;
     case "conditional_attack_speed_on_kill":
       acc.hasBerserkerFury = true;
       acc.berserkerFuryPerStack = modValue;
+      return true;
+    case "conditional_stat_on_kill":
+      acc.onKillStatBonuses[statKey] = (acc.onKillStatBonuses[statKey] ?? 0) + modValue;
+      return true;
+    case "conditional_stat_on_trigger":
+      acc.triggerStatBonuses[statKey] = (acc.triggerStatBonuses[statKey] ?? 0) + modValue;
+      return true;
+    case "slash_on_crit":
+      acc.slashOnCritChance += modValue;
+      return true;
+    case "slash_on_impact_proc":
+      acc.slashOnImpactProcChance += modValue;
+      return true;
+    case "first_shot_damage":
+      acc.firstShotDamageBonus += modValue;
       return true;
     case "additive_percent":
       if (statKey === "comboDuration" && ctx.comboDuration) {

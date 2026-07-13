@@ -778,7 +778,13 @@ function CodexModRow({
         selected ? "border-indigo-500/50 bg-indigo-500/5" : "border-border/60 hover:border-indigo-500/30",
       )}
     >
-      <CodexModImage name={mod.name} polarity={mod.polarity} size={44} className="h-11 w-11" />
+      <CodexModImage
+        name={mod.name}
+        polarity={mod.polarity}
+        variant="card"
+        size={56}
+        className="h-[82px] w-14"
+      />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{mod.name}</p>
         <p className="text-[10px] text-muted-foreground">
@@ -892,8 +898,9 @@ function ModDetailPanel({ mod, compact, returnTo }: { mod: Mod; compact?: boolea
         <CodexModImage
           name={mod.name}
           polarity={mod.polarity}
-          size={compact ? 48 : 64}
-          className={compact ? "h-12 w-12" : "h-16 w-16"}
+          variant="card"
+          size={compact ? 80 : 104}
+          className={compact ? "h-[116px] w-20" : "h-[151px] w-[104px]"}
         />
         <div className="min-w-0 flex-1">
           <h2 className={cn("font-semibold leading-tight", compact && "text-sm")}>{mod.name}</h2>

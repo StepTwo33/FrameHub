@@ -145,6 +145,303 @@ describe("status DoT tick fractions (wiki Damage/Calculation)", () => {
   });
 });
 
+describe("Acuity mods (wiki: weak point damage/crit, multishot locked)", () => {
+  it("locks multishot against mod bonuses and gates crit/damage on headshots", () => {
+    const weapon = allWeapons.find((w) => w.id === "braton_prime" || w.name === "Braton Prime");
+    const acuity = allMods.find((m) => m.id === "primary_acuity");
+    const multishotMod = allMods.find((m) => m.id === "split_chamber_r3" || m.stats.multishot != null && m.category === "rifle");
+    if (!weapon || !acuity || !multishotMod) return;
+
+    const simHead = { ...DEFAULT_SIM_PARAMS, applyHeadshots: true };
+    const stats = calculateWeaponBuild(
+      weapon,
+      [
+        { modId: multishotMod.id, rank: multishotMod.maxRank, slotIndex: 0 },
+        { modId: acuity.id, rank: acuity.maxRank, slotIndex: 1 },
+      ],
+      modsMap(),
+      undefined,
+      simHead,
+    );
+    // "Multishot cannot be modified" — Split Chamber has no effect
+    expect(stats.multishot).toBeCloseTo(weapon.multishot, 5);
+    expect(stats.multishotLocked).toBe(true);
+    // +350% weak point crit chance, applied only when headshots are simulated
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * (1 + 3.5), 3);
+    // +350% weak point damage routes to headshot damage bonus
+    expect(stats.headshotDamageBonus).toBeCloseTo(3.5, 3);
+
+    const noHead = calculateWeaponBuild(
+      weapon,
+      [{ modId: acuity.id, rank: acuity.maxRank, slotIndex: 0 }],
+      modsMap(),
+      undefined,
+      DEFAULT_SIM_PARAMS,
+    );
+    expect(noHead.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+  });
+});
+
+describe("status duration mods extend DoT ticks (wiki Status Effect)", () => {
+  it("Continuous Misery (+100%) doubles slash duration: 12s / 13 ticks", () => {
+    const weapon = allWeapons.find((w) => w.id === "braton_prime" || w.name === "Braton Prime");
+    const misery = allMods.find((m) => m.id === "continuous_misery");
+    if (!weapon || !misery) return;
+
+    const base = calculateWeaponBuild(weapon, [], modsMap());
+    const modded = calculateWeaponBuild(
+      weapon,
+      [{ modId: misery.id, rank: misery.maxRank, slotIndex: 0 }],
+      modsMap(),
+    );
+    const baseSlash = base.statusProcs.find((p) => p.type === "slash");
+    const moddedSlash = modded.statusProcs.find((p) => p.type === "slash");
+    if (!baseSlash || !moddedSlash) return;
+
+    expect(baseSlash.duration).toBe(6);
+    expect(baseSlash.ticks).toBe(7);
+    expect(moddedSlash.duration).toBeCloseTo(12, 5);
+    expect(moddedSlash.ticks).toBe(13);
+    expect(moddedSlash.totalDamage).toBeCloseTo(baseSlash.totalDamage * (13 / 7), 3);
+  });
+});
+
+describe("Charged Chamber first-shot bonus (wiki)", () => {
+  it("leaves arsenal damage unchanged and averages +40% over the magazine in DPS", () => {
+    const weapon = allWeapons.find((w) => w.id === "rubico_prime" || w.name === "Rubico Prime");
+    const cc = allMods.find((m) => m.id === "charged_chamber");
+    if (!weapon || !cc) return;
+
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const modded = calculateWeaponBuild(
+      weapon,
+      [{ modId: cc.id, rank: cc.maxRank, slotIndex: 0 }],
+      modsMap(),
+    );
+    // Conditional bonus must not inflate arsenal-style damage display
+    expect(modded.totalDamage).toBeCloseTo(bare.totalDamage, 5);
+    // DPS averages the first-shot bonus over the magazine
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1 + 0.4 / bare.magazine, 5);
+  });
+});
+
+describe("Internal Bleeding forced Slash on Impact procs (wiki)", () => {
+  it("adds a slash proc proportional to the impact proc chance", () => {
+    const weapon = allWeapons.find((w) => w.id === "rubico_prime" || w.name === "Rubico Prime");
+    const ib = allMods.find((m) => m.id === "internal_bleeding");
+    if (!weapon || !ib) return;
+
+    const stats = calculateWeaponBuild(
+      weapon,
+      [{ modId: ib.id, rank: ib.maxRank, slotIndex: 0 }],
+      modsMap(),
+    );
+    const impact = stats.statusProcs.find((p) => p.type === "impact");
+    const forced = stats.statusProcs.find((p) => p.description.includes("Internal Bleeding"));
+    if (!impact) return;
+    expect(forced).toBeDefined();
+    const rateMult = stats.fireRate < 2.5 ? 2 : 1;
+    expect(forced!.chance).toBeCloseTo(impact.chance * Math.min(0.35 * rateMult, 1), 5);
+  });
+});
+
+describe("Vigilante crit-tier enhance folded into DPS", () => {
+  it("burst DPS uses crit chance + 0.05 per Vigilante mod", () => {
+    const weapon = allWeapons.find((w) => w.id === "braton_prime" || w.name === "Braton Prime");
+    const va = allMods.find((m) => m.id === "vigilante_armaments");
+    if (!weapon || !va) return;
+
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const vig = calculateWeaponBuild(
+      weapon,
+      [{ modId: va.id, rank: va.maxRank, slotIndex: 0 }],
+      modsMap(),
+    );
+    const expected =
+      (vig.multishot / bare.multishot) *
+      (avgCritMultiplier(vig.criticalChance + 0.05, vig.criticalMultiplier) /
+        avgCritMultiplier(bare.criticalChance, bare.criticalMultiplier));
+    expect(vig.burstDps / bare.burstDps).toBeCloseTo(expected, 5);
+  });
+});
+
+describe("Cannonade mods lock fire rate (wiki: cannot be modified)", () => {
+  it("nulls fire rate mods when a Cannonade mod is equipped", () => {
+    const weapon = allWeapons.find((w) => w.id === "latron_prime" || w.name === "Latron Prime");
+    const st = allMods.find((m) => m.id === "speed_trigger_r3" || m.id === "speed_trigger");
+    const cannonade = allMods.find((m) => m.id === "semi_rifle_cannonade");
+    if (!weapon || !st || !cannonade) return;
+
+    const stats = calculateWeaponBuild(
+      weapon,
+      [
+        { modId: st.id, rank: st.maxRank, slotIndex: 0 },
+        { modId: cannonade.id, rank: cannonade.maxRank, slotIndex: 1 },
+      ],
+      modsMap(),
+    );
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(stats.fireRateLocked).toBe(true);
+    // Damage bonus still applies (+240%)
+    expect(stats.totalDamage / weapon.damage).toBeCloseTo(3.4, 2);
+  });
+});
+
+describe("Incarnon-form radials excluded until Incarnon is active", () => {
+  it("does not add Incarnon Form AoE DPS on a bare build", () => {
+    const weapon = allWeapons.find((w) => w.id === "braton_prime" || w.name === "Braton Prime");
+    if (!weapon) return;
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    expect(bare.radialBurstDps ?? 0).toBe(0);
+    // With incarnon stat changes present, the Incarnon Form AoE contributes
+    const incarnon = calculateWeaponBuild(weapon, [], modsMap(), { damage: 10 });
+    expect(incarnon.radialBurstDps ?? 0).toBeGreaterThan(0);
+  });
+});
+
+describe("Devouring Attrition (wiki: 50% chance +2000% on non-crit hits)", () => {
+  it("boosts DPS by the average non-crit bonus", () => {
+    const weapon = allWeapons.find((w) => w.id === "lex_prime" || w.id === "lex");
+    if (!weapon) return;
+    const base = calculateWeaponBuild(weapon, [], modsMap());
+    const withPerk = calculateWeaponBuild(weapon, [], modsMap(), { devouringAttrition: 20 });
+    // Expected: avgCrit gains (1 − cc) × 10
+    const cc = base.criticalChance;
+    const cm = base.criticalMultiplier;
+    const avgCrit = 1 + cc * (cm - 1);
+    const expectedFactor = (avgCrit + (1 - cc) * 10) / avgCrit;
+    expect(withPerk.burstDps / base.burstDps).toBeCloseTo(expectedFactor, 2);
+  });
+
+  it("gives no bonus at 100%+ crit chance", () => {
+    const weapon = allWeapons.find((w) => w.id === "lex_prime" || w.id === "lex");
+    if (!weapon) return;
+    const base = calculateWeaponBuild(weapon, [], modsMap(), { criticalChance: 1 });
+    const withPerk = calculateWeaponBuild(weapon, [], modsMap(), {
+      criticalChance: 1,
+      devouringAttrition: 20,
+    });
+    expect(withPerk.burstDps).toBeCloseTo(base.burstDps, 6);
+  });
+});
+
+describe("incarnon evolutions (wiki-parsed)", () => {
+  it("flat base damage adds scale all damage proportionally", () => {
+    const weapon = allWeapons.find((w) => w.id === "lex_prime" || w.id === "lex");
+    if (!weapon) return;
+    const base = calculateWeaponBuild(weapon, [], modsMap());
+    const withPerk = calculateWeaponBuild(weapon, [], modsMap(), { flatBaseDamage: 60 });
+    expect(withPerk.totalDamage / base.totalDamage).toBeCloseTo(1 + 60 / weapon.damage, 3);
+  });
+
+  it("genesis weapons use real wiki evolutions (no fabricated Devouring Attrition)", async () => {
+    const { incarnonDataMap } = await import("@/data/incarnon");
+    const braton = incarnonDataMap.get("braton_prime");
+    expect(braton).toBeDefined();
+    const names = braton!.evolutions.map((e) => e.name);
+    expect(names).not.toContain("Devouring Attrition");
+    expect(names).toContain("Critical Parallel");
+    // Variant-specific values resolve for Braton Prime
+    const cp = braton!.evolutions.find((e) => e.name === "Critical Parallel")!;
+    expect(cp.variantStatChanges?.["braton_prime"]?.criticalChance).toBeCloseTo(0.18, 6);
+  });
+
+  it("native incarnons keep Devouring Attrition with correct model", async () => {
+    const { incarnonDataMap } = await import("@/data/incarnon");
+    const phenmor = incarnonDataMap.get("phenmor");
+    const da = phenmor!.evolutions.find((e) => e.name === "Devouring Attrition");
+    expect(da?.statChanges.devouringAttrition).toBe(20);
+  });
+});
+
+describe("radial DPS inference (wiki: launchers, alt-fires, glaives)", () => {
+  it("glaive charged-throw explosions are manual — not in melee DPS", () => {
+    const weapon = allWeapons.find((w) => w.id === "glaive_prime");
+    if (!weapon) return;
+    const stats = calculateWeaponBuild(weapon, [], modsMap());
+    expect(stats.radialBurstDps ?? 0).toBe(0);
+  });
+
+  it("alt-fire explosions (Corinth Air Burst) are excluded from auto DPS", () => {
+    const weapon = allWeapons.find((w) => w.id === "corinth_prime");
+    if (!weapon) return;
+    const stats = calculateWeaponBuild(weapon, [], modsMap());
+    const airBurst = (stats.radialAttacks ?? []).find((a) => /air burst/i.test(a.name));
+    expect(airBurst?.burstDps ?? 0).toBe(0);
+  });
+
+  it("launcher explosions folded into weapon damage are not double-counted (Kuva Bramma)", () => {
+    const weapon = allWeapons.find((w) => w.id === "kuva_bramma");
+    if (!weapon) return;
+    const stats = calculateWeaponBuild(weapon, [], modsMap());
+    const main = (stats.radialAttacks ?? []).find((a) => a.name === "Radial Attack");
+    expect(main?.includedInDirect).toBe(true);
+    expect(main?.burstDps ?? 0).toBe(0);
+    // Cluster bombs are extra damage on top and still counted.
+    const cluster = (stats.radialAttacks ?? []).find((a) => /cluster/i.test(a.name));
+    expect(cluster?.burstDps ?? 0).toBeGreaterThan(0);
+  });
+
+  it("innate per-shot explosions still contribute (Zakti gas cloud)", () => {
+    const weapon = allWeapons.find((w) => w.id === "zakti_prime");
+    if (!weapon) return;
+    const stats = calculateWeaponBuild(weapon, [], modsMap());
+    expect(stats.radialBurstDps ?? 0).toBeGreaterThan(0);
+  });
+});
+
+describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
+  it("base archgun stats are the Archwing (space) profile (Imperator)", () => {
+    const imperator = allWeapons.find((w) => w.id === "imperator")!;
+    expect(imperator.damage).toBe(50);
+    expect(imperator.fireRate).toBeCloseTo(16.7, 5);
+    expect(imperator.magazine).toBe(200);
+  });
+
+  it("applyGravimagMode swaps to atmosphere stats (Imperator: 2× damage, 2s reload)", async () => {
+    const { applyGravimagMode, weaponHasGravimagMode } = await import("@/lib/weapon-gravimag");
+    const imperator = allWeapons.find((w) => w.id === "imperator")!;
+    expect(weaponHasGravimagMode(imperator)).toBe(true);
+    const atmos = applyGravimagMode(imperator);
+    expect(atmos.damage).toBe(100);
+    expect(atmos.impact).toBe(40);
+    expect(atmos.reloadTime).toBe(2);
+    // Unchanged fields carry over
+    expect(atmos.fireRate).toBeCloseTo(16.7, 5);
+    const stats = calculateWeaponBuild(atmos, [], modsMap());
+    expect(stats.totalDamage).toBeCloseTo(100, 5);
+  });
+
+  it("Corvas atmosphere mode becomes an 11-pellet shotgun without heat", async () => {
+    const { applyGravimagMode } = await import("@/lib/weapon-gravimag");
+    const corvas = allWeapons.find((w) => w.id === "corvas")!;
+    expect(corvas.heat).toBe(480);
+    const atmos = applyGravimagMode(corvas);
+    expect(atmos.heat).toBe(0);
+    expect(atmos.multishot).toBe(11);
+    expect(atmos.damage).toBe(160);
+  });
+
+  it("atmosphere radial attacks replace Archwing ones (Kuva Ayanga 187 → 280)", async () => {
+    const { applyGravimagMode } = await import("@/lib/weapon-gravimag");
+    const { getWeaponRadialAttacks } = await import("@/lib/weapon-radial-utils");
+    const ayanga = allWeapons.find((w) => w.id === "kuva_ayanga")!;
+    expect(getWeaponRadialAttacks(ayanga)[0]?.totalDamage).toBeCloseTo(187, 5);
+    const atmos = applyGravimagMode(ayanga);
+    expect(getWeaponRadialAttacks(atmos)[0]?.totalDamage).toBeCloseTo(280, 5);
+  });
+
+  it("weapons without a distinct atmosphere profile have no gravimag mode", async () => {
+    const { weaponHasGravimagMode } = await import("@/lib/weapon-gravimag");
+    // Corvas Prime: identical stats in both modes on the wiki — no toggle.
+    const corvasPrime = allWeapons.find((w) => w.id === "corvas_prime")!;
+    expect(weaponHasGravimagMode(corvasPrime)).toBe(false);
+    // Non-archguns never have one.
+    const braton = allWeapons.find((w) => w.id === "braton_prime");
+    if (braton) expect(weaponHasGravimagMode(braton)).toBe(false);
+  });
+});
+
 describe("enemy level scaling smoke checks", () => {
   it("caps armor at 2700", () => {
     expect(scaleArmor(500, 200)).toBeLessThanOrEqual(2700);

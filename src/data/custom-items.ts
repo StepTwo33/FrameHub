@@ -267,6 +267,7 @@ export const customWeapons: Weapon[] = [
     impact: 0,
     puncture: 0,
     slash: 0,
+    cold: 32,
     fireRate: 12.0,
     criticalChance: 0.14,
     criticalMultiplier: 2.2,
@@ -281,22 +282,22 @@ export const customWeapons: Weapon[] = [
     isIncarnon: false,
     hasRivenSlot: true,
   },
-  // Source: https://wiki.warframe.com/w/Vulcax - charges single Heat shot
-  // Vulcax: 100 Heat, charge weapon
+  // Source: https://wiki.warframe.com/w/Vulcax - charges single Impact shot
+  // Vulcax (post robotic-weapon rebalance): 500 Impact, CC 20%/2.5x, SC 10%
   {
     id: "vulcax",
     name: "Vulcax",
     category: "sentinel_weapon",
-    damage: 100,
-    impact: 0,
+    damage: 500,
+    impact: 500,
     puncture: 0,
     slash: 0,
     fireRate: 1.0,
-    criticalChance: 0.10,
-    criticalMultiplier: 2.0,
-    statusChance: 0.20,
+    criticalChance: 0.20,
+    criticalMultiplier: 2.5,
+    statusChance: 0.10,
     magazine: 1,
-    reloadTime: 1.0,
+    reloadTime: 3.0,
     multishot: 1,
     triggerType: "Charge",
     modSlots: 8,
@@ -423,7 +424,7 @@ export const customWeapons: Weapon[] = [
   // Vulpaphylas
   {
     id: "sly_claws", name: "Sly Claws", category: "beast_claw",
-    damage: 80, impact: 40, puncture: 0, slash: 0,
+    damage: 80, impact: 40, puncture: 0, slash: 0, magnetic: 40,
     fireRate: 1.0, criticalChance: 0.20, criticalMultiplier: 2.0, statusChance: 0.20,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
@@ -431,7 +432,7 @@ export const customWeapons: Weapon[] = [
   },
   {
     id: "crescent_claws", name: "Crescent Claws", category: "beast_claw",
-    damage: 100, impact: 0, puncture: 50, slash: 0,
+    damage: 100, impact: 0, puncture: 50, slash: 0, electricity: 50,
     fireRate: 1.0, criticalChance: 0.225, criticalMultiplier: 2.0, statusChance: 0.175,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
@@ -439,7 +440,7 @@ export const customWeapons: Weapon[] = [
   },
   {
     id: "panzer_claws", name: "Panzer Claws", category: "beast_claw",
-    damage: 90, impact: 0, puncture: 0, slash: 45,
+    damage: 90, impact: 0, puncture: 0, slash: 45, toxin: 45,
     fireRate: 1.0, criticalChance: 0.25, criticalMultiplier: 2.0, statusChance: 0.125,
     magazine: 0, reloadTime: 0, multishot: 1, triggerType: "Melee", modSlots: 8,
     hasPrimaryArcaneSlot: false, hasSecondaryArcaneSlot: false, isIncarnon: false, hasRivenSlot: false,
