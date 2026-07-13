@@ -14,7 +14,6 @@ import {
   Plane,
   ExternalLink,
   Users,
-  Bot,
 } from "lucide-react";
 import {
   PageShell,
@@ -165,14 +164,6 @@ export default function Home() {
                 icon={GitCompareArrows}
                 accent="teal"
                 badges={["Build vs Build", "Loadout vs Loadout"]}
-              />
-              <FeatureCard
-                href="/bot"
-                title="Discord Bot"
-                description="World-state, vendor, and cycle alerts — configure channels from the web dashboard."
-                icon={Bot}
-                accent="indigo"
-                badges={["Sortie", "Baro", "Cycles"]}
               />
             </div>
 
