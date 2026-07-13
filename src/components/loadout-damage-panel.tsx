@@ -48,10 +48,10 @@ function ContributionsList({ contributions }: { contributions?: DpsContribution[
               )}
             </div>
             <div className="shrink-0 text-right">
-              <div className="text-[10px] font-mono text-blue-400">{formatMarginalPct(row.burstMarginalPct)}</div>
+              <div className="text-[10px] font-mono text-blue-400">{formatMarginalPct(row.burstMarginalPct ?? 0)}</div>
               {showSustained && (
                 <div className="text-[9px] font-mono text-muted-foreground">
-                  sus {formatMarginalPct(row.sustainedMarginalPct)}
+                  sus {formatMarginalPct(row.sustainedMarginalPct ?? 0)}
                 </div>
               )}
             </div>
@@ -111,10 +111,10 @@ function WeaponRow({
           <StatLine label="Total damage" value={(stats.totalDamage ?? 0).toFixed(1)} />
           <StatLine label="Crit" value={`${((stats.criticalChance ?? 0) * 100).toFixed(1)}% / ${(stats.criticalMultiplier ?? 0).toFixed(1)}x`} />
           <StatLine label="Status" value={`${((stats.statusChance ?? 0) * 100).toFixed(1)}%`} />
-          {isMelee && stats.heavyAttackDamage > 0 && (
+          {isMelee && (stats.heavyAttackDamage ?? 0) > 0 && (
             <>
-              <StatLine label="Heavy attack mult" value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`} />
-              <StatLine label="Heavy attack" value={fmtDamageNum(stats.heavyAttackDamage)} />
+              <StatLine label="Heavy attack mult" value={`${(stats.heavyAttackComboMultiplier ?? 1).toFixed(1)}x`} />
+              <StatLine label="Heavy attack" value={fmtDamageNum(stats.heavyAttackDamage ?? 0)} />
             </>
           )}
           {!isMelee && (
@@ -144,10 +144,15 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
   const [activeAbilityBuffs, setActiveAbilityBuffs] = useState<string[]>([]);
 
   const abilityBuffOptions = useMemo(() => {
-    const wfId = loadout.warframeBuild?.warframeId;
-    if (!wfId) return [];
-    const wf = allWarframes.find((w) => w.id === wfId);
-    return weaponDamageBuffAbilities(wf?.abilities);
+    try {
+      const wfId = loadout.warframeBuild?.warframeId;
+      if (!wfId) return [];
+      const wf = allWarframes.find((w) => w.id === wfId);
+      return weaponDamageBuffAbilities(wf?.abilities);
+    } catch (err) {
+      console.warn("Loadout ability buff options failed", err);
+      return [];
+    }
   }, [loadout.warframeBuild?.warframeId]);
 
   const enemy = useMemo(
@@ -173,7 +178,15 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
     }
   }, [loadout, scenario, enemy, enemyLevel, allWeapons, activeAbilityBuffs]);
 
-  const best = useMemo(() => (stats ? bestSustainedDps(stats) : null), [stats]);
+  const best = useMemo(() => {
+    if (!stats) return null;
+    try {
+      return bestSustainedDps(stats);
+    } catch (err) {
+      console.warn("Loadout best DPS failed", err);
+      return null;
+    }
+  }, [stats]);
   const showTtk = scenario === "vsEnemy";
 
   if (!stats) return null;

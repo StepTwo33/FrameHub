@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, startTransition } from "react";
 import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
 import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild, mergeCloudLoadoutPreservingSlots } from "@/lib/loadouts";
 import {
@@ -17,6 +17,7 @@ import {
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import {
   useCloudBuildFromUrl,
+  markCloudBuildLoaded,
 } from "@/lib/use-cloud-build-from-url";
 import { Loadout, EquippedArchonShard } from "@/lib/types";
 import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
@@ -343,9 +344,8 @@ export default function LoadoutsPage() {
           updatedAt: Date.now(),
         };
         saveLoadout(updated);
-        refresh();
-        setSaveDialogOpen(false);
-        setSaveDialogLoadoutId(null);
+        markCloudBuildLoaded(cloudResult.id);
+        startTransition(() => refresh());
         toast.success("Loadout saved", {
           description: isPublic ? "Listed in Community Builds." : "Saved to your account.",
         });
@@ -771,7 +771,19 @@ export default function LoadoutsPage() {
         ) : (
           <div className="space-y-4">
             {loadouts.map((loadout) => (
-              <ContentPanel key={loadout.id} className="p-5">
+              <LoadoutSectionErrorBoundary
+                key={loadout.id}
+                label="loadout card"
+                resetKey={`${loadout.id}:${loadout.updatedAt}`}
+                fallback={
+                  <ContentPanel className="p-5 border-destructive/30">
+                    <p className="text-sm text-muted-foreground">
+                      Could not display &ldquo;{loadout.name}&rdquo;. Your data is still saved locally.
+                    </p>
+                  </ContentPanel>
+                }
+              >
+              <ContentPanel className="p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     {editingId === loadout.id ? (
                       <div className="flex items-center gap-2 flex-1 flex-wrap">
@@ -956,10 +968,11 @@ export default function LoadoutsPage() {
                     })}
                   </div>
 
-                  <LoadoutSectionErrorBoundary label="damage panel">
+                  <LoadoutSectionErrorBoundary label="damage panel" resetKey={loadout.updatedAt}>
                     <LoadoutDamagePanel loadout={loadout} />
                   </LoadoutSectionErrorBoundary>
                 </ContentPanel>
+              </LoadoutSectionErrorBoundary>
               ))}
             </div>
           )}
@@ -1152,18 +1165,20 @@ export default function LoadoutsPage() {
         </DialogContent>
       </Dialog>
 
-      <SaveBuildDialog
-        open={saveDialogOpen}
-        onOpenChange={(open) => {
-          setSaveDialogOpen(open);
-          if (!open) setSaveDialogLoadoutId(null);
-        }}
-        defaultName={saveDialogLoadout?.name ?? "Loadout"}
-        defaultDescription={saveDialogLoadout?.description ?? ""}
-        defaultIsPublic={saveDialogDefaultPublic || (saveDialogLoadout?.isPublic ?? false)}
-        title="Save Loadout"
-        onSave={handleSaveLoadoutConfirm}
-      />
+      <LoadoutSectionErrorBoundary label="save dialog">
+        <SaveBuildDialog
+          open={saveDialogOpen}
+          onOpenChange={(open) => {
+            setSaveDialogOpen(open);
+            if (!open) setSaveDialogLoadoutId(null);
+          }}
+          defaultName={saveDialogLoadout?.name ?? "Loadout"}
+          defaultDescription={saveDialogLoadout?.description ?? ""}
+          defaultIsPublic={saveDialogDefaultPublic || (saveDialogLoadout?.isPublic ?? false)}
+          title="Save Loadout"
+          onSave={handleSaveLoadoutConfirm}
+        />
+      </LoadoutSectionErrorBoundary>
     </PageShell>
   );
 }

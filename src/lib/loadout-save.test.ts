@@ -97,4 +97,64 @@ describe("loadout cloud save round-trip", () => {
     expect(merged.warframeBuild?.warframeId).toBe("gara");
     expect(merged.companionBuild?.weaponId).toBe("pharaoh_claws");
   });
+
+  it("handles a full imported-style loadout after cloud save metadata", () => {
+    const local: Loadout = {
+      id: "local_2",
+      name: "Step-Bro_Prime — Imported Loadout",
+      cloudId: "cloud_cuid_abc",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      warframeBuild: {
+        warframeId: "revenant_prime",
+        mods: Array.from({ length: 10 }, (_, i) => ({ modId: "steel_fiber", rank: 10, slotIndex: i })),
+        shards: [null, null, null, null, null],
+        arcaneIds: [null, null],
+        hasOrokinReactor: false,
+        isMR30: true,
+        slotPolarities: {},
+      },
+      primaryBuild: {
+        weaponId: "haalvu",
+        mods: Array.from({ length: 7 }, (_, i) => ({ modId: "serration", rank: 10, slotIndex: i })),
+        arcaneIds: [null, null],
+        hasOrokinCatalyst: false,
+        isMR30: true,
+        slotPolarities: {},
+      },
+      secondaryBuild: {
+        weaponId: "dual_toxocyst",
+        mods: Array.from({ length: 8 }, (_, i) => ({ modId: "hornet_strike", rank: 10, slotIndex: i })),
+        arcaneIds: [null, null],
+        hasOrokinCatalyst: false,
+        isMR30: true,
+        slotPolarities: {},
+      },
+      meleeBuild: {
+        weaponId: "coda_mire",
+        mods: Array.from({ length: 9 }, (_, i) => ({ modId: "pressure_point", rank: 10, slotIndex: i })),
+        arcaneIds: [null, null],
+        hasOrokinCatalyst: false,
+        isMR30: true,
+        slotPolarities: {},
+      },
+      companionBuild: {
+        companionId: "pharaoh_predasite",
+        customName: "King of Covid",
+        mods: Array.from({ length: 10 }, (_, i) => ({ modId: "link_health", rank: 10, slotIndex: i })),
+        weaponId: "pharaoh_claws",
+        weaponMods: Array.from({ length: 8 }, (_, i) => ({ modId: "claws_ferocity", rank: 10, slotIndex: i })),
+        arcaneIds: [null, null],
+        hasReactor: false,
+        hasCatalyst: false,
+        isMR30: true,
+      },
+    };
+
+    const payload = normalizeLoadoutBuildData(loadoutToBuildData(local));
+    const stats = calcLoadoutStats(local, { allWeapons: getEffectiveWeapons() });
+    expect(payload.primaryBuild?.weaponId).toBe("haalvu");
+    expect(stats.companion?.weapon?.name).toBeTruthy();
+    expect(() => JSON.stringify({ ...local, data: payload })).not.toThrow();
+  });
 });
