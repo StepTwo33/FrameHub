@@ -71,6 +71,8 @@ export function SaveBuildDialog({
     try {
       await onSave({ name: name.trim(), description: description.trim(), isPublic, tags });
       onOpenChange(false);
+    } catch (err) {
+      console.error("Save build dialog failed", err);
     } finally {
       setSaving(false);
     }

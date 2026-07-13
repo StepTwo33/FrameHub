@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
-import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild } from "@/lib/loadouts";
+import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild, mergeCloudLoadoutPreservingSlots } from "@/lib/loadouts";
 import {
   generateBuildId,
   saveCloudBuild,
@@ -57,6 +57,7 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
 import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
+import { LoadoutSectionErrorBoundary } from "@/components/loadout-section-error-boundary";
 import { dualFormModCountSummary, emptyDualFormBuilds, isDualFormWarframe } from "@/lib/dual-form-warframes";
 
 type SlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
@@ -272,11 +273,10 @@ export default function LoadoutsPage() {
 
   const applyCloudLoadout = useCallback(
     (build: SavedBuild, options?: { silent?: boolean }) => {
-      const imported = loadoutFromSavedBuild(build);
       const existing = getLoadouts().find((l) => l.cloudId === build.id || l.id === build.id);
       const loadout: Loadout = existing
-        ? { ...imported, id: existing.id, cloudId: build.id }
-        : imported;
+        ? mergeCloudLoadoutPreservingSlots(existing, build)
+        : { ...loadoutFromSavedBuild(build), id: generateId(), cloudId: build.id };
       saveLoadout(loadout);
       refresh();
       if (!options?.silent) {
@@ -288,7 +288,20 @@ export default function LoadoutsPage() {
 
   useCloudBuildFromUrl("loadout", (build) => applyCloudLoadout(build, { silent: true }));
 
-  const handleOpenSaveDialog = useCallback((loadoutId: string, defaultPublic = false) => {
+  const handleOpenSaveDialog = useCallback(async (loadoutId: string, defaultPublic = false) => {
+    try {
+      const res = await fetch("/api/auth/session");
+      const session = await res.json().catch(() => null);
+      if (!session?.user) {
+        toast.error("Sign in to save loadouts", {
+          description: "Create an account or sign in, then try again.",
+        });
+        return;
+      }
+    } catch {
+      toast.error("Could not verify sign-in status", { description: "Check your connection and try again." });
+      return;
+    }
     setSaveDialogLoadoutId(loadoutId);
     setSaveDialogDefaultPublic(defaultPublic);
     setSaveDialogOpen(true);
@@ -315,7 +328,9 @@ export default function LoadoutsPage() {
 
         const cloudResult = await saveCloudBuild(build);
         if (!cloudResult) {
-          toast.error("Could not save loadout", { description: "Sign in to save loadouts to your account." });
+          toast.error("Could not save loadout", {
+            description: "Sign in to save loadouts to your account, or try again in a moment.",
+          });
           return;
         }
 
@@ -329,6 +344,8 @@ export default function LoadoutsPage() {
         };
         saveLoadout(updated);
         refresh();
+        setSaveDialogOpen(false);
+        setSaveDialogLoadoutId(null);
         toast.success("Loadout saved", {
           description: isPublic ? "Listed in Community Builds." : "Saved to your account.",
         });
@@ -939,7 +956,9 @@ export default function LoadoutsPage() {
                     })}
                   </div>
 
-                  <LoadoutDamagePanel loadout={loadout} />
+                  <LoadoutSectionErrorBoundary label="damage panel">
+                    <LoadoutDamagePanel loadout={loadout} />
+                  </LoadoutSectionErrorBoundary>
                 </ContentPanel>
               ))}
             </div>

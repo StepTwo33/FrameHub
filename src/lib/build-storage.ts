@@ -93,9 +93,18 @@ export async function saveCloudBuild(build: SavedBuild): Promise<SavedBuild | nu
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(build),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn("saveCloudBuild failed", res.status, await res.text().catch(() => ""));
+      return null;
+    }
+    const contentType = res.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+      console.warn("saveCloudBuild: expected JSON response");
+      return null;
+    }
     return await res.json();
-  } catch {
+  } catch (err) {
+    console.warn("saveCloudBuild error", err);
     return null;
   }
 }

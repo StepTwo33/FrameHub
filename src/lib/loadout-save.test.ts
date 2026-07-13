@@ -4,6 +4,7 @@ import {
   loadoutFromSavedBuild,
   loadoutToBuildData,
   normalizeLoadoutBuildData,
+  mergeCloudLoadoutPreservingSlots,
 } from "@/lib/loadouts";
 import type { Loadout } from "@/lib/types";
 import type { SavedBuild } from "@/lib/build-storage";
@@ -78,5 +79,22 @@ describe("loadout cloud save round-trip", () => {
     );
     expect(stats.warframe).not.toBeNull();
     expect(stats.companion?.weapon).not.toBeNull();
+  });
+
+  it("mergeCloudLoadoutPreservingSlots keeps local slots when cloud payload is empty", () => {
+    const local = importedLoadoutFixture();
+    const cloud = {
+      id: "cloud_1",
+      name: "Cloud name",
+      type: "loadout" as const,
+      createdAt: 1,
+      updatedAt: 2,
+      data: {},
+    };
+    const merged = mergeCloudLoadoutPreservingSlots(local, cloud);
+    expect(merged.id).toBe(local.id);
+    expect(merged.cloudId).toBe("cloud_1");
+    expect(merged.warframeBuild?.warframeId).toBe("gara");
+    expect(merged.companionBuild?.weaponId).toBe("pharaoh_claws");
   });
 });

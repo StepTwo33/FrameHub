@@ -108,9 +108,9 @@ function WeaponRow({
               <StatLine label="Shots to kill" value={ttk.shotsToKill === Infinity ? "∞" : String(ttk.shotsToKill)} />
             </>
           )}
-          <StatLine label="Total damage" value={stats.totalDamage.toFixed(1)} />
-          <StatLine label="Crit" value={`${(stats.criticalChance * 100).toFixed(1)}% / ${stats.criticalMultiplier.toFixed(1)}x`} />
-          <StatLine label="Status" value={`${(stats.statusChance * 100).toFixed(1)}%`} />
+          <StatLine label="Total damage" value={(stats.totalDamage ?? 0).toFixed(1)} />
+          <StatLine label="Crit" value={`${((stats.criticalChance ?? 0) * 100).toFixed(1)}% / ${(stats.criticalMultiplier ?? 0).toFixed(1)}x`} />
+          <StatLine label="Status" value={`${((stats.statusChance ?? 0) * 100).toFixed(1)}%`} />
           {isMelee && stats.heavyAttackDamage > 0 && (
             <>
               <StatLine label="Heavy attack mult" value={`${stats.heavyAttackComboMultiplier.toFixed(1)}x`} />
@@ -118,7 +118,7 @@ function WeaponRow({
             </>
           )}
           {!isMelee && (
-            <StatLine label="Fire rate" value={stats.fireRate.toFixed(2)} />
+            <StatLine label="Fire rate" value={(stats.fireRate ?? 0).toFixed(2)} />
           )}
           <ContributionsList contributions={entry.contributions} />
         </div>
@@ -298,20 +298,20 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
                   <div key={form.id} className="rounded-md border border-purple-500/15 bg-background/30 px-2 py-1.5">
                     <p className="text-[10px] font-semibold text-purple-800/90 mb-1 dark:text-purple-300/90">{form.label}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
-                      <MiniStat label="EHP" value={fmtDamageNum(form.stats.effectiveHealth)} />
-                      <MiniStat label="Strength" value={`${(form.stats.abilityStrength * 100).toFixed(0)}%`} />
-                      <MiniStat label="Duration" value={`${(form.stats.abilityDuration * 100).toFixed(0)}%`} />
-                      <MiniStat label="Efficiency" value={`${(form.stats.abilityEfficiency * 100).toFixed(0)}%`} />
+                      <MiniStat label="EHP" value={fmtDamageNum(form.stats?.effectiveHealth ?? 0)} />
+                      <MiniStat label="Strength" value={`${((form.stats?.abilityStrength ?? 0) * 100).toFixed(0)}%`} />
+                      <MiniStat label="Duration" value={`${((form.stats?.abilityDuration ?? 0) * 100).toFixed(0)}%`} />
+                      <MiniStat label="Efficiency" value={`${((form.stats?.abilityEfficiency ?? 0) * 100).toFixed(0)}%`} />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1">
-                <MiniStat label="EHP" value={fmtDamageNum(stats.warframe.stats.effectiveHealth)} />
-                <MiniStat label="Strength" value={`${(stats.warframe.stats.abilityStrength * 100).toFixed(0)}%`} />
-                <MiniStat label="Duration" value={`${(stats.warframe.stats.abilityDuration * 100).toFixed(0)}%`} />
-                <MiniStat label="Efficiency" value={`${(stats.warframe.stats.abilityEfficiency * 100).toFixed(0)}%`} />
+                <MiniStat label="EHP" value={fmtDamageNum(stats.warframe.stats?.effectiveHealth ?? 0)} />
+                <MiniStat label="Strength" value={`${((stats.warframe.stats?.abilityStrength ?? 0) * 100).toFixed(0)}%`} />
+                <MiniStat label="Duration" value={`${((stats.warframe.stats?.abilityDuration ?? 0) * 100).toFixed(0)}%`} />
+                <MiniStat label="Efficiency" value={`${((stats.warframe.stats?.abilityEfficiency ?? 0) * 100).toFixed(0)}%`} />
               </div>
             )}
           </div>

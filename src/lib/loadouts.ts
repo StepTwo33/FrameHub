@@ -12,7 +12,12 @@ export type LoadoutBuildData = Omit<
 
 /** Ensure cloud-safe defaults on slot payloads before POST /api/builds. */
 export function normalizeLoadoutBuildData(data: LoadoutBuildData): LoadoutBuildData {
-  const out = JSON.parse(JSON.stringify(data)) as LoadoutBuildData;
+  let out: LoadoutBuildData;
+  try {
+    out = JSON.parse(JSON.stringify(data)) as LoadoutBuildData;
+  } catch {
+    out = { ...data };
+  }
 
   if (out.warframeBuild) {
     const wb = out.warframeBuild;
@@ -98,10 +103,45 @@ export function loadoutFromSavedBuild(build: SavedBuild): Loadout {
 }
 
 export function mergeCloudLoadout(local: Loadout, cloud: SavedBuild): Loadout {
+  return mergeCloudLoadoutPreservingSlots(local, cloud);
+}
+
+/** Merge cloud slot data onto a local loadout without wiping filled slots with empty cloud payloads. */
+export function mergeCloudLoadoutPreservingSlots(local: Loadout, cloud: SavedBuild): Loadout {
+  const cloudData = (cloud.data ?? {}) as LoadoutBuildData;
+  const localData = loadoutToBuildData(local);
+
+  const hasMods = (mods?: { length: number }) => (mods?.length ?? 0) > 0;
+
+  const mergeWeapon = (
+    localSlot: LoadoutBuildData["primaryBuild"],
+    cloudSlot: LoadoutBuildData["primaryBuild"],
+  ) => {
+    if (!cloudSlot) return localSlot;
+    if (!localSlot) return cloudSlot;
+    return hasMods(cloudSlot.mods) || cloudSlot.weaponId ? cloudSlot : localSlot;
+  };
+
   return {
-    ...loadoutFromSavedBuild(cloud),
-    id: local.id,
+    ...local,
+    name: cloud.name || local.name,
+    description: cloud.description ?? local.description,
+    isPublic: cloud.isPublic ?? local.isPublic,
     cloudId: cloud.id,
+    warframeBuild:
+      cloudData.warframeBuild && hasMods(cloudData.warframeBuild.mods)
+        ? cloudData.warframeBuild
+        : localData.warframeBuild ?? cloudData.warframeBuild,
+    primaryBuild: mergeWeapon(localData.primaryBuild, cloudData.primaryBuild),
+    secondaryBuild: mergeWeapon(localData.secondaryBuild, cloudData.secondaryBuild),
+    meleeBuild: mergeWeapon(localData.meleeBuild, cloudData.meleeBuild),
+    companionBuild:
+      cloudData.companionBuild &&
+      (hasMods(cloudData.companionBuild.mods) || hasMods(cloudData.companionBuild.weaponMods))
+        ? cloudData.companionBuild
+        : localData.companionBuild ?? cloudData.companionBuild,
+    modularBuild: cloudData.modularBuild ?? localData.modularBuild,
+    archwingBuild: cloudData.archwingBuild ?? localData.archwingBuild,
   };
 }
 
