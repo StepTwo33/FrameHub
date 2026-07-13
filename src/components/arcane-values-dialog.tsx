@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { ArcaneEffectsEditor, ArcaneTriggerPicker } from "@/components/override-field-editors";
 import type { ArcaneTrigger } from "@/data/arcane-effects";
 import {
@@ -74,7 +75,7 @@ export function ArcaneValuesDialog({
       onSaved?.();
       onOpenChange(false);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to save arcane values");
+      toast.error(err instanceof Error ? err.message : "Failed to save arcane values");
     } finally {
       setSaving(false);
     }

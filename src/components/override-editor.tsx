@@ -73,6 +73,7 @@ import {
   getModStatPickerOptions,
   getShardStatPickerOptions,
 } from "@/lib/override-stat-catalog";
+import { toast } from "sonner";
 
 const CATEGORY_LABELS = OVERRIDE_CATEGORY_LABELS;
 
@@ -457,7 +458,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
   const handleSave = async () => {
     const targetId = action === "add" ? selectedItemId.trim() : selectedItemId;
     if (!targetId?.trim()) {
-      alert("Please select an item first.");
+      toast.error("Please select an item first.");
       return;
     }
 
@@ -486,7 +487,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
         const fields = deepMergeOverrideFields(template, patch);
         fields.id = trimmedId;
         if (Object.keys(fields).length <= 1) {
-          alert("Fill in at least one field for the new item.");
+          toast.error("Fill in at least one field for the new item.");
           return;
         }
         await saveOverride({
@@ -504,7 +505,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
 
       const fields = buildFields();
       if (Object.keys(fields).length === 0) {
-        alert("Change at least one field before saving.");
+        toast.error("Change at least one field before saving.");
         return;
       }
 
@@ -528,7 +529,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
       if (category === "arcane") {
         const { catalog, effectDef } = splitArcaneSaveFields(fields);
         if (Object.keys(catalog).length === 0 && Object.keys(effectDef).length === 0) {
-          alert("Change at least one field before saving.");
+          toast.error("Change at least one field before saving.");
           return;
         }
         if (Object.keys(catalog).length > 0) {
@@ -558,7 +559,7 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
 
       onSave();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to save override");
+      toast.error(err instanceof Error ? err.message : "Failed to save override");
     }
   };
 

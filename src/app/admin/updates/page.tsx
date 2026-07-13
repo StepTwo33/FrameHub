@@ -21,6 +21,7 @@ import {
   Save,
   X,
 } from "lucide-react";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 
 interface Draft {
   title: string;
@@ -31,6 +32,7 @@ interface Draft {
 const emptyDraft = (): Draft => ({ title: "", body: "", published: true });
 
 export default function AdminUpdatesPage() {
+  const { confirm } = useConfirmDialog();
   const [updates, setUpdates] = useState<SiteUpdateSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -118,7 +120,13 @@ export default function AdminUpdatesPage() {
   };
 
   const deleteUpdate = async (id: string) => {
-    if (!confirm("Delete this update?")) return;
+    const ok = await confirm({
+      title: "Delete update?",
+      description: "This site update will be permanently removed.",
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     await fetch(`/api/admin/site-updates/${id}`, { method: "DELETE" });
     if (editingId === id) cancelEdit();
     refresh();

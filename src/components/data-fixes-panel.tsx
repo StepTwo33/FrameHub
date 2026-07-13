@@ -20,6 +20,8 @@ import {
 } from "@/lib/data-overrides-client";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 import {
   Plus,
   Trash2,
@@ -56,6 +58,7 @@ export function DataFixesPanel({
   returnTo?: string | null;
   compactHeader?: boolean;
 }) {
+  const { confirm } = useConfirmDialog();
   const [overrides, setOverrides] = useState<DataOverride[]>([]);
   const [showEditor, setShowEditor] = useState(Boolean(initialPrefill?.itemId || initialPrefill?.existingOverrideId));
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -126,15 +129,21 @@ export function DataFixesPanel({
 
   const handleDelete = useCallback(
     async (id: string) => {
-      if (!confirm("Delete this data fix? The site will revert to the original data for this item.")) return;
+      const ok = await confirm({
+        title: "Delete data fix?",
+        description: "The site will revert to the original data for this item.",
+        confirmLabel: "Delete",
+        destructive: true,
+      });
+      if (!ok) return;
       try {
         await deleteOverride(id);
         refreshOverrides();
       } catch (err) {
-        alert(err instanceof Error ? err.message : "Failed to delete");
+        toast.error(err instanceof Error ? err.message : "Failed to delete");
       }
     },
-    [refreshOverrides],
+    [confirm, refreshOverrides],
   );
 
   const handleEdit = useCallback((ovr: DataOverride) => {
@@ -163,7 +172,7 @@ export function DataFixesPanel({
   const handleExportTypeScript = useCallback(() => {
     const adds = getOverrides().filter((o) => o.action === "add");
     if (adds.length === 0) {
-      alert("No “New item” fixes to export.");
+      toast.info("No “New item” fixes to export.");
       return;
     }
     const byType: Record<string, string[]> = {};
@@ -199,7 +208,7 @@ export function DataFixesPanel({
       reader.onload = () => {
         void importOverrides(reader.result as string).then((count) => {
           refreshOverrides();
-          alert(`Imported ${count} new fix(es). Existing items were skipped.`);
+          toast.success(`Imported ${count} new fix(es). Existing items were skipped.`);
         });
       };
       reader.readAsText(file);
@@ -212,13 +221,13 @@ export function DataFixesPanel({
     try {
       const { imported, remaining } = await uploadLegacyLocalOverrides();
       refreshOverrides();
-      alert(
+      toast.success(
         remaining === 0
           ? `Uploaded ${imported} fix(es). Browser copy cleared.`
           : `Uploaded ${imported}. ${remaining} still only on this device — export JSON if needed.`,
       );
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setLegacyUploading(false);
     }
@@ -227,7 +236,7 @@ export function DataFixesPanel({
   const handleExportLegacy = useCallback(() => {
     const data = exportLegacyLocalOverrides();
     if (!data) {
-      alert("No browser-saved fixes on this device.");
+      toast.info("No browser-saved fixes on this device.");
       return;
     }
     const blob = new Blob([data], { type: "application/json" });

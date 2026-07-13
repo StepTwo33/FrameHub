@@ -9,6 +9,7 @@ import {
   AlertTriangle, Shield, RotateCcw, Clock, CheckCircle2, Ban,
   MessageSquare, User as UserIcon, Calendar,
 } from "lucide-react";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 
 interface ApiReport {
   id: string;
@@ -53,6 +54,7 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function AdminReportsPage() {
+  const { confirm } = useConfirmDialog();
   const [reports, setReports] = useState<ApiReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -439,10 +441,14 @@ export default function AdminReportsPage() {
                       )}
                       <div className="flex-1" />
                       <button
-                        onClick={() => {
-                          if (confirm("Delete this report permanently?")) {
-                            handleAction(report.id, "delete");
-                          }
+                        onClick={async () => {
+                          const ok = await confirm({
+                            title: "Delete report?",
+                            description: "This report will be permanently removed.",
+                            confirmLabel: "Delete",
+                            destructive: true,
+                          });
+                          if (ok) handleAction(report.id, "delete");
                         }}
                         disabled={isLoading}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"

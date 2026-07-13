@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PageShell, PageMain, PageHero } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
 import { Ban, Search, Shield, Heart, RotateCcw, Users } from "lucide-react";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 
 interface AdminUser {
   id: string;
@@ -20,6 +21,7 @@ interface AdminUser {
 }
 
 export default function AdminUsersPage() {
+  const { prompt } = useConfirmDialog();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -74,11 +76,15 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleBan = (user: AdminUser) => {
-    const reason = window.prompt(
-      `Ban ${user.username ?? user.email ?? user.id}? Optional reason (e.g. inappropriate build description):`,
-      user.banReason ?? "",
-    );
+  const handleBan = async (user: AdminUser) => {
+    const label = user.username ?? user.email ?? user.id;
+    const reason = await prompt({
+      title: `Ban ${label}?`,
+      description: "Optional reason (e.g. inappropriate build description). Leave blank if none.",
+      defaultValue: user.banReason ?? "",
+      confirmLabel: "Ban user",
+      destructive: true,
+    });
     if (reason === null) return;
     void runAction(user.id, "ban", { reason });
   };

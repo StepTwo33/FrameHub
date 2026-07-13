@@ -10,6 +10,7 @@ import { AvatarImage } from "@/components/game-asset-image";
 import { AvatarCropDialog } from "@/components/avatar-crop-dialog";
 import { SupporterBadge } from "@/components/supporter-badge";
 import { RoleBadge } from "@/components/role-badge";
+import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 
 interface ProfileUser {
   id: string;
@@ -68,6 +69,7 @@ const typeColors: Record<string, string> = {
 };
 
 export default function ProfilePage() {
+  const { confirm } = useConfirmDialog();
   const [user, setUser] = useState<ProfileUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [builds, setBuilds] = useState<CloudBuild[]>([]);
@@ -274,7 +276,13 @@ export default function ProfilePage() {
   }, [showMessage, notifyProfileUpdated]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this build?")) return;
+    const ok = await confirm({
+      title: "Delete build?",
+      description: "This build will be permanently removed from your account.",
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     const res = await fetch(`/api/builds/${id}`, { method: "DELETE" });
     if (res.ok) {
       setBuilds((prev) => prev.filter((b) => b.id !== id));
