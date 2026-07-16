@@ -103,4 +103,8 @@ Issues and pull requests are welcome. Please do not commit secrets, database fil
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**.
+
+See [LICENSE](LICENSE) for details.
+
+This change provides stronger copyleft protection for the web application (if you modify and host it, you must share your changes).
