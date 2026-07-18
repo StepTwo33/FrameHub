@@ -3,10 +3,10 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
-import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/data-overrides";
-import { dataFixesHref } from "@/lib/data-fixes-url";
+import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/overrides/data-overrides";
+import { dataFixesHref } from "@/lib/overrides/data-fixes-url";
 import { DataFixesPanel, prefillFromReport } from "@/components/data-fixes-panel";
-import type { DataFixesPrefill } from "@/lib/data-fixes-url";
+import type { DataFixesPrefill } from "@/lib/overrides/data-fixes-url";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allCompanions } from "@/data/companions";
@@ -17,7 +17,7 @@ import {
   AlertTriangle, Search, Wrench, Edit3,
 } from "lucide-react";
 import { NavBack } from "@/components/nav-back";
-import { decodeReturnTo, returnLabel } from "@/lib/nav-return";
+import { decodeReturnTo, returnLabel } from "@/lib/site/nav-return";
 
 interface ApiReport {
   id: string;

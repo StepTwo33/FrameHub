@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect, type ReactNode } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import {
@@ -11,115 +11,60 @@ import {
   BuilderActionGroup,
 } from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
-import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
+import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
-import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
-import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
-import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard } from "@/lib/types";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Zap, Flag, RefreshCw, Gem, Sparkles, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Shield } from "lucide-react";
+import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/weapons/use-data";
+import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calc/calculator";
+import {
+  computeUsedCapacity,
+  warframeBaseCapacity,
+  computeWarframeAuraBonus,
+  computeWarframeCapacityUsed,
+} from "@/lib/calc/compute-used-capacity";
+import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard, ArchonShard } from "@/lib/types";
+import { Zap, Flag, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
-import { ArchonShardSlot, ArchonShardIcon } from "@/components/archon-shard-slot";
+import { ArchonShardSlot } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
-import { appendReturnTo } from "@/lib/nav-return";
-import { formatAbilityDescription } from "@/lib/ability-text";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import {
   getExaltedWeaponForAbility,
   getExaltedWeaponsForWarframe,
   getPrimaryExaltedWeapon,
-} from "@/lib/exalted-weapons";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
-import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
+} from "@/lib/weapons/exalted-weapons";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, persistSavedBuild, resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
+import { extractBuildFromUrl } from "@/lib/builds/build-url";
+import { shareBuilderBuild } from "@/lib/builds/share-build";
 import { toast } from "sonner";
-import { getWarframeImage } from "@/lib/images";
+import { getWarframeImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { getWeaponImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { DualFormTabs } from "@/components/dual-form-tabs";
-import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
-import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
+import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
+import { getWeaponArcanes } from "@/lib/weapons/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
   getDualFormConfig,
-  getDualFormAbilities,
+  buildAbilityDisplayEntries,
   serializeDualFormBuilds,
   EMPTY_ARCANE_IDS,
   DEFAULT_ARCANE_RANKS,
   type DualFormBuildSlice,
-} from "@/lib/dual-form-warframes";
-import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
-import {
-  AbilityCardShell,
-  AbilitySlotBadge,
-  AbilityFormBadge,
-  AbilityEnergyChip,
-  AbilityDamageTypeChip,
-  AbilityStatsBlock,
-  AbilitiesSectionHeader,
-} from "@/components/ability-display";
+} from "@/lib/builds/dual-form-warframes";
+import { AbilitiesSectionHeader } from "@/components/ability-display";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
+import { AbilityCard, HelminthAbilityCard, HelminthSubsumeButton } from "./ability-cards";
+import { ShardPickerDialog } from "./shard-picker-dialog";
+import { HelminthPickerDialog } from "./helminth-picker-dialog";
+import { ExaltedWeaponSection } from "./exalted-weapon-section";
 
 const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
-
-const bonusLabels: Record<string, string> = {
-  // Crimson
-  abilityStrength: "Ability Strength",
-  abilityDuration: "Ability Duration",
-  meleeCritDamage: "Melee Crit Damage",
-  primaryStatusChance: "Primary Status Chance",
-  secondaryCritChance: "Secondary Crit Chance",
-  // Azure
-  health: "Health",
-  shield: "Shield Capacity",
-  energyMax: "Max Energy",
-  armor: "Armor",
-  healthRegen: "Health Regen",
-  // Amber
-  castingSpeed: "Casting Speed",
-  parkourVelocity: "Parkour Velocity",
-  startingEnergy: "Starting Energy",
-  healthOrbEffectiveness: "Health Orb Effectiveness",
-  energyOrbEffectiveness: "Energy Orb Effectiveness",
-  // Violet
-  abilityDamageElectricity: "Ability Dmg vs Electricity",
-  primaryElectricityDamage: "Primary Electricity Damage",
-  meleeCritDamageEnergy: "Melee Crit Dmg (Energy>500: 2x)",
-  orbConversion: "Orb Conversion (Equilibrium)",
-  // Topaz
-  blastKillHealth: "Health per Blast Kill",
-  blastKillShields: "Shields on Blast Kill",
-  heatKillSecondaryCrit: "Sec. Crit/Heat Kill",
-  abilityDamageRadiation: "Ability Dmg vs Radiation",
-  // Emerald
-  toxinStatusDamage: "Toxin Status Damage",
-  toxinHealthRecovery: "Health per Toxin Tick",
-  abilityDamageCorrosion: "Ability Dmg vs Corrosion",
-  corrosionMaxStacks: "Max Corrosion Stacks",
-};
-
-const FLAT_SHARD_KEYS = new Set([
-  "health", "shield", "energyMax", "armor", "healthRegen",
-  "blastKillHealth", "blastKillShields", "toxinHealthRecovery",
-  "corrosionMaxStacks", "heatKillSecondaryCrit",
-]);
-
-function formatBonusValue(key: string, value: number): string {
-  if (FLAT_SHARD_KEYS.has(key)) {
-    const dec = value % 1 !== 0 ? 1 : 0;
-    if (key === "healthRegen") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}/s`;
-    if (key === "heatKillSecondaryCrit") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%/kill`;
-    return `${value > 0 ? "+" : ""}${value.toFixed(dec)}`;
-  }
-  const dec = value % 1 !== 0 ? 1 : 0;
-  return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%`;
-}
 
 // Slot layout: 0=Aura, 1-8=Regular, 9=Exilus
 const AURA_SLOT = 0;
@@ -129,149 +74,6 @@ function getSlotType(index: number): SlotType {
   if (index === AURA_SLOT) return "aura";
   if (index === EXILUS_SLOT) return "exilus";
   return "regular";
-}
-
-// Full ability card with all stats
-function AbilityCard({ ability, index, stats, gameSlot, formLabel, warframeId, footer, exaltedWeapon }: {
-  ability: Ability;
-  index: number;
-  stats: WarframeCalculatedStats | null;
-  gameSlot?: number;
-  formLabel?: string;
-  warframeId?: string;
-  footer?: ReactNode;
-  exaltedWeapon?: Weapon | null;
-}) {
-  const eff = stats?.abilityEfficiency ?? 1;
-  const display = { warframeId, abilityName: ability.name };
-  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const slotNum = gameSlot ?? index + 1;
-
-  return (
-    <AbilityCardShell slot={slotNum} className="flex h-full flex-col">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-start gap-2.5">
-          <AbilitySlotBadge slot={slotNum} />
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-base font-semibold leading-tight tracking-tight">{ability.name}</h3>
-              {formLabel && <AbilityFormBadge label={formLabel} />}
-            </div>
-          </div>
-        </div>
-        <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
-      </div>
-
-      <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-        {formatAbilityDescription(ability.description)}
-      </p>
-
-      {ability.subAbilities != null && ability.subAbilities.length > 0 && (
-        <ul className="mb-3 list-inside list-disc space-y-1 text-[11px] leading-relaxed text-muted-foreground">
-          {ability.subAbilities.map((line, i) => (
-            <li key={i}>{line}</li>
-          ))}
-        </ul>
-      )}
-
-      {ability.damageType && (
-        <div className="mb-3">
-          <AbilityDamageTypeChip type={ability.damageType} />
-        </div>
-      )}
-
-      <div className="mb-3">
-        <AbilityStatsBlock ability={ability} stats={stats} display={display} />
-      </div>
-
-      {exaltedWeapon && (
-        <div className="mb-3 rounded-lg border border-purple-500/25 bg-purple-500/5 px-2.5 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-purple-800 dark:text-purple-300">Exalted weapon</p>
-          <p className="mt-0.5 text-xs font-medium">{exaltedWeapon.name}</p>
-          <p className="text-[10px] text-muted-foreground">
-            Mod this weapon in the Exalted Weapon section below.
-          </p>
-        </div>
-      )}
-
-      {footer}
-    </AbilityCardShell>
-  );
-}
-
-function HelminthSubsumeButton({
-  onClick,
-  label = "Subsume Helminth",
-}: {
-  onClick: () => void;
-  label?: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-medium text-emerald-900 transition-colors hover:bg-emerald-500/20 hover:border-emerald-600/50 dark:text-emerald-300 dark:hover:border-emerald-400/50"
-    >
-      <RefreshCw className="h-3.5 w-3.5 shrink-0" />
-      {label}
-    </button>
-  );
-}
-
-function HelminthAbilityCard({
-  ability,
-  stats,
-  gameSlot,
-  onChange,
-  onRemove,
-}: {
-  ability: HelminthAbility;
-  stats: WarframeCalculatedStats | null;
-  gameSlot: number;
-  onChange: () => void;
-  onRemove: () => void;
-}) {
-  const eff = stats?.abilityEfficiency ?? 1;
-  const effectiveCost = scaledAbilityEnergyCost(ability.energyCost, eff);
-  const display = { warframeId: undefined, abilityName: ability.name, helminth: true as const };
-
-  return (
-    <AbilityCardShell slot={gameSlot} variant="helminth" className="flex h-full flex-col">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-start gap-2.5">
-          <AbilitySlotBadge slot={gameSlot} />
-          <div className="min-w-0">
-            <h3 className="text-base font-semibold leading-tight tracking-tight text-emerald-400">
-              {ability.name}
-            </h3>
-            <p className="mt-0.5 text-[10px] text-emerald-400/70">
-              {ability.sourceWarframe ? `Subsumed from ${ability.sourceWarframe}` : "Helminth"}
-            </p>
-          </div>
-        </div>
-        <AbilityEnergyChip baseCost={ability.energyCost} effectiveCost={effectiveCost} />
-      </div>
-
-      <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-        {formatAbilityDescription(ability.description)}
-      </p>
-
-      <div className="mb-3">
-        <AbilityStatsBlock ability={ability} stats={stats} display={display} />
-      </div>
-
-      <div className="mt-auto flex flex-wrap gap-2 border-t border-emerald-500/15 pt-3">
-        <HelminthSubsumeButton onClick={onChange} label="Change Helminth" />
-        <button
-          type="button"
-          onClick={onRemove}
-          className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-800 transition-colors hover:bg-rose-500/20 dark:text-rose-300"
-        >
-          Restore ability
-        </button>
-      </div>
-    </AbilityCardShell>
-  );
 }
 
 export default function WarframeBuilderPage() {
@@ -295,14 +97,12 @@ export default function WarframeBuilderPage() {
   const [showWarframeList, setShowWarframeList] = useState(true);
   const [shardPickerOpen, setShardPickerOpen] = useState(false);
   const [activeShardSlot, setActiveShardSlot] = useState(0);
-  const [selectedShardForBonus, setSelectedShardForBonus] = useState<typeof allArchonShards[0] | null>(null);
   const [hasOrokinReactor, setHasOrokinReactor] = useState(false);
   const [isMR30, setIsMR30] = useState(false);
   const [helminthSlot, setHelminthSlot] = useState<number | null>(null); // which ability slot (0-3) is replaced
   const [helminthAbility, setHelminthAbility] = useState<HelminthAbility | null>(null);
   const [helminthPickerOpen, setHelminthPickerOpen] = useState(false);
   const [helminthPickerSlot, setHelminthPickerSlot] = useState(0);
-  const [helminthSearch, setHelminthSearch] = useState("");
   const [modPickerMode, setModPickerMode] = useState<"mods" | "arcanes">("mods");
   const [equippedArcanes, setEquippedArcanes] = useState<(Mod | null)[]>([null, null]);
   const [equippedArcaneRanks, setEquippedArcaneRanks] = useState<number[]>([5, 5]);
@@ -319,6 +119,7 @@ export default function WarframeBuilderPage() {
   const [dualFormBuilds, setDualFormBuilds] = useState<Record<string, DualFormBuildSlice>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("warframe"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"catalog" | "saved">("catalog");
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
@@ -519,23 +320,13 @@ export default function WarframeBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
     setBuildDescription(description);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("warframe"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("warframe"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
@@ -558,6 +349,7 @@ export default function WarframeBuilderPage() {
   }, [applyLoadedBuild]);
 
   useCloudBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
+  useLocalBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
   useLoadoutSlotFromUrl(
     "warframe",
     useCallback((build) => applyLoadedBuild(build, { silent: true }), [applyLoadedBuild]),
@@ -618,15 +410,10 @@ export default function WarframeBuilderPage() {
     };
   }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap]);
 
-  const exaltedCapacity = useMemo(() => {
-    return exaltedMods.reduce((sum, m) => {
-      const mod = modsMap.get(m.modId);
-      if (!mod) return sum;
-      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
-      const slotPol = exaltedSlotPolarities[m.slotIndex];
-      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
-    }, 0);
-  }, [exaltedMods, exaltedSlotPolarities]);
+  const exaltedCapacity = useMemo(
+    () => computeUsedCapacity(exaltedMods, modsMap, exaltedSlotPolarities),
+    [exaltedMods, exaltedSlotPolarities, modsMap],
+  );
 
   const filteredWarframes = useMemo(() => {
     const sorted = [...allWarframes]
@@ -651,56 +438,21 @@ export default function WarframeBuilderPage() {
 
   const abilityDisplayEntries = useMemo(() => {
     if (!selectedWarframe) return [];
-    if (dualFormConfig) {
-      const entries = getDualFormAbilities(
-        selectedWarframe.id,
-        activeDualFormId,
-        selectedWarframe.abilities,
-      );
-      if (entries) {
-        return entries.map((entry) => ({
-          key: `${entry.abilityIndex}-${activeDualFormId}`,
-          ability: entry.ability,
-          abilityIndex: entry.abilityIndex,
-          gameSlot: entry.gameSlot,
-          formLabel: entry.formLabel,
-        }));
-      }
-    }
-    return selectedWarframe.abilities.map((ability, i) => ({
-      key: String(i),
-      ability,
-      abilityIndex: i,
-      gameSlot: i + 1,
-      formLabel: undefined as string | undefined,
-    }));
+    return buildAbilityDisplayEntries(selectedWarframe, !!dualFormConfig, activeDualFormId);
   }, [selectedWarframe, dualFormConfig, activeDualFormId]);
 
-  // Calculate capacity
-  const baseCapacity = (hasOrokinReactor ? 60 : 30) + (isMR30 ? 10 : 0);
-  const auraBonus = useMemo(() => {
-    const auraMod = equippedMods.find((m) => m.slotIndex === AURA_SLOT);
-    if (!auraMod) return 0;
-    const mod = modsMap.get(auraMod.modId);
-    if (!mod) return 0;
-    const drainAtRank = modCapacityAtRank(mod.drain, auraMod.rank);
-    const effectiveDrain = modSlotCapacityCost(drainAtRank, slotPolarities[AURA_SLOT], mod.polarity);
-    return Math.abs(effectiveDrain);
-  }, [equippedMods, slotPolarities]);
+  const baseCapacity = warframeBaseCapacity(hasOrokinReactor, isMR30);
+  const auraBonus = useMemo(
+    () => computeWarframeAuraBonus(equippedMods, modsMap, slotPolarities, AURA_SLOT),
+    [equippedMods, modsMap, slotPolarities],
+  );
 
   const totalCapacity = baseCapacity + auraBonus;
 
-  const capacityUsed = useMemo(() => {
-    return equippedMods
-      .filter((m) => m.slotIndex !== AURA_SLOT) // Aura adds capacity, doesn't cost
-      .reduce((sum, m) => {
-        const mod = modsMap.get(m.modId);
-        if (!mod) return sum;
-        const baseDrain = modCapacityAtRank(mod.drain, m.rank);
-        const slotPol = slotPolarities[m.slotIndex];
-        return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
-      }, 0);
-  }, [equippedMods, slotPolarities]);
+  const capacityUsed = useMemo(
+    () => computeWarframeCapacityUsed(equippedMods, modsMap, slotPolarities, AURA_SLOT),
+    [equippedMods, modsMap, slotPolarities],
+  );
 
   const handleSelectWarframe = useCallback((warframe: Warframe) => {
     setSelectedWarframe(warframe);
@@ -767,10 +519,9 @@ export default function WarframeBuilderPage() {
   const handleOpenShardPicker = useCallback((slotIndex: number) => {
     setActiveShardSlot(slotIndex);
     setShardPickerOpen(true);
-    setSelectedShardForBonus(null);
   }, []);
 
-  const handleSelectShardBonus = useCallback((shard: typeof allArchonShards[0], bonusKey: string, bonusValue: number) => {
+  const handleSelectShardBonus = useCallback((shard: ArchonShard, bonusKey: string, bonusValue: number) => {
     setEquippedShards((prev) => {
       const next = [...prev];
       next[activeShardSlot] = {
@@ -784,7 +535,6 @@ export default function WarframeBuilderPage() {
       return next;
     });
     setShardPickerOpen(false);
-    setSelectedShardForBonus(null);
   }, [activeShardSlot]);
 
   const handleRemoveShard = useCallback((slotIndex: number) => {
@@ -799,35 +549,29 @@ export default function WarframeBuilderPage() {
   const handleShareBuild = useCallback(async () => {
     if (!selectedWarframe) return;
 
-    const fallbackShareable: ShareableBuild = {
-      type: "warframe",
-      itemId: selectedWarframe.id,
-      mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
-      arcanes: equippedArcanes.map((a) => a?.id ?? ""),
-      shards: equippedShards.filter((s): s is EquippedArchonShard => s !== null).map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
-    };
+    const outcome = await shareBuilderBuild({
+      isPublic: buildIsPublic,
+      buildId: currentBuildId,
+      fallback: {
+        type: "warframe",
+        itemId: selectedWarframe.id,
+        mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        arcanes: equippedArcanes.map((a) => a?.id ?? ""),
+        shards: equippedShards
+          .filter((s): s is EquippedArchonShard => s !== null)
+          .map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
+      },
+    });
 
-    if (buildIsPublic && currentBuildId) {
-      const url = `${window.location.origin}/build/${currentBuildId}`;
-      await navigator.clipboard.writeText(url);
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2000);
-      toast.success("Share link copied!", { description: "Link copied to clipboard" });
-      return;
-    }
-
-    if (!buildIsPublic) {
+    if (outcome.kind === "need_public_save") {
       setSaveDialogDefaultPublic(true);
       setSaveDialogOpen(true);
-      toast.info("Enable community listing to share", { description: "Check \"List in Community Builds\" when saving, then copy the link." });
       return;
     }
-
-    const url = window.location.origin + buildShareUrl(fallbackShareable);
-    await navigator.clipboard.writeText(url);
-    setShareCopied(true);
-    setTimeout(() => setShareCopied(false), 2000);
-    toast.success("Share link copied!", { description: "Link copied to clipboard" });
+    if (outcome.kind === "copied") {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
   }, [selectedWarframe, equippedMods, equippedArcanes, equippedShards, buildIsPublic, currentBuildId]);
 
   const equippedModIds = equippedMods.map((m) => m.modId);
@@ -846,6 +590,39 @@ export default function WarframeBuilderPage() {
             search={warframeSearch}
             onSearchChange={setWarframeSearch}
             searchPlaceholder="Search warframes..."
+            pickerTab={pickerTab}
+            onPickerTabChange={(tab) => {
+              if (tab === "saved") setSavedBuilds(getSavedBuilds("warframe"));
+              setPickerTab(tab);
+            }}
+            savedPanel={
+              savedBuilds.length === 0 ? (
+                <p className="px-2 py-6 text-center text-xs text-muted-foreground">
+                  No saved warframe builds yet. Save a build from the builder to see it here.
+                </p>
+              ) : (
+                savedBuilds.map((build) => {
+                  const d = build.data as WarframeBuildData;
+                  const wfName = allWarframes.find((w) => w.id === d.warframeId)?.name ?? d.warframeId;
+                  return (
+                    <ItemPickerRow
+                      key={build.id}
+                      accent="purple"
+                      onClick={() => handleLoadBuild(build)}
+                      title={build.name}
+                      badge={
+                        <span className="shrink-0 text-xs text-muted-foreground">{wfName}</span>
+                      }
+                      meta={
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(build.updatedAt).toLocaleDateString()}
+                        </span>
+                      }
+                    />
+                  );
+                })
+              )
+            }
           >
             {filteredWarframes.map((wf) => (
               <ItemPickerRow
@@ -1167,7 +944,6 @@ export default function WarframeBuilderPage() {
                         const openHelminthPicker = () => {
                           setHelminthPickerSlot(slotIndex);
                           setHelminthPickerOpen(true);
-                          setHelminthSearch("");
                         };
                         return (
                           <div key={entry.key} className="flex h-full flex-col">
@@ -1208,115 +984,46 @@ export default function WarframeBuilderPage() {
                   </div>
                 )}
 
-                {/* Exalted Weapon */}
                 {exaltedWeapon && (
-                  <div className="rounded-xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.07] via-card to-card p-5 shadow-sm ring-1 ring-violet-500/10">
-                    <div className="mb-4 flex items-start gap-3">
-                      <GameAssetImage
-                        src={getWeaponImage(exaltedWeapon.name, { category: exaltedWeapon.category })}
-                        alt=""
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 shrink-0 rounded-lg object-contain bg-muted/30 ring-1 ring-violet-500/20"
-                        hideOnError
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Sparkles className="h-4 w-4 shrink-0 text-violet-400" aria-hidden />
-                          <h2 className="text-sm font-semibold tracking-wide text-violet-300">
-                            Exalted Weapon
-                          </h2>
-                          <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-300 ring-1 ring-violet-500/25">
-                            {exaltedWeapon.name}
-                          </span>
-                        </div>
-                        {exaltedWeapons.length > 1 && (
-                          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
-                            Also moddable:{" "}
-                            {exaltedWeapons
-                              .filter((w) => w.id !== exaltedWeapon.id)
-                              .map((w) => w.name)
-                              .join(", ")}
-                            . Grid below is for {exaltedWeapon.name}.
-                          </p>
-                        )}
-                        <div className="mt-2 flex items-center gap-3 text-xs">
-                          <span className="text-muted-foreground">Capacity</span>
-                          <span className={cn(
-                            "font-mono font-medium",
-                            exaltedCapacity > 60 ? "text-red-400" : "text-foreground",
-                          )}>
-                            {exaltedCapacity} / 60
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
-                      {Array.from({ length: exaltedWeapon.modSlots }, (_, i) => {
-                        const equipped = exaltedMods.find((m) => m.slotIndex === i);
-                        const mod = equipped ? modsMap.get(equipped.modId) ?? null : null;
-                        return (
-                          <ModSlotCard
-                            key={`ex${i}`}
-                            mod={mod}
-                            rank={equipped?.rank ?? 0}
-                            slotIndex={i}
-                            slotPolarity={exaltedSlotPolarities[i]}
-                            onAdd={() => { setExaltedActiveSlot(i); setExaltedModPickerOpen(true); }}
-                            onRemove={() => setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))}
-                            onPolarize={(p) => setExaltedSlotPolarities((prev) => { const next = { ...prev }; if (p) next[i] = p; else delete next[i]; return next; })}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {exaltedArcaneConfig.slots > 0 && (
-                      <div className="mt-4 border-t border-violet-500/15 pt-4">
-                        <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          {exaltedArcaneConfig.label}
-                        </h3>
-                        <div
-                          className={cn(
-                            "grid gap-2",
-                            exaltedArcaneConfig.slots === 2 ? "grid-cols-2" : "grid-cols-1",
-                          )}
-                        >
-                          {Array.from({ length: exaltedArcaneConfig.slots }).map((_, i) => (
-                            <ArcaneSlotCard
-                              key={`exalted-arcane-${i}`}
-                              arcane={exaltedArcanes[i] ?? null}
-                              rank={exaltedArcanes[i]?.maxRank ?? 0}
-                              label={`${exaltedArcaneConfig.label}${exaltedArcaneConfig.slots > 1 ? ` ${i + 1}` : ""}`}
-                              onAdd={() => {
-                                setExaltedActiveArcaneSlot(i);
-                                setExaltedArcanePickerOpen(true);
-                              }}
-                              onRemove={() =>
-                                setExaltedArcanes((prev) => {
-                                  const next = [...prev];
-                                  next[i] = null;
-                                  return next;
-                                })
-                              }
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {exaltedStats && (
-                      <div className="mt-4 border-t border-violet-500/15 pt-4 [&>div]:border-0 [&>div]:bg-transparent [&>div]:p-0 [&_h3]:text-violet-300/80">
-                        <WeaponStatsPanel
-                          stats={exaltedStats}
-                          baseStats={exaltedBaseStats}
-                          weapon={exaltedWeapon}
-                          isMelee={exaltedWeapon.category === "melee" || exaltedWeapon.triggerType === "Melee"}
-                          contributionContext={exaltedContributionContext}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <ExaltedWeaponSection
+                    exaltedWeapon={exaltedWeapon}
+                    exaltedWeapons={exaltedWeapons}
+                    exaltedCapacity={exaltedCapacity}
+                    exaltedMods={exaltedMods}
+                    modsMap={modsMap}
+                    exaltedSlotPolarities={exaltedSlotPolarities}
+                    exaltedArcaneConfig={exaltedArcaneConfig}
+                    exaltedArcanes={exaltedArcanes}
+                    exaltedStats={exaltedStats}
+                    exaltedBaseStats={exaltedBaseStats}
+                    exaltedContributionContext={exaltedContributionContext}
+                    onAddMod={(i) => {
+                      setExaltedActiveSlot(i);
+                      setExaltedModPickerOpen(true);
+                    }}
+                    onRemoveMod={(i) =>
+                      setExaltedMods((prev) => prev.filter((m) => m.slotIndex !== i))
+                    }
+                    onPolarize={(i, p) =>
+                      setExaltedSlotPolarities((prev) => {
+                        const next = { ...prev };
+                        if (p) next[i] = p;
+                        else delete next[i];
+                        return next;
+                      })
+                    }
+                    onAddArcane={(i) => {
+                      setExaltedActiveArcaneSlot(i);
+                      setExaltedArcanePickerOpen(true);
+                    }}
+                    onRemoveArcane={(i) =>
+                      setExaltedArcanes((prev) => {
+                        const next = [...prev];
+                        next[i] = null;
+                        return next;
+                      })
+                    }
+                  />
                 )}
 
                 {/* Build Description */}
@@ -1361,111 +1068,23 @@ export default function WarframeBuilderPage() {
         equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}
       />
 
-      {/* Archon Shard Picker */}
-      <Dialog open={shardPickerOpen} onOpenChange={(v) => !v && setShardPickerOpen(false)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedShardForBonus ? `${selectedShardForBonus.name} — Select Bonus` : "Select Archon Shard"}
-            </DialogTitle>
-          </DialogHeader>
+      <ShardPickerDialog
+        open={shardPickerOpen}
+        onOpenChange={setShardPickerOpen}
+        allArchonShards={allArchonShards}
+        onSelectBonus={handleSelectShardBonus}
+      />
 
-          {selectedShardForBonus ? (
-            <div className="space-y-2">
-              {Object.entries(selectedShardForBonus.statBonuses).map(([key, value]) => (
-                <button
-                  key={key}
-                  onClick={() => handleSelectShardBonus(selectedShardForBonus, key, value)}
-                  className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
-                >
-                  <span className="text-sm font-medium">{bonusLabels[key] || key}</span>
-                  <span className="text-sm text-purple-400 ml-2">
-                    {formatBonusValue(key, value)}
-                  </span>
-                </button>
-              ))}
-              <button
-                onClick={() => setSelectedShardForBonus(null)}
-                className="w-full text-sm text-muted-foreground hover:text-foreground py-2"
-              >
-                ← Back to shard list
-              </button>
-            </div>
-          ) : (
-            <ScrollArea className="max-h-[60vh]">
-              <div className="space-y-1">
-                {allArchonShards.map((shard) => (
-                  <button
-                    key={shard.id}
-                    onClick={() => setSelectedShardForBonus(shard)}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all flex items-center gap-3"
-                  >
-                    <ArchonShardIcon color={shard.color} tier={shard.tier} className="shrink-0" />
-                    <div>
-                      <span className="text-sm font-medium">{shard.name}</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">{shard.description}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Helminth Ability Picker */}
-      <Dialog open={helminthPickerOpen} onOpenChange={(v) => { if (!v) setHelminthPickerOpen(false); }}>
-        <DialogContent className="max-w-lg max-h-[85vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-0">
-            <DialogTitle>
-              {helminthAbility
-                ? `Change Helminth ability (slot ${helminthPickerSlot + 1})`
-                : `Replace ability ${helminthPickerSlot + 1} with Helminth`}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="px-6 py-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search Helminth abilities..."
-                value={helminthSearch}
-                onChange={(e) => setHelminthSearch(e.target.value)}
-                className="pl-9 h-9 text-sm"
-              />
-            </div>
-          </div>
-          <ScrollArea className="flex-1 px-6 pb-6">
-            <div className="space-y-1">
-              {allHelminthAbilities
-                .filter((a) => {
-                  if (!helminthSearch.trim()) return true;
-                  const q = helminthSearch.toLowerCase();
-                  return a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q) || (a.sourceWarframe || "").toLowerCase().includes(q);
-                })
-                .map((ability) => (
-                  <button
-                    key={ability.id}
-                    onClick={() => {
-                      setHelminthSlot(helminthPickerSlot);
-                      setHelminthAbility(ability);
-                      setHelminthPickerOpen(false);
-                    }}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:border-green-500/50 hover:bg-green-500/5 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{ability.name}</span>
-                      <span className="text-[10px] text-green-400/70">
-                        {ability.sourceWarframe ? ability.sourceWarframe : "Helminth"}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{ability.description}</p>
-                    <span className="text-[9px] text-muted-foreground">⚡ {ability.energyCost} energy</span>
-                  </button>
-                ))}
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
+      <HelminthPickerDialog
+        open={helminthPickerOpen}
+        onOpenChange={setHelminthPickerOpen}
+        pickerSlot={helminthPickerSlot}
+        hasCurrentHelminth={!!helminthAbility}
+        onSelect={(ability, slot) => {
+          setHelminthSlot(slot);
+          setHelminthAbility(ability);
+        }}
+      />
 
       {/* Exalted Weapon Mod Picker */}
       {exaltedWeapon && (
@@ -1513,39 +1132,20 @@ export default function WarframeBuilderPage() {
         />
       )}
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Warframe Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as WarframeBuildData;
-                  const wf = allWarframes.find((w) => w.id === d.warframeId);
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-purple-500/30 transition-all">
-                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {wf?.name ?? d.warframeId} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Warframe Builds"
+        builds={savedBuilds}
+        accent="purple"
+        getSubtitle={(build) => {
+          const d = build.data as WarframeBuildData;
+          const wf = allWarframes.find((w) => w.id === d.warframeId);
+          return `${wf?.name ?? d.warframeId} • ${d.mods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}

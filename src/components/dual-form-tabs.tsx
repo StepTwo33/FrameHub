@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { DualFormDef } from "@/lib/dual-form-warframes";
+import type { DualFormDef } from "@/lib/builds/dual-form-warframes";
 
 export function DualFormTabs({
   forms,

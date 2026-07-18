@@ -4,14 +4,14 @@ import Link from "next/link";
 import { PageShell, ContentPanel } from "@/components/page-shell";
 import { BuildPreviewSummary } from "@/components/build-preview-summary";
 import { BuildPreviewStats } from "@/components/build-preview-stats";
-import { buildOpenUrl } from "@/lib/build-url";
-import { summarizeBuildPreview } from "@/lib/build-preview";
+import { buildOpenUrl } from "@/lib/builds/build-url";
+import { summarizeBuildPreview } from "@/lib/builds/build-preview";
 import { BuildPageVote } from "@/components/build-page-vote";
 import { BuildShareCard } from "@/components/build-share-card";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
-import { safeParseBuildJson } from "@/lib/build-types";
-import { getSiteUrl } from "@/lib/site-metadata";
+import { getSession } from "@/lib/auth/auth";
+import { safeParseBuildJson } from "@/lib/builds/build-types";
+import { getSiteUrl } from "@/lib/site/site-metadata";
 import Image from "next/image";
 
 interface SharedBuild {

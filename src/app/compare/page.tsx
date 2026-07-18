@@ -3,8 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { PageShell, PageMain, PageHero, FilterChip, ContentPanel, EmptyState } from "@/components/page-shell";
 import { WeaponStatsPanel } from "@/components/stats-panel";
-import { useWeapons, useMods } from "@/lib/use-data";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { useWeapons, useMods } from "@/lib/weapons/use-data";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker, type SlotType as ModPickerSlotType } from "@/components/mod-picker";
@@ -15,24 +15,20 @@ import {
   Shield, Swords, Crosshair, Dog, Trophy, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
+import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { getLoadouts } from "@/lib/loadouts";
-import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
-import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
+import { getLoadouts } from "@/lib/builds/loadouts";
+import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/builds/loadout-stats";
+import { isPrimaryWeaponCategory } from "@/lib/mods/mod-weapon-eligibility";
+import { isCompanionWeaponCategory } from "@/lib/weapons/companion-weapons";
+import { getModCategory } from "@/lib/weapons/weapon-categories";
+import { toast } from "sonner";
 
 /* ─── Shared helpers ─── */
 
 function weaponImageForName(name: string, weapons: Weapon[]): string {
   const w = weapons.find((x) => x.name === name);
   return getWeaponImage(name, w ? { category: w.category } : undefined);
-}
-
-function getModCategory(weaponCategory: string): string {
-  if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(weaponCategory)) return "primary";
-  if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
-  if (weaponCategory === "melee") return "melee";
-  return "primary";
 }
 
 function fmtNum(n: number, decimals = 0): string {
@@ -101,7 +97,14 @@ function BuildCompareTab() {
   const [weaponSearch, setWeaponSearch] = useState("");
 
   const filteredWeapons = useMemo(() => {
-    const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
+    const hiddenCategories = [
+      "amp_prism",
+      "zaw_strike",
+      "kitgun_chamber",
+      "sentinel_weapon",
+      "hound_weapon",
+      "beast_claw",
+    ];
     let weapons = allWeapons.filter((w) => !hiddenCategories.includes(w.category));
     if (weaponSearch.trim()) {
       const q = weaponSearch.toLowerCase();
@@ -117,6 +120,17 @@ function BuildCompareTab() {
   };
 
   const selectWeapon = (side: 0 | 1, weapon: Weapon) => {
+    if (isCompanionWeaponCategory(weapon.category)) {
+      toast.error("Companion weapons are built in Companion Builder", {
+        action: {
+          label: "Open",
+          onClick: () => {
+            window.location.href = "/companion-builder";
+          },
+        },
+      });
+      return;
+    }
     setBuilds((prev) => {
       const next = [...prev] as [BuildSlot, BuildSlot];
       next[side] = { weapon, mods: [], stats: recalcStats(weapon, []) };

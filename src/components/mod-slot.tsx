@@ -5,15 +5,15 @@ import { Mod, getRivenStatsForCategory } from "@/lib/types";
 import { X, Plus, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PolarityIcon, polarityNames } from "@/components/polarity-icon";
-import { getModImage } from "@/lib/images";
+import { getModImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { UMBRAL_MOD_IDS, getUmbralSetBonusMultiplier } from "@/lib/set-bonuses";
+import { UMBRAL_MOD_IDS, getUmbralSetBonusMultiplier } from "@/lib/calc/set-bonuses";
 import {
   getPolarityCapacityEffect,
   modCapacityAtRank,
   modSlotCapacityCost,
-} from "@/lib/mod-capacity";
-import { cleanModDescription, formatModStatValue } from "@/lib/mod-display";
+} from "@/lib/calc/mod-capacity";
+import { cleanModDescription, formatModStatValue } from "@/lib/display/mod-display";
 
 const rarityBorderColors: Record<string, string> = {
   common: "border-amber-700/40 dark:border-amber-900/50",

@@ -1,4 +1,4 @@
-// Core data types for Overframe
+// Core data types for FrameHub
 
 export interface Mod {
   id: string;
@@ -131,6 +131,8 @@ export interface WeaponRadialAttack {
   blast?: number;
   gas?: number;
   magnetic?: number;
+  /** Tau damage type (distinct from Tauforged Archon Shards). */
+  tau?: number;
   radius: number;
   /** Damage reduction at max radius (0.5 = 50% falloff from center to edge). */
   falloffReduction?: number;
@@ -465,10 +467,14 @@ export interface CalculatedStats {
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
   modBonuses?: Record<string, number>;
   /**
-   * Slide speed fraction from weapon mods that buff Warframe movement
-   * (e.g. Amalgam Serration +55% at max → 0.55).
+   * Slide speed fraction from weapon mods that buff Warframe movement.
    */
   slideSpeedBonus?: number;
+  /**
+   * Sprint speed fraction from weapon mods that buff Warframe movement
+   * (e.g. Amalgam Serration +55% at max → 0.55).
+   */
+  sprintSpeedBonus?: number;
   /** Elementalist-style status effect damage bonus (fraction). */
   statusDamageBonus?: number;
   /** Acuity / headshot damage bonus (fraction on top of base head multi). */
@@ -487,7 +493,7 @@ export interface CalculatedStats {
   preComboCriticalChance?: number;
   preComboStatusChance?: number;
   /** Inputs for recomputing combo scaling after arcanes adjust combo count. */
-  meleeComboModContext?: import("@/lib/melee-combo").MeleeComboModContext;
+  meleeComboModContext?: import("@/lib/calc/melee-combo").MeleeComboModContext;
 }
 
 export interface WarframeCalculatedStats {
@@ -502,7 +508,7 @@ export interface WarframeCalculatedStats {
   armorBonus: number;
   energyBonus: number;
   sprintSpeedBonus: number;
-  /** Additive slide speed fraction (Maglev, Amalgam Serration via loadout, etc.). */
+  /** Additive slide speed fraction (Maglev, Cunning Drift, etc.). */
   slideSpeedBonus: number;
   flowBonus: number;
   // Flat additions from Archon Shards (Azure, Topaz)
@@ -790,14 +796,6 @@ export interface Loadout {
   };
 }
 
-export interface RivenMod {
-  weaponName: string;
-  stats: Record<string, number>; // e.g. { damage: 0.25, criticalChance: 0.15, statusChance: -0.10 }
-  mastery: number;
-  rolls: number;
-}
-
-// Riven stat definition with calculator key mapping
 export interface RivenStatDef {
   key: string;       // calculator key (e.g. "damage", "criticalChance")
   label: string;     // display name

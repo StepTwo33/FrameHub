@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, generateOAuthState, oauthStateCookieOptions } from "@/lib/auth";
+import { getSession, generateOAuthState, oauthStateCookieOptions } from "@/lib/auth/auth";
 import { getDiscordLinkAuthUrl, getDiscordClientId } from "@/lib/bot/discord-oauth";
-import { getPublicOrigin } from "@/lib/public-origin";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export async function GET(req: NextRequest) {
   const session = await getSession();

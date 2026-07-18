@@ -1,5 +1,5 @@
 import { GameAssetImage } from "@/components/game-asset-image";
-import type { BuildPreviewData } from "@/lib/build-preview";
+import type { BuildPreviewData } from "@/lib/builds/build-preview";
 import { cn } from "@/lib/utils";
 
 export function BuildPreviewSummary({ preview }: { preview: BuildPreviewData }) {

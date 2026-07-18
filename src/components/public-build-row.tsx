@@ -18,11 +18,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buildOpenUrl } from "@/lib/build-url";
-import type { PublicBuildSummary } from "@/lib/build-types";
-import { resolveBuildItemDisplay } from "@/lib/build-item-display";
+import { buildOpenUrl } from "@/lib/builds/build-url";
+import type { PublicBuildSummary } from "@/lib/builds/build-types";
+import { resolveBuildItemDisplay } from "@/lib/builds/build-item-display";
 import { AvatarImage, GameAssetImage } from "@/components/game-asset-image";
-import { tagLabel } from "@/lib/build-tags";
+import { tagLabel } from "@/lib/builds/build-tags";
 
 interface BuildVoteButtonProps {
   buildId: string;

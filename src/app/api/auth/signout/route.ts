@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE, clearFramehubSessionCookieOptions } from "@/lib/auth";
-import { getPublicOrigin } from "@/lib/public-origin";
+import { SESSION_COOKIE, clearFramehubSessionCookieOptions } from "@/lib/auth/auth";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export async function POST(req: NextRequest) {
   const origin = getPublicOrigin(req);

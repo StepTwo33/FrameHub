@@ -13,31 +13,34 @@ import {
 } from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { useCompanions, useWeapons, useMods } from "@/lib/use-data";
+import { useCompanions, useWeapons, useMods } from "@/lib/weapons/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
-import { calculateCompanionBuild } from "@/lib/companion-calculator";
+import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
+import { mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
+import { avgCritMultiplier, critTierDamage } from "@/lib/calc/crit-utils";
 import {
   COMPANION_MAX_PRECEPTS,
   COMPANION_MOD_SLOT_COUNT,
   isCompanionPrecept,
-} from "@/lib/companion-augment-mods";
+} from "@/lib/mods/companion-augment-mods";
 import {
   companionPreceptModsForBuilder,
   companionStatModsForBuilder,
   companionPreceptEligibleForCompanion,
   isCataloguedCompanionPrecept,
-} from "@/lib/companion-precept-eligibility";
+} from "@/lib/mods/companion-precept-eligibility";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen } from "lucide-react";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { cn } from "@/lib/utils";
-import { appendReturnTo } from "@/lib/nav-return";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import { toast } from "sonner";
-import { getCompanionImage } from "@/lib/images";
+import { getCompanionImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 
 const companionTypeLabels: Record<string, string> = {
   all: "All",
@@ -70,103 +73,17 @@ function getCompanionModSubCategory(companionType: string): string[] {
   }
 }
 
-import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
+import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/weapons/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
-function calculateWeaponStats(
-  weapon: Weapon,
-  mods: EquippedMod[],
-  modsMap: Map<string, Mod>,
-  rivenStats?: Record<string, number> | null,
-) {
-  let dmgMult = 1;
-  let critChance = weapon.criticalChance;
-  let critMult = weapon.criticalMultiplier;
-  let statusChance = weapon.statusChance;
-  let fireRate = weapon.fireRate;
-  let multishotBonus = 0;
-  let magazineBonus = 0;
-  let reloadBonus = 0;
-  let damagePerStatusBonus = 0;
-  let nonCritDamageBonus = 0;
-  let healthPerSlashStack = 0;
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
 
-  for (const em of mods) {
-    const mod = modsMap.get(em.modId);
-    if (!mod) continue;
-    const rank = Math.min(em.rank, mod.maxRank);
-    const mult = rank + 1;
-    for (const [stat, val] of Object.entries(mod.stats)) {
-      const v = (val * mult) / 100;
-      switch (stat) {
-        case "damage": dmgMult += v; break;
-        case "criticalChance": critChance += weapon.criticalChance * v; break;
-        case "criticalMultiplier":
-        case "criticalDamage":
-          critMult += weapon.criticalMultiplier * v;
-          break;
-        case "statusChance": statusChance += weapon.statusChance * v; break;
-        case "fireRate": case "attackSpeed": fireRate += weapon.fireRate * v; break;
-        case "multishot": multishotBonus += v; break;
-        case "magazine": case "magazineSize": magazineBonus += v; break;
-        case "reload": case "reloadSpeed": reloadBonus += v; break;
-        case "damagePerStatus": damagePerStatusBonus += v; break;
-        case "nonCritDamage": nonCritDamageBonus += v; break;
-        case "healthPerSlashStack": healthPerSlashStack += val * mult; break;
-      }
-    }
-  }
-
-  // Apply riven stats
-  if (rivenStats && Object.keys(rivenStats).length > 0) {
-    for (const [stat, val] of Object.entries(rivenStats)) {
-      switch (stat) {
-        case "damage": dmgMult += val; break;
-        case "criticalChance": critChance += weapon.criticalChance * val; break;
-        case "criticalMultiplier":
-        case "criticalDamage":
-          critMult += weapon.criticalMultiplier * val;
-          break;
-        case "statusChance": statusChance += weapon.statusChance * val; break;
-        case "fireRate": fireRate += weapon.fireRate * val; break;
-        case "multishot": multishotBonus += val; break;
-        case "magazine": magazineBonus += val; break;
-        case "reloadSpeed": reloadBonus += val; break;
-      }
-    }
-  }
-
-  const multishot = (weapon.multishot ?? 1) * (1 + multishotBonus);
-  const totalDmg = weapon.damage * dmgMult;
-  const avgHit = totalDmg * multishot;
-  const avgCritMult = 1 + critChance * (critMult - 1);
-  const dps = avgHit * avgCritMult * fireRate;
-  const magazine = Math.round(weapon.magazine * (1 + magazineBonus));
-  const reload = Math.max(0.1, weapon.reloadTime * (1 - reloadBonus));
-
-  return {
-    totalDamage: totalDmg,
-    avgHit,
-    critChance: Math.min(critChance, 1),
-    critMultiplier: critMult,
-    statusChance: Math.min(statusChance, 1),
-    fireRate,
-    multishot,
-    dps,
-    magazine,
-    reloadTime: reload,
-    damagePerStatusBonus,
-    nonCritDamageBonus,
-    healthPerSlashStack,
-  };
-}
-
-function StatRow({ label, value, highlighted }: { label: string; value: string; highlighted?: boolean }) {
+function StatRow({ label, value, highlighted, color }: { label: string; value: string; highlighted?: boolean; color?: string }) {
   return (
     <div className="flex justify-between items-center py-1">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className={highlighted ? "text-sm font-bold text-cyan-400" : "text-sm font-mono"}>
+      <span className={cn("text-sm", color || "text-muted-foreground")}>{label}</span>
+      <span className={highlighted ? "text-sm font-bold text-cyan-400" : `text-sm font-mono ${color || ""}`}>
         {value}
       </span>
     </div>
@@ -196,6 +113,7 @@ export default function CompanionBuilderPage() {
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("companion"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"catalog" | "saved">("catalog");
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
@@ -235,23 +153,13 @@ export default function CompanionBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
     setBuildDescription(description);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("companion"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("companion"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
@@ -294,6 +202,7 @@ export default function CompanionBuilderPage() {
   }, [allCompanions, allWeapons]);
 
   useCloudBuildFromUrl("companion", handleLoadBuild);
+  useLocalBuildFromUrl("companion", handleLoadBuild);
   useLoadoutSlotFromUrl("companion", handleLoadBuild, allCompanions.length > 0);
 
   const handleDeleteBuild = useCallback((id: string) => {
@@ -367,20 +276,18 @@ export default function CompanionBuilderPage() {
 
   const weaponStats = useMemo(() => {
     if (!selectedWeapon) return null;
-    // Gather riven stats from any weapon slot that has a riven
-    let rivenStats: Record<string, number> | null = null;
-    if (weaponRivenStatsMap) {
-      for (const [slotStr, stats] of Object.entries(weaponRivenStatsMap)) {
-        const slotIdx = Number(slotStr);
-        const equipped = weaponMods.find((m) => m.slotIndex === slotIdx);
-        if (equipped && equipped.modId.startsWith("riven_")) {
-          rivenStats = rivenStats || {};
-          for (const [k, v] of Object.entries(stats)) rivenStats[k] = (rivenStats[k] ?? 0) + v;
-        }
-      }
-    }
-    return calculateWeaponStats(selectedWeapon, weaponMods, modsMap, rivenStats);
-  }, [selectedWeapon, weaponMods, weaponRivenStatsMap]);
+    const rivenStatChanges = mergeRivenStatChanges(weaponRivenStatsMap, weaponMods);
+    return calculateWeaponBuild(
+      selectedWeapon,
+      weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+      modsMap,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      rivenStatChanges,
+    );
+  }, [selectedWeapon, weaponMods, weaponRivenStatsMap, modsMap]);
 
   const weaponCapacity = hasCatalyst ? 60 : 30;
   const weaponCapacityUsed = useMemo(() => {
@@ -517,6 +424,39 @@ export default function CompanionBuilderPage() {
             search={companionSearch}
             onSearchChange={setCompanionSearch}
             searchPlaceholder="Search companions..."
+            pickerTab={pickerTab}
+            onPickerTabChange={(tab) => {
+              if (tab === "saved") setSavedBuilds(getSavedBuilds("companion"));
+              setPickerTab(tab);
+            }}
+            savedPanel={
+              savedBuilds.length === 0 ? (
+                <p className="px-2 py-6 text-center text-xs text-muted-foreground">
+                  No saved companion builds yet. Save a build from the builder to see it here.
+                </p>
+              ) : (
+                savedBuilds.map((build) => {
+                  const d = build.data as CompanionBuildData;
+                  const compName = allCompanions.find((c) => c.id === d.companionId)?.name ?? d.companionId;
+                  return (
+                    <ItemPickerRow
+                      key={build.id}
+                      accent="cyan"
+                      onClick={() => handleLoadBuild(build)}
+                      title={build.name}
+                      badge={
+                        <span className="shrink-0 text-xs text-muted-foreground">{compName}</span>
+                      }
+                      meta={
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(build.updatedAt).toLocaleDateString()}
+                        </span>
+                      }
+                    />
+                  );
+                })
+              )
+            }
             filters={Object.entries(companionTypeLabels).map(([key, label]) => (
               <ItemPickerFilter
                 key={key}
@@ -819,26 +759,42 @@ export default function CompanionBuilderPage() {
                         <h3 className="text-sm font-semibold tracking-wider text-muted-foreground mb-4">WEAPON STATS</h3>
                         {weaponStats ? (
                           <div className="space-y-0.5">
-                            <StatRow label="Total Damage" value={weaponStats.totalDamage.toFixed(1)} />
-                            <StatRow label="Avg Hit" value={weaponStats.avgHit.toFixed(1)} />
-                            <StatRow label="Crit Chance" value={`${(weaponStats.critChance * 100).toFixed(1)}%`} />
-                            <StatRow label="Crit Multi" value={`${weaponStats.critMultiplier.toFixed(1)}x`} />
-                            <StatRow label="Status" value={`${(weaponStats.statusChance * 100).toFixed(1)}%`} />
-                            <StatRow label="Fire Rate" value={weaponStats.fireRate.toFixed(2)} />
-                            <StatRow label="Multishot" value={weaponStats.multishot.toFixed(1)} />
-                            <StatRow label="Magazine" value={`${weaponStats.magazine}`} />
-                            <StatRow label="Reload" value={`${weaponStats.reloadTime.toFixed(2)}s`} />
+                            <p className="text-[10px] text-muted-foreground/70 mb-1">Hit damage (no multishot / fire rate)</p>
+                            <StatRow
+                              label="Non-crit hit"
+                              value={(weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage).toFixed(1)}
+                              highlighted
+                            />
+                            <StatRow
+                              label="Yellow crit"
+                              value={(
+                                (weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage) *
+                                critTierDamage(1, weaponStats.criticalMultiplier)
+                              ).toFixed(1)}
+                              color="text-yellow-400"
+                            />
+                            <StatRow
+                              label="Avg hit"
+                              value={(
+                                (weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage) *
+                                avgCritMultiplier(weaponStats.criticalChance, weaponStats.criticalMultiplier)
+                              ).toFixed(1)}
+                            />
                             <div className="border-t border-border my-2" />
-                            <StatRow label="DPS" value={weaponStats.dps.toFixed(0)} highlighted />
-                            {weaponStats.damagePerStatusBonus > 0 && (
-                              <StatRow label="Dmg / status on target" value={`+${(weaponStats.damagePerStatusBonus * 100).toFixed(0)}%`} />
+                            <StatRow label="Crit Chance" value={`${(weaponStats.criticalChance * 100).toFixed(1)}%`} />
+                            <StatRow label="Crit Multi" value={`${weaponStats.criticalMultiplier.toFixed(2)}x`} />
+                            <StatRow label="Status" value={`${(weaponStats.statusChancePerShot * 100).toFixed(1)}%`} />
+                            <StatRow label="Fire Rate" value={(weaponStats.effectiveFireRate ?? weaponStats.fireRate).toFixed(2)} />
+                            <StatRow label="Multishot" value={weaponStats.multishot.toFixed(2)} />
+                            {weaponStats.magazine > 0 && (
+                              <StatRow label="Magazine" value={`${weaponStats.magazine}`} />
                             )}
-                            {weaponStats.nonCritDamageBonus > 0 && (
-                              <StatRow label="Non-crit damage" value={`+${(weaponStats.nonCritDamageBonus * 100).toFixed(0)}%`} />
+                            {weaponStats.reloadTime > 0 && (
+                              <StatRow label="Reload" value={`${weaponStats.reloadTime.toFixed(2)}s`} />
                             )}
-                            {weaponStats.healthPerSlashStack > 0 && (
-                              <StatRow label="Lifesteal / Slash stack" value={`${weaponStats.healthPerSlashStack.toFixed(0)} HP`} />
-                            )}
+                            <div className="border-t border-border my-2" />
+                            <StatRow label="Burst DPS" value={weaponStats.burstDps.toFixed(0)} highlighted />
+                            <StatRow label="Sustained DPS" value={weaponStats.sustainedDps.toFixed(0)} highlighted />
                           </div>
                         ) : (
                           <p className="text-sm text-muted-foreground">Select a weapon to see stats</p>
@@ -865,39 +821,20 @@ export default function CompanionBuilderPage() {
         weaponCategory={selectedWeapon?.category}
       />
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Companion Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as CompanionBuildData;
-                  const comp = allCompanions.find((c) => c.id === d.companionId);
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-green-500/30 transition-all">
-                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {comp?.name ?? d.companionId} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Companion Builds"
+        builds={savedBuilds}
+        accent="green"
+        getSubtitle={(build) => {
+          const d = build.data as CompanionBuildData;
+          const comp = allCompanions.find((c) => c.id === d.companionId);
+          return `${comp?.name ?? d.companionId} • ${d.mods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}

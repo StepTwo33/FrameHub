@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Header } from "@/components/header";
-import { resolvePageIcon, type PageIconName } from "@/lib/page-icons";
+import { resolvePageIcon, type PageIconName } from "@/lib/display/page-icons";
 import { cn } from "@/lib/utils";
 
 const MAX_WIDTH = {
@@ -424,45 +424,6 @@ export function PanelHeading({
     >
       {children}
     </h2>
-  );
-}
-
-/** Highlight callout banner (e.g. open source on homepage). */
-export function CalloutBanner({
-  children,
-  accent = "emerald",
-  className,
-}: {
-  children: React.ReactNode;
-  accent?: AccentColor;
-  className?: string;
-}) {
-  const borderMap: Record<AccentColor, string> = {
-    blue: "border-blue-500/25 bg-blue-500/5",
-    purple: "border-purple-500/25 bg-purple-500/5",
-    cyan: "border-cyan-500/25 bg-cyan-500/5",
-    amber: "border-amber-500/25 bg-amber-500/5",
-    indigo: "border-indigo-500/25 bg-indigo-500/5",
-    yellow: "border-yellow-500/25 bg-yellow-500/5",
-    red: "border-red-500/25 bg-red-500/5",
-    green: "border-green-500/25 bg-green-500/5",
-    orange: "border-orange-500/25 bg-orange-500/5",
-    rose: "border-rose-500/25 bg-rose-500/5",
-    teal: "border-teal-500/25 bg-teal-500/5",
-    slate: "border-slate-500/25 bg-slate-500/5",
-    emerald: "border-emerald-500/25 bg-emerald-500/5",
-    primary: "border-primary/25 bg-primary/5",
-  };
-  return (
-    <div
-      className={cn(
-        "rounded-xl border px-4 py-3 text-left sm:text-center",
-        borderMap[accent],
-        className,
-      )}
-    >
-      {children}
-    </div>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Swords, Shield, Bug, Wrench, BarChart3, Users, User, Github, Info, BookOpen, FolderOpen, Plane, Rocket } from "lucide-react";
-import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site/site-links";
 import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
 
 export default function AboutPage() {

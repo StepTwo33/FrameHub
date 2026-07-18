@@ -2,8 +2,8 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Mod, getRivenStatsForCategory } from "@/lib/types";
-import { isAuraMod } from "@/lib/aura-mods";
-import { isArchmeleeMod } from "@/lib/archmelee-mods";
+import { isAuraMod } from "@/lib/mods/aura-mods";
+import { isArchmeleeMod } from "@/lib/mods/archmelee-mods";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { Search, Plus, X } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
-import { getModImage, getArcaneImage } from "@/lib/images";
+import { getModImage, getArcaneImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getBlockedModIds } from "@/data/mod-exclusions";
-import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/display/mod-display";
 
 function isRivenMod(mod: Mod): boolean {
   return mod.subCategory === "riven" || mod.id.startsWith("riven_");
@@ -22,20 +22,20 @@ function isRivenMod(mod: Mod): boolean {
 
 import {
   warframeAugmentEligibleInBuilder,
-} from "@/lib/warframe-augment-mods";
-import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/archwing-augment-mods";
-import { isTomeMod } from "@/lib/mod-slot-categories";
-import { isTomeWeapon } from "@/lib/tome-weapons";
-import { isSetBonusMod } from "@/lib/set-mod-catalog";
-import { RARITY_BADGE_COLORS } from "@/lib/rarity-badge-colors";
+} from "@/lib/mods/warframe-augment-mods";
+import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/mods/archwing-augment-mods";
+import { isTomeMod } from "@/lib/mods/mod-slot-categories";
+import { isTomeWeapon } from "@/lib/weapons/tome-weapons";
+import { isSetBonusMod } from "@/lib/mods/set-mod-catalog";
+import { RARITY_BADGE_COLORS } from "@/lib/display/rarity-badge-colors";
 import {
   isWarframeExilusMod,
-} from "@/lib/mod-slot-categories";
+} from "@/lib/mods/mod-slot-categories";
 import {
   modEligibleForWeaponSlot,
   type WeaponModSlotType,
-} from "@/lib/mod-weapon-eligibility";
-import { getWeaponModProfile } from "@/lib/weapon-mod-tags";
+} from "@/lib/mods/mod-weapon-eligibility";
+import { getWeaponModProfile } from "@/lib/mods/weapon-mod-tags";
 import type { Weapon } from "@/lib/types";
 import {
   getModPickerStatFilters,
@@ -43,7 +43,7 @@ import {
   sortMods,
   type ModSortId,
   type ModStatFilterId,
-} from "@/lib/mod-stat-filters";
+} from "@/lib/mods/mod-stat-filters";
 
 export type SlotType = WeaponModSlotType | "aura" | "exilus" | "companion_precept";
 

@@ -5,16 +5,16 @@ import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker } from "@/components/mod-picker";
-import { useMods, useArcanes, useWeapons } from "@/lib/use-data";
-import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
+import { useMods, useArcanes, useWeapons } from "@/lib/weapons/use-data";
+import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calc/calculator";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 import { Weapon, Mod, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, ModularBuildData } from "@/lib/types";
-import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
+import { getWeaponArcanes } from "@/lib/weapons/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import type { SlotType } from "@/components/mod-picker";
-import { Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Trash2, Gem } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, saveCloudBuild } from "@/lib/build-storage";
+import { Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Gem } from "lucide-react";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, persistSavedBuild } from "@/lib/builds/build-storage";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { toast } from "sonner";
 import {
   kitgunChambers, kitgunGrips, kitgunLoaders, buildKitgun,
@@ -24,11 +24,11 @@ import {
   KitgunChamber, KitgunGrip, KitgunLoader, ZawStrike, ZawGrip, ZawLink, AmpScaffold, AmpBrace,
 } from "@/data/modular-weapons";
 import { cn } from "@/lib/utils";
-import { extractBuildFromUrl } from "@/lib/build-url";
-import { resolveArcaneById } from "@/lib/build-storage";
+import { extractBuildFromUrl } from "@/lib/builds/build-url";
+import { resolveArcaneById } from "@/lib/builds/build-storage";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
 
 type ModularType = "kitgun" | "zaw" | "amp";
 
@@ -245,22 +245,12 @@ export default function ModularBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("modular"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("modular"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
@@ -865,38 +855,19 @@ export default function ModularBuilderPage() {
         />
       )}
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Modular Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as ModularBuildData;
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-cyan-500/30 transition-all">
-                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {d.modularType} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Modular Builds"
+        builds={savedBuilds}
+        accent="cyan"
+        getSubtitle={(build) => {
+          const d = build.data as ModularBuildData;
+          return `${d.modularType} • ${d.mods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}

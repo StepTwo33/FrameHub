@@ -1,5 +1,5 @@
 import { Mod } from "@/lib/types";
-import { normalizeModCatalog } from "@/lib/set-mod-catalog";
+import { normalizeModCatalog } from "@/lib/mods/set-mod-catalog";
 
 const RAW_MODS: Mod[] = [
   {
@@ -340,11 +340,11 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "weapon",
     "stats": {
-      // Max rank: +155% damage (14.0909×11), +55% slide speed (5×11). No sprint bonus.
+      // Max rank: +155% damage (14.0909×11), +55% sprint speed (5×11).
       "damage": 14.0909,
-      "slideSpeed": 5
+      "sprintSpeed": 5
     },
-    "description": "+155% Damage, +55% Slide Speed at max rank",
+    "description": "+155% Damage, +55% Sprint Speed at max rank",
     "rarity": "rare"
   },
   {
@@ -5725,8 +5725,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 10
     },
@@ -5809,8 +5809,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 10
     },
@@ -5851,8 +5851,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": 2,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 10
     },
@@ -5879,8 +5879,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 20
     },
@@ -5907,8 +5907,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 10
     },
@@ -6133,8 +6133,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": 4,
     "maxRank": 3,
-    "category": "stance",
-    "subCategory": "weapon",
+    "category": "general",
+    "subCategory": "",
     "stats": {
       "damageBonus": 15
     },
@@ -10155,8 +10155,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {
       "damage": 15.0,
       "slash": 5.0
@@ -10229,8 +10229,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {
       "damage": 15.0,
       "statusDamage": 10.0
@@ -10868,8 +10868,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {
       "damage": 15.0,
       "statusChance": 10.0
@@ -16620,8 +16620,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Rapid strikes, deceptive movements.",
     "rarity": "uncommon"
@@ -16766,8 +16766,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "unairu",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -16830,8 +16830,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Reverse grip style emphasizing slashing and impaling strikes.",
     "rarity": "uncommon"
@@ -17001,8 +17001,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Round-house attacks and leaping fists.",
     "rarity": "rare"
@@ -17013,8 +17013,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Stance: Rip and rend with this Assault Saw stance.",
     "rarity": "rare"
@@ -17049,8 +17049,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17319,8 +17319,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17331,8 +17331,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17415,8 +17415,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Aerial attacks with Crowd Control combos.",
     "rarity": "rare"
@@ -17442,8 +17442,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17468,8 +17468,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Brutal strikes with deft movement.",
     "rarity": "rare"
@@ -17599,8 +17599,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17692,8 +17692,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Rapid attacks using sword and shield.",
     "rarity": "uncommon"
@@ -17852,8 +17852,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -17876,8 +17876,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Powerful slashes and shield attacks.",
     "rarity": "uncommon"
@@ -18051,8 +18051,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fast strikes, powerful slams.",
     "rarity": "rare"
@@ -18063,8 +18063,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "unairu",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fast, multi-hit strikes with powerful finishers.",
     "rarity": "uncommon"
@@ -18117,8 +18117,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Slow, powerful strikes.",
     "rarity": "rare"
@@ -18129,8 +18129,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Wide slashes and heavy strikes.",
     "rarity": "uncommon"
@@ -18157,8 +18157,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "A style exhibiting sweeping slash attacks and swift jabs.",
     "rarity": "uncommon"
@@ -18195,8 +18195,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fast arcing strikes.",
     "rarity": "rare"
@@ -18680,8 +18680,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -18704,8 +18704,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -18848,8 +18848,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -19011,8 +19011,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Puncturing strikes and quick slashes.",
     "rarity": "rare"
@@ -19178,8 +19178,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Sharp movements with wide reach.",
     "rarity": "uncommon"
@@ -19700,8 +19700,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -19972,8 +19972,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20404,8 +20404,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "unairu",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20557,8 +20557,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Downward cuts with an impact combo.",
     "rarity": "uncommon"
@@ -20569,8 +20569,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20684,8 +20684,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "unairu",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20764,8 +20764,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20871,8 +20871,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -20895,8 +20895,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "vazarin",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Methodical strikes and high impact combos.",
     "rarity": "uncommon"
@@ -21061,8 +21061,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Twirling, acrobatic slashes with a refined touch.",
     "rarity": "rare"
@@ -21165,8 +21165,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "An outlandish style with sweeping attacks.",
     "rarity": "rare"
@@ -21239,8 +21239,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -21387,8 +21387,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -21524,8 +21524,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Powerful arcs with frenzied combo.",
     "rarity": "rare"
@@ -21712,8 +21712,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Fighting form devised for Conclave.",
     "rarity": "uncommon"
@@ -21979,8 +21979,8 @@ const RAW_MODS: Mod[] = [
     "polarity": "naramon",
     "drain": -2,
     "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
+    "category": "stance",
+    "subCategory": "weapon",
     "stats": {},
     "description": "Precise, focused arcs and cuts not hampered by pity.",
     "rarity": "rare"

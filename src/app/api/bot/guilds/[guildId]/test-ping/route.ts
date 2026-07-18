@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { listManageableGuilds } from "@/lib/bot/discord-link-service";
 import { postChannelEmbed, fetchGuildChannels } from "@/lib/bot/discord-oauth";
 import { embedTestPing } from "@/lib/bot/embeds";

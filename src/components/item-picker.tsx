@@ -96,6 +96,9 @@ export function ItemPickerScreen({
   filters,
   children,
   className,
+  pickerTab = "catalog",
+  onPickerTabChange,
+  savedPanel,
 }: {
   icon: LucideIcon;
   accent: AccentColor;
@@ -108,32 +111,70 @@ export function ItemPickerScreen({
   filters?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  /** When `savedPanel` is set, Catalog | Saved tabs appear above the list. */
+  pickerTab?: "catalog" | "saved";
+  onPickerTabChange?: (tab: "catalog" | "saved") => void;
+  savedPanel?: React.ReactNode;
 }) {
+  const showTabs = savedPanel != null && onPickerTabChange != null;
+  const onSaved = showTabs && pickerTab === "saved";
+
   return (
     <div className={cn("mx-auto max-w-3xl", className)}>
       <PageHero icon={icon} accent={accent} title={title} description={description} />
 
-      <div className="mb-4 overflow-hidden rounded-xl border border-border/60 bg-card/50 p-4 shadow-sm backdrop-blur-sm ring-1 ring-border/30">
-        {filters && <div className="mb-4 flex flex-wrap gap-2">{filters}</div>}
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder={searchPlaceholder}
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="border-border/60 bg-background/50 pl-9"
-          />
+      {showTabs && (
+        <div className="mb-3 flex gap-1 rounded-lg border border-border/60 bg-card/40 p-1">
+          <button
+            type="button"
+            onClick={() => onPickerTabChange("catalog")}
+            className={cn(
+              "flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+              !onSaved
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Catalog
+          </button>
+          <button
+            type="button"
+            onClick={() => onPickerTabChange("saved")}
+            className={cn(
+              "flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+              onSaved
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Saved
+          </button>
         </div>
+      )}
 
-        <p className="mt-3 text-xs text-muted-foreground">
-          <span className="font-mono font-medium text-foreground">{count}</span> results
-        </p>
-      </div>
+      {!onSaved && (
+        <div className="mb-4 overflow-hidden rounded-xl border border-border/60 bg-card/50 p-4 shadow-sm backdrop-blur-sm ring-1 ring-border/30">
+          {filters && <div className="mb-4 flex flex-wrap gap-2">{filters}</div>}
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={searchPlaceholder}
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="border-border/60 bg-background/50 pl-9"
+            />
+          </div>
+
+          <p className="mt-3 text-xs text-muted-foreground">
+            <span className="font-mono font-medium text-foreground">{count}</span> results
+          </p>
+        </div>
+      )}
 
       <div className="overflow-hidden rounded-xl border border-border/60 bg-card/40 ring-1 ring-border/30">
         <ScrollArea className="h-[60vh]">
-          <div className="space-y-1.5 p-2 pr-3">{children}</div>
+          <div className="space-y-1.5 p-2 pr-3">{onSaved ? savedPanel : children}</div>
         </ScrollArea>
       </div>
     </div>

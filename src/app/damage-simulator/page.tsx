@@ -7,17 +7,14 @@ import { Crosshair, Shield, Heart, Flame, Plus, X, ChevronDown, ChevronRight, Za
 import {
   EnemyType, ENEMY_TYPES,
   HEALTH_MODIFIERS, ARMOR_MODIFIERS, SHIELD_MODIFIERS,
-  getMod, scaleArmor, scaleHealth, scaleShield, avgCritMult,
-} from "@/lib/ttk";
-import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/build-storage";
-import { calcSavedWeaponBuildStats } from "@/lib/loadout-stats";
-import { calculatedStatsToSimInputs } from "@/lib/damage-sim-load";
+  getMod,
+} from "@/lib/calc/ttk";
+import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/builds/build-storage";
+import { calcSavedWeaponBuildStats } from "@/lib/builds/loadout-stats";
+import { calculatedStatsToSimInputs } from "@/lib/calc/damage-sim-load";
+import { runDamageSim, type DamageSimResult } from "@/lib/calc/damage-sim";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
-import {
-  combatDamageMultiplier,
-  factionBonusFromStats,
-  factionDotMultiplier,
-} from "@/lib/combat-multipliers";
+import { EnemyLevelControl } from "@/components/enemy-level-control";
 
 const FACTION_COLORS: Record<string, string> = {
   Grineer: "#FF6B35", Corpus: "#00B4D8", Infested: "#2ECC71",
@@ -38,37 +35,6 @@ const DAMAGE_TYPES = [
   { key: "corrosive", label: "Corrosive" }, { key: "gas", label: "Gas" },
   { key: "magnetic", label: "Magnetic" }, { key: "radiation", label: "Radiation" }, { key: "viral", label: "Viral" },
 ];
-
-interface SimResult {
-  // Enemy
-  hp: number; shield: number; armor: number;
-  armorDR: number; effectiveHP: number;
-  // Per-type breakdowns
-  typeBreakdown: { type: string; raw: number; vsShield: number; vsHealth: number; weight: number }[];
-  // Aggregate
-  avgCrit: number;
-  rawPerShot: number;
-  shieldDmgPerShot: number;
-  healthDmgPerShot: number;
-  // Status
-  procsPerSec: number;
-  viralMult: number;
-  corrosiveStrippedArmor: number;
-  slashDotDps: number;
-  heatDotDps: number;
-  toxinDotDps: number;
-  totalDotDps: number;
-  // DPS
-  burstDps: number;
-  sustainedDps: number;
-  shieldBurstDps: number;
-  healthBurstDps: number;
-  // Time
-  shieldTime: number;
-  healthTime: number;
-  ttk: number;
-  shotsToKill: number;
-}
 
 function InputField({ label, value, onChange, step, min, suffix }: {
   label: string; value: number; onChange: (v: number) => void;
@@ -219,152 +185,26 @@ export default function DamageSimulatorPage() {
 
   const totalRaw = useMemo(() => Object.values(dmgTypes).reduce((s, v) => s + v, 0), [dmgTypes]);
 
-  // Full simulation
-  const sim = useMemo((): SimResult | null => {
+  const sim = useMemo((): DamageSimResult | null => {
     if (!selectedEnemy || totalRaw <= 0) return null;
-
-    const hp = scaleHealth(selectedEnemy.baseHealth, enemyLevel, selectedEnemy.faction);
-    let armor = scaleArmor(selectedEnemy.baseArmor, enemyLevel);
-    const shield = scaleShield(selectedEnemy.baseShield, enemyLevel);
-
-    // Status procs/sec
-    const procsPerSec = fireRate * statusChance * multishot;
-
-    // Corrosive strip: 26% per stack, max 10, avg over ~3s window
-    const corrosiveRaw = dmgTypes["corrosive"] ?? 0;
-    let corrosiveStrippedArmor = armor;
-    if (corrosiveRaw > 0 && armor > 0 && procsPerSec > 0) {
-      const corPPS = procsPerSec * (corrosiveRaw / totalRaw);
-      const avgStacks = Math.min(10, corPPS * 3);
-      corrosiveStrippedArmor = armor * Math.pow(0.74, avgStacks);
-    }
-    armor = corrosiveStrippedArmor;
-
-    // Viral health multiplier
-    const viralRaw = dmgTypes["viral"] ?? 0;
-    let viralMult = 1.0;
-    if (viralRaw > 0 && procsPerSec > 0) {
-      const virPPS = procsPerSec * (viralRaw / totalRaw);
-      const avgStacks = Math.min(10, virPPS * 3);
-      if (avgStacks >= 1) viralMult = 2.0 + Math.min(avgStacks - 1, 9) * 0.25;
-    }
-
-    const armorDR = armor > 0 ? armor / (armor + 300) : 0;
-
-    // Per-type damage breakdown vs shield and health
-    const types = Object.entries(dmgTypes).filter(([, v]) => v > 0);
-    const typeBreakdown = types.map(([type, raw]) => {
-      const weight = raw / totalRaw;
-
-      // vs shield
-      let vsShield = raw;
-      if (shield > 0 && selectedEnemy.shieldType !== "none") {
-        vsShield = raw * (1 + getMod(SHIELD_MODIFIERS, selectedEnemy.shieldType, type));
-      }
-
-      // vs health (through armor)
-      const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, type);
-      let vsHealth = raw * (1 + hm);
-      if (armor > 0 && selectedEnemy.armorType !== "none") {
-        const am = getMod(ARMOR_MODIFIERS, selectedEnemy.armorType, type);
-        const effArmor = armor * Math.max(0, 1 - am);
-        const effDR = effArmor > 0 ? effArmor / (effArmor + 300) : 0;
-        vsHealth *= (1 - effDR);
-      }
-      vsHealth *= viralMult;
-
-      return { type, raw, vsShield, vsHealth, weight };
-    });
-
-    // Aggregate per-shot — faction / headshot from loaded build
-    const acm = avgCritMult(critChance, critMulti);
-    const shieldSum = typeBreakdown.reduce((s, t) => s + t.vsShield, 0);
-    const healthSum = typeBreakdown.reduce((s, t) => s + t.vsHealth, 0);
-    const factionBonus = factionBonusFromStats(factionBonuses, selectedEnemy.faction);
-    const combatMult = combatDamageMultiplier({
-      factionBonus,
-      applyHeadshots,
-      headshotDamageBonus,
-    });
-    const factionDot = factionDotMultiplier(factionBonus);
-    const statusDmg = 1 + statusDamageBonus;
-    const head = applyHeadshots ? 2 * (1 + headshotDamageBonus) : 1;
-    const dotMult = statusDmg * factionDot * head;
-
-    const rawPerShot = totalRaw * multishot * acm * combatMult;
-    const shieldDmgPerShot = shieldSum * multishot * acm * combatMult;
-    const healthDmgPerShot = healthSum * multishot * acm * combatMult;
-
-    // DoT DPS (modded base ≈ totalRaw for hand-entered stats)
-    let slashDotDps = 0;
-    const slashRaw = dmgTypes["slash"] ?? 0;
-    if (slashRaw > 0 && procsPerSec > 0) {
-      const pps = procsPerSec * (slashRaw / totalRaw);
-      const tickDmg = totalRaw * 0.35 * acm * dotMult;
-      const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "slash");
-      slashDotDps = pps * tickDmg * (7 / 6) * (1 + hm) * viralMult;
-    }
-
-    let heatDotDps = 0;
-    const heatRaw = dmgTypes["heat"] ?? 0;
-    if (heatRaw > 0 && procsPerSec > 0) {
-      const pps = procsPerSec * (heatRaw / totalRaw);
-      const tickDmg = totalRaw * 0.5 * acm * dotMult;
-      const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "heat");
-      heatDotDps = pps * tickDmg * (1 + hm) * (1 - armorDR);
-    }
-
-    let toxinDotDps = 0;
-    const toxinRaw = dmgTypes["toxin"] ?? 0;
-    if (toxinRaw > 0 && procsPerSec > 0) {
-      const pps = procsPerSec * (toxinRaw / totalRaw);
-      const tickDmg = totalRaw * 0.5 * acm * dotMult;
-      const hm = getMod(HEALTH_MODIFIERS, selectedEnemy.healthType, "toxin");
-      toxinDotDps = pps * tickDmg * (1 + hm) * (1 - armorDR);
-    }
-
-    const totalDotDps = slashDotDps + heatDotDps + toxinDotDps;
-
-    // DPS
-    const shieldBurstDps = shieldDmgPerShot * fireRate;
-    const healthBurstDps = healthDmgPerShot * fireRate + totalDotDps;
-
-    const sustainFactor = magazine > 0 && reloadTime > 0 && fireRate > 0
-      ? (magazine / fireRate) / (magazine / fireRate + reloadTime)
-      : 1;
-    const burstDps = healthBurstDps;
-    const sustainedDps = healthBurstDps * sustainFactor;
-
-    // TTK
-    const shieldTime = shield > 0 && shieldBurstDps > 0 ? shield / shieldBurstDps : 0;
-    const healthTime = healthBurstDps > 0 ? hp / healthBurstDps : Infinity;
-    let ttk = shieldTime + healthTime;
-
-    if (magazine > 0 && reloadTime > 0 && fireRate > 0) {
-      const magDur = magazine / fireRate;
-      if (ttk > magDur) {
-        const totalShots = ttk * fireRate;
-        const fullReloads = Math.floor(totalShots / magazine);
-        ttk += fullReloads * reloadTime;
-      }
-    }
-
-    const stk = shieldDmgPerShot > 0 && healthDmgPerShot > 0
-      ? Math.ceil(shield / shieldDmgPerShot) + Math.ceil(hp / healthDmgPerShot)
-      : Infinity;
-
-    const effectiveHP = hp + shield;
-
-    return {
-      hp, shield, armor, armorDR, effectiveHP,
-      typeBreakdown, avgCrit: acm,
-      rawPerShot, shieldDmgPerShot, healthDmgPerShot,
-      procsPerSec, viralMult, corrosiveStrippedArmor,
-      slashDotDps, heatDotDps, toxinDotDps, totalDotDps,
-      burstDps, sustainedDps, shieldBurstDps, healthBurstDps,
-      shieldTime, healthTime, ttk,
-      shotsToKill: Math.max(1, stk),
-    };
+    return runDamageSim(
+      {
+        dmgTypes,
+        fireRate,
+        critChance,
+        critMulti,
+        multishot,
+        statusChance,
+        magazine,
+        reloadTime,
+        statusDamageBonus,
+        headshotDamageBonus,
+        factionBonuses,
+        applyHeadshots,
+      },
+      selectedEnemy,
+      enemyLevel,
+    );
   }, [
     selectedEnemy, enemyLevel, dmgTypes, totalRaw, fireRate, critChance, critMulti,
     multishot, statusChance, magazine, reloadTime, statusDamageBonus, headshotDamageBonus,
@@ -385,8 +225,8 @@ export default function DamageSimulatorPage() {
             Damage Simulator
           </h1>
           <p className="text-xs text-muted-foreground mb-6 max-w-2xl">
-            Enter stats by hand or load a saved weapon build. TTK uses post-U32 enemy scaling, Viral/Corrosive averages,
-            Elementalist status damage, Bane (hit + DoT²), and optional headshots.
+            Enter stats by hand or load a saved weapon build. TTK uses the same discrete engine as the Arsenal
+            (post-U32 enemy armor DR = 0.9×AR/2700, Viral/Corrosive stacking, Elementalist, Bane, optional headshots).
           </p>
 
           <div className="grid lg:grid-cols-[1fr_420px] gap-6">
@@ -547,22 +387,8 @@ export default function DamageSimulatorPage() {
                 </div>
 
                 {selectedEnemy && (
-                  <div className="mt-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] text-muted-foreground">Level</span>
-                      <input
-                        type="range"
-                        min={1} max={200} value={enemyLevel}
-                        onChange={(e) => setEnemyLevel(Number(e.target.value))}
-                        className="flex-1 h-1 accent-primary"
-                      />
-                      <input
-                        type="number"
-                        min={1} max={9999} value={enemyLevel}
-                        onChange={(e) => setEnemyLevel(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-14 bg-background border border-border rounded px-1.5 py-0.5 text-xs font-mono text-right"
-                      />
-                    </div>
+                  <div className="mt-3 min-w-0">
+                    <EnemyLevelControl value={enemyLevel} onChange={setEnemyLevel} />
                   </div>
                 )}
               </Section>
@@ -576,7 +402,21 @@ export default function DamageSimulatorPage() {
                   <Section title={`${selectedEnemy.name} Lv.${enemyLevel}`} icon={<Heart className="h-3.5 w-3.5 text-red-400" />}>
                     <ResultRow label="Health" value={fmt(sim.hp)} color="text-red-400" />
                     {sim.shield > 0 && <ResultRow label="Shield" value={fmt(sim.shield)} color="text-cyan-300" />}
-                    {sim.armor > 0 && <ResultRow label="Armor" value={`${fmt(sim.armor)} (${(sim.armorDR * 100).toFixed(1)}% DR)`} color="text-yellow-400" />}
+                    {sim.baseArmor > 0 && (
+                      <ResultRow
+                        label="Armor"
+                        value={`${fmt(sim.armor)} (${(sim.armorDR * 100).toFixed(1)}% DR)`}
+                        color="text-yellow-400"
+                        tooltip="Enemy DR = 0.9 × net armor / 2700 (capped 90%). Not the Tenno armor/(armor+300) formula."
+                      />
+                    )}
+                    {sim.baseArmor > 0 && sim.corrosiveStrippedArmor < sim.baseArmor - 0.5 && (
+                      <ResultRow
+                        label="Armor before strip"
+                        value={fmt(sim.baseArmor)}
+                        color="text-yellow-400/70"
+                      />
+                    )}
                     <ResultRow label="Effective HP" value={fmt(sim.effectiveHP)} bold color="text-primary" />
                     <div className="text-[9px] text-muted-foreground/60 mt-1">
                       {selectedEnemy.healthType} health · {selectedEnemy.armorType !== "none" ? `${selectedEnemy.armorType} armor` : "no armor"} · {selectedEnemy.shieldType !== "none" ? `${selectedEnemy.shieldType} shields` : "no shields"}
@@ -620,19 +460,19 @@ export default function DamageSimulatorPage() {
                       <ResultRow label="Procs / Sec" value={sim.procsPerSec.toFixed(1)} color="text-teal-400" />
                       {sim.viralMult > 1 && (
                         <ResultRow label="Viral Multiplier" value={`${sim.viralMult.toFixed(2)}x health dmg`} color="text-teal-300"
-                          tooltip="Stack 1: +100% health dmg, stacks 2-10: +25% each" />
+                          tooltip="Stack 1: +100% health dmg, stacks 2–10: +25% each (max 4.25×). Uses discrete peak stacks when available." />
                       )}
-                      {sim.corrosiveStrippedArmor < sim.armor && (
-                        <ResultRow label="Corrosive Strip" value={`${fmt(sim.armor)} → ${fmt(sim.corrosiveStrippedArmor)}`} color="text-lime-400"
-                          tooltip="-26% armor per stack, max 10 stacks" />
+                      {sim.baseArmor > 0 && sim.corrosiveStrippedArmor < sim.baseArmor - 0.5 && (
+                        <ResultRow label="Corrosive Strip" value={`${fmt(sim.baseArmor)} → ${fmt(sim.corrosiveStrippedArmor)}`} color="text-lime-400"
+                          tooltip="Stack 1: −26% armor; stacks 2–10: −6% each of original (max −80% at 10). Heat strip (−50%) applied when Heat procs." />
                       )}
                       <div className="border-t border-border/50 mt-1 pt-1" />
                       {sim.slashDotDps > 0 && <ResultRow label="Slash DoT DPS" value={fmt(sim.slashDotDps)} color="text-red-300"
                         tooltip="35% base/tick, 7 ticks over 6s, bypasses armor" />}
                       {sim.heatDotDps > 0 && <ResultRow label="Heat DoT DPS" value={fmt(sim.heatDotDps)} color="text-orange-300"
-                        tooltip="50% base/tick, 6 ticks over 6s, reduced by armor" />}
+                        tooltip="50% base/tick, reduced by enemy armor DR (0.9×AR/2700)" />}
                       {sim.toxinDotDps > 0 && <ResultRow label="Toxin DoT DPS" value={fmt(sim.toxinDotDps)} color="text-green-300"
-                        tooltip="50% base/tick, 8 ticks over 8s, bypasses shields" />}
+                        tooltip="50% base/tick, bypasses shields; reduced by armor DR on health" />}
                       {sim.totalDotDps > 0 && <ResultRow label="Total DoT DPS" value={fmt(sim.totalDotDps)} bold color="text-teal-400" />}
                     </Section>
                   )}
@@ -650,7 +490,8 @@ export default function DamageSimulatorPage() {
                     <ResultRow label="Health Phase" value={sim.healthTime === Infinity ? "∞" : `${sim.healthTime.toFixed(2)}s`} color="text-red-300" />
                     <div className="border-t border-border/50 my-1" />
                     <ResultRow label="Time to Kill" value={sim.ttk === Infinity ? "∞" : sim.ttk < 0.01 ? "<0.01s" : `${sim.ttk.toFixed(2)}s`}
-                      bold color={sim.ttk < 1 ? "text-green-400" : sim.ttk < 5 ? "text-yellow-400" : sim.ttk < 15 ? "text-orange-400" : "text-red-400"} />
+                      bold color={sim.ttk < 1 ? "text-green-400" : sim.ttk < 5 ? "text-yellow-400" : sim.ttk < 15 ? "text-orange-400" : "text-red-400"}
+                      tooltip="Discrete shot-by-shot sim (same as Arsenal TTK) — not the continuous paper estimate." />
                     <ResultRow label="Shots to Kill" value={sim.shotsToKill === Infinity ? "∞" : sim.shotsToKill.toLocaleString()} bold />
                     {magazine > 0 && (
                       <ResultRow label="Magazines Needed" value={Math.ceil(sim.shotsToKill / magazine).toString()} />

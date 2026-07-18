@@ -87,9 +87,10 @@ Or run `./scripts/deploy.sh` (same steps, default branch `dev`).
 | `npm run dev` | Next.js dev server |
 | `npm run build` | Production build |
 | `npm run db:migrate` | Apply Prisma migrations |
+| `npm test` | Run Vitest unit tests |
 | `CONFIRM_SET_ADMIN=1 npx tsx scripts/set-admin.ts` | **Local dev only** — promote users to admin |
 
-Never run `set-admin.ts` against a production database you do not fully control.
+Never run `set-admin.ts` against a production database you do not fully control. More detail: [`scripts/README.md`](scripts/README.md).
 
 ## Security
 
@@ -100,6 +101,17 @@ Never run `set-admin.ts` against a production database you do not fully control.
 ## Contributing
 
 Issues and pull requests are welcome. Please do not commit secrets, database files, or user uploads.
+
+**Before changing code or data, read:**
+
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — where builders, calc, catalogs, and behaviors live
+- [`scripts/README.md`](scripts/README.md) — which scripts are safe vs data-pipeline scratch
+- Prefer **one item at a time** when editing mods/weapons/warframes/arcanes (no blanket catalog transforms)
+
+```bash
+npm test          # Vitest unit tests
+npm run lint      # ESLint
+```
 
 ## License
 

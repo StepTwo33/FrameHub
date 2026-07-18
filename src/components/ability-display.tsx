@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { AbilityScaleAttribute } from "@/lib/ability-scaling-registry";
+import type { AbilityScaleAttribute } from "@/lib/codex/ability-scaling-registry";
 import type { Ability, WarframeCalculatedStats } from "@/lib/types";
 import {
   scaleAbilityMiscStats,
@@ -9,7 +9,7 @@ import {
   scaledAbilityDamageBuff,
   abilityPercentFraction,
   type AbilityDisplayContext,
-} from "@/lib/ability-misc-stats";
+} from "@/lib/codex/ability-misc-stats";
 import { Zap, Sparkles } from "lucide-react";
 
 export type AbilityScaleHint = AbilityScaleAttribute;
@@ -644,99 +644,6 @@ export function AbilityStatsBlock({
       )}
     >
       {rows}
-    </div>
-  );
-}
-
-export function AbilityPreviewShell({
-  slot,
-  variant = "default",
-  title,
-  formLabel,
-  energyCost,
-  effectiveCost,
-  subtitle,
-  description,
-  damageType,
-  subAbilities,
-  children,
-  headerRight,
-  className,
-}: {
-  slot?: number;
-  variant?: "default" | "helminth";
-  title: string;
-  formLabel?: string;
-  energyCost: number;
-  effectiveCost: number;
-  subtitle?: string;
-  description?: string;
-  damageType?: string;
-  subAbilities?: string[];
-  children?: React.ReactNode;
-  headerRight?: React.ReactNode;
-  className?: string;
-}) {
-  const isHelminth = variant === "helminth";
-
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-lg border transition-colors",
-        isHelminth
-          ? "border-emerald-500/25 bg-gradient-to-br from-emerald-500/8 via-card/50 to-transparent ring-1 ring-emerald-500/15"
-          : "border-border/50 bg-gradient-to-br from-muted/30 via-transparent to-transparent hover:border-border/80",
-        slot != null && !isHelminth && cn("border-l-[3px]", getSlotStyle(slot).border),
-        className,
-      )}
-    >
-      <div className="p-2.5">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex min-w-0 items-start gap-2">
-            {slot != null && !isHelminth && <AbilitySlotBadge slot={slot} />}
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span
-                  className={cn(
-                    "text-xs font-semibold leading-tight",
-                    isHelminth ? "text-emerald-400" : "text-foreground",
-                  )}
-                >
-                  {title}
-                </span>
-                {formLabel && <AbilityFormBadge label={formLabel} />}
-              </div>
-              {subtitle && (
-                <p className="mt-0.5 text-[9px] text-muted-foreground">{subtitle}</p>
-              )}
-            </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5">
-            {headerRight}
-            <AbilityEnergyChip baseCost={energyCost} effectiveCost={effectiveCost} />
-          </div>
-        </div>
-
-        {description && description.length > 0 && (
-          <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">{description}</p>
-        )}
-
-        {subAbilities != null && subAbilities.length > 0 && (
-          <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-[10px] leading-relaxed text-muted-foreground">
-            {subAbilities.map((line, i) => (
-              <li key={i}>{line}</li>
-            ))}
-          </ul>
-        )}
-
-        {damageType && (
-          <div className="mt-1.5">
-            <AbilityDamageTypeChip type={damageType} />
-          </div>
-        )}
-
-        {children && <div className="mt-2">{children}</div>}
-      </div>
     </div>
   );
 }

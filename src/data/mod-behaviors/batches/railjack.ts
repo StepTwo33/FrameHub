@@ -2,7 +2,7 @@
  * Per-mod verified behaviors — Railjack Plexus (integrated) mods.
  * Overrides general.ts entries that mis-route to warframe_totals / weapon_dps.
  */
-import type { VerifiedModBehavior } from "@/lib/item-behavior-types";
+import type { VerifiedModBehavior } from "@/lib/codex/item-behavior-types";
 
 function line(
   statKey: string,

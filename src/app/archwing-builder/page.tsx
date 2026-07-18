@@ -4,25 +4,25 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { useMods, useWeapons, useArchwings, useNecramechs } from "@/lib/use-data";
-import { enrichWeapon } from "@/lib/weapon-enrich";
-import { filterArchmeleeMods } from "@/lib/archmelee-mods";
-import { archgunModsForBuilder } from "@/lib/archgun-weapon-augment-mods";
-import { isArchwingAugment } from "@/lib/archwing-augment-mods";
+import { useMods, useWeapons, useArchwings, useNecramechs } from "@/lib/weapons/use-data";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
+import { filterArchmeleeMods } from "@/lib/mods/archmelee-mods";
+import { archgunModsForBuilder } from "@/lib/mods/archgun-weapon-augment-mods";
+import { isArchwingAugment } from "@/lib/mods/archwing-augment-mods";
 import { Archwing, Necramech } from "@/data/archwing";
-import { calculateWeaponBuild } from "@/lib/calculator";
-import { buildWeaponContributionContext } from "@/lib/dps-contributions";
-import { calculateArchwingBuild, calculateNecramechBuild } from "@/lib/archwing-calculator";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
+import { buildWeaponContributionContext } from "@/lib/calc/dps-contributions";
+import { calculateArchwingBuild, calculateNecramechBuild } from "@/lib/calc/archwing-calculator";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 import { WeaponStatsPanel, ArchwingStatsPanel } from "@/components/stats-panel";
 import { Weapon, EquippedMod, CalculatedStats, ArchwingCalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Star, Zap, Save, FolderOpen, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { Star, Zap, Save, FolderOpen } from "lucide-react";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
 
 type BuilderMode = "archwing" | "necramech";
 
@@ -89,22 +89,12 @@ export default function ArchwingBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("archwing"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("archwing"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
@@ -543,38 +533,19 @@ export default function ArchwingBuilderPage() {
         }}
       />
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Archwing/Necramech Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as ArchwingBuildData;
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-cyan-500/30 transition-all">
-                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {d.mode} • {d.frameMods.length + d.weaponMods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Archwing/Necramech Builds"
+        builds={savedBuilds}
+        accent="cyan"
+        getSubtitle={(build) => {
+          const d = build.data as ArchwingBuildData;
+          return `${d.mode} • ${d.frameMods.length + d.weaponMods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}

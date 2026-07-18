@@ -11,13 +11,13 @@ import {
   importOverrides,
   OverrideCategory,
   OVERRIDE_CATEGORIES,
-} from "@/lib/data-overrides";
+} from "@/lib/overrides/data-overrides";
 import {
   exportLegacyLocalOverrides,
   getLegacyLocalOverrideCount,
   loadSharedOverrides,
   uploadLegacyLocalOverrides,
-} from "@/lib/data-overrides-client";
+} from "@/lib/overrides/data-overrides-client";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -38,10 +38,10 @@ import {
   formatOverrideFieldsSummary,
   OVERRIDE_ACTION_LABELS,
   OVERRIDE_CATEGORY_LABELS,
-} from "@/lib/override-schemas";
-import type { DataFixesPrefill } from "@/lib/data-fixes-url";
+} from "@/lib/overrides/override-schemas";
+import type { DataFixesPrefill } from "@/lib/overrides/data-fixes-url";
 import { NavBack } from "@/components/nav-back";
-import { returnLabel } from "@/lib/nav-return";
+import { returnLabel } from "@/lib/site/nav-return";
 
 const ACTION_CHIP: Record<DataOverride["action"], string> = {
   modify: "text-blue-800 bg-blue-500/10 dark:text-blue-400",

@@ -4,7 +4,7 @@
  *
  * Edit individual lines here only — no blanket stat rules.
  */
-import type { VerifiedArcaneBehavior } from "@/lib/item-behavior-types";
+import type { VerifiedArcaneBehavior } from "@/lib/codex/item-behavior-types";
 
 export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> = {
 

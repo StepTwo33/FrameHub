@@ -2,7 +2,7 @@
  * Per-mod verified behavior — one entry per mod ID, one line per stat on that mod.
  * Add mods here only after wiki verification for that specific mod.
  */
-import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/item-behavior-types";
+import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/codex/item-behavior-types";
 
 function line(
   statKey: string,

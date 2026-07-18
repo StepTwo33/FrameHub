@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { isUserBanned } from "@/lib/admin";
-import { Flag, Users, Megaphone, Wrench } from "lucide-react";
+import { isUserBanned } from "@/lib/auth/admin";
+import { Flag, Users, Megaphone, Wrench, Mail } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -48,13 +48,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             Users
           </Link>
           {isFullAdmin && (
-            <Link
-              href="/admin/updates"
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
-            >
-              <Megaphone className="h-3.5 w-3.5" />
-              Site Updates
-            </Link>
+            <>
+              <Link
+                href="/admin/updates"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+              >
+                <Megaphone className="h-3.5 w-3.5" />
+                Site Updates
+              </Link>
+              <Link
+                href="/admin/newsletter"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                Newsletter
+              </Link>
+            </>
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchPublishedSiteUpdates } from "@/lib/site-updates-server";
+import { fetchPublishedSiteUpdates } from "@/lib/site/site-updates-server";
 
 // GET /api/site-updates?limit=10 — published posts for home page
 export async function GET(req: NextRequest) {

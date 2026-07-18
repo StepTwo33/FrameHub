@@ -3,9 +3,9 @@ import {
     findUserByEmailInsensitive,
     generateVerificationCode,
     storeVerificationToken,
-} from "@/lib/auth";
-import { sendVerificationEmail } from "@/lib/email";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+} from "@/lib/auth/auth";
+import { sendVerificationEmail } from "@/lib/auth/email";
+import { checkRateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
 import { readJsonBodyLimited } from "@/lib/read-json-body";
 

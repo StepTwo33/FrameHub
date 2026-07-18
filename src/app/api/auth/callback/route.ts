@@ -6,8 +6,8 @@ import {
   SESSION_COOKIE,
   framehubSessionCookieOptions,
   oauthStateCookieOptions,
-} from "@/lib/auth";
-import { getPublicOrigin } from "@/lib/public-origin";
+} from "@/lib/auth/auth";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");

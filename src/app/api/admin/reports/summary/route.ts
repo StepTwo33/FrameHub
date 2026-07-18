@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifyAdmin } from "@/lib/admin";
+import { verifyAdmin } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";

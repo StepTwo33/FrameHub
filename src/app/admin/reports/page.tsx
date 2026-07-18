@@ -21,6 +21,7 @@ interface ApiReport {
   issues: string;
   statDiscrepancies: string;
   comment: string;
+  adminReply: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -63,6 +64,8 @@ export default function AdminReportsPage() {
   const [filterType, setFilterType] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [emailNotify, setEmailNotify] = useState<Record<string, boolean>>({});
 
   const refresh = useCallback(() => {
     fetch("/api/reports")
@@ -121,16 +124,22 @@ export default function AdminReportsPage() {
       if (action === "delete") {
         await fetch(`/api/reports/${id}`, { method: "DELETE" });
       } else {
+        const payload: { status: string; adminReply?: string; notifyByEmail?: boolean } = { status: action };
+        if (action === "resolved" || action === "wontfix") {
+          const draft = replyDrafts[id]?.trim();
+          if (draft) payload.adminReply = draft;
+          if (emailNotify[id]) payload.notifyByEmail = true;
+        }
         await fetch(`/api/reports/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: action }),
+          body: JSON.stringify(payload),
         });
       }
       refresh();
     } catch { /* ignore */ }
     setActionLoading(null);
-  }, [refresh]);
+  }, [refresh, replyDrafts, emailNotify]);
 
   if (loading) {
     return (
@@ -398,6 +407,59 @@ export default function AdminReportsPage() {
                         <p className="text-sm text-muted-foreground bg-muted/20 rounded-lg p-3 border border-border">
                           {report.comment}
                         </p>
+                      </div>
+                    )}
+
+                    {/* Existing moderator reply */}
+                    {report.adminReply && (
+                      <div>
+                        <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">Moderator reply</div>
+                        <p className="text-sm text-foreground/90 bg-sky-500/5 rounded-lg p-3 border border-sky-500/20 whitespace-pre-wrap">
+                          {report.adminReply}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Reply when closing */}
+                    {report.status === "open" && (
+                      <div className="space-y-2">
+                        <div>
+                          <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">
+                            Reply to reporter (optional)
+                          </div>
+                          <textarea
+                            value={replyDrafts[report.id] ?? ""}
+                            onChange={(e) =>
+                              setReplyDrafts((prev) => ({ ...prev, [report.id]: e.target.value }))
+                            }
+                            maxLength={4000}
+                            rows={3}
+                            placeholder="Explain what you fixed or why this won't be changed. Shown on their Profile → Reports."
+                            className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background resize-y focus:outline-none focus:border-primary/50"
+                          />
+                          <p className="text-[10px] text-muted-foreground mt-1">
+                            Signed-in reporters always see status and this reply on their profile. Email is off unless you check below.
+                          </p>
+                        </div>
+                        {report.userId && report.user?.email ? (
+                          <label className="flex items-start gap-2 cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={!!emailNotify[report.id]}
+                              onChange={(e) =>
+                                setEmailNotify((prev) => ({ ...prev, [report.id]: e.target.checked }))
+                              }
+                              className="mt-0.5 h-3.5 w-3.5 rounded border-border accent-primary"
+                            />
+                            <span className="text-[11px] text-muted-foreground leading-snug">
+                              Also email {report.user.email} about this decision
+                            </span>
+                          </label>
+                        ) : (
+                          <p className="text-[10px] text-muted-foreground/80">
+                            No account email on this report — on-site profile update only (if they were signed in).
+                          </p>
+                        )}
                       </div>
                     )}
 

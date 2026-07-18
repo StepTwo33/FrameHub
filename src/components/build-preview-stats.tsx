@@ -7,9 +7,9 @@ import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
 import {
   resolvePublicBuildWarframePreview,
   resolvePublicBuildWeaponPreview,
-} from "@/lib/build-stats";
-import type { LoadoutBuildData } from "@/lib/loadouts";
-import { useMods, useWeapons } from "@/lib/use-data";
+} from "@/lib/builds/build-stats";
+import type { LoadoutBuildData } from "@/lib/builds/loadouts";
+import { useMods, useWeapons } from "@/lib/weapons/use-data";
 import type { EquippedMod, Loadout } from "@/lib/types";
 
 function StatsDivider() {

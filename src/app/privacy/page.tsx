@@ -55,7 +55,8 @@ export default function PrivacyPage() {
                 Your account and build data are retained as long as your account is active.
                 You can delete individual builds from your profile page at any time and remove your custom avatar
                 from profile settings. Issue reports are retained so staff can track corrections and follow up when needed.
-                If you wish to delete your entire account, please contact us via the Report Issue page.
+                You can permanently delete your entire account from Profile → Settings → Danger Zone
+                (cloud builds and linked Discord data are removed; local browser builds are not).
               </p>
             </section>
 

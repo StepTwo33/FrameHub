@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buildOpenUrl } from "@/lib/build-url";
+import { buildOpenUrl } from "@/lib/builds/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
 import { AvatarCropDialog } from "@/components/avatar-crop-dialog";
 import { SupporterBadge } from "@/components/supporter-badge";
@@ -21,6 +21,7 @@ interface ProfileUser {
   bio: string | null;
   role: string;
   supporterAt: string | null;
+  newsletterOptIn: boolean;
   createdAt: string;
   _count: { builds: number; reports: number };
 }
@@ -44,6 +45,7 @@ interface UserReport {
   itemId: string;
   status: string;
   comment: string;
+  adminReply?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -91,6 +93,10 @@ export default function ProfilePage() {
   const [avatarCropOpen, setAvatarCropOpen] = useState(false);
   const [avatarCropSrc, setAvatarCropSrc] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const avatarCropSrcRef = useRef<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
@@ -219,6 +225,32 @@ export default function ProfilePage() {
     }
     setSaving(false);
   }, [user, bioInput, showMessage]);
+
+  const handleNewsletterToggle = useCallback(async (next: boolean) => {
+    if (!user) return;
+    setSaving(true);
+    const prev = user.newsletterOptIn;
+    setUser((u) => (u ? { ...u, newsletterOptIn: next } : u));
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newsletterOptIn: next }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser((u) => (u ? { ...u, ...data.user } : u));
+        showMessage("success", next ? "Newsletter emails enabled" : "Opted out of newsletters");
+      } else {
+        setUser((u) => (u ? { ...u, newsletterOptIn: prev } : u));
+        showMessage("error", data.error || "Failed to update preference");
+      }
+    } catch {
+      setUser((u) => (u ? { ...u, newsletterOptIn: prev } : u));
+      showMessage("error", "Something went wrong");
+    }
+    setSaving(false);
+  }, [user, showMessage]);
 
   const handleAvatarUpload = useCallback(async (file: File) => {
     setAvatarUploading(true);
@@ -688,6 +720,120 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
+
+            {/* Email preferences */}
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
+              <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 mb-3">
+                <Mail className="h-3.5 w-3.5" /> EMAIL PREFERENCES
+              </label>
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">Newsletters</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Occasional product news from news@frame-hub.com. Report status and account
+                    emails from support are separate and always sent when needed.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={user.newsletterOptIn !== false}
+                  disabled={saving}
+                  onClick={() => handleNewsletterToggle(!(user.newsletterOptIn ?? true))}
+                  className={cn(
+                    "relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50",
+                    user.newsletterOptIn !== false ? "bg-primary" : "bg-muted border border-border",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform",
+                      user.newsletterOptIn !== false && "translate-x-5",
+                    )}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5 space-y-3">
+              <label className="text-xs font-semibold text-red-400 flex items-center gap-1.5">
+                <Trash2 className="h-3.5 w-3.5" /> DANGER ZONE
+              </label>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Permanently delete your account, cloud builds, votes, and linked Discord connection.
+                Local builds in this browser are not removed. This cannot be undone.
+              </p>
+              {!deleteAccountOpen ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteAccountOpen(true);
+                    setDeleteConfirmInput("");
+                    setDeleteError(null);
+                  }}
+                  className="px-3 py-2 text-xs rounded-lg border border-red-500/40 text-red-400 hover:bg-red-500/10 transition-colors font-medium"
+                >
+                  Delete account…
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-[11px] text-muted-foreground">
+                    Type <span className="font-mono text-foreground">{user.username || user.email}</span> to confirm:
+                  </p>
+                  <input
+                    value={deleteConfirmInput}
+                    onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                    className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:border-red-500/50"
+                    placeholder={user.username || user.email || "confirm"}
+                    autoFocus
+                  />
+                  {deleteError && <p className="text-xs text-red-400">{deleteError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      disabled={deletingAccount || !deleteConfirmInput.trim()}
+                      onClick={async () => {
+                        setDeletingAccount(true);
+                        setDeleteError(null);
+                        try {
+                          const res = await fetch("/api/auth/account", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ confirm: deleteConfirmInput.trim() }),
+                          });
+                          const data = await res.json().catch(() => ({}));
+                          if (!res.ok) {
+                            setDeleteError(typeof data.error === "string" ? data.error : "Delete failed");
+                            return;
+                          }
+                          window.location.href = "/";
+                        } catch {
+                          setDeleteError("Network error. Try again.");
+                        } finally {
+                          setDeletingAccount(false);
+                        }
+                      }}
+                      className="px-3 py-2 text-xs rounded-lg bg-red-600 text-white hover:bg-red-500 disabled:opacity-50 font-medium transition-colors"
+                    >
+                      {deletingAccount ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Delete forever"}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={deletingAccount}
+                      onClick={() => {
+                        setDeleteAccountOpen(false);
+                        setDeleteConfirmInput("");
+                        setDeleteError(null);
+                      }}
+                      className="px-3 py-2 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -695,7 +841,7 @@ export default function ProfilePage() {
         {activeTab === "reports" && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-2xl">
             <p className="text-xs text-muted-foreground">
-              Status updates for reports you filed while signed in. Anonymous reports are not listed here.
+              Status updates and moderator replies for reports you filed while signed in appear here (no email unless a mod chooses to send one). Anonymous reports are not listed.
             </p>
             {reportsLoading ? (
               <div className="space-y-3">
@@ -738,6 +884,14 @@ export default function ProfilePage() {
                         </div>
                         {r.comment ? (
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.comment}</p>
+                        ) : null}
+                        {r.adminReply ? (
+                          <div className="mt-2 rounded-md border border-sky-500/20 bg-sky-500/5 px-2.5 py-2">
+                            <p className="text-[10px] font-semibold text-sky-400/80 uppercase mb-0.5">
+                              Moderator reply
+                            </p>
+                            <p className="text-xs text-foreground/90 whitespace-pre-wrap">{r.adminReply}</p>
+                          </div>
                         ) : null}
                         <p className="text-[10px] text-muted-foreground mt-2">
                           Submitted {new Date(r.createdAt).toLocaleString()}

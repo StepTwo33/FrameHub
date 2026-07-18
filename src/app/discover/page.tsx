@@ -13,14 +13,14 @@ import {
   EmptyState,
 } from "@/components/page-shell";
 import { Search, Loader2, Users, X, Sparkles } from "lucide-react";
-import type { PublicBuildSummary } from "@/lib/build-types";
+import type { PublicBuildSummary } from "@/lib/builds/build-types";
 import {
   buildDiscoverUrl,
   getBuildItemRef,
   searchBuildCatalog,
   type BuildSearchItem,
-} from "@/lib/build-search";
-import { BUILD_TAG_OPTIONS, tagLabel } from "@/lib/build-tags";
+} from "@/lib/builds/build-search";
+import { BUILD_TAG_OPTIONS, tagLabel } from "@/lib/builds/build-tags";
 
 const BUILD_TYPES = [
   { id: "all", label: "All" },

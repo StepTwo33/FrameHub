@@ -7,10 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getArcaneImage } from "@/lib/images";
+import { getArcaneImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 
-import { RARITY_BADGE_COLORS } from "@/lib/rarity-badge-colors";
+import { RARITY_BADGE_COLORS } from "@/lib/display/rarity-badge-colors";
 interface ArcaneSlotProps {
   arcane: Mod | null;
   rank: number;

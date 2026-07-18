@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
-import { verifyAdmin } from "@/lib/admin";
+import { verifyAdmin } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 import {
   OVERRIDE_CATEGORIES,
   type DataOverride,
   type OverrideCategory,
-} from "@/lib/data-overrides";
-import { deepMergeOverrideFields } from "@/lib/override-merge";
+} from "@/lib/overrides/data-overrides";
+import { deepMergeOverrideFields } from "@/lib/overrides/override-merge";
 
 const VALID_ACTIONS = new Set(["modify", "add", "remove"]);
 

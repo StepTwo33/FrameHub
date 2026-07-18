@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Loader2, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PublicBuildSummary } from "@/lib/build-types";
+import type { PublicBuildSummary } from "@/lib/builds/build-types";
 import { PublicBuildRow } from "@/components/public-build-row";
 import {
   HOME_SIDEBAR_BODY_CLASS,
   HOME_SIDEBAR_PANEL_CLASS,
   HOME_SIDEBAR_TAB_ROW_CLASS,
-} from "@/lib/home-sidebar-layout";
+} from "@/lib/site/home-sidebar-layout";
 import { ContentPanel } from "@/components/page-shell";
 
 type SortMode = "recent" | "popular";

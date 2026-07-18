@@ -3,11 +3,11 @@ import { AvatarImage } from "@/components/game-asset-image";
 import Link from "next/link";
 import { PageShell, PageMain, ContentPanel } from "@/components/page-shell";
 import { prisma } from "@/lib/prisma";
-import { buildOpenUrl } from "@/lib/build-url";
+import { buildOpenUrl } from "@/lib/builds/build-url";
 import { ThumbsUp, ChevronRight } from "lucide-react";
 import { SupporterBadge } from "@/components/supporter-badge";
 import { RoleBadge } from "@/components/role-badge";
-import { isSupporter } from "@/lib/supporter";
+import { isSupporter } from "@/lib/auth/supporter";
 
 export const dynamic = "force-dynamic";
 

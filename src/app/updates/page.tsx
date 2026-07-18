@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageShell, PageMain, PageHero, ContentPanel } from "@/components/page-shell";
-import { fetchPublishedSiteUpdates } from "@/lib/site-updates-server";
-import { formatSiteUpdateTime } from "@/lib/site-updates";
+import { fetchPublishedSiteUpdates } from "@/lib/site/site-updates-server";
+import { formatSiteUpdateTime } from "@/lib/site/site-updates";
 
 export const metadata = {
   title: "What's New - Frame Hub",

@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { calculateAbilityTTK, ENEMY_TYPES, type AbilityTTKEntry } from "@/lib/ability-ttk";
+import { calculateAbilityTTK, ENEMY_TYPES, type AbilityTTKEntry } from "@/lib/calc/ability-ttk";
 import { cn } from "@/lib/utils";
+import { EnemyLevelControl } from "@/components/enemy-level-control";
 
 const FACTION_COLORS: Record<string, string> = {
   Grineer: "text-red-400",
@@ -53,18 +54,7 @@ export function AbilityTTKPanel({ entries }: { entries: AbilityTTKEntry[] }) {
         </p>
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] text-muted-foreground">Lv</span>
-        <input
-          type="range"
-          min={1}
-          max={200}
-          value={level}
-          onChange={(e) => setLevel(Number(e.target.value))}
-          className="flex-1 h-1 accent-primary"
-        />
-        <span className="text-[10px] font-mono w-8 text-right">{level}</span>
-      </div>
+      <EnemyLevelControl value={level} onChange={setLevel} label="Enemy level" />
 
       <div className="flex gap-1 flex-wrap">
         {factions.map((f) => (

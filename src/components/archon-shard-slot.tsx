@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { getArchonShardImage, getShardColorName, SHARD_COLORS } from "@/lib/shard-display";
+import { getArchonShardImage, getShardColorName, SHARD_COLORS } from "@/lib/display/shard-display";
 import type { EquippedArchonShard } from "@/lib/types";
 import { Plus } from "lucide-react";
 
