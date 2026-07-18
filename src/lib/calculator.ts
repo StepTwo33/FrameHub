@@ -119,9 +119,9 @@ const STATUS_INFO: Record<string, { duration: number; ticks: number; desc: strin
   magnetic:    { duration: 6, ticks: 1, desc: '+100% dmg to shields/overguard (stacks to +325%)' },
   radiation:   { duration: 12, ticks: 1, desc: 'Confusion + friendly-fire dmg (stacks to +550%)' },
   viral:       { duration: 6, ticks: 1, desc: '+100% health dmg first stack, +25% each after (max +325%)' },
-  // Tau: status chance vulnerability (Caliban / Sentient); Void: bullet attract
-  tau:         { duration: 8, ticks: 1, desc: '+10% status chance vuln per stack (max +100% at 10)' },
-  void:        { duration: 3, ticks: 1, desc: 'Bullet Attract (pulls nearby projectiles to target)' },
+  // Wiki / in-game: Status Chance Vulnerability; DE tooltip U38.5
+  tau:         { duration: 8, ticks: 1, desc: '+10% status chance received per stack (max +100% / 2× procs at 10)' },
+  void:        { duration: 3, ticks: 1, desc: 'Bullet Attract 2.5m for 3s (pulls projectiles to proc location)' },
 };
 
 /** Damage types that deal DoT; tick fraction of modded base (before type-specific bonuses). */
