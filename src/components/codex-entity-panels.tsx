@@ -6,21 +6,21 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { PanelHeading } from "@/components/page-shell";
-import { formatCompanionType, formatWeaponCategory, getCodexWikiUrl, pct, weaponElementEntries } from "@/lib/codex-catalog";
+import { formatCompanionType, formatWeaponCategory, getCodexWikiUrl, pct, weaponElementEntries } from "@/lib/codex/codex-catalog";
 import {
   getWeaponRadialAttacks,
   radialAttackDamageTags,
   weaponHasRadialAttacks,
-} from "@/lib/weapon-radial-utils";
+} from "@/lib/weapons/weapon-radial-utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage, getModImage } from "@/lib/display/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
-import { useMods } from "@/lib/use-data";
-import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
-import { getAugmentModIdsForWarframe } from "@/lib/warframe-augment-mods";
-import { appendReturnTo } from "@/lib/nav-return";
+import { useMods } from "@/lib/weapons/use-data";
+import { getExclusiveModIdsForWeapon } from "@/lib/mods/weapon-exclusive-mods";
+import { getAugmentModIdsForWarframe } from "@/lib/mods/warframe-augment-mods";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import { dataFixesHref } from "@/lib/overrides/data-fixes-url";
-import { useStaffRole } from "@/lib/use-staff";
+import { useStaffRole } from "@/lib/auth/use-staff";
 import type { OverrideCategory } from "@/lib/overrides/data-overrides";
 import { cn } from "@/lib/utils";
 

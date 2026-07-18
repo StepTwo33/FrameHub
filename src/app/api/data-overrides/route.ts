@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
-import { verifyAdmin } from "@/lib/admin";
+import { verifyAdmin } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 import {
   OVERRIDE_CATEGORIES,

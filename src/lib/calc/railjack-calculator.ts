@@ -1,4 +1,4 @@
-import { getEffectiveModsMap } from "@/lib/effective-data";
+import { getEffectiveModsMap } from "@/lib/weapons/effective-data";
 import {
   findRailjackArmament,
   findRailjackComponent,
@@ -12,11 +12,11 @@ import {
   RAILJACK_PLEXUS_ABILITIES,
   summarizeEquippedAbilities,
   type RailjackAbilitySummary,
-} from "@/lib/railjack-abilities";
+} from "@/lib/codex/railjack-abilities";
 import {
   applyVerifiedModStatToRailjack,
   type RailjackModAccumulators,
-} from "@/lib/mod-behavior-registry";
+} from "@/lib/mods/mod-behavior-registry";
 import type {
   Mod,
   ModSlot,

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { isUserBanned } from "@/lib/admin";
+import { isUserBanned } from "@/lib/auth/admin";
 import { Flag, Users, Megaphone, Wrench, Mail } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

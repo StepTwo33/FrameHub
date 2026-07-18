@@ -8,7 +8,7 @@
 import type { Companion, Mod } from "@/lib/types";
 import {
   isCompanionPrecept,
-} from "@/lib/companion-augment-mods";
+} from "@/lib/mods/companion-augment-mods";
 
 /** Companion ids that may equip each precept mod in the builder. */
 export const COMPANION_PRECEPT_COMPANION_IDS: Readonly<Record<string, readonly string[]>> = {

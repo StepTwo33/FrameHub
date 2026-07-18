@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Megaphone } from "lucide-react";
 import { PageShell, PageMain, ContentPanel } from "@/components/page-shell";
-import { fetchPublishedSiteUpdate } from "@/lib/site-updates-server";
-import { formatSiteUpdateTime } from "@/lib/site-updates";
+import { fetchPublishedSiteUpdate } from "@/lib/site/site-updates-server";
+import { formatSiteUpdateTime } from "@/lib/site/site-updates";
 
 export async function generateMetadata({
   params,

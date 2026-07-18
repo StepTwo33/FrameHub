@@ -1,4 +1,4 @@
-import type { Weapon } from "./types";
+import type { Weapon } from "../types";
 
 /** Element keys supported for Kuva/Tenet/Coda progenitor bonus (matches calculator innate keys). */
 export const PROGENITOR_ELEMENT_IDS = [

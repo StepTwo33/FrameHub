@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { PageShell } from "@/components/page-shell";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { useMods } from "@/lib/use-data";
+import { useMods } from "@/lib/weapons/use-data";
 import {
   allReactors, allShieldArrays, allEngines, allPlating,
   allTurrets, allOrdnance,
@@ -15,7 +15,7 @@ import {
 } from "@/data/railjack";
 import { EquippedMod } from "@/lib/types";
 import { calculateRailjackBuild, railjackBuildNeedsSimulation } from "@/lib/calc/railjack-calculator";
-import { filterRailjackModsForTab } from "@/lib/railjack-plexus-mods";
+import { filterRailjackModsForTab } from "@/lib/mods/railjack-plexus-mods";
 import { cn } from "@/lib/utils";
 import { Save, FolderOpen, Crosshair, Shield, Zap, Gauge, ChevronRight, Users } from "lucide-react";
 import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, persistSavedBuild } from "@/lib/builds/build-storage";

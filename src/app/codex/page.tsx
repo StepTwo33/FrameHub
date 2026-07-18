@@ -12,27 +12,27 @@ import {
   CODEX_CATEGORY_SECTIONS,
   parseCodexSection,
   type CodexSection,
-} from "@/lib/codex-sections";
+} from "@/lib/codex/codex-sections";
 import {
   CODEX_WEAPON_CATEGORY_FILTERS,
   CODEX_COMPANION_TYPE_FILTERS,
   CODEX_HIDDEN_WEAPON_CATEGORIES,
   filterCodexWeapons,
   matchesCodexSearch,
-} from "@/lib/codex-catalog";
-import { weaponHasRadialAttacks } from "@/lib/weapon-radial-utils";
+} from "@/lib/codex/codex-catalog";
+import { weaponHasRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 import {
   isCodexListedMod,
   matchesModBrowserCategory,
   type ModBrowserCategoryId,
-} from "@/lib/mod-browser-categories";
+} from "@/lib/mods/mod-browser-categories";
 import {
   getArcaneCoverageInfo,
   getArcaneSlotCategory,
   ARCANE_TRIGGER_FILTERS,
-} from "@/lib/arcane-browser-meta";
+} from "@/lib/codex/arcane-browser-meta";
 import { getArcaneDisplayInfo } from "@/lib/display/arcane-display";
-import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
+import { getExaltedWeaponsForWarframe } from "@/lib/weapons/exalted-weapons";
 import {
   useMods,
   useArcanes,
@@ -43,7 +43,7 @@ import {
   useCompanions,
   useArchwings,
   useNecramechs,
-} from "@/lib/use-data";
+} from "@/lib/weapons/use-data";
 import { Mod } from "@/lib/types";
 import {
   CodexWeaponRow,

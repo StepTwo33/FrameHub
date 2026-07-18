@@ -17,7 +17,7 @@ import {
   AlertTriangle, Search, Wrench, Edit3,
 } from "lucide-react";
 import { NavBack } from "@/components/nav-back";
-import { decodeReturnTo, returnLabel } from "@/lib/nav-return";
+import { decodeReturnTo, returnLabel } from "@/lib/site/nav-return";
 
 interface ApiReport {
   id: string;

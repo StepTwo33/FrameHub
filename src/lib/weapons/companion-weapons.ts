@@ -1,4 +1,4 @@
-import type { Companion, Weapon } from "./types";
+import type { Companion, Weapon } from "../types";
 
 /** Weapon categories that belong in Companion Builder only (not Weapon Builder). */
 export const COMPANION_WEAPON_CATEGORIES = [

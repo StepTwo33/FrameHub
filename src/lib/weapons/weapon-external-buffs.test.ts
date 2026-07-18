@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { computeDpsContributions } from "@/lib/calc/dps-contributions";
-import { resolveWeaponExternalBuffs } from "@/lib/weapon-external-buffs";
+import { resolveWeaponExternalBuffs } from "@/lib/weapons/weapon-external-buffs";
 import { allMods } from "@/data/mods";
 import type { Ability, ModSlot, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";

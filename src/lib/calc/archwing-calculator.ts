@@ -1,10 +1,10 @@
-import { getEffectiveModsMap } from "@/lib/effective-data";
+import { getEffectiveModsMap } from "@/lib/weapons/effective-data";
 import type { Archwing, Necramech } from "@/data/archwing";
 import {
   applyVerifiedModStatToArchwing,
   applyVerifiedModStatToNecramech,
   type ArchwingModAccumulators,
-} from "@/lib/mod-behavior-registry";
+} from "@/lib/mods/mod-behavior-registry";
 import type { ArchwingCalculatedStats, Mod, ModSlot } from "@/lib/types";
 
 type EquippedArchwingMod = Pick<ModSlot, "modId" | "rank">;

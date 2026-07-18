@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { PageShell, PageMain, PageHero, FilterChip, ContentPanel, EmptyState } from "@/components/page-shell";
 import { WeaponStatsPanel } from "@/components/stats-panel";
-import { useWeapons, useMods } from "@/lib/use-data";
+import { useWeapons, useMods } from "@/lib/weapons/use-data";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
@@ -19,9 +19,9 @@ import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/displ
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getLoadouts } from "@/lib/builds/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/builds/loadout-stats";
-import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
-import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
-import { getModCategory } from "@/lib/weapon-categories";
+import { isPrimaryWeaponCategory } from "@/lib/mods/mod-weapon-eligibility";
+import { isCompanionWeaponCategory } from "@/lib/weapons/companion-weapons";
+import { getModCategory } from "@/lib/weapons/weapon-categories";
 import { toast } from "sonner";
 
 /* ─── Shared helpers ─── */

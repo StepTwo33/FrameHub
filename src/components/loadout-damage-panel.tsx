@@ -11,9 +11,9 @@ import {
 } from "@/lib/builds/loadout-stats";
 import type { Loadout } from "@/lib/types";
 import type { LoadoutStatsResult, LoadoutWeaponSlotStats } from "@/lib/builds/loadout-stats";
-import { useWeapons } from "@/lib/use-data";
+import { useWeapons } from "@/lib/weapons/use-data";
 import { allWarframes } from "@/data/warframes";
-import { weaponDamageBuffAbilities } from "@/lib/weapon-external-buffs";
+import { weaponDamageBuffAbilities } from "@/lib/weapons/weapon-external-buffs";
 import { formatMarginalPct, type DpsContribution } from "@/lib/calc/dps-contributions";
 import { ChevronDown, ChevronRight, Crosshair, Dog, Shield, Swords, Sparkles, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";

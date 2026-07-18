@@ -3,7 +3,7 @@
  * Generated: python scripts/generate_mod_behavior_batch.py tektolyst
  * Each mod has its own entry; edit lines after individual wiki review.
  */
-import type { VerifiedModBehavior, VerifiedItemStatLine } from "@/lib/item-behavior-types";
+import type { VerifiedModBehavior, VerifiedItemStatLine } from "@/lib/codex/item-behavior-types";
 
 function line(statKey: string, target: VerifiedItemStatLine['target'], mode: VerifiedItemStatLine['mode'], source: string): VerifiedItemStatLine {
   return { statKey, target, mode, source };

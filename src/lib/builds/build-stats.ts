@@ -4,7 +4,7 @@ import {
   getEffectiveWarframesMap,
   getEffectiveWeapons,
   getEffectiveWeaponsMap,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 import { allHelminthAbilities, type HelminthAbility } from "@/data/helminth";
 import {
   resolveSavedArcaneSlots,
@@ -14,7 +14,7 @@ import {
   type WeaponBuildData,
 } from "@/lib/builds/build-storage";
 import { buildAbilityTTKEntries, type AbilityTTKEntry } from "@/lib/calc/ability-ttk";
-import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
+import { resolveDefaultCompanionWeapon } from "@/lib/weapons/companion-weapons";
 import {
   calcSavedWeaponBuildStats,
   getIncarnonStatChangesForWeapon,
@@ -27,8 +27,8 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calc/calculator";
-import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
-import { enrichWeapon } from "@/lib/weapon-enrich";
+import { getPrimaryExaltedWeapon } from "@/lib/weapons/exalted-weapons";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
 import type {
   Ability,
   CalculatedStats,

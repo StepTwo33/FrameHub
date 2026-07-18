@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
-import { verifyAdmin } from "@/lib/admin";
-import { getSession } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/auth/admin";
+import { getSession } from "@/lib/auth/auth";
 import { PageShell, PageMain } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 

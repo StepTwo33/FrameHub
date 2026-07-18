@@ -10,7 +10,7 @@ import {
   HOME_SIDEBAR_BODY_CLASS,
   HOME_SIDEBAR_PANEL_CLASS,
   HOME_SIDEBAR_TAB_ROW_CLASS,
-} from "@/lib/home-sidebar-layout";
+} from "@/lib/site/home-sidebar-layout";
 import { ContentPanel } from "@/components/page-shell";
 
 type SortMode = "recent" | "popular";

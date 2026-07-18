@@ -1,10 +1,10 @@
-import { getEffectiveModsMap } from "@/lib/effective-data";
+import { getEffectiveModsMap } from "@/lib/weapons/effective-data";
 import type { Companion, CompanionCalculatedStats, Mod, ModSlot } from "@/lib/types";
 import {
   applyVerifiedModStatToCompanion,
   getVerifiedModStatLine,
   type CompanionModAccumulators,
-} from "@/lib/mod-behavior-registry";
+} from "@/lib/mods/mod-behavior-registry";
 
 const FLAT_COMPANION_STAT_KEYS = new Set([
   "incapacitationTimerReduction",

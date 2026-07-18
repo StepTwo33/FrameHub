@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyNewsletterUnsubscribeToken } from "@/lib/email";
+import { verifyNewsletterUnsubscribeToken } from "@/lib/auth/email";
 
 export const dynamic = "force-dynamic";
 

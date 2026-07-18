@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 
 /** Comma-separated admin emails in `.env` — promoted on sign-in (not stored in git). */

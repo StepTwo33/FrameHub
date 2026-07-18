@@ -13,7 +13,7 @@ import {
   type Weapon,
   type WeaponCalculationOptions,
 } from "@/lib/types";
-import { mergeWeaponCalcOptions, resolveWeaponExternalBuffs, type WeaponBuffContext } from "@/lib/weapon-external-buffs";
+import { mergeWeaponCalcOptions, resolveWeaponExternalBuffs, type WeaponBuffContext } from "@/lib/weapons/weapon-external-buffs";
 import {
   countSetModsInSlots,
   countSynthSetPieces,

@@ -1,5 +1,5 @@
-import { findUserByEmailInsensitive } from "@/lib/auth";
-import { isUserBanned } from "@/lib/admin";
+import { findUserByEmailInsensitive } from "@/lib/auth/auth";
+import { isUserBanned } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 
 export async function findVerifiedUserByDonorEmail(email: string) {

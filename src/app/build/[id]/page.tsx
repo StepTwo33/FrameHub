@@ -9,9 +9,9 @@ import { summarizeBuildPreview } from "@/lib/builds/build-preview";
 import { BuildPageVote } from "@/components/build-page-vote";
 import { BuildShareCard } from "@/components/build-share-card";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { safeParseBuildJson } from "@/lib/builds/build-types";
-import { getSiteUrl } from "@/lib/site-metadata";
+import { getSiteUrl } from "@/lib/site/site-metadata";
 import Image from "next/image";
 
 interface SharedBuild {

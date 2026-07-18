@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyFullAdmin } from "@/lib/admin";
+import { verifyFullAdmin } from "@/lib/auth/admin";
 import {
   buildNewsletterHtml,
   createNewsletterUnsubscribeToken,
   getAppBaseUrl,
   plainTextToNewsletterHtml,
   sendNewsletterEmail,
-} from "@/lib/email";
-import { checkRateLimit } from "@/lib/rate-limit";
+} from "@/lib/auth/email";
+import { checkRateLimit } from "@/lib/auth/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
 
 export const dynamic = "force-dynamic";

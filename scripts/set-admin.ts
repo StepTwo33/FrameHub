@@ -1,7 +1,7 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { resolveSqliteDatabasePath } from "../src/lib/sqlite-path";
-import { getBootstrapAdminEmails } from "../src/lib/admin";
+import { getBootstrapAdminEmails } from "../src/lib/auth/admin";
 
 /** Local dev only. Requires CONFIRM_SET_ADMIN=1 — never run on production. */
 if (process.env.CONFIRM_SET_ADMIN !== "1") {

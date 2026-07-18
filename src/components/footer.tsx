@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Github, Heart } from "lucide-react";
-import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site/site-links";
 
 const FOOTER_LINKS = [
   { href: FRAME_HUB_GITHUB_URL, label: "Open Source", external: true },

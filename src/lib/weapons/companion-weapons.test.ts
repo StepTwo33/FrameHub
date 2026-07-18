@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { allCompanions } from "@/data/companions";
-import { getCompanionWeapons } from "@/lib/companion-weapons";
+import { getCompanionWeapons } from "@/lib/weapons/companion-weapons";
 import type { Weapon } from "@/lib/types";
 
 const beastClaws: Weapon[] = [

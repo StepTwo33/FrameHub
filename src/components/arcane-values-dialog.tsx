@@ -21,7 +21,7 @@ import {
   toEffectDrafts,
   type ArcaneEffectLineDraft,
 } from "@/lib/overrides/arcane-effect-drafts";
-import { appendReturnTo } from "@/lib/nav-return";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import { dataFixesHref } from "@/lib/overrides/data-fixes-url";
 
 type ArcaneValuesDialogProps = {

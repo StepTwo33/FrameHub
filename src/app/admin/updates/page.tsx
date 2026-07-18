@@ -9,7 +9,7 @@ import {
   SITE_UPDATE_BODY_MAX,
   SITE_UPDATE_TITLE_MAX,
   type SiteUpdateSummary,
-} from "@/lib/site-updates";
+} from "@/lib/site/site-updates";
 import {
   Megaphone,
   Loader2,

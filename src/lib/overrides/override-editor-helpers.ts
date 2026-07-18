@@ -21,8 +21,8 @@ import {
   applyNecramechOverrides,
 } from "@/lib/overrides/data-overrides";
 import { applyArcaneEffectOverrides } from "@/lib/overrides/arcane-effect-overrides";
-import { getEffectiveWeapons } from "@/lib/effective-data";
-import { enrichWeapon } from "@/lib/weapon-enrich";
+import { getEffectiveWeapons } from "@/lib/weapons/effective-data";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
 import { allWeapons } from "@/data/weapons";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";

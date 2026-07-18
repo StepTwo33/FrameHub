@@ -1,4 +1,4 @@
-import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/item-behavior-types";
+import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/codex/item-behavior-types";
 import { VERIFIED_MOD_BEHAVIORS } from "@/data/mod-behaviors";
 import { FACTION_STAT_TO_ID } from "@/lib/calc/combat-multipliers";
 

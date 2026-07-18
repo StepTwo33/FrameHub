@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { isUserBanned, syncBootstrapAdminRole } from "@/lib/admin";
+import { isUserBanned, syncBootstrapAdminRole } from "@/lib/auth/admin";
 
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,5 @@
 import { Mod } from "@/lib/types";
-import { normalizeModCatalog } from "@/lib/set-mod-catalog";
+import { normalizeModCatalog } from "@/lib/mods/set-mod-catalog";
 
 const RAW_MODS: Mod[] = [
   {

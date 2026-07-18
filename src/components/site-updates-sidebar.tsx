@@ -4,12 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Loader2, Megaphone, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatSiteUpdateTime, type SiteUpdateSummary } from "@/lib/site-updates";
+import { formatSiteUpdateTime, type SiteUpdateSummary } from "@/lib/site/site-updates";
 import {
   HOME_SIDEBAR_BODY_CLASS,
   HOME_SIDEBAR_PANEL_CLASS,
   HOME_SIDEBAR_TAB_ROW_CLASS,
-} from "@/lib/home-sidebar-layout";
+} from "@/lib/site/home-sidebar-layout";
 import { ContentPanel } from "@/components/page-shell";
 
 interface SiteUpdatesSidebarProps {

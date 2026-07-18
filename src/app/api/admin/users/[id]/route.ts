@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { banUser, unbanUser, verifyAdmin, verifyFullAdmin } from "@/lib/admin";
-import { grantSupporter, revokeSupporter } from "@/lib/supporter";
+import { banUser, unbanUser, verifyAdmin, verifyFullAdmin } from "@/lib/auth/admin";
+import { grantSupporter, revokeSupporter } from "@/lib/auth/supporter";
 import { prisma } from "@/lib/prisma";
 import { logServerError } from "@/lib/log-server-error";
 

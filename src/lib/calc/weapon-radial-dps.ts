@@ -1,6 +1,6 @@
 import type { CalculatedStats, Weapon, WeaponRadialAttack } from "@/lib/types";
 import { avgCritMultiplier } from "@/lib/calc/crit-utils";
-import { getWeaponRadialAttacks } from "@/lib/weapon-radial-utils";
+import { getWeaponRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 
 export interface ScaledRadialAttack extends WeaponRadialAttack {
   /** Average damage after linear radius falloff (center = full, edge = 1 − falloffReduction). */

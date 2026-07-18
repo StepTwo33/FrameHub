@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { DataFixesPanel } from "@/components/data-fixes-panel";
 import type { DataFixesPrefill } from "@/lib/overrides/data-fixes-url";
-import { decodeReturnTo } from "@/lib/nav-return";
+import { decodeReturnTo } from "@/lib/site/nav-return";
 import { OVERRIDE_CATEGORIES, type OverrideCategory } from "@/lib/overrides/data-overrides";
 
 function isOverrideCategory(v: string | null): v is OverrideCategory {

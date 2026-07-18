@@ -5,7 +5,7 @@ import {
   PROGENITOR_ELEMENT_LABELS,
   PROGENITOR_BONUS_MIN,
   PROGENITOR_BONUS_MAX,
-} from "@/lib/weapon-progenitor";
+} from "@/lib/weapons/weapon-progenitor";
 
 export function ProgenitorControls({
   progenitorElement,

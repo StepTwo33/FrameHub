@@ -8,7 +8,7 @@ import {
 } from "@/lib/builds/loadouts";
 import type { Loadout } from "@/lib/types";
 import type { SavedBuild } from "@/lib/builds/build-storage";
-import { getEffectiveWeapons } from "@/lib/effective-data";
+import { getEffectiveWeapons } from "@/lib/weapons/effective-data";
 
 /** Minimal imported Player Sync shape (Pharaoh Predasite + slots). */
 function importedLoadoutFixture(): Loadout {

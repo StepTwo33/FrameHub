@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseBmcDonationWebhook, verifyBmcWebhookSignature } from "@/lib/bmc-webhook";
+import { parseBmcDonationWebhook, verifyBmcWebhookSignature } from "@/lib/auth/bmc-webhook";
 import { logServerError } from "@/lib/log-server-error";
 import { prisma } from "@/lib/prisma";
 import {
   findVerifiedUserByDonorEmail,
   grantSupporter,
   revokeSupporter,
-} from "@/lib/supporter";
+} from "@/lib/auth/supporter";
 
 export const dynamic = "force-dynamic";
 

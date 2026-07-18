@@ -1,4 +1,4 @@
-import type { VerifiedArcaneBehavior, VerifiedArcaneEffectLine, ItemApplyTarget } from "@/lib/item-behavior-types";
+import type { VerifiedArcaneBehavior, VerifiedArcaneEffectLine, ItemApplyTarget } from "@/lib/codex/item-behavior-types";
 import { VERIFIED_ARCANE_BEHAVIORS } from "@/data/arcane-behaviors";
 
 export function getVerifiedArcaneBehavior(arcaneId: string): VerifiedArcaneBehavior | undefined {

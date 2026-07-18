@@ -6,9 +6,9 @@ import {
     buildSessionUser,
     SESSION_COOKIE,
     framehubSessionCookieOptions,
-} from "@/lib/auth";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { getPublicOrigin } from "@/lib/public-origin";
+} from "@/lib/auth/auth";
+import { checkRateLimit, getClientIp } from "@/lib/auth/rate-limit";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 import { logServerError } from "@/lib/log-server-error";
 import { readJsonBodyLimited } from "@/lib/read-json-body";
 

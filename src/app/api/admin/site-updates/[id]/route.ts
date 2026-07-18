@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyFullAdmin } from "@/lib/admin";
+import { verifyFullAdmin } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 import {
   SITE_UPDATE_BODY_MAX,
   SITE_UPDATE_TITLE_MAX,
   type SiteUpdateSummary,
-} from "@/lib/site-updates";
+} from "@/lib/site/site-updates";
 
 function toSummary(
   row: {

@@ -1,13 +1,13 @@
 import { Mod } from "@/lib/types";
-import { isAuraMod } from "@/lib/aura-mods";
-import { isArchmeleeMod } from "@/lib/archmelee-mods";
-import { getModSlotCategory } from "@/lib/mod-slot-categories";
-import { getModCodexBrowserCategories } from "@/lib/weapon-exclusive-mods";
-import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
-import { isCompanionAffectingWarframeAugment } from "@/lib/companion-augment-mods";
-import { isArchwingAugment } from "@/lib/archwing-augment-mods";
-import { isWarframeAugment, isWarframeSpecificAugment } from "@/lib/warframe-augment-mods";
-import { isSetBonusMod } from "@/lib/set-mod-catalog";
+import { isAuraMod } from "@/lib/mods/aura-mods";
+import { isArchmeleeMod } from "@/lib/mods/archmelee-mods";
+import { getModSlotCategory } from "@/lib/mods/mod-slot-categories";
+import { getModCodexBrowserCategories } from "@/lib/mods/weapon-exclusive-mods";
+import { isWeaponExclusiveMod } from "@/lib/mods/weapon-mod-tags";
+import { isCompanionAffectingWarframeAugment } from "@/lib/mods/companion-augment-mods";
+import { isArchwingAugment } from "@/lib/mods/archwing-augment-mods";
+import { isWarframeAugment, isWarframeSpecificAugment } from "@/lib/mods/warframe-augment-mods";
+import { isSetBonusMod } from "@/lib/mods/set-mod-catalog";
 
 export type ModBrowserCategoryId =
   | "all"

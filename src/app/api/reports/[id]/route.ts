@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyAdmin } from "@/lib/admin";
-import { sendReportStatusEmail } from "@/lib/email";
+import { verifyAdmin } from "@/lib/auth/admin";
+import { sendReportStatusEmail } from "@/lib/auth/email";
 import { logServerError } from "@/lib/log-server-error";
 
 const ADMIN_REPLY_MAX = 4_000;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { extractBuildItemId, isAllowedBuildType, safeParseBuildJson } from "@/lib/builds/build-types";
 import { parseBuildTags, serializeBuildTags } from "@/lib/builds/build-tags";

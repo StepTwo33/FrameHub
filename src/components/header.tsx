@@ -8,7 +8,7 @@ import { ThemePicker } from "@/components/theme-picker";
 import { BrandMark } from "@/components/brand-mark";
 import { AvatarImage } from "@/components/game-asset-image";
 import { Input } from "@/components/ui/input";
-import { FRAME_HUB_GITHUB_URL } from "@/lib/site-links";
+import { FRAME_HUB_GITHUB_URL } from "@/lib/site/site-links";
 import { bestBuildCatalogMatch, buildDiscoverUrl, searchBuildCatalog, type BuildSearchItem } from "@/lib/builds/build-search";
 import type { PublicBuildSummary } from "@/lib/builds/build-types";
 

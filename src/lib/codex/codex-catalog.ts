@@ -1,5 +1,5 @@
 import type { Weapon } from "@/lib/types";
-import { getWeaponRadialAttacks, weaponHasRadialAttacks } from "@/lib/weapon-radial-utils";
+import { getWeaponRadialAttacks, weaponHasRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 
 /** Modular part categories — hidden from codex weapon browse (same as weapon builder). */
 export const CODEX_HIDDEN_WEAPON_CATEGORIES = new Set([

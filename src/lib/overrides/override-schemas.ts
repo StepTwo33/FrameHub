@@ -1,6 +1,6 @@
 import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/overrides/data-overrides";
-import { CODEX_COMPANION_TYPE_FILTERS, CODEX_WEAPON_CATEGORY_LABELS } from "@/lib/codex-catalog";
-import { WEAPON_ELEMENT_KEYS } from "@/lib/codex-catalog";
+import { CODEX_COMPANION_TYPE_FILTERS, CODEX_WEAPON_CATEGORY_LABELS } from "@/lib/codex/codex-catalog";
+import { WEAPON_ELEMENT_KEYS } from "@/lib/codex/codex-catalog";
 
 /** Record fields edited as individual stat rows (mods, arcanes, shards). */
 export const NESTED_RECORD_FIELDS: Partial<Record<OverrideCategory, string[]>> = {

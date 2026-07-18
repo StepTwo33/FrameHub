@@ -9,7 +9,7 @@ import {
   resolvePublicBuildWeaponPreview,
 } from "@/lib/builds/build-stats";
 import type { LoadoutBuildData } from "@/lib/builds/loadouts";
-import { useMods, useWeapons } from "@/lib/use-data";
+import { useMods, useWeapons } from "@/lib/weapons/use-data";
 import type { EquippedMod, Loadout } from "@/lib/types";
 
 function StatsDivider() {

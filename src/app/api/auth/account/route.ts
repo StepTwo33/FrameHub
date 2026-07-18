@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, SESSION_COOKIE, clearFramehubSessionCookieOptions } from "@/lib/auth";
+import { getSession, SESSION_COOKIE, clearFramehubSessionCookieOptions } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkRateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
-import { getPublicOrigin } from "@/lib/public-origin";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export const dynamic = "force-dynamic";
 

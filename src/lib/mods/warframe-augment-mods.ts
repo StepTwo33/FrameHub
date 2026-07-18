@@ -1,6 +1,6 @@
-import { getEffectiveModsMap, getEffectiveWarframesMap } from "@/lib/effective-data";
-import { isArchwingAugment } from "@/lib/archwing-augment-mods";
-import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
+import { getEffectiveModsMap, getEffectiveWarframesMap } from "@/lib/weapons/effective-data";
+import { isArchwingAugment } from "@/lib/mods/archwing-augment-mods";
+import { isWeaponExclusiveMod } from "@/lib/mods/weapon-mod-tags";
 import type { Mod } from "@/lib/types";
 
 /** Strip variant suffix so loki_prime matches augments tagged for loki. */

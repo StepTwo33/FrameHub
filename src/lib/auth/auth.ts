@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { isUserBanned, syncBootstrapAdminRole } from "@/lib/admin";
+import { isUserBanned, syncBootstrapAdminRole } from "@/lib/auth/admin";
 import crypto from "crypto";
 
 const SESSION_COOKIE = "framehub_session";

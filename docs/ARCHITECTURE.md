@@ -10,7 +10,7 @@ Short map of where things live. Prefer small, targeted changes over rewrites.
 | Codex | `src/app/codex/` | Browse items; detail UI in `codex-entity-panels.tsx` + `codex-item-panels.tsx` |
 | Compare / damage sim | `src/app/compare/`, `src/app/damage-simulator/` | |
 | Admin | `src/app/admin/` | Reports, data fixes, users, site updates, newsletter |
-| Auth / profile | `src/app/api/auth/`, `src/app/profile/` | JWT cookie sessions (`src/lib/auth.ts`) |
+| Auth / profile | `src/app/api/auth/`, `src/app/profile/` | JWT cookie sessions (`src/lib/auth/auth.ts`) |
 | Discord bot | `bot/` | Separate process; `npm run bot` |
 
 UI shells and shared layout: `src/components/` (e.g. `stats/` barrel, mod picker, override editors).
@@ -26,9 +26,9 @@ Admin editor shell: `override-editor.tsx` (item picker + save). Field UIs are sp
 | `override-abilities-editor.tsx` | Warframe / companion abilities |
 | `override-stat-rows-editor.tsx` | Nested mod/shard/stat maps |
 | `override-radial-editors.tsx` | Weapon radial attack drafts |
-| `override-editor-helpers.ts` | Catalog lookup + scalar parse/compare for the shell |
+| `override-editor-helpers.ts` | Catalog lookup + scalar parse/compare for the shell (`src/lib/overrides/`) |
 
-Schemas / merge: `src/lib/override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`.
+Schemas / merge: `src/lib/overrides/override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`.
 
 ## Data vs behavior
 
@@ -42,7 +42,7 @@ Schemas / merge: `src/lib/override-schemas.ts`, `override-merge.ts`, `data-overr
 | Arcane effects | `src/data/arcane-behaviors.ts`, `arcane-effects.ts`, `arcane-manual-overrides.json` |
 | Stance → melee class | `src/data/stances.ts` + wiki tags in `mod-weapon-tags.ts` |
 | Weapon extras | `weapon-passives.ts`, `weapon-radial-attacks.ts`, `incarnon*.ts` |
-| Runtime overrides | DB `DataOverride` + `src/lib/data-overrides*.ts` / admin Data Fixes UI |
+| Runtime overrides | DB `DataOverride` + `src/lib/overrides/data-overrides*.ts` / admin Data Fixes UI |
 
 ### Editing item data
 
@@ -51,34 +51,48 @@ Schemas / merge: `src/lib/override-schemas.ts`, `override-merge.ts`, `data-overr
 - Stance eligibility: mod `category: "stance"` + entry in `STANCE_WEAPON_TYPE` + correct weapon `stanceType`.
 - Prefer id-keyed maps over rewriting hundreds of rows.
 
-See also `.cursor/rules/no-blanket-item-edits.mdc`.
+Do not blanket-transform catalogs; edit one item (or a short reviewed list) at a time.
 
 ## Calculation stack
 
 | Concern | Start here |
 |---------|------------|
-| Weapon DPS / stats | `src/lib/calculator.ts` (re-exports helpers) |
-| Crit / fire rate / melee combo | `crit-utils.ts`, `effective-fire-rate.ts`, `melee-combo.ts` |
-| TTK / damage sim | `ttk.ts`, `damage-sim.ts`, `ability-ttk.ts` |
-| Arcanes | `arcane-calculator.ts`, `arcane-handlers.ts`, `arcane-behavior-registry.ts` |
-| Companions / archwing / railjack | `companion-calculator.ts`, `archwing-calculator.ts`, `railjack-calculator.ts` |
-| Mod eligibility | `mod-weapon-eligibility.ts`, `mod-weapon-tags.ts` data |
-| Capacity | `mod-capacity.ts`, `compute-used-capacity.ts` (incl. warframe aura capacity) |
-| Weapon builder merges | `weapon-stat-merges.ts` (Incarnon + riven deltas) |
+| Weapon DPS / stats | `src/lib/calc/calculator.ts` |
+| Crit / fire rate / melee combo | `calc/crit-utils.ts`, `effective-fire-rate.ts`, `melee-combo.ts` |
+| TTK / damage sim | `calc/ttk.ts`, `damage-sim.ts`, `ability-ttk.ts` |
+| Arcanes | `calc/arcane-calculator.ts`, `arcane-handlers.ts`, `arcane-behavior-registry.ts` |
+| Companions / archwing / railjack | `calc/companion-calculator.ts`, `archwing-calculator.ts`, `railjack-calculator.ts` |
+| Mod eligibility | `mods/mod-weapon-eligibility.ts`, tags in `src/data/` |
+| Capacity | `calc/mod-capacity.ts`, `compute-used-capacity.ts` |
+| Weapon builder merges | `calc/weapon-stat-merges.ts` (Incarnon + riven deltas) |
 
 Tests live next to modules as `*.test.ts` (Vitest: `npm test`).
 
-## `src/lib` by domain (not exhaustive)
+## `src/lib` layout
 
-| Domain | Typical files |
-|--------|----------------|
-| Auth / admin | `auth.ts`, `admin.ts`, `email.ts`, `rate-limit.ts` |
-| Builds / share | `build-url.ts`, `build-storage.ts` (`persistSavedBuild`), `share-build.ts`, `use-*-from-url.ts`, `SavedBuildsDialog`, `loadout-slot-helpers.ts` |
-| Overrides / reports | `override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`, `report-types.ts` |
-| Display | `mod-display.ts`, `arcane-display.ts`, `shard-display.ts`, `images.ts` |
-| Site | `site-updates.ts`, `site-metadata.ts`, `public-origin.ts` |
+Domain folders (prefer these for new files):
 
-When adding a helper, name it for the domain (`arcane-*`, `weapon-*`, `override-*`) rather than a generic catch-all.
+| Folder | Role |
+|--------|------|
+| `calc/` | DPS, TTK, sim, capacity, arcane/companion calculators |
+| `builds/` | Save/share/loadouts, build URL hooks, dual-form helpers |
+| `overrides/` | Data Fixes merge/schemas, runtime overrides |
+| `display/` | Labels, images, badges, clipboard/avatars |
+| `mods/` | Behavior registry, eligibility, augment catalogs |
+| `weapons/` | Enrichment, radial utils, companion weapons, `use-data` |
+| `auth/` | Sessions, admin, email, rate limits |
+| `site/` | Site updates, metadata, nav, public origin |
+| `codex/` | Codex catalog helpers, ability scaling registries |
+| `bot/` | Discord bot helpers (existing) |
+| `warframe-arsenal/` | Player Sync / Twitch arsenal (existing) |
+
+Stay at lib root: `types.ts`, `utils.ts`, `prisma.ts`, `sqlite-path.ts`, `log-server-error.ts`, `read-json-body.ts`.
+
+Catalogs remain in `src/data/` (not under lib).
+
+When adding a helper, put it in the matching domain folder rather than dumping on the lib root.
+
+Schemas / merge for Data Fixes: `src/lib/overrides/override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`.
 
 ## Database
 

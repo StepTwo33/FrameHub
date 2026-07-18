@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGoogleAuthUrl, generateOAuthState, oauthStateCookieOptions } from "@/lib/auth";
-import { getPublicOrigin } from "@/lib/public-origin";
+import { getGoogleAuthUrl, generateOAuthState, oauthStateCookieOptions } from "@/lib/auth/auth";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export async function GET(req: NextRequest) {
     const origin = getPublicOrigin(req);

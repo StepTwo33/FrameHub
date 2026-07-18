@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { verifyAdmin } from "@/lib/admin";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { verifyAdmin } from "@/lib/auth/admin";
+import { checkRateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { normalizeReportItemType } from "@/lib/overrides/report-types";
 import { logServerError } from "@/lib/log-server-error";
 

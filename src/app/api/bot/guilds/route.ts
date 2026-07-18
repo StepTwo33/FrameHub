@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth/auth";
 import { getBotInviteUrl } from "@/lib/bot/discord-oauth";
 import { listManageableGuilds, guildIconUrl } from "@/lib/bot/discord-link-service";
 import { prisma } from "@/lib/prisma";

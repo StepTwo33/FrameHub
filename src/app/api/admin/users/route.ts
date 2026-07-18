@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAdmin } from "@/lib/admin";
+import { verifyAdmin } from "@/lib/auth/admin";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/admin/users?q= — list users (admin/mod only)

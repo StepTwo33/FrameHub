@@ -2,7 +2,7 @@
  * Discord OAuth helpers for linking FrameHub accounts and bot invite URLs.
  */
 
-import { getPublicOrigin } from "@/lib/public-origin";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 const DISCORD_API = "https://discord.com/api/v10";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { AbilityScaleAttribute } from "@/lib/ability-scaling-registry";
+import type { AbilityScaleAttribute } from "@/lib/codex/ability-scaling-registry";
 import type { Ability, WarframeCalculatedStats } from "@/lib/types";
 import {
   scaleAbilityMiscStats,
@@ -9,7 +9,7 @@ import {
   scaledAbilityDamageBuff,
   abilityPercentFraction,
   type AbilityDisplayContext,
-} from "@/lib/ability-misc-stats";
+} from "@/lib/codex/ability-misc-stats";
 import { Zap, Sparkles } from "lucide-react";
 
 export type AbilityScaleHint = AbilityScaleAttribute;

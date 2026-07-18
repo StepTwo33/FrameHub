@@ -1,7 +1,7 @@
-import { getEffectiveModsMap } from "@/lib/effective-data";
+import { getEffectiveModsMap } from "@/lib/weapons/effective-data";
 import type { Mod } from "@/lib/types";
-import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
-import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
+import { isWeaponExclusiveMod } from "@/lib/mods/weapon-mod-tags";
+import { getExclusiveModIdsForWeapon } from "@/lib/mods/weapon-exclusive-mods";
 
 /** Universal archgun slot mods (excludes riven placeholder and mis-scraped entries). */
 const ARCHGUN_POOL_BLOCKLIST = new Set([

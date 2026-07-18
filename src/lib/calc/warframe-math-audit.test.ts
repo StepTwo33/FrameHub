@@ -414,7 +414,7 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 
   it("applyGravimagMode swaps to atmosphere stats (Imperator: 2× damage, 2s reload)", async () => {
-    const { applyGravimagMode, weaponHasGravimagMode } = await import("@/lib/weapon-gravimag");
+    const { applyGravimagMode, weaponHasGravimagMode } = await import("@/lib/weapons/weapon-gravimag");
     const imperator = allWeapons.find((w) => w.id === "imperator")!;
     expect(weaponHasGravimagMode(imperator)).toBe(true);
     const atmos = applyGravimagMode(imperator);
@@ -428,7 +428,7 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 
   it("Corvas atmosphere mode becomes an 11-pellet shotgun without heat", async () => {
-    const { applyGravimagMode } = await import("@/lib/weapon-gravimag");
+    const { applyGravimagMode } = await import("@/lib/weapons/weapon-gravimag");
     const corvas = allWeapons.find((w) => w.id === "corvas")!;
     expect(corvas.heat).toBe(480);
     const atmos = applyGravimagMode(corvas);
@@ -438,8 +438,8 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 
   it("atmosphere radial attacks replace Archwing ones (Kuva Ayanga 187 → 280)", async () => {
-    const { applyGravimagMode } = await import("@/lib/weapon-gravimag");
-    const { getWeaponRadialAttacks } = await import("@/lib/weapon-radial-utils");
+    const { applyGravimagMode } = await import("@/lib/weapons/weapon-gravimag");
+    const { getWeaponRadialAttacks } = await import("@/lib/weapons/weapon-radial-utils");
     const ayanga = allWeapons.find((w) => w.id === "kuva_ayanga")!;
     expect(getWeaponRadialAttacks(ayanga)[0]?.totalDamage).toBeCloseTo(187, 5);
     const atmos = applyGravimagMode(ayanga);
@@ -447,7 +447,7 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 
   it("weapons without a distinct atmosphere profile have no gravimag mode", async () => {
-    const { weaponHasGravimagMode } = await import("@/lib/weapon-gravimag");
+    const { weaponHasGravimagMode } = await import("@/lib/weapons/weapon-gravimag");
     // Corvas Prime: identical stats in both modes on the wiki — no toggle.
     const corvasPrime = allWeapons.find((w) => w.id === "corvas_prime")!;
     expect(weaponHasGravimagMode(corvasPrime)).toBe(false);

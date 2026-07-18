@@ -21,7 +21,7 @@ import {
   applyNecramechOverrides,
   getOverrides,
 } from "@/lib/overrides/data-overrides";
-import { enrichWeapon } from "@/lib/weapon-enrich";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
 import type { Mod, Weapon, Warframe, Companion, ArchonShard } from "@/lib/types";
 import type { Archwing, Necramech } from "@/data/archwing";
 

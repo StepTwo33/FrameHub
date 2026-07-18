@@ -14,7 +14,7 @@ import {
   getEffectiveWarframes,
   getEffectiveArchwings,
   getEffectiveNecramechs,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 
 export {
   getEffectiveWeapons,
@@ -27,7 +27,7 @@ export {
   getEffectiveCompanionsMap,
   getEffectiveArcanes,
   resolveEffectiveModOrArcane,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 
 function useOverrideRefresh(reload: () => void) {
   useEffect(() => {

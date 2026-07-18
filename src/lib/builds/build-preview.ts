@@ -5,7 +5,7 @@ import {
   getEffectiveModsMap,
   getEffectiveWarframesMap,
   getEffectiveWeaponsMap,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 import { resolveArcaneById } from "@/lib/builds/build-storage";
 import type { WarframeBuildData } from "@/lib/builds/build-storage";
 import { dualFormModCountSummary } from "@/lib/builds/dual-form-warframes";

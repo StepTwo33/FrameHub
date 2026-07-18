@@ -1,6 +1,6 @@
 import { MOD_EXCLUSIVE_WEAPON_IDS } from "@/data/mod-weapon-tags";
-import { getEffectiveWeaponsMap } from "@/lib/effective-data";
-import type { ModBrowserCategoryId } from "@/lib/mod-browser-categories";
+import { getEffectiveWeaponsMap } from "@/lib/weapons/effective-data";
+import type { ModBrowserCategoryId } from "@/lib/mods/mod-browser-categories";
 
 const PRIMARY_WEAPON_CATEGORIES = new Set([
   "rifle",

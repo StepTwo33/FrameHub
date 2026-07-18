@@ -7,7 +7,7 @@ import {
   applyMeleeComboToStats,
   resolveEffectiveComboCount,
 } from './melee-combo';
-import { enrichWeapon } from '../weapon-enrich';
+import { enrichWeapon } from '../weapons/weapon-enrich';
 
 export { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import {
@@ -37,7 +37,7 @@ import {
   sumSprintSpeedBonusFromModSlots,
   type WarframeModAccumulators,
   type WeaponModAccumulators,
-} from '@/lib/mod-behavior-registry';
+} from '@/lib/mods/mod-behavior-registry';
 import {
   combatDamageMultiplier,
   factionBonusFromStats,

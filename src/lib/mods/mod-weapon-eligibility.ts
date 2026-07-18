@@ -5,14 +5,14 @@ import {
   isSecondaryWeaponExilusMod,
   isTomeCanticleMod,
   isTomeMod,
-} from "@/lib/mod-slot-categories";
-import { isTomeWeapon } from "@/lib/tome-weapons";
+} from "@/lib/mods/mod-slot-categories";
+import { isTomeWeapon } from "@/lib/weapons/tome-weapons";
 import {
   isWeaponExclusiveMod,
   modCompatibleWithWeaponProfile,
   modMatchesExclusiveWeapon,
   type WeaponModProfile,
-} from "@/lib/weapon-mod-tags";
+} from "@/lib/mods/weapon-mod-tags";
 
 export type WeaponModSlotType =
   | "regular"

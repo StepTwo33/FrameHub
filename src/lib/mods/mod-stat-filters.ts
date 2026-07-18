@@ -1,7 +1,7 @@
 import type { Mod } from "@/lib/types";
-import { getVerifiedModBehavior } from "@/lib/mod-behavior-registry";
-import { isWarframeAugment } from "@/lib/warframe-augment-mods";
-import type { WeaponModSlotType } from "@/lib/mod-weapon-eligibility";
+import { getVerifiedModBehavior } from "@/lib/mods/mod-behavior-registry";
+import { isWarframeAugment } from "@/lib/mods/warframe-augment-mods";
+import type { WeaponModSlotType } from "@/lib/mods/mod-weapon-eligibility";
 
 export type ModPickerSlotKind = WeaponModSlotType | "aura" | "exilus" | "companion_precept";
 

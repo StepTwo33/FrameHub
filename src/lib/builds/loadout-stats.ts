@@ -4,15 +4,15 @@ import {
   getEffectiveWarframesMap,
   getEffectiveWeapons,
   getEffectiveWeaponsMap,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 import { incarnonDataMap } from "@/data/incarnon";
 import type { WarframeBuildData } from "@/lib/builds/build-storage";
 import { allDualFormMods, getDualFormConfig } from "@/lib/builds/dual-form-warframes";
 import { resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
-import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
+import { resolveDefaultCompanionWeapon } from "@/lib/weapons/companion-weapons";
 import { weaponFromModularData } from "@/lib/builds/modular-resolve";
-import { enrichWeapon } from "@/lib/weapon-enrich";
-import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
+import { getPrimaryExaltedWeapon } from "@/lib/weapons/exalted-weapons";
 import {
   applyWarframeShardsAndArcanes,
   calculateWarframeBuild,
@@ -27,7 +27,7 @@ import {
   mergeWeaponCalcOptions,
   resolveWeaponExternalBuffs,
   type WeaponBuffContext,
-} from "@/lib/weapon-external-buffs";
+} from "@/lib/weapons/weapon-external-buffs";
 import type {
   CalculatedStats,
   Companion,

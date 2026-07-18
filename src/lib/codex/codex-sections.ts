@@ -1,7 +1,7 @@
 import { BookOpen, Sparkles, Gem, Crosshair, User, PawPrint, Plane, Bot } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { MOD_BROWSER_CATEGORIES, type ModBrowserCategoryId } from "@/lib/mod-browser-categories";
-import { ARCANE_SLOT_FILTERS } from "@/lib/arcane-browser-meta";
+import { MOD_BROWSER_CATEGORIES, type ModBrowserCategoryId } from "@/lib/mods/mod-browser-categories";
+import { ARCANE_SLOT_FILTERS } from "@/lib/codex/arcane-browser-meta";
 
 export type CodexSection =
   | "mods"

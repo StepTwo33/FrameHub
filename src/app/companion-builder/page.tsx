@@ -13,7 +13,7 @@ import {
 } from "@/components/item-picker";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
-import { useCompanions, useWeapons, useMods } from "@/lib/use-data";
+import { useCompanions, useWeapons, useMods } from "@/lib/weapons/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
@@ -23,20 +23,20 @@ import {
   COMPANION_MAX_PRECEPTS,
   COMPANION_MOD_SLOT_COUNT,
   isCompanionPrecept,
-} from "@/lib/companion-augment-mods";
+} from "@/lib/mods/companion-augment-mods";
 import {
   companionPreceptModsForBuilder,
   companionStatModsForBuilder,
   companionPreceptEligibleForCompanion,
   isCataloguedCompanionPrecept,
-} from "@/lib/companion-precept-eligibility";
+} from "@/lib/mods/companion-precept-eligibility";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen } from "lucide-react";
 import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { cn } from "@/lib/utils";
-import { appendReturnTo } from "@/lib/nav-return";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
@@ -73,7 +73,7 @@ function getCompanionModSubCategory(companionType: string): string[] {
   }
 }
 
-import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
+import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/weapons/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";

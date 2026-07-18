@@ -5,7 +5,7 @@ import {
   exchangeDiscordCode,
   fetchDiscordUser,
 } from "@/lib/bot/discord-oauth";
-import { getPublicOrigin } from "@/lib/public-origin";
+import { getPublicOrigin } from "@/lib/site/public-origin";
 
 export async function GET(req: NextRequest) {
   const origin = getPublicOrigin(req);

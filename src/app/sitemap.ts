@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
-import { getSiteUrl } from "@/lib/site-metadata";
+import { getSiteUrl } from "@/lib/site/site-metadata";
 
 /** Refresh public build/profile URLs about hourly. */
 export const revalidate = 3600;

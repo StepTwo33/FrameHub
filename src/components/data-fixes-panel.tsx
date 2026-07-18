@@ -41,7 +41,7 @@ import {
 } from "@/lib/overrides/override-schemas";
 import type { DataFixesPrefill } from "@/lib/overrides/data-fixes-url";
 import { NavBack } from "@/components/nav-back";
-import { returnLabel } from "@/lib/nav-return";
+import { returnLabel } from "@/lib/site/nav-return";
 
 const ACTION_CHIP: Record<DataOverride["action"], string> = {
   modify: "text-blue-800 bg-blue-500/10 dark:text-blue-400",

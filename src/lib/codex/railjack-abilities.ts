@@ -1,4 +1,4 @@
-import type { PlexusModTab } from "@/lib/railjack-plexus-mods";
+import type { PlexusModTab } from "@/lib/mods/railjack-plexus-mods";
 
 export type PlexusAbilityCategory = "defensive" | "offensive" | "super";
 

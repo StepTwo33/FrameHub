@@ -6,7 +6,7 @@ import {
   MOD_WEAPON_SPECIFIC_INCOMPAT_TAGS,
   WEAPON_WIKI_SPECIFIC_TAGS,
 } from "@/data/mod-weapon-tags";
-import { getWeaponRadialAttacks } from "@/lib/weapon-radial-utils";
+import { getWeaponRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 
 /** Tags weapons carry for mod compatibility (mirrors wiki weapon tags). */
 export type WeaponModProfileTag = string;

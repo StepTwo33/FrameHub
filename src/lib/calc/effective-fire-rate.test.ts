@@ -6,7 +6,7 @@ import {
   moddedChargeTime,
   resolveEffectiveFireRate,
 } from "@/lib/calc/effective-fire-rate";
-import { enrichWeapon } from "@/lib/weapon-enrich";
+import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
 
 const modsMap = () => new Map(allMods.map((m) => [m.id, m]));
 

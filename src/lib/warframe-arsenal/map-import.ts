@@ -1,7 +1,7 @@
 import type ArsenalData from "@wfcd/arsenal-parser";
 import type { ModUnion } from "@wfcd/items";
 import type { Companion, Loadout, ModSlot, ModularBuildData } from "@/lib/types";
-import { resolveCompanionClawId } from "@/lib/companion-weapons";
+import { resolveCompanionClawId } from "@/lib/weapons/companion-weapons";
 import {
   findArcaneByName,
   findCompanionByName,

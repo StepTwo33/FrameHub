@@ -4,7 +4,7 @@ import {
   getVerifiedMiscScaling,
   type AbilityScaleAttribute,
   type VerifiedStatScaling,
-} from "@/lib/ability-scaling-registry";
+} from "@/lib/codex/ability-scaling-registry";
 
 export interface AbilityScaleContext {
   strength: number;

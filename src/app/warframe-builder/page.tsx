@@ -13,7 +13,7 @@ import {
 import { ModSlotCard } from "@/components/mod-slot";
 import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
-import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
+import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/weapons/use-data";
 import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calc/calculator";
 import {
   computeUsedCapacity,
@@ -28,12 +28,12 @@ import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { ArchonShardSlot } from "@/components/archon-shard-slot";
 import { allHelminthAbilities, HelminthAbility } from "@/data/helminth";
 import { cn } from "@/lib/utils";
-import { appendReturnTo } from "@/lib/nav-return";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import {
   getExaltedWeaponForAbility,
   getExaltedWeaponsForWarframe,
   getPrimaryExaltedWeapon,
-} from "@/lib/exalted-weapons";
+} from "@/lib/weapons/exalted-weapons";
 import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, persistSavedBuild, resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
 import { extractBuildFromUrl } from "@/lib/builds/build-url";
 import { shareBuilderBuild } from "@/lib/builds/share-build";
@@ -47,7 +47,7 @@ import { DualFormTabs } from "@/components/dual-form-tabs";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/builds/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
 import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
-import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
+import { getWeaponArcanes } from "@/lib/weapons/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
   getDualFormConfig,

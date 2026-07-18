@@ -5,10 +5,10 @@ import {
     storeVerificationToken,
     findUserByEmail,
     generateUniqueUsername,
-} from "@/lib/auth";
+} from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { sendVerificationEmail } from "@/lib/email";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { sendVerificationEmail } from "@/lib/auth/email";
+import { checkRateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { logServerError } from "@/lib/log-server-error";
 import { readJsonBodyLimited } from "@/lib/read-json-body";
 

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { SiteUpdateSummary } from "@/lib/site-updates";
+import type { SiteUpdateSummary } from "@/lib/site/site-updates";
 
 type SiteUpdateRow = {
   id: string;

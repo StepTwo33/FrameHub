@@ -29,7 +29,7 @@ import {
   HOME_RIGHT_ASIDE_CLASS,
   HOME_SIDEBAR_ASIDE_CLASS,
   HOME_SIDEBAR_INLINE_CLASS,
-} from "@/lib/home-sidebar-layout";
+} from "@/lib/site/home-sidebar-layout";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/brand-mark";
 

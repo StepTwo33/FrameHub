@@ -1,10 +1,10 @@
-import { getVerifiedFieldScaling } from "@/lib/ability-scaling-registry";
+import { getVerifiedFieldScaling } from "@/lib/codex/ability-scaling-registry";
 import { getModStatDisplayLines } from "@/lib/display/mod-display";
 import {
   applyVerifiedModStatToWeapon,
   getVerifiedModStatLine,
   type WeaponModAccumulators,
-} from "@/lib/mod-behavior-registry";
+} from "@/lib/mods/mod-behavior-registry";
 import { weaponSupportsPrimaryStyleSets } from "@/lib/calc/set-bonuses";
 import type {
   Ability,

@@ -10,7 +10,7 @@ import {
   getEffectiveNecramechs,
   getEffectiveWarframesMap,
   getEffectiveWeaponsMap,
-} from "@/lib/effective-data";
+} from "@/lib/weapons/effective-data";
 import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/display/images";
 
 export interface BuildItemDisplay {

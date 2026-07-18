@@ -22,7 +22,7 @@ import { Loadout } from "@/lib/types";
 import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/builds/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
-import { useWeapons } from "@/lib/use-data";
+import { useWeapons } from "@/lib/weapons/use-data";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";

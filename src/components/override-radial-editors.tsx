@@ -6,7 +6,7 @@ import {
   RADIAL_ELEMENT_OPTIONS,
   findPrimaryElementKey,
   type RadialDamageKey,
-} from "@/lib/weapon-radial-utils";
+} from "@/lib/weapons/weapon-radial-utils";
 import type { WeaponRadialAttack } from "@/lib/types";
 
 export interface RadialAttackDraft {

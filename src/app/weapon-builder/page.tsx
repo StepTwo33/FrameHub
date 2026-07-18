@@ -14,24 +14,24 @@ import {
 import { ModSlotCard } from "@/components/mod-slot";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, type SlotType } from "@/components/mod-picker";
-import { useWeapons, useMods } from "@/lib/use-data";
+import { useWeapons, useMods } from "@/lib/weapons/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calc/calculator";
 import { modCapacityAtRank } from "@/lib/calc/mod-capacity";
 import { mergeIncarnonStatChanges, mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
-import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapon-gravimag";
+import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
 import {
   weaponSupportsProgenitor,
   PROGENITOR_BONUS_DEFAULT,
-} from "@/lib/weapon-progenitor";
+} from "@/lib/weapons/weapon-progenitor";
 import { Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Crosshair, Orbit } from "lucide-react";
-import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
-import { isTomeWeapon } from "@/lib/tome-weapons";
-import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
+import { isPrimaryWeaponCategory } from "@/lib/mods/mod-weapon-eligibility";
+import { isTomeWeapon } from "@/lib/weapons/tome-weapons";
+import { getWeaponArcanes } from "@/lib/weapons/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { incarnonDataMap } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
-import { appendReturnTo } from "@/lib/nav-return";
+import { appendReturnTo } from "@/lib/site/nav-return";
 import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, persistSavedBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/builds/build-storage";
 import { extractBuildFromUrl, ShareableBuild } from "@/lib/builds/build-url";
 import { shareBuilderBuild } from "@/lib/builds/share-build";
@@ -44,9 +44,9 @@ import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
 import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
-import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
+import { isCompanionWeaponCategory } from "@/lib/weapons/companion-weapons";
 import { computeUsedCapacity } from "@/lib/calc/compute-used-capacity";
-import { WEAPON_CATEGORY_LABELS, getModCategory } from "@/lib/weapon-categories";
+import { WEAPON_CATEGORY_LABELS, getModCategory } from "@/lib/weapons/weapon-categories";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { StancePickerDialog } from "./stance-picker-dialog";
 import { ProgenitorControls } from "./progenitor-controls";
