@@ -65,6 +65,7 @@ export default function AdminReportsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [emailNotify, setEmailNotify] = useState<Record<string, boolean>>({});
 
   const refresh = useCallback(() => {
     fetch("/api/reports")
@@ -123,10 +124,11 @@ export default function AdminReportsPage() {
       if (action === "delete") {
         await fetch(`/api/reports/${id}`, { method: "DELETE" });
       } else {
-        const payload: { status: string; adminReply?: string } = { status: action };
+        const payload: { status: string; adminReply?: string; notifyByEmail?: boolean } = { status: action };
         if (action === "resolved" || action === "wontfix") {
           const draft = replyDrafts[id]?.trim();
           if (draft) payload.adminReply = draft;
+          if (emailNotify[id]) payload.notifyByEmail = true;
         }
         await fetch(`/api/reports/${id}`, {
           method: "PATCH",
@@ -137,7 +139,7 @@ export default function AdminReportsPage() {
       refresh();
     } catch { /* ignore */ }
     setActionLoading(null);
-  }, [refresh, replyDrafts]);
+  }, [refresh, replyDrafts, emailNotify]);
 
   if (loading) {
     return (
@@ -420,23 +422,44 @@ export default function AdminReportsPage() {
 
                     {/* Reply when closing */}
                     {report.status === "open" && (
-                      <div>
-                        <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">
-                          Reply to reporter (optional)
+                      <div className="space-y-2">
+                        <div>
+                          <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">
+                            Reply to reporter (optional)
+                          </div>
+                          <textarea
+                            value={replyDrafts[report.id] ?? ""}
+                            onChange={(e) =>
+                              setReplyDrafts((prev) => ({ ...prev, [report.id]: e.target.value }))
+                            }
+                            maxLength={4000}
+                            rows={3}
+                            placeholder="Explain what you fixed or why this won't be changed. Shown on their Profile → Reports."
+                            className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background resize-y focus:outline-none focus:border-primary/50"
+                          />
+                          <p className="text-[10px] text-muted-foreground mt-1">
+                            Signed-in reporters always see status and this reply on their profile. Email is off unless you check below.
+                          </p>
                         </div>
-                        <textarea
-                          value={replyDrafts[report.id] ?? ""}
-                          onChange={(e) =>
-                            setReplyDrafts((prev) => ({ ...prev, [report.id]: e.target.value }))
-                          }
-                          maxLength={4000}
-                          rows={3}
-                          placeholder="Explain what you fixed or why this won't be changed. Included in their email and profile."
-                          className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background resize-y focus:outline-none focus:border-primary/50"
-                        />
-                        <p className="text-[10px] text-muted-foreground mt-1">
-                          Signed-in reporters get an email with this reply when you resolve or close.
-                        </p>
+                        {report.userId && report.user?.email ? (
+                          <label className="flex items-start gap-2 cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={!!emailNotify[report.id]}
+                              onChange={(e) =>
+                                setEmailNotify((prev) => ({ ...prev, [report.id]: e.target.checked }))
+                              }
+                              className="mt-0.5 h-3.5 w-3.5 rounded border-border accent-primary"
+                            />
+                            <span className="text-[11px] text-muted-foreground leading-snug">
+                              Also email {report.user.email} about this decision
+                            </span>
+                          </label>
+                        ) : (
+                          <p className="text-[10px] text-muted-foreground/80">
+                            No account email on this report — on-site profile update only (if they were signed in).
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -458,14 +481,14 @@ export default function AdminReportsPage() {
                             disabled={isLoading}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 transition-colors disabled:opacity-50"
                           >
-                            <Check className="h-3 w-3" /> Resolve &amp; notify
+                            <Check className="h-3 w-3" /> Resolve
                           </button>
                           <button
                             onClick={() => handleAction(report.id, "wontfix")}
                             disabled={isLoading}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 hover:bg-zinc-500/20 transition-colors disabled:opacity-50"
                           >
-                            <X className="h-3 w-3" /> Won&apos;t Fix &amp; notify
+                            <X className="h-3 w-3" /> Won&apos;t Fix
                           </button>
                         </>
                       )}

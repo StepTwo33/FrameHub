@@ -841,7 +841,7 @@ export default function ProfilePage() {
         {activeTab === "reports" && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-2xl">
             <p className="text-xs text-muted-foreground">
-              Status updates for reports you filed while signed in. Anonymous reports are not listed here.
+              Status updates and moderator replies for reports you filed while signed in appear here (no email unless a mod chooses to send one). Anonymous reports are not listed.
             </p>
             {reportsLoading ? (
               <div className="space-y-3">

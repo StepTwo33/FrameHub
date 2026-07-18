@@ -14,7 +14,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   const { id } = await params;
-  let body: { status?: string; adminReply?: string };
+  let body: { status?: string; adminReply?: string; notifyByEmail?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -63,11 +63,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       data: updates,
     });
 
+    // Email only when the mod explicitly opts in — status + reply always show on Profile → Reports.
     const newStatus = updates.status as string | undefined;
-    const shouldEmailReporter = newStatus === "resolved" || newStatus === "wontfix";
+    const closing = newStatus === "resolved" || newStatus === "wontfix";
     const wasOpen = existing.status === "open";
+    const wantsEmail = body.notifyByEmail === true;
 
-    if (shouldEmailReporter && wasOpen && existing.userId && existing.user?.email) {
+    if (wantsEmail && closing && wasOpen && existing.userId && existing.user?.email) {
       try {
         await sendReportStatusEmail({
           to: existing.user.email,

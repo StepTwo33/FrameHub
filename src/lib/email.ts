@@ -96,7 +96,7 @@ export function verifyNewsletterUnsubscribeToken(token: string): string | null {
   return userId;
 }
 
-/** Email the reporter when a mod marks their ticket resolved or won't fix. No-op if RESEND_API_KEY is unset. */
+/** Opt-in email when a mod checks “Also email the reporter” on resolve / won't fix. */
 export async function sendReportStatusEmail(params: {
   to: string;
   reporterName: string;
