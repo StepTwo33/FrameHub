@@ -110,6 +110,31 @@ describe("elemental combo order (wiki: mods first, innate last)", () => {
     expect(types).not.toContain("heat");
   });
 
+  it("merges duplicate combined types from separate mod pairs (Viral+Viral → one Viral)", () => {
+    const lesion = allWeapons.find((w) => w.id === "lesion");
+    const fever = allMods.find((m) => m.id === "fever_strike_r3" || m.id === "fever_strike");
+    const north = allMods.find((m) => m.id === "north_wind_r3" || m.id === "north_wind");
+    const virulent = allMods.find((m) => m.id === "virulent_scourge");
+    const frost = allMods.find((m) => m.id === "vicious_frost");
+    if (!lesion || !fever || !north || !virulent || !frost) return;
+
+    const stats = calculateWeaponBuild(
+      lesion,
+      [
+        { modId: fever.id, rank: fever.maxRank, slotIndex: 0 },
+        { modId: north.id, rank: north.maxRank, slotIndex: 1 },
+        { modId: virulent.id, rank: virulent.maxRank, slotIndex: 2 },
+        { modId: frost.id, rank: frost.maxRank, slotIndex: 3 },
+      ],
+      modsMap(),
+    );
+
+    const viral = stats.elements.filter((e) => e.type === "viral");
+    expect(viral).toHaveLength(1);
+    expect(viral[0]!.value).toBeGreaterThan(0);
+    expect(stats.elements.filter((e) => e.type === "toxin" || e.type === "cold")).toHaveLength(0);
+  });
+
   it("preserves residual base damage when IPS/element fields are missing", () => {
     // Amprex-like: total damage set, IPS zero, no electricity field
     const amprex = allWeapons.find((w) => w.id === "amprex");

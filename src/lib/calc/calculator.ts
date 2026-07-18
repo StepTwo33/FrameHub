@@ -93,7 +93,16 @@ function resolveElementalCombos(rawElements: { type: string; value: number }[]):
       i++;
     }
   }
-  return result;
+
+  // Same final damage type stacks into one line (arsenal / wiki), even when formed
+  // from separate mod pairs (e.g. two Viral from Toxin+Cold twice).
+  const merged: ElementalDamage[] = [];
+  for (const el of result) {
+    const existing = merged.find((m) => m.type === el.type);
+    if (existing) existing.value += el.value;
+    else merged.push({ ...el });
+  }
+  return merged;
 }
 
 function findCombo(a: string, b: string): string | null {
