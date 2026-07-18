@@ -1,5 +1,18 @@
 import type { Companion, Weapon } from "./types";
 
+/** Weapon categories that belong in Companion Builder only (not Weapon Builder). */
+export const COMPANION_WEAPON_CATEGORIES = [
+  "sentinel_weapon",
+  "hound_weapon",
+  "beast_claw",
+] as const;
+
+export type CompanionWeaponCategory = (typeof COMPANION_WEAPON_CATEGORIES)[number];
+
+export function isCompanionWeaponCategory(category: string): boolean {
+  return (COMPANION_WEAPON_CATEGORIES as readonly string[]).includes(category);
+}
+
 /** Breed-specific claw weapon per companion id (not interchangeable within a family). */
 export const COMPANION_CLAW_BY_ID: Record<string, string> = {
   chesa: "chesa_claws",

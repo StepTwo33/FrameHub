@@ -69,6 +69,15 @@ function usesPercentDisplay(statKey: string): boolean {
   return statKey.includes("Damage") || statKey.includes("Speed") || statKey.includes("Rate");
 }
 
+/** True when catalog stores a per-rank % that scales as base × (rank+1). */
+export function isPercentLikeModStat(statKey: string): boolean {
+  return usesPercentDisplay(statKey);
+}
+
+export function isFlatModStat(statKey: string): boolean {
+  return FLAT_STAT_KEYS.has(statKey);
+}
+
 function formatStatNumber(value: number): string {
   const abs = Math.abs(value);
   const decimals = abs % 1 !== 0 && abs < 10 ? 1 : 0;

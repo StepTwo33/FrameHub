@@ -820,6 +820,11 @@ export function OverrideEditor({ onSave, onCancel, backLink, prefill }: Override
               onAddKey={(key) => handleAddStatKey(recordField, key)}
               onRemoveKey={handleRemoveStatKey}
               statOptions={statPickerOptions}
+              maxRank={
+                category === "mod" && itemData?.maxRank != null
+                  ? Number(itemData.maxRank)
+                  : undefined
+              }
             />
           ))}
 

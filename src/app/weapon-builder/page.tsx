@@ -51,6 +51,7 @@ import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
 import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
+import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
 
 const categoryLabels: Record<string, string> = {
   all: "All",
@@ -64,9 +65,6 @@ const categoryLabels: Record<string, string> = {
   launcher: "Launchers",
   archgun: "Archguns",
   archmelee: "Archmelee",
-  sentinel_weapon: "Sentinel",
-  hound_weapon: "Hound",
-  beast_claw: "Beast Claws",
   tektolyst: "Tektolyst",
 };
 
@@ -75,8 +73,7 @@ function getModCategory(weaponCategory: string): string {
   if (weaponCategory === "archgun") return "archgun";
   if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
   if (weaponCategory === "archmelee") return "archmelee";
-  if (["melee", "beast_claw"].includes(weaponCategory)) return "melee";
-  if (["sentinel_weapon", "hound_weapon"].includes(weaponCategory)) return "primary";
+  if (weaponCategory === "melee") return "melee";
   if (weaponCategory === "tektolyst") return "tektolyst";
   return weaponCategory;
 }
@@ -149,6 +146,22 @@ export default function WeaponBuilderPage() {
       if (!shared || shared.type !== "weapon") return;
       const weapon = allWeapons.find((w) => w.id === shared.itemId);
       if (!weapon) return;
+      if (isCompanionWeaponCategory(weapon.category)) {
+        toast.error("Companion weapons are built in Companion Builder", {
+          description: `${weapon.name} — open Companion Builder to configure this weapon.`,
+          action: {
+            label: "Open",
+            onClick: () => {
+              window.location.href = "/companion-builder";
+            },
+          },
+        });
+        const url = new URL(window.location.href);
+        url.searchParams.delete("build");
+        const qs = url.searchParams.toString();
+        window.history.replaceState({}, "", qs ? `${url.pathname}?${qs}` : url.pathname);
+        return;
+      }
       setSelectedWeapon(weapon);
       setShowWeaponList(false);
       const mods: EquippedMod[] = shared.mods.map((m, i) => {
@@ -200,6 +213,18 @@ export default function WeaponBuilderPage() {
     const d = build.data as WeaponBuildData;
     const weapon = allWeapons.find((w) => w.id === d.weaponId);
     if (!weapon) { toast.error("Weapon not found"); return; }
+    if (isCompanionWeaponCategory(weapon.category)) {
+      toast.error("Companion weapons are built in Companion Builder", {
+        description: build.name,
+        action: {
+          label: "Open",
+          onClick: () => {
+            window.location.href = "/companion-builder";
+          },
+        },
+      });
+      return;
+    }
     setSelectedWeapon(weapon);
     setEquippedMods(d.mods.map((m) => {
       const mod = modsMap.get(m.modId);
@@ -351,7 +376,14 @@ export default function WeaponBuilderPage() {
   }, [selectedWeapon, equippedMods, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, weaponCalcOptions, selectedEvolutions, buildIsPublic, currentBuildId]);
 
   const filteredWeapons = useMemo(() => {
-    const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
+    const hiddenCategories = [
+      "amp_prism",
+      "zaw_strike",
+      "kitgun_chamber",
+      "sentinel_weapon",
+      "hound_weapon",
+      "beast_claw",
+    ];
     let weapons = allWeapons.filter((w) => !hiddenCategories.includes(w.category));
     if (weaponCategory !== "all") {
       weapons = weapons.filter((w) => w.category === weaponCategory);

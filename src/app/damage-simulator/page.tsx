@@ -18,6 +18,7 @@ import {
   factionBonusFromStats,
   factionDotMultiplier,
 } from "@/lib/combat-multipliers";
+import { EnemyLevelControl } from "@/components/enemy-level-control";
 
 const FACTION_COLORS: Record<string, string> = {
   Grineer: "#FF6B35", Corpus: "#00B4D8", Infested: "#2ECC71",
@@ -547,22 +548,8 @@ export default function DamageSimulatorPage() {
                 </div>
 
                 {selectedEnemy && (
-                  <div className="mt-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] text-muted-foreground">Level</span>
-                      <input
-                        type="range"
-                        min={1} max={200} value={enemyLevel}
-                        onChange={(e) => setEnemyLevel(Number(e.target.value))}
-                        className="flex-1 h-1 accent-primary"
-                      />
-                      <input
-                        type="number"
-                        min={1} max={9999} value={enemyLevel}
-                        onChange={(e) => setEnemyLevel(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-14 bg-background border border-border rounded px-1.5 py-0.5 text-xs font-mono text-right"
-                      />
-                    </div>
+                  <div className="mt-3 min-w-0">
+                    <EnemyLevelControl value={enemyLevel} onChange={setEnemyLevel} />
                   </div>
                 )}
               </Section>

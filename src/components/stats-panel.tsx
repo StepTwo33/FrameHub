@@ -21,6 +21,8 @@ import {
   type DpsContributionCategory,
   type WeaponDpsCalcContext,
 } from "@/lib/dps-contributions";
+import { EnemyLevelControl } from "@/components/enemy-level-control";
+import { avgCritMultiplier, critTierDamage } from "@/lib/crit-utils";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-700 dark:text-orange-400",
@@ -76,7 +78,7 @@ function CollapsibleSection({ title, defaultOpen, children }: {
         {open ? <ChevronDown className="h-3 w-3 inline-block" /> : <ChevronRight className="h-3 w-3 inline-block" />}
         {title}
       </button>
-      {open && <div className="ml-1">{children}</div>}
+      {open && <div className="ml-1 min-w-0 overflow-x-hidden">{children}</div>}
     </div>
   );
 }
@@ -85,23 +87,32 @@ function SimSlider({ label, value, min, max, onChange, suffix, tooltip }: {
   label: string; value: number; min: number; max: number;
   onChange: (v: number) => void; suffix?: string; tooltip?: string;
 }) {
+  const clamp = (v: number) => Math.min(max, Math.max(min, v));
   return (
-    <div className="flex items-center gap-2" title={tooltip}>
-      <span className="text-[10px] text-muted-foreground w-24 shrink-0">{label}</span>
-      <input
-        type="range" min={min} max={max} value={Math.min(value, max)}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="flex-1 h-1 accent-primary cursor-pointer"
-      />
-      <input
-        type="number" min={min} value={value}
-        onChange={(e) => {
-          const v = Number(e.target.value);
-          if (!isNaN(v) && v >= min) onChange(v);
-        }}
-        className="w-10 text-[10px] font-mono text-right bg-background border border-border rounded px-1 py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-      />
-      {suffix && <span className="text-[10px] text-muted-foreground">{suffix}</span>}
+    <div className="w-full min-w-0 space-y-0.5" title={tooltip}>
+      <span className="block text-[10px] text-muted-foreground leading-tight">{label}</span>
+      <div className="flex min-w-0 items-center gap-2">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={Math.min(value, max)}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="min-w-0 flex-1 h-1 accent-primary cursor-pointer"
+        />
+        <input
+          type="number"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (!isNaN(v)) onChange(clamp(v));
+          }}
+          className="w-10 shrink-0 text-[10px] font-mono text-right bg-background border border-border rounded px-1 py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        {suffix && <span className="shrink-0 text-[10px] text-muted-foreground">{suffix}</span>}
+      </div>
     </div>
   );
 }
@@ -155,7 +166,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
   );
 
   return (
-    <div className="border border-border rounded-xl p-4 bg-card space-y-1">
+    <div className="border border-border rounded-xl p-4 bg-card space-y-1 min-w-0 overflow-x-hidden">
       <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground mb-2">WEAPON STATS</h3>
 
       {weapon?.passive && (
@@ -167,7 +178,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
       {/* Simulation Controls */}
       {simParams && onSimParamsChange && (
         <CollapsibleSection title="SIMULATION" defaultOpen={hasConditionals}>
-          <div className="space-y-1.5 py-1">
+          <div className="space-y-1.5 py-1 min-w-0">
             {isMelee && (
               <SimSlider
                 label="Combo Hits" value={simParams.comboCount} min={0} max={260}
@@ -446,6 +457,57 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 ))}
               </>
             )}
+          </CollapsibleSection>
+        );
+      })()}
+
+      {/* Per-hit damage — no multishot, fire rate, or DPS averaging */}
+      {(() => {
+        const hitBase = (stats.arsenalDamage ?? stats).totalDamage;
+        const cm = stats.criticalMultiplier;
+        const cc = stats.criticalChance;
+        const yellow = hitBase * critTierDamage(1, cm);
+        const orange = hitBase * critTierDamage(2, cm);
+        const red = hitBase * critTierDamage(3, cm);
+        const avgHit = hitBase * avgCritMultiplier(cc, cm);
+        return (
+          <CollapsibleSection title="HIT DAMAGE" defaultOpen>
+            <p className="text-[9px] text-muted-foreground/70 mb-1 leading-snug">
+              Per pellet / swing — not DPS (no multishot or fire rate).
+            </p>
+            <StatRow
+              label="Non-crit hit"
+              value={hitBase.toFixed(1)}
+              highlighted
+              tooltip="Raw hit damage before crit averaging, multishot, and fire rate."
+            />
+            <StatRow
+              label="Yellow crit"
+              value={yellow.toFixed(1)}
+              color="text-yellow-400"
+              tooltip={`Non-crit × ${cm.toFixed(2)} crit multiplier`}
+            />
+            {cc >= 1 && (
+              <StatRow
+                label="Orange crit"
+                value={orange.toFixed(1)}
+                color="text-orange-400"
+                tooltip="Tier-2 crit (crit chance ≥ 100%)"
+              />
+            )}
+            {cc >= 2 && (
+              <StatRow
+                label="Red crit"
+                value={red.toFixed(1)}
+                color="text-red-400"
+                tooltip="Tier-3 crit (crit chance ≥ 200%)"
+              />
+            )}
+            <StatRow
+              label="Avg hit"
+              value={avgHit.toFixed(1)}
+              tooltip="Non-crit hit × average crit multiplier (still without multishot / fire rate)."
+            />
           </CollapsibleSection>
         );
       })()}
@@ -1157,17 +1219,8 @@ function TTKSection({ stats }: { stats: CalculatedStats }) {
 
   return (
     <CollapsibleSection title="TIME TO KILL" defaultOpen={false}>
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-[10px] text-muted-foreground">Lv</span>
-        <input
-          type="range"
-          min={1}
-          max={200}
-          value={level}
-          onChange={(e) => setLevel(Number(e.target.value))}
-          className="flex-1 h-1 accent-primary"
-        />
-        <span className="text-[10px] font-mono w-8 text-right">{level}</span>
+      <div className="mb-2 min-w-0">
+        <EnemyLevelControl value={level} onChange={setLevel} label="Enemy level" />
       </div>
       <div className="flex gap-1 mb-2 flex-wrap">
         {factions.map((f) => (

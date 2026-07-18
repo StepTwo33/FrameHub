@@ -17,6 +17,7 @@ import { weaponDamageBuffAbilities } from "@/lib/weapon-external-buffs";
 import { formatMarginalPct, type DpsContribution } from "@/lib/dps-contributions";
 import { ChevronDown, ChevronRight, Crosshair, Dog, Shield, Swords, Sparkles, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EnemyLevelControl } from "@/components/enemy-level-control";
 
 const SCENARIO_LABELS: Record<DamageScenario, string> = {
   paper: "Paper",
@@ -245,16 +246,8 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
               ))}
             </select>
           </div>
-          <div className="w-20">
-            <label className="text-[10px] text-muted-foreground block mb-0.5">Level</label>
-            <input
-              type="number"
-              min={1}
-              max={9999}
-              value={enemyLevel}
-              onChange={(e) => setEnemyLevel(parseInt(e.target.value, 10) || 1)}
-              className="w-full bg-background border border-border rounded-md px-2 py-1 text-xs font-mono"
-            />
+          <div className="min-w-0 flex-1 max-w-[10rem]">
+            <EnemyLevelControl value={enemyLevel} onChange={setEnemyLevel} />
           </div>
         </div>
       )}

@@ -20,6 +20,8 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { getLoadouts } from "@/lib/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
 import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
+import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
+import { toast } from "sonner";
 
 /* ─── Shared helpers ─── */
 
@@ -101,7 +103,14 @@ function BuildCompareTab() {
   const [weaponSearch, setWeaponSearch] = useState("");
 
   const filteredWeapons = useMemo(() => {
-    const hiddenCategories = ["amp_prism", "zaw_strike", "kitgun_chamber"];
+    const hiddenCategories = [
+      "amp_prism",
+      "zaw_strike",
+      "kitgun_chamber",
+      "sentinel_weapon",
+      "hound_weapon",
+      "beast_claw",
+    ];
     let weapons = allWeapons.filter((w) => !hiddenCategories.includes(w.category));
     if (weaponSearch.trim()) {
       const q = weaponSearch.toLowerCase();
@@ -117,6 +126,17 @@ function BuildCompareTab() {
   };
 
   const selectWeapon = (side: 0 | 1, weapon: Weapon) => {
+    if (isCompanionWeaponCategory(weapon.category)) {
+      toast.error("Companion weapons are built in Companion Builder", {
+        action: {
+          label: "Open",
+          onClick: () => {
+            window.location.href = "/companion-builder";
+          },
+        },
+      });
+      return;
+    }
     setBuilds((prev) => {
       const next = [...prev] as [BuildSlot, BuildSlot];
       next[side] = { weapon, mods: [], stats: recalcStats(weapon, []) };

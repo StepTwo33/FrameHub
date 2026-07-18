@@ -1,4 +1,4 @@
-function critTierDamage(tier: number, critMultiplier: number): number {
+export function critTierDamage(tier: number, critMultiplier: number): number {
   return tier * (critMultiplier - 1.0) + 1.0;
 }
 
