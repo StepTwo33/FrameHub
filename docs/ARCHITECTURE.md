@@ -57,7 +57,7 @@ Tests live next to modules as `*.test.ts` (Vitest: `npm test`).
 | Domain | Typical files |
 |--------|----------------|
 | Auth / admin | `auth.ts`, `admin.ts`, `email.ts`, `rate-limit.ts` |
-| Builds / share | `build-url.ts`, `build-storage.ts`, `share-build.ts`, `use-*-from-url.ts` |
+| Builds / share | `build-url.ts`, `build-storage.ts` (`persistSavedBuild`), `share-build.ts`, `use-*-from-url.ts`, `SavedBuildsDialog` |
 | Overrides / reports | `override-schemas.ts`, `override-merge.ts`, `report-types.ts` |
 | Display | `mod-display.ts`, `arcane-display.ts`, `shard-display.ts`, `images.ts` |
 | Site | `site-updates.ts`, `site-metadata.ts`, `public-origin.ts` |

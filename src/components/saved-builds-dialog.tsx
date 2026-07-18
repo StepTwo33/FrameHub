@@ -24,10 +24,18 @@ export function SavedBuildsDialog({
   getSubtitle: (build: SavedBuild) => string;
   onLoad: (build: SavedBuild) => void;
   onDelete: (id: string) => void;
-  accent?: "cyan" | "purple";
+  accent?: "cyan" | "purple" | "green" | "orange" | "rose";
 }) {
   const hoverBorder =
-    accent === "purple" ? "hover:border-purple-500/30" : "hover:border-cyan-500/30";
+    accent === "purple"
+      ? "hover:border-purple-500/30"
+      : accent === "green"
+        ? "hover:border-green-500/30"
+        : accent === "orange"
+          ? "hover:border-orange-500/30"
+          : accent === "rose"
+            ? "hover:border-rose-500/30"
+            : "hover:border-cyan-500/30";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -31,7 +31,7 @@ import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import { incarnonDataMap } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, persistSavedBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
 import { extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
 import { shareBuilderBuild } from "@/lib/share-build";
 import { toast } from "sonner";
@@ -250,23 +250,13 @@ export default function WeaponBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
     setBuildDescription(description);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("weapon"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("weapon"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });

@@ -31,9 +31,9 @@ import {
 } from "@/lib/companion-precept-eligibility";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, saveCloudBuild } from "@/lib/build-storage";
+import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen } from "lucide-react";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, persistSavedBuild } from "@/lib/build-storage";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
 import { toast } from "sonner";
@@ -152,23 +152,13 @@ export default function CompanionBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
     setBuildDescription(description);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("companion"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("companion"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
@@ -842,39 +832,20 @@ export default function CompanionBuilderPage() {
         weaponCategory={selectedWeapon?.category}
       />
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Companion Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as CompanionBuildData;
-                  const comp = allCompanions.find((c) => c.id === d.companionId);
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-green-500/30 transition-all">
-                      <button onClick={() => handleLoadBuild(build)} className="flex-1 text-left">
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {comp?.name ?? d.companionId} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteBuild(build.id)} className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Companion Builds"
+        builds={savedBuilds}
+        accent="green"
+        getSubtitle={(build) => {
+          const d = build.data as CompanionBuildData;
+          const comp = allCompanions.find((c) => c.id === d.companionId);
+          return `${comp?.name ?? d.companionId} • ${d.mods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}

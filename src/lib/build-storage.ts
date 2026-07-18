@@ -118,6 +118,35 @@ export async function deleteCloudBuild(id: string): Promise<boolean> {
   }
 }
 
+/**
+ * Local-first save used by all builders: write localStorage, then sync to the
+ * cloud when logged in. Remaps the local id if the API assigns a new one.
+ */
+export async function persistSavedBuild(build: SavedBuild): Promise<{
+  id: string;
+  isPublic: boolean;
+  synced: boolean;
+  builds: SavedBuild[];
+}> {
+  saveBuild(build);
+  let id = build.id;
+  let isPublic = !!build.isPublic;
+  let synced = false;
+
+  const cloudResult = await saveCloudBuild(build);
+  if (cloudResult) {
+    synced = true;
+    isPublic = cloudResult.isPublic ?? isPublic;
+    if (cloudResult.id !== build.id) {
+      deleteBuild(build.id);
+      saveBuild({ ...build, id: cloudResult.id, isPublic });
+    }
+    id = cloudResult.id;
+  }
+
+  return { id, isPublic, synced, builds: getSavedBuilds(build.type) };
+}
+
 // Weapon build data
 export interface WeaponBuildData {
   weaponId: string;

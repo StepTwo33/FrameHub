@@ -30,7 +30,7 @@ import {
   getExaltedWeaponsForWarframe,
   getPrimaryExaltedWeapon,
 } from "@/lib/exalted-weapons";
-import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, persistSavedBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
 import { extractBuildFromUrl } from "@/lib/build-url";
 import { shareBuilderBuild } from "@/lib/share-build";
 import { toast } from "sonner";
@@ -316,23 +316,13 @@ export default function WarframeBuilderPage() {
       updatedAt: Date.now(),
       data,
     };
-    saveBuild(build);
-    setCurrentBuildId(build.id);
+    const result = await persistSavedBuild(build);
+    setCurrentBuildId(result.id);
     setBuildName(name);
     setBuildDescription(description);
-    setBuildIsPublic(isPublic);
-    setSavedBuilds(getSavedBuilds("warframe"));
-
-    const cloudResult = await saveCloudBuild(build);
-    if (cloudResult) {
-      if (cloudResult.id !== build.id) {
-        // Server assigned a new id — replace the local copy so we don't keep a duplicate
-        deleteBuild(build.id);
-        saveBuild({ ...build, id: cloudResult.id, isPublic: cloudResult.isPublic ?? isPublic });
-        setSavedBuilds(getSavedBuilds("warframe"));
-      }
-      setCurrentBuildId(cloudResult.id);
-      setBuildIsPublic(cloudResult.isPublic ?? isPublic);
+    setBuildIsPublic(result.isPublic);
+    setSavedBuilds(result.builds);
+    if (result.synced) {
       toast.success("Build saved", { description: `${name} saved to your account` });
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
