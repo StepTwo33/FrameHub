@@ -808,8 +808,12 @@ export function calculateWeaponBuild(
         case 'impact': stats.impact *= (1 + value); break;
         case 'puncture': stats.puncture *= (1 + value); break;
         case 'slash': stats.slash *= (1 + value); break;
-        // Melee-specific riven stats
-        case 'range': /* melee range — visual only, no calc effect */ break;
+        // Melee-specific riven / incarnon stats
+        case 'range':
+          // Absolute meters (Incarnon Orokin Reach). Riven % range is also stored here as a
+          // display hint when base reach is unknown — still no DPS effect.
+          stats.range = (stats.range ?? 0) + value;
+          break;
         case 'slideAttack': /* slide attack bonus — visual only */ break;
         case 'finisherDamage': /* finisher bonus — visual only */ break;
         case 'comboDuration': stats.comboDuration += value; break;
@@ -817,7 +821,13 @@ export function calculateWeaponBuild(
         case 'projectileSpeed': /* visual only */ break;
         case 'zoom': /* visual only */ break;
         case 'punchThrough': /* visual only */ break;
-        case 'ammoMax': /* visual only */ break;
+        case 'ammoMax': /* riven % of ammo max — no base ammoMax on Weapon yet */ break;
+        case 'flatAmmoMax':
+          stats.ammoMax = (stats.ammoMax ?? 0) + value;
+          break;
+        case 'ammoMaxSet':
+          stats.ammoMax = value;
+          break;
         case 'recoil': /* visual only */ break;
       }
     }

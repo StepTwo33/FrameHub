@@ -20,6 +20,7 @@ import {
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calc/calculator";
 import { resolveIncarnonActiveWeapon, isIncarnonFormActive } from "@/lib/calc/incarnon-active-weapon";
+import { mergeIncarnonStatChanges } from "@/lib/calc/weapon-stat-merges";
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/calc/ttk";
 import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/calc/dps-contributions";
@@ -146,18 +147,9 @@ function getIncarnonStatChanges(
   evolutions?: Record<number, number>,
 ): Record<string, number> | undefined {
   const data = incarnonDataMap.get(weaponId);
-  if (!data || !evolutions || Object.keys(evolutions).length === 0) return undefined;
-  const merged: Record<string, number> = {};
-  for (const [tierStr, slot] of Object.entries(evolutions)) {
-    const tier = Number(tierStr);
-    const evo = data.evolutions.find((e) => e.tier === tier && e.slot === slot);
-    if (!evo) continue;
-    const changes = evo.variantStatChanges?.[weaponId] ?? evo.statChanges;
-    for (const [stat, val] of Object.entries(changes)) {
-      merged[stat] = (merged[stat] ?? 0) + val;
-    }
-  }
-  return Object.keys(merged).length > 0 ? merged : undefined;
+  return mergeIncarnonStatChanges(data, evolutions ?? {}, weaponId, {
+    formActive: isIncarnonFormActive(evolutions, data),
+  });
 }
 
 export const getIncarnonStatChangesForWeapon = getIncarnonStatChanges;

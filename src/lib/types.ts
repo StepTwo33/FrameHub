@@ -387,6 +387,10 @@ export interface CalculatedStats {
   magazine: number;
   reloadTime: number;
   multishot: number;
+  /** Melee reach / falloff meters added by incarnon (and similar) — display only. */
+  range?: number;
+  /** Ammo reserve after incarnon set/add perks — display only (base ammo not always in weapon data). */
+  ammoMax?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

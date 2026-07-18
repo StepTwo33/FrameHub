@@ -160,6 +160,56 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 4: 0 }, "paris")).toBeUndefined();
   });
 
+  it("Paris Striking Succession assumes max stacks (+60)", () => {
+    const data = incarnonDataMap.get("paris")!;
+    expect(mergeIncarnonStatChanges(data, { 4: 2 }, "paris")?.flatBaseDamage).toBe(60);
+  });
+
+  it("Soma Fresh Havoc assumes max stacks (+12)", () => {
+    const data = incarnonDataMap.get("soma")!;
+    expect(mergeIncarnonStatChanges(data, { 4: 0 }, "soma")?.flatBaseDamage).toBe(12);
+  });
+
+  it("Orokin Reach / Mercenary Chamber / Hitman's Hoard encode range and ammo", () => {
+    const ack = incarnonDataMap.get("ack_&_brunt") ?? incarnonDataMap.get("ack_brunt")!;
+    expect(mergeIncarnonStatChanges(ack, { 3: 0 }, "ack_brunt")?.range).toBe(0.7);
+    const atomos = incarnonDataMap.get("atomos")!;
+    expect(mergeIncarnonStatChanges(atomos, { 3: 1 }, "atomos")?.ammoMaxSet).toBe(560);
+    const angstrum = incarnonDataMap.get("angstrum")!;
+    expect(mergeIncarnonStatChanges(angstrum, { 3: 2 }, "angstrum")?.flatAmmoMax).toBe(9);
+    const braton = incarnonDataMap.get("braton")!;
+    expect(mergeIncarnonStatChanges(braton, { 3: 0 }, "braton_prime")?.ammoMaxSet).toBe(1125);
+  });
+
+  it("Sybaris Elemental Dominance doubles status in form", () => {
+    const data = incarnonDataMap.get("sybaris")!;
+    expect(mergeIncarnonStatChanges(data, { 4: 0 }, "sybaris")?.statusChance).toBe(0.15);
+    expect(
+      mergeIncarnonStatChanges(data, { 4: 0 }, "sybaris", { formActive: true })?.statusChance,
+    ).toBeCloseTo(0.3, 5);
+    expect(
+      mergeIncarnonStatChanges(data, { 4: 0 }, "sybaris_prime", { formActive: true })?.statusChance,
+    ).toBeCloseTo(0.16, 5);
+  });
+
+  it("Strun Elemental Balance uses form SC total ~132%", () => {
+    const data = incarnonDataMap.get("strun")!;
+    expect(mergeIncarnonStatChanges(data, { 4: 0 }, "strun")?.statusChance).toBeCloseTo(0.11, 5);
+    expect(
+      mergeIncarnonStatChanges(data, { 4: 0 }, "strun", { formActive: true })?.statusChance,
+    ).toBeCloseTo(1.32, 5);
+  });
+
+  it("range and ammoMax appear on CalculatedStats", () => {
+    const atomos = allWeapons.find((w) => w.id === "atomos")!;
+    const ammo = mergeIncarnonStatChanges(incarnonDataMap.get("atomos")!, { 3: 1 }, "atomos");
+    expect(calculateWeaponBuild(atomos, [], modsMap(), ammo).ammoMax).toBe(560);
+
+    const gammacor = allWeapons.find((w) => w.id === "gammacor")!;
+    const range = mergeIncarnonStatChanges(incarnonDataMap.get("gammacor")!, { 3: 1 }, "gammacor");
+    expect(calculateWeaponBuild(gammacor, [], modsMap(), range).range).toBe(8);
+  });
+
   it("Braton Daring Reverie / Munitions Grit variant flats", () => {
     const data = incarnonDataMap.get("braton")!;
     expect(mergeIncarnonStatChanges(data, { 1: 1 }, "braton")?.flatBaseDamage).toBe(24);

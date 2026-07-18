@@ -16,6 +16,13 @@ export interface IncarnonEvolution {
   statChanges: Record<string, number>;
   /** Per-variant overrides (wiki tables list different values per variant, e.g. Bo vs Bo Prime). */
   variantStatChanges?: Record<string, Record<string, number>>;
+  /**
+   * Extra flat deltas applied only while Incarnon Form is active
+   * (e.g. Elemental Dominance doubling, "+Y% for Incarnon Form").
+   */
+  formStatChanges?: Record<string, number>;
+  /** Per-variant overrides for formStatChanges. */
+  variantFormStatChanges?: Record<string, Record<string, number>>;
 }
 
 export interface IncarnonForm {

@@ -381,7 +381,10 @@ export default function WeaponBuilderPage() {
 
   // Merge selected incarnon evolution / riven stat changes
   const incarnonStatChanges = useMemo(
-    () => mergeIncarnonStatChanges(incarnonData, selectedEvolutions, selectedWeapon?.id),
+    () =>
+      mergeIncarnonStatChanges(incarnonData, selectedEvolutions, selectedWeapon?.id, {
+        formActive: isIncarnonFormActive(selectedEvolutions, incarnonData),
+      }),
     [incarnonData, selectedEvolutions, selectedWeapon?.id],
   );
 

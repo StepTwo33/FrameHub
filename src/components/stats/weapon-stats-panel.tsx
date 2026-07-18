@@ -249,6 +249,12 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
         {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
         {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
+        {stats.range != null && stats.range !== 0 && (
+          <StatRow label="Range" value={`+${stats.range.toFixed(1)}m`} tooltip="Incarnon / reach bonus (display)." />
+        )}
+        {stats.ammoMax != null && stats.ammoMax > 0 && (
+          <StatRow label="Ammo Max" value={stats.ammoMax.toString()} tooltip="Incarnon ammo capacity perk (display)." />
+        )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
           <StatRow
             label="Sprint Speed"
@@ -520,7 +526,9 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             const tier = Number(tierStr);
             const evo = allEvolutions.find((e) => e.tier === tier && e.slot === slot);
             if (!evo) return null;
-            const hasStats = Object.keys(evo.statChanges).length > 0;
+            const hasStats =
+              Object.keys(evo.statChanges).length > 0 ||
+              (evo.formStatChanges != null && Object.keys(evo.formStatChanges).length > 0);
             return (
               <div key={tier} className="py-0.5">
                 <div className="flex justify-between items-center">
@@ -530,10 +538,23 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                       {Object.entries(evo.statChanges).map(([s, v]) => {
                         const n = v as number;
                         if (s === "flatBaseDamage") return `baseDamage: +${n}`;
+                        if (s === "flatMagazine") return `magazine: +${n}`;
+                        if (s === "flatAmmoMax") return `ammoMax: +${n}`;
+                        if (s === "ammoMaxSet") return `ammoMax: ${n}`;
+                        if (s === "range") return `range: +${n}m`;
                         if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
                         if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
                         return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
                       }).join(", ")}
+                      {evo.formStatChanges && Object.keys(evo.formStatChanges).length > 0
+                        ? ` | form: ${Object.entries(evo.formStatChanges)
+                            .map(([s, v]) => {
+                              const n = v as number;
+                              if (s === "criticalMultiplier") return `critMult +${n}x`;
+                              return `${s} +${(n * 100).toFixed(0)}%`;
+                            })
+                            .join(", ")}`
+                        : ""}
                     </span>
                   )}
                 </div>
