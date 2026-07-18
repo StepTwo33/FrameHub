@@ -1,4 +1,4 @@
-// Core data types for Overframe
+// Core data types for FrameHub
 
 export interface Mod {
   id: string;

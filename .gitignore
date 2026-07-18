@@ -52,3 +52,30 @@ next-env.d.ts
 
 # user uploads
 public/uploads/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Personal / local notes (not project docs)
+docs/warframe-msi-a17-keybinds.md
+
+# Local script scratch / dumps (do not commit)
+scripts/**/__pycache__/
+scripts/*.log
+scripts/**/*.log
+scripts/**/*.wikitext
+scripts/_wiki_incarnon/
+scripts/_tmp_*/
+scripts/_live-og.png
+scripts/_arcane_inventory.txt
+scripts/_archgun_wiki.json
+scripts/_white_mod_stems*.txt
+scripts/_wiki_verify.txt
+scripts/_upgrade_mod_cards.log
+scripts/arcane_audit_report.txt
+scripts/arcane_rank_verify.txt
+scripts/arcane_wiki_verify.txt
+scripts/*_verify.txt
+scripts/*_audit_report.txt
