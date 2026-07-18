@@ -1,7 +1,7 @@
 "use client";
 
 import { CalculatedStats, Weapon, SimulationParams } from "@/lib/types";
-import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/set-bonuses";
+import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/calc/set-bonuses";
 import { useMemo } from "react";
 import { IncarnonEvolution } from "@/data/incarnon";
 import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
@@ -12,8 +12,8 @@ import {
   formatMarginalPct,
   type DpsContributionCategory,
   type WeaponDpsCalcContext,
-} from "@/lib/dps-contributions";
-import { avgCritMultiplier, critTierDamage } from "@/lib/crit-utils";
+} from "@/lib/calc/dps-contributions";
+import { avgCritMultiplier, critTierDamage } from "@/lib/calc/crit-utils";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 import { TTKSection } from "./ttk-section";
 import { WeaponSimControls } from "./weapon-sim-controls";

@@ -1,5 +1,5 @@
 import { ARCANE_EFFECTS, ArcaneEffectDef, ArcaneTrigger } from "@/data/arcane-effects";
-import { WARFRAME_CUSTOM_ARCANE_IDS, WEAPON_CUSTOM_ARCANE_IDS } from "@/lib/arcane-handlers";
+import { WARFRAME_CUSTOM_ARCANE_IDS, WEAPON_CUSTOM_ARCANE_IDS } from "@/lib/calc/arcane-handlers";
 import { Mod } from "@/lib/types";
 
 export type ArcaneSlotCategory =

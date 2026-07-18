@@ -1,5 +1,5 @@
 import type { CalculatedStats, Mod, ModSlot } from "@/lib/types";
-import { avgCritMultiplier } from "@/lib/crit-utils";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
 
 /**
  * Wiki Melee Combo Counter: tiers every 20 hits.

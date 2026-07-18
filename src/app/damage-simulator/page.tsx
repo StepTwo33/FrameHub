@@ -8,11 +8,11 @@ import {
   EnemyType, ENEMY_TYPES,
   HEALTH_MODIFIERS, ARMOR_MODIFIERS, SHIELD_MODIFIERS,
   getMod,
-} from "@/lib/ttk";
+} from "@/lib/calc/ttk";
 import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/build-storage";
 import { calcSavedWeaponBuildStats } from "@/lib/loadout-stats";
-import { calculatedStatsToSimInputs } from "@/lib/damage-sim-load";
-import { runDamageSim, type DamageSimResult } from "@/lib/damage-sim";
+import { calculatedStatsToSimInputs } from "@/lib/calc/damage-sim-load";
+import { runDamageSim, type DamageSimResult } from "@/lib/calc/damage-sim";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 import { EnemyLevelControl } from "@/components/enemy-level-control";
 

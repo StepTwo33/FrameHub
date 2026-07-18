@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { allWarframes } from "@/data/warframes";
-import { calculateWeaponBuild, calculateWarframeBuild } from "@/lib/calculator";
+import { calculateWeaponBuild, calculateWarframeBuild } from "@/lib/calc/calculator";
 import { getModStatDisplayLines } from "@/lib/mod-display";
 
 const modsMap = new Map(allMods.map((m) => [m.id, m]));

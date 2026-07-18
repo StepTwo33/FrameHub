@@ -5,7 +5,7 @@ import {
   getVerifiedModStatLine,
   type WeaponModAccumulators,
 } from "@/lib/mod-behavior-registry";
-import { weaponSupportsPrimaryStyleSets } from "@/lib/set-bonuses";
+import { weaponSupportsPrimaryStyleSets } from "@/lib/calc/set-bonuses";
 import type {
   Ability,
   Mod,

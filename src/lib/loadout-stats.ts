@@ -18,10 +18,10 @@ import {
   calculateWarframeBuild,
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
-} from "@/lib/calculator";
-import { calculateCompanionBuild } from "@/lib/companion-calculator";
-import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/ttk";
-import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/dps-contributions";
+} from "@/lib/calc/calculator";
+import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
+import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/calc/ttk";
+import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/calc/dps-contributions";
 import { rivenStatChangesFromModSlots } from "@/lib/warframe-arsenal/riven-resolve";
 import {
   mergeWeaponCalcOptions,

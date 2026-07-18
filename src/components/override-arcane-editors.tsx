@@ -2,7 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { arcaneEffectValuesByRank } from "@/lib/arcane-utils";
+import { arcaneEffectValuesByRank } from "@/lib/calc/arcane-utils";
 import { draftToEffectLine } from "@/lib/arcane-effect-drafts";
 import { getArcaneStatLabel } from "@/lib/arcane-display";
 import type { ArcaneEffectLineDraft } from "@/lib/arcane-effect-drafts";

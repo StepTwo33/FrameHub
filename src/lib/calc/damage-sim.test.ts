@@ -7,9 +7,9 @@ import {
   viralHealthMultiplier,
   avgCritMult,
   heatArmorRemaining,
-} from "@/lib/ttk";
-import { avgCritMultiplier } from "@/lib/crit-utils";
-import { runDamageSim, simInputsToCalculatedStats } from "@/lib/damage-sim";
+} from "@/lib/calc/ttk";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
+import { runDamageSim, simInputsToCalculatedStats } from "@/lib/calc/damage-sim";
 
 const lancer = ENEMY_TYPES.find((e) => e.id === "lancer")!;
 

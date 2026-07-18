@@ -1,5 +1,5 @@
 import type { ArcaneEffectDef, ArcaneEffectLine, ArcaneTrigger } from "@/data/arcane-effects";
-import { scaleArcaneEffectLine } from "@/lib/arcane-utils";
+import { scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
 
 /** Triggers where the effect applies on every qualifying event (no proc roll). */
 const ALWAYS_ON_TRIGGERS = new Set<ArcaneTrigger>(["passive", "onHit", "onStatus", "onFreeze"]);

@@ -5,8 +5,8 @@
 import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
-import { calculateWeaponBuild, quantizeDamageValue } from "@/lib/calculator";
-import { avgCritMultiplier, quantizeBaseCritMultiplier } from "@/lib/crit-utils";
+import { calculateWeaponBuild, quantizeDamageValue } from "@/lib/calc/calculator";
+import { avgCritMultiplier, quantizeBaseCritMultiplier } from "@/lib/calc/crit-utils";
 import {
   averageProcsPerShot,
   corrosiveArmorRemaining,
@@ -14,7 +14,7 @@ import {
   scaleArmor,
   scaleHealth,
   scaleShield,
-} from "@/lib/ttk";
+} from "@/lib/calc/ttk";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 
 const modsMap = () => new Map(allMods.map((m) => [m.id, m]));

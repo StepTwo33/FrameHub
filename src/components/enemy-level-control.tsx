@@ -4,7 +4,7 @@ import {
   ENEMY_LEVEL_INPUT_MAX,
   ENEMY_LEVEL_MIN,
   ENEMY_LEVEL_SLIDER_MAX,
-} from "@/lib/sim-limits";
+} from "@/lib/calc/sim-limits";
 import { cn } from "@/lib/utils";
 
 /**

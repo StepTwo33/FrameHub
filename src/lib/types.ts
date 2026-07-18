@@ -493,7 +493,7 @@ export interface CalculatedStats {
   preComboCriticalChance?: number;
   preComboStatusChance?: number;
   /** Inputs for recomputing combo scaling after arcanes adjust combo count. */
-  meleeComboModContext?: import("@/lib/melee-combo").MeleeComboModContext;
+  meleeComboModContext?: import("@/lib/calc/melee-combo").MeleeComboModContext;
 }
 
 export interface WarframeCalculatedStats {

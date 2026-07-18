@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeDpsContributions } from "@/lib/dps-contributions";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { computeDpsContributions } from "@/lib/calc/dps-contributions";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { allMods } from "@/data/mods";
 import type { ModSlot, Weapon } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";

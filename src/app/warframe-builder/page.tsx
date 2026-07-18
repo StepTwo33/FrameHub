@@ -14,13 +14,13 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
 import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
-import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calculator";
+import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calc/calculator";
 import {
   computeUsedCapacity,
   warframeBaseCapacity,
   computeWarframeAuraBonus,
   computeWarframeCapacityUsed,
-} from "@/lib/compute-used-capacity";
+} from "@/lib/calc/compute-used-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard, ArchonShard } from "@/lib/types";
 import { Zap, Flag, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";

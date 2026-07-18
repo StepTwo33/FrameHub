@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import {
   calculateTTK,
   ENEMY_TYPES,
@@ -7,7 +7,7 @@ import {
   corrosiveArmorRemaining,
   scaleArmor,
   simulateDiscreteTTK,
-} from "@/lib/ttk";
+} from "@/lib/calc/ttk";
 import type { CalculatedStats } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 

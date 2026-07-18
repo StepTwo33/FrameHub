@@ -1,7 +1,7 @@
 import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
-} from "@/lib/calculator";
+} from "@/lib/calc/calculator";
 import { getModStatDisplayLines } from "@/lib/mod-display";
 import {
   DEFAULT_SIM_PARAMS,
@@ -21,7 +21,7 @@ import {
   VIGILANTE_MOD_IDS,
   weaponAcceptsSynthReloadBonus,
   weaponSupportsPrimaryStyleSets,
-} from "@/lib/set-bonuses";
+} from "@/lib/calc/set-bonuses";
 
 export type DpsContributionCategory =
   | "damage"

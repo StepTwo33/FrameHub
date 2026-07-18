@@ -15,10 +15,10 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { useCompanions, useWeapons, useMods } from "@/lib/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
-import { calculateCompanionBuild } from "@/lib/companion-calculator";
-import { calculateWeaponBuild } from "@/lib/calculator";
-import { mergeRivenStatChanges } from "@/lib/weapon-stat-merges";
-import { avgCritMultiplier, critTierDamage } from "@/lib/crit-utils";
+import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
+import { mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
+import { avgCritMultiplier, critTierDamage } from "@/lib/calc/crit-utils";
 import {
   COMPANION_MAX_PRECEPTS,
   COMPANION_MOD_SLOT_COUNT,
@@ -40,7 +40,7 @@ import { appendReturnTo } from "@/lib/nav-return";
 import { toast } from "sonner";
 import { getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
+import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 
 const companionTypeLabels: Record<string, string> = {
   all: "All",

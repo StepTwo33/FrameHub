@@ -8,7 +8,7 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { getWeaponImage } from "@/lib/images";
 import { cn } from "@/lib/utils";
 import type { CalculatedStats, EquippedMod, Mod, Weapon } from "@/lib/types";
-import type { WeaponDpsCalcContext } from "@/lib/dps-contributions";
+import type { WeaponDpsCalcContext } from "@/lib/calc/dps-contributions";
 
 export function ExaltedWeaponSection({
   exaltedWeapon,

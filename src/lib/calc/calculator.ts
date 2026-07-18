@@ -1,5 +1,5 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
-import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from './types';
+import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from '../types';
 import { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import { resolveEffectiveFireRate } from './effective-fire-rate';
 import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
@@ -7,7 +7,7 @@ import {
   applyMeleeComboToStats,
   resolveEffectiveComboCount,
 } from './melee-combo';
-import { enrichWeapon } from './weapon-enrich';
+import { enrichWeapon } from '../weapon-enrich';
 
 export { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import {
@@ -43,7 +43,7 @@ import {
   factionBonusFromStats,
   factionDotMultiplier,
   resolveStanceDamageMultiplier,
-} from '@/lib/combat-multipliers';
+} from '@/lib/calc/combat-multipliers';
 
 /** Unmodded rank-30 energy capacity — the pool Flow and +% max energy mods scale (wiki Energy Capacity). */
 export function getWarframeEnergyModBase(warframe: Warframe): number {

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { CalculatedStats } from "@/lib/types";
-import { ENEMY_TYPES, calculateTTK } from "@/lib/ttk";
+import { ENEMY_TYPES, calculateTTK } from "@/lib/calc/ttk";
 import { EnemyLevelControl } from "@/components/enemy-level-control";
 import { CollapsibleSection, StatRow } from "./stat-primitives";
 

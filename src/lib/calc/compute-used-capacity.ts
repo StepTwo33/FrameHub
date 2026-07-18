@@ -1,5 +1,5 @@
 import type { Mod, EquippedMod } from "@/lib/types";
-import { modCapacityAtRank, modSlotCapacityCost } from "@/lib/mod-capacity";
+import { modCapacityAtRank, modSlotCapacityCost } from "@/lib/calc/mod-capacity";
 
 /** Sum of capacity cost for equipped mods given slot polarities. */
 export function computeUsedCapacity(

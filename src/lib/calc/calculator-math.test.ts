@@ -4,7 +4,7 @@ import { allWeapons } from "@/data/weapons";
 import {
   calculateWeaponBuild,
   quantizeDamageValue,
-} from "@/lib/calculator";
+} from "@/lib/calc/calculator";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 
 const modsMap = () => new Map(allMods.map((m) => [m.id, m]));

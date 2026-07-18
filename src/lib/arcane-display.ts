@@ -1,6 +1,6 @@
 import { Mod } from "@/lib/types";
 import { ARCANE_EFFECTS, ArcaneEffectDef, ArcaneTrigger } from "@/data/arcane-effects";
-import { getPersistenceDamageCap, scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/arcane-utils";
+import { getPersistenceDamageCap, scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/calc/arcane-utils";
 
 export interface ArcaneEffectLine {
   label: string;

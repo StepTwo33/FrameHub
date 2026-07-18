@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateRailjackBuild } from "@/lib/railjack-calculator";
+import { calculateRailjackBuild } from "@/lib/calc/railjack-calculator";
 
 describe("calculateRailjackBuild", () => {
   it("adds component stats to base hull, shield, speed, and flux", () => {

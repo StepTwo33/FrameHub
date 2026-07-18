@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { getArcaneEffectDef } from "@/lib/arcane-calculator";
+import { getArcaneEffectDef } from "@/lib/calc/arcane-calculator";
 import {
   bigCritProcRate,
   estimateEnervateCritStacks,
   getArcaneProcUptime,
-} from "@/lib/arcane-proc-model";
-import { avgCritMultiplier } from "@/lib/calculator";
-import { calculateWeaponBuildWithArcanes } from "@/lib/calculator";
+} from "@/lib/calc/arcane-proc-model";
+import { avgCritMultiplier } from "@/lib/calc/calculator";
+import { calculateWeaponBuildWithArcanes } from "@/lib/calc/calculator";
 import { allArcanes } from "@/data/arcanes";
 import { allWeapons } from "@/data/weapons";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";

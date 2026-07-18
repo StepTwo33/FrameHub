@@ -13,7 +13,7 @@ import {
   type WarframeBuildData,
   type WeaponBuildData,
 } from "@/lib/build-storage";
-import { buildAbilityTTKEntries, type AbilityTTKEntry } from "@/lib/ability-ttk";
+import { buildAbilityTTKEntries, type AbilityTTKEntry } from "@/lib/calc/ability-ttk";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import {
   calcSavedWeaponBuildStats,
@@ -26,7 +26,7 @@ import {
   calculateWarframeBuild,
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
-} from "@/lib/calculator";
+} from "@/lib/calc/calculator";
 import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import type {

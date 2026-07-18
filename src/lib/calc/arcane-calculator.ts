@@ -1,19 +1,19 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getArcaneEffectDef } from "@/lib/arcane-effect-overrides";
 export { getArcaneEffectDef };
-import { shouldApplyArcaneLineToBuild } from "@/lib/arcane-behavior-registry";
+import { shouldApplyArcaneLineToBuild } from "@/lib/calc/arcane-behavior-registry";
 import {
   applyCustomArcaneToWarframe,
   applyCustomArcaneToWeapon,
   WarframeArcaneContext,
-} from "@/lib/arcane-handlers";
-import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
+} from "@/lib/calc/arcane-handlers";
+import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
 import {
   estimateEnervateCritStacks,
   isArcaneMetadataStat,
   isArcaneProcChanceStat,
   scaleArcaneEffectForBuild,
-} from "@/lib/arcane-proc-model";
+} from "@/lib/calc/arcane-proc-model";
 import { CalculatedStats, Mod, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 /** Effective stack count for arcane effect scaling. */
@@ -36,7 +36,7 @@ export function effectiveArcaneStacks(
   return def.stackCap ?? 1;
 }
 
-export type { WarframeArcaneContext } from "@/lib/arcane-handlers";
+export type { WarframeArcaneContext } from "@/lib/calc/arcane-handlers";
 
 function ensureArcaneBonuses(stats: { arcaneBonuses?: Record<string, number> }): Record<string, number> {
   if (!stats.arcaneBonuses) stats.arcaneBonuses = {};

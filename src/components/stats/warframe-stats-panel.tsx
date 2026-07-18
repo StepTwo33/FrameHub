@@ -9,7 +9,7 @@ import { getArcaneDisplayInfo } from "@/lib/arcane-display";
 import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,
-} from "@/lib/calculator";
+} from "@/lib/calc/calculator";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {

@@ -1,5 +1,5 @@
 import type { CalculatedStats, Weapon, WeaponRadialAttack } from "@/lib/types";
-import { avgCritMultiplier } from "@/lib/crit-utils";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
 import { getWeaponRadialAttacks } from "@/lib/weapon-radial-utils";
 
 export interface ScaledRadialAttack extends WeaponRadialAttack {

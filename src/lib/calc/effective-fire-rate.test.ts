@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import {
   moddedChargeTime,
   resolveEffectiveFireRate,
-} from "@/lib/effective-fire-rate";
+} from "@/lib/calc/effective-fire-rate";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 
 const modsMap = () => new Map(allMods.map((m) => [m.id, m]));

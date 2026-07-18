@@ -8,7 +8,7 @@ import {
   scaleShield,
   type EnemyType,
   type TTKResult,
-} from "@/lib/ttk";
+} from "@/lib/calc/ttk";
 
 export interface AbilityTTKEntry {
   key: string;

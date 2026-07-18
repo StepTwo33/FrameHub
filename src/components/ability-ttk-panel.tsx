@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { calculateAbilityTTK, ENEMY_TYPES, type AbilityTTKEntry } from "@/lib/ability-ttk";
+import { calculateAbilityTTK, ENEMY_TYPES, type AbilityTTKEntry } from "@/lib/calc/ability-ttk";
 import { cn } from "@/lib/utils";
 import { EnemyLevelControl } from "@/components/enemy-level-control";
 

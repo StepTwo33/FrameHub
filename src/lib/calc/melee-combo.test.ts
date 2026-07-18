@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import {
   getHeavyAttackComboMultiplier,
   getMeleeScalingMultiplier,
   resolveEffectiveComboCount,
-} from "@/lib/melee-combo";
+} from "@/lib/calc/melee-combo";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
 
 const galatine = allWeapons.find((w) => w.id === "galatine")!;

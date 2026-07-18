@@ -3,12 +3,12 @@
  * All armor / viral / corrosive / crit math comes from ttk.ts + crit-utils
  * (wiki Armor / Status Effect). Do not reimplement those formulas here.
  */
-import { avgCritMultiplier } from "@/lib/crit-utils";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
 import {
   combatDamageMultiplier,
   factionBonusFromStats,
   factionDotMultiplier,
-} from "@/lib/combat-multipliers";
+} from "@/lib/calc/combat-multipliers";
 import {
   ARMOR_MODIFIERS,
   calculateTTK,
@@ -24,7 +24,7 @@ import {
   viralHealthMultiplier,
   type EnemyType,
   type TTKResult,
-} from "@/lib/ttk";
+} from "@/lib/calc/ttk";
 import { DEFAULT_SIM_PARAMS, type CalculatedStats } from "@/lib/types";
 
 export interface DamageSimInputs {

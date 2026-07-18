@@ -10,7 +10,7 @@ import {
   getRerollCost,
   getStatsWithDisposition, getNegativeStats,
   getStatTier, getStatTierColor,
-} from "@/lib/riven-calculator";
+} from "@/lib/calc/riven-calculator";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Plus, X, Sparkles } from "lucide-react";

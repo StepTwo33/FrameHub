@@ -1,6 +1,6 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
-import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/arcane-utils";
-import { estimateEnervateCritStacks, getArcaneProcUptime } from "@/lib/arcane-proc-model";
+import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
+import { estimateEnervateCritStacks, getArcaneProcUptime } from "@/lib/calc/arcane-proc-model";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 export interface WarframeArcaneContext {

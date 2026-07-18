@@ -1,7 +1,7 @@
 // Time-to-Kill Calculator
 // Post-Update 32 S-curve scaling, proper armor/shield/health type interactions,
 // Viral/Corrosive status accounting, Slash/Heat/Toxin DoT damage, reload cycles
-import { CalculatedStats } from "./types";
+import { CalculatedStats } from "../types";
 import { avgCritMultiplier } from "./crit-utils";
 import {
   combatDamageMultiplier,

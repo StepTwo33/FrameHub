@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { PageShell, PageMain, PageHero, FilterChip, ContentPanel, EmptyState } from "@/components/page-shell";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { useWeapons, useMods } from "@/lib/use-data";
-import { calculateWeaponBuild } from "@/lib/calculator";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { Weapon, Mod, CalculatedStats, EquippedMod, Loadout } from "@/lib/types";
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker, type SlotType as ModPickerSlotType } from "@/components/mod-picker";

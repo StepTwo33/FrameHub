@@ -1,5 +1,5 @@
 import { Mod } from "@/lib/types";
-import { modCapacityAtRank } from "@/lib/mod-capacity";
+import { modCapacityAtRank } from "@/lib/calc/mod-capacity";
 
 export { modCapacityAtRank };
 

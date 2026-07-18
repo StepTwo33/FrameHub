@@ -1,4 +1,4 @@
-import type { ModSlot, SetBonusLinkage, SetBonusSummaryLine } from "./types";
+import type { ModSlot, SetBonusLinkage, SetBonusSummaryLine } from "../types";
 
 export const VIGILANTE_MOD_IDS = [
   "vigilante_armaments",

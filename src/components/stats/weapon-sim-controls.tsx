@@ -1,7 +1,7 @@
 "use client";
 
 import type { CalculatedStats, SimulationParams, Weapon } from "@/lib/types";
-import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/set-bonuses";
+import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/calc/set-bonuses";
 import { getModStatLabel } from "@/lib/override-stat-catalog";
 import { CollapsibleSection, SimSlider } from "./stat-primitives";
 
