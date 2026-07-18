@@ -111,7 +111,7 @@ export function scaleRadialAttacksWithDps(
   // a radial to DPS again would double-count the explosion.
   const partsSum =
     (baseWeapon.impact ?? 0) + (baseWeapon.puncture ?? 0) + (baseWeapon.slash ?? 0) +
-    (["heat", "cold", "toxin", "electricity", "blast", "radiation", "gas", "magnetic", "viral", "corrosive"] as const)
+    (["heat", "cold", "toxin", "electricity", "blast", "radiation", "gas", "magnetic", "viral", "corrosive", "tau"] as const)
       .reduce((sum, key) => sum + ((baseWeapon as unknown as Record<string, number>)[key] ?? 0), 0);
   let directResidual = Math.max(0, baseWeapon.damage - partsSum);
   const mult = stats.totalDamage / baseWeapon.damage;
@@ -136,7 +136,7 @@ export function scaleRadialAttacksWithDps(
     }
     for (const key of [
       "impact", "puncture", "slash", "heat", "cold", "toxin", "electricity",
-      "radiation", "viral", "corrosive", "blast", "gas", "magnetic",
+      "radiation", "viral", "corrosive", "blast", "gas", "magnetic", "tau",
     ] as const) {
       const val = attack[key];
       if (val != null && val > 0) scaledAttack[key] = val * mult;

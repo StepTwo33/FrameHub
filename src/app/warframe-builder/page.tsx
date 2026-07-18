@@ -45,6 +45,7 @@ import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { DualFormTabs } from "@/components/dual-form-tabs";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
@@ -319,6 +320,7 @@ export default function WarframeBuilderPage() {
   const [dualFormBuilds, setDualFormBuilds] = useState<Record<string, DualFormBuildSlice>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("warframe"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"catalog" | "saved">("catalog");
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
@@ -558,6 +560,7 @@ export default function WarframeBuilderPage() {
   }, [applyLoadedBuild]);
 
   useCloudBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
+  useLocalBuildFromUrl("warframe", (build) => applyLoadedBuild(build, { silent: true }));
   useLoadoutSlotFromUrl(
     "warframe",
     useCallback((build) => applyLoadedBuild(build, { silent: true }), [applyLoadedBuild]),
@@ -846,6 +849,39 @@ export default function WarframeBuilderPage() {
             search={warframeSearch}
             onSearchChange={setWarframeSearch}
             searchPlaceholder="Search warframes..."
+            pickerTab={pickerTab}
+            onPickerTabChange={(tab) => {
+              if (tab === "saved") setSavedBuilds(getSavedBuilds("warframe"));
+              setPickerTab(tab);
+            }}
+            savedPanel={
+              savedBuilds.length === 0 ? (
+                <p className="px-2 py-6 text-center text-xs text-muted-foreground">
+                  No saved warframe builds yet. Save a build from the builder to see it here.
+                </p>
+              ) : (
+                savedBuilds.map((build) => {
+                  const d = build.data as WarframeBuildData;
+                  const wfName = allWarframes.find((w) => w.id === d.warframeId)?.name ?? d.warframeId;
+                  return (
+                    <ItemPickerRow
+                      key={build.id}
+                      accent="purple"
+                      onClick={() => handleLoadBuild(build)}
+                      title={build.name}
+                      badge={
+                        <span className="shrink-0 text-xs text-muted-foreground">{wfName}</span>
+                      }
+                      meta={
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(build.updatedAt).toLocaleDateString()}
+                        </span>
+                      }
+                    />
+                  );
+                })
+              )
+            }
           >
             {filteredWarframes.map((wf) => (
               <ItemPickerRow

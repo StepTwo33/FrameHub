@@ -152,7 +152,7 @@ function inferModCategory(mod: Mod): DpsContributionCategory {
   if (keys.some((k) => k === "multishot" || k === "multishotOnKill")) return "multishot";
   if (
     keys.some((k) =>
-      ["heat", "cold", "toxin", "electricity", "radiation", "viral", "corrosive", "blast", "gas", "magnetic"].includes(k),
+      ["heat", "cold", "toxin", "electricity", "radiation", "viral", "corrosive", "blast", "gas", "magnetic", "tau"].includes(k),
     )
   ) {
     return "elemental";

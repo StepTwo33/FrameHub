@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { calculateWeaponBuild, quantizeDamageValue } from "@/lib/calculator";
-import { avgCritMultiplier } from "@/lib/crit-utils";
+import { avgCritMultiplier, quantizeBaseCritMultiplier } from "@/lib/crit-utils";
 import {
   averageProcsPerShot,
   corrosiveArmorRemaining,
@@ -29,6 +29,21 @@ describe("crit averaging (wiki Damage/Calculation)", () => {
     // 250% CC, 3× CM → avg = 1 + 2.5×2 = 6
     expect(avgCritMultiplier(2.5, 3)).toBeCloseTo(1 + 2.5 * (3 - 1), 10);
     expect(avgCritMultiplier(2.5, 3)).toBeCloseTo(6, 10);
+  });
+});
+
+describe("base crit multiplier quantization (wiki Critical Hit)", () => {
+  it("matches wiki Critical Parallel example: (1.6+0.4) quantized × (1+1.2)", () => {
+    const quantized = quantizeBaseCritMultiplier(1.6 + 0.4);
+    expect(quantized).toBeCloseTo((256 * 32) / 4095, 10);
+    expect(quantized * (1 + 1.2)).toBeCloseTo(4.401074481, 6);
+  });
+
+  it("quantizes weapon base CM before crit-damage mods in calculateWeaponBuild", () => {
+    const weapon = allWeapons.find((w) => Math.abs(w.criticalMultiplier - 1.6) < 0.001);
+    if (!weapon) return;
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    expect(bare.criticalMultiplier).toBeCloseTo(quantizeBaseCritMultiplier(1.6), 6);
   });
 });
 

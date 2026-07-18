@@ -1,6 +1,6 @@
 // Advanced Build Calculator - ported from Dart with elemental combos, status procs, heavy attacks
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from './types';
-import { avgCritMultiplier } from './crit-utils';
+import { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import { resolveEffectiveFireRate } from './effective-fire-rate';
 import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
 import {
@@ -9,7 +9,7 @@ import {
 } from './melee-combo';
 import { enrichWeapon } from './weapon-enrich';
 
-export { avgCritMultiplier } from './crit-utils';
+export { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import {
   applyArcaneToWarframeFromMod,
   applyArcaneToWeaponFromMod,
@@ -34,6 +34,7 @@ import {
   applyVerifiedModStatToWarframe,
   applyVerifiedModStatToWeapon,
   sumSlideSpeedBonusFromModSlots,
+  sumSprintSpeedBonusFromModSlots,
   type WarframeModAccumulators,
   type WeaponModAccumulators,
 } from '@/lib/mod-behavior-registry';
@@ -393,6 +394,7 @@ export function calculateWeaponBuild(
     berserkerFuryBonus: 0,
     weepingWoundsBonus: 0,
     slideSpeedBonus: 0,
+    sprintSpeedBonus: 0,
   };
 
   // Collect elemental mods in order and other stat bonuses
@@ -615,8 +617,10 @@ export function calculateWeaponBuild(
   stats.slash *= dmgMult;
 
   // Apply other bonuses
+  // Wiki: quantize base CM before % crit-damage mods (Critical Parallel base adds land later as flat += today).
   stats.criticalChance *= (1 + critChanceBonus);
-  stats.criticalMultiplier *= (1 + critMultBonus);
+  stats.criticalMultiplier =
+    quantizeBaseCritMultiplier(baseWeapon.criticalMultiplier) * (1 + critMultBonus);
   if (critMultFlatBonus.critEventBonus > 0) {
     stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
   }
@@ -1016,11 +1020,14 @@ export function calculateWarframeBuild(
   stats.abilityEfficiency = 1.0 + wfModAcc.abilityEfficiency;
   stats.abilityRange = 1.0 + wfModAcc.abilityRange;
 
-  // Cross-slot slide speed from equipped weapons (Amalgam Serration on primary, etc.)
+  // Cross-slot movement speed from equipped weapons (Amalgam Serration sprint, etc.)
   if (linkage) {
     stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.primaryMods, allMods);
     stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.secondaryMods, allMods);
     stats.slideSpeedBonus += sumSlideSpeedBonusFromModSlots(linkage.meleeMods, allMods);
+    stats.sprintSpeedBonus += sumSprintSpeedBonusFromModSlots(linkage.primaryMods, allMods);
+    stats.sprintSpeedBonus += sumSprintSpeedBonusFromModSlots(linkage.secondaryMods, allMods);
+    stats.sprintSpeedBonus += sumSprintSpeedBonusFromModSlots(linkage.meleeMods, allMods);
   }
 
   // Calculate derived stats

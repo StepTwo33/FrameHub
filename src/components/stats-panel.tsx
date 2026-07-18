@@ -33,6 +33,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   magnetic: "text-indigo-800 dark:text-indigo-300",
   radiation: "text-amber-800 dark:text-amber-300",
   viral: "text-teal-800 dark:text-teal-300",
+  tau: "text-violet-800 dark:text-violet-300",
   impact: "text-slate-700 dark:text-slate-300",
   puncture: "text-stone-700 dark:text-stone-300",
   slash: "text-red-700 dark:text-red-300",
@@ -40,13 +41,13 @@ const ELEMENT_COLORS: Record<string, string> = {
 
 const RADIAL_DAMAGE_KEYS = [
   "impact", "puncture", "slash", "heat", "cold", "toxin", "electricity",
-  "radiation", "viral", "corrosive", "blast", "gas", "magnetic",
+  "radiation", "viral", "corrosive", "blast", "gas", "magnetic", "tau",
 ] as const;
 
 const ELEMENT_LABELS: Record<string, string> = {
   heat: "Heat", cold: "Cold", toxin: "Toxin", electricity: "Electricity",
   blast: "Blast", corrosive: "Corrosive", gas: "Gas", magnetic: "Magnetic",
-  radiation: "Radiation", viral: "Viral",
+  radiation: "Radiation", viral: "Viral", tau: "Tau",
 };
 
 function StatRow({ label, value, highlighted, color, tooltip }: {
@@ -409,11 +410,16 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         const dmg = stats.arsenalDamage ?? stats;
         const arsenalTotal = dmg.totalDamage * Math.max(1, stats.multishot);
         return (
-          <CollapsibleSection title="DAMAGE" defaultOpen>
+          <CollapsibleSection title="DIRECT DAMAGE" defaultOpen>
             <StatRow label="Total Damage" value={arsenalTotal.toFixed(1)} highlighted />
             {stats.multishot > 1 && (
               <div className="text-[9px] text-muted-foreground/60 -mt-0.5 mb-0.5">
-                {dmg.totalDamage.toFixed(1)} per pellet × {stats.multishot.toFixed(2)} multishot
+                {dmg.totalDamage.toFixed(1)} per pellet × {stats.multishot.toFixed(2)} multishot (projectile / hit)
+              </div>
+            )}
+            {stats.multishot <= 1 && (
+              <div className="text-[9px] text-muted-foreground/60 -mt-0.5 mb-0.5">
+                Projectile / hit damage (excludes radial explosions)
               </div>
             )}
             {(dmg.impact > 0 || (baseStats && baseStats.impact > 0)) && (
@@ -443,6 +449,44 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           </CollapsibleSection>
         );
       })()}
+
+      {/* Core Stats — arsenal-like order before radial */}
+      <CollapsibleSection title="CORE" defaultOpen>
+        <StatRow
+          label={isMelee ? "Attack Speed" : "Fire Rate"}
+          value={(stats.effectiveFireRate ?? stats.fireRate).toFixed(2)}
+          tooltip={
+            isMelee
+              ? "Melee attacks per second (same field as fire rate for guns in the build engine)."
+              : stats.effectiveFireRate != null &&
+                  Math.abs(stats.effectiveFireRate - stats.fireRate) > 0.01
+                ? `Effective shots/sec (charge/bow/burst timing). Arsenal FR component: ${stats.fireRate.toFixed(2)}`
+                : "Shots per second used for DPS."
+          }
+        />
+        <StatRow label="Critical Chance" value={`${(stats.criticalChance * 100).toFixed(1)}%`} />
+        <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(2)}x`} />
+        <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
+        {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
+        {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
+        {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
+        {(stats.sprintSpeedBonus ?? 0) !== 0 && (
+          <StatRow
+            label="Sprint Speed"
+            value={`${(stats.sprintSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.sprintSpeedBonus ?? 0) * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Warframe sprint speed while this weapon is equipped (Amalgam Serration, etc.)."
+          />
+        )}
+        {(stats.slideSpeedBonus ?? 0) !== 0 && (
+          <StatRow
+            label="Slide Speed"
+            value={`${(stats.slideSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.slideSpeedBonus ?? 0) * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Warframe slide speed while this weapon is equipped."
+          />
+        )}
+      </CollapsibleSection>
 
       {stats.radialAttacks && stats.radialAttacks.length > 0 && (
         <CollapsibleSection title="RADIAL ATTACK" defaultOpen>
@@ -503,36 +547,6 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         </CollapsibleSection>
       )}
 
-      {/* Core Stats */}
-      <CollapsibleSection title="CORE" defaultOpen>
-        <StatRow label="Critical Chance" value={`${(stats.criticalChance * 100).toFixed(1)}%`} />
-        <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(2)}x`} />
-        <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
-        <StatRow
-          label={isMelee ? "Attack Speed" : "Fire Rate"}
-          value={(stats.effectiveFireRate ?? stats.fireRate).toFixed(2)}
-          tooltip={
-            isMelee
-              ? "Melee attacks per second (same field as fire rate for guns in the build engine)."
-              : stats.effectiveFireRate != null &&
-                  Math.abs(stats.effectiveFireRate - stats.fireRate) > 0.01
-                ? `Effective shots/sec (charge/bow/burst timing). Arsenal FR component: ${stats.fireRate.toFixed(2)}`
-                : "Shots per second used for DPS."
-          }
-        />
-        {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
-        {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
-        {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
-        {(stats.slideSpeedBonus ?? 0) !== 0 && (
-          <StatRow
-            label="Slide Speed"
-            value={`${(stats.slideSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.slideSpeedBonus ?? 0) * 100).toFixed(0)}%`}
-            color="text-cyan-400"
-            tooltip="Warframe slide speed while this weapon is equipped (Amalgam Serration, etc.)."
-          />
-        )}
-      </CollapsibleSection>
-
       {/* Melee-specific */}
       {isMelee && stats.heavyAttackDamage > 0 && (
         <CollapsibleSection title="MELEE" defaultOpen>
@@ -574,40 +588,59 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         </CollapsibleSection>
       )}
 
-      {/* DPS */}
+      {/* DPS — direct hit vs radial shown separately; totals include both when radial applies */}
       <CollapsibleSection title="DPS" defaultOpen>
-        <StatRow
-          label="Burst DPS"
-          value={stats.burstDps.toFixed(0)}
-          highlighted
-          tooltip="dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled). No charge-time or attenuation."
-        />
-        <StatRow
-          label="Sustained DPS"
-          value={stats.sustainedDps.toFixed(0)}
-          highlighted
-          tooltip="Burst DPS × (mag time / mag+reload cycle). Melee uses burst (no reload)."
-        />
-        {(stats.radialBurstDps ?? 0) > 0 && (
-          <>
-            <StatRow
-              label="Radial Burst DPS"
-              value={(stats.radialBurstDps ?? 0).toFixed(0)}
-              color="text-orange-300"
-              tooltip="Innate explosion / AoE DPS included in burst total above."
-            />
-            <StatRow
-              label="Radial Sustained DPS"
-              value={(stats.radialSustainedDps ?? 0).toFixed(0)}
-              color="text-orange-300"
-              tooltip="Radial DPS adjusted for magazine and reload cycle."
-            />
-          </>
-        )}
+        {(() => {
+          const radialBurst = stats.radialBurstDps ?? 0;
+          const radialSustained = stats.radialSustainedDps ?? 0;
+          const directBurst = Math.max(0, stats.burstDps - radialBurst);
+          const directSustained = Math.max(0, stats.sustainedDps - radialSustained);
+          return (
+            <>
+              <StatRow
+                label="Direct Burst DPS"
+                value={directBurst.toFixed(0)}
+                highlighted
+                tooltip="Projectile / hit DPS only (no radial). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
+              />
+              <StatRow
+                label="Direct Sustained DPS"
+                value={directSustained.toFixed(0)}
+                highlighted
+                tooltip="Direct burst × (mag time / mag+reload cycle). Melee uses burst (no reload)."
+              />
+              {radialBurst > 0 && (
+                <>
+                  <StatRow
+                    label="Radial Burst DPS"
+                    value={radialBurst.toFixed(0)}
+                    color="text-orange-300"
+                    tooltip="Innate explosion / AoE DPS (not slam radials)."
+                  />
+                  <StatRow
+                    label="Radial Sustained DPS"
+                    value={radialSustained.toFixed(0)}
+                    color="text-orange-300"
+                    tooltip="Radial DPS adjusted for magazine and reload cycle."
+                  />
+                  <div className="border-t border-border/50 my-1" />
+                  <StatRow
+                    label="Total Burst DPS"
+                    value={stats.burstDps.toFixed(0)}
+                    tooltip="Direct + radial burst DPS combined."
+                  />
+                  <StatRow
+                    label="Total Sustained DPS"
+                    value={stats.sustainedDps.toFixed(0)}
+                    tooltip="Direct + radial sustained DPS combined."
+                  />
+                </>
+              )}
+            </>
+          );
+        })()}
         {stats.statusProcs && stats.statusProcs.length > 0 && (() => {
           const efr = stats.effectiveFireRate ?? stats.fireRate;
-          // Per-proc rate = shots/sec × pellets × that proc's chance (works for
-          // status-weighted procs and forced procs like Hunter Munitions alike).
           const procsPerSec = stats.statusProcs.reduce(
             (sum, p) => sum + efr * stats.multishot * p.chance,
             0,
@@ -842,7 +875,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
             label="Slide Speed"
             value={`${stats.slideSpeedBonus > 0 ? "+" : ""}${(stats.slideSpeedBonus * 100).toFixed(0)}%`}
             color={stats.slideSpeedBonus > 0 ? "text-cyan-400" : "text-red-400"}
-            tooltip="From Maglev / Cunning Drift / Streamlined Form / Amalgam Serration (linked weapons), etc."
+            tooltip="From Maglev / Cunning Drift / Streamlined Form, etc."
           />
         )}
         {stats.parkourVelocityBonus > 0 && (
@@ -866,12 +899,6 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
             {" "}(not included in EHP).
           </p>
         )}
-        <div className="border-t border-border/50 my-1" />
-        <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
-        <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />
-        {stats.adaptationNoteMaxTypedDRPercent != null && (
-          <AdaptationSurvivability stats={stats} />
-        )}
       </CollapsibleSection>
 
       <CollapsibleSection title="ABILITY MODS" defaultOpen>
@@ -883,6 +910,14 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           color={stats.abilityEfficiency > 1 ? "text-blue-400" : stats.abilityEfficiency < 1 ? "text-red-400" : undefined} />
         <StatRow label="Range" value={`${(stats.abilityRange * 100).toFixed(0)}%`}
           color={stats.abilityRange > 1 ? "text-green-400" : stats.abilityRange < 1 ? "text-red-400" : undefined} />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="EFFECTIVE HEALTH" defaultOpen>
+        <StatRow label="Effective Health" value={stats.effectiveHealth.toFixed(0)} highlighted />
+        <StatRow label="Damage Reduction" value={`${stats.damageReduction.toFixed(1)}%`} highlighted />
+        {stats.adaptationNoteMaxTypedDRPercent != null && (
+          <AdaptationSurvivability stats={stats} />
+        )}
       </CollapsibleSection>
 
       {stats.setBonusSummary && stats.setBonusSummary.length > 0 && (

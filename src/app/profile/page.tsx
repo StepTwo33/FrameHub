@@ -91,6 +91,10 @@ export default function ProfilePage() {
   const [avatarCropOpen, setAvatarCropOpen] = useState(false);
   const [avatarCropSrc, setAvatarCropSrc] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const avatarCropSrcRef = useRef<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
@@ -687,6 +691,86 @@ export default function ProfilePage() {
                   <span>{memberSince}</span>
                 </div>
               </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5 space-y-3">
+              <label className="text-xs font-semibold text-red-400 flex items-center gap-1.5">
+                <Trash2 className="h-3.5 w-3.5" /> DANGER ZONE
+              </label>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Permanently delete your account, cloud builds, votes, and linked Discord connection.
+                Local builds in this browser are not removed. This cannot be undone.
+              </p>
+              {!deleteAccountOpen ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteAccountOpen(true);
+                    setDeleteConfirmInput("");
+                    setDeleteError(null);
+                  }}
+                  className="px-3 py-2 text-xs rounded-lg border border-red-500/40 text-red-400 hover:bg-red-500/10 transition-colors font-medium"
+                >
+                  Delete account…
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-[11px] text-muted-foreground">
+                    Type <span className="font-mono text-foreground">{user.username || user.email}</span> to confirm:
+                  </p>
+                  <input
+                    value={deleteConfirmInput}
+                    onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                    className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:border-red-500/50"
+                    placeholder={user.username || user.email || "confirm"}
+                    autoFocus
+                  />
+                  {deleteError && <p className="text-xs text-red-400">{deleteError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      disabled={deletingAccount || !deleteConfirmInput.trim()}
+                      onClick={async () => {
+                        setDeletingAccount(true);
+                        setDeleteError(null);
+                        try {
+                          const res = await fetch("/api/auth/account", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ confirm: deleteConfirmInput.trim() }),
+                          });
+                          const data = await res.json().catch(() => ({}));
+                          if (!res.ok) {
+                            setDeleteError(typeof data.error === "string" ? data.error : "Delete failed");
+                            return;
+                          }
+                          window.location.href = "/";
+                        } catch {
+                          setDeleteError("Network error. Try again.");
+                        } finally {
+                          setDeletingAccount(false);
+                        }
+                      }}
+                      className="px-3 py-2 text-xs rounded-lg bg-red-600 text-white hover:bg-red-500 disabled:opacity-50 font-medium transition-colors"
+                    >
+                      {deletingAccount ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Delete forever"}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={deletingAccount}
+                      onClick={() => {
+                        setDeleteAccountOpen(false);
+                        setDeleteConfirmInput("");
+                        setDeleteError(null);
+                      }}
+                      className="px-3 py-2 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

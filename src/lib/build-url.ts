@@ -77,3 +77,12 @@ export function buildOpenUrl(type: string, buildId: string): string {
   if (!path) return "#";
   return `${path}?buildId=${encodeURIComponent(buildId)}`;
 }
+
+/** Open a locally saved build in the matching builder. */
+export function localBuildOpenUrl(type: string, buildId: string): string {
+  const path = BUILDER_PATHS[type] ?? "/loadouts";
+  if (type === "loadout") return "/loadouts";
+  return `${path}?localBuild=${encodeURIComponent(buildId)}`;
+}
+
+export { BUILDER_PATHS };

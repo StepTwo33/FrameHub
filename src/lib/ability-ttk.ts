@@ -31,7 +31,7 @@ function normalizeDamageType(raw?: string): { type: string; ignoreArmor: boolean
     /\b(impact|puncture|slash|heat|cold|toxin|electricity|blast|corrosive|viral|gas|magnetic|radiation|void|tau)\b/,
   );
   if (elementalMatch) {
-    const t = elementalMatch[1] === "tau" ? "radiation" : elementalMatch[1];
+    const t = elementalMatch[1];
     return { type: t, ignoreArmor: false };
   }
   return { type: "heat", ignoreArmor: false };

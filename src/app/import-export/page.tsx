@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { PageShell, PageMain, PageHero } from "@/components/page-shell";
 import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/build-storage";
 import { getLoadouts, saveLoadout, generateId } from "@/lib/loadouts";
@@ -12,8 +13,32 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QrCodeImage } from "@/components/game-asset-image";
+import { toast } from "sonner";
+import { localBuildOpenUrl } from "@/lib/build-url";
 
 // ── Helpers ──────────────────────────────────────────────────────────────
+
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
 
 function compressForShare(data: object): string {
   try {
@@ -64,6 +89,7 @@ interface ExportableItem {
 // ── Main Page ───────────────────────────────────────────────────────────
 
 export default function ImportExportPage() {
+  const router = useRouter();
   const [mode, setMode] = useState<"export" | "import">("export");
 
   // Export state
@@ -131,37 +157,51 @@ export default function ImportExportPage() {
       : "";
     setShareLink(link);
 
-    // Generate QR code
+    // Always encode an absolute import URL so QR scans land on FrameHub (never raw base64).
     import("qrcode").then((QRCode) => {
-      // Use the shorter code string for QR (the link might be too long)
-      const qrContent = code.length < 2000 ? link : code;
-      QRCode.toDataURL(qrContent, {
+      QRCode.toDataURL(link, {
         width: 280,
         margin: 2,
         color: { dark: "#ffffffee", light: "#00000000" },
-        errorCorrectionLevel: "M",
+        errorCorrectionLevel: code.length > 1200 ? "L" : "M",
       }).then((url: string) => setQrDataUrl(url))
-        .catch(() => setQrDataUrl(null));
+        .catch(() => {
+          setQrDataUrl(null);
+          toast.error("QR too large for this build", {
+            description: "Use Copy Share Link or Copy Short Code instead.",
+          });
+        });
     });
   }, [selected]);
 
   const handleCopyLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(shareLink);
+    if (!shareLink) return;
+    const ok = await copyTextToClipboard(shareLink);
+    if (ok) {
       setCopied(true);
+      toast.success("Share link copied");
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* fallback */ }
+    } else {
+      toast.error("Could not copy link", { description: "Copy it manually from the address field." });
+    }
   }, [shareLink]);
 
   const handleCopyCode = useCallback(async () => {
     if (!selected) return;
     const shareData = { _v: 1, type: selected.type, name: selected.name, data: selected.data };
     const code = compressForShare(shareData);
-    try {
-      await navigator.clipboard.writeText(code);
+    if (!code) {
+      toast.error("Could not create short code");
+      return;
+    }
+    const ok = await copyTextToClipboard(code);
+    if (ok) {
       setCopied(true);
+      toast.success("Short code copied");
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* fallback */ }
+    } else {
+      toast.error("Could not copy short code", { description: "Your browser blocked clipboard access." });
+    }
   }, [selected]);
 
   const handleImport = useCallback((codeOverride?: string) => {
@@ -199,8 +239,11 @@ export default function ImportExportPage() {
           companionBuild: jsonData.companionBuild,
         };
         saveLoadout(loadout);
-        setImportSuccess(`Imported loadout "${jsonData.name}" successfully!`);
+        const msg = `Imported loadout "${jsonData.name}" successfully!`;
+        setImportSuccess(msg);
+        toast.success(msg);
         setImportCode("");
+        router.push("/loadouts");
         return;
       }
     } catch { /* not JSON */ }
@@ -209,12 +252,14 @@ export default function ImportExportPage() {
     const decoded = decompressFromShare(rawCode);
     if (!decoded || typeof decoded !== "object") {
       setImportError("Invalid share code. Make sure you copied the full code or link.");
+      toast.error("Invalid share code");
       return;
     }
 
     const share = decoded as { _v?: number; type?: string; name?: string; data?: object };
     if (!share.name || !share.data) {
       setImportError("Invalid build data in share code.");
+      toast.error("Invalid build data in share code");
       return;
     }
 
@@ -228,21 +273,30 @@ export default function ImportExportPage() {
         updatedAt: Date.now(),
       };
       saveLoadout(loadout);
-      setImportSuccess(`Imported loadout "${share.name}" successfully!`);
-    } else {
-      const build: SavedBuild = {
-        id: generateBuildId(),
-        name: `${share.name} (Imported)`,
-        type: (share.type || "weapon") as SavedBuild["type"],
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        data: share.data,
-      };
-      saveBuild(build);
-      setImportSuccess(`Imported ${getBuildTypeLabel(share.type || "weapon").toLowerCase()} "${share.name}" successfully!`);
+      const msg = `Imported loadout "${share.name}" successfully!`;
+      setImportSuccess(msg);
+      toast.success(msg);
+      setImportCode("");
+      router.push("/loadouts");
+      return;
     }
+
+    const buildType = (share.type || "weapon") as SavedBuild["type"];
+    const build: SavedBuild = {
+      id: generateBuildId(),
+      name: `${share.name} (Imported)`,
+      type: buildType,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      data: share.data,
+    };
+    saveBuild(build);
+    const msg = `Imported ${getBuildTypeLabel(buildType).toLowerCase()} "${share.name}" successfully!`;
+    setImportSuccess(msg);
+    toast.success(msg, { description: "Opening builder…" });
     setImportCode("");
-  }, [importCode]);
+    router.push(localBuildOpenUrl(buildType, build.id));
+  }, [importCode, router]);
 
   // Auto-import from URL code param
   const autoImportedRef = useRef(false);
@@ -254,11 +308,13 @@ export default function ImportExportPage() {
       autoImportedRef.current = true;
       setMode("import");
       setImportCode(code);
-      // Clean URL
+      // Clean URL before import (code is already captured)
       window.history.replaceState({}, "", window.location.pathname);
-      // Only auto-trigger the import when the code actually decodes
-      if (decompressFromShare(code)) {
+      if (decompressFromShare(code) || (() => { try { JSON.parse(code); return true; } catch { return false; } })()) {
         handleImport(code);
+      } else {
+        setImportError("Invalid share code in link.");
+        toast.error("Invalid share code in link");
       }
     }
   }, [handleImport]);

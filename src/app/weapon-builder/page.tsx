@@ -48,6 +48,7 @@ import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 
@@ -119,6 +120,7 @@ export default function WeaponBuilderPage() {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveDialogDefaultPublic, setSaveDialogDefaultPublic] = useState(false);
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"catalog" | "saved">("catalog");
   const [showImporter, setShowImporter] = useState(false);
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [simParams, setSimParams] = useState<SimulationParams>({ ...DEFAULT_SIM_PARAMS });
@@ -290,6 +292,7 @@ export default function WeaponBuilderPage() {
   }, [applyLoadedBuild]);
 
   useCloudBuildFromUrl("weapon", (build) => applyLoadedBuild(build, { silent: true }));
+  useLocalBuildFromUrl("weapon", (build) => applyLoadedBuild(build, { silent: true }));
   useLoadoutSlotFromUrl(
     "weapon",
     useCallback((build) => applyLoadedBuild(build, { silent: true }), [applyLoadedBuild]),
@@ -531,6 +534,39 @@ export default function WeaponBuilderPage() {
             search={weaponSearch}
             onSearchChange={setWeaponSearch}
             searchPlaceholder="Search weapons..."
+            pickerTab={pickerTab}
+            onPickerTabChange={(tab) => {
+              if (tab === "saved") setSavedBuilds(getSavedBuilds("weapon"));
+              setPickerTab(tab);
+            }}
+            savedPanel={
+              savedBuilds.length === 0 ? (
+                <p className="px-2 py-6 text-center text-xs text-muted-foreground">
+                  No saved weapon builds yet. Save a build from the builder to see it here.
+                </p>
+              ) : (
+                savedBuilds.map((build) => {
+                  const d = build.data as WeaponBuildData;
+                  const weaponName = allWeapons.find((w) => w.id === d.weaponId)?.name ?? d.weaponId;
+                  return (
+                    <ItemPickerRow
+                      key={build.id}
+                      accent="blue"
+                      onClick={() => handleLoadBuild(build)}
+                      title={build.name}
+                      badge={
+                        <span className="shrink-0 text-xs text-muted-foreground">{weaponName}</span>
+                      }
+                      meta={
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(build.updatedAt).toLocaleDateString()}
+                        </span>
+                      }
+                    />
+                  );
+                })
+              )
+            }
             filters={Object.entries(categoryLabels).map(([key, label]) => (
               <ItemPickerFilter
                 key={key}

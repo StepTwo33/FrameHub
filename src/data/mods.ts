@@ -340,11 +340,11 @@ const RAW_MODS: Mod[] = [
     "category": "rifle",
     "subCategory": "weapon",
     "stats": {
-      // Max rank: +155% damage (14.0909×11), +55% slide speed (5×11). No sprint bonus.
+      // Max rank: +155% damage (14.0909×11), +55% sprint speed (5×11).
       "damage": 14.0909,
-      "slideSpeed": 5
+      "sprintSpeed": 5
     },
-    "description": "+155% Damage, +55% Slide Speed at max rank",
+    "description": "+155% Damage, +55% Sprint Speed at max rank",
     "rarity": "rare"
   },
   {

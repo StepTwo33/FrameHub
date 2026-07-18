@@ -74,6 +74,7 @@ import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/compan
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
 import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
 function calculateWeaponStats(
   weapon: Weapon,
   mods: EquippedMod[],
@@ -196,6 +197,7 @@ export default function CompanionBuilderPage() {
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("companion"));
   const [showSavedBuilds, setShowSavedBuilds] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"catalog" | "saved">("catalog");
   const [currentBuildId, setCurrentBuildId] = useState<string | null>(null);
   const [buildName, setBuildName] = useState("");
   const [buildDescription, setBuildDescription] = useState("");
@@ -294,6 +296,7 @@ export default function CompanionBuilderPage() {
   }, [allCompanions, allWeapons]);
 
   useCloudBuildFromUrl("companion", handleLoadBuild);
+  useLocalBuildFromUrl("companion", handleLoadBuild);
   useLoadoutSlotFromUrl("companion", handleLoadBuild, allCompanions.length > 0);
 
   const handleDeleteBuild = useCallback((id: string) => {
@@ -517,6 +520,39 @@ export default function CompanionBuilderPage() {
             search={companionSearch}
             onSearchChange={setCompanionSearch}
             searchPlaceholder="Search companions..."
+            pickerTab={pickerTab}
+            onPickerTabChange={(tab) => {
+              if (tab === "saved") setSavedBuilds(getSavedBuilds("companion"));
+              setPickerTab(tab);
+            }}
+            savedPanel={
+              savedBuilds.length === 0 ? (
+                <p className="px-2 py-6 text-center text-xs text-muted-foreground">
+                  No saved companion builds yet. Save a build from the builder to see it here.
+                </p>
+              ) : (
+                savedBuilds.map((build) => {
+                  const d = build.data as CompanionBuildData;
+                  const compName = allCompanions.find((c) => c.id === d.companionId)?.name ?? d.companionId;
+                  return (
+                    <ItemPickerRow
+                      key={build.id}
+                      accent="cyan"
+                      onClick={() => handleLoadBuild(build)}
+                      title={build.name}
+                      badge={
+                        <span className="shrink-0 text-xs text-muted-foreground">{compName}</span>
+                      }
+                      meta={
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(build.updatedAt).toLocaleDateString()}
+                        </span>
+                      }
+                    />
+                  );
+                })
+              )
+            }
             filters={Object.entries(companionTypeLabels).map(([key, label]) => (
               <ItemPickerFilter
                 key={key}

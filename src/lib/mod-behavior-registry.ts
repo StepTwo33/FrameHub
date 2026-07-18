@@ -233,7 +233,11 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
 
 /** Apply a single mod stat line when that mod has a verified per-item entry. Returns true if handled. */
 export function applyVerifiedModStatToWeapon(
-  stats: { modBonuses?: Record<string, number>; slideSpeedBonus?: number },
+  stats: {
+    modBonuses?: Record<string, number>;
+    slideSpeedBonus?: number;
+    sprintSpeedBonus?: number;
+  },
   ctx: ModApplyWeaponContext,
 ): boolean {
   const line = getVerifiedModStatLine(ctx.modId, ctx.statKey);
@@ -249,6 +253,12 @@ export function applyVerifiedModStatToWeapon(
 
   if (ctx.statKey === "slideSpeed") {
     stats.slideSpeedBonus = (stats.slideSpeedBonus ?? 0) + ctx.modValue;
+    trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
+    return true;
+  }
+
+  if (ctx.statKey === "sprintSpeed") {
+    stats.sprintSpeedBonus = (stats.sprintSpeedBonus ?? 0) + ctx.modValue;
     trackModPanel(stats, ctx.modId, ctx.statKey, ctx.modValue);
     return true;
   }
@@ -293,7 +303,7 @@ export type WarframeModAccumulators = {
   armorBonus: number;
   energyBonus: number;
   sprintSpeedBonus: number;
-  /** Fraction bonus to slide speed (e.g. Maglev, Amalgam Serration). */
+  /** Fraction bonus to slide speed (e.g. Maglev). */
   slideSpeedBonus: number;
   flowBonus: number;
   parkourVelocityBonus: number;
@@ -518,23 +528,41 @@ export function applyVerifiedModStatToWarframe(
 }
 
 /**
- * Sum slide-speed fraction from equipped weapon mods (Amalgam Serration, etc.)
- * for warframe / loadout display.
+ * Sum slide-speed fraction from equipped weapon mods for warframe / loadout display.
  */
 export function sumSlideSpeedBonusFromModSlots(
   slots: { modId: string; rank?: number }[] | undefined,
   allMods: Map<string, { maxRank: number; stats?: Record<string, number>; category?: string }>,
 ): number {
+  return sumMovementBonusFromWeaponModSlots(slots, allMods, "slideSpeed");
+}
+
+/**
+ * Sum sprint-speed fraction from equipped weapon mods (Amalgam Serration, etc.)
+ * for warframe / loadout display.
+ */
+export function sumSprintSpeedBonusFromModSlots(
+  slots: { modId: string; rank?: number }[] | undefined,
+  allMods: Map<string, { maxRank: number; stats?: Record<string, number>; category?: string }>,
+): number {
+  return sumMovementBonusFromWeaponModSlots(slots, allMods, "sprintSpeed");
+}
+
+function sumMovementBonusFromWeaponModSlots(
+  slots: { modId: string; rank?: number }[] | undefined,
+  allMods: Map<string, { maxRank: number; stats?: Record<string, number>; category?: string }>,
+  statKey: "slideSpeed" | "sprintSpeed",
+): number {
   if (!slots?.length) return 0;
   let total = 0;
   for (const slot of slots) {
     const mod = allMods.get(slot.modId);
-    const perRank = mod?.stats?.slideSpeed;
+    const perRank = mod?.stats?.[statKey];
     if (perRank == null || !mod) continue;
     // Only weapon-slot mods contribute here (warframe mods are applied in calculateWarframeBuild).
     const cat = (mod.category ?? "").toLowerCase();
     if (cat === "warframe" || cat === "aura" || cat === "exilus" || cat === "augment") continue;
-    const line = getVerifiedModStatLine(slot.modId, "slideSpeed");
+    const line = getVerifiedModStatLine(slot.modId, statKey);
     if (line && line.mode !== "multiplicative_percent") continue;
     const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod.maxRank);
     total += (perRank * (rank + 1)) / 100;
