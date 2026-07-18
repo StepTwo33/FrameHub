@@ -7,8 +7,8 @@ import { WarframeStatsPanel, WeaponStatsPanel } from "@/components/stats-panel";
 import {
   resolvePublicBuildWarframePreview,
   resolvePublicBuildWeaponPreview,
-} from "@/lib/build-stats";
-import type { LoadoutBuildData } from "@/lib/loadouts";
+} from "@/lib/builds/build-stats";
+import type { LoadoutBuildData } from "@/lib/builds/loadouts";
 import { useMods, useWeapons } from "@/lib/use-data";
 import type { EquippedMod, Loadout } from "@/lib/types";
 

@@ -2,7 +2,7 @@
 
 import { Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { SavedBuild } from "@/lib/build-storage";
+import type { SavedBuild } from "@/lib/builds/build-storage";
 import { cn } from "@/lib/utils";
 
 export function SavedBuildsDialog({

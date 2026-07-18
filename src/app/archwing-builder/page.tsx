@@ -18,11 +18,11 @@ import { WeaponStatsPanel, ArchwingStatsPanel } from "@/components/stats-panel";
 import { Weapon, EquippedMod, CalculatedStats, ArchwingCalculatedStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Star, Zap, Save, FolderOpen } from "lucide-react";
-import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, persistSavedBuild } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, ArchwingBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
 
 type BuilderMode = "archwing" | "necramech";
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { SavedBuild } from "@/lib/build-storage";
-import { getSavedBuilds } from "@/lib/build-storage";
+import type { SavedBuild } from "@/lib/builds/build-storage";
+import { getSavedBuilds } from "@/lib/builds/build-storage";
 
 /**
  * Load a locally saved build when the builder is opened via `?localBuild=<id>`

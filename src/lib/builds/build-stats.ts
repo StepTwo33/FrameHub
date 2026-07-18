@@ -12,15 +12,15 @@ import {
   type CompanionBuildData,
   type WarframeBuildData,
   type WeaponBuildData,
-} from "@/lib/build-storage";
+} from "@/lib/builds/build-storage";
 import { buildAbilityTTKEntries, type AbilityTTKEntry } from "@/lib/calc/ability-ttk";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import {
   calcSavedWeaponBuildStats,
   getIncarnonStatChangesForWeapon,
   scenarioSimParams,
-} from "@/lib/loadout-stats";
-import { weaponFromModularData } from "@/lib/modular-resolve";
+} from "@/lib/builds/loadout-stats";
+import { weaponFromModularData } from "@/lib/builds/modular-resolve";
 import {
   applyWarframeShardsAndArcanes,
   calculateWarframeBuild,

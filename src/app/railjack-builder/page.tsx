@@ -18,11 +18,11 @@ import { calculateRailjackBuild, railjackBuildNeedsSimulation } from "@/lib/calc
 import { filterRailjackModsForTab } from "@/lib/railjack-plexus-mods";
 import { cn } from "@/lib/utils";
 import { Save, FolderOpen, Crosshair, Shield, Zap, Gauge, ChevronRight, Users } from "lucide-react";
-import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, persistSavedBuild } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, RailjackBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
 import { toast } from "sonner";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 
 type PlexusTab = "integrated" | "battle" | "tactical";

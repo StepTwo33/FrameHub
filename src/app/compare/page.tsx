@@ -17,8 +17,8 @@ import {
 import { cn } from "@/lib/utils";
 import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { getLoadouts } from "@/lib/loadouts";
-import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
+import { getLoadouts } from "@/lib/builds/loadouts";
+import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/builds/loadout-stats";
 import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
 import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
 import { getModCategory } from "@/lib/weapon-categories";

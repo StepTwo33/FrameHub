@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { isAllowedBuildType } from "@/lib/build-types";
-import { parseBuildTags } from "@/lib/build-tags";
+import { isAllowedBuildType } from "@/lib/builds/build-types";
+import { parseBuildTags } from "@/lib/builds/build-tags";
 
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 50;

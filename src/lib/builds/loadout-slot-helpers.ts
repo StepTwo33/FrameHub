@@ -2,14 +2,14 @@
  * Pure helpers for loadout slot labels, mod counts, and build pickers.
  */
 
-import { getSavedBuilds, type SavedBuild, type WarframeBuildData, type WeaponBuildData, type ModularBuildData } from "@/lib/build-storage";
+import { getSavedBuilds, type SavedBuild, type WarframeBuildData, type WeaponBuildData, type ModularBuildData } from "@/lib/builds/build-storage";
 import type { Loadout, EquippedArchonShard, Weapon } from "@/lib/types";
-import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
-import type { LoadoutWeaponSlot } from "@/lib/modular-resolve";
+import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/builds/modular-resolve";
+import type { LoadoutWeaponSlot } from "@/lib/builds/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
 import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
-import { dualFormModCountSummary, isDualFormWarframe } from "@/lib/dual-form-warframes";
+import { dualFormModCountSummary, isDualFormWarframe } from "@/lib/builds/dual-form-warframes";
 
 export type LoadoutSlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";
 

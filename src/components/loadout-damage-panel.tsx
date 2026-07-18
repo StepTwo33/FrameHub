@@ -8,9 +8,9 @@ import {
   scenarioSimParams,
   ENEMY_TYPES,
   type DamageScenario,
-} from "@/lib/loadout-stats";
+} from "@/lib/builds/loadout-stats";
 import type { Loadout } from "@/lib/types";
-import type { LoadoutStatsResult, LoadoutWeaponSlotStats } from "@/lib/loadout-stats";
+import type { LoadoutStatsResult, LoadoutWeaponSlotStats } from "@/lib/builds/loadout-stats";
 import { useWeapons } from "@/lib/use-data";
 import { allWarframes } from "@/data/warframes";
 import { weaponDamageBuffAbilities } from "@/lib/weapon-external-buffs";

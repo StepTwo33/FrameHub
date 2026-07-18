@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BUILD_TAG_OPTIONS } from "@/lib/build-tags";
+import { BUILD_TAG_OPTIONS } from "@/lib/builds/build-tags";
 
 export interface SaveBuildDialogValues {
   name: string;

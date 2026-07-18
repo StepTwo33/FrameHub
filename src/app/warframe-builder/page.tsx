@@ -34,9 +34,9 @@ import {
   getExaltedWeaponsForWarframe,
   getPrimaryExaltedWeapon,
 } from "@/lib/exalted-weapons";
-import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, persistSavedBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
-import { extractBuildFromUrl } from "@/lib/build-url";
-import { shareBuilderBuild } from "@/lib/share-build";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, persistSavedBuild, resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
+import { extractBuildFromUrl } from "@/lib/builds/build-url";
+import { shareBuilderBuild } from "@/lib/builds/share-build";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
@@ -44,9 +44,9 @@ import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { DualFormTabs } from "@/components/dual-form-tabs";
-import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
-import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
+import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
@@ -56,7 +56,7 @@ import {
   EMPTY_ARCANE_IDS,
   DEFAULT_ARCANE_RANKS,
   type DualFormBuildSlice,
-} from "@/lib/dual-form-warframes";
+} from "@/lib/builds/dual-form-warframes";
 import { AbilitiesSectionHeader } from "@/components/ability-display";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { AbilityCard, HelminthAbilityCard, HelminthSubsumeButton } from "./ability-cards";

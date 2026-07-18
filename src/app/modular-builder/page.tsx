@@ -13,7 +13,7 @@ import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
 import type { SlotType } from "@/components/mod-picker";
 import { Zap, Star, Wrench, ChevronRight, Save, FolderOpen, Gem } from "lucide-react";
-import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, persistSavedBuild } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, persistSavedBuild } from "@/lib/builds/build-storage";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { toast } from "sonner";
 import {
@@ -24,11 +24,11 @@ import {
   KitgunChamber, KitgunGrip, KitgunLoader, ZawStrike, ZawGrip, ZawLink, AmpScaffold, AmpBrace,
 } from "@/data/modular-weapons";
 import { cn } from "@/lib/utils";
-import { extractBuildFromUrl } from "@/lib/build-url";
-import { resolveArcaneById } from "@/lib/build-storage";
+import { extractBuildFromUrl } from "@/lib/builds/build-url";
+import { resolveArcaneById } from "@/lib/builds/build-storage";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
 
 type ModularType = "kitgun" | "zaw" | "amp";
 

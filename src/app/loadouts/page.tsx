@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useCallback, useMemo, startTransition } from "react";
 import { PageShell, PageMain, PageHero, ContentPanel, EmptyState } from "@/components/page-shell";
-import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild, mergeCloudLoadoutPreservingSlots } from "@/lib/loadouts";
+import { getLoadouts, saveLoadout, deleteLoadout, generateId, loadoutToBuildData, loadoutFromSavedBuild, mergeCloudLoadoutPreservingSlots } from "@/lib/builds/loadouts";
 import {
   generateBuildId,
   saveCloudBuild,
@@ -12,14 +12,14 @@ import {
   WeaponBuildData,
   CompanionBuildData,
   ModularBuildData,
-} from "@/lib/build-storage";
+} from "@/lib/builds/build-storage";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import {
   useCloudBuildFromUrl,
   markCloudBuildLoaded,
-} from "@/lib/use-cloud-build-from-url";
+} from "@/lib/builds/use-cloud-build-from-url";
 import { Loadout } from "@/lib/types";
-import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/modular-resolve";
+import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/builds/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
 import { useWeapons } from "@/lib/use-data";
@@ -55,7 +55,7 @@ import { toast } from "sonner";
 import { useConfirmDialog } from "@/components/confirm-dialog-provider";
 import { LoadoutDamagePanel } from "@/components/loadout-damage-panel";
 import { LoadoutSectionErrorBoundary } from "@/components/loadout-section-error-boundary";
-import { emptyDualFormBuilds, isDualFormWarframe } from "@/lib/dual-form-warframes";
+import { emptyDualFormBuilds, isDualFormWarframe } from "@/lib/builds/dual-form-warframes";
 import {
   type LoadoutSlotType,
   LOADOUT_SLOT_CONFIG,
@@ -70,7 +70,7 @@ import {
   listSavedBuildsForSlot,
   listModularBuildsForWeaponSlot,
   normalizeWarframeBuild,
-} from "@/lib/loadout-slot-helpers";
+} from "@/lib/builds/loadout-slot-helpers";
 
 type SlotType = LoadoutSlotType;
 

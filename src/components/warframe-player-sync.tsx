@@ -11,7 +11,7 @@ import {
   type WarframePlatform,
 } from "@/lib/warframe-arsenal/platforms";
 import type { ArsenalImportPayload, ArsenalImportWarning } from "@/lib/warframe-arsenal/map-import";
-import { generateId, saveLoadout } from "@/lib/loadouts";
+import { generateId, saveLoadout } from "@/lib/builds/loadouts";
 import type { Loadout } from "@/lib/types";
 import { toast } from "sonner";
 

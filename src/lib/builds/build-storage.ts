@@ -1,5 +1,5 @@
 // Build storage utilities - localStorage fallback + cloud API when logged in
-import { ModSlot, EquippedArchonShard, Mod, ModularBuildData } from "./types";
+import { ModSlot, EquippedArchonShard, Mod, ModularBuildData } from "../types";
 import { resolveEffectiveModOrArcane } from "@/lib/effective-data";
 
 /** Arcanes are not in mods.ts; resolve from override-aware catalogs. */

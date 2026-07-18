@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { Trash2, Crosshair, Shield, Dog, Wrench, Plane, LogIn, Camera, Loader2, Check, X, Pencil, Calendar, User as UserIcon, Mail, FileText, Flag, CheckCircle2, Ban, CircleDot, ChevronRight, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buildOpenUrl } from "@/lib/build-url";
+import { buildOpenUrl } from "@/lib/builds/build-url";
 import { AvatarImage } from "@/components/game-asset-image";
 import { AvatarCropDialog } from "@/components/avatar-crop-dialog";
 import { SupporterBadge } from "@/components/supporter-badge";

@@ -9,8 +9,8 @@ import {
   HEALTH_MODIFIERS, ARMOR_MODIFIERS, SHIELD_MODIFIERS,
   getMod,
 } from "@/lib/calc/ttk";
-import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/build-storage";
-import { calcSavedWeaponBuildStats } from "@/lib/loadout-stats";
+import { getSavedBuilds, getCloudBuilds, type SavedBuild } from "@/lib/builds/build-storage";
+import { calcSavedWeaponBuildStats } from "@/lib/builds/loadout-stats";
 import { calculatedStatsToSimInputs } from "@/lib/calc/damage-sim-load";
 import { runDamageSim, type DamageSimResult } from "@/lib/calc/damage-sim";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";

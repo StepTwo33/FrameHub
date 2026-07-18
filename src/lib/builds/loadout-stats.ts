@@ -6,11 +6,11 @@ import {
   getEffectiveWeaponsMap,
 } from "@/lib/effective-data";
 import { incarnonDataMap } from "@/data/incarnon";
-import type { WarframeBuildData } from "@/lib/build-storage";
-import { allDualFormMods, getDualFormConfig } from "@/lib/dual-form-warframes";
-import { resolveSavedArcaneSlots } from "@/lib/build-storage";
+import type { WarframeBuildData } from "@/lib/builds/build-storage";
+import { allDualFormMods, getDualFormConfig } from "@/lib/builds/dual-form-warframes";
+import { resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
 import { resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
-import { weaponFromModularData } from "@/lib/modular-resolve";
+import { weaponFromModularData } from "@/lib/builds/modular-resolve";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import { getPrimaryExaltedWeapon } from "@/lib/exalted-weapons";
 import {

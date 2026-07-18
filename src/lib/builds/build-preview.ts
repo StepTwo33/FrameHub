@@ -6,9 +6,9 @@ import {
   getEffectiveWarframesMap,
   getEffectiveWeaponsMap,
 } from "@/lib/effective-data";
-import { resolveArcaneById } from "@/lib/build-storage";
-import type { WarframeBuildData } from "@/lib/build-storage";
-import { dualFormModCountSummary } from "@/lib/dual-form-warframes";
+import { resolveArcaneById } from "@/lib/builds/build-storage";
+import type { WarframeBuildData } from "@/lib/builds/build-storage";
+import { dualFormModCountSummary } from "@/lib/builds/dual-form-warframes";
 import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/images";
 import type { EquippedArchonShard, ModSlot } from "@/lib/types";
 

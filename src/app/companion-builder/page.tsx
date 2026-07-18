@@ -33,7 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Zap, Dog, Bot, Bug, Swords, Crosshair, Flag, Star, Save, FolderOpen } from "lucide-react";
-import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, persistSavedBuild } from "@/lib/build-storage";
+import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, CompanionBuildData, persistSavedBuild } from "@/lib/builds/build-storage";
 import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
@@ -75,9 +75,9 @@ function getCompanionModSubCategory(companionType: string): string[] {
 
 import { getCompanionWeapons, resolveDefaultCompanionWeapon } from "@/lib/companion-weapons";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
-import { useCloudBuildFromUrl } from "@/lib/use-cloud-build-from-url";
-import { useLoadoutSlotFromUrl } from "@/lib/use-loadout-slot-from-url";
-import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
+import { useCloudBuildFromUrl } from "@/lib/builds/use-cloud-build-from-url";
+import { useLoadoutSlotFromUrl } from "@/lib/builds/use-loadout-slot-from-url";
+import { useLocalBuildFromUrl } from "@/lib/builds/use-local-build-from-url";
 
 function StatRow({ label, value, highlighted, color }: { label: string; value: string; highlighted?: boolean; color?: string }) {
   return (

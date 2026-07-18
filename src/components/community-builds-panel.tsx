@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PublicBuildSummary } from "@/lib/build-types";
+import type { PublicBuildSummary } from "@/lib/builds/build-types";
 import { PublicBuildRow } from "@/components/public-build-row";
 
 interface CommunityBuildsPanelProps {

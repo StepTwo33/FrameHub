@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getLoadouts } from "@/lib/loadouts";
-import type { SavedBuild } from "@/lib/build-storage";
+import { getLoadouts } from "@/lib/builds/loadouts";
+import type { SavedBuild } from "@/lib/builds/build-storage";
 import type { Loadout } from "@/lib/types";
 
 type BuilderKind = "weapon" | "warframe" | "companion" | "modular";

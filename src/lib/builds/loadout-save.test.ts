@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { calcLoadoutStats } from "@/lib/loadout-stats";
+import { calcLoadoutStats } from "@/lib/builds/loadout-stats";
 import {
   loadoutFromSavedBuild,
   loadoutToBuildData,
   normalizeLoadoutBuildData,
   mergeCloudLoadoutPreservingSlots,
-} from "@/lib/loadouts";
+} from "@/lib/builds/loadouts";
 import type { Loadout } from "@/lib/types";
-import type { SavedBuild } from "@/lib/build-storage";
+import type { SavedBuild } from "@/lib/builds/build-storage";
 import { getEffectiveWeapons } from "@/lib/effective-data";
 
 /** Minimal imported Player Sync shape (Pharaoh Predasite + slots). */

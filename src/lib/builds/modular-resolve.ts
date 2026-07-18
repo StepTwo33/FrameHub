@@ -1,5 +1,5 @@
-import type { ModularBuildData } from "./types";
-import type { Weapon } from "./types";
+import type { ModularBuildData } from "../types";
+import type { Weapon } from "../types";
 import {
   buildKitgun,
   buildZaw,

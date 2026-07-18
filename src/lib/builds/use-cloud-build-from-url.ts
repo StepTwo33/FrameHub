@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
-import type { SavedBuild } from "@/lib/build-storage";
+import type { SavedBuild } from "@/lib/builds/build-storage";
 
 const cloudBuildLoadedIdRef = { current: null as string | null };
 

@@ -1,5 +1,5 @@
 import type { Ability, ModSlot } from "@/lib/types";
-import type { WarframeBuildData } from "@/lib/build-storage";
+import type { WarframeBuildData } from "@/lib/builds/build-storage";
 
 export const EMPTY_ARCANE_IDS: (string | null)[] = [null, null];
 export const DEFAULT_ARCANE_RANKS = [5, 5] as const;

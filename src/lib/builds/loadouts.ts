@@ -1,4 +1,4 @@
-import { Loadout, ModularBuildData, ModSlot } from "./types";
+import { Loadout, ModularBuildData, ModSlot } from "../types";
 import { inferModularLoadoutSlot } from "./modular-resolve";
 import type { SavedBuild } from "./build-storage";
 

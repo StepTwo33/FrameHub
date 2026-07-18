@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { PageShell, PageMain, PageHero } from "@/components/page-shell";
-import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/build-storage";
-import { getLoadouts, saveLoadout, generateId } from "@/lib/loadouts";
-import type { SavedBuild } from "@/lib/build-storage";
+import { getSavedBuilds, saveBuild, generateBuildId } from "@/lib/builds/build-storage";
+import { getLoadouts, saveLoadout, generateId } from "@/lib/builds/loadouts";
+import type { SavedBuild } from "@/lib/builds/build-storage";
 import type { Loadout } from "@/lib/types";
 import {
   Upload, Download, Clipboard, Check, AlertCircle, QrCode,
@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { QrCodeImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
-import { localBuildOpenUrl, encodeJsonPayload, decodeJsonPayload } from "@/lib/build-url";
+import { localBuildOpenUrl, encodeJsonPayload, decodeJsonPayload } from "@/lib/builds/build-url";
 import { copyTextToClipboard } from "@/lib/clipboard";
 
 function getBuildTypeIcon(type: string) {
