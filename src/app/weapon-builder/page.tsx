@@ -18,7 +18,7 @@ import { useWeapons, useMods } from "@/lib/weapons/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calc/calculator";
 import { modCapacityAtRank } from "@/lib/calc/mod-capacity";
 import { mergeIncarnonStatChanges, mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
-import { resolveIncarnonActiveWeapon } from "@/lib/calc/incarnon-active-weapon";
+import { resolveIncarnonActiveWeapon, isIncarnonFormActive } from "@/lib/calc/incarnon-active-weapon";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
 import {
@@ -109,9 +109,18 @@ export default function WeaponBuilderPage() {
   }, [selectedWeapon, gravimagMode, selectedEvolutions]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
-    if (!selectedWeapon || !weaponSupportsProgenitor(selectedWeapon)) return undefined;
-    return { progenitorElement, progenitorBonusPercent };
-  }, [selectedWeapon, progenitorElement, progenitorBonusPercent]);
+    const data = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;
+    const formActive = isIncarnonFormActive(selectedEvolutions, data);
+    const progenitor =
+      selectedWeapon && weaponSupportsProgenitor(selectedWeapon)
+        ? { progenitorElement, progenitorBonusPercent }
+        : undefined;
+    if (!progenitor && !formActive) return undefined;
+    return {
+      ...(progenitor ?? {}),
+      ...(formActive ? { incarnonFormActive: true } : {}),
+    };
+  }, [selectedWeapon, progenitorElement, progenitorBonusPercent, selectedEvolutions]);
 
   // Load build from URL ?build= param
   useEffect(() => {

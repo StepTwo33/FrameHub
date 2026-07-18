@@ -19,7 +19,7 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calc/calculator";
-import { resolveIncarnonActiveWeapon } from "@/lib/calc/incarnon-active-weapon";
+import { resolveIncarnonActiveWeapon, isIncarnonFormActive } from "@/lib/calc/incarnon-active-weapon";
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/calc/ttk";
 import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/calc/dps-contributions";
@@ -187,12 +187,19 @@ function calcWeaponSlotStats(
   const base = weaponWithPassive(w);
   const incarnonData = incarnonDataMap.get(build.weaponId);
   const calcWeapon = resolveIncarnonActiveWeapon(base, incarnonData, build.incarnonEvolutions);
+  const formActive = isIncarnonFormActive(build.incarnonEvolutions, incarnonData);
   const progenitorOpts =
     build.progenitorElement &&
     build.progenitorBonusPercent != null &&
     build.progenitorBonusPercent > 0
-      ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
-      : undefined;
+      ? {
+          progenitorElement: build.progenitorElement,
+          progenitorBonusPercent: build.progenitorBonusPercent,
+          ...(formActive ? { incarnonFormActive: true as const } : {}),
+        }
+      : formActive
+        ? { incarnonFormActive: true as const }
+        : undefined;
   const externalBuffs = resolveWeaponExternalBuffs(calcWeapon, buffContext, simParams);
   const calcOptions = mergeWeaponCalcOptions(progenitorOpts, externalBuffs);
   const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions);

@@ -362,14 +362,21 @@ export function weaponDamageBuffAbilities(abilities: Ability[] | undefined): Abi
 }
 
 export function mergeWeaponCalcOptions(
-  existing: { progenitorElement?: string; progenitorBonusPercent?: number } | undefined,
+  existing:
+    | {
+        progenitorElement?: string;
+        progenitorBonusPercent?: number;
+        incarnonFormActive?: boolean;
+      }
+    | undefined,
   externalBuffs: WeaponExternalBuff[],
 ): import("@/lib/types").WeaponCalculationOptions | undefined {
   const hasProgenitor =
     existing?.progenitorElement &&
     existing.progenitorBonusPercent != null &&
     existing.progenitorBonusPercent > 0;
-  if (!hasProgenitor && externalBuffs.length === 0) return undefined;
+  const formActive = existing?.incarnonFormActive === true;
+  if (!hasProgenitor && externalBuffs.length === 0 && !formActive) return undefined;
   return {
     ...(hasProgenitor
       ? {
@@ -378,5 +385,6 @@ export function mergeWeaponCalcOptions(
         }
       : {}),
     ...(externalBuffs.length > 0 ? { externalBuffs } : {}),
+    ...(formActive ? { incarnonFormActive: true } : {}),
   };
 }

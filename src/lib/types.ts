@@ -290,6 +290,8 @@ export interface WeaponCalculationOptions {
   progenitorBonusPercent?: number;
   /** Loadout-wide buffs applied after weapon mods (abilities, shards, …). */
   externalBuffs?: WeaponExternalBuff[];
+  /** When true, Incarnon Form radials contribute to DPS (form attack active). */
+  incarnonFormActive?: boolean;
 }
 
 export interface ElementalDamage {

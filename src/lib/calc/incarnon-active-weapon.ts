@@ -4,7 +4,8 @@
  */
 
 import type { IncarnonForm, IncarnonWeaponData } from "@/data/incarnon";
-import type { Weapon } from "@/lib/types";
+import { WEAPON_RADIAL_ATTACKS } from "@/data/weapon-radial-attacks";
+import type { Weapon, WeaponRadialAttack } from "@/lib/types";
 
 export function isIncarnonFormActive(
   selectedEvolutions: Record<number, number> | undefined,
@@ -37,18 +38,34 @@ const ELEM_KEYS = [
   "tau",
 ] as const;
 
+function formOnlyRadials(weaponId: string): WeaponRadialAttack[] {
+  const all = WEAPON_RADIAL_ATTACKS[weaponId] ?? [];
+  return all.filter((a) => /incarnon form/i.test(a.name));
+}
+
 /**
  * Overlay Incarnon Form attack stats onto the arsenal weapon.
- * Clears IPS/elements then applies form damage (typed element when provided).
- * Strips base radials (e.g. Torid Poison Cloud) — form has its own attack profile.
+ * Clears IPS/elements then applies form damage (typed element / IPS when provided).
+ * Keeps only Incarnon Form radials for this weapon id (drops Poison Cloud etc.).
+ * Melee forms are not swapped — Incarnon melee is buff-driven, not a new arsenal attack.
  */
 export function applyIncarnonFormToWeapon(base: Weapon, form: IncarnonForm): Weapon {
+  if (
+    form.triggerType === "Melee" ||
+    base.category === "melee" ||
+    base.triggerType === "Melee"
+  ) {
+    return base;
+  }
+
+  const formRadials = formOnlyRadials(base.id);
+
   const next: Weapon = {
     ...base,
     damage: form.damage,
-    impact: 0,
-    puncture: 0,
-    slash: 0,
+    impact: form.impact ?? 0,
+    puncture: form.puncture ?? 0,
+    slash: form.slash ?? 0,
     fireRate: form.fireRate,
     criticalChance: form.criticalChance,
     criticalMultiplier: form.criticalMultiplier,
@@ -56,42 +73,48 @@ export function applyIncarnonFormToWeapon(base: Weapon, form: IncarnonForm): Wea
     triggerType: form.triggerType,
     magazine: form.magazine ?? base.magazine,
     reloadTime: form.reloadTime ?? base.reloadTime,
-    // Form is a distinct attack — do not keep grenade/cloud radials from base.
-    radialAttacks: [],
+    multishot: form.multishot ?? base.multishot,
+    radialAttacks: formRadials,
   };
 
   for (const k of ELEM_KEYS) {
     delete (next as unknown as Record<string, unknown>)[k];
   }
 
-  const typed =
-    form.toxin ??
-    form.heat ??
-    form.cold ??
-    form.electricity ??
-    form.radiation ??
-    form.viral ??
-    form.corrosive ??
-    form.blast ??
-    form.gas ??
-    form.magnetic ??
-    form.tau;
-
-  if (typed != null && typed > 0) {
-    if (form.toxin != null) next.toxin = form.toxin;
-    else if (form.heat != null) next.heat = form.heat;
-    else if (form.cold != null) next.cold = form.cold;
-    else if (form.electricity != null) next.electricity = form.electricity;
-    else if (form.radiation != null) next.radiation = form.radiation;
-    else if (form.viral != null) next.viral = form.viral;
-    else if (form.corrosive != null) next.corrosive = form.corrosive;
-    else if (form.blast != null) next.blast = form.blast;
-    else if (form.gas != null) next.gas = form.gas;
-    else if (form.magnetic != null) next.magnetic = form.magnetic;
-    else if (form.tau != null) next.tau = form.tau;
-  } else if (form.damageType) {
+  let appliedElem = false;
+  for (const k of ELEM_KEYS) {
+    const v = form[k];
+    if (v != null && v > 0) {
+      (next as unknown as Record<string, number>)[k] = v;
+      appliedElem = true;
+    }
+  }
+  if (!appliedElem && form.damageType) {
     const key = form.damageType.toLowerCase();
     (next as unknown as Record<string, unknown>)[key] = form.damage;
+  }
+
+  // Variant-aware pure-element forms (e.g. Burston vs Burston Prime Heat):
+  // when the form radial is a single matching element, sync direct damage from it.
+  if (form.heat != null && formRadials.length === 1) {
+    const r = formRadials[0];
+    if (r.heat != null && r.heat > 0 && r.totalDamage === r.heat) {
+      next.heat = r.heat;
+      next.damage = r.heat;
+      next.impact = 0;
+      next.puncture = 0;
+      next.slash = 0;
+    }
+  }
+
+  // Dual-type forms (e.g. Phenmor Slash + Radiation): damage = sum of parts
+  const ips = (next.impact ?? 0) + (next.puncture ?? 0) + (next.slash ?? 0);
+  let eleSum = 0;
+  for (const k of ELEM_KEYS) {
+    eleSum += (next as unknown as Record<string, number | undefined>)[k] ?? 0;
+  }
+  if (ips + eleSum > 0) {
+    next.damage = ips + eleSum;
   }
 
   return next;

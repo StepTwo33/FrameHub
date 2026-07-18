@@ -308,8 +308,10 @@ describe("Incarnon-form radials excluded until Incarnon is active", () => {
     if (!weapon) return;
     const bare = calculateWeaponBuild(weapon, [], modsMap());
     expect(bare.radialBurstDps ?? 0).toBe(0);
-    // With incarnon stat changes present, the Incarnon Form AoE contributes
-    const incarnon = calculateWeaponBuild(weapon, [], modsMap(), { damage: 10 });
+    // Form-active flag (not merely any evolution numeric) enables Incarnon Form AoE
+    const incarnon = calculateWeaponBuild(weapon, [], modsMap(), undefined, undefined, {
+      incarnonFormActive: true,
+    });
     expect(incarnon.radialBurstDps ?? 0).toBeGreaterThan(0);
   });
 });

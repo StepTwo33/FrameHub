@@ -927,7 +927,7 @@ export function calculateWeaponBuild(
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
-  applyRadialAttacks(baseWeapon, stats, incarnonStatChanges != null);
+  applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
 
   return stats;
 }
@@ -1299,7 +1299,7 @@ export function calculateWeaponBuildWithArcanes(
   });
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
-  applyRadialAttacks(baseWeapon, stats, incarnonStatChanges != null);
+  applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
   return stats;
 }
 
