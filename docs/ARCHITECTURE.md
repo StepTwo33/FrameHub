@@ -15,6 +15,20 @@ Short map of where things live. Prefer small, targeted changes over rewrites.
 
 UI shells and shared layout: `src/components/` (e.g. `stats/` barrel, mod picker, override editors).
 
+### Data Fixes / override UI
+
+Admin editor shell: `override-editor.tsx` (item picker + save). Field UIs are split by domain:
+
+| Module | Role |
+|--------|------|
+| `override-field-editors.tsx` | Thin barrel — prefer specific modules for new code |
+| `override-arcane-editors.tsx` | Arcane trigger + effect lines |
+| `override-abilities-editor.tsx` | Warframe / companion abilities |
+| `override-stat-rows-editor.tsx` | Nested mod/shard/stat maps |
+| `override-radial-editors.tsx` | Weapon radial attack drafts |
+
+Schemas / merge: `src/lib/override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`.
+
 ## Data vs behavior
 
 **Catalogs** (`src/data/*.ts`) hold identity and base stats: mods, weapons, warframes, arcanes, companions, stances, etc. Files are large on purpose — that is fine.
@@ -58,7 +72,7 @@ Tests live next to modules as `*.test.ts` (Vitest: `npm test`).
 |--------|----------------|
 | Auth / admin | `auth.ts`, `admin.ts`, `email.ts`, `rate-limit.ts` |
 | Builds / share | `build-url.ts`, `build-storage.ts` (`persistSavedBuild`), `share-build.ts`, `use-*-from-url.ts`, `SavedBuildsDialog` |
-| Overrides / reports | `override-schemas.ts`, `override-merge.ts`, `report-types.ts` |
+| Overrides / reports | `override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`, `report-types.ts` |
 | Display | `mod-display.ts`, `arcane-display.ts`, `shard-display.ts`, `images.ts` |
 | Site | `site-updates.ts`, `site-metadata.ts`, `public-origin.ts` |
 
