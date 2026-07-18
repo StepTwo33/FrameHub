@@ -7,7 +7,7 @@ Short map of where things live. Prefer small, targeted changes over rewrites.
 | Area | Path | Notes |
 |------|------|--------|
 | Builders | `src/app/*-builder/` | Weapon, warframe, companion, modular, etc. |
-| Codex | `src/app/codex/` | Browse items; detail panels partly in `codex-entity-panels.tsx` |
+| Codex | `src/app/codex/` | Browse items; detail UI in `codex-entity-panels.tsx` + `codex-item-panels.tsx` |
 | Compare / damage sim | `src/app/compare/`, `src/app/damage-simulator/` | |
 | Admin | `src/app/admin/` | Reports, data fixes, users, site updates, newsletter |
 | Auth / profile | `src/app/api/auth/`, `src/app/profile/` | JWT cookie sessions (`src/lib/auth.ts`) |
