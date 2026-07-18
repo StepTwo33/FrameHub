@@ -1,3 +1,5 @@
+import { STANCE_WEAPON_TYPE } from "@/data/stances";
+
 /**
  * Shared combat multipliers: faction (Bane), headshots, stance averages, status damage.
  * Used by weapon DPS and TTK so both stay in sync.
@@ -103,7 +105,7 @@ export function resolveStanceDamageMultiplier(
   equippedMods: { modId: string }[],
 ): number {
   for (const slot of equippedMods) {
-    if (!slot.modId.startsWith("stance_")) continue;
+    if (!(slot.modId in STANCE_WEAPON_TYPE)) continue;
     return STANCE_AVG_DAMAGE_MULTIPLIER[slot.modId] ?? DEFAULT_STANCE_AVG_MULTIPLIER;
   }
   return 1;

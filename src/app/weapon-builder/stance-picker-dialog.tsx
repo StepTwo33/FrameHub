@@ -27,10 +27,9 @@ export function StancePickerDialog({
     allMods
       .filter((m) => m.category === "stance")
       .filter((m) => {
-        if (stanceType) {
-          const type = STANCE_WEAPON_TYPE[m.id];
-          if (type && type !== stanceType) return false;
-        }
+        const type = STANCE_WEAPON_TYPE[m.id];
+        if (!type) return false;
+        if (stanceType && type !== stanceType) return false;
         return true;
       })
       .filter((m) => !search.trim() || m.name.toLowerCase().includes(search.toLowerCase()))

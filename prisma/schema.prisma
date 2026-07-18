@@ -49,6 +49,8 @@ model User {
   bannedAt      DateTime?
   banReason     String?
   supporterAt   DateTime?
+  /** Opt in to FrameHub newsletters (news@…). Transactional mail is unaffected. */
+  newsletterOptIn Boolean  @default(true)
   createdAt     DateTime  @default(now())
   accounts      Account[]
   sessions      Session[]
@@ -156,6 +158,8 @@ model Report {
   issues           String   // JSON string of issue flags
   statDiscrepancies String  @default("[]") // JSON string
   comment          String   @default("")
+  /** Moderator reply shown to the reporter and included in status emails. */
+  adminReply       String   @default("")
   status           String   @default("open") // open | resolved | wontfix
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

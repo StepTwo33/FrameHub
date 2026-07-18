@@ -21,6 +21,7 @@ interface ApiReport {
   issues: string;
   statDiscrepancies: string;
   comment: string;
+  adminReply: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -63,6 +64,7 @@ export default function AdminReportsPage() {
   const [filterType, setFilterType] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
 
   const refresh = useCallback(() => {
     fetch("/api/reports")
@@ -121,16 +123,21 @@ export default function AdminReportsPage() {
       if (action === "delete") {
         await fetch(`/api/reports/${id}`, { method: "DELETE" });
       } else {
+        const payload: { status: string; adminReply?: string } = { status: action };
+        if (action === "resolved" || action === "wontfix") {
+          const draft = replyDrafts[id]?.trim();
+          if (draft) payload.adminReply = draft;
+        }
         await fetch(`/api/reports/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: action }),
+          body: JSON.stringify(payload),
         });
       }
       refresh();
     } catch { /* ignore */ }
     setActionLoading(null);
-  }, [refresh]);
+  }, [refresh, replyDrafts]);
 
   if (loading) {
     return (
@@ -401,6 +408,38 @@ export default function AdminReportsPage() {
                       </div>
                     )}
 
+                    {/* Existing moderator reply */}
+                    {report.adminReply && (
+                      <div>
+                        <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">Moderator reply</div>
+                        <p className="text-sm text-foreground/90 bg-sky-500/5 rounded-lg p-3 border border-sky-500/20 whitespace-pre-wrap">
+                          {report.adminReply}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Reply when closing */}
+                    {report.status === "open" && (
+                      <div>
+                        <div className="text-[10px] font-semibold text-muted-foreground mb-1.5 uppercase">
+                          Reply to reporter (optional)
+                        </div>
+                        <textarea
+                          value={replyDrafts[report.id] ?? ""}
+                          onChange={(e) =>
+                            setReplyDrafts((prev) => ({ ...prev, [report.id]: e.target.value }))
+                          }
+                          maxLength={4000}
+                          rows={3}
+                          placeholder="Explain what you fixed or why this won't be changed. Included in their email and profile."
+                          className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background resize-y focus:outline-none focus:border-primary/50"
+                        />
+                        <p className="text-[10px] text-muted-foreground mt-1">
+                          Signed-in reporters get an email with this reply when you resolve or close.
+                        </p>
+                      </div>
+                    )}
+
                     {/* Meta */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-[10px] text-muted-foreground">
                       <span className="flex items-center gap-1"><Calendar className="h-3 w-3 shrink-0" /> Created: {new Date(report.createdAt).toLocaleString()}</span>
@@ -419,14 +458,14 @@ export default function AdminReportsPage() {
                             disabled={isLoading}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 transition-colors disabled:opacity-50"
                           >
-                            <Check className="h-3 w-3" /> Resolve
+                            <Check className="h-3 w-3" /> Resolve &amp; notify
                           </button>
                           <button
                             onClick={() => handleAction(report.id, "wontfix")}
                             disabled={isLoading}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 hover:bg-zinc-500/20 transition-colors disabled:opacity-50"
                           >
-                            <X className="h-3 w-3" /> Won&apos;t Fix
+                            <X className="h-3 w-3" /> Won&apos;t Fix &amp; notify
                           </button>
                         </>
                       )}

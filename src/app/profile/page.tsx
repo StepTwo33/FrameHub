@@ -21,6 +21,7 @@ interface ProfileUser {
   bio: string | null;
   role: string;
   supporterAt: string | null;
+  newsletterOptIn: boolean;
   createdAt: string;
   _count: { builds: number; reports: number };
 }
@@ -44,6 +45,7 @@ interface UserReport {
   itemId: string;
   status: string;
   comment: string;
+  adminReply?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -223,6 +225,32 @@ export default function ProfilePage() {
     }
     setSaving(false);
   }, [user, bioInput, showMessage]);
+
+  const handleNewsletterToggle = useCallback(async (next: boolean) => {
+    if (!user) return;
+    setSaving(true);
+    const prev = user.newsletterOptIn;
+    setUser((u) => (u ? { ...u, newsletterOptIn: next } : u));
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newsletterOptIn: next }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser((u) => (u ? { ...u, ...data.user } : u));
+        showMessage("success", next ? "Newsletter emails enabled" : "Opted out of newsletters");
+      } else {
+        setUser((u) => (u ? { ...u, newsletterOptIn: prev } : u));
+        showMessage("error", data.error || "Failed to update preference");
+      }
+    } catch {
+      setUser((u) => (u ? { ...u, newsletterOptIn: prev } : u));
+      showMessage("error", "Something went wrong");
+    }
+    setSaving(false);
+  }, [user, showMessage]);
 
   const handleAvatarUpload = useCallback(async (file: File) => {
     setAvatarUploading(true);
@@ -693,6 +721,40 @@ export default function ProfilePage() {
               </div>
             </div>
 
+            {/* Email preferences */}
+            <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-sm">
+              <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 mb-3">
+                <Mail className="h-3.5 w-3.5" /> EMAIL PREFERENCES
+              </label>
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">Newsletters</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Occasional product news from news@frame-hub.com. Report status and account
+                    emails from support are separate and always sent when needed.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={user.newsletterOptIn !== false}
+                  disabled={saving}
+                  onClick={() => handleNewsletterToggle(!(user.newsletterOptIn ?? true))}
+                  className={cn(
+                    "relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50",
+                    user.newsletterOptIn !== false ? "bg-primary" : "bg-muted border border-border",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform",
+                      user.newsletterOptIn !== false && "translate-x-5",
+                    )}
+                  />
+                </button>
+              </div>
+            </div>
+
             {/* Danger Zone */}
             <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5 space-y-3">
               <label className="text-xs font-semibold text-red-400 flex items-center gap-1.5">
@@ -822,6 +884,14 @@ export default function ProfilePage() {
                         </div>
                         {r.comment ? (
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.comment}</p>
+                        ) : null}
+                        {r.adminReply ? (
+                          <div className="mt-2 rounded-md border border-sky-500/20 bg-sky-500/5 px-2.5 py-2">
+                            <p className="text-[10px] font-semibold text-sky-400/80 uppercase mb-0.5">
+                              Moderator reply
+                            </p>
+                            <p className="text-xs text-foreground/90 whitespace-pre-wrap">{r.adminReply}</p>
+                          </div>
                         ) : null}
                         <p className="text-[10px] text-muted-foreground mt-2">
                           Submitted {new Date(r.createdAt).toLocaleString()}
