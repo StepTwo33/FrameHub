@@ -21,6 +21,7 @@ import { getLoadouts } from "@/lib/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/loadout-stats";
 import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
 import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
+import { getModCategory } from "@/lib/weapon-categories";
 import { toast } from "sonner";
 
 /* ─── Shared helpers ─── */
@@ -28,13 +29,6 @@ import { toast } from "sonner";
 function weaponImageForName(name: string, weapons: Weapon[]): string {
   const w = weapons.find((x) => x.name === name);
   return getWeaponImage(name, w ? { category: w.category } : undefined);
-}
-
-function getModCategory(weaponCategory: string): string {
-  if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(weaponCategory)) return "primary";
-  if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
-  if (weaponCategory === "melee") return "melee";
-  return "primary";
 }
 
 function fmtNum(n: number, decimals = 0): string {

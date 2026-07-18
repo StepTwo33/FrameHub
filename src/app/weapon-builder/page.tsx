@@ -16,23 +16,14 @@ import { WeaponStatsPanel } from "@/components/stats-panel";
 import { ModPicker, type SlotType } from "@/components/mod-picker";
 import { useWeapons, useMods } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
+import { modCapacityAtRank } from "@/lib/mod-capacity";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapon-gravimag";
 import {
   weaponSupportsProgenitor,
-  PROGENITOR_ELEMENT_IDS,
-  PROGENITOR_ELEMENT_LABELS,
   PROGENITOR_BONUS_DEFAULT,
-  PROGENITOR_BONUS_MIN,
-  PROGENITOR_BONUS_MAX,
 } from "@/lib/weapon-progenitor";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Trash2, Share2, Check, Upload, Crosshair, Orbit } from "lucide-react";
-import { PolarityIcon } from "@/components/polarity-icon";
-import { STANCE_WEAPON_TYPE, MELEE_TYPE_LABELS } from "@/data/stances";
+import { Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Crosshair, Orbit } from "lucide-react";
 import { isPrimaryWeaponCategory } from "@/lib/mod-weapon-eligibility";
 import { isTomeWeapon } from "@/lib/tome-weapons";
 import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
@@ -53,31 +44,12 @@ import { useLocalBuildFromUrl } from "@/lib/use-local-build-from-url";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
 import { CommunityBuildsPanel } from "@/components/community-builds-panel";
 import { isCompanionWeaponCategory } from "@/lib/companion-weapons";
-
-const categoryLabels: Record<string, string> = {
-  all: "All",
-  primary: "Primary",
-  rifle: "Rifles",
-  shotgun: "Shotguns",
-  bow: "Bows",
-  secondary: "Secondary",
-  pistol: "Pistols",
-  melee: "Melee",
-  launcher: "Launchers",
-  archgun: "Archguns",
-  archmelee: "Archmelee",
-  tektolyst: "Tektolyst",
-};
-
-function getModCategory(weaponCategory: string): string {
-  if (["rifle", "shotgun", "bow", "primary", "launcher"].includes(weaponCategory)) return "primary";
-  if (weaponCategory === "archgun") return "archgun";
-  if (["pistol", "secondary", "dual_pistols"].includes(weaponCategory)) return "secondary";
-  if (weaponCategory === "archmelee") return "archmelee";
-  if (weaponCategory === "melee") return "melee";
-  if (weaponCategory === "tektolyst") return "tektolyst";
-  return weaponCategory;
-}
+import { computeUsedCapacity } from "@/lib/compute-used-capacity";
+import { WEAPON_CATEGORY_LABELS, getModCategory } from "@/lib/weapon-categories";
+import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
+import { StancePickerDialog } from "./stance-picker-dialog";
+import { ProgenitorControls } from "./progenitor-controls";
+import { IncarnonEvolutionsSection } from "./incarnon-evolutions-section";
 
 /** 9th slot (index 8) for primary / secondary / melee — in-game weapon Exilus slot. */
 const WEAPON_EXILUS_SLOT_INDEX = 8;
@@ -109,7 +81,6 @@ export default function WeaponBuilderPage() {
   const [activeArcaneSlot, setActiveArcaneSlot] = useState(0);
   const [stanceMod, setStanceMod] = useState<Mod | null>(null);
   const [stancePickerOpen, setStancePickerOpen] = useState(false);
-  const [stanceSearch, setStanceSearch] = useState("");
   const [slotPolarities, setSlotPolarities] = useState<Record<number, string>>({});
   const [savedBuilds, setSavedBuilds] = useState<SavedBuild[]>(() => getSavedBuilds("weapon"));
   const [buildName, setBuildName] = useState("");
@@ -605,7 +576,7 @@ export default function WeaponBuilderPage() {
                 })
               )
             }
-            filters={Object.entries(categoryLabels).map(([key, label]) => (
+            filters={Object.entries(WEAPON_CATEGORY_LABELS).map(([key, label]) => (
               <ItemPickerFilter
                 key={key}
                 active={weaponCategory === key}
@@ -638,7 +609,7 @@ export default function WeaponBuilderPage() {
                 }
                 badge={
                   <span className="shrink-0 text-xs text-muted-foreground">
-                    {categoryLabels[weapon.category] || weapon.category}
+                    {WEAPON_CATEGORY_LABELS[weapon.category] || weapon.category}
                   </span>
                 }
                 meta={
@@ -771,39 +742,12 @@ export default function WeaponBuilderPage() {
                 </BuilderActionGroup>
 
                 {selectedWeapon && weaponSupportsProgenitor(selectedWeapon) && (
-                  <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.06]">
-                    <span className="text-xs font-medium text-amber-400/90 shrink-0">Progenitor bonus</span>
-                    <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="hidden sm:inline">Element</span>
-                      <select
-                        value={progenitorElement}
-                        onChange={(e) => setProgenitorElement(e.target.value)}
-                        className="bg-background border border-border rounded-md px-2 py-1 text-xs text-foreground max-w-[140px]"
-                      >
-                        {PROGENITOR_ELEMENT_IDS.map((id) => (
-                          <option key={id} value={id}>
-                            {PROGENITOR_ELEMENT_LABELS[id] ?? id}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>Bonus %</span>
-                      <input
-                        type="number"
-                        min={PROGENITOR_BONUS_MIN}
-                        max={PROGENITOR_BONUS_MAX}
-                        value={progenitorBonusPercent}
-                        onChange={(e) => {
-                          const v = Number(e.target.value);
-                          if (!Number.isFinite(v)) return;
-                          setProgenitorBonusPercent(Math.min(PROGENITOR_BONUS_MAX, Math.max(PROGENITOR_BONUS_MIN, Math.round(v))));
-                        }}
-                        className="w-14 bg-background border border-border rounded-md px-1.5 py-1 text-xs font-mono text-foreground"
-                      />
-                      <span className="text-[10px] opacity-70">({PROGENITOR_BONUS_MIN}–{PROGENITOR_BONUS_MAX})</span>
-                    </label>
-                  </div>
+                  <ProgenitorControls
+                    progenitorElement={progenitorElement}
+                    progenitorBonusPercent={progenitorBonusPercent}
+                    onElementChange={setProgenitorElement}
+                    onBonusChange={setProgenitorBonusPercent}
+                  />
                 )}
 
                 <div className="flex-1" />
@@ -838,22 +782,11 @@ export default function WeaponBuilderPage() {
                   </h2>
                   <span className={cn(
                     "text-xs font-mono",
-                    equippedMods.reduce((sum, m) => {
-                      const mod = modsMap.get(m.modId);
-                      if (!mod) return sum;
-                      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
-                      const slotPol = slotPolarities[m.slotIndex];
-                      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
-                    }, 0) > ((hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0))
+                    computeUsedCapacity(equippedMods, modsMap, slotPolarities) >
+                      (hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0)
                       ? "text-red-400" : "text-muted-foreground"
                   )}>
-                    {equippedMods.reduce((sum, m) => {
-                      const mod = modsMap.get(m.modId);
-                      if (!mod) return sum;
-                      const baseDrain = modCapacityAtRank(mod.drain, m.rank);
-                      const slotPol = slotPolarities[m.slotIndex];
-                      return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
-                    }, 0)} / {(hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0)}
+                    {computeUsedCapacity(equippedMods, modsMap, slotPolarities)} / {(hasOrokinCatalyst ? 60 : 30) + (isMR30 ? 10 : 0)}
                   </span>
                 </div>
                 {showImporter && (
@@ -953,51 +886,14 @@ export default function WeaponBuilderPage() {
                   );
                 })()}
 
-                {/* Incarnon Evolutions */}
                 {isIncarnon && (
-                  <div className="mt-6">
-                    <h2 className="text-sm font-semibold tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                      <Flame className="h-4 w-4 text-orange-400" />
-                      INCARNON EVOLUTIONS
-                    </h2>
-                    {incarnonData ? (
-                      <div className="space-y-2">
-                        {[1, 2, 3, 4, 5].map((tier) => {
-                          const choices = incarnonData.evolutions.filter((e) => e.tier === tier);
-                          if (choices.length === 0) return null;
-                          const selected = selectedEvolutions[tier];
-                          return (
-                            <div key={tier} className="border border-border rounded-lg p-3">
-                              <span className="text-[10px] font-semibold text-orange-400 tracking-wider">EVOLUTION {tier}</span>
-                              <div className="flex gap-2 mt-1.5">
-                                {choices.map((evo) => (
-                                  <button
-                                    key={evo.slot}
-                                    onClick={() => setSelectedEvolutions((prev) => ({ ...prev, [tier]: evo.slot }))}
-                                    className={cn(
-                                      "flex-1 text-left p-2 rounded-lg border text-[10px] transition-all",
-                                      selected === evo.slot
-                                        ? "border-orange-500/50 bg-orange-500/10 text-orange-900 dark:text-orange-300"
-                                        : "border-border text-muted-foreground hover:border-orange-500/30"
-                                    )}
-                                  >
-                                    <span className="font-medium block">{evo.name}</span>
-                                    <span className="text-[9px] opacity-70">{evo.description}</span>
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground border border-dashed border-border rounded-lg p-4 text-center">
-                        Incarnon evolution data not yet available for this weapon.
-                        <br />
-                        <span className="text-[10px]">Evolution data is being added — check back soon.</span>
-                      </p>
-                    )}
-                  </div>
+                  <IncarnonEvolutionsSection
+                    incarnonData={incarnonData}
+                    selectedEvolutions={selectedEvolutions}
+                    onSelectEvolution={(tier, slot) =>
+                      setSelectedEvolutions((prev) => ({ ...prev, [tier]: slot }))
+                    }
+                  />
                 )}
 
                 {/* Build Description */}
@@ -1063,112 +959,31 @@ export default function WeaponBuilderPage() {
       )}
 
       {/* Stance Mod Picker */}
-      {selectedWeapon && selectedWeapon.category === "melee" && stancePickerOpen && (
-        <Dialog open={stancePickerOpen} onOpenChange={setStancePickerOpen}>
-          <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-            <DialogHeader className="p-6 pb-0">
-              <DialogTitle>Select Stance Mod</DialogTitle>
-            </DialogHeader>
-            <div className="px-6 pb-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search stances..."
-                  value={stanceSearch}
-                  onChange={(e) => setStanceSearch(e.target.value)}
-                  className="pl-9"
-                  autoFocus
-                />
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-              <div className="space-y-4">
-                {Object.entries(
-                  allMods
-                    .filter((m) => m.category === "stance")
-                    .filter((m) => {
-                      // Filter stances to match the selected weapon's stanceType
-                      if (selectedWeapon?.stanceType) {
-                        const stanceType = STANCE_WEAPON_TYPE[m.id];
-                        if (stanceType && stanceType !== selectedWeapon.stanceType) return false;
-                      }
-                      return true;
-                    })
-                    .filter((m) => !stanceSearch.trim() || m.name.toLowerCase().includes(stanceSearch.toLowerCase()))
-                    .reduce<Record<string, typeof allMods>>((groups, mod) => {
-                      const type = STANCE_WEAPON_TYPE[mod.id] || "other";
-                      const label = MELEE_TYPE_LABELS[type] || "Other";
-                      if (!groups[label]) groups[label] = [];
-                      groups[label].push(mod);
-                      return groups;
-                    }, {})
-                )
-                  .sort(([a], [b]) => a.localeCompare(b))
-                  .map(([type, mods]) => (
-                    <div key={type}>
-                      <h3 className="text-[10px] font-semibold tracking-wider text-amber-400/70 uppercase mb-1">{type}</h3>
-                      <div className="space-y-1">
-                        {mods.map((mod) => (
-                          <button
-                            key={mod.id}
-                            onClick={() => { setStanceMod(mod); setStancePickerOpen(false); setStanceSearch(""); }}
-                            className="w-full text-left p-2.5 rounded-lg border border-border hover:border-amber-500/50 hover:bg-amber-500/5 transition-all"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium">{mod.name}</span>
-                              <PolarityIcon polarity={mod.polarity} size={14} />
-                            </div>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">{mod.description.replace(/<[^>]+>/g, "").substring(0, 80)}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+      {selectedWeapon && selectedWeapon.category === "melee" && (
+        <StancePickerDialog
+          open={stancePickerOpen}
+          onOpenChange={setStancePickerOpen}
+          allMods={allMods}
+          stanceType={selectedWeapon.stanceType}
+          onSelect={setStanceMod}
+        />
       )}
 
-      {/* Saved Builds Dialog */}
-      <Dialog open={showSavedBuilds} onOpenChange={setShowSavedBuilds}>
-        <DialogContent className="max-w-lg max-h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-3">
-            <DialogTitle>Saved Weapon Builds</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
-            {savedBuilds.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No saved builds yet. Build a weapon and click Save!</p>
-            ) : (
-              <div className="space-y-2">
-                {savedBuilds.map((build) => {
-                  const d = build.data as WeaponBuildData;
-                  const weapon = allWeapons.find((w) => w.id === d.weaponId);
-                  return (
-                    <div key={build.id} className="flex items-center gap-2 p-3 rounded-lg border border-border hover:border-cyan-500/30 transition-all">
-                      <button
-                        onClick={() => handleLoadBuild(build)}
-                        className="flex-1 text-left"
-                      >
-                        <span className="text-sm font-medium">{build.name}</span>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">
-                          {weapon?.name ?? d.weaponId} • {d.mods.length} mods • {new Date(build.updatedAt).toLocaleDateString()}
-                        </div>
-                      </button>
-                      <button
-                        onClick={() => handleDeleteBuild(build.id)}
-                        className="p-1.5 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SavedBuildsDialog
+        open={showSavedBuilds}
+        onOpenChange={setShowSavedBuilds}
+        title="Saved Weapon Builds"
+        emptyMessage="No saved builds yet. Build a weapon and click Save!"
+        builds={savedBuilds}
+        accent="cyan"
+        getSubtitle={(build) => {
+          const d = build.data as WeaponBuildData;
+          const weapon = allWeapons.find((w) => w.id === d.weaponId);
+          return `${weapon?.name ?? d.weaponId} • ${d.mods.length} mods • ${new Date(build.updatedAt).toLocaleDateString()}`;
+        }}
+        onLoad={handleLoadBuild}
+        onDelete={handleDeleteBuild}
+      />
 
       <SaveBuildDialog
         open={saveDialogOpen}
