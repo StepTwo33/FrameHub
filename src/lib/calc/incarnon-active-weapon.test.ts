@@ -144,8 +144,8 @@ describe("evolution numeric fixes", () => {
   it("Sybaris Extended Volley +8 / Well Rehearsed +20", () => {
     const data = incarnonDataMap.get("sybaris")!;
     expect(mergeIncarnonStatChanges(data, { 3: 0 }, "sybaris")?.flatMagazine).toBe(8);
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "sybaris")?.flatBaseDamage).toBe(20);
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "dex_sybaris")?.flatBaseDamage).toBe(15);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "sybaris")?.flatBaseDamage).toBe(20);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "dex_sybaris")?.flatBaseDamage).toBe(15);
   });
 
   it("Despair Vendetta is +60 flat only (no always-on MS)", () => {
@@ -212,23 +212,23 @@ describe("evolution numeric fixes", () => {
 
   it("Braton Daring Reverie / Munitions Grit variant flats", () => {
     const data = incarnonDataMap.get("braton")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "braton")?.flatBaseDamage).toBe(24);
-    expect(mergeIncarnonStatChanges(data, { 1: 2 }, "braton_prime")?.flatBaseDamage).toBe(2);
-    expect(mergeIncarnonStatChanges(data, { 1: 2 }, "braton")?.multishot).toBe(0.2);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "braton")?.flatBaseDamage).toBe(24);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.flatBaseDamage).toBe(2);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.multishot).toBe(0.2);
   });
 
   it("Latron Riddled Target / Critical Parallel", () => {
     const data = incarnonDataMap.get("latron")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "latron")?.flatBaseDamage).toBe(48);
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "latron_prime")?.flatBaseDamage).toBe(6);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "latron")?.flatBaseDamage).toBe(48);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "latron_prime")?.flatBaseDamage).toBe(6);
     expect(mergeIncarnonStatChanges(data, { 4: 2 }, "latron")?.criticalChance).toBe(0.3);
     expect(mergeIncarnonStatChanges(data, { 4: 2 }, "latron")?.criticalMultiplier).toBe(0.6);
   });
 
   it("Furis Haven Foray +28 / Mk1 +34", () => {
     const data = incarnonDataMap.get("furis")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "furis")?.flatBaseDamage).toBe(28);
-    expect(mergeIncarnonStatChanges(data, { 1: 1 }, "mk1_furis")?.flatBaseDamage).toBe(34);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "furis")?.flatBaseDamage).toBe(28);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "mk1_furis")?.flatBaseDamage).toBe(34);
   });
 
   it("melee T1 +100% Melee Damage encodes as damage:1", () => {
@@ -238,10 +238,10 @@ describe("evolution numeric fixes", () => {
 
   it("Gorgon / Strun flat base damage tables", () => {
     const gorgon = incarnonDataMap.get("gorgon")!;
-    expect(mergeIncarnonStatChanges(gorgon, { 1: 1 }, "gorgon")?.flatBaseDamage).toBe(10);
+    expect(mergeIncarnonStatChanges(gorgon, { 2: 0 }, "gorgon")?.flatBaseDamage).toBe(10);
     const strun = incarnonDataMap.get("strun")!;
-    expect(mergeIncarnonStatChanges(strun, { 1: 1 }, "strun")?.flatBaseDamage).toBe(54);
-    expect(mergeIncarnonStatChanges(strun, { 1: 1 }, "strun_prime")?.flatBaseDamage).toBe(2);
+    expect(mergeIncarnonStatChanges(strun, { 2: 0 }, "strun")?.flatBaseDamage).toBe(54);
+    expect(mergeIncarnonStatChanges(strun, { 2: 0 }, "strun_prime")?.flatBaseDamage).toBe(2);
   });
 });
 

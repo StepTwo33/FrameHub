@@ -45,6 +45,30 @@ describe("base crit multiplier quantization (wiki Critical Hit)", () => {
     const bare = calculateWeaponBuild(weapon, [], modsMap());
     expect(bare.criticalMultiplier).toBeCloseTo(quantizeBaseCritMultiplier(1.6), 6);
   });
+
+  it("folds Critical Parallel into base before Vital Sense / Point Strike", () => {
+    const braton = allWeapons.find((w) => w.id === "braton");
+    const vital = allMods.find((m) => m.id === "vital_sense_r3");
+    const pointStrike = allMods.find((m) => m.id === "point_strike_r3");
+    if (!braton || !vital || !pointStrike) return;
+
+    const withCm = calculateWeaponBuild(
+      braton,
+      [{ modId: vital.id, rank: vital.maxRank, slotIndex: 0 }],
+      modsMap(),
+      { criticalMultiplier: 0.4 },
+    );
+    expect(withCm.criticalMultiplier).toBeCloseTo(4.401074481, 6);
+
+    const withCc = calculateWeaponBuild(
+      braton,
+      [{ modId: pointStrike.id, rank: pointStrike.maxRank, slotIndex: 0 }],
+      modsMap(),
+      { criticalChance: 0.16 },
+    );
+    // (0.12 + 0.16) × (1 + 1.5) — not 0.12×2.5 + 0.16
+    expect(withCc.criticalChance).toBeCloseTo(0.7, 6);
+  });
 });
 
 describe("damage quantization (wiki Damage/Calculation)", () => {

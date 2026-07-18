@@ -363,6 +363,15 @@ export function calculateWeaponBuild(
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
 
+  // Incarnon "Increase Base Crit/Status/CM" raises the weapon base before mod multipliers
+  // (wiki Critical Hit / Critical Parallel worked example).
+  const incBaseCC = incarnonStatChanges?.criticalChance ?? 0;
+  const incBaseCM = incarnonStatChanges?.criticalMultiplier ?? 0;
+  const incBaseSC = incarnonStatChanges?.statusChance ?? 0;
+  const evolvedBaseCC = baseWeapon.criticalChance + incBaseCC;
+  const evolvedBaseCM = baseWeapon.criticalMultiplier + incBaseCM;
+  const evolvedBaseSC = baseWeapon.statusChance + incBaseSC;
+
   const stats: CalculatedStats = {
     totalDamage: baseWeapon.damage,
     impact: baseWeapon.impact,
@@ -371,10 +380,10 @@ export function calculateWeaponBuild(
     elements: [],
     rawElements: [],
     fireRate: baseWeapon.fireRate,
-    criticalChance: baseWeapon.criticalChance,
-    criticalMultiplier: baseWeapon.criticalMultiplier,
-    statusChance: baseWeapon.statusChance,
-    statusChancePerShot: baseWeapon.statusChance,
+    criticalChance: evolvedBaseCC,
+    criticalMultiplier: evolvedBaseCM,
+    statusChance: evolvedBaseSC,
+    statusChancePerShot: evolvedBaseSC,
     magazine: baseWeapon.magazine,
     reloadTime: baseWeapon.reloadTime,
     multishot: baseWeapon.multishot,
@@ -620,10 +629,10 @@ export function calculateWeaponBuild(
   stats.slash *= dmgMult;
 
   // Apply other bonuses
-  // Wiki: quantize base CM before % crit-damage mods (Critical Parallel base adds land later as flat += today).
+  // Wiki: add Incarnon base CM, then quantize, then apply % crit-damage mods.
   stats.criticalChance *= (1 + critChanceBonus);
   stats.criticalMultiplier =
-    quantizeBaseCritMultiplier(baseWeapon.criticalMultiplier) * (1 + critMultBonus);
+    quantizeBaseCritMultiplier(evolvedBaseCM) * (1 + critMultBonus);
   if (critMultFlatBonus.critEventBonus > 0) {
     stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
   }
@@ -739,15 +748,19 @@ export function calculateWeaponBuild(
 
   // Apply Incarnon evolution / riven stat changes.
   // relativeCritStatus: riven crit/status/critMult bonuses are relative fractions on
-  // the base stat (they join the mod bonus pool); apply them multiplicatively like
-  // 'damage'. Incarnon crit/status changes are flat absolute adds (e.g. Devouring
-  // Attrition criticalMultiplier: 2.5 = +2.5x crit damage), so they keep +=.
+  // the (already modded) stat. Incarnon base CC/CM/SC are folded into evolvedBase*
+  // before mod scaling above — remaining incarnon keys (flatBaseDamage, etc.) apply here.
   const applyStatChanges = (changes: Record<string, number>, relativeCritStatus: boolean) => {
+    const phys0 = stats.impact + stats.puncture + stats.slash;
+    const ele0 = stats.elements.reduce((sum, e) => sum + e.value, 0);
+    let residual = Math.max(0, stats.totalDamage - phys0 - ele0);
+
     for (const [stat, value] of Object.entries(changes)) {
       switch (stat) {
         case 'damage': {
           const dm = 1 + value;
           damageMultTotal *= dm;
+          residual *= dm;
           stats.totalDamage *= dm;
           stats.impact *= dm;
           stats.puncture *= dm;
@@ -758,15 +771,13 @@ export function calculateWeaponBuild(
         }
         case 'criticalChance':
           if (relativeCritStatus) stats.criticalChance *= (1 + value);
-          else stats.criticalChance += value;
+          // Incarnon base CC already applied via evolvedBaseCC — skip flat path.
           break;
         case 'criticalMultiplier':
           if (relativeCritStatus) stats.criticalMultiplier *= (1 + value);
-          else stats.criticalMultiplier += value;
           break;
         case 'statusChance':
           if (relativeCritStatus) stats.statusChance *= (1 + value);
-          else stats.statusChance += value;
           break;
         case 'fireRate': stats.fireRate *= (1 + value); break;
         // Devouring/Devastating Attrition: 50% chance for non-crit hits to
@@ -781,6 +792,7 @@ export function calculateWeaponBuild(
           if (baseWeapon.damage > 0) {
             const dm = 1 + value / baseWeapon.damage;
             damageMultTotal *= dm;
+            residual *= dm;
             stats.totalDamage *= dm;
             stats.impact *= dm;
             stats.puncture *= dm;
@@ -831,10 +843,10 @@ export function calculateWeaponBuild(
         case 'recoil': /* visual only */ break;
       }
     }
-    // Recalculate total damage after incarnon/riven changes
+    // Recalculate total damage after incarnon/riven changes (keep residual)
     const physDmg2 = stats.impact + stats.puncture + stats.slash;
     const eleDmg2 = stats.elements.reduce((sum, e) => sum + e.value, 0);
-    stats.totalDamage = physDmg2 + eleDmg2;
+    stats.totalDamage = physDmg2 + eleDmg2 + residual;
   };
   if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
   if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
@@ -894,8 +906,8 @@ export function calculateWeaponBuild(
       effectiveCombo,
       baseWeapon.id,
       comboContext,
-      baseWeapon.criticalChance,
-      baseWeapon.statusChance,
+      evolvedBaseCC,
+      evolvedBaseSC,
     );
   }
 
@@ -1287,8 +1299,8 @@ export function calculateWeaponBuildWithArcanes(
       stats.comboCount,
       baseWeapon.id,
       stats.meleeComboModContext,
-      baseWeapon.criticalChance,
-      baseWeapon.statusChance,
+      baseWeapon.criticalChance + (incarnonStatChanges?.criticalChance ?? 0),
+      baseWeapon.statusChance + (incarnonStatChanges?.statusChance ?? 0),
     );
     if (arcaneHeavyFactor !== 1) {
       stats.heavyAttackDamage *= arcaneHeavyFactor;
