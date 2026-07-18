@@ -26,6 +26,7 @@ Admin editor shell: `override-editor.tsx` (item picker + save). Field UIs are sp
 | `override-abilities-editor.tsx` | Warframe / companion abilities |
 | `override-stat-rows-editor.tsx` | Nested mod/shard/stat maps |
 | `override-radial-editors.tsx` | Weapon radial attack drafts |
+| `override-editor-helpers.ts` | Catalog lookup + scalar parse/compare for the shell |
 
 Schemas / merge: `src/lib/override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`.
 
@@ -71,7 +72,7 @@ Tests live next to modules as `*.test.ts` (Vitest: `npm test`).
 | Domain | Typical files |
 |--------|----------------|
 | Auth / admin | `auth.ts`, `admin.ts`, `email.ts`, `rate-limit.ts` |
-| Builds / share | `build-url.ts`, `build-storage.ts` (`persistSavedBuild`), `share-build.ts`, `use-*-from-url.ts`, `SavedBuildsDialog` |
+| Builds / share | `build-url.ts`, `build-storage.ts` (`persistSavedBuild`), `share-build.ts`, `use-*-from-url.ts`, `SavedBuildsDialog`, `loadout-slot-helpers.ts` |
 | Overrides / reports | `override-schemas.ts`, `override-merge.ts`, `data-overrides*.ts`, `report-types.ts` |
 | Display | `mod-display.ts`, `arcane-display.ts`, `shard-display.ts`, `images.ts` |
 | Site | `site-updates.ts`, `site-metadata.ts`, `public-origin.ts` |
