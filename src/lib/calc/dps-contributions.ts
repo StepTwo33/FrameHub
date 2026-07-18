@@ -2,7 +2,7 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calc/calculator";
-import { getModStatDisplayLines } from "@/lib/mod-display";
+import { getModStatDisplayLines } from "@/lib/display/mod-display";
 import {
   DEFAULT_SIM_PARAMS,
   type CalculatedStats,

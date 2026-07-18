@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { PolarityIcon } from "@/components/polarity-icon";
-import { getModImage } from "@/lib/images";
+import { getModImage } from "@/lib/display/images";
 import { cn } from "@/lib/utils";
 
 type CodexModImageProps = {

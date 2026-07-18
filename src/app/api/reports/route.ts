@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { verifyAdmin } from "@/lib/admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { normalizeReportItemType } from "@/lib/report-types";
+import { normalizeReportItemType } from "@/lib/overrides/report-types";
 import { logServerError } from "@/lib/log-server-error";
 
 const REPORT_BODY_MAX = 120_000;

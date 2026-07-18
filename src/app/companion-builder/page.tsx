@@ -38,7 +38,7 @@ import { SavedBuildsDialog } from "@/components/saved-builds-dialog";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
 import { toast } from "sonner";
-import { getCompanionImage } from "@/lib/images";
+import { getCompanionImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/calc/mod-capacity";
 

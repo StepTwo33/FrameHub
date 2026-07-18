@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Header } from "@/components/header";
-import { resolvePageIcon, type PageIconName } from "@/lib/page-icons";
+import { resolvePageIcon, type PageIconName } from "@/lib/display/page-icons";
 import { cn } from "@/lib/utils";
 
 const MAX_WIDTH = {

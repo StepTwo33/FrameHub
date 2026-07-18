@@ -17,20 +17,20 @@ import {
   sortFieldsForCategory,
   STAT_RECORD_HELP,
   OVERRIDE_EDITOR_CATEGORIES,
-} from "@/lib/override-schemas";
+} from "@/lib/overrides/override-schemas";
 import {
   buildNestedPatch,
   deepMergeOverrideFields,
   flattenRecordFields,
   OVERRIDE_DELETE,
-} from "@/lib/override-merge";
+} from "@/lib/overrides/override-merge";
 import {
   DataOverride,
   OverrideCategory,
   generateOverrideId,
   saveOverride,
-} from "@/lib/data-overrides";
-import { toEffectDrafts, draftsToEffectsPayload } from "@/lib/arcane-effect-drafts";
+} from "@/lib/overrides/data-overrides";
+import { toEffectDrafts, draftsToEffectsPayload } from "@/lib/overrides/arcane-effect-drafts";
 import {
   AbilitiesEditor,
   ArcaneEffectLineDraft,
@@ -43,8 +43,8 @@ import {
   draftToRadialAttack,
   toRadialAttackDrafts,
 } from "@/components/override-field-editors";
-import type { AbilityDraft } from "@/lib/ability-override-fields";
-import { abilitiesToDrafts, draftsToAbilitiesPayload } from "@/lib/ability-override-fields";
+import type { AbilityDraft } from "@/lib/overrides/ability-override-fields";
+import { abilitiesToDrafts, draftsToAbilitiesPayload } from "@/lib/overrides/ability-override-fields";
 import {
   getAllItems,
   getItemData,
@@ -55,12 +55,12 @@ import {
   getOriginalAtPath,
   inferInputType,
   parseScalarValue,
-} from "@/lib/override-editor-helpers";
+} from "@/lib/overrides/override-editor-helpers";
 import {
   getArcaneCatalogStatPickerOptions,
   getModStatPickerOptions,
   getShardStatPickerOptions,
-} from "@/lib/override-stat-catalog";
+} from "@/lib/overrides/override-stat-catalog";
 import { toast } from "sonner";
 
 const CATEGORY_LABELS = OVERRIDE_CATEGORY_LABELS;

@@ -11,10 +11,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { Search, Plus, X } from "lucide-react";
 import { PolarityIcon } from "@/components/polarity-icon";
-import { getModImage, getArcaneImage } from "@/lib/images";
+import { getModImage, getArcaneImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getBlockedModIds } from "@/data/mod-exclusions";
-import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/display/mod-display";
 
 function isRivenMod(mod: Mod): boolean {
   return mod.subCategory === "riven" || mod.id.startsWith("riven_");
@@ -27,7 +27,7 @@ import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/archw
 import { isTomeMod } from "@/lib/mod-slot-categories";
 import { isTomeWeapon } from "@/lib/tome-weapons";
 import { isSetBonusMod } from "@/lib/set-mod-catalog";
-import { RARITY_BADGE_COLORS } from "@/lib/rarity-badge-colors";
+import { RARITY_BADGE_COLORS } from "@/lib/display/rarity-badge-colors";
 import {
   isWarframeExilusMod,
 } from "@/lib/mod-slot-categories";

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { QrCodeImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
 import { localBuildOpenUrl, encodeJsonPayload, decodeJsonPayload } from "@/lib/builds/build-url";
-import { copyTextToClipboard } from "@/lib/clipboard";
+import { copyTextToClipboard } from "@/lib/display/clipboard";
 
 function getBuildTypeIcon(type: string) {
   if (type === "warframe") return Shield;

@@ -17,14 +17,14 @@ import { ArcaneValuesDialog } from "@/components/arcane-values-dialog";
 import { ArcaneEffectDef } from "@/data/arcane-effects";
 import { isAuraMod, modMaxCapacity } from "@/lib/aura-mods";
 import { getModSlotCategory, modSlotCategoryLabel } from "@/lib/mod-slot-categories";
-import { getArcaneImage, getWeaponImage, getWarframeImage } from "@/lib/images";
-import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/shard-display";
+import { getArcaneImage, getWeaponImage, getWarframeImage } from "@/lib/display/images";
+import { getArchonShardImage, SHARD_COLORS, getShardColorName } from "@/lib/display/shard-display";
 import { scaleArcaneEffectLine, scaleArcaneEffectValue } from "@/lib/calc/arcane-utils";
-import { getArcaneStatLabel, getArcaneDisplayInfo } from "@/lib/arcane-display";
+import { getArcaneStatLabel, getArcaneDisplayInfo } from "@/lib/display/arcane-display";
 import { getVerifiedArcaneBehavior } from "@/lib/calc/arcane-behavior-registry";
 import { itemApplyTargetLabel } from "@/lib/item-behavior-types";
-import { cleanModDescription, getModStatDisplayLines, modDrainAtRank } from "@/lib/mod-display";
-import { getModStatLabel } from "@/lib/override-stat-catalog";
+import { cleanModDescription, getModStatDisplayLines, modDrainAtRank } from "@/lib/display/mod-display";
+import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
 import { getExclusiveWeaponEntries } from "@/lib/weapon-exclusive-mods";
 import { isWeaponExclusiveMod } from "@/lib/weapon-mod-tags";
 import {
@@ -42,7 +42,7 @@ import {
 import { modBrowserCategoryLabel } from "@/lib/mod-browser-categories";
 import { Mod, ArchonShard } from "@/lib/types";
 import { getSetBonusPieces, isSetBonusMod } from "@/lib/set-mod-catalog";
-import { accentTone } from "@/lib/accent-tones";
+import { accentTone } from "@/lib/display/accent-tones";
 import { cn } from "@/lib/utils";
 
 export function CodexDetailCard({ children, onClose }: { children: ReactNode; onClose: () => void }) {

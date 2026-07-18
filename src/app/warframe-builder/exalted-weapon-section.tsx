@@ -5,7 +5,7 @@ import { ModSlotCard } from "@/components/mod-slot";
 import { ArcaneSlotCard } from "@/components/arcane-picker";
 import { WeaponStatsPanel } from "@/components/stats-panel";
 import { GameAssetImage } from "@/components/game-asset-image";
-import { getWeaponImage } from "@/lib/images";
+import { getWeaponImage } from "@/lib/display/images";
 import { cn } from "@/lib/utils";
 import type { CalculatedStats, EquippedMod, Mod, Weapon } from "@/lib/types";
 import type { WeaponDpsCalcContext } from "@/lib/calc/dps-contributions";

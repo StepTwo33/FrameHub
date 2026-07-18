@@ -1,6 +1,6 @@
 import { ARCANE_EFFECTS, ArcaneEffectDef } from "@/data/arcane-effects";
-import { getOverrides } from "@/lib/data-overrides";
-import { deepMergeOverrideFields } from "@/lib/override-merge";
+import { getOverrides } from "@/lib/overrides/data-overrides";
+import { deepMergeOverrideFields } from "@/lib/overrides/override-merge";
 
 /** Merge shared data overrides onto static ARCANE_EFFECTS. */
 export function applyArcaneEffectOverrides(

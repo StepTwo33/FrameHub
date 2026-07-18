@@ -1,5 +1,5 @@
 import type { Ability } from "@/lib/types";
-import type { StatPickerOption } from "@/lib/override-stat-catalog";
+import type { StatPickerOption } from "@/lib/overrides/override-stat-catalog";
 
 /** Damage types the ability TTK calculator understands. */
 export const ABILITY_DAMAGE_TYPE_OPTIONS: { value: string; label: string }[] = [

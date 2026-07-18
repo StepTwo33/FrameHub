@@ -1,4 +1,4 @@
-import type { OverrideCategory } from "@/lib/data-overrides";
+import type { OverrideCategory } from "@/lib/overrides/data-overrides";
 
 export type DataFixesPrefill = {
   existingOverrideId?: string;

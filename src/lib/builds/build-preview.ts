@@ -9,7 +9,7 @@ import {
 import { resolveArcaneById } from "@/lib/builds/build-storage";
 import type { WarframeBuildData } from "@/lib/builds/build-storage";
 import { dualFormModCountSummary } from "@/lib/builds/dual-form-warframes";
-import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/images";
+import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/display/images";
 import type { EquippedArchonShard, ModSlot } from "@/lib/types";
 
 export interface BuildPreviewChip {

@@ -9,10 +9,10 @@ export {
   ArcaneTriggerPicker,
   ArcaneEffectsEditor,
 } from "@/components/override-arcane-editors";
-export type { ArcaneEffectLineDraft } from "@/lib/arcane-effect-drafts";
+export type { ArcaneEffectLineDraft } from "@/lib/overrides/arcane-effect-drafts";
 
 export { AbilitiesEditor } from "@/components/override-abilities-editor";
-export type { AbilityDraft } from "@/lib/ability-override-fields";
+export type { AbilityDraft } from "@/lib/overrides/ability-override-fields";
 
 export {
   StatRowsEditor,

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { RefreshCw } from "lucide-react";
 import type { Ability, WarframeCalculatedStats, Weapon } from "@/lib/types";
 import type { HelminthAbility } from "@/data/helminth";
-import { formatAbilityDescription } from "@/lib/ability-text";
+import { formatAbilityDescription } from "@/lib/display/ability-text";
 import { scaledAbilityEnergyCost } from "@/lib/ability-misc-stats";
 import {
   AbilityCardShell,

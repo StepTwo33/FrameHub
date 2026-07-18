@@ -4,9 +4,9 @@ import { Suspense, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { DataFixesPanel } from "@/components/data-fixes-panel";
-import type { DataFixesPrefill } from "@/lib/data-fixes-url";
+import type { DataFixesPrefill } from "@/lib/overrides/data-fixes-url";
 import { decodeReturnTo } from "@/lib/nav-return";
-import { OVERRIDE_CATEGORIES, type OverrideCategory } from "@/lib/data-overrides";
+import { OVERRIDE_CATEGORIES, type OverrideCategory } from "@/lib/overrides/data-overrides";
 
 function isOverrideCategory(v: string | null): v is OverrideCategory {
   return v != null && (OVERRIDE_CATEGORIES as readonly string[]).includes(v);

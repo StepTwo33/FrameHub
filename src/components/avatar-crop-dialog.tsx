@@ -18,7 +18,7 @@ import {
   minCoverScale,
   renderCroppedAvatarBlob,
   type AvatarCropTransform,
-} from "@/lib/avatar-crop";
+} from "@/lib/display/avatar-crop";
 import { cn } from "@/lib/utils";
 
 type AvatarCropDialogProps = {

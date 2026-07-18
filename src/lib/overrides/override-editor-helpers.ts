@@ -6,7 +6,7 @@ import {
   ARCANE_EFFECT_FIELD_KEYS,
   TEXTAREA_FIELDS,
   getSelectOptions,
-} from "@/lib/override-schemas";
+} from "@/lib/overrides/override-schemas";
 import {
   OverrideCategory,
   getOverrides,
@@ -19,8 +19,8 @@ import {
   applyArchonShardOverrides,
   applyArchwingOverrides,
   applyNecramechOverrides,
-} from "@/lib/data-overrides";
-import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
+} from "@/lib/overrides/data-overrides";
+import { applyArcaneEffectOverrides } from "@/lib/overrides/arcane-effect-overrides";
 import { getEffectiveWeapons } from "@/lib/effective-data";
 import { enrichWeapon } from "@/lib/weapon-enrich";
 import { allWeapons } from "@/data/weapons";

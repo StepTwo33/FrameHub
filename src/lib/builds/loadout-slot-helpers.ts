@@ -8,7 +8,7 @@ import { modularBuildDisplayName, modularBuildMatchesLoadoutSlot } from "@/lib/b
 import type { LoadoutWeaponSlot } from "@/lib/builds/modular-resolve";
 import { allWarframes } from "@/data/warframes";
 import { allCompanions } from "@/data/companions";
-import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/images";
+import { getWarframeImage, getWeaponImage, getCompanionImage } from "@/lib/display/images";
 import { dualFormModCountSummary, isDualFormWarframe } from "@/lib/builds/dual-form-warframes";
 
 export type LoadoutSlotType = "warframe" | "primary" | "secondary" | "melee" | "companion";

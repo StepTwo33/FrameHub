@@ -11,7 +11,7 @@ import {
   getEffectiveWarframesMap,
   getEffectiveWeaponsMap,
 } from "@/lib/effective-data";
-import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/images";
+import { getCompanionImage, getWarframeImage, getWeaponImage } from "@/lib/display/images";
 
 export interface BuildItemDisplay {
   itemName: string | null;

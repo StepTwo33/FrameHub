@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { StatPickerOption } from "@/lib/override-stat-catalog";
+import type { StatPickerOption } from "@/lib/overrides/override-stat-catalog";
 
 type StatKeyPickerProps = {
   value: string;

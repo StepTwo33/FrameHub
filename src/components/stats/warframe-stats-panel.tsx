@@ -2,10 +2,10 @@
 
 import { WarframeCalculatedStats, Warframe, Mod, EquippedMod, EquippedArchonShard } from "@/lib/types";
 import { useMemo, useState } from "react";
-import { formatAbilityDescription } from "@/lib/ability-text";
-import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
-import { buildShardBonusLines } from "@/lib/shard-display";
-import { getArcaneDisplayInfo } from "@/lib/arcane-display";
+import { formatAbilityDescription } from "@/lib/display/ability-text";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/display/mod-display";
+import { buildShardBonusLines } from "@/lib/display/shard-display";
+import { getArcaneDisplayInfo } from "@/lib/display/arcane-display";
 import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,

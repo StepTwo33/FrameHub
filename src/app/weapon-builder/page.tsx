@@ -36,7 +36,7 @@ import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WeaponBuildDa
 import { extractBuildFromUrl, ShareableBuild } from "@/lib/builds/build-url";
 import { shareBuilderBuild } from "@/lib/builds/share-build";
 import { toast } from "sonner";
-import { getWeaponImage } from "@/lib/images";
+import { getWeaponImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { useCloudBuildFromUrl, fetchCloudBuild, setCloudBuildInUrl, clearCloudBuildInUrl, markCloudBuildLoaded } from "@/lib/builds/use-cloud-build-from-url";

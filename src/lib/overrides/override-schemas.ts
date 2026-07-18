@@ -1,4 +1,4 @@
-import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/data-overrides";
+import { OverrideCategory, OVERRIDE_CATEGORIES } from "@/lib/overrides/data-overrides";
 import { CODEX_COMPANION_TYPE_FILTERS, CODEX_WEAPON_CATEGORY_LABELS } from "@/lib/codex-catalog";
 import { WEAPON_ELEMENT_KEYS } from "@/lib/codex-catalog";
 

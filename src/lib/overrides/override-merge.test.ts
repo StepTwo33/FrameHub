@@ -3,7 +3,7 @@ import {
   deepMergeOverrideFields,
   OVERRIDE_DELETE,
   buildNestedPatch,
-} from "@/lib/override-merge";
+} from "@/lib/overrides/override-merge";
 
 describe("deepMergeOverrideFields deletion", () => {
   it("removes nested stats marked with null", () => {

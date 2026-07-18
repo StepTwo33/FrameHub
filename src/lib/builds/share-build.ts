@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { buildShareUrl, type ShareableBuild } from "@/lib/builds/build-url";
-import { copyTextToClipboard } from "@/lib/clipboard";
+import { copyTextToClipboard } from "@/lib/display/clipboard";
 
 export type ShareBuildOutcome =
   | { kind: "copied"; url: string }

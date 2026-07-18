@@ -2,8 +2,8 @@ import { allMods } from "@/data/mods";
 import { allArcanes } from "@/data/arcanes";
 import { allArchonShards } from "@/data/archon-shards";
 import { ARCANE_EFFECTS } from "@/data/arcane-effects";
-import { getArcaneStatLabel, getKnownArcaneStatKeys } from "@/lib/arcane-display";
-import { formatOverrideFieldLabel } from "@/lib/override-schemas";
+import { getArcaneStatLabel, getKnownArcaneStatKeys } from "@/lib/display/arcane-display";
+import { formatOverrideFieldLabel } from "@/lib/overrides/override-schemas";
 
 export type StatPickerOption = {
   value: string;

@@ -3,13 +3,13 @@
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { arcaneEffectValuesByRank } from "@/lib/calc/arcane-utils";
-import { draftToEffectLine } from "@/lib/arcane-effect-drafts";
-import { getArcaneStatLabel } from "@/lib/arcane-display";
-import type { ArcaneEffectLineDraft } from "@/lib/arcane-effect-drafts";
-import { getArcaneEffectStatPickerOptions } from "@/lib/override-stat-catalog";
+import { draftToEffectLine } from "@/lib/overrides/arcane-effect-drafts";
+import { getArcaneStatLabel } from "@/lib/display/arcane-display";
+import type { ArcaneEffectLineDraft } from "@/lib/overrides/arcane-effect-drafts";
+import { getArcaneEffectStatPickerOptions } from "@/lib/overrides/override-stat-catalog";
 import { StatKeyPicker } from "@/components/stat-key-picker";
-import type { StatPickerOption } from "@/lib/override-stat-catalog";
-import { ARCANE_TRIGGER_OPTIONS } from "@/lib/override-schemas";
+import type { StatPickerOption } from "@/lib/overrides/override-stat-catalog";
+import { ARCANE_TRIGGER_OPTIONS } from "@/lib/overrides/override-schemas";
 
 export type { ArcaneEffectLineDraft };
 

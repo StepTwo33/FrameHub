@@ -2,7 +2,7 @@
 
 import type { CalculatedStats, SimulationParams, Weapon } from "@/lib/types";
 import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/calc/set-bonuses";
-import { getModStatLabel } from "@/lib/override-stat-catalog";
+import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
 import { CollapsibleSection, SimSlider } from "./stat-primitives";
 
 export function WeaponSimControls({

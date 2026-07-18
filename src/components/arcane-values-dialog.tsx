@@ -20,9 +20,9 @@ import {
   saveArcaneEffectOverride,
   toEffectDrafts,
   type ArcaneEffectLineDraft,
-} from "@/lib/arcane-effect-drafts";
+} from "@/lib/overrides/arcane-effect-drafts";
 import { appendReturnTo } from "@/lib/nav-return";
-import { dataFixesHref } from "@/lib/data-fixes-url";
+import { dataFixesHref } from "@/lib/overrides/data-fixes-url";
 
 type ArcaneValuesDialogProps = {
   open: boolean;

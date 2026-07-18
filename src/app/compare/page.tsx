@@ -15,7 +15,7 @@ import {
   Shield, Swords, Crosshair, Dog, Trophy, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/images";
+import { getWeaponImage, getWarframeImage, getCompanionImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { getLoadouts } from "@/lib/builds/loadouts";
 import { calcLoadoutStats, fmtDamageNum, scenarioSimParams, type LoadoutStatsResult } from "@/lib/builds/loadout-stats";

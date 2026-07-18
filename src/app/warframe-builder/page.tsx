@@ -38,7 +38,7 @@ import { getSavedBuilds, deleteBuild, generateBuildId, SavedBuild, WarframeBuild
 import { extractBuildFromUrl } from "@/lib/builds/build-url";
 import { shareBuilderBuild } from "@/lib/builds/share-build";
 import { toast } from "sonner";
-import { getWarframeImage } from "@/lib/images";
+import { getWarframeImage } from "@/lib/display/images";
 import { GameAssetImage } from "@/components/game-asset-image";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";

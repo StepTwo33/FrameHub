@@ -3,7 +3,7 @@ import {
   generateOverrideId,
   getOverrideForTarget,
   saveOverride,
-} from "@/lib/data-overrides";
+} from "@/lib/overrides/data-overrides";
 
 export interface ArcaneEffectLineDraft {
   stat: string;

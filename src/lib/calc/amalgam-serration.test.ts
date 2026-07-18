@@ -3,7 +3,7 @@ import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { allWarframes } from "@/data/warframes";
 import { calculateWeaponBuild, calculateWarframeBuild } from "@/lib/calc/calculator";
-import { getModStatDisplayLines } from "@/lib/mod-display";
+import { getModStatDisplayLines } from "@/lib/display/mod-display";
 
 const modsMap = new Map(allMods.map((m) => [m.id, m]));
 

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ARCANE_EFFECTS, ArcaneEffectDef } from "@/data/arcane-effects";
 import { Mod, ArchonShard } from "@/lib/types";
-import { applyArcaneEffectOverrides } from "@/lib/arcane-effect-overrides";
+import { applyArcaneEffectOverrides } from "@/lib/overrides/arcane-effect-overrides";
 import {
   getEffectiveWeapons,
   getEffectiveMods,

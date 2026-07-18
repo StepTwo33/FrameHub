@@ -4,9 +4,9 @@ import { CalculatedStats, Weapon, SimulationParams } from "@/lib/types";
 import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/calc/set-bonuses";
 import { useMemo } from "react";
 import { IncarnonEvolution } from "@/data/incarnon";
-import { cleanModDescription, getModStatDisplayLines } from "@/lib/mod-display";
-import { getModStatLabel } from "@/lib/override-stat-catalog";
-import { getArcaneDisplayInfo } from "@/lib/arcane-display";
+import { cleanModDescription, getModStatDisplayLines } from "@/lib/display/mod-display";
+import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
+import { getArcaneDisplayInfo } from "@/lib/display/arcane-display";
 import {
   computeDpsContributions,
   formatMarginalPct,

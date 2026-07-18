@@ -11,7 +11,7 @@ import {
   getAbilityMiscStatLabel,
   getAbilityMiscStatPickerOptions,
   getAddableAbilityFields,
-} from "@/lib/ability-override-fields";
+} from "@/lib/overrides/ability-override-fields";
 
 export type { AbilityDraft };
 

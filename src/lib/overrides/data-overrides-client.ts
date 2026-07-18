@@ -7,7 +7,7 @@ import {
   mergeOverrideLists,
   OVERRIDE_CATEGORIES,
   type OverrideCategory,
-} from "@/lib/data-overrides";
+} from "@/lib/overrides/data-overrides";
 
 const LEGACY_STORAGE_KEY = "framehub_data_overrides";
 

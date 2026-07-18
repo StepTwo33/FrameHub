@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { resolveAvatarSrc } from "@/lib/avatar-url";
+import { resolveAvatarSrc } from "@/lib/display/avatar-url";
 
 const hideOnImageError: React.ReactEventHandler<HTMLImageElement> = (e) => {
   (e.target as HTMLImageElement).style.display = "none";

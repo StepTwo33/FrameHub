@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArchonShardIcon } from "@/components/archon-shard-slot";
-import { SHARD_BONUS_LABELS, formatShardBonusValue } from "@/lib/shard-display";
+import { SHARD_BONUS_LABELS, formatShardBonusValue } from "@/lib/display/shard-display";
 import type { ArchonShard } from "@/lib/types";
 
 export function ShardPickerDialog({

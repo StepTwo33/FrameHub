@@ -1,6 +1,6 @@
 import { Weapon, Mod, Companion, Warframe, ArchonShard } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
-import { deepMergeOverrideFields } from "@/lib/override-merge";
+import { deepMergeOverrideFields } from "@/lib/overrides/override-merge";
 
 export const OVERRIDE_CATEGORIES = [
   "weapon", "mod", "warframe", "companion", "arcane", "arcane_effect", "archon_shard", "archwing", "necramech",
@@ -31,12 +31,12 @@ export function getOverrides(): DataOverride[] {
 }
 
 export async function saveOverride(override: DataOverride): Promise<DataOverride> {
-  const { persistOverride } = await import("@/lib/data-overrides-client");
+  const { persistOverride } = await import("@/lib/overrides/data-overrides-client");
   return persistOverride(override);
 }
 
 export async function deleteOverride(id: string): Promise<void> {
-  const { removeOverride } = await import("@/lib/data-overrides-client");
+  const { removeOverride } = await import("@/lib/overrides/data-overrides-client");
   return removeOverride(id);
 }
 
@@ -51,12 +51,12 @@ export function generateOverrideId(): string {
 }
 
 export async function exportOverrides(): Promise<string> {
-  const { exportSharedOverrides } = await import("@/lib/data-overrides-client");
+  const { exportSharedOverrides } = await import("@/lib/overrides/data-overrides-client");
   return exportSharedOverrides();
 }
 
 export async function importOverrides(json: string): Promise<number> {
-  const { importSharedOverrides } = await import("@/lib/data-overrides-client");
+  const { importSharedOverrides } = await import("@/lib/overrides/data-overrides-client");
   return importSharedOverrides(json);
 }
 

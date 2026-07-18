@@ -1,5 +1,5 @@
 import type { Mod } from "@/lib/types";
-import { getModStatLabel } from "@/lib/override-stat-catalog";
+import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
 
 /** Strip wiki/HTML markup from mod descriptions for UI. */
 export function cleanModDescription(description: string): string {

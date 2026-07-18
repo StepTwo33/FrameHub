@@ -4,13 +4,13 @@ import { useMemo, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatKeyAddRow } from "@/components/stat-key-picker";
-import { getModStatLabel } from "@/lib/override-stat-catalog";
-import type { StatPickerOption } from "@/lib/override-stat-catalog";
+import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
+import type { StatPickerOption } from "@/lib/overrides/override-stat-catalog";
 import {
   formatModStatValue,
   isFlatModStat,
   isPercentLikeModStat,
-} from "@/lib/mod-display";
+} from "@/lib/display/mod-display";
 
 /** Marker stored in override field values when a nested stat should be stripped. */
 export const STAT_ROW_DELETE_MARKER = "__DELETE__";

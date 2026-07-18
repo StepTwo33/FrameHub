@@ -12,16 +12,16 @@ import {
   radialAttackDamageTags,
   weaponHasRadialAttacks,
 } from "@/lib/weapon-radial-utils";
-import { getWeaponImage, getWarframeImage, getCompanionImage, getModImage } from "@/lib/images";
+import { getWeaponImage, getWarframeImage, getCompanionImage, getModImage } from "@/lib/display/images";
 import { Weapon, Warframe, Companion } from "@/lib/types";
 import { Archwing, Necramech } from "@/data/archwing";
 import { useMods } from "@/lib/use-data";
 import { getExclusiveModIdsForWeapon } from "@/lib/weapon-exclusive-mods";
 import { getAugmentModIdsForWarframe } from "@/lib/warframe-augment-mods";
 import { appendReturnTo } from "@/lib/nav-return";
-import { dataFixesHref } from "@/lib/data-fixes-url";
+import { dataFixesHref } from "@/lib/overrides/data-fixes-url";
 import { useStaffRole } from "@/lib/use-staff";
-import type { OverrideCategory } from "@/lib/data-overrides";
+import type { OverrideCategory } from "@/lib/overrides/data-overrides";
 import { cn } from "@/lib/utils";
 
 export function CodexActionLinks({

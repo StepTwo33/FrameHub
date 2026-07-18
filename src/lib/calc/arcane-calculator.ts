@@ -1,5 +1,5 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
-import { getArcaneEffectDef } from "@/lib/arcane-effect-overrides";
+import { getArcaneEffectDef } from "@/lib/overrides/arcane-effect-overrides";
 export { getArcaneEffectDef };
 import { shouldApplyArcaneLineToBuild } from "@/lib/calc/arcane-behavior-registry";
 import {

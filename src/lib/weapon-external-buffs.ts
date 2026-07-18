@@ -1,5 +1,5 @@
 import { getVerifiedFieldScaling } from "@/lib/ability-scaling-registry";
-import { getModStatDisplayLines } from "@/lib/mod-display";
+import { getModStatDisplayLines } from "@/lib/display/mod-display";
 import {
   applyVerifiedModStatToWeapon,
   getVerifiedModStatLine,

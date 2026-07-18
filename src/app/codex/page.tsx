@@ -31,7 +31,7 @@ import {
   getArcaneSlotCategory,
   ARCANE_TRIGGER_FILTERS,
 } from "@/lib/arcane-browser-meta";
-import { getArcaneDisplayInfo } from "@/lib/arcane-display";
+import { getArcaneDisplayInfo } from "@/lib/display/arcane-display";
 import { getExaltedWeaponsForWarframe } from "@/lib/exalted-weapons";
 import {
   useMods,
@@ -67,7 +67,7 @@ import {
   ShardDetailPanel,
 } from "@/components/codex-item-panels";
 import { cn } from "@/lib/utils";
-import { accentTone } from "@/lib/accent-tones";
+import { accentTone } from "@/lib/display/accent-tones";
 
 const POLARITIES = ["All", "madurai", "vazarin", "naramon", "zenurik", "unairu", "penjaga", "umbra"] as const;
 const RARITIES = ["All", "Common", "Uncommon", "Rare", "Legendary"] as const;
