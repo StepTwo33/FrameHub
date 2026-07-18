@@ -18,7 +18,7 @@ import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
-import { avgCritMultiplier, critTierDamage } from "@/lib/calc/crit-utils";
+import { avgCritMultiplier, critTierDamage, critTiersToShow, critTierLabel, critTierColorClass, exceedsWarframeInt32 } from "@/lib/calc/crit-utils";
 import {
   COMPANION_MAX_PRECEPTS,
   COMPANION_MOD_SLOT_COUNT,
@@ -760,26 +760,46 @@ export default function CompanionBuilderPage() {
                         {weaponStats ? (
                           <div className="space-y-0.5">
                             <p className="text-[10px] text-muted-foreground/70 mb-1">Hit damage (no multishot / fire rate)</p>
-                            <StatRow
-                              label="Non-crit hit"
-                              value={(weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage).toFixed(1)}
-                              highlighted
-                            />
-                            <StatRow
-                              label="Yellow crit"
-                              value={(
-                                (weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage) *
-                                critTierDamage(1, weaponStats.criticalMultiplier)
-                              ).toFixed(1)}
-                              color="text-yellow-400"
-                            />
-                            <StatRow
-                              label="Avg hit"
-                              value={(
-                                (weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage) *
-                                avgCritMultiplier(weaponStats.criticalChance, weaponStats.criticalMultiplier)
-                              ).toFixed(1)}
-                            />
+                            {(() => {
+                              const hitBase = weaponStats.arsenalDamage?.totalDamage ?? weaponStats.totalDamage;
+                              const cm = weaponStats.criticalMultiplier;
+                              const cc = weaponStats.criticalChance;
+                              const avgHit = hitBase * avgCritMultiplier(cc, cm);
+                              const tiers = critTiersToShow(cc);
+                              const showOverflow = [
+                                hitBase,
+                                ...tiers.map((t) => hitBase * critTierDamage(t, cm)),
+                                avgHit,
+                                weaponStats.burstDps,
+                                weaponStats.sustainedDps,
+                              ].some(exceedsWarframeInt32);
+                              return (
+                                <>
+                                  <StatRow
+                                    label="Non-crit hit"
+                                    value={hitBase.toFixed(1)}
+                                    highlighted
+                                  />
+                                  {tiers.map((tier) => (
+                                    <StatRow
+                                      key={tier}
+                                      label={critTierLabel(tier)}
+                                      value={(hitBase * critTierDamage(tier, cm)).toFixed(1)}
+                                      color={critTierColorClass(tier)}
+                                    />
+                                  ))}
+                                  <StatRow
+                                    label="Avg hit"
+                                    value={avgHit.toFixed(1)}
+                                  />
+                                  {showOverflow && (
+                                    <p className="text-[9px] text-amber-500/90 mt-1.5 leading-snug">
+                                      Note: values above ~2.147B can wrap to large negatives in-game (signed 32-bit). FrameHub shows uncapped math.
+                                    </p>
+                                  )}
+                                </>
+                              );
+                            })()}
                             <div className="border-t border-border my-2" />
                             <StatRow label="Crit Chance" value={`${(weaponStats.criticalChance * 100).toFixed(1)}%`} />
                             <StatRow label="Crit Multi" value={`${weaponStats.criticalMultiplier.toFixed(2)}x`} />

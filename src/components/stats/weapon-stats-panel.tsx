@@ -13,7 +13,7 @@ import {
   type DpsContributionCategory,
   type WeaponDpsCalcContext,
 } from "@/lib/calc/dps-contributions";
-import { avgCritMultiplier, critTierDamage } from "@/lib/calc/crit-utils";
+import { avgCritMultiplier, critTierDamage, critTiersToShow, critTierLabel, critTierColorClass, exceedsWarframeInt32 } from "@/lib/calc/crit-utils";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 import { TTKSection } from "./ttk-section";
 import { WeaponSimControls } from "./weapon-sim-controls";
@@ -182,10 +182,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         const hitBase = (stats.arsenalDamage ?? stats).totalDamage;
         const cm = stats.criticalMultiplier;
         const cc = stats.criticalChance;
-        const yellow = hitBase * critTierDamage(1, cm);
-        const orange = hitBase * critTierDamage(2, cm);
-        const red = hitBase * critTierDamage(3, cm);
         const avgHit = hitBase * avgCritMultiplier(cc, cm);
+        const tiers = critTiersToShow(cc);
+        const hitValues = [
+          hitBase,
+          ...tiers.map((t) => hitBase * critTierDamage(t, cm)),
+          avgHit,
+        ];
+        const showOverflow = hitValues.some(exceedsWarframeInt32);
         return (
           <CollapsibleSection title="HIT DAMAGE" defaultOpen>
             <p className="text-[9px] text-muted-foreground/70 mb-1 leading-snug">
@@ -197,33 +201,30 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               highlighted
               tooltip="Raw hit damage before crit averaging, multishot, and fire rate."
             />
-            <StatRow
-              label="Yellow crit"
-              value={yellow.toFixed(1)}
-              color="text-yellow-400"
-              tooltip={`Non-crit × ${cm.toFixed(2)} crit multiplier`}
-            />
-            {cc >= 1 && (
+            {tiers.map((tier) => (
               <StatRow
-                label="Orange crit"
-                value={orange.toFixed(1)}
-                color="text-orange-400"
-                tooltip="Tier-2 crit (crit chance ≥ 100%)"
+                key={tier}
+                label={critTierLabel(tier)}
+                value={(hitBase * critTierDamage(tier, cm)).toFixed(1)}
+                color={critTierColorClass(tier)}
+                tooltip={
+                  tier === 1
+                    ? `Non-crit × ${cm.toFixed(2)} crit multiplier`
+                    : `Tier-${tier} crit (crit chance ≥ ${(tier - 1) * 100}%)`
+                }
               />
-            )}
-            {cc >= 2 && (
-              <StatRow
-                label="Red crit"
-                value={red.toFixed(1)}
-                color="text-red-400"
-                tooltip="Tier-3 crit (crit chance ≥ 200%)"
-              />
-            )}
+            ))}
             <StatRow
               label="Avg hit"
               value={avgHit.toFixed(1)}
-              tooltip="Non-crit hit × average crit multiplier (still without multishot / fire rate)."
+              highlighted
+              tooltip="Expected hit damage across crit tiers (includes orange/red+ when CC &gt; 100%)."
             />
+            {showOverflow && (
+              <p className="text-[9px] text-amber-500/90 mt-1.5 leading-snug">
+                Note: values above ~2.147B can wrap to large negatives in-game (signed 32-bit). FrameHub shows uncapped math.
+              </p>
+            )}
           </CollapsibleSection>
         );
       })()}
@@ -373,6 +374,9 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           const radialSustained = stats.radialSustainedDps ?? 0;
           const directBurst = Math.max(0, stats.burstDps - radialBurst);
           const directSustained = Math.max(0, stats.sustainedDps - radialSustained);
+          const showOverflow = [directBurst, directSustained, stats.burstDps, stats.sustainedDps].some(
+            exceedsWarframeInt32,
+          );
           return (
             <>
               <StatRow
@@ -413,6 +417,11 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                     tooltip="Direct + radial sustained DPS combined."
                   />
                 </>
+              )}
+              {showOverflow && (
+                <p className="text-[9px] text-amber-500/90 mt-1.5 leading-snug">
+                  Note: DPS above ~2.147B can wrap to large negatives in-game (signed 32-bit). FrameHub shows uncapped math.
+                </p>
               )}
             </>
           );

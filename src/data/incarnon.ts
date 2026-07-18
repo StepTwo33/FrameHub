@@ -28,6 +28,19 @@ export interface IncarnonForm {
   triggerType: string;
   magazine?: number;
   reloadTime?: number;
+  /** When set, form damage is this pure element (clears IPS). */
+  damageType?: string;
+  heat?: number;
+  cold?: number;
+  toxin?: number;
+  electricity?: number;
+  radiation?: number;
+  viral?: number;
+  corrosive?: number;
+  blast?: number;
+  gas?: number;
+  magnetic?: number;
+  tau?: number;
   specialMechanics?: Record<string, string>;
 }
 
@@ -824,8 +837,37 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
     category: "genesis_primary",
     variants: ["torid"],
     forms: [
-      { name: "Torid", damage: 250.0, fireRate: 1.5, criticalChance: 0.15, criticalMultiplier: 2.0, statusChance: 0.25, triggerType: "Semi", magazine: 5, reloadTime: 1.7 },
-      { name: "Torid Incarnon", damage: 500.0, fireRate: 1.5, criticalChance: 0.28, criticalMultiplier: 2.5, statusChance: 0.4, triggerType: "Semi", magazine: 5, reloadTime: 1.7, specialMechanics: { evolutionMode: "Toxin grenades chain between enemies", modeSwitch: "Kills build evolution" } },
+      {
+        name: "Torid",
+        damage: 140,
+        fireRate: 1.5,
+        criticalChance: 0.15,
+        criticalMultiplier: 2.0,
+        statusChance: 0.23,
+        triggerType: "Semi",
+        magazine: 5,
+        reloadTime: 1.7,
+        damageType: "toxin",
+        toxin: 140,
+      },
+      {
+        // Wiki Incarnon Form: long-range toxin beam (Held), 51 toxin, 8 FR, 29% / 3.1x / 39%, 170 charge
+        name: "Torid Incarnon",
+        damage: 51,
+        fireRate: 8,
+        criticalChance: 0.29,
+        criticalMultiplier: 3.1,
+        statusChance: 0.39,
+        triggerType: "Held",
+        magazine: 170,
+        reloadTime: 1.7,
+        damageType: "toxin",
+        toxin: 51,
+        specialMechanics: {
+          evolutionMode: "Long-range Toxin beam; chain to nearby enemies",
+          modeSwitch: "Direct shots charge Incarnon; Alt-fire transmutes",
+        },
+      },
     ],
     evolutions: [
       { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },

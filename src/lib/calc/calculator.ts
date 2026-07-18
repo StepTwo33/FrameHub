@@ -796,6 +796,7 @@ export function calculateWeaponBuild(
           else stats.multishot += value;
           break;
         case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
+        case 'flatMagazine': stats.magazine = Math.round(stats.magazine + value); break;
         case 'reloadSpeed': stats.reloadTime /= (1 + value); break;
         case 'heat': case 'cold': case 'toxin': case 'electricity':
           elementalMods.push({ type: stat, value: baseWeapon.damage * damageMultTotal * value });

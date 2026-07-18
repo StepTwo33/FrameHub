@@ -18,6 +18,7 @@ import { useWeapons, useMods } from "@/lib/weapons/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calc/calculator";
 import { modCapacityAtRank } from "@/lib/calc/mod-capacity";
 import { mergeIncarnonStatChanges, mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
+import { resolveIncarnonActiveWeapon } from "@/lib/calc/incarnon-active-weapon";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
 import {
@@ -101,9 +102,11 @@ export default function WeaponBuilderPage() {
   /** Archgun with Gravimag on → atmosphere stat profile; otherwise the base (Archwing) weapon. */
   const activeWeapon = useMemo<Weapon | null>(() => {
     if (!selectedWeapon) return null;
-    if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) return applyGravimagMode(selectedWeapon);
-    return selectedWeapon;
-  }, [selectedWeapon, gravimagMode]);
+    let w = selectedWeapon;
+    if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) w = applyGravimagMode(selectedWeapon);
+    const data = incarnonDataMap.get(w.id);
+    return resolveIncarnonActiveWeapon(w, data, selectedEvolutions);
+  }, [selectedWeapon, gravimagMode, selectedEvolutions]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
     if (!selectedWeapon || !weaponSupportsProgenitor(selectedWeapon)) return undefined;

@@ -19,6 +19,7 @@ import {
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
 } from "@/lib/calc/calculator";
+import { resolveIncarnonActiveWeapon } from "@/lib/calc/incarnon-active-weapon";
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib/calc/ttk";
 import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/calc/dps-contributions";
@@ -184,13 +185,15 @@ function calcWeaponSlotStats(
   const w = weaponsMap.get(build.weaponId);
   if (!w) return null;
   const base = weaponWithPassive(w);
+  const incarnonData = incarnonDataMap.get(build.weaponId);
+  const calcWeapon = resolveIncarnonActiveWeapon(base, incarnonData, build.incarnonEvolutions);
   const progenitorOpts =
     build.progenitorElement &&
     build.progenitorBonusPercent != null &&
     build.progenitorBonusPercent > 0
       ? { progenitorElement: build.progenitorElement, progenitorBonusPercent: build.progenitorBonusPercent }
       : undefined;
-  const externalBuffs = resolveWeaponExternalBuffs(base, buffContext, simParams);
+  const externalBuffs = resolveWeaponExternalBuffs(calcWeapon, buffContext, simParams);
   const calcOptions = mergeWeaponCalcOptions(progenitorOpts, externalBuffs);
   const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions);
   const arcaneMods = resolveSavedArcaneSlots(build.arcaneIds, 2).filter((m): m is Mod => m != null);
@@ -199,7 +202,7 @@ function calcWeaponSlotStats(
   const stats =
     arcaneMods.length > 0
       ? calculateWeaponBuildWithArcanes(
-          base,
+          calcWeapon,
           modSlots,
           modsMap,
           arcaneMods,
@@ -210,7 +213,7 @@ function calcWeaponSlotStats(
           rivenStatChanges,
         )
       : calculateWeaponBuild(
-          base,
+          calcWeapon,
           modSlots,
           modsMap,
           incarnonChanges,
@@ -223,7 +226,7 @@ function calcWeaponSlotStats(
   const ttk =
     enemy && enemyLevel != null && enemyLevel > 0 ? calculateTTK(stats, enemy, enemyLevel) : undefined;
   const contributionContext = buildWeaponContributionContext({
-    weapon: base,
+    weapon: calcWeapon,
     modSlots,
     allMods: modsMap,
     arcanes: arcaneMods,
