@@ -34,10 +34,12 @@ import {
   getPrimaryExaltedWeapon,
 } from "@/lib/exalted-weapons";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WarframeBuildData, saveCloudBuild, resolveSavedArcaneSlots } from "@/lib/build-storage";
-import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
+import { extractBuildFromUrl } from "@/lib/build-url";
+import { shareBuilderBuild } from "@/lib/share-build";
 import { toast } from "sonner";
 import { getWarframeImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
+import { SHARD_BONUS_LABELS, formatShardBonusValue } from "@/lib/shard-display";
 import { getWeaponImage } from "@/lib/images";
 import { BuildImporter } from "@/components/build-importer";
 import { SaveBuildDialog, type SaveBuildDialogValues } from "@/components/save-build-dialog";
@@ -68,59 +70,6 @@ import {
 } from "@/components/ability-display";
 
 const EMPTY_SHARDS: (EquippedArchonShard | null)[] = [null, null, null, null, null];
-
-const bonusLabels: Record<string, string> = {
-  // Crimson
-  abilityStrength: "Ability Strength",
-  abilityDuration: "Ability Duration",
-  meleeCritDamage: "Melee Crit Damage",
-  primaryStatusChance: "Primary Status Chance",
-  secondaryCritChance: "Secondary Crit Chance",
-  // Azure
-  health: "Health",
-  shield: "Shield Capacity",
-  energyMax: "Max Energy",
-  armor: "Armor",
-  healthRegen: "Health Regen",
-  // Amber
-  castingSpeed: "Casting Speed",
-  parkourVelocity: "Parkour Velocity",
-  startingEnergy: "Starting Energy",
-  healthOrbEffectiveness: "Health Orb Effectiveness",
-  energyOrbEffectiveness: "Energy Orb Effectiveness",
-  // Violet
-  abilityDamageElectricity: "Ability Dmg vs Electricity",
-  primaryElectricityDamage: "Primary Electricity Damage",
-  meleeCritDamageEnergy: "Melee Crit Dmg (Energy>500: 2x)",
-  orbConversion: "Orb Conversion (Equilibrium)",
-  // Topaz
-  blastKillHealth: "Health per Blast Kill",
-  blastKillShields: "Shields on Blast Kill",
-  heatKillSecondaryCrit: "Sec. Crit/Heat Kill",
-  abilityDamageRadiation: "Ability Dmg vs Radiation",
-  // Emerald
-  toxinStatusDamage: "Toxin Status Damage",
-  toxinHealthRecovery: "Health per Toxin Tick",
-  abilityDamageCorrosion: "Ability Dmg vs Corrosion",
-  corrosionMaxStacks: "Max Corrosion Stacks",
-};
-
-const FLAT_SHARD_KEYS = new Set([
-  "health", "shield", "energyMax", "armor", "healthRegen",
-  "blastKillHealth", "blastKillShields", "toxinHealthRecovery",
-  "corrosionMaxStacks", "heatKillSecondaryCrit",
-]);
-
-function formatBonusValue(key: string, value: number): string {
-  if (FLAT_SHARD_KEYS.has(key)) {
-    const dec = value % 1 !== 0 ? 1 : 0;
-    if (key === "healthRegen") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}/s`;
-    if (key === "heatKillSecondaryCrit") return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%/kill`;
-    return `${value > 0 ? "+" : ""}${value.toFixed(dec)}`;
-  }
-  const dec = value % 1 !== 0 ? 1 : 0;
-  return `${value > 0 ? "+" : ""}${value.toFixed(dec)}%`;
-}
 
 // Slot layout: 0=Aura, 1-8=Regular, 9=Exilus
 const AURA_SLOT = 0;
@@ -802,35 +751,29 @@ export default function WarframeBuilderPage() {
   const handleShareBuild = useCallback(async () => {
     if (!selectedWarframe) return;
 
-    const fallbackShareable: ShareableBuild = {
-      type: "warframe",
-      itemId: selectedWarframe.id,
-      mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
-      arcanes: equippedArcanes.map((a) => a?.id ?? ""),
-      shards: equippedShards.filter((s): s is EquippedArchonShard => s !== null).map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
-    };
+    const outcome = await shareBuilderBuild({
+      isPublic: buildIsPublic,
+      buildId: currentBuildId,
+      fallback: {
+        type: "warframe",
+        itemId: selectedWarframe.id,
+        mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
+        arcanes: equippedArcanes.map((a) => a?.id ?? ""),
+        shards: equippedShards
+          .filter((s): s is EquippedArchonShard => s !== null)
+          .map((s) => ({ id: s.shardId, bonus: s.selectedBonus })),
+      },
+    });
 
-    if (buildIsPublic && currentBuildId) {
-      const url = `${window.location.origin}/build/${currentBuildId}`;
-      await navigator.clipboard.writeText(url);
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2000);
-      toast.success("Share link copied!", { description: "Link copied to clipboard" });
-      return;
-    }
-
-    if (!buildIsPublic) {
+    if (outcome.kind === "need_public_save") {
       setSaveDialogDefaultPublic(true);
       setSaveDialogOpen(true);
-      toast.info("Enable community listing to share", { description: "Check \"List in Community Builds\" when saving, then copy the link." });
       return;
     }
-
-    const url = window.location.origin + buildShareUrl(fallbackShareable);
-    await navigator.clipboard.writeText(url);
-    setShareCopied(true);
-    setTimeout(() => setShareCopied(false), 2000);
-    toast.success("Share link copied!", { description: "Link copied to clipboard" });
+    if (outcome.kind === "copied") {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
   }, [selectedWarframe, equippedMods, equippedArcanes, equippedShards, buildIsPublic, currentBuildId]);
 
   const equippedModIds = equippedMods.map((m) => m.modId);
@@ -1414,9 +1357,9 @@ export default function WarframeBuilderPage() {
                   onClick={() => handleSelectShardBonus(selectedShardForBonus, key, value)}
                   className="w-full text-left p-3 rounded-lg border border-border hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
                 >
-                  <span className="text-sm font-medium">{bonusLabels[key] || key}</span>
+                  <span className="text-sm font-medium">{SHARD_BONUS_LABELS[key] || key}</span>
                   <span className="text-sm text-purple-400 ml-2">
-                    {formatBonusValue(key, value)}
+                    {formatShardBonusValue(key, value)}
                   </span>
                 </button>
               ))}

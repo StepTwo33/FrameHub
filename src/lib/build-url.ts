@@ -16,32 +16,39 @@ export interface ShareableBuild {
   slotPolarities?: Record<string, string>;
   // Warframe-specific
   shards?: { id: string; bonus: string }[];
+  // Incarnon (weapon builder share codes)
+  incarnonEvolutions?: Record<number, number>;
 }
 
-export function encodeBuild(build: ShareableBuild): string {
+export function encodeJsonPayload(data: unknown): string {
   try {
-    const json = JSON.stringify(build);
-    // Use base64url encoding (URL-safe)
-    const encoded = btoa(json)
+    return btoa(JSON.stringify(data))
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-    return encoded;
   } catch {
     return "";
   }
 }
 
-export function decodeBuild(hash: string): ShareableBuild | null {
+export function decodeJsonPayload(hash: string): unknown | null {
   try {
-    // Restore base64 padding
     let b64 = hash.replace(/-/g, "+").replace(/_/g, "/");
     while (b64.length % 4) b64 += "=";
-    const json = atob(b64);
-    return JSON.parse(json) as ShareableBuild;
+    return JSON.parse(atob(b64));
   } catch {
     return null;
   }
+}
+
+export function encodeBuild(build: ShareableBuild): string {
+  return encodeJsonPayload(build);
+}
+
+export function decodeBuild(hash: string): ShareableBuild | null {
+  const parsed = decodeJsonPayload(hash);
+  if (!parsed || typeof parsed !== "object") return null;
+  return parsed as ShareableBuild;
 }
 
 export function buildShareUrl(build: ShareableBuild): string {

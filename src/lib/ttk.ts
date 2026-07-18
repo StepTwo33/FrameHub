@@ -2,6 +2,7 @@
 // Post-Update 32 S-curve scaling, proper armor/shield/health type interactions,
 // Viral/Corrosive status accounting, Slash/Heat/Toxin DoT damage, reload cycles
 import { CalculatedStats } from "./types";
+import { avgCritMultiplier } from "./crit-utils";
 import {
   combatDamageMultiplier,
   factionBonusFromStats,
@@ -166,17 +167,9 @@ export function scaleShield(base: number, level: number): number {
   return lo * (1 - sm) + hi * sm;
 }
 
-// ── Crit averaging (yellow / orange / red) ────────────────────────────
-// Warframe crit tier damage: tier × (cm − 1) + 1 (yellow = cm, orange = 2(cm−1)+1, …)
-export function avgCritMult(cc: number, cm: number): number {
-  if (cc <= 0) return 1.0;
-  if (cc <= 1.0) return 1.0 + cc * (cm - 1.0);
-  const tier = Math.floor(cc);
-  const rem = cc - tier;
-  const currentTierDmg = tier * (cm - 1.0) + 1.0;
-  const nextTierDmg = (tier + 1) * (cm - 1.0) + 1.0;
-  return (1 - rem) * currentTierDmg + rem * nextTierDmg;
-}
+// ── Crit averaging — single source of truth in crit-utils ─────────────
+/** @deprecated Prefer avgCritMultiplier from crit-utils; alias kept for existing imports. */
+export const avgCritMult = avgCritMultiplier;
 
 // ── Viral stack multiplier (wiki Status Effect) ───────────────────────
 /** Health damage mult from viral stacks (1 = no viral). Stack1=+100%, +25%/stack → max 4.25×. */
@@ -339,7 +332,7 @@ export function simulateDiscreteTTK(
   const procsPerShot = averageProcsPerShot(statusChance, multishot);
   const shotInterval = 1 / efr;
 
-  const acm = avgCritMult(stats.criticalChance, stats.criticalMultiplier);
+  const acm = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
   const moddedBase =
     stats.moddedBaseDamage != null && stats.moddedBaseDamage > 0
       ? stats.moddedBaseDamage

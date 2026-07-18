@@ -3,17 +3,7 @@ import { allArchonShards } from "@/data/archon-shards";
 
 const shardNameById = new Map(allArchonShards.map((s) => [s.id, s.name]));
 
-export const SHARD_SHORT_NAMES: Record<string, string> = {
-  crimson: "Crim",
-  azure: "Azur",
-  amber: "Ambr",
-  violet: "Viol",
-  topaz: "Topz",
-  emerald: "Emer",
-};
-
-export const SHARD_COLORS: Record<string, string> = {
-  crimson: "#E74C3C",
+export const SHARD_COLORS: Record<string, string> = {  crimson: "#E74C3C",
   azure: "#3498DB",
   amber: "#F39C12",
   violet: "#9B59B6",

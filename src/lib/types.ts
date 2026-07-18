@@ -796,14 +796,6 @@ export interface Loadout {
   };
 }
 
-export interface RivenMod {
-  weaponName: string;
-  stats: Record<string, number>; // e.g. { damage: 0.25, criticalChance: 0.15, statusChance: -0.10 }
-  mastery: number;
-  rolls: number;
-}
-
-// Riven stat definition with calculator key mapping
 export interface RivenStatDef {
   key: string;       // calculator key (e.g. "damage", "criticalChance")
   label: string;     // display name

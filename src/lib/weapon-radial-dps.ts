@@ -72,21 +72,6 @@ export function radialAttacksPerSecond(
   return efr * stats.multishot;
 }
 
-export function computeRadialBurstDps(
-  attack: WeaponRadialAttack,
-  stats: Pick<
-    CalculatedStats,
-    "criticalChance" | "criticalMultiplier" | "fireRate" | "effectiveFireRate" | "multishot"
-  >,
-  isMelee: boolean,
-  chargeIsPrimary = false,
-): number {
-  const rate = radialAttacksPerSecond(attack, stats, isMelee, chargeIsPrimary);
-  if (rate <= 0) return 0;
-  const avgCrit = avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
-  return avgRadialDamage(attack) * rate * avgCrit;
-}
-
 export function scaleRadialAttacksWithDps(
   baseWeapon: Weapon,
   stats: CalculatedStats,

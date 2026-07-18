@@ -41,7 +41,8 @@ import { incarnonDataMap } from "@/data/incarnon";
 import { cn } from "@/lib/utils";
 import { appendReturnTo } from "@/lib/nav-return";
 import { getSavedBuilds, saveBuild, deleteBuild, generateBuildId, SavedBuild, WeaponBuildData, saveCloudBuild, resolveSavedArcaneSlots, resolveArcaneById } from "@/lib/build-storage";
-import { buildShareUrl, extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
+import { extractBuildFromUrl, ShareableBuild } from "@/lib/build-url";
+import { shareBuilderBuild } from "@/lib/share-build";
 import { toast } from "sonner";
 import { getWeaponImage } from "@/lib/images";
 import { GameAssetImage } from "@/components/game-asset-image";
@@ -335,45 +336,50 @@ export default function WeaponBuilderPage() {
   const handleShareBuild = useCallback(async () => {
     if (!selectedWeapon) return;
 
-    const fallbackShareable: ShareableBuild = {
-      type: "weapon",
-      itemId: selectedWeapon.id,
-      mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
-      arcanes: equippedArcanes.map((a) => a?.id ?? ""),
-      hasOrokinCatalyst,
-      isMR30,
-      slotPolarities: slotPolarities as Record<string, string>,
-      ...(weaponCalcOptions?.progenitorElement != null
-        ? {
-            progenitorElement: weaponCalcOptions.progenitorElement,
-            progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
-          }
-        : {}),
-      ...(Object.keys(selectedEvolutions).length > 0 ? { incarnonEvolutions: selectedEvolutions } : {}),
-    };
+    const outcome = await shareBuilderBuild({
+      isPublic: buildIsPublic,
+      buildId: currentBuildId,
+      fallback: {
+        type: "weapon",
+        itemId: selectedWeapon.id,
+        mods: equippedMods.map((m) => ({ id: m.modId, rank: m.rank })),
+        arcanes: equippedArcanes.map((a) => a?.id ?? ""),
+        hasOrokinCatalyst,
+        isMR30,
+        slotPolarities: slotPolarities as Record<string, string>,
+        ...(weaponCalcOptions?.progenitorElement != null
+          ? {
+              progenitorElement: weaponCalcOptions.progenitorElement,
+              progenitorBonusPercent: weaponCalcOptions.progenitorBonusPercent,
+            }
+          : {}),
+        ...(Object.keys(selectedEvolutions).length > 0
+          ? { incarnonEvolutions: selectedEvolutions }
+          : {}),
+      },
+    });
 
-    if (buildIsPublic && currentBuildId) {
-      const url = `${window.location.origin}/build/${currentBuildId}`;
-      await navigator.clipboard.writeText(url);
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2000);
-      toast.success("Share link copied!", { description: "Link copied to clipboard" });
-      return;
-    }
-
-    if (!buildIsPublic) {
+    if (outcome.kind === "need_public_save") {
       setSaveDialogDefaultPublic(true);
       setSaveDialogOpen(true);
-      toast.info("Enable community listing to share", { description: "Check \"List in Community Builds\" when saving, then copy the link." });
       return;
     }
-
-    const url = window.location.origin + buildShareUrl(fallbackShareable);
-    await navigator.clipboard.writeText(url);
-    setShareCopied(true);
-    setTimeout(() => setShareCopied(false), 2000);
-    toast.success("Share link copied!", { description: "Link copied to clipboard" });
-  }, [selectedWeapon, equippedMods, equippedArcanes, hasOrokinCatalyst, isMR30, slotPolarities, weaponCalcOptions, selectedEvolutions, buildIsPublic, currentBuildId]);
+    if (outcome.kind === "copied") {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
+  }, [
+    selectedWeapon,
+    equippedMods,
+    equippedArcanes,
+    hasOrokinCatalyst,
+    isMR30,
+    slotPolarities,
+    weaponCalcOptions,
+    selectedEvolutions,
+    buildIsPublic,
+    currentBuildId,
+  ]);
 
   const filteredWeapons = useMemo(() => {
     const hiddenCategories = [

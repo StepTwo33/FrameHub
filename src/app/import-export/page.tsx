@@ -14,46 +14,8 @@ import {
 import { cn } from "@/lib/utils";
 import { QrCodeImage } from "@/components/game-asset-image";
 import { toast } from "sonner";
-import { localBuildOpenUrl } from "@/lib/build-url";
-
-// ── Helpers ──────────────────────────────────────────────────────────────
-
-async function copyTextToClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.setAttribute("readonly", "");
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      return ok;
-    } catch {
-      return false;
-    }
-  }
-}
-
-function compressForShare(data: object): string {
-  try {
-    const json = JSON.stringify(data);
-    return btoa(json).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  } catch { return ""; }
-}
-
-function decompressFromShare(code: string): object | null {
-  try {
-    let b64 = code.replace(/-/g, "+").replace(/_/g, "/");
-    while (b64.length % 4) b64 += "=";
-    return JSON.parse(atob(b64));
-  } catch { return null; }
-}
+import { localBuildOpenUrl, encodeJsonPayload, decodeJsonPayload } from "@/lib/build-url";
+import { copyTextToClipboard } from "@/lib/clipboard";
 
 function getBuildTypeIcon(type: string) {
   if (type === "warframe") return Shield;
@@ -151,7 +113,7 @@ export default function ImportExportPage() {
       name: selected.name,
       data: selected.data,
     };
-    const code = compressForShare(shareData);
+    const code = encodeJsonPayload(shareData);
     const link = typeof window !== "undefined"
       ? `${window.location.origin}/import-export?code=${code}`
       : "";
@@ -189,7 +151,7 @@ export default function ImportExportPage() {
   const handleCopyCode = useCallback(async () => {
     if (!selected) return;
     const shareData = { _v: 1, type: selected.type, name: selected.name, data: selected.data };
-    const code = compressForShare(shareData);
+    const code = encodeJsonPayload(shareData);
     if (!code) {
       toast.error("Could not create short code");
       return;
@@ -249,7 +211,7 @@ export default function ImportExportPage() {
     } catch { /* not JSON */ }
 
     // Try base64 share code
-    const decoded = decompressFromShare(rawCode);
+    const decoded = decodeJsonPayload(rawCode);
     if (!decoded || typeof decoded !== "object") {
       setImportError("Invalid share code. Make sure you copied the full code or link.");
       toast.error("Invalid share code");
@@ -310,7 +272,7 @@ export default function ImportExportPage() {
       setImportCode(code);
       // Clean URL before import (code is already captured)
       window.history.replaceState({}, "", window.location.pathname);
-      if (decompressFromShare(code) || (() => { try { JSON.parse(code); return true; } catch { return false; } })()) {
+      if (decodeJsonPayload(code) || (() => { try { JSON.parse(code); return true; } catch { return false; } })()) {
         handleImport(code);
       } else {
         setImportError("Invalid share code in link.");
