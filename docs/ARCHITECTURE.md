@@ -63,7 +63,8 @@ See also `.cursor/rules/no-blanket-item-edits.mdc`.
 | Arcanes | `arcane-calculator.ts`, `arcane-handlers.ts`, `arcane-behavior-registry.ts` |
 | Companions / archwing / railjack | `companion-calculator.ts`, `archwing-calculator.ts`, `railjack-calculator.ts` |
 | Mod eligibility | `mod-weapon-eligibility.ts`, `mod-weapon-tags.ts` data |
-| Capacity | `mod-capacity.ts`, `compute-used-capacity.ts` |
+| Capacity | `mod-capacity.ts`, `compute-used-capacity.ts` (incl. warframe aura capacity) |
+| Weapon builder merges | `weapon-stat-merges.ts` (Incarnon + riven deltas) |
 
 Tests live next to modules as `*.test.ts` (Vitest: `npm test`).
 

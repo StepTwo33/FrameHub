@@ -60,6 +60,39 @@ export function getDualFormAbilities(
   }));
 }
 
+/** Flatten dual-form or default ability list for builder UI cards. */
+export function buildAbilityDisplayEntries(
+  warframe: { id: string; abilities: Ability[] },
+  dualFormActive: boolean,
+  activeDualFormId: string,
+): {
+  key: string;
+  ability: Ability;
+  abilityIndex: number;
+  gameSlot: number;
+  formLabel?: string;
+}[] {
+  if (dualFormActive) {
+    const entries = getDualFormAbilities(warframe.id, activeDualFormId, warframe.abilities);
+    if (entries) {
+      return entries.map((entry) => ({
+        key: `${entry.abilityIndex}-${activeDualFormId}`,
+        ability: entry.ability,
+        abilityIndex: entry.abilityIndex,
+        gameSlot: entry.gameSlot,
+        formLabel: entry.formLabel,
+      }));
+    }
+  }
+  return warframe.abilities.map((ability, i) => ({
+    key: String(i),
+    ability,
+    abilityIndex: i,
+    gameSlot: i + 1,
+    formLabel: undefined,
+  }));
+}
+
 export function getDualFormConfig(warframeId: string): DualFormWarframeConfig | null {
   return DUAL_FORM_WARFRAMES[warframeId] ?? null;
 }

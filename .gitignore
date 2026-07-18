@@ -58,6 +58,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Cursor IDE local config / rules (do not commit)
+.cursor/
+
 # Personal / local notes (not project docs)
 docs/warframe-msi-a17-keybinds.md
 

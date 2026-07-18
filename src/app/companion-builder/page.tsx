@@ -17,6 +17,7 @@ import { useCompanions, useWeapons, useMods } from "@/lib/use-data";
 import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
 import { calculateCompanionBuild } from "@/lib/companion-calculator";
 import { calculateWeaponBuild } from "@/lib/calculator";
+import { mergeRivenStatChanges } from "@/lib/weapon-stat-merges";
 import { avgCritMultiplier, critTierDamage } from "@/lib/crit-utils";
 import {
   COMPANION_MAX_PRECEPTS,
@@ -275,19 +276,7 @@ export default function CompanionBuilderPage() {
 
   const weaponStats = useMemo(() => {
     if (!selectedWeapon) return null;
-    let rivenStatChanges: Record<string, number> | undefined;
-    if (weaponRivenStatsMap) {
-      for (const [slotStr, stats] of Object.entries(weaponRivenStatsMap)) {
-        const slotIdx = Number(slotStr);
-        const equipped = weaponMods.find((m) => m.slotIndex === slotIdx);
-        if (equipped && equipped.modId.startsWith("riven_")) {
-          rivenStatChanges = rivenStatChanges || {};
-          for (const [k, v] of Object.entries(stats)) {
-            rivenStatChanges[k] = (rivenStatChanges[k] ?? 0) + v;
-          }
-        }
-      }
-    }
+    const rivenStatChanges = mergeRivenStatChanges(weaponRivenStatsMap, weaponMods);
     return calculateWeaponBuild(
       selectedWeapon,
       weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),

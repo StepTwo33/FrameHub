@@ -15,8 +15,12 @@ import { WarframeStatsPanel } from "@/components/stats-panel";
 import { ModPicker, SlotType } from "@/components/mod-picker";
 import { useWeapons, useWarframes, useMods, useArchonShards } from "@/lib/use-data";
 import { calculateWarframeBuild, calculateWeaponBuild, calculateWeaponBuildWithArcanes, applyWarframeShardsAndArcanes } from "@/lib/calculator";
-import { modSlotCapacityCost, modCapacityAtRank } from "@/lib/mod-capacity";
-import { computeUsedCapacity } from "@/lib/compute-used-capacity";
+import {
+  computeUsedCapacity,
+  warframeBaseCapacity,
+  computeWarframeAuraBonus,
+  computeWarframeCapacityUsed,
+} from "@/lib/compute-used-capacity";
 import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard, ArchonShard } from "@/lib/types";
 import { Zap, Flag, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";
@@ -47,7 +51,7 @@ import { getWeaponArcanes } from "@/lib/weapon-arcane-config";
 import {
   dualFormStatesFromBuild,
   getDualFormConfig,
-  getDualFormAbilities,
+  buildAbilityDisplayEntries,
   serializeDualFormBuilds,
   EMPTY_ARCANE_IDS,
   DEFAULT_ARCANE_RANKS,
@@ -434,56 +438,21 @@ export default function WarframeBuilderPage() {
 
   const abilityDisplayEntries = useMemo(() => {
     if (!selectedWarframe) return [];
-    if (dualFormConfig) {
-      const entries = getDualFormAbilities(
-        selectedWarframe.id,
-        activeDualFormId,
-        selectedWarframe.abilities,
-      );
-      if (entries) {
-        return entries.map((entry) => ({
-          key: `${entry.abilityIndex}-${activeDualFormId}`,
-          ability: entry.ability,
-          abilityIndex: entry.abilityIndex,
-          gameSlot: entry.gameSlot,
-          formLabel: entry.formLabel,
-        }));
-      }
-    }
-    return selectedWarframe.abilities.map((ability, i) => ({
-      key: String(i),
-      ability,
-      abilityIndex: i,
-      gameSlot: i + 1,
-      formLabel: undefined as string | undefined,
-    }));
+    return buildAbilityDisplayEntries(selectedWarframe, !!dualFormConfig, activeDualFormId);
   }, [selectedWarframe, dualFormConfig, activeDualFormId]);
 
-  // Calculate capacity
-  const baseCapacity = (hasOrokinReactor ? 60 : 30) + (isMR30 ? 10 : 0);
-  const auraBonus = useMemo(() => {
-    const auraMod = equippedMods.find((m) => m.slotIndex === AURA_SLOT);
-    if (!auraMod) return 0;
-    const mod = modsMap.get(auraMod.modId);
-    if (!mod) return 0;
-    const drainAtRank = modCapacityAtRank(mod.drain, auraMod.rank);
-    const effectiveDrain = modSlotCapacityCost(drainAtRank, slotPolarities[AURA_SLOT], mod.polarity);
-    return Math.abs(effectiveDrain);
-  }, [equippedMods, slotPolarities]);
+  const baseCapacity = warframeBaseCapacity(hasOrokinReactor, isMR30);
+  const auraBonus = useMemo(
+    () => computeWarframeAuraBonus(equippedMods, modsMap, slotPolarities, AURA_SLOT),
+    [equippedMods, modsMap, slotPolarities],
+  );
 
   const totalCapacity = baseCapacity + auraBonus;
 
-  const capacityUsed = useMemo(() => {
-    return equippedMods
-      .filter((m) => m.slotIndex !== AURA_SLOT) // Aura adds capacity, doesn't cost
-      .reduce((sum, m) => {
-        const mod = modsMap.get(m.modId);
-        if (!mod) return sum;
-        const baseDrain = modCapacityAtRank(mod.drain, m.rank);
-        const slotPol = slotPolarities[m.slotIndex];
-        return sum + modSlotCapacityCost(baseDrain, slotPol, mod.polarity);
-      }, 0);
-  }, [equippedMods, slotPolarities]);
+  const capacityUsed = useMemo(
+    () => computeWarframeCapacityUsed(equippedMods, modsMap, slotPolarities, AURA_SLOT),
+    [equippedMods, modsMap, slotPolarities],
+  );
 
   const handleSelectWarframe = useCallback((warframe: Warframe) => {
     setSelectedWarframe(warframe);

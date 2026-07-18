@@ -17,6 +17,7 @@ import { ModPicker, type SlotType } from "@/components/mod-picker";
 import { useWeapons, useMods } from "@/lib/use-data";
 import { calculateWeaponBuild, calculateWeaponBuildWithArcanes } from "@/lib/calculator";
 import { modCapacityAtRank } from "@/lib/mod-capacity";
+import { mergeIncarnonStatChanges, mergeRivenStatChanges } from "@/lib/weapon-stat-merges";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapon-gravimag";
 import {
@@ -366,35 +367,16 @@ export default function WeaponBuilderPage() {
   const incarnonData = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;
   const isIncarnon = !!(incarnonData || selectedWeapon?.isIncarnon);
 
-  // Merge selected incarnon evolution stat changes
-  const incarnonStatChanges = useMemo<Record<string, number> | undefined>(() => {
-    if (!incarnonData || Object.keys(selectedEvolutions).length === 0) return undefined;
-    const merged: Record<string, number> = {};
-    for (const [tierStr, slot] of Object.entries(selectedEvolutions)) {
-      const tier = Number(tierStr);
-      const evo = incarnonData.evolutions.find((e) => e.tier === tier && e.slot === slot);
-      if (evo) {
-        const changes = evo.variantStatChanges?.[selectedWeapon?.id ?? ""] ?? evo.statChanges;
-        for (const [stat, val] of Object.entries(changes)) {
-          merged[stat] = (merged[stat] ?? 0) + val;
-        }
-      }
-    }
-    return Object.keys(merged).length > 0 ? merged : undefined;
-  }, [incarnonData, selectedEvolutions, selectedWeapon?.id]);
+  // Merge selected incarnon evolution / riven stat changes
+  const incarnonStatChanges = useMemo(
+    () => mergeIncarnonStatChanges(incarnonData, selectedEvolutions, selectedWeapon?.id),
+    [incarnonData, selectedEvolutions, selectedWeapon?.id],
+  );
 
-  // Gather riven stat changes from any slot that has a riven equipped (applied multiplicatively by the calculator)
-  const rivenStatChanges = useMemo<Record<string, number> | undefined>(() => {
-    const merged: Record<string, number> = {};
-    for (const [slotStr, stats] of Object.entries(rivenStatsMap)) {
-      const slotIdx = Number(slotStr);
-      const equipped = equippedMods.find((m) => m.slotIndex === slotIdx);
-      if (equipped && equipped.modId.startsWith("riven_")) {
-        for (const [k, v] of Object.entries(stats)) merged[k] = (merged[k] ?? 0) + v;
-      }
-    }
-    return Object.keys(merged).length > 0 ? merged : undefined;
-  }, [rivenStatsMap, equippedMods]);
+  const rivenStatChanges = useMemo(
+    () => mergeRivenStatChanges(rivenStatsMap, equippedMods),
+    [rivenStatsMap, equippedMods],
+  );
 
   const calculatedStats = useMemo<CalculatedStats | null>(() => {
     if (!activeWeapon) return null;
