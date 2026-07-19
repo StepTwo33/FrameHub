@@ -563,11 +563,6 @@ export default function WarframeBuilderPage() {
       },
     });
 
-    if (outcome.kind === "need_public_save") {
-      setSaveDialogDefaultPublic(true);
-      setSaveDialogOpen(true);
-      return;
-    }
     if (outcome.kind === "copied") {
       setShareCopied(true);
       setTimeout(() => setShareCopied(false), 2000);
