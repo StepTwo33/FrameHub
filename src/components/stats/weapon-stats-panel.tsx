@@ -14,9 +14,10 @@ import {
   type WeaponDpsCalcContext,
 } from "@/lib/calc/dps-contributions";
 import { avgCritMultiplier, critTierDamage, critTiersToShow, critTierLabel, critTierColorClass, exceedsWarframeInt32 } from "@/lib/calc/crit-utils";
-import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
+import { CollapsibleSection, StatRow } from "./stat-primitives";
 import { TTKSection } from "./ttk-section";
 import { WeaponSimControls } from "./weapon-sim-controls";
+import { useSimStatChangeFlash } from "./use-sim-stat-change-flash";
 
 const ELEMENT_COLORS: Record<string, string> = {
   heat: "text-orange-700 dark:text-orange-400",
@@ -69,6 +70,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
     () => (contributionContext ? computeDpsContributions(contributionContext) : []),
     [contributionContext],
   );
+  const flash = useSimStatChangeFlash(stats, simParams);
 
   if (!stats) {
     return (
@@ -93,6 +95,9 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
   const showSustainedColumn = dpsContributions.some(
     (c) => Math.abs(c.sustainedMarginalPct - c.burstMarginalPct) > 0.5,
   );
+  const ttkFlash = flash.has("ttk") || flash.has("burstDps") || flash.has("sustainedDps")
+    || flash.has("directBurstDps") || flash.has("fireRate") || flash.has("criticalChance")
+    || flash.has("avgHit") || flash.has("totalDamage") || flash.has("statusDps");
 
   return (
     <div className="border border-border rounded-xl p-4 bg-card space-y-1 min-w-0 overflow-x-hidden">
@@ -138,7 +143,12 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         const arsenalTotal = dmg.totalDamage * Math.max(1, stats.multishot);
         return (
           <CollapsibleSection title="DIRECT DAMAGE" defaultOpen>
-            <StatRow label="Total Damage" value={arsenalTotal.toFixed(1)} highlighted />
+            <StatRow
+              label="Total Damage"
+              value={arsenalTotal.toFixed(1)}
+              highlighted
+              changed={flash.has("arsenalTotal") || flash.has("totalDamage")}
+            />
             {stats.multishot > 1 && (
               <div className="text-[9px] text-muted-foreground/60 -mt-0.5 mb-0.5">
                 {dmg.totalDamage.toFixed(1)} per pellet × {stats.multishot.toFixed(2)} multishot (projectile / hit)
@@ -150,13 +160,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               </div>
             )}
             {(dmg.impact > 0 || (baseStats && baseStats.impact > 0)) && (
-              <StatRow label="Impact" value={dmg.impact.toFixed(1)} color="text-slate-400" />
+              <StatRow label="Impact" value={dmg.impact.toFixed(1)} color="text-slate-400" changed={flash.has("impact")} />
             )}
             {(dmg.puncture > 0 || (baseStats && baseStats.puncture > 0)) && (
-              <StatRow label="Puncture" value={dmg.puncture.toFixed(1)} color="text-stone-400" />
+              <StatRow label="Puncture" value={dmg.puncture.toFixed(1)} color="text-stone-400" changed={flash.has("puncture")} />
             )}
             {(dmg.slash > 0 || (baseStats && baseStats.slash > 0)) && (
-              <StatRow label="Slash" value={dmg.slash.toFixed(1)} color="text-red-400" />
+              <StatRow label="Slash" value={dmg.slash.toFixed(1)} color="text-red-400" changed={flash.has("slash")} />
             )}
 
             {/* Elemental Damage */}
@@ -169,6 +179,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                     label={ELEMENT_LABELS[e.type] || e.type}
                     value={e.value.toFixed(1)}
                     color={ELEMENT_COLORS[e.type]}
+                    changed={flash.has("totalDamage") || flash.has("arsenalTotal")}
                   />
                 ))}
               </>
@@ -199,16 +210,19 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               label="Non-crit hit"
               value={hitBase.toFixed(1)}
               highlighted
+              changed={flash.has("nonCritHit")}
               tooltip="Raw hit damage before crit averaging, multishot, and fire rate."
             />
             {tiers.map((tier) => {
               const reachable = tier === 1 ? cc > 0 : cc >= tier - 1;
+              const tierKey = tier === 1 ? "yellowHit" : tier === 2 ? "orangeHit" : tier === 3 ? "redHit" : `tier${tier}Hit`;
               return (
                 <StatRow
                   key={tier}
                   label={critTierLabel(tier)}
                   value={(hitBase * critTierDamage(tier, cm)).toFixed(1)}
                   color={critTierColorClass(tier)}
+                  changed={flash.has(tierKey) || (tier > 3 && flash.has("avgHit"))}
                   tooltip={
                     tier === 1
                       ? `Non-crit × ${cm.toFixed(2)} crit multiplier`
@@ -223,6 +237,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               label="Avg hit"
               value={avgHit.toFixed(1)}
               highlighted
+              changed={flash.has("avgHit")}
               tooltip="Expected hit damage across crit tiers your current crit chance can roll (includes orange/red+ when CC &gt; 100%)."
             />
             {showOverflow && (
@@ -239,6 +254,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         <StatRow
           label={isMelee ? "Attack Speed" : "Fire Rate"}
           value={(stats.effectiveFireRate ?? stats.fireRate).toFixed(2)}
+          changed={flash.has("fireRate")}
           tooltip={
             isMelee
               ? "Melee attacks per second (same field as fire rate for guns in the build engine)."
@@ -248,12 +264,32 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 : "Shots per second used for DPS."
           }
         />
-        <StatRow label="Critical Chance" value={`${(stats.criticalChance * 100).toFixed(1)}%`} />
-        <StatRow label="Critical Multiplier" value={`${stats.criticalMultiplier.toFixed(2)}x`} />
-        <StatRow label="Status Chance" value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`} />
-        {!isMelee && <StatRow label="Multishot" value={stats.multishot.toFixed(2)} />}
+        <StatRow
+          label="Critical Chance"
+          value={`${(stats.criticalChance * 100).toFixed(1)}%`}
+          changed={flash.has("criticalChance")}
+        />
+        <StatRow
+          label="Critical Multiplier"
+          value={`${stats.criticalMultiplier.toFixed(2)}x`}
+          changed={flash.has("criticalMultiplier")}
+        />
+        <StatRow
+          label="Status Chance"
+          value={`${(stats.statusChancePerShot * 100).toFixed(1)}%`}
+          changed={flash.has("statusChance")}
+        />
+        {!isMelee && (
+          <StatRow label="Multishot" value={stats.multishot.toFixed(2)} changed={flash.has("multishot")} />
+        )}
         {stats.magazine > 0 && <StatRow label="Magazine" value={stats.magazine.toString()} />}
-        {stats.reloadTime > 0 && <StatRow label="Reload Time" value={`${stats.reloadTime.toFixed(2)}s`} />}
+        {stats.reloadTime > 0 && (
+          <StatRow
+            label="Reload Time"
+            value={`${stats.reloadTime.toFixed(2)}s`}
+            changed={flash.has("reloadTime")}
+          />
+        )}
         {stats.range != null && stats.range !== 0 && (
           <StatRow label="Range" value={`+${stats.range.toFixed(1)}m`} tooltip="Incarnon / reach bonus (display)." />
         )}
@@ -358,7 +394,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Heavy Attack Multiplier (same track as combo mult: 2× at first tier, +1× per tier to 12× at 220+ hits on standard weapons)."
           />
           <StatRow label="Combo Duration" value={`${stats.comboDuration.toFixed(0)}s`} />
-          <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted />
+          <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted changed={flash.has("heavyAttack")} />
           {stats.bloodRushStacks > 0 && (
             <StatRow
               label="Blood Rush"
@@ -394,12 +430,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 label="Direct Burst DPS"
                 value={directBurst.toFixed(0)}
                 highlighted
+                changed={flash.has("directBurstDps") || flash.has("burstDps")}
                 tooltip="Projectile / hit DPS only (no radial). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
               />
               <StatRow
                 label="Direct Sustained DPS"
                 value={directSustained.toFixed(0)}
                 highlighted
+                changed={flash.has("directSustainedDps") || flash.has("sustainedDps")}
                 tooltip="Direct burst × (mag time / mag+reload cycle). Melee uses burst (no reload)."
               />
               {radialBurst > 0 && (
@@ -408,23 +446,27 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                     label="Radial Burst DPS"
                     value={radialBurst.toFixed(0)}
                     color="text-orange-300"
+                    changed={flash.has("radialBurstDps")}
                     tooltip="Innate explosion / AoE DPS (not slam radials)."
                   />
                   <StatRow
                     label="Radial Sustained DPS"
                     value={radialSustained.toFixed(0)}
                     color="text-orange-300"
+                    changed={flash.has("radialSustainedDps")}
                     tooltip="Radial DPS adjusted for magazine and reload cycle."
                   />
                   <div className="border-t border-border/50 my-1" />
                   <StatRow
                     label="Total Burst DPS"
                     value={stats.burstDps.toFixed(0)}
+                    changed={flash.has("burstDps")}
                     tooltip="Direct + radial burst DPS combined."
                   />
                   <StatRow
                     label="Total Sustained DPS"
                     value={stats.sustainedDps.toFixed(0)}
+                    changed={flash.has("sustainedDps")}
                     tooltip="Direct + radial sustained DPS combined."
                   />
                 </>
@@ -451,9 +493,10 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           return (
             <>
               <div className="border-t border-border/50 my-1" />
-              <StatRow label="Procs / Sec" value={procsPerSec.toFixed(1)} color="text-teal-400" />
+              <StatRow label="Procs / Sec" value={procsPerSec.toFixed(1)} color="text-teal-400" changed={flash.has("procsPerSec")} />
               {statusDps > 0 && (
                 <StatRow label="Status DPS" value={statusDps.toFixed(0)} color="text-teal-400"
+                  changed={flash.has("statusDps")}
                   tooltip="Estimated DPS from DoT status effects (Slash, Heat, Toxin, Gas)" />
               )}
             </>
@@ -571,7 +614,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
       )}
 
       {/* TTK */}
-      <TTKSection stats={stats} />
+      <TTKSection stats={stats} flash={ttkFlash} />
     </div>
   );
 }
