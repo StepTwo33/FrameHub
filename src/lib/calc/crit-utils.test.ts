@@ -7,21 +7,21 @@ import {
 } from "@/lib/calc/crit-utils";
 
 describe("critTiersToShow", () => {
-  it("always includes yellow (tier 1)", () => {
-    expect(critTiersToShow(0)).toEqual([1]);
-    expect(critTiersToShow(0.5)).toEqual([1]);
+  it("always shows yellow/orange/red even below 100% CC", () => {
+    expect(critTiersToShow(0)).toEqual([1, 2, 3]);
+    expect(critTiersToShow(0.5)).toEqual([1, 2, 3]);
   });
 
-  it("adds orange when CC ≥ 100%", () => {
-    expect(critTiersToShow(1)).toEqual([1, 2]);
-    expect(critTiersToShow(1.5)).toEqual([1, 2]);
+  it("keeps yellow/orange/red at 100–199% CC", () => {
+    expect(critTiersToShow(1)).toEqual([1, 2, 3]);
+    expect(critTiersToShow(1.5)).toEqual([1, 2, 3]);
   });
 
-  it("adds red when CC ≥ 200%", () => {
+  it("keeps yellow/orange/red at 200% CC", () => {
     expect(critTiersToShow(2)).toEqual([1, 2, 3]);
   });
 
-  it("shows tiers through floor(cc)+1", () => {
+  it("adds unlimited higher tiers as CC climbs past 300%", () => {
     expect(critTiersToShow(3.2)).toEqual([1, 2, 3, 4]);
     expect(critTiersToShow(4)).toEqual([1, 2, 3, 4, 5]);
   });

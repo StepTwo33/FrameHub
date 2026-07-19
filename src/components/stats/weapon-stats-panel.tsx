@@ -193,7 +193,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         return (
           <CollapsibleSection title="HIT DAMAGE" defaultOpen>
             <p className="text-[9px] text-muted-foreground/70 mb-1 leading-snug">
-              Per pellet / swing — not DPS (no multishot or fire rate).
+              Per pellet / swing — not DPS (no multishot or fire rate). Orange/red+ rows are tier hit values; Avg hit only blends tiers your crit chance can roll.
             </p>
             <StatRow
               label="Non-crit hit"
@@ -201,24 +201,29 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               highlighted
               tooltip="Raw hit damage before crit averaging, multishot, and fire rate."
             />
-            {tiers.map((tier) => (
-              <StatRow
-                key={tier}
-                label={critTierLabel(tier)}
-                value={(hitBase * critTierDamage(tier, cm)).toFixed(1)}
-                color={critTierColorClass(tier)}
-                tooltip={
-                  tier === 1
-                    ? `Non-crit × ${cm.toFixed(2)} crit multiplier`
-                    : `Tier-${tier} crit (crit chance ≥ ${(tier - 1) * 100}%)`
-                }
-              />
-            ))}
+            {tiers.map((tier) => {
+              const reachable = tier === 1 ? cc > 0 : cc >= tier - 1;
+              return (
+                <StatRow
+                  key={tier}
+                  label={critTierLabel(tier)}
+                  value={(hitBase * critTierDamage(tier, cm)).toFixed(1)}
+                  color={critTierColorClass(tier)}
+                  tooltip={
+                    tier === 1
+                      ? `Non-crit × ${cm.toFixed(2)} crit multiplier`
+                      : reachable
+                        ? `Tier-${tier} crit hit (crit chance ≥ ${(tier - 1) * 100}%)`
+                        : `Tier-${tier} crit hit — needs ≥${(tier - 1) * 100}% CC (reference only; not in avg hit yet)`
+                  }
+                />
+              );
+            })}
             <StatRow
               label="Avg hit"
               value={avgHit.toFixed(1)}
               highlighted
-              tooltip="Expected hit damage across crit tiers (includes orange/red+ when CC &gt; 100%)."
+              tooltip="Expected hit damage across crit tiers your current crit chance can roll (includes orange/red+ when CC &gt; 100%)."
             />
             {showOverflow && (
               <p className="text-[9px] text-amber-500/90 mt-1.5 leading-snug">

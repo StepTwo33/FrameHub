@@ -23,14 +23,17 @@ export function avgCritMultiplier(critChance: number, critMultiplier: number): n
   return (1.0 - remainder) * currentTierDmg + remainder * nextTierDmg;
 }
 
-/** Crit tiers to show in HIT DAMAGE UI (1 = yellow …). */
+/**
+ * Crit tiers to show in HIT DAMAGE UI (1 = yellow, 2 = orange, 3 = red, …).
+ * Always show yellow/orange/red so players can see higher-tier hit values even
+ * when current CC can't roll them yet; also include any extra tiers the build
+ * can actually reach (CC ≥ 300% → tier 4, etc.).
+ */
 export function critTiersToShow(critChance: number): number[] {
-  const tiers = [1];
-  if (critChance <= 0) return tiers;
-  const maxTier = Math.max(1, Math.floor(critChance) + 1);
-  for (let t = 2; t <= maxTier; t++) {
-    if (critChance >= t - 1) tiers.push(t);
-  }
+  const reachable = critChance > 0 ? Math.max(1, Math.floor(critChance) + 1) : 1;
+  const maxTier = Math.max(3, reachable);
+  const tiers: number[] = [];
+  for (let t = 1; t <= maxTier; t++) tiers.push(t);
   return tiers;
 }
 
