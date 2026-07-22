@@ -751,9 +751,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     initialDamageReduction: { scale: "strength", cap: 0.5 },
   },
 
-  // wiki: Fire Blast — armor strip × STR at max Immolation heat (cap 100%; heat lerp unmodeled)
+  // wiki: Fire Blast — armor strip × STR at max Immolation heat (cap 100%; heat lerp unmodeled);
+  // cast cost falls with heat to maxHeatEnergyCost 25 × EFF (cast_cost); Helminth has no Immolation heat
   "ember::Fire Blast": {
     armorStrip: { scale: "strength", cap: 1 },
+    maxHeatEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
   "helminth::Fire Blast": {
     armorStrip: { scale: "strength", cap: 1 },
@@ -787,10 +789,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
 
   // wiki: Glory on High — alt explosion × RNG; Judgment chance / +100% move Misc-fixed;
-  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25); alt-fire cast × EFF (cast_cost)
   "jade::Glory On High": {
     altFireExplosion: { scale: "range" },
     energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    altFireEnergy: { scale: "efficiency", formula: "cast_cost" },
   },
 
   // wiki: Thermal Sunder — radii × RNG; Cold/Heat damage use ability.damage / aoeDamage (× STR)

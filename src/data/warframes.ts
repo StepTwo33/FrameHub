@@ -1326,7 +1326,8 @@ export const allWarframes: Warframe[] = [
         "castTime": 0.7,
         "damageType": "Heat",
         "miscStats": {
-          "armorStrip": 1
+          "armorStrip": 1,
+          "maxHeatEnergyCost": 25
         }
       },
       {
@@ -1394,7 +1395,8 @@ export const allWarframes: Warframe[] = [
         "castTime": 0.7,
         "damageType": "Heat",
         "miscStats": {
-          "armorStrip": 1
+          "armorStrip": 1,
+          "maxHeatEnergyCost": 25
         }
       },
       {

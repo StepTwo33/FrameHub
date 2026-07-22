@@ -48,6 +48,7 @@ const LABELS: Record<string, string> = {
   judgmentChance: "Judgment Chance",
   altFireExplosion: "Alt-Fire Explosion",
   altFireEnergy: "Alt-Fire Energy",
+  maxHeatEnergyCost: "Energy Cost (Max Heat)",
   dashDistance: "Dash Distance",
   batteryChargeOnCast: "Battery Charge on Cast",
   batteryCharge: "Battery Charge",
@@ -1178,6 +1179,7 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "energyDrainMoving" ||
       key === "energyRegen" ||
       key === "altFireEnergy" ||
+      key === "maxHeatEnergyCost" ||
       key === "wellsLimit" ||
       key === "charges" ||
       key === "areasPerElement" ||
@@ -1688,6 +1690,7 @@ function scaleVerifiedValue(
       key === "maxStorms" ||
       key === "ticksPerSecond" ||
       key === "altFireEnergy" ||
+      key === "maxHeatEnergyCost" ||
       key === "sentryArmor" ||
       key === "statusTypes" ||
       key === "statusStacks" ||

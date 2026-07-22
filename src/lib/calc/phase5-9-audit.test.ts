@@ -2341,10 +2341,15 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
       cap: 1,
     });
+    expect(getVerifiedMiscScaling("ember", "Fire Blast", "maxHeatEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("helminth", "Fire Blast", "armorStrip")).toEqual({
       scale: "strength",
       cap: 1,
     });
+    expect(getVerifiedMiscScaling("helminth", "Fire Blast", "maxHeatEnergyCost")).toBeNull();
     const ember = allWarframes.find((w) => w.id === "ember")!;
     const fireball = ember.abilities.find((a) => a.name === "Fireball")!;
     expect(fireball.damage).toBe(800);
@@ -2369,6 +2374,7 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     const blast = ember.abilities.find((a) => a.name === "Fire Blast")!;
     expect(blast.damage).toBe(200);
     expect(blast.range).toBe(25);
+    expect(blast.miscStats?.maxHeatEnergyCost).toBe(25);
     const helminth = allHelminthAbilities.find((h) => h.id === "subsume_ember")!;
     expect(helminth.range).toBe(25);
     expect(helminth.miscStats?.armorStrip).toBe(1);

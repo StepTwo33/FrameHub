@@ -551,6 +551,26 @@ describe("scaleAbilityMiscStats", () => {
       scaled: "7",
       scaleAttr: "efficiency",
     });
+    const fireBlast = scaleAbilityMiscStats(
+      { maxHeatEnergyCost: 25 },
+      ctx,
+      { warframeId: "ember", abilityName: "Fire Blast" },
+    );
+    expect(fireBlast.find((l) => l.label === "Energy Cost (Max Heat)")!).toMatchObject({
+      base: "25",
+      scaled: "17.5",
+      scaleAttr: "efficiency",
+    });
+    const glory = scaleAbilityMiscStats(
+      { altFireEnergy: 25 },
+      ctx,
+      { warframeId: "jade", abilityName: "Glory On High" },
+    );
+    expect(glory.find((l) => l.label === "Alt-Fire Energy")!).toMatchObject({
+      base: "25",
+      scaled: "17.5",
+      scaleAttr: "efficiency",
+    });
     const desecrate = scaleAbilityMiscStats(
       { energyPerCorpse: 10 },
       ctx,
