@@ -522,44 +522,45 @@ export function AbilityStatsBlock({
     );
   }
   if (ability.health != null && ability.health > 0) {
-    const isSnowGlobe = display.abilityName === "Snow Globe";
-    // Snow Globe: base HP is a formula input; outer STR applies on the armor-scaled pool.
+    // Snow Globe / Tectonics: base HP is a formula input; outer STR on armor-scaled pool.
+    const isArmorPoolHealth =
+      display.abilityName === "Snow Globe" || display.abilityName === "Tectonics";
     rows.push(
       <AbilityStatRow
         key="health"
         compact={compact}
-        label={isSnowGlobe ? "Base Health" : "Health"}
+        label={isArmorPoolHealth ? "Base Health" : "Health"}
         baseValue={ability.health.toFixed(0)}
         modifiedValue={
-          isSnowGlobe ? ability.health.toFixed(0) : (ability.health * str).toFixed(0)
+          isArmorPoolHealth ? ability.health.toFixed(0) : (ability.health * str).toFixed(0)
         }
-        isModified={!isSnowGlobe && str !== 1}
+        isModified={!isArmorPoolHealth && str !== 1}
         isPositive={str > 1}
-        scaleHint={isSnowGlobe ? undefined : "strength"}
+        scaleHint={isArmorPoolHealth ? undefined : "strength"}
       />,
     );
-    const globeMult = Number(ability.miscStats?.armorMultiplier);
+    const poolMult = Number(ability.miscStats?.armorMultiplier);
     if (
-      isSnowGlobe &&
+      isArmorPoolHealth &&
       stats != null &&
-      Number.isFinite(globeMult) &&
-      globeMult > 0
+      Number.isFinite(poolMult) &&
+      poolMult > 0
     ) {
       const unscaled = computeArmorScaledPool(
         ability.health,
-        globeMult,
+        poolMult,
         stats.totalArmor,
         1,
       );
       const scaled = computeArmorScaledPool(
         ability.health,
-        globeMult,
+        poolMult,
         stats.totalArmor,
         str,
       );
       rows.push(
         <AbilityStatRow
-          key="snowGlobeHealth"
+          key={`${display.abilityName}-initialHealth`}
           compact={compact}
           label="Initial Health"
           baseValue={unscaled.toFixed(0)}
@@ -707,18 +708,24 @@ export function AbilityStatsBlock({
       />,
     );
   }
-  // wiki Warding Halo: (haloHealth + armorMult × totalArmor) × STR before invuln absorb
-  if (display.abilityName === "Warding Halo" && stats != null && ability.miscStats) {
-    const haloBase = Number(ability.miscStats.haloHealth);
-    const haloMult = Number(ability.miscStats.armorMultiplier);
-    if (Number.isFinite(haloBase) && haloBase > 0 && Number.isFinite(haloMult) && haloMult > 0) {
-      const unscaled = computeArmorScaledPool(haloBase, haloMult, stats.totalArmor, 1);
-      const scaled = computeArmorScaledPool(haloBase, haloMult, stats.totalArmor, str);
+  // wiki armor-scaled pools stored in misc: (base + armorMult × totalArmor) × STR
+  const miscArmorPool: Record<string, { baseKey: string; label: string }> = {
+    "Warding Halo": { baseKey: "haloHealth", label: "Initial Health" },
+    "Shield Maiden": { baseKey: "shieldHealth", label: "Initial Health" },
+    "Mass Vitrify": { baseKey: "segmentHealth", label: "Initial Segment Health" },
+  };
+  const miscPool = miscArmorPool[display.abilityName];
+  if (miscPool && stats != null && ability.miscStats) {
+    const poolBase = Number(ability.miscStats[miscPool.baseKey]);
+    const poolMult = Number(ability.miscStats.armorMultiplier);
+    if (Number.isFinite(poolBase) && poolBase > 0 && Number.isFinite(poolMult) && poolMult > 0) {
+      const unscaled = computeArmorScaledPool(poolBase, poolMult, stats.totalArmor, 1);
+      const scaled = computeArmorScaledPool(poolBase, poolMult, stats.totalArmor, str);
       rows.push(
         <AbilityStatRow
-          key="wardingHaloHealth"
+          key={`${display.abilityName}-armorPool`}
           compact={compact}
-          label="Initial Health"
+          label={miscPool.label}
           baseValue={unscaled.toFixed(0)}
           modifiedValue={scaled.toFixed(0)}
           isModified={str !== 1}

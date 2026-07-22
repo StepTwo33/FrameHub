@@ -510,12 +510,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     lifesteal: { scale: "strength" },
     explosionHealthPercent: { scale: "strength" },
   },
-  // wiki: Shield Maiden — shield HP + reflect + armor mult × STR;
-  // Maiden's Kiss bash energy × EFF (cast_cost)
+  // wiki: Shield Maiden — reflect × STR; shieldHealth / armorMult Misc-fixed;
+  // Initial Health = (base + mult × totalArmor) × STR; Maiden's Kiss × EFF
   "bonewidow::Shield Maiden": {
-    shieldHealth: { scale: "strength" },
     reflectMultiplier: { scale: "strength" },
-    armorMultiplier: { scale: "strength" },
     kissEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
   // wiki: Firing Line — Lifted vulnerability Misc-fixed 1.5×; range via ability
@@ -1244,11 +1242,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     charmRadius: { scale: "range" },
   },
 
-  // wiki: Mass Vitrify — explosion via damage; vuln / segment HP × STR; armor mult Misc-fixed;
+  // wiki: Mass Vitrify — explosion via damage; vuln × STR; segmentHealth / armorMult Misc-fixed;
+  // Initial Segment Health = (base + mult × totalArmor) × STR;
   // expansion × DUR; explosion range × RNG; channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "gara::Mass Vitrify": {
     damageVulnerability: { scale: "strength" },
-    segmentHealth: { scale: "strength" },
     expansionTime: { scale: "duration" },
     explosionRange: { scale: "range" },
     energyDrain: { scale: "efficiency", formula: "channeled_drain" },

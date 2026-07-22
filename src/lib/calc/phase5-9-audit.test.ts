@@ -1131,9 +1131,8 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "damageVulnerability")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "segmentHealth")).toEqual({
-      scale: "strength",
-    });
+    // segmentHealth / armorMult Misc-fixed; Initial Segment Health via computeArmorScaledPool
+    expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "segmentHealth")).toBeNull();
     expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "armorMultiplier")).toBeNull();
     expect(getVerifiedMiscScaling("gara_prime", "Mass Vitrify", "explosionRange")).toEqual({
       scale: "range",
@@ -2044,7 +2043,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("bonewidow", "Meathook", "healthDrainPerSecond")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "shieldHealth")).toEqual({
+    // shieldHealth / armorMult Misc-fixed; Initial Health via computeArmorScaledPool
+    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "shieldHealth")).toBeNull();
+    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "armorMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "reflectMultiplier")).toEqual({
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "kissEnergyCost")).toEqual({

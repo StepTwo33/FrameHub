@@ -13,6 +13,14 @@ describe("computeArmorScaledPool", () => {
   it("matches wiki Snow Globe health before absorb", () => {
     expect(computeArmorScaledPool(3500, 5, 600, 1.3)).toBe(8450);
   });
+  // wiki Mass Vitrify segment: (1600 + 5 × (160 × 2)) × 1.3 = 4160
+  it("matches wiki Mass Vitrify segment health before absorb", () => {
+    expect(computeArmorScaledPool(1600, 5, 320, 1.3)).toBe(4160);
+  });
+  // wiki Shield Maiden: (2000 + (2.5 × 480)) × 1.6 = 7040
+  it("matches wiki Shield Maiden health before absorb", () => {
+    expect(computeArmorScaledPool(2000, 2.5, 960, 1.6)).toBe(7040);
+  });
 });
 
 describe("scaleAbilityMiscStats", () => {

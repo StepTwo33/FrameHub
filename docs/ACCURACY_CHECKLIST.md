@@ -170,11 +170,11 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Loki kit | 2026-07-21 | Decoy 25s/15% absorb; Invis 12s (was 30); Switch 75m/+50% speed; Disarm 500 Impact/20m |
 | B5 Mag kit | 2026-07-21 | Pull 300/25m; Magnetize 300 Blast/2×/15s; Polarize 400/8m; Crush 1500/18m |
 | B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m/5× Misc + Initial HP=(base+mult×armor)×STR; Avalanche 1500/15m/60% strip |
-| B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln |
+| B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln/1600 seg/5× Misc + Initial seg pool |
 | B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day buffs; Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
 | B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5× +growth÷DUR +drain/growth×EFF/DUR; Prowl +40% HS/stealTime÷DUR +melee/dmg energy×EFF; Artemis 240×7 |
 | B5 Ash kit | 2026-07-21 | Shuriken 750×5; Smoke 12s/10m; Teleport +200% finisher; Blade Storm 1500 True/12e/mark×EFF |
-| B5 Atlas kit | 2026-07-21 | Landslide 350/12m; Tectonics 1500 HP/500 Puncture; Petrify 20s/14m/+50% vuln; Rumblers 2000/1200 HP |
+| B5 Atlas kit | 2026-07-21 | Landslide 350/12m; Tectonics 1500 HP/5× Misc + Initial=(base+mult×armor)×STR; Petrify 20s/14m/+50% vuln; Rumblers 2000/1200 HP |
 | B5 Banshee kit | 2026-07-21 | Boom 50 Impact/15m; Sonar 5×/35m/30s; Silence 30s/20m; Quake 200 Blast/s/20m |
 | B5 Revenant kit | 2026-07-21 | Enthrall 1000/30s; Mesmer 6 charges; Reave 50/8%/6m (was 75); Danse 1250/s |
 | B5 Oberon kit | 2026-07-21 | Smite 500/35%/50m; Ground 100 Rad/15m; Renewal 25/50% armor/40 HPS; Reckoning 7500/60% strip |
@@ -215,7 +215,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Sirius & Orion kit | 2026-07-21 | Coronal 1500 Heat/5m; Gravitic 2000 Slash/50% strip/8m; Jade Stars 500/35s/7 motes; Astral Shell 35s/200 Blast decoy; Sanctuary 30s/25–55 HPS/45% DR (cap 75%); Event Horizon 750/8m→12m; Clash 10k Blast/26m; Helminth→Jade Stars 500/35s |
 | B5 Nokko kit | 2026-07-21 | Stinkbrain 250 Viral/5m/25s/4 cap; Brightbonnet 15 energy×STR/+30% STR (cap 150%)/15m/25s; Reroot 50e/10s/10 HPS/80 pickup; Sporespring 75e/2500 Toxin/3m/10 bounces×1.5; Helminth Brightbonnet 10e/+20% STR (cap 100%) |
 | B5 Voidrig kit | 2026-07-21 | Necraweb 2000 Blast/20m mire/25m explode/50% slow; Storm Shroud 50e/1200 HP/2× absorb/100% reflect; Gravemines 75e/200 Heat×24/8m; Guard Mode 50e/500/5eps (Arquebex) |
-| B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP/2× reflect/2.5× armor/Kiss 15e×EFF; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
+| B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP Misc/2× reflect×STR/2.5× armor Misc + Initial pool/Kiss 15e×EFF; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
 | B5 Helminth unique | 2026-07-21 | Infested Mobility +60% sprint/+30% parkour/8s; Energized Munitions 75% ammo/5s; Empower +50% next STR; Marked for Death 75% spread; Rebuild Shields 12s CD |
 
 ## New / extended test files

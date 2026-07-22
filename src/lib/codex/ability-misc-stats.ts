@@ -1286,6 +1286,8 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "pickupHeal" ||
       key === "haloHealth" ||
       key === "shroudHealth" ||
+      key === "shieldHealth" ||
+      key === "segmentHealth" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||
@@ -1745,6 +1747,8 @@ function scaleVerifiedValue(
       key === "pickupHeal" ||
       key === "haloHealth" ||
       key === "shroudHealth" ||
+      key === "shieldHealth" ||
+      key === "segmentHealth" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||
