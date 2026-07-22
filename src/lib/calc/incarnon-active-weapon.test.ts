@@ -553,9 +553,12 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 4: 1 }, "despair")?.criticalChance).toBe(0.12);
   });
 
-  it("Vasto Lone Gun uses unconditional +66 only", () => {
+  it("Vasto Lone Gun papers no-primary +40 flat / +14 mag", () => {
     const data = incarnonDataMap.get("vasto")!;
-    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "vasto")?.flatBaseDamage).toBe(66);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "vasto")?.flatBaseDamage).toBe(106);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "vasto")?.flatMagazine).toBe(14);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "vasto_prime")?.flatBaseDamage).toBe(64);
+    expect(mergeIncarnonStatChanges(data, { 2: 0 }, "vasto_prime")?.flatMagazine).toBe(14);
   });
 
   it("Vasto Prime Deathtrap papers +0.8× CM (not Vasto +2.2×)", () => {
@@ -1027,6 +1030,29 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
   });
 
+  it("half-HP Feigned/Hitman/Swift ignore own flat; Impaler is Serration-additive", () => {
+    const sicarusData = incarnonDataMap.get("sicarus")!;
+    const feigned = mergeIncarnonStatChanges(sicarusData, { 2: 0 }, "sicarus");
+    expect(feigned?.flatBaseDamage).toBe(50);
+    expect(feigned?.halfHealthAdditiveDamage).toBeCloseTo(0.4, 5);
+    expect(feigned?.damage).toBeUndefined();
+
+    const sicarus = allWeapons.find((w) => w.id === "sicarus")!;
+    const withHalf = calculateWeaponBuild(sicarus, [], modsMap(), feigned);
+    const flatOnly = calculateWeaponBuild(sicarus, [], modsMap(), { flatBaseDamage: 50 });
+    // Wiki: +40% on arsenal base only → add arsenal×0.4 (not (arsenal+flat)×0.4)
+    expect(withHalf.totalDamage).toBeCloseTo(flatOnly.totalDamage + sicarus.damage * 0.4, 5);
+
+    const dreadData = incarnonDataMap.get("dread")!;
+    expect(mergeIncarnonStatChanges(dreadData, { 2: 0 }, "dread")?.halfHealthAdditiveDamage).toBe(1);
+    expect(mergeIncarnonStatChanges(dreadData, { 2: 0 }, "dread")?.damage).toBeUndefined();
+
+    const onos = allWeapons.find((w) => w.id === "onos")!;
+    const bare = calculateWeaponBuild(onos, [], modsMap());
+    const impaler = calculateWeaponBuild(onos, [], modsMap(), { additiveBaseDamage: 2 });
+    expect(impaler.totalDamage).toBeCloseTo(bare.totalDamage * 3, 5);
+  });
+
   it("Forceful Finality / Miter Plentiful / Reaver Rapture paper correctly", () => {
     const burstonData = incarnonDataMap.get("burston")!;
     const forceful = mergeIncarnonStatChanges(burstonData, { 2: 0 }, "burston");
@@ -1248,7 +1274,7 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(kunai, { 4: 0 }, "mk1_kunai")?.criticalMultiplier).toBe(1);
     expect(mergeIncarnonStatChanges(kunai, { 2: 0 }, "kunai")?.flatBaseDamage).toBe(70);
     expect(mergeIncarnonStatChanges(kunai, { 2: 0 }, "mk1_kunai")?.flatBaseDamage).toBe(80);
-    expect(mergeIncarnonStatChanges(kunai, { 2: 0 }, "kunai")?.damage).toBe(2);
+    expect(mergeIncarnonStatChanges(kunai, { 2: 0 }, "kunai")?.halfHealthAdditiveDamage).toBe(2);
     expect(mergeIncarnonStatChanges(kunai, { 2: 1 }, "kunai")?.multishot).toBe(1);
 
     const lato = incarnonDataMap.get("lato")!;
@@ -1268,7 +1294,7 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(innodem, { 5: 0 }, "innodem")?.heavyAttackEfficiency).toBe(0.4);
 
     const onos = incarnonDataMap.get("onos")!;
-    expect(mergeIncarnonStatChanges(onos, { 5: 1 }, "onos")?.damage).toBe(2);
+    expect(mergeIncarnonStatChanges(onos, { 5: 1 }, "onos")?.additiveBaseDamage).toBe(2);
 
     const paris = incarnonDataMap.get("paris")!;
     expect(mergeIncarnonStatChanges(paris, { 2: 1 }, "paris")?.flatBaseDamage).toBe(92);
@@ -1364,8 +1390,14 @@ describe("evolution numeric fixes", () => {
 
   it("Onos Cascade / Thalys Reach-Drift / Skyborne / Brigand / Reaching Lunge encode", () => {
     const onos = incarnonDataMap.get("onos")!;
-    expect(mergeIncarnonStatChanges(onos, { 5: 2 }, "onos")?.criticalChance).toBe(2.5);
-    expect(mergeIncarnonStatChanges(onos, { 5: 2 }, "onos")?.criticalMultiplier).toBe(2.5);
+    // Cascade is charge-blast only — absent on held / default merge
+    expect(mergeIncarnonStatChanges(onos, { 5: 2 }, "onos")?.criticalChance).toBeUndefined();
+    expect(
+      mergeIncarnonStatChanges(onos, { 5: 2 }, "onos", { chargeMode: true })?.criticalChance,
+    ).toBe(2.5);
+    expect(
+      mergeIncarnonStatChanges(onos, { 5: 2 }, "onos", { chargeMode: true })?.criticalMultiplier,
+    ).toBe(2.5);
 
     const thalys = incarnonDataMap.get("thalys")!;
     expect(mergeIncarnonStatChanges(thalys, { 2: 0 }, "thalys")?.range).toBe(2);

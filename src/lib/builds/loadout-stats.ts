@@ -146,10 +146,12 @@ export function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
 function getIncarnonStatChanges(
   weaponId: string,
   evolutions?: Record<number, number>,
+  options?: { chargeMode?: boolean },
 ): Record<string, number> | undefined {
   const data = incarnonDataMap.get(weaponId);
   return mergeIncarnonStatChanges(data, evolutions ?? {}, weaponId, {
     formActive: isIncarnonFormActive(evolutions, data),
+    chargeMode: options?.chargeMode === true,
   });
 }
 
@@ -197,7 +199,9 @@ function calcWeaponSlotStats(
         : undefined;
   const externalBuffs = resolveWeaponExternalBuffs(calcWeapon, buffContext, simParams);
   const calcOptions = mergeWeaponCalcOptions(progenitorOpts, externalBuffs);
-  const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions);
+  const incarnonChanges = getIncarnonStatChanges(build.weaponId, build.incarnonEvolutions, {
+    chargeMode: simParams.onosIncarnonMode === "charge",
+  });
   const arcaneMods = resolveSavedArcaneSlots(build.arcaneIds, 2).filter((m): m is Mod => m != null);
   const modSlots = build.mods || [];
   const rivenStatChanges = rivenStatChangesFromModSlots(modSlots);

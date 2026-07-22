@@ -954,8 +954,9 @@ export function calculateWeaponBuild(
         case 'critMultFlat':
         case 'critMultMultiply':
         case 'criticalMultiplierSet':
-        // Early Serration-additive / last-shot MS / capacity-MS flat (handled outside switch).
+        // Early Serration-additive / last-shot MS / capacity-MS flat / half-HP (handled outside switch).
         case 'additiveBaseDamage':
+        case 'halfHealthAdditiveDamage':
         case 'lastShotBaseMultishot':
         case 'flatMsPelletDamage':
           break;
@@ -1204,6 +1205,14 @@ export function calculateWeaponBuild(
       const frac = (stats.multishot - 1) / stats.multishot;
       const scale = stats.totalDamage / damageMultTotal / baseWeapon.damage;
       stats.totalDamage += flatMsPellet * frac * scale;
+    }
+
+    // Feigned Retreat / Hitman's Opportunity / Swift Conclusion: half-HP % is Hornet/Serration-
+    // additive but ignores this perk's own flatBaseDamage (wiki).
+    // add = total × half / damageMultTotal ≡ arsenal × half × (elem/phys composition).
+    const halfHp = incarnonStatChanges.halfHealthAdditiveDamage ?? 0;
+    if (halfHp > 0 && damageMultTotal > 0 && stats.totalDamage > 0) {
+      stats.totalDamage += (stats.totalDamage * halfHp) / damageMultTotal;
     }
   }
 

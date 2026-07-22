@@ -23,6 +23,11 @@ export interface IncarnonEvolution {
   formStatChanges?: Record<string, number>;
   /** Per-variant overrides for formStatChanges. */
   variantFormStatChanges?: Record<string, Record<string, number>>;
+  /**
+   * Extra deltas for charge-mode Incarnon attacks only (e.g. Onos Devastation Cascade
+   * on the fully charged blast). Merged when merge options.chargeMode is true.
+   */
+  chargeStatChanges?: Record<string, number>;
 }
 
 export interface IncarnonForm {

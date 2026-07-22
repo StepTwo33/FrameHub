@@ -7,6 +7,8 @@ import type { IncarnonWeaponData } from "@/data/incarnon";
 export type MergeIncarnonOptions = {
   /** When true, also merge formStatChanges / variantFormStatChanges. */
   formActive?: boolean;
+  /** When true, also merge chargeStatChanges (Onos charged blast, etc.). */
+  chargeMode?: boolean;
 };
 
 /** Sum selected Incarnon evolution stat changes (variant-aware). */
@@ -19,6 +21,7 @@ export function mergeIncarnonStatChanges(
   if (!incarnonData || Object.keys(selectedEvolutions).length === 0) return undefined;
   const merged: Record<string, number> = {};
   const formActive = options?.formActive === true;
+  const chargeMode = options?.chargeMode === true;
   for (const [tierStr, slot] of Object.entries(selectedEvolutions)) {
     const tier = Number(tierStr);
     const evo = incarnonData.evolutions.find((e) => e.tier === tier && e.slot === slot);
@@ -34,6 +37,11 @@ export function mergeIncarnonStatChanges(
         for (const [stat, val] of Object.entries(formChanges)) {
           merged[stat] = (merged[stat] ?? 0) + val;
         }
+      }
+    }
+    if (chargeMode && evo.chargeStatChanges) {
+      for (const [stat, val] of Object.entries(evo.chargeStatChanges)) {
+        merged[stat] = (merged[stat] ?? 0) + val;
       }
     }
   }

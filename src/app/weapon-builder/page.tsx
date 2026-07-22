@@ -381,8 +381,9 @@ export default function WeaponBuilderPage() {
     () =>
       mergeIncarnonStatChanges(incarnonData, selectedEvolutions, selectedWeapon?.id, {
         formActive: isIncarnonFormActive(selectedEvolutions, incarnonData),
+        chargeMode: simParams.onosIncarnonMode === "charge",
       }),
-    [incarnonData, selectedEvolutions, selectedWeapon?.id],
+    [incarnonData, selectedEvolutions, selectedWeapon?.id, simParams.onosIncarnonMode],
   );
 
   const rivenStatChanges = useMemo(

@@ -214,7 +214,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "dread_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Sacrifice silence for increased projectile size and Heat Damage.", statChanges: {} },
     // Assumes target below half health for paper DPS
-    { tier: 2, slot: 0, name: "Hitman's Opportunity", description: "Increase Base Damage by +70. +100% Damage to enemies below half Health", statChanges: {"flatBaseDamage":70,"damage":1} },
+    // half-HP % ignores this perk's flat (and charged 2× / GA); Hornet/Serration-additive
+    { tier: 2, slot: 0, name: "Hitman's Opportunity", description: "Increase Base Damage by +70. +100% Damage to enemies below half Health", statChanges: {"flatBaseDamage":70,"halfHealthAdditiveDamage":1} },
     // Max stacks assumed for paper DPS (+10 × 5 flat, +10% FR × 5); set equipped assumed
     { tier: 2, slot: 1, name: "Stalker's Resentment", description: "Increase Base Damage by +50. With Hate and Despair Equipped: Hits increase Base Damage by +10 and Fire Rate by +10%, stacks up to 5x. Resets on missed shot.", statChanges: {"flatBaseDamage":100,"fireRate":0.5} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed", statChanges: {"projectileSpeed":0.3} },
@@ -354,7 +355,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "kunai_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Projectiles seek Headshots and have increased Multishot.", statChanges: {} },
     // Assumes target below half health for paper DPS
-    { tier: 2, slot: 0, name: "Swift Conclusion", description: "Increase Damage by +70. Increase Damage by +200% if enemy has less than half health.", statChanges: {"flatBaseDamage":70,"damage":2}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"damage":2},"mk1_kunai":{"flatBaseDamage":80,"damage":2}} },
+    // Base-form paper: +200% Hornet-additive (wiki: multiplicative in Incarnon form — not papered)
+    { tier: 2, slot: 0, name: "Swift Conclusion", description: "Increase Damage by +70. Increase Damage by +200% if enemy has less than half health.", statChanges: {"flatBaseDamage":70,"halfHealthAdditiveDamage":2}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"halfHealthAdditiveDamage":2},"mk1_kunai":{"flatBaseDamage":80,"halfHealthAdditiveDamage":2}} },
     // Assumes channeled ability active for paper DPS
     { tier: 2, slot: 1, name: "Sage's Resolve", description: "Increase Base Damage by +70 With Channeled Ability active: +100% Multishot.", statChanges: {"flatBaseDamage":70,"multishot":1}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"multishot":1},"mk1_kunai":{"flatBaseDamage":80,"multishot":1}} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
@@ -507,10 +509,10 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     // Max stacks assumed for paper DPS (+30% × 4)
     { tier: 5, slot: 0, name: "Sequential Skullbuster", description: "On Consecutive Weakpoint Hits: +30% Headshot Damage. Stacks up to 4x", statChanges: {"headshotDamageBonus":1.2} },
-    // Assumes punch-through buff up for paper DPS
-    { tier: 5, slot: 1, name: "Impaler's Ferocity", description: "On Punch Through Hit: +200% Damage for 10s.", statChanges: {"damage":2} },
-    // Max stacks assumed for paper DPS (+5% × 50 CC/CM on charged blast; overstates held beam)
-    { tier: 5, slot: 2, name: "Devastation Cascade", description: "Hitting enemies in Incarnon Form increases the Critical Chance and Critical Damage of the fully charged blast by +5%. Stacks up to 50 times.", statChanges: {"criticalChance":2.5,"criticalMultiplier":2.5} },
+    // Assumes punch-through buff up for paper DPS; Hornet-additive (not late ×damage)
+    { tier: 5, slot: 1, name: "Impaler's Ferocity", description: "On Punch Through Hit: +200% Damage for 10s.", statChanges: {"additiveBaseDamage":2} },
+    // Max stacks on charged blast only (+5% × 50); merge via chargeStatChanges / chargeMode
+    { tier: 5, slot: 2, name: "Devastation Cascade", description: "Hitting enemies in Incarnon Form increases the Critical Chance and Critical Damage of the fully charged blast by +5%. Stacks up to 50 times.", statChanges: {}, chargeStatChanges: {"criticalChance":2.5,"criticalMultiplier":2.5} },
   ],
   "paris_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Sacrifice silence for increased projectile size and Heat Damage.", statChanges: {} },
@@ -599,7 +601,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "sicarus_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Bullets ricochet.", statChanges: {} },
     // Assumes target below half health for paper DPS
-    { tier: 2, slot: 0, name: "Feigned Retreat", description: "Increase Base Damage by +50. +40% Damage to enemies below half Health.", statChanges: {"flatBaseDamage":50,"damage":0.4}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"damage":0.4},"sicarus_prime":{"flatBaseDamage":40,"damage":0.4}} },
+    // half-HP % Hornet-additive; ignores this perk's flat (wiki)
+    { tier: 2, slot: 0, name: "Feigned Retreat", description: "Increase Base Damage by +50. +40% Damage to enemies below half Health.", statChanges: {"flatBaseDamage":50,"halfHealthAdditiveDamage":0.4}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"halfHealthAdditiveDamage":0.4},"sicarus_prime":{"flatBaseDamage":40,"halfHealthAdditiveDamage":0.4}} },
     // Assumes weakpoint hits for paper DPS (+150% CC additive w/ Gambit; body ×0 unmodeled)
     { tier: 2, slot: 1, name: "King's Gambit", description: "Increase Base Damage by +50 (Sicarus) / +50 (Prime) x0 Critical Chance on Bodyshots, +150% Critical Chance on Weakpoint Hits.", statChanges: {"flatBaseDamage":50,"critChanceBonus":1.5}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"critChanceBonus":1.5},"sicarus_prime":{"flatBaseDamage":40,"critChanceBonus":1.5}} },
     { tier: 3, slot: 0, name: "Void's Guidance", description: "+40% Accuracy.", statChanges: {"accuracy":0.4} },
@@ -709,7 +712,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "vasto_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Rapidly empty a full magazine.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Lone Gun", description: "Increase Base Damage by +66. With No Primary Equipped: Increase Base Damage by +40 Increase Base Magazine Capacity by +14.", statChanges: {"flatBaseDamage":66}, variantStatChanges: {"vasto":{"flatBaseDamage":66},"vasto_prime":{"flatBaseDamage":24}} },
+    // No-primary paper: X+40 flat +14 mag (mag ignored in form per wiki; paper on base)
+    { tier: 2, slot: 0, name: "Lone Gun", description: "Increase Base Damage by +66. With No Primary Equipped: Increase Base Damage by +40 Increase Base Magazine Capacity by +14.", statChanges: {"flatBaseDamage":106,"flatMagazine":14}, variantStatChanges: {"vasto":{"flatBaseDamage":106,"flatMagazine":14},"vasto_prime":{"flatBaseDamage":64,"flatMagazine":14}} },
     // Assumes equip buff active for paper DPS
     // Wiki: Prime CM buff is +0.8x (not the Vasto +2.2x)
     { tier: 2, slot: 1, name: "Deathtrap Trigger", description: "Increase Base Damage by +66. On Equip From Primary: Increase Base Critical Chance by +30% for 3s. Increase Base Critical Damage Multiplier by +2.2x for 3s.", statChanges: {"flatBaseDamage":66,"criticalChance":0.3,"criticalMultiplier":2.2}, variantStatChanges: {"vasto":{"flatBaseDamage":66,"criticalChance":0.3,"criticalMultiplier":2.2},"vasto_prime":{"flatBaseDamage":24,"criticalChance":0.3,"criticalMultiplier":0.8}} },
