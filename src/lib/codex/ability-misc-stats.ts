@@ -1960,17 +1960,64 @@ export function scaledAbilityEnergyCost(baseCost: number, efficiency: number): n
   return Math.max(baseCost * 0.25, baseCost * (2 - clampedEff));
 }
 
+/** How cast-invuln absorbed damage enters an armor-scaled pool. */
+export type ArmorPoolAbsorbMode = "additive" | "inside_strength";
+
+export type ArmorScaledPoolOptions = {
+  /** Damage taken during cast invulnerability (0 = pre-absorb initial pool). */
+  absorbedDamage?: number;
+  /**
+   * additive — Iron Skin / Snow Globe / Tectonics / Shield Maiden:
+   *   (base + armorMult × armor) × STR + absorbed
+   * inside_strength — Warding Halo:
+   *   (base + armorMult × armor + absorbed × absorbMult) × STR
+   */
+  absorbMode?: ArmorPoolAbsorbMode;
+  /** Halo-style absorb multiplier (Misc-fixed 2.5). Default 1. */
+  absorptionMultiplier?: number;
+};
+
 /**
- * Wiki Iron Skin / Snow Globe (pre-absorb) pool:
- * (base + armorMultiplier × totalArmor) × Ability Strength.
+ * Wiki Iron Skin / Snow Globe / Halo-style pools.
+ * Pre-absorb (default): (base + armorMultiplier × totalArmor) × Ability Strength.
  */
 export function computeArmorScaledPool(
   base: number,
   armorMultiplier: number,
   totalArmor: number,
   strength: number,
+  opts?: ArmorScaledPoolOptions,
 ): number {
-  return (base + armorMultiplier * Math.max(0, totalArmor)) * strength;
+  const armor = Math.max(0, totalArmor);
+  const absorbed = Math.max(0, opts?.absorbedDamage ?? 0);
+  const absorbMult = opts?.absorptionMultiplier ?? 1;
+  if (opts?.absorbMode === "inside_strength") {
+    return (base + armorMultiplier * armor + absorbed * absorbMult) * strength;
+  }
+  return (base + armorMultiplier * armor) * strength + absorbed;
+}
+
+/** Abilities whose cast invuln adds absorbed damage into the armor-scaled pool. */
+export function getArmorPoolInvulnAbsorb(
+  abilityName: string,
+  miscStats?: Record<string, unknown> | null,
+): { mode: ArmorPoolAbsorbMode; absorptionMultiplier: number } | null {
+  switch (abilityName) {
+    case "Iron Skin":
+    case "Snow Globe":
+    case "Tectonics":
+    case "Shield Maiden":
+      return { mode: "additive", absorptionMultiplier: 1 };
+    case "Warding Halo": {
+      const m = Number(miscStats?.absorptionMultiplier);
+      return {
+        mode: "inside_strength",
+        absorptionMultiplier: Number.isFinite(m) && m > 0 ? m : 2.5,
+      };
+    }
+    default:
+      return null;
+  }
 }
 
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */

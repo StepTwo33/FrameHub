@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { AbilityScaleAttribute } from "@/lib/codex/ability-scaling-registry";
 import type { Ability, WarframeCalculatedStats } from "@/lib/types";
@@ -9,8 +10,10 @@ import {
   scaledAbilityDamageBuff,
   abilityPercentFraction,
   computeArmorScaledPool,
+  getArmorPoolInvulnAbsorb,
   type AbilityDisplayContext,
 } from "@/lib/codex/ability-misc-stats";
+import { SimSlider } from "@/components/stats/stat-primitives";
 import { Zap, Sparkles } from "lucide-react";
 
 export type AbilityScaleHint = AbilityScaleAttribute;
@@ -313,6 +316,16 @@ export function AbilityStatsBlock({
   const dur = stats?.abilityDuration ?? 1;
   const rng = stats?.abilityRange ?? 1;
   const eff = stats?.abilityEfficiency ?? 1;
+  const poolAbsorb = getArmorPoolInvulnAbsorb(display.abilityName, ability.miscStats);
+  const [invulnAbsorbK, setInvulnAbsorbK] = useState(0);
+  const absorbedDamage = poolAbsorb ? invulnAbsorbK * 1000 : 0;
+  const poolAbsorbOpts = poolAbsorb
+    ? {
+        absorbedDamage,
+        absorbMode: poolAbsorb.mode,
+        absorptionMultiplier: poolAbsorb.absorptionMultiplier,
+      }
+    : undefined;
 
   const scaledMisc = ability.miscStats
     ? scaleAbilityMiscStats(
@@ -551,22 +564,24 @@ export function AbilityStatsBlock({
         poolMult,
         stats.totalArmor,
         1,
+        poolAbsorbOpts,
       );
       const scaled = computeArmorScaledPool(
         ability.health,
         poolMult,
         stats.totalArmor,
         str,
+        poolAbsorbOpts,
       );
       rows.push(
         <AbilityStatRow
           key={`${display.abilityName}-initialHealth`}
           compact={compact}
-          label="Initial Health"
+          label={absorbedDamage > 0 ? "Health (w/ Absorb)" : "Initial Health"}
           baseValue={unscaled.toFixed(0)}
           modifiedValue={scaled.toFixed(0)}
-          isModified={str !== 1}
-          isPositive={str > 1}
+          isModified={str !== 1 || absorbedDamage > 0}
+          isPositive={str > 1 || absorbedDamage > 0}
           scaleHint="strength"
         />,
       );
@@ -601,22 +616,24 @@ export function AbilityStatsBlock({
         skinMult,
         stats.totalArmor,
         1,
+        poolAbsorbOpts,
       );
       const scaled = computeArmorScaledPool(
         ability.armor,
         skinMult,
         stats.totalArmor,
         str,
+        poolAbsorbOpts,
       );
       rows.push(
         <AbilityStatRow
           key="ironSkinOverguard"
           compact={compact}
-          label="Initial Overguard"
+          label={absorbedDamage > 0 ? "Overguard (w/ Absorb)" : "Initial Overguard"}
           baseValue={unscaled.toFixed(0)}
           modifiedValue={scaled.toFixed(0)}
-          isModified={str !== 1}
-          isPositive={str > 1}
+          isModified={str !== 1 || absorbedDamage > 0}
+          isPositive={str > 1 || absorbedDamage > 0}
           scaleHint="strength"
         />,
       );
@@ -719,17 +736,34 @@ export function AbilityStatsBlock({
     const poolBase = Number(ability.miscStats[miscPool.baseKey]);
     const poolMult = Number(ability.miscStats.armorMultiplier);
     if (Number.isFinite(poolBase) && poolBase > 0 && Number.isFinite(poolMult) && poolMult > 0) {
-      const unscaled = computeArmorScaledPool(poolBase, poolMult, stats.totalArmor, 1);
-      const scaled = computeArmorScaledPool(poolBase, poolMult, stats.totalArmor, str);
+      const unscaled = computeArmorScaledPool(
+        poolBase,
+        poolMult,
+        stats.totalArmor,
+        1,
+        poolAbsorbOpts,
+      );
+      const scaled = computeArmorScaledPool(
+        poolBase,
+        poolMult,
+        stats.totalArmor,
+        str,
+        poolAbsorbOpts,
+      );
+      const withAbsorb = absorbedDamage > 0;
       rows.push(
         <AbilityStatRow
           key={`${display.abilityName}-armorPool`}
           compact={compact}
-          label={miscPool.label}
+          label={
+            withAbsorb
+              ? miscPool.label.replace(/^Initial /, "") + " (w/ Absorb)"
+              : miscPool.label
+          }
           baseValue={unscaled.toFixed(0)}
           modifiedValue={scaled.toFixed(0)}
-          isModified={str !== 1}
-          isPositive={str > 1}
+          isModified={str !== 1 || withAbsorb}
+          isPositive={str > 1 || withAbsorb}
           scaleHint="strength"
         />,
       );
@@ -750,6 +784,20 @@ export function AbilityStatsBlock({
         compact && "p-1",
       )}
     >
+      {poolAbsorb && (
+        <SimSlider
+          label="Invuln Absorb (k)"
+          value={invulnAbsorbK}
+          min={0}
+          max={64}
+          onChange={setInvulnAbsorbK}
+          tooltip={
+            poolAbsorb.mode === "inside_strength"
+              ? "Damage taken during cast invulnerability. Wiki: (base + armor×mult + absorb×absorbMult) × STR (Warding Halo absorbMult Misc-fixed)."
+              : "Damage taken during cast invulnerability. Wiki: (base + armor×mult) × STR + absorbed."
+          }
+        />
+      )}
       {rows}
     </div>
   );

@@ -47,7 +47,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur/Hunter **panel %** locked (40%/piece, 25%/piece); Mecha mark/spread summary only; shield-cast / companion timing / Mecha burst still unmodeled in DPS | Panel goldens in `set-bonus-audit.test.ts`; DPS remains C |
-| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion + EFF formulas + Absorb √buff + Nourish energy + channeled drains + Hildryn shield costs |
+| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion + EFF + Absorb √buff + Nourish + drains + Hildryn + armor-pool invuln absorb sim |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud sim-gated DPS (enemies×STR; not in TTK); utility Genesis remain |
@@ -221,6 +221,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Exalted/Inferno cast costs | 2026-07-21 | Artemis/Noctua/Neutralize energyPerShot (+ altFire) × EFF; Inferno energyPerEnemy × EFF; combo/kill windows + kavat lifespan as seconds |
 | Fire Blast max-heat + Glory alt | 2026-07-21 | Ember Fire Blast maxHeatEnergyCost 25 × EFF (heat lerp still unmodeled); Jade Glory altFireEnergy 25 × EFF |
 | Virulence energy refund × EFF | 2026-07-21 | energyRefundPerHit follows cast_cost (¼ of ability cost); low EFF increases refund |
+| Armor-pool invuln absorb | 2026-07-21 | Sim-gated Invuln Absorb (k): Iron Skin/Globe/Tectonics/Maiden +absorb; Halo absorb×2.5 inside STR |
 
 ## New / extended test files
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   computeArmorScaledPool,
+  getArmorPoolInvulnAbsorb,
   scaleAbilityMiscStats,
 } from "@/lib/codex/ability-misc-stats";
 
@@ -8,6 +9,15 @@ describe("computeArmorScaledPool", () => {
   // wiki Iron Skin: (1200 + (2.5 × 240 × 2)) × 1.3 = 3120
   it("matches wiki Iron Skin Overguard before absorb", () => {
     expect(computeArmorScaledPool(1200, 2.5, 480, 1.3)).toBe(3120);
+  });
+  // wiki Iron Skin: initial + absorbed (absorb outside STR)
+  it("adds Iron Skin invuln absorb outside Strength", () => {
+    expect(
+      computeArmorScaledPool(1200, 2.5, 480, 1.3, {
+        absorbedDamage: 5000,
+        absorbMode: "additive",
+      }),
+    ).toBe(8120);
   });
   // wiki Snow Globe: {3500 + 5 × [300 × (1 + 1)]} × 1.3 = 8450
   it("matches wiki Snow Globe health before absorb", () => {
@@ -20,6 +30,44 @@ describe("computeArmorScaledPool", () => {
   // wiki Shield Maiden: (2000 + (2.5 × 480)) × 1.6 = 7040
   it("matches wiki Shield Maiden health before absorb", () => {
     expect(computeArmorScaledPool(2000, 2.5, 960, 1.6)).toBe(7040);
+  });
+  // wiki Warding Halo: (base + armorMult×armor + absorbed×2.5) × STR
+  it("folds Warding Halo absorb inside Strength with absorb Mult", () => {
+    // pre-absorb wiki sample shape: (1000 + 2.5×870) × 1.3 — use round numbers
+    // (1000 + 2.5×400 + 2000×2.5) × 1.3 = (1000 + 1000 + 5000) × 1.3 = 9100
+    expect(
+      computeArmorScaledPool(1000, 2.5, 400, 1.3, {
+        absorbedDamage: 2000,
+        absorbMode: "inside_strength",
+        absorptionMultiplier: 2.5,
+      }),
+    ).toBe(9100);
+  });
+});
+
+describe("getArmorPoolInvulnAbsorb", () => {
+  it("maps additive pools and Halo inside_strength absorb Mult", () => {
+    expect(getArmorPoolInvulnAbsorb("Iron Skin")).toEqual({
+      mode: "additive",
+      absorptionMultiplier: 1,
+    });
+    expect(getArmorPoolInvulnAbsorb("Snow Globe")).toEqual({
+      mode: "additive",
+      absorptionMultiplier: 1,
+    });
+    expect(getArmorPoolInvulnAbsorb("Tectonics")).toEqual({
+      mode: "additive",
+      absorptionMultiplier: 1,
+    });
+    expect(getArmorPoolInvulnAbsorb("Shield Maiden")).toEqual({
+      mode: "additive",
+      absorptionMultiplier: 1,
+    });
+    expect(getArmorPoolInvulnAbsorb("Warding Halo", { absorptionMultiplier: 2.5 })).toEqual({
+      mode: "inside_strength",
+      absorptionMultiplier: 2.5,
+    });
+    expect(getArmorPoolInvulnAbsorb("Mass Vitrify")).toBeNull();
   });
 });
 
