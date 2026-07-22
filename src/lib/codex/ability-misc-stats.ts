@@ -3302,6 +3302,119 @@ export function computeSevagothTombstonePassive(): SevagothTombstonePassive {
   return { soulsRequired: 5, soulTrackRangeM: 14 };
 }
 
+export interface InarosPassive {
+  /** Max-Health fraction restored per melee Finisher kill. */
+  finisherHealFraction: number;
+  /** Sarcophagus sand form activates on fatal damage. */
+  sarcophagusOnFatal: boolean;
+}
+
+/** Health restored from a Finisher kill given max Health. */
+export function computeInarosFinisherHeal(
+  maxHealth: number,
+  passive: InarosPassive = computeInarosPassive(),
+): number {
+  return Math.max(0, maxHealth) * passive.finisherHealFraction;
+}
+
+/** wiki Inaros: Sarcophagus on fatal; melee Finishers restore 20% max Health. */
+export function computeInarosPassive(): InarosPassive {
+  return { finisherHealFraction: 0.2, sarcophagusOnFatal: true };
+}
+
+export interface NokkoVitalDecayPassive {
+  /** Seconds to reach a glowing mushroom while in Sprodling form. */
+  timeLimitSec: number;
+  /** Requires ≥1 active Stinkbrain/Brightbonnet to trigger. */
+  requiresActiveMushroom: boolean;
+  /** Post-revive invulnerability after the 3s revive animation (s). */
+  postReviveInvulnSec: number;
+}
+
+/** Remaining Vital Decay time from elapsed seconds in Sprodling form. */
+export function computeNokkoVitalDecayRemaining(
+  elapsedSec: number,
+  passive: NokkoVitalDecayPassive = computeNokkoVitalDecayPassive(),
+): number {
+  return Math.max(0, passive.timeLimitSec - Math.max(0, elapsedSec));
+}
+
+/**
+ * wiki Nokko Vital Decay: with ≥1 mushroom, fatal damage → invulnerable Sprodling for 15s;
+ * touch a glowing mushroom to revive (3s anim + 1s invuln).
+ */
+export function computeNokkoVitalDecayPassive(): NokkoVitalDecayPassive {
+  return {
+    timeLimitSec: 15,
+    requiresActiveMushroom: true,
+    postReviveInvulnSec: 1,
+  };
+}
+
+export type WukongFiveTechniqueId =
+  | "primal_forces"
+  | "heavenly_cloak"
+  | "cosmic_armour"
+  | "monkey_luck"
+  | "sly_alchemy";
+
+export interface WukongFiveTechnique {
+  id: WukongFiveTechniqueId;
+  name: string;
+  summary: string;
+  durationSec: number;
+}
+
+export interface WukongFiveTechniquesPassive {
+  /** Techniques randomly available per mission. */
+  techniquesPerMission: number;
+  /** Shared death-gate: invuln + Health restore on each technique proc. */
+  deathGateInvulnSec: number;
+  deathGateHealFraction: number;
+  techniques: WukongFiveTechnique[];
+}
+
+/** wiki Wukong: 3 of 5 random death-avoid techniques per mission. */
+export function computeWukongFiveTechniquesPassive(): WukongFiveTechniquesPassive {
+  return {
+    techniquesPerMission: 3,
+    deathGateInvulnSec: 2,
+    deathGateHealFraction: 0.5,
+    techniques: [
+      {
+        id: "primal_forces",
+        name: "Primal Forces",
+        summary: "+300% Elemental Damage",
+        durationSec: 60,
+      },
+      {
+        id: "heavenly_cloak",
+        name: "Heavenly Cloak",
+        summary: "Invisibility (attacks do not break)",
+        durationSec: 30,
+      },
+      {
+        id: "cosmic_armour",
+        name: "Cosmic Armour",
+        summary: "Invulnerability",
+        durationSec: 30,
+      },
+      {
+        id: "monkey_luck",
+        name: "Monkey Luck",
+        summary: "Extra loot on kills",
+        durationSec: 60,
+      },
+      {
+        id: "sly_alchemy",
+        name: "Sly Alchemy",
+        summary: "Orbs 4× more effective",
+        durationSec: 60,
+      },
+    ],
+  };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

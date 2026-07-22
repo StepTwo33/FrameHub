@@ -266,6 +266,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Chroma + Titania + Hildryn passives | 2026-07-22 | Chroma extra jump + element cycle; Titania +25% parkour / Upsurge 4HP/s 20s 15m; Hildryn 3.5s gate |
 | Nidus + Sirius/Orion + Wisp passives | 2026-07-22 | Nidus Undying ≥15 stacks; Sirius/Orion +45% EFF ×2 casts; Wisp airborne invis |
 | Follie + Sevagoth passives | 2026-07-22 | Follie Inkblot 50% slow 10s / 20% balloon×3 orbs; Sevagoth Tombstone 5 souls @ 14m |
+| Inaros + Nokko + Wukong passives | 2026-07-22 | Inaros Sarcophagus + 20% Finisher heal; Nokko Vital Decay 15s; Wukong 3 of 5 techniques |
 
 ## New / extended test files
 

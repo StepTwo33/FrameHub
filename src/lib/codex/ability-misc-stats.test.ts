@@ -101,6 +101,11 @@ import {
   computeFollieInkblotExpected,
   computeSevagothTombstonePassive,
   computeSevagothTombstoneSoulsRemaining,
+  computeInarosPassive,
+  computeInarosFinisherHeal,
+  computeNokkoVitalDecayPassive,
+  computeNokkoVitalDecayRemaining,
+  computeWukongFiveTechniquesPassive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -991,6 +996,46 @@ describe("Sevagoth Tombstone passive", () => {
     expect(computeSevagothTombstoneSoulsRemaining(0)).toBe(5);
     expect(computeSevagothTombstoneSoulsRemaining(3)).toBe(2);
     expect(computeSevagothTombstoneSoulsRemaining(5)).toBe(0);
+  });
+});
+
+describe("Inaros Sarcophagus / Finisher heal passive", () => {
+  it("restores 20% max Health on Finisher kills and enables Sarcophagus", () => {
+    expect(computeInarosPassive()).toEqual({
+      finisherHealFraction: 0.2,
+      sarcophagusOnFatal: true,
+    });
+    expect(computeInarosFinisherHeal(2000)).toBe(400);
+  });
+});
+
+describe("Nokko Vital Decay passive", () => {
+  it("gives 15s to reach a mushroom when one is active", () => {
+    expect(computeNokkoVitalDecayPassive()).toEqual({
+      timeLimitSec: 15,
+      requiresActiveMushroom: true,
+      postReviveInvulnSec: 1,
+    });
+    expect(computeNokkoVitalDecayRemaining(0)).toBe(15);
+    expect(computeNokkoVitalDecayRemaining(10)).toBe(5);
+    expect(computeNokkoVitalDecayRemaining(15)).toBe(0);
+  });
+});
+
+describe("Wukong Five Techniques passive", () => {
+  it("lists five techniques with 3 available per mission", () => {
+    const p = computeWukongFiveTechniquesPassive();
+    expect(p.techniquesPerMission).toBe(3);
+    expect(p.deathGateInvulnSec).toBe(2);
+    expect(p.deathGateHealFraction).toBe(0.5);
+    expect(p.techniques).toHaveLength(5);
+    expect(p.techniques.map((t) => t.id)).toEqual([
+      "primal_forces",
+      "heavenly_cloak",
+      "cosmic_armour",
+      "monkey_luck",
+      "sly_alchemy",
+    ]);
   });
 });
 

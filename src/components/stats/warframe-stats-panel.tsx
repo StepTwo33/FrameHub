@@ -93,6 +93,11 @@ import {
   computeFollieInkblotExpected,
   computeSevagothTombstonePassive,
   computeSevagothTombstoneSoulsRemaining,
+  computeInarosPassive,
+  computeInarosFinisherHeal,
+  computeNokkoVitalDecayPassive,
+  computeNokkoVitalDecayRemaining,
+  computeWukongFiveTechniquesPassive,
   type MesaSidearmStyle,
   type NovaSpeedState,
   type ChromaElement,
@@ -1881,6 +1886,101 @@ function SevagothTombstonePassivePanel() {
   );
 }
 
+function InarosPassivePanel({ maxHealth }: { maxHealth: number }) {
+  const passive = computeInarosPassive();
+  const heal = computeInarosFinisherHeal(maxHealth, passive);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Sarcophagus"
+        value={passive.sarcophagusOnFatal ? "On Fatal" : "—"}
+        color="text-amber-400"
+        tooltip="Inaros: fatal damage entombs him; sand form melee-siphons to revive (allies can also interact)."
+      />
+      <StatRow
+        label="Finisher Heal"
+        value={`+${(passive.finisherHealFraction * 100).toFixed(0)}% (${heal.toFixed(0)})`}
+        color="text-green-400"
+        tooltip={`Melee Finisher / Mercy kills restore 20% of max Health (~${heal.toFixed(0)} at current max HP).`}
+      />
+    </div>
+  );
+}
+
+function NokkoVitalDecayPassivePanel() {
+  const decay = computeNokkoVitalDecayPassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const [hasMushroom, setHasMushroom] = useState(1);
+  const remaining = computeNokkoVitalDecayRemaining(elapsedSec, decay);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Active Mushroom"
+        value={hasMushroom}
+        min={0}
+        max={1}
+        onChange={setHasMushroom}
+        tooltip="Nokko Vital Decay requires ≥1 Stinkbrain or Brightbonnet placed to trigger on fatal damage."
+      />
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={decay.timeLimitSec}
+        onChange={setElapsedSec}
+        tooltip="Sprodling form: reach a glowing mushroom within 15s to revive (3s anim + 1s invuln)."
+      />
+      <StatRow
+        label="Vital Decay"
+        value={
+          hasMushroom <= 0
+            ? "Bleedout"
+            : remaining > 0
+              ? `${remaining.toFixed(0)}s left`
+              : "Expired"
+        }
+        color={hasMushroom > 0 && remaining > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip="Fungal Spores grant move speed but not healing. Does not work in Arbitrations."
+      />
+    </div>
+  );
+}
+
+function WukongFiveTechniquesPassivePanel() {
+  const five = computeWukongFiveTechniquesPassive();
+  const [techIdx, setTechIdx] = useState(0);
+  const tech =
+    five.techniques[Math.min(Math.max(0, Math.floor(techIdx)), five.techniques.length - 1)]
+    ?? five.techniques[0]!;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Per Mission"
+        value={`${five.techniquesPerMission} of ${five.techniques.length}`}
+        color="text-amber-400"
+        tooltip={`On fatal damage: ${five.deathGateInvulnSec}s invuln + ${(five.deathGateHealFraction * 100).toFixed(0)}% Health, then a random remaining technique buff.`}
+      />
+      <SimSlider
+        label="Technique (0–4)"
+        value={techIdx}
+        min={0}
+        max={five.techniques.length - 1}
+        onChange={setTechIdx}
+        tooltip="Browse the five techniques. Three are chosen at random per mission."
+      />
+      <StatRow
+        label={tech.name}
+        value={`${tech.summary} · ${tech.durationSec}s`}
+        color="text-violet-300"
+        tooltip="Buffs cannot be dispelled by Nullifiers or ability disable."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -2061,6 +2161,13 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {warframe.id === "follie" && <FollieInkblotPassivePanel />}
           {(warframe.id === "sevagoth" || warframe.id === "sevagoth_prime") && (
             <SevagothTombstonePassivePanel />
+          )}
+          {(warframe.id === "inaros" || warframe.id === "inaros_prime") && (
+            <InarosPassivePanel maxHealth={stats.totalHealth} />
+          )}
+          {warframe.id === "nokko" && <NokkoVitalDecayPassivePanel />}
+          {(warframe.id === "wukong" || warframe.id === "wukong_prime") && (
+            <WukongFiveTechniquesPassivePanel />
           )}
         </CollapsibleSection>
       )}
