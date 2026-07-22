@@ -21,6 +21,8 @@ import {
   computeFrostPassiveArmor,
   computeCyte09PracticedAimCritChance,
   computeGrendelPassiveArmor,
+  computeCalibanAdaptiveArmorDr,
+  computeProteaPassiveStrengthBonus,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -243,6 +245,83 @@ function GrendelBellyArmorPassive({ moddedArmor }: { moddedArmor: number }) {
   );
 }
 
+function CalibanAdaptiveArmorPassive({
+  effectiveHealth,
+  armorDrFraction,
+}: {
+  effectiveHealth: number;
+  armorDrFraction: number;
+}) {
+  const [hits, setHits] = useState(10);
+  const typedDr = computeCalibanAdaptiveArmorDr(hits);
+  const armorMult = 1 - Math.min(Math.max(armorDrFraction, 0), 0.99);
+  const combinedMult = armorMult * (1 - typedDr);
+  const combinedDrPct = (1 - combinedMult) * 100;
+  const adaptedEhp = typedDr < 1 ? effectiveHealth / (1 - typedDr) : effectiveHealth;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Hits Taken"
+        value={hits}
+        min={0}
+        max={10}
+        onChange={setHits}
+        tooltip="Caliban Adaptive Armor: +5% typed resistance per hit (cap 50%). Decays after 5s without damage."
+      />
+      <StatRow
+        label="Typed Resist"
+        value={`${(typedDr * 100).toFixed(0)}%`}
+        color="text-violet-300"
+        tooltip="Per damage type; does not stack with Adaptation (higher of the two)."
+      />
+      <StatRow
+        label="Combined DR"
+        value={`${combinedDrPct.toFixed(1)}%`}
+        color="text-violet-400"
+        tooltip="Armor DR × Adaptive Armor vs that type."
+      />
+      <StatRow
+        label="Adapted EHP"
+        value={adaptedEhp.toFixed(0)}
+        color="text-violet-400"
+        tooltip="Effective health vs fully adapted single-type damage (typed resist only on EHP row)."
+      />
+    </div>
+  );
+}
+
+function ProteaPowerRecorderPassive({ abilityStrength }: { abilityStrength: number }) {
+  const [powerBars, setPowerBars] = useState(3);
+  const bonus = computeProteaPassiveStrengthBonus(powerBars);
+  const nextStr = abilityStrength + bonus;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Power Bars"
+        value={powerBars}
+        min={0}
+        max={3}
+        onChange={setPowerBars}
+        tooltip="Protea: 1 bar per cast; at 3 bars the next cast gets +100% Ability Strength, then resets."
+      />
+      <StatRow
+        label="Next Cast STR"
+        value={bonus > 0 ? `+${(bonus * 100).toFixed(0)}% Ready` : "Charging"}
+        color={bonus > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip="Additive +100% Ability Strength on the empowered cast only."
+      />
+      <StatRow
+        label="Effective STR"
+        value={`${(nextStr * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Current Ability Strength + passive bonus if power recorder is full."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -352,6 +431,15 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {warframe.id === "cyte_09" && <Cyte09PracticedAimPassive />}
           {(warframe.id === "grendel" || warframe.id === "grendel_prime") && (
             <GrendelBellyArmorPassive moddedArmor={stats.totalArmor} />
+          )}
+          {(warframe.id === "caliban" || warframe.id === "caliban_prime") && (
+            <CalibanAdaptiveArmorPassive
+              effectiveHealth={stats.effectiveHealth}
+              armorDrFraction={stats.damageReduction / 100}
+            />
+          )}
+          {(warframe.id === "protea" || warframe.id === "protea_prime") && (
+            <ProteaPowerRecorderPassive abilityStrength={stats.abilityStrength} />
           )}
         </CollapsibleSection>
       )}

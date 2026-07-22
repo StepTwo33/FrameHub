@@ -29,6 +29,8 @@ import {
   computeFrostPassiveArmor,
   computeCyte09PracticedAimCritChance,
   computeGrendelPassiveArmor,
+  computeCalibanAdaptiveArmorDr,
+  computeProteaPassiveStrengthBonus,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -351,6 +353,24 @@ describe("Grendel belly armor passive", () => {
     expect(computeGrendelPassiveArmor(8)).toBe(1250);
     // Catgut max-rank path: 400/enemy → 2000 at cap
     expect(computeGrendelPassiveArmor(5, { armorPerEnemy: 400 })).toBe(2000);
+  });
+});
+
+describe("Caliban Adaptive Armor passive", () => {
+  it("grants +5% typed DR per hit up to 50%", () => {
+    expect(computeCalibanAdaptiveArmorDr(0)).toBe(0);
+    expect(computeCalibanAdaptiveArmorDr(1)).toBeCloseTo(0.05, 5);
+    expect(computeCalibanAdaptiveArmorDr(10)).toBeCloseTo(0.5, 5);
+    expect(computeCalibanAdaptiveArmorDr(20)).toBeCloseTo(0.5, 5);
+  });
+});
+
+describe("Protea 4th-cast Strength passive", () => {
+  it("grants +100% STR when power recorder is full (3 bars)", () => {
+    expect(computeProteaPassiveStrengthBonus(0)).toBe(0);
+    expect(computeProteaPassiveStrengthBonus(2)).toBe(0);
+    expect(computeProteaPassiveStrengthBonus(3)).toBe(1);
+    expect(computeProteaPassiveStrengthBonus(4)).toBe(1);
   });
 });
 

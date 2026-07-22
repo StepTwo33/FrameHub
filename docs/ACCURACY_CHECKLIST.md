@@ -241,6 +241,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Fireball combo×heat | 2026-07-22 | Chain 1/2/4/8 + 4×heat; dmg=(base÷2)×(combo+1)×STR; wiki 3600/5200 goldens + Prior Casts slider |
 | Frost Fortifying Freeze | 2026-07-22 | +50 Armor × Cold enemies in Affinity Range (panel; after mods, not × STR) |
 | Cyte-09 + Grendel passives | 2026-07-22 | Practiced Aim +1% WP CC/kill cap 300%; Grendel +250 Armor/gut enemy cap 5 (+1250) |
+| Caliban + Protea passives | 2026-07-22 | Adaptive Armor +5%/hit cap 50% (panel DR/EHP); Protea 4th cast +100% STR at 3 power bars |
 
 ## New / extended test files
 

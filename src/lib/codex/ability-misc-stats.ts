@@ -2383,6 +2383,22 @@ export function computeGrendelPassiveArmor(
   return Math.min(cap, Math.max(0, Math.floor(enemiesInGut))) * per;
 }
 
+/**
+ * wiki Caliban Adaptive Armor: +5% typed DR per hit taken, cap 50%.
+ * Does not stack with Adaptation (higher of the two applies). Not × STR.
+ */
+export function computeCalibanAdaptiveArmorDr(hitsTaken: number): number {
+  return Math.min(0.5, Math.max(0, Math.floor(hitsTaken)) * 0.05);
+}
+
+/**
+ * wiki Protea passive: every 4th cast gets +100% Ability Strength (additive).
+ * Power recorder fills 0→3 bars; at 3 bars the next cast is empowered.
+ */
+export function computeProteaPassiveStrengthBonus(powerBars: number): number {
+  return Math.min(3, Math.max(0, Math.floor(powerBars))) >= 3 ? 1 : 0;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
