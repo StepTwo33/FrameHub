@@ -402,6 +402,24 @@ function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
     });
   }
 
+  if (sim.applyMechaEmpoweredVsMarkedDamage) {
+    sources.push({
+      id: "mecha-marked",
+      label: "Mecha Empowered vs marked",
+      category: "external",
+      nominal: "+150% damage vs marked",
+      tooltip: "Mecha Empowered aura vs companion-marked enemies (requires ≥1 Mecha set piece).",
+      apply: (base) => {
+        const next = cloneCtx(base);
+        next.simParams = {
+          ...(next.simParams ?? DEFAULT_SIM_PARAMS),
+          applyMechaEmpoweredVsMarkedDamage: false,
+        };
+        return next;
+      },
+    });
+  }
+
   if ((sim.extraSynthSetPiecesOffWeapon ?? 0) > 0) {
     sources.push({
       id: "wf-synth-pieces",

@@ -107,7 +107,7 @@ import {
   type NovaSpeedState,
   type ChromaElement,
 } from "@/lib/codex/ability-misc-stats";
-import { augurShieldsFromEnergySpent } from "@/lib/calc/set-bonuses";
+import { augurShieldsFromEnergySpent, computeMechaSetMarkStats } from "@/lib/calc/set-bonuses";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
 function GaussPassiveBattery() {
@@ -2078,6 +2078,40 @@ function AugurCastShieldsPanel({
   );
 }
 
+function MechaMarkTimingPanel({ pieces }: { pieces: number }) {
+  const mark = computeMechaSetMarkStats(pieces);
+  if (!mark) return null;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Mark Cooldown"
+        value={`${mark.cooldownSec}s`}
+        color="text-amber-400"
+        tooltip="Mecha Set: companion marks a target on this interval (Kubrow/Predasite required)."
+      />
+      <StatRow
+        label="Mark Duration"
+        value={`${mark.markDurationSec}s`}
+        color="text-sky-400"
+        tooltip="How long the mark lasts. Killing the marked target spreads statuses to nearby enemies."
+      />
+      <StatRow
+        label="Spread Range"
+        value={`${mark.spreadRangeM}m`}
+        color="text-violet-300"
+        tooltip="Status types (not stacks) transfer with remaining duration. DoT spread damage is not modeled in paper DPS."
+      />
+      <StatRow
+        label="Empowered vs Marked"
+        value="+150% (toggle)"
+        color="text-muted-foreground"
+        tooltip="Mecha Empowered aura: squad +150% damage vs the marked enemy — enable via weapon SIMULATION toggle."
+      />
+    </div>
+  );
+}
+
 function UrielLegionPassivePanel() {
   const legion = computeUrielLegionPassive();
   const [demonIdx, setDemonIdx] = useState(0);
@@ -2420,6 +2454,17 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
                 color="text-amber-400"
                 tooltip="Applies to beast claws / sentinel weapons when the Hunter vs Slash DPS toggle is on (companion builder / loadout sim)."
               />
+            )}
+            {(stats.mechaSetPieces ?? 0) > 0 && (
+              <>
+                <StatRow
+                  label="Mecha (mark)"
+                  value={`${stats.mechaSetPieces}/4 pieces`}
+                  color="text-orange-400"
+                  tooltip="Companion mark + status spread on kill. Requires Kubrow or Predasite."
+                />
+                <MechaMarkTimingPanel pieces={stats.mechaSetPieces ?? 0} />
+              </>
             )}
           </div>
         </CollapsibleSection>

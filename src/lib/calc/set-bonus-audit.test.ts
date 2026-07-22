@@ -4,16 +4,18 @@
 import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
-import { calculateWarframeBuild } from "@/lib/calc/calculator";
+import { calculateWarframeBuild, calculateWeaponBuild } from "@/lib/calc/calculator";
 import {
   augurShieldsFromEnergySpent,
   buildWarframeSetBonusSummary,
+  computeMechaSetMarkStats,
   countAugurSetPieces,
   countHunterSetPieces,
+  countMechaSetPieces,
   hunterCompanionDamageMultiplier,
+  MECHA_EMPOWERED_VS_MARKED_MULTIPLIER,
   weaponSupportsHunterCompanionSet,
 } from "@/lib/calc/set-bonuses";
-import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { scaledAbilityEnergyCost } from "@/lib/codex/ability-misc-stats";
 import { resolveWeaponExternalBuffs } from "@/lib/weapons/weapon-external-buffs";
 import type { Ability, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
@@ -146,13 +148,97 @@ describe("Hunter set (wiki: +25% companion dmg per piece vs Slash)", () => {
   });
 });
 
-describe("Mecha set summary (wiki: mark + status spread, not explosion DPS)", () => {
-  it("describes mark/spread, not +150% explosion", () => {
+describe("Mecha set (wiki: mark timing + Empowered vs marked)", () => {
+  it("describes mark/spread with piece-scaled numbers, not explosion DPS", () => {
     const slots = [{ modId: "mecha_pulse_r3", rank: 3, slotIndex: 0 }];
     const line = buildWarframeSetBonusSummary(slots).find((s) => s.setId === "mecha")!;
     expect(line.active).toBe(true);
-    expect(line.description.toLowerCase()).toMatch(/mark/);
+    expect(line.description).toMatch(/60s/);
+    expect(line.description).toMatch(/3s/);
+    expect(line.description).toMatch(/7\.5m/);
     expect(line.description.toLowerCase()).not.toMatch(/explode/);
+  });
+
+  it("scales mark cooldown / duration / range by piece count", () => {
+    expect(computeMechaSetMarkStats(0)).toBeNull();
+    expect(computeMechaSetMarkStats(1)).toEqual({
+      pieces: 1,
+      cooldownSec: 60,
+      markDurationSec: 3,
+      spreadRangeM: 7.5,
+    });
+    expect(computeMechaSetMarkStats(4)).toEqual({
+      pieces: 4,
+      cooldownSec: 15,
+      markDurationSec: 12,
+      spreadRangeM: 30,
+    });
+    expect(computeMechaSetMarkStats(9)?.pieces).toBe(4);
+  });
+
+  it("applies Mecha Empowered +150% vs marked when toggle + Empowered + set piece", () => {
+    expect(MECHA_EMPOWERED_VS_MARKED_MULTIPLIER).toBe(2.5);
+    const rifle: Weapon = {
+      id: "t",
+      name: "T",
+      category: "rifle",
+      damage: 100,
+      impact: 100,
+      puncture: 0,
+      slash: 0,
+      fireRate: 1,
+      criticalChance: 0,
+      criticalMultiplier: 2,
+      statusChance: 0,
+      magazine: 30,
+      reloadTime: 2,
+      multishot: 1,
+      triggerType: "Auto",
+      modSlots: 8,
+      hasPrimaryArcaneSlot: false,
+      hasSecondaryArcaneSlot: false,
+      isIncarnon: false,
+      hasRivenSlot: true,
+    };
+    const linkage = {
+      warframeMods: [
+        { modId: "mecha_empowered", rank: 5, slotIndex: 0 },
+        { modId: "mecha_pulse_r3", rank: 3, slotIndex: 1 },
+      ],
+      companionMods: [{ modId: "mecha_recharge", rank: 5, slotIndex: 0 }],
+    };
+    expect(countMechaSetPieces(linkage.warframeMods, linkage.companionMods)).toBe(3);
+
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const wfStats = calculateWarframeBuild(excal, linkage.warframeMods, modsMap(), {
+      companionMods: linkage.companionMods,
+    });
+    expect(wfStats.mechaSetPieces).toBe(3);
+
+    const off = calculateWeaponBuild(rifle, [], modsMap(), undefined, DEFAULT_SIM_PARAMS, undefined, linkage);
+    const on = calculateWeaponBuild(
+      rifle,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, applyMechaEmpoweredVsMarkedDamage: true },
+      undefined,
+      linkage,
+    );
+    expect(off.mechaEmpoweredVsMarkedDamageMultiplier).toBeUndefined();
+    expect(on.mechaEmpoweredVsMarkedDamageMultiplier).toBe(2.5);
+    expect(on.totalDamage / off.totalDamage).toBeCloseTo(2.5, 5);
+
+    const noEmpowered = calculateWeaponBuild(
+      rifle,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, applyMechaEmpoweredVsMarkedDamage: true },
+      undefined,
+      { warframeMods: [{ modId: "mecha_pulse_r3", rank: 3, slotIndex: 0 }] },
+    );
+    expect(noEmpowered.mechaEmpoweredVsMarkedDamageMultiplier).toBeUndefined();
   });
 });
 

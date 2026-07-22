@@ -24,6 +24,9 @@ import {
   weaponSupportsHunterCompanionSet,
   countHunterSetPieces,
   hunterCompanionDamageMultiplier,
+  countMechaSetPieces,
+  linkageHasMechaEmpowered,
+  MECHA_EMPOWERED_VS_MARKED_MULTIPLIER,
   buildWarframeSetBonusSummary,
   buildWeaponSetBonusSummary,
   countSynthSetPieces,
@@ -325,9 +328,9 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 // Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only;
 //   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe; folded into avg crit for DPS).
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
-// Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % (per piece).
-// Augur shields/cast panel-sim; Hunter companion DPS via applyHunterSetVsSlashDamage on claws/sentinel.
-// Not in weapon DPS: Mecha mark/status-spread.
+// Warframe panel: Augur/Hunter/Mecha/Synth/Tek + Augur shields/cast + Mecha mark timing.
+// Hunter vs Slash / Mecha Empowered vs marked are optional DPS toggles.
+// Status-spread DoT damage from Mecha mark-kills remains unmodeled.
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
 // Sacrificial full set bonus: +75% when both mods equipped
@@ -1108,6 +1111,28 @@ export function calculateWeaponBuild(
     stats.totalDamage = physHunter + eleHunter;
   }
 
+  // Mecha Empowered: +150% squad damage vs Mecha-marked enemies (optional sim; needs Empowered + ≥1 set piece)
+  const mechaPiecesForMark = countMechaSetPieces(
+    linkage?.warframeMods ?? [],
+    linkage?.companionMods,
+  );
+  if (
+    sim.applyMechaEmpoweredVsMarkedDamage &&
+    mechaPiecesForMark >= 1 &&
+    linkageHasMechaEmpowered(linkage)
+  ) {
+    const mm = MECHA_EMPOWERED_VS_MARKED_MULTIPLIER;
+    stats.mechaEmpoweredVsMarkedDamageMultiplier = mm;
+    stats.impact *= mm;
+    stats.puncture *= mm;
+    stats.slash *= mm;
+    for (const e of stats.elements) e.value *= mm;
+    for (const e of stats.rawElements) e.value *= mm;
+    const physMecha = stats.impact + stats.puncture + stats.slash;
+    const eleMecha = stats.elements.reduce((sum, e) => sum + e.value, 0);
+    stats.totalDamage = physMecha + eleMecha;
+  }
+
   // Snapshot arsenal-style display damage before quantization (the in-game arsenal
   // shows theoretical values; actual hits are quantized below).
   stats.arsenalDamage = {
@@ -1313,9 +1338,11 @@ export function calculateWarframeBuild(
   stats.setBonusSummary = buildWarframeSetBonusSummary(equippedMods, linkage);
   const aug = stats.setBonusSummary.find((s) => s.setId === "augur");
   const hun = stats.setBonusSummary.find((s) => s.setId === "hunter");
+  const mecha = stats.setBonusSummary.find((s) => s.setId === "mecha");
   // wiki Augur Set: +40% energy→shields per piece; Hunter Set: +25% companion dmg per piece
   stats.augurEnergyToShieldsPercent = (aug?.pieces ?? 0) * 40;
   stats.hunterCompanionVsStatusDamagePercent = (hun?.pieces ?? 0) * 25;
+  stats.mechaSetPieces = mecha?.pieces ?? 0;
 
   if (equippedMods.some((s) => s.modId === "adaptation")) {
     stats.adaptationNoteMaxTypedDRPercent = 90;

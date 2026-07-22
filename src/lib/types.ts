@@ -347,6 +347,11 @@ export interface SimulationParams {
    * weapon damage vs Slash-status targets (beast claws / sentinel weapons only).
    */
   applyHunterSetVsSlashDamage?: boolean;
+  /**
+   * If Mecha Empowered is equipped and ≥1 Mecha set piece marks a target, apply
+   * +150% squad damage vs that marked enemy (optional DPS toggle).
+   */
+  applyMechaEmpoweredVsMarkedDamage?: boolean;
   /** Warframe ability names treated as active weapon damage buffs (e.g. "Roar", "Eclipse"). */
   activeWeaponAbilityBuffs?: string[];
   /**
@@ -405,6 +410,7 @@ export const DEFAULT_SIM_PARAMS: SimulationParams = {
   extraTekSetPiecesOffWeapon: 0,
   applyTekSetVsMarkedDamage: false,
   applyHunterSetVsSlashDamage: false,
+  applyMechaEmpoweredVsMarkedDamage: false,
   targetFaction: undefined,
   applyHeadshots: false,
   applyStanceMultiplier: true,
@@ -524,6 +530,8 @@ export interface CalculatedStats {
   tekSetVsMarkedDamageMultiplier?: number;
   /** Hunter set: companion weapon damage multiplier vs Slash-status when sim toggle on. */
   hunterSetVsSlashDamageMultiplier?: number;
+  /** Mecha Empowered: damage multiplier vs marked when sim toggle on (+150% → 2.5). */
+  mechaEmpoweredVsMarkedDamageMultiplier?: number;
   /** Cross-slot set detection (optional). */
   setBonusSummary?: SetBonusSummaryLine[];
   /** Mod-scaled radial / AoE attacks when the weapon has them. */
@@ -638,6 +646,8 @@ export interface WarframeCalculatedStats {
   augurEnergyToShieldsPercent?: number;
   /** Hunter set: companion damage bonus vs Slash-status enemies (+150% → 150 here). */
   hunterCompanionVsStatusDamagePercent?: number;
+  /** Mecha set piece count (for mark timing panel). */
+  mechaSetPieces?: number;
   /**
    * When Adaptation is equipped: typed DR stacks (see computeAdaptationSurvivability in UI).
    */

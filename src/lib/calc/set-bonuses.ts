@@ -154,6 +154,42 @@ export function countMechaSetPieces(warframeMods: ModSlot[], companionMods?: Mod
   return countSetModsInSlots(concatSlots(warframeMods, companionMods), MECHA_SET);
 }
 
+export interface MechaSetMarkStats {
+  pieces: number;
+  /** Seconds between companion marks. */
+  cooldownSec: number;
+  /** Mark duration (s). */
+  markDurationSec: number;
+  /** Status spread radius on mark-kill (m). */
+  spreadRangeM: number;
+}
+
+const MECHA_MARK_BY_PIECES: readonly Omit<MechaSetMarkStats, "pieces">[] = [
+  { cooldownSec: 60, markDurationSec: 3, spreadRangeM: 7.5 },
+  { cooldownSec: 45, markDurationSec: 6, spreadRangeM: 15 },
+  { cooldownSec: 30, markDurationSec: 9, spreadRangeM: 22.5 },
+  { cooldownSec: 15, markDurationSec: 12, spreadRangeM: 30 },
+];
+
+/**
+ * wiki Mecha Set: companion mark cooldown / duration / spread range by piece count.
+ * Requires Kubrow or Predasite. Returns null when inactive.
+ */
+export function computeMechaSetMarkStats(pieces: number): MechaSetMarkStats | null {
+  const p = Math.min(4, Math.max(0, Math.floor(pieces)));
+  if (p <= 0) return null;
+  const row = MECHA_MARK_BY_PIECES[p - 1]!;
+  return { pieces: p, ...row };
+}
+
+/** True when Mecha Empowered aura is equipped (squad +150% vs marked). */
+export function linkageHasMechaEmpowered(linkage: SetBonusLinkage | undefined): boolean {
+  return (linkage?.warframeMods ?? []).some((s) => s.modId === "mecha_empowered");
+}
+
+/** wiki Mecha Empowered: squad deals +150% damage vs marked → 2.5×. */
+export const MECHA_EMPOWERED_VS_MARKED_MULTIPLIER = 2.5;
+
 export function countSynthSetPieces(linkage: SetBonusLinkage | undefined, localWeaponMods: ModSlot[]): number {
   return countSetModsInSlots(
     concatSlots(
@@ -197,6 +233,7 @@ export function buildWeaponSetBonusSummary(
     extraTekSetPiecesOffWeapon?: number;
     applyTekSetVsMarkedDamage?: boolean;
     applyHunterSetVsSlashDamage?: boolean;
+    applyMechaEmpoweredVsMarkedDamage?: boolean;
   },
 ): SetBonusSummaryLine[] {
   const vigSet = new Set<string>(VIGILANTE_MOD_IDS);
@@ -213,9 +250,14 @@ export function buildWeaponSetBonusSummary(
     : countTekSetPieces(undefined, localMods) + (sim.extraTekSetPiecesOffWeapon ?? 0);
 
   const hunterPieces = countHunterSetPieces(linkage, linkage?.warframeMods ?? []);
+  const mechaPieces = countMechaSetPieces(linkage?.warframeMods ?? [], linkage?.companionMods);
   const primaryStyle = weaponSupportsPrimaryStyleSets(weapon);
   const companionStyle = weaponSupportsHunterCompanionSet(weapon);
   const hunterMult = hunterCompanionDamageMultiplier(hunterPieces);
+  const mechaEmpoweredActive =
+    mechaPieces >= 1 &&
+    !!sim.applyMechaEmpoweredVsMarkedDamage &&
+    linkageHasMechaEmpowered(linkage);
 
   return [
     {
@@ -258,6 +300,16 @@ export function buildWeaponSetBonusSummary(
         companionStyle && hunterPieces >= 1
           ? `+${((hunterMult - 1) * 100).toFixed(0)}% companion damage vs Slash-status (optional DPS toggle)`
           : "Each piece: +25% companion damage vs Slash-status enemies (max +150% at 6)",
+    },
+    {
+      setId: "mecha",
+      label: "Mecha",
+      pieces: mechaPieces,
+      required: 4,
+      active: mechaEmpoweredActive,
+      description: mechaEmpoweredActive
+        ? "+150% damage vs Mecha-marked (Empowered; optional DPS toggle)"
+        : "Mecha Empowered: +150% vs marked when set marks a target (optional DPS toggle)",
     },
   ];
 }
@@ -318,10 +370,13 @@ export function buildWarframeSetBonusSummary(
       required: 4,
       active: mecha >= 1,
       // wiki: mark + status spread on kill — not a flat explosion DPS buff
-      description:
-        mecha >= 1
-          ? `Companion marks a target (cooldown/duration/range scale with ${mecha} piece${mecha === 1 ? "" : "s"}); kill spreads statuses`
-          : "Each piece: shorter mark cooldown, longer mark, wider status spread on mark-kill (requires Kubrow/Predasite)",
+      description: (() => {
+        const mark = computeMechaSetMarkStats(mecha);
+        if (!mark) {
+          return "Each piece: shorter mark cooldown, longer mark, wider status spread on mark-kill (requires Kubrow/Predasite)";
+        }
+        return `Mark every ${mark.cooldownSec}s for ${mark.markDurationSec}s; kill spreads statuses in ${mark.spreadRangeM}m (Kubrow/Predasite)`;
+      })(),
     },
     {
       setId: "synth",

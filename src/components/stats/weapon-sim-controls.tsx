@@ -108,6 +108,14 @@ export function WeaponSimControls({
               tooltip="When Hunter set pieces are equipped across the loadout, apply +25%/piece companion damage vs Slash-status targets (max +150%)."
             />
           )}
+          <SimSlider
+            label="Mecha Empowered vs marked"
+            value={simParams.applyMechaEmpoweredVsMarkedDamage ? 1 : 0}
+            min={0}
+            max={1}
+            onChange={(v) => onSimParamsChange({ ...simParams, applyMechaEmpoweredVsMarkedDamage: v >= 1 })}
+            tooltip="When Mecha Empowered is equipped and ≥1 Mecha set piece marks a target, apply +150% squad damage vs that marked enemy."
+          />
           <div className="pt-1 space-y-1.5">
             {weapon?.id === "onos" && (
               <label className="block text-[10px] text-muted-foreground" title="Wiki: Held Radiation beam vs full-charge Heat blast">
