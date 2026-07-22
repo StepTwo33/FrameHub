@@ -154,6 +154,11 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "virtuos_surge",
   "virtuos_trojan",
   "magus_accelerant",
+  "magus_destruct",
+  "residual_boils",
+  "residual_shock",
+  "residual_malodor",
+  "residual_viremia",
   "melee_influence",
   "melee_duplicate",
   "arcane_melee_animosity",
@@ -221,7 +226,6 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_truculence",
   "emergence_dissipate",
   "emergence_savior",
-  "magus_destruct",
   "magus_glitch",
   "magus_repair",
   "magus_revert",
@@ -248,6 +252,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_double_back",
   "arcane_grace",
   "arcane_victory",
+  "arcane_aegis",
   "magus_firewall",
   "magus_overload",
 ]);
@@ -813,6 +818,42 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "magus_destruct": {
+      // wiki R5: Void Sling → −65% enemy Puncture resistance / stack.
+      // Paper: Puncture × (1 + 0.65×stacks).
+      const redLine = findEffect(def, "enemyResistanceReduction");
+      const perStack = redLine ? scaleArcaneEffectLine(redLine, rank, def.maxRank) : 0;
+      const vulnPct = perStack * Math.max(stacks, 0);
+      const mult = 1 + vulnPct / 100;
+      const before = stats.puncture;
+      if (before > 0 && vulnPct > 0) {
+        stats.puncture *= mult;
+        stats.totalDamage += before * (mult - 1);
+      }
+      trackBonus(stats, "enemyResistanceReduction", vulnPct);
+      return true;
+    }
+
+    case "residual_boils":
+    case "residual_shock":
+    case "residual_malodor":
+    case "residual_viremia": {
+      // Kitgun Residual zones. Paper: stacks>0 = one zone up.
+      // DoT (Malodor/Viremia): flat zoneDamagePerSec. Burst (Boils/Shock): paper 1 hit/s = zoneDamage.
+      const isKitgun = /kitgun/i.test(ctx.baseWeapon?.category ?? "");
+      const dpsLine =
+        findEffect(def, "zoneDamagePerSec") ?? findEffect(def, "zoneDamage");
+      const dps = dpsLine ? scaleArcaneEffectLine(dpsLine, rank, def.maxRank) : 0;
+      if (isKitgun && dps > 0) {
+        stats.residualZoneDps = (stats.residualZoneDps ?? 0) + dps;
+      }
+      for (const line of def.effects ?? []) {
+        trackBonus(stats, line.stat, scaleArcaneEffectLine(line, rank, def.maxRank));
+      }
+      trackBonus(stats, "residualZoneDps", isKitgun ? dps : 0);
+      return true;
+    }
+
     case "melee_influence": {
       // wiki R5: on Electricity status (20%), elemental melee statuses spread + deal matching
       // elemental damage to nearby. Paper: stacks>0 = buff up; 1 nearby hit = sum(elements).
@@ -1372,6 +1413,20 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
+    case "arcane_aegis": {
+      // wiki R5: 3% on shield damage → +30% shield recharge for 12s (delay→0 while up).
+      // Paper: equipped = buff up; additive to innate 5% recharge rate.
+      const amtLine = findEffect(def, "shieldRegenAmount");
+      const pct = amtLine ? scaleArcaneEffectLine(amtLine, rank, def.maxRank) : 0;
+      if (pct > 0) stats.shieldRechargeBonus = (stats.shieldRechargeBonus ?? 0) + pct / 100;
+      trackBonus(stats, "shieldRegenAmount", pct);
+      const chanceLine = findEffect(def, "shieldRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "shieldRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "theorem_infection": {
       // wiki R5: +24%/s companion+summon damage in Residual zone (cap 15 → +360%).
       const dmgLine = findEffect(def, "companionDamageRamp");
@@ -1424,7 +1479,6 @@ export function applyCustomArcaneToWarframe(
     case "arcane_truculence":
     case "emergence_dissipate":
     case "emergence_savior":
-    case "magus_destruct":
     case "magus_glitch":
     case "magus_repair":
     case "magus_revert":

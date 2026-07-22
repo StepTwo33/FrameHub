@@ -87,7 +87,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "shieldRegenChance",
         "maxValue": 3.0,
-        "baseValue": 0.5
+        "constantAtAllRanks": true
       },
       {
         "stat": "shieldRegenAmount",

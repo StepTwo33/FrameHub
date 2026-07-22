@@ -1386,6 +1386,7 @@ export function calculateWarframeBuild(
     castingSpeedBonus: 0,
     parkourVelocityBonus: 0,
     healthRegenPerSec: 0,
+    shieldRechargeBonus: 0,
     elementalResistance: 0,
     primaryShardBonus: 0,
     secondaryShardBonus: 0,
@@ -1737,6 +1738,10 @@ export function calculateWeaponBuildWithArcanes(
   stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
   applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
+  if ((stats.residualZoneDps ?? 0) > 0) {
+    stats.burstDps += stats.residualZoneDps!;
+    stats.sustainedDps += stats.residualZoneDps!;
+  }
   return stats;
 }
 

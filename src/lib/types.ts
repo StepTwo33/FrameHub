@@ -620,6 +620,11 @@ export interface CalculatedStats {
    * Included in burstDps/sustainedDps totals when > 0; excluded from TTK.
    */
   contagionCloudDps?: number;
+  /**
+   * Residual Boils/Shock/Malodor/Viremia kitgun zone DPS (paper: stacks>0 = zone up).
+   * Included in burstDps/sustainedDps; flat unmodded zone damage.
+   */
+  residualZoneDps?: number;
   /** Accumulated arcane stat values for display / future modeling. */
   arcaneBonuses?: Record<string, number>;
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */
@@ -710,6 +715,8 @@ export interface WarframeCalculatedStats {
   castingSpeedBonus: number;
   parkourVelocityBonus: number;
   healthRegenPerSec: number;
+  /** Additive shield recharge rate fraction (e.g. Arcane Aegis +30% → 0.30). */
+  shieldRechargeBonus?: number;
   elementalResistance: number;
   primaryShardBonus: number;
   secondaryShardBonus: number;

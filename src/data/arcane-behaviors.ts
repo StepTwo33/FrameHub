@@ -25,9 +25,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_aegis": {
     arcaneId: "arcane_aegis",
+    customHandler: "arcane_aegis",
     effects: [
-      {"statKey": "shieldRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Aegis: shieldRegenChance (when damaged proc)"},
-      {"statKey": "shieldRegenAmount", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Aegis: shieldRegenAmount (when damaged proc)"},
+      {"statKey": "shieldRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Arcane Aegis — 3% chance on shield damage (panel)"},
+      {"statKey": "shieldRegenAmount", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Aegis — +30% shield recharge for 12s (paper: equipped = buff up; additive to innate 5%)"},
     ],
   },
   "arcane_agility": {
@@ -686,7 +687,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "magus_destruct",
     customHandler: "magus_destruct",
     effects: [
-      {"statKey": "enemyResistanceReduction", "target": "arcane_panel", "mode": "custom", "source": "Magus Destruct: custom handler"},
+      {"statKey": "enemyResistanceReduction", "target": "weapon_dps", "mode": "custom", "source": "wiki: Magus Destruct — −65% Puncture resistance / Void Sling stack (paper: Puncture ×(1+0.65×stacks))"},
     ],
   },
   "magus_drive": {
@@ -992,36 +993,40 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "residual_boils": {
     arcaneId: "residual_boils",
+    customHandler: "residual_boils",
     effects: [
-      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneDuration (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneDamage (conditional proc)"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Boils: zoneRadius (conditional proc)"},
+      {"statKey": "zoneDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Boils — 80 Heat explosion (paper: stacks>0 = zone up; 1 hit/s → +80 DPS)"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 3–12s duration by rank"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 10m"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 20% spawn chance on kill (panel)"},
     ],
   },
   "residual_malodor": {
     arcaneId: "residual_malodor",
+    customHandler: "residual_malodor",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: healthRegenChance (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: buffDuration (conditional proc)"},
-      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Malodor: zoneDamagePerSec (conditional proc)"},
+      {"statKey": "zoneDamagePerSec", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Malodor — 40 Cold/s (paper: stacks>0 = zone up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 12s duration"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 20% spawn chance on kill (panel)"},
     ],
   },
   "residual_shock": {
     arcaneId: "residual_shock",
+    customHandler: "residual_shock",
     effects: [
-      {"statKey": "electricZoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: electricZoneDuration (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: zoneDamage (conditional proc)"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Shock: zoneRadius (conditional proc)"},
+      {"statKey": "zoneDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Shock — 200 Electricity (paper: stacks>0 = zone up; 1 hit/s → +200 DPS)"},
+      {"statKey": "electricZoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 3–12s duration"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 10m"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 20% spawn chance on kill (panel)"},
     ],
   },
   "residual_viremia": {
     arcaneId: "residual_viremia",
+    customHandler: "residual_viremia",
     effects: [
-      {"statKey": "zoneDamagePerSec", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: zoneDamagePerSec (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: healthRegenChance (conditional proc)"},
-      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Residual Viremia: zoneDuration (conditional proc)"},
+      {"statKey": "zoneDamagePerSec", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Viremia — 40 Toxin/s (paper: stacks>0 = zone up)"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 3–12s duration"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 20% spawn chance on kill (panel)"},
     ],
   },
   "secondary_cryogenic": {

@@ -2114,6 +2114,98 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(heatFull).toBeCloseTo(heatBare * 1.65, 4);
   });
 
+  it("Arcane Aegis: equipped → +30% shield recharge bonus", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const aegis = allArcanes.find((a) => a.id === "arcane_aegis")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [aegis],
+    );
+    expect(full.shieldRechargeBonus ?? 0).toBeCloseTo((bare.shieldRechargeBonus ?? 0) + 0.3, 4);
+    expect(full.arcaneBonuses?.shieldRegenAmount).toBeCloseTo(30, 4);
+    expect(full.arcaneBonuses?.shieldRegenChance).toBeCloseTo(3, 4);
+  });
+
+  it("Residual Malodor/Viremia: stacks>0 → +40 zone DPS on kitgun", () => {
+    const kit = allWeapons.find((w) => w.id === "catchmoon_chamber")!;
+    const malodor = allArcanes.find((a) => a.id === "residual_malodor")!;
+    const viremia = allArcanes.find((a) => a.id === "residual_viremia")!;
+    const bare = calculateWeaponBuild(kit, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [malodor],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.burstDps).toBeCloseTo(bare.burstDps, 2);
+    const malo = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [malodor],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(malo.residualZoneDps).toBeCloseTo(40, 4);
+    expect(malo.burstDps).toBeCloseTo(bare.burstDps + 40, 2);
+
+    const vir = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [viremia],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(vir.residualZoneDps).toBeCloseTo(40, 4);
+  });
+
+  it("Residual Boils/Shock: stacks>0 → +80 / +200 zone DPS paper (1 hit/s)", () => {
+    const kit = allWeapons.find((w) => w.id === "catchmoon_chamber")!;
+    const boils = allArcanes.find((a) => a.id === "residual_boils")!;
+    const shock = allArcanes.find((a) => a.id === "residual_shock")!;
+    const bare = calculateWeaponBuild(kit, [], new Map());
+    const withBoils = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [boils],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(withBoils.residualZoneDps).toBeCloseTo(80, 4);
+    expect(withBoils.burstDps).toBeCloseTo(bare.burstDps + 80, 2);
+    const withShock = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [shock],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(withShock.residualZoneDps).toBeCloseTo(200, 4);
+  });
+
+  it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [destruct],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.puncture).toBeCloseTo(bare.puncture * 1.65, 4);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage + bare.puncture * 0.65, 4);
+  });
+
   it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const fort = allArcanes.find((a) => a.id === "melee_fortification")!;
