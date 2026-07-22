@@ -184,6 +184,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
   it("Primary Merciless still scales with sim stacks", () => {
     const braton = allWeapons.find((w) => w.id === "braton")!;
     const merciless = allArcanes.find((a) => a.id === "arcane_primary_merciless")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
     const zero = calculateWeaponBuildWithArcanes(
       braton,
       [],
@@ -201,6 +202,9 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 12 },
     );
     expect(full.totalDamage).toBeGreaterThan(zero.totalDamage);
+    // wiki R5: +30% damage × 12 = +360%; reload is flat +30% (not × stacks)
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.reloadTime).toBeCloseTo(bare.reloadTime / 1.3, 4);
   });
 
   it("Secondary Kinship: paper 0 buffs = no CC; 3 buffs = +60% CC (wiki)", () => {
@@ -374,6 +378,78 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     // wiki R5: +12% damage × 40 = +480%
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 5.8, 4);
     expect(full.burstDps).toBeGreaterThan(zero.burstDps);
+  });
+
+  it("Primary Frostbite: 0 stacks = no buff; 40 stacks R5 → +90% MS / +120% CD", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const frostbite = allArcanes.find((a) => a.id === "primary_frostbite")!;
+    const def = getArcaneEffectDef("primary_frostbite")!;
+    expect(def.stackCap).toBe(40);
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [frostbite],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.multishot).toBeCloseTo(bare.multishot, 5);
+    expect(zero.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier, 5);
+
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [frostbite],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 40 },
+    );
+    // wiki R5: +2.25% MS × 40 = +90%; +3% CD × 40 = +120%
+    expect(full.multishot).toBeCloseTo(bare.multishot + braton.multishot * 0.9, 4);
+    expect(full.criticalMultiplier).toBeCloseTo(
+      bare.criticalMultiplier + braton.criticalMultiplier * 1.2,
+      4,
+    );
+    expect(full.burstDps).toBeGreaterThan(zero.burstDps);
+  });
+
+  it("Akimbo Slip Shot R5: +65% ammo efficiency (paper assumes slide/aim glide)", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const slip = allArcanes.find((a) => a.id === "akimbo_slip_shot")!;
+    const def = getArcaneEffectDef("akimbo_slip_shot")!;
+    expect(def.trigger).toBe("passive");
+
+    const withArc = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [slip],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(withArc.ammoEfficiency).toBeCloseTo(0.65, 4);
+  });
+
+  it("Primary Overcharge R5: +350% multishot (paper assumes Energy >90% at cap)", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const over = allArcanes.find((a) => a.id === "primary_overcharge")!;
+    const def = getArcaneEffectDef("primary_overcharge")!;
+    expect(def.trigger).toBe("passive");
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const withArc = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [over],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    // wiki R5 cap +350% MS
+    expect(withArc.multishot).toBeCloseTo(bare.multishot + braton.multishot * 3.5, 4);
+    expect(withArc.burstDps).toBeGreaterThan(bare.burstDps);
   });
 });
 

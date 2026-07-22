@@ -11,7 +11,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "akimbo_slip_shot": {
     arcaneId: "akimbo_slip_shot",
     effects: [
-      {"statKey": "ammoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Akimbo Slip Shot: ammoEfficiency (always active while equipped)"},
+      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Akimbo Slip Shot — +65% Ammo Efficiency while sliding/aim gliding (paper assumes active)"},
     ],
   },
   "arcane_acceleration": {
@@ -316,8 +316,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_primary_merciless",
     customHandler: "arcane_primary_merciless",
     effects: [
-      {"statKey": "reloadSpeed", "target": "arcane_panel", "mode": "custom", "source": "Primary Merciless: custom handler"},
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Primary Merciless: custom handler"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Merciless — +30% Reload Speed passive at R5 (not per-stack)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Merciless — +30% damage / kill stack at R5 (cap 12 → +360%; applies at sim stack count)"},
     ],
   },
   "arcane_pulse": {
@@ -383,8 +383,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_secondary_merciless",
     customHandler: "arcane_secondary_merciless",
     effects: [
-      {"statKey": "reloadSpeed", "target": "arcane_panel", "mode": "custom", "source": "Secondary Merciless: custom handler"},
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Secondary Merciless: custom handler"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Merciless — +30% Reload Speed passive at R5 (not per-stack)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Merciless — +30% damage / kill stack at R5 (cap 12 → +360%; applies at sim stack count)"},
     ],
   },
   "arcane_steadfast": {
@@ -909,8 +909,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "primary_frostbite": {
     arcaneId: "primary_frostbite",
     effects: [
-      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Frostbite: multishot (stacking — applies at sim stack count)"},
-      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Frostbite: criticalMultiplier (stacking — applies at sim stack count)"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Frostbite — +2.25% Multishot / Cold stack at R5 (cap 40 → +90%; applies at sim stack count)"},
+      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Frostbite — +3% Critical Damage / Cold stack at R5 (cap 40 → +120%; applies at sim stack count)"},
     ],
   },
   "primary_obstruct": {
@@ -925,7 +925,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "primary_overcharge",
     customHandler: "primary_overcharge",
     effects: [
-      {"statKey": "multishot", "target": "arcane_panel", "mode": "custom", "source": "Primary Overcharge: custom handler"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Overcharge — up to +350% Multishot at R5 while Energy >90% (paper assumes cap)"},
     ],
   },
   "primary_plated_round": {

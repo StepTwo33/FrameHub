@@ -111,7 +111,9 @@ function applyStackingDamageHandler(
   const dmg = scaledLine(def, findEffect(def, "damage"), rank, stacks);
   if (dmg > 0) applyWeaponDamageMult(stats, dmg);
   if (opts?.reload) {
-    const reload = scaledLine(def, findEffect(def, "reloadSpeed"), rank, stacks);
+    // Merciless reload is a Rank-5 passive (wiki), not per-stack — apply once at rank value.
+    const reloadLine = findEffect(def, "reloadSpeed");
+    const reload = reloadLine ? scaleArcaneEffectLine(reloadLine, rank, def.maxRank) : 0;
     if (reload > 0) stats.reloadTime /= 1 + reload / 100;
   }
   trackBonus(stats, opts?.bonusKey ?? "stackingDamageStacks", stacks);
