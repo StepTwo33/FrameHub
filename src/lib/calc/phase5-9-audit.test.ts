@@ -1498,9 +1498,10 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.abilityStrength).toBeCloseTo(bareStr + 0.6, 4);
   });
 
-  it("Pax Bolt: equipped → +30% STR / +30% EFF (next-cast paper)", () => {
+  it("Pax Bolt: equipped → +30% STR / +30% EFF / 4s (next-cast paper)", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const bolt = allArcanes.find((a) => a.id === "pax_bolt")!;
+    expect(getArcaneEffectDef("pax_bolt")!.trigger).toBe("onHeadshot");
     const bare = calculateWarframeBuild(excal, [], new Map());
     const full = applyWarframeShardsAndArcanes(
       calculateWarframeBuild(excal, [], new Map()),
@@ -1509,6 +1510,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.abilityStrength).toBeCloseTo(bare.abilityStrength + 0.3, 4);
     expect(full.abilityEfficiency).toBeCloseTo(bare.abilityEfficiency + 0.3, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(4, 4);
   });
 
   it("Melee Influence: stacks>0 → +sum(elements) splash (1 nearby)", () => {
@@ -2244,6 +2246,81 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       expect(full.elementalResistance).toBeCloseTo(bare.elementalResistance + 102, 4);
       expect(full.arcaneBonuses?.statusResistance).toBeCloseTo(102, 4);
     }
+  });
+
+  it("Secondary Cryogenic: stacks>0 → 3 Cold / 15m on secondary", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const cryo = allArcanes.find((a) => a.id === "secondary_cryogenic")!;
+    const stacksLine = getArcaneEffectDef("secondary_cryogenic")!.effects.find(
+      (e) => e.stat === "coldStacksApplied",
+    )!;
+    expect(stacksLine.valuesByRank?.[0]).toBe(1);
+    expect(stacksLine.valuesByRank?.[2]).toBe(2);
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [cryo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.coldStacksApplied ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [cryo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.coldStacksApplied).toBe(3);
+    expect(full.arcaneBonuses?.coldSpreadRadius).toBeCloseTo(15, 4);
+    const onPrimary = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [cryo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(onPrimary.arcaneBonuses?.coldStacksApplied ?? 0).toBe(0);
+  });
+
+  it("Arcane Universal Fallout: 6% per Radiation / 60% cap", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const fallout = allArcanes.find((a) => a.id === "arcane_universal_fallout")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [fallout],
+    );
+    expect(full.arcaneBonuses?.universalOrbChance).toBeCloseTo(6, 4);
+    expect(full.arcaneBonuses?.universalOrbChanceCap).toBe(60);
+  });
+
+  it("Virtuos Null: stacks>0 → +20% amp energy regen / 4s", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const nullArc = allArcanes.find((a) => a.id === "virtuos_null")!;
+    const zero = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [nullArc],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.energyRegen ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [nullArc],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(20, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(4, 4);
   });
 
   it("Exodia Triumph: Zaw +50% combo chance panel; non-Zaw gated", () => {

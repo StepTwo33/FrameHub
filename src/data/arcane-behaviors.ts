@@ -487,8 +487,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_universal_fallout": {
     arcaneId: "arcane_universal_fallout",
+    customHandler: "arcane_universal_fallout",
     effects: [
-      {"statKey": "universalOrbChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Universal Fallout: universalOrbChance (on status proc)"},
+      {"statKey": "universalOrbChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Universal Fallout — +1–6% Universal Orb chance per Radiation status (cap 60%)"},
+      {"statKey": "universalOrbChanceCap", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Universal Fallout — 60% chance cap (constant)"},
     ],
   },
   "arcane_velocity": {
@@ -935,8 +937,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "pax_bolt",
     customHandler: "pax_bolt",
     effects: [
-      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +30% EFF on next cast after kitgun HS kill (paper: equipped = buff up)"},
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +30% STR on next cast after kitgun HS kill (paper: equipped = buff up)"},
+      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +7.5–30% EFF on next cast after kitgun HS kill (paper: equipped = buff up)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +7.5–30% STR on next cast after kitgun HS kill (paper: equipped = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Pax Bolt — 4s window for next ability (constant)"},
     ],
   },
   "pax_charge": {
@@ -1083,8 +1086,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "secondary_cryogenic": {
     arcaneId: "secondary_cryogenic",
+    customHandler: "secondary_cryogenic",
     effects: [
-      {"statKey": "coldStacksApplied", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Cryogenic: coldStacksApplied (conditional proc)"},
+      {"statKey": "coldStacksApplied", "target": "arcane_panel", "mode": "custom", "source": "wiki: Secondary Cryogenic — 1/1/2/2/3/3 Cold stacks on Puncture (paper: stacks>0)"},
+      {"statKey": "coldSpreadRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Secondary Cryogenic — 10–15m radius around Puncture target"},
     ],
   },
   "secondary_encumber": {
@@ -1199,9 +1204,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_null": {
     arcaneId: "virtuos_null",
+    customHandler: "virtuos_null",
     effects: [
-      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Null: energyRegen (on kill proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Null: buffDuration (on kill proc)"},
+      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "wiki: Virtuos Null — +5–20% Amp energy regen for 4s on kill (paper: stacks>0)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Virtuos Null — 4s duration (constant)"},
     ],
   },
   "virtuos_shadow": {

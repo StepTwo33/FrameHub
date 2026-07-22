@@ -1031,6 +1031,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "universalOrbChance",
         "maxValue": 6.0,
         "baseValue": 1.0
+      },
+      {
+        "stat": "universalOrbChanceCap",
+        "maxValue": 60,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2066,28 +2072,24 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "pax_bolt": {
     "name": "Pax Bolt",
-    "trigger": "conditional",
+    "trigger": "onHeadshot",
     "maxRank": 3,
     "effects": [
       {
         "stat": "abilityEfficiency",
         "maxValue": 30,
-        "valuesByRank": [
-          7.5,
-          15,
-          22.5,
-          30
-        ]
+        "valuesByRank": [7.5, 15, 22.5, 30]
       },
       {
         "stat": "abilityStrength",
         "maxValue": 30,
-        "valuesByRank": [
-          7.5,
-          15,
-          22.5,
-          30
-        ]
+        "valuesByRank": [7.5, 15, 22.5, 30]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2555,14 +2557,20 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "secondary_cryogenic": {
     "name": "Secondary Cryogenic",
-    "trigger": "conditional",
+    "trigger": "onStatus",
     "maxRank": 5,
     "effects": [
       {
         "stat": "coldStacksApplied",
         "maxValue": 3,
         "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [1, 1, 2, 2, 3, 3]
+      },
+      {
+        "stat": "coldSpreadRadius",
+        "maxValue": 15,
+        "flat": true,
+        "valuesByRank": [10, 11, 12, 13, 14, 15]
       }
     ]
   },
@@ -2872,8 +2880,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "energyRegen",
         "maxValue": 20.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 5.0
       },
       {

@@ -46,7 +46,7 @@ WIKI_RANKS = {
     "pax_soar": {
         "airborneAccuracy": (12.5, 50),
         "airborneRecoilReduction": (12.5, 50),
-        "aimGlideDuration": (1.3, 5),
+        "aimGlideDuration": (1.25, 5),
     },
     "residual_boils": {
         "killProcChance": (20, 20),

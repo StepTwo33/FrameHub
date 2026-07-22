@@ -183,6 +183,8 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "pax_charge",
   "pax_seeker",
   "pax_soar",
+  "secondary_cryogenic",
+  "virtuos_null",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -280,6 +282,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_deflection",
   "arcane_warmth",
   "arcane_circumvent",
+  "arcane_universal_fallout",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1390,6 +1393,27 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "secondary_cryogenic": {
+      // wiki R5: On Puncture — apply 1–3 Cold stacks in 10–15m around target. Paper: stacks>0.
+      const isSecondary = /secondary|pistol|kitgun/i.test(ctx.baseWeapon?.category ?? "");
+      const stacksLine = findEffect(def, "coldStacksApplied");
+      const radLine = findEffect(def, "coldSpreadRadius");
+      const coldStacks = stacksLine ? scaleArcaneEffectLine(stacksLine, rank, def.maxRank) : 0;
+      const radius = radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "coldStacksApplied", isSecondary ? coldStacks : 0);
+      trackBonus(stats, "coldSpreadRadius", isSecondary ? radius : 0);
+      return true;
+    }
+
+    case "virtuos_null": {
+      // wiki R3: On Kill — +5–20% Amp energy regen for 4s. Paper: stacks>0 = buff up. Panel only.
+      const regenLine = findEffect(def, "energyRegen");
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "energyRegen", regenLine ? scaleArcaneEffectLine(regenLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 4);
+      return true;
+    }
+
     default:
       return false;
   }
@@ -1468,7 +1492,7 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "pax_bolt": {
-      // wiki R3: +30% STR / +30% EFF on next cast after kitgun HS kill. Paper: equipped = buff up.
+      // wiki R3: +30% STR / +30% EFF on next cast within 4s after kitgun HS kill. Paper: equipped = buff up.
       const strLine = findEffect(def, "abilityStrength");
       const str = strLine ? scaleArcaneEffectLine(strLine, rank, def.maxRank) : 0;
       if (str > 0) stats.abilityStrength += str / 100;
@@ -1477,6 +1501,17 @@ export function applyCustomArcaneToWarframe(
       const eff = effLine ? scaleArcaneEffectLine(effLine, rank, def.maxRank) : 0;
       if (eff > 0) stats.abilityEfficiency += eff / 100;
       trackBonus(stats, "abilityEfficiency", eff);
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 4);
+      return true;
+    }
+
+    case "arcane_universal_fallout": {
+      // wiki R5: +1–6% Universal Orb chance per Radiation status on death (cap 60%). Panel.
+      const chanceLine = findEffect(def, "universalOrbChance");
+      const capLine = findEffect(def, "universalOrbChanceCap");
+      trackBonus(stats, "universalOrbChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "universalOrbChanceCap", capLine ? scaleArcaneEffectLine(capLine, rank, def.maxRank) : 60);
       return true;
     }
 

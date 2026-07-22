@@ -182,6 +182,8 @@ const STAT_LABELS: Record<string, string> = {
   zoneBuffRadius: "Buff Radius",
   attackCount: "Attack Count",
   coldStacksApplied: "Cold Stacks Applied",
+  coldSpreadRadius: "Cold Spread Radius",
+  universalOrbChanceCap: "Universal Orb Chance Cap",
   companionDamageRamp: "Companion Damage Ramp",
   companionHeal: "Companion Heal",
   companionHealKillThreshold: "Companion Heal Kill Threshold",

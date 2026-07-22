@@ -754,6 +754,12 @@
         "stat": "universalOrbChance",
         "maxValue": 6,
         "baseValue": 1
+      },
+      {
+        "stat": "universalOrbChanceCap",
+        "maxValue": 60,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1467,17 +1473,23 @@
   },
   "pax_bolt": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onHeadshot",
     "effects": [
       {
         "stat": "abilityEfficiency",
         "maxValue": 30,
-        "baseValue": 7.5
+        "valuesByRank": [7.5, 15, 22.5, 30]
       },
       {
         "stat": "abilityStrength",
         "maxValue": 30,
-        "baseValue": 7.5
+        "valuesByRank": [7.5, 15, 22.5, 30]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 4,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1837,13 +1849,19 @@
   },
   "secondary_cryogenic": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onStatus",
     "effects": [
       {
         "stat": "coldStacksApplied",
         "maxValue": 3,
         "flat": true,
-        "baseValue": 1
+        "valuesByRank": [1, 1, 2, 2, 3, 3]
+      },
+      {
+        "stat": "coldSpreadRadius",
+        "maxValue": 15,
+        "flat": true,
+        "valuesByRank": [10, 11, 12, 13, 14, 15]
       }
     ]
   },
@@ -2073,8 +2091,7 @@
       {
         "stat": "energyRegen",
         "maxValue": 20,
-        "flat": false,
-        "stacking": false
+        "baseValue": 5
       },
       {
         "stat": "buffDuration",
