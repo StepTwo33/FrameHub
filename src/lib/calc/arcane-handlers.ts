@@ -178,6 +178,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "exodia_triumph",
   "exodia_valor",
   "primary_debilitate",
+  "primary_obstruct",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -229,6 +230,8 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "emergence_savior",
   "magus_glitch",
   "magus_repair",
+  "magus_nourish",
+  "magus_replenish",
   "magus_revert",
   "magus_cadence",
   "magus_cloud",
@@ -238,7 +241,6 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "zid_an_asheir",
   "zid_an_sek_eel",
   "melee_vortex",
-  "primary_obstruct",
   "pax_bolt",
   "molt_vigor",
   "arcane_concentration",
@@ -1273,11 +1275,54 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
-    case "exodia_hunt":
-    case "exodia_might":
-    case "exodia_epidemic":
-      trackAllEffects(stats, def, rank, stacks);
+    case "exodia_hunt": {
+      // wiki R3: On Ground Slam — 50% chance (constant) to pull enemies within 6–12m.
+      // Paper: stacks>0 = slam. Zaw-only. CC panel (no DPS).
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const chanceLine = findEffect(def, "pullChance");
+      const radLine = findEffect(def, "pullRadius");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      const radius = radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "pullChance", isZaw ? chance : 0);
+      trackBonus(stats, "pullRadius", isZaw ? radius : 0);
       return true;
+    }
+
+    case "exodia_might": {
+      // wiki R3: On Finisher Kill — 50% chance for +30% Life Steal for 8s.
+      // Paper: stacks>0 = buff up. Zaw-only. Survivability panel (no DPS).
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const chanceLine = findEffect(def, "lifeStealChance");
+      const stealLine = findEffect(def, "lifeSteal");
+      const durLine = findEffect(def, "buffDuration");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      const steal = stealLine ? scaleArcaneEffectLine(stealLine, rank, def.maxRank) : 0;
+      const dur = durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 8;
+      trackBonus(stats, "lifeStealChance", isZaw ? chance : 0);
+      trackBonus(stats, "lifeSteal", isZaw ? steal : 0);
+      trackBonus(stats, "buffDuration", isZaw ? dur : 0);
+      return true;
+    }
+
+    case "exodia_epidemic": {
+      // wiki R3: After bullet jump/double jump slam — suspend wave, duration 1–4s.
+      // Paper: stacks>0 = aerial slam. Zaw-only. CC panel (no DPS).
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const durLine = findEffect(def, "epidemicSuspendDuration");
+      const dur = durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "epidemicSuspendDuration", isZaw ? dur : 0);
+      return true;
+    }
+
+    case "primary_obstruct": {
+      // wiki R5: On Magnetic status — jam enemy weapons within 15m; cooldown 60→10s.
+      // Paper: stacks>0 = Magnetic status applied. Utility panel (no DPS).
+      const radLine = findEffect(def, "weaponJamRadius");
+      const cdLine = findEffect(def, "weaponJamCooldown");
+      trackBonus(stats, "weaponJamRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "weaponJamCooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 0);
+      return true;
+    }
 
     default:
       return false;
@@ -1570,6 +1615,38 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
+    case "magus_nourish": {
+      // wiki R5: While Operator — restore 35 Health/s to Warframe.
+      // Paper: equipped = Operator active → flat HP/s on Warframe regen.
+      const healLine = findEffect(def, "operatorToWarframeHeal");
+      const heal = healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0;
+      if (heal > 0) stats.healthRegenPerSec += heal;
+      trackBonus(stats, "operatorToWarframeHeal", heal);
+      return true;
+    }
+
+    case "magus_repair": {
+      // wiki R5: Void Mode — heal Warframes within 30m by 25% max HP/s.
+      // Paper: equipped = Void Mode → % max HP/s into healthRegenPerSec.
+      const pctLine = findEffect(def, "operatorToWarframeHeal");
+      const pct = pctLine ? scaleArcaneEffectLine(pctLine, rank, def.maxRank) : 0;
+      const healPerSec = (pct / 100) * wfCtx.totalHealth;
+      if (healPerSec > 0) stats.healthRegenPerSec += healPerSec;
+      trackBonus(stats, "operatorToWarframeHeal", pct);
+      trackBonus(stats, "repairHealPerSec", healPerSec);
+      const radLine = findEffect(def, "repairRadius");
+      trackBonus(stats, "repairRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 30);
+      return true;
+    }
+
+    case "magus_replenish": {
+      // wiki R5: On Void Sling — heal 30% Operator Health (guaranteed). Operator panel only.
+      const healLine = findEffect(def, "operatorHealthRegen");
+      const pct = healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "operatorHealthRegen", pct);
+      return true;
+    }
+
     case "arcane_eruption":
     case "arcane_escapist":
     case "arcane_steadfast":
@@ -1577,7 +1654,6 @@ export function applyCustomArcaneToWarframe(
     case "emergence_dissipate":
     case "emergence_savior":
     case "magus_glitch":
-    case "magus_repair":
     case "magus_revert":
     case "magus_cadence":
     case "magus_cloud":
@@ -1585,7 +1661,6 @@ export function applyCustomArcaneToWarframe(
     case "theorem_contagion":
     case "zid_an_sek_eel":
     case "melee_vortex":
-    case "primary_obstruct":
       trackAllEffects(stats, def, rank, stacks);
       return true;
 

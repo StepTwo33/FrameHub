@@ -2301,6 +2301,133 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(withVigor.totalHealth).toBeCloseTo(bare.totalHealth, 4);
   });
 
+  it("Exodia Hunt: stacks>0 → 50% / 12m pull on Zaw", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const hunt = allArcanes.find((a) => a.id === "exodia_hunt")!;
+    const zero = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [hunt],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.pullChance ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [hunt],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.pullChance).toBeCloseTo(50, 4);
+    expect(full.arcaneBonuses?.pullRadius).toBeCloseTo(12, 4);
+  });
+
+  it("Exodia Might: stacks>0 → 50% / +30% lifesteal / 8s on Zaw", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const might = allArcanes.find((a) => a.id === "exodia_might")!;
+    const full = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [might],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.lifeStealChance).toBeCloseTo(50, 4);
+    expect(full.arcaneBonuses?.lifeSteal).toBeCloseTo(30, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(8, 4);
+  });
+
+  it("Exodia Epidemic: stacks>0 → 4s suspend on Zaw", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const epidemic = allArcanes.find((a) => a.id === "exodia_epidemic")!;
+    const full = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [epidemic],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.epidemicSuspendDuration).toBeCloseTo(4, 4);
+  });
+
+  it("Primary Obstruct: stacks>0 → 15m jam / 10s cooldown", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const obstruct = allArcanes.find((a) => a.id === "primary_obstruct")!;
+    const cdLine = getArcaneEffectDef("primary_obstruct")!.effects.find(
+      (e) => e.stat === "weaponJamCooldown",
+    )!;
+    expect(cdLine.baseValue).toBe(60);
+    expect(cdLine.maxValue).toBe(10);
+
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [obstruct],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.weaponJamRadius ?? 0).toBe(0);
+
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [obstruct],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.weaponJamRadius).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.weaponJamCooldown).toBeCloseTo(10, 4);
+    expect(full.totalDamage).toBeCloseTo(calculateWeaponBuild(braton, [], new Map()).totalDamage, 4);
+  });
+
+  it("Magus Nourish: +35 Warframe HP/s while Operator paper", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const nourish = allArcanes.find((a) => a.id === "magus_nourish")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [nourish],
+    );
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + 35, 4);
+    expect(full.arcaneBonuses?.operatorToWarframeHeal).toBeCloseTo(35, 4);
+  });
+
+  it("Magus Repair: Void Mode paper → 25% max HP/s within 30m", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const repair = allArcanes.find((a) => a.id === "magus_repair")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [repair],
+    );
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + bare.totalHealth * 0.25, 4);
+    expect(full.arcaneBonuses?.operatorToWarframeHeal).toBeCloseTo(25, 4);
+    expect(full.arcaneBonuses?.repairRadius).toBeCloseTo(30, 4);
+  });
+
+  it("Magus Replenish: 30% Operator heal panel only", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const replenish = allArcanes.find((a) => a.id === "magus_replenish")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [replenish],
+    );
+    expect(full.arcaneBonuses?.operatorHealthRegen).toBeCloseTo(30, 4);
+    expect(full.totalHealth).toBeCloseTo(bare.totalHealth, 4);
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;

@@ -881,7 +881,7 @@
       {
         "stat": "pullChance",
         "maxValue": 50,
-        "baseValue": 50
+        "constantAtAllRanks": true
       },
       {
         "stat": "pullRadius",
@@ -898,12 +898,18 @@
       {
         "stat": "lifeStealChance",
         "maxValue": 50,
-        "baseValue": 50
+        "constantAtAllRanks": true
       },
       {
         "stat": "lifeSteal",
         "maxValue": 30,
         "baseValue": 7.5
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1118,6 +1124,12 @@
         "stat": "operatorToWarframeHeal",
         "maxValue": 25,
         "baseValue": 5
+      },
+      {
+        "stat": "repairRadius",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1561,7 +1573,7 @@
         "stat": "weaponJamRadius",
         "maxValue": 15,
         "flat": true,
-        "baseValue": 15
+        "constantAtAllRanks": true
       },
       {
         "stat": "weaponJamCooldown",

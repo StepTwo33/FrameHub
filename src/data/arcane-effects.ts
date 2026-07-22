@@ -1315,12 +1315,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "pullChance",
         "maxValue": 50,
-        "valuesByRank": [
-          50,
-          50,
-          50,
-          50
-        ]
+        "constantAtAllRanks": true
       },
       {
         "stat": "pullRadius",
@@ -1343,12 +1338,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "lifeStealChance",
         "maxValue": 50,
-        "valuesByRank": [
-          50,
-          50,
-          50,
-          50
-        ]
+        "constantAtAllRanks": true
       },
       {
         "stat": "lifeSteal",
@@ -1359,6 +1349,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
           22.5,
           30
         ]
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 8,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1627,7 +1623,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "operatorToWarframeHeal",
         "maxValue": 35.0,
         "flat": true,
-        "baseValue": 5.833333
+        "baseValue": 10.0
       }
     ]
   },
@@ -1651,7 +1647,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "operatorToWarframeHeal",
         "maxValue": 25.0,
-        "baseValue": 4.166667
+        "baseValue": 5.0
+      },
+      {
+        "stat": "repairRadius",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2266,7 +2268,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "weaponJamCooldown",
         "maxValue": 10,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 60
       }
     ]
   },

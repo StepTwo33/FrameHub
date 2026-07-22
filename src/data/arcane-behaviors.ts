@@ -592,7 +592,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_epidemic",
     customHandler: "exodia_epidemic",
     effects: [
-      {"statKey": "epidemicSuspendDuration", "target": "arcane_panel", "mode": "custom", "source": "Exodia Epidemic: custom handler"},
+      {"statKey": "epidemicSuspendDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Epidemic — aerial slam suspend 1–4s (paper: stacks>0; Zaw panel)"},
     ],
   },
   "exodia_force": {
@@ -607,16 +607,17 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_hunt",
     customHandler: "exodia_hunt",
     effects: [
-      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: custom handler"},
-      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Hunt: custom handler"},
+      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Hunt — 50% slam pull chance (constant; Zaw panel)"},
+      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Hunt — 6–12m pull radius on slam (paper: stacks>0)"},
     ],
   },
   "exodia_might": {
     arcaneId: "exodia_might",
     customHandler: "exodia_might",
     effects: [
-      {"statKey": "lifeStealChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: custom handler"},
-      {"statKey": "lifeSteal", "target": "arcane_panel", "mode": "custom", "source": "Exodia Might: custom handler"},
+      {"statKey": "lifeStealChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Might — 50% finisher chance for lifesteal (constant; Zaw panel)"},
+      {"statKey": "lifeSteal", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Might — +7.5–30% Life Steal for 8s (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Might — 8s duration (constant)"},
     ],
   },
   "exodia_triumph": {
@@ -742,8 +743,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_nourish": {
     arcaneId: "magus_nourish",
+    customHandler: "magus_nourish",
     effects: [
-      {"statKey": "operatorToWarframeHeal", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Nourish: operatorToWarframeHeal (always active while equipped)"},
+      {"statKey": "operatorToWarframeHeal", "target": "warframe_totals", "mode": "custom", "source": "wiki: Magus Nourish — 10–35 Warframe HP/s while Operator (paper: equipped = Operator → healthRegenPerSec)"},
     ],
   },
   "magus_overload": {
@@ -757,13 +759,15 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "magus_repair",
     customHandler: "magus_repair",
     effects: [
-      {"statKey": "operatorToWarframeHeal", "target": "arcane_panel", "mode": "custom", "source": "Magus Repair: custom handler"},
+      {"statKey": "operatorToWarframeHeal", "target": "warframe_totals", "mode": "custom", "source": "wiki: Magus Repair — 5–25% max HP/s within 30m in Void Mode (paper: equipped = Void Mode → healthRegenPerSec)"},
+      {"statKey": "repairRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Repair — 30m radius (constant)"},
     ],
   },
   "magus_replenish": {
     arcaneId: "magus_replenish",
+    customHandler: "magus_replenish",
     effects: [
-      {"statKey": "operatorHealthRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Replenish: operatorHealthRegen (on void sling proc)"},
+      {"statKey": "operatorHealthRegen", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Replenish — heal 5–30% Operator Health on Void Sling (Operator panel only)"},
     ],
   },
   "magus_revert": {
@@ -975,8 +979,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "primary_obstruct",
     customHandler: "primary_obstruct",
     effects: [
-      {"statKey": "weaponJamRadius", "target": "arcane_panel", "mode": "custom", "source": "Primary Obstruct: custom handler"},
-      {"statKey": "weaponJamCooldown", "target": "arcane_panel", "mode": "custom", "source": "Primary Obstruct: custom handler"},
+      {"statKey": "weaponJamRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Obstruct — 15m jam radius on Magnetic status (constant)"},
+      {"statKey": "weaponJamCooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Obstruct — cooldown 60→10s by rank (paper: stacks>0 = Magnetic applied)"},
     ],
   },
   "primary_overcharge": {
