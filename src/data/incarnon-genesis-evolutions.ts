@@ -13,7 +13,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.7 Range", statChanges: {"range":0.7} },
     { tier: 3, slot: 1, name: "Abiding Hold", description: "Combo Timer pauses when weapon is holstered.", statChanges: {} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+70% Heavy Attack Windup Speed", statChanges: {"heavyAttackWindUp":0.7} },
-    { tier: 4, slot: 0, name: "Rogue Readiness", description: "On Kill: 50% chance for Primary and Secondary weapons instantly reload.", statChanges: {} },
+    { tier: 4, slot: 0, name: "Rogue Readiness", description: "On Kill: 50% chance for Primary and Secondary weapons instantly reload.", statChanges: {"instantReloadOnKillChance":0.5} },
     { tier: 4, slot: 1, name: "Absolute Valor", description: "Increase Base Critical Chance by +17%.", statChanges: {"criticalChance":0.17} },
     { tier: 4, slot: 2, name: "Versatile Creed", description: "Increase Base Critical Chance by +9%. Increase Base Status Chance by +9%.", statChanges: {"criticalChance":0.09,"statusChance":0.09} },
   ],
@@ -152,7 +152,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Breacher's Opportunity", description: "Increase Base Damage by +120. On Shield Break: Increase Base Damage by +80 for 8s.", statChanges: {"flatBaseDamage":200} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+1 Range", statChanges: {"range":1} },
     { tier: 3, slot: 1, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
-    { tier: 3, slot: 2, name: "Rogue Readiness", description: "On Kill: 40% chance for Instantly Reload Primary and Secondary weapons.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Rogue Readiness", description: "On Kill: 40% chance for Instantly Reload Primary and Secondary weapons.", statChanges: {"instantReloadOnKillChance":0.4} },
     // Assumes first-attack buff active for paper DPS
     { tier: 4, slot: 0, name: "Red Right Hand", description: "On First Attack With Primary Equipped: Increase Base Critical Damage Multiplier by +2x.", statChanges: {"criticalMultiplier":2} },
     { tier: 4, slot: 1, name: "Absolute Dominion", description: "Increase Base Status Chance by +30%.", statChanges: {"statusChance":0.3} },
@@ -179,7 +179,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Paragon Essence", description: "Increase Base Damage by +6. On Status Effect: +5% Fire Rate for 5s. Stacks up to 6x.", statChanges: {"flatBaseDamage":6,"fireRate":0.3}, variantStatChanges: {"dera":{"flatBaseDamage":6,"fireRate":0.3},"dera_vandal":{"flatBaseDamage":4,"fireRate":0.3}} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +22", statChanges: {"flatMagazine":22} },
-    { tier: 3, slot: 2, name: "Evolved Autoloader", description: "+50% Magazine Reloaded per second when Holstered.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Evolved Autoloader", description: "+50% Magazine Reloaded per second when Holstered.", statChanges: {"holsterReloadPerSec":0.5} },
     { tier: 4, slot: 0, name: "Deathtrap Trigger", description: "Increase Base Critical Chance by +14% Increase Base Critical Damage Multiplier by +0.6x", statChanges: {"criticalChance":0.14,"criticalMultiplier":0.6}, variantStatChanges: {"dera":{"criticalChance":0.14,"criticalMultiplier":0.6},"dera_vandal":{"criticalChance":0.14,"criticalMultiplier":0.4}} },
     { tier: 4, slot: 1, name: "High Ground", description: "Increase Base Critical Chance by 25% of current Status Chance, up to 35%.", statChanges: {"critFromStatusFraction":0.25,"critFromStatusCap":0.35} },
     { tier: 4, slot: 2, name: "Elemental Balance", description: "Increase Base Status Chance by +18%", statChanges: {"statusChance":0.18}, variantStatChanges: {"dera":{"statusChance":0.18},"dera_vandal":{"statusChance":0.14}} },
@@ -240,7 +240,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+5% × 20)
     { tier: 2, slot: 1, name: "Fevered Frenzy", description: "Increase Base Damage by +50. On Ability Cast: +5% Multishot. Stacks up to 20x.", statChanges: {"flatBaseDamage":50,"multishot":1} },
     { tier: 3, slot: 0, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed.", statChanges: {"reloadSpeed":1} },
-    { tier: 3, slot: 1, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when holstered.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when holstered.", statChanges: {"holsterReloadPerSec":0.5} },
     { tier: 3, slot: 2, name: "Marksman's Hand", description: "-50% Weapon Recoil.", statChanges: {"recoil":-0.5} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +20%.", statChanges: {"criticalChance":0.2} },
     { tier: 4, slot: 1, name: "Neurotoxin", description: "On Headshot: +70% Toxin for 3s.", statChanges: {"neurotoxinToxinOnHeadshot":0.7} },
@@ -252,7 +252,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Attuned Accuracy", description: "+40% Accuracy when Aiming.", statChanges: {"accuracy":0.4} },
     { tier: 2, slot: 1, name: "Kinetic Baffle", description: "-50% Weapon Recoil", statChanges: {} },
     { tier: 2, slot: 2, name: "Frictionless Flight", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
-    { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {} },
+    { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {"holsterReloadPerSec":0.5} },
     // Paper: one full base mag (6 shells) reload → +60% FR (not infinite 99-stack)
     { tier: 3, slot: 1, name: "Mounting Momentum", description: "Reload increases Fire Rate by +10% per shell. Resets on reload.", statChanges: {"fireRate":0.6} },
     { tier: 4, slot: 0, name: "Brutal Edge", description: "+10% Critical Chance +10% Status Chance", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
@@ -285,7 +285,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Stormburst", description: "Increase Base Damage by +X. On hitting enemies affected by Electricity Status: +0.4 Multishot for 2s. Stacks up to 3x.", statChanges: {"flatBaseDamage":28,"multishot":1.2}, variantStatChanges: {"furis":{"flatBaseDamage":28,"multishot":1.2},"mk1_furis":{"flatBaseDamage":34,"multishot":1.2}} },
     { tier: 3, slot: 0, name: "Practiced Grip", description: "Increase Accuracy by +50%", statChanges: {"accuracy":0.5} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +25.", statChanges: {"flatMagazine":25} },
-    { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot: 10% chance for Instant Reload", statChanges: {} },
+    { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot: 10% chance for Instant Reload", statChanges: {"instantReloadOnHeadshotChance":0.1} },
     // Max stacks assumed for paper DPS (+5% × 10)
     { tier: 4, slot: 0, name: "Headcracker", description: "On Headshot: +5% Fire Rate for 2s. Stacks up to 10x.", statChanges: {"fireRate":0.5} },
     { tier: 4, slot: 1, name: "Prelude of Might", description: "With Critical Chance below 40%: Increase Base Critical Damage Multiplier by +3x.", statChanges: {"preludeMightBaseCm":3,"preludeMightMaxCc":0.4} },
@@ -297,7 +297,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Sage's Resolve", description: "Increase Base Damage by +10. With Channeled Ability Active: +25% Multishot.", statChanges: {"flatBaseDamage":10,"multishot":0.25} },
     // Max stacks assumed for paper DPS (+5 × 4)
     { tier: 2, slot: 1, name: "Infused Shots", description: "Increase Base Damage by +6. On 50 Energy Spent: Increase Base Damage by +5 for 10s. Stacks up to 4x.", statChanges: {"flatBaseDamage":26} },
-    { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {} },
+    { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {"holsterReloadPerSec":0.5} },
     { tier: 3, slot: 1, name: "Moonrise Velocity", description: "+8 Range", statChanges: {"range":8} },
     { tier: 3, slot: 2, name: "Extended Volley", description: "Increase Base Magazine Capacity by +40.", statChanges: {"flatMagazine":40} },
     { tier: 4, slot: 0, name: "Critical Parallel", description: "Increase Base Critical Chance by +20%. Increase Base Critical Damage Multiplier by +0.2x.", statChanges: {"criticalChance":0.2,"criticalMultiplier":0.2}, variantStatChanges: {"gammacor":{"criticalChance":0.2,"criticalMultiplier":0.2},"synoid_gammacor":{"criticalChance":0.1,"criticalMultiplier":0.2}} },
@@ -370,7 +370,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 2, name: "Raptor's Chase", description: "+50% Movement Speed while Aiming", statChanges: {} },
     // Max stacks assumed for paper DPS (+30% × 3)
     { tier: 3, slot: 0, name: "Lethal Rearmament", description: "On Headshot: +30% Reload Speed for 12 seconds. Stacks up to 3 times.", statChanges: {"reloadSpeed":0.9} },
-    { tier: 3, slot: 1, name: "Awakened Readiness", description: "30% Magazine Reloaded per second while Holstered", statChanges: {} },
+    { tier: 3, slot: 1, name: "Awakened Readiness", description: "30% Magazine Reloaded per second while Holstered", statChanges: {"holsterReloadPerSec":0.3} },
     // Assumes aim-glide/slide for paper DPS
     { tier: 3, slot: 2, name: "Feather of Justice", description: "Gain 60% Ammo Efficiency while Aim Gliding or Sliding.", statChanges: {"ammoEfficiency":0.6} },
     { tier: 4, slot: 0, name: "Caput Mortuum", description: "+50% Headshot damage", statChanges: {"headshotDamageBonus":0.5} },
@@ -391,7 +391,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Void's Guidance", description: "+50% Accuracy -50% Recoil", statChanges: {"accuracy":0.5,"recoil":-0.5} },
     // Assumes headshot AE buff up for paper DPS (+50% AE)
     { tier: 3, slot: 1, name: "Marksman's Gain", description: "On Headshot: 20% chance for +50% Ammo Efficiency for 6s.", statChanges: {"ammoEfficiency":0.5} },
-    { tier: 3, slot: 2, name: "Exact Penance", description: "On Kill: 50% chance for Instant Reload.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Exact Penance", description: "On Kill: 50% chance for Instant Reload.", statChanges: {"instantReloadOnKillChance":0.5} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +20%. Increase Base Status Chance by +12%.", statChanges: {"criticalChance":0.2,"statusChance":0.12}, variantStatChanges: {"lato":{"criticalChance":0.2,"statusChance":0.12},"lato_vandal":{"criticalChance":0.06,"statusChance":0.12},"lato_prime":{"criticalChance":0.04,"statusChance":0.1}} },
     // Assumes equip buff active for paper DPS
     { tier: 4, slot: 1, name: "Deathtrap Trigger", description: "On Equip from Primary: Increase Base Critical Chance by +50% for 4s. Increase Base Critical Damage Multiplier by +3.2x for 4s.", statChanges: {"criticalChance":0.5,"criticalMultiplier":3.2} },
@@ -526,7 +526,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 2, name: "Swift Deliverance", description: "+80% Projectile Speed", statChanges: {"projectileSpeed":0.8} },
     { tier: 3, slot: 0, name: "Retribution's Vessel", description: "+50% Magazine Capacity", statChanges: {"magazine":0.5} },
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed for 6 seconds", statChanges: {"reloadSpeed":1} },
-    { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot kill: 20% chance to instant Reload.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot kill: 20% chance to instant Reload.", statChanges: {"instantReloadOnHeadshotChance":0.2} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "+10% Critical Chance +10% Status Chance", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
     { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
@@ -702,7 +702,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Deathtrap Trigger", description: "Increase Base Damage by +66. On Equip From Primary: Increase Base Critical Chance by +30% for 3s. Increase Base Critical Damage Multiplier by +2.2x for 3s.", statChanges: {"flatBaseDamage":66,"criticalChance":0.3,"criticalMultiplier":2.2}, variantStatChanges: {"vasto":{"flatBaseDamage":66,"criticalChance":0.3,"criticalMultiplier":2.2},"vasto_prime":{"flatBaseDamage":24,"criticalChance":0.3,"criticalMultiplier":0.8}} },
     { tier: 3, slot: 0, name: "Extended Volley", description: "Increase Base Magazine Capacity by +6.", statChanges: {"flatMagazine":6} },
     { tier: 3, slot: 1, name: "Marksman's Hand", description: "-50% Weapon Recoil.", statChanges: {"recoil":-0.5} },
-    { tier: 3, slot: 2, name: "Awakened Readiness", description: "+20% Magazine Reloaded per second when Holstered.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Awakened Readiness", description: "+20% Magazine Reloaded per second when Holstered.", statChanges: {"holsterReloadPerSec":0.2} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +16%.", statChanges: {"criticalChance":0.16}, variantStatChanges: {"vasto":{"criticalChance":0.16},"vasto_prime":{"criticalChance":0.18}} },
     { tier: 4, slot: 1, name: "Survivor's Edge", description: "Increase Base Critical Chance by +10%. Increase Base Status Chance by +10%.", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
     // Assumes headshot AE buff up for paper DPS (100% → no reload)

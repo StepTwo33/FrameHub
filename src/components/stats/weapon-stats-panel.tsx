@@ -332,6 +332,30 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Incarnon / riven recoil (display; negative = less recoil). Not modeled in DPS."
           />
         )}
+        {stats.holsterReloadPerSec != null && stats.holsterReloadPerSec !== 0 && (
+          <StatRow
+            label="Holster Reload"
+            value={`${(stats.holsterReloadPerSec * 100).toFixed(0)}%/s`}
+            color="text-sky-400"
+            tooltip="Magazine fraction reloaded per second while holstered (display; not folded into sustained DPS)."
+          />
+        )}
+        {stats.instantReloadOnKillChance != null && stats.instantReloadOnKillChance > 0 && (
+          <StatRow
+            label="Instant Reload (Kill)"
+            value={`${(stats.instantReloadOnKillChance * 100).toFixed(0)}%`}
+            color="text-amber-400"
+            tooltip="Chance to instantly reload on kill (display; not folded into sustained DPS)."
+          />
+        )}
+        {stats.instantReloadOnHeadshotChance != null && stats.instantReloadOnHeadshotChance > 0 && (
+          <StatRow
+            label="Instant Reload (HS)"
+            value={`${(stats.instantReloadOnHeadshotChance * 100).toFixed(0)}%`}
+            color="text-amber-400"
+            tooltip="Chance to instantly reload on headshot / headshot-kill (display; not folded into sustained DPS)."
+          />
+        )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
           <StatRow
             label="Sprint Speed"
@@ -646,6 +670,9 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "followThrough") return `followThrough: +${(n * 100).toFixed(0)}%`;
                         if (s === "accuracy") return `acc: +${(n * 100).toFixed(0)}%`;
                         if (s === "recoil") return `recoil: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "holsterReloadPerSec") return `holster: ${(n * 100).toFixed(0)}%/s`;
+                        if (s === "instantReloadOnKillChance") return `reload@kill: ${(n * 100).toFixed(0)}%`;
+                        if (s === "instantReloadOnHeadshotChance") return `reload@HS: ${(n * 100).toFixed(0)}%`;
                         if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
                         if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
                         return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;

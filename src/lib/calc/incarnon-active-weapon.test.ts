@@ -679,6 +679,38 @@ describe("evolution numeric fixes", () => {
     ).toBe(0.6);
   });
 
+  it("holster reload and instant-reload chances appear on CalculatedStats", () => {
+    const dera = allWeapons.find((w) => w.id === "dera")!;
+    const auto = mergeIncarnonStatChanges(incarnonDataMap.get("dera")!, { 3: 2 }, "dera");
+    expect(auto?.holsterReloadPerSec).toBe(0.5);
+    expect(calculateWeaponBuild(dera, [], modsMap(), auto).holsterReloadPerSec).toBe(0.5);
+
+    const laetum = allWeapons.find((w) => w.id === "laetum")!;
+    const ready = mergeIncarnonStatChanges(incarnonDataMap.get("laetum")!, { 3: 1 }, "laetum");
+    expect(ready?.holsterReloadPerSec).toBe(0.3);
+    expect(calculateWeaponBuild(laetum, [], modsMap(), ready).holsterReloadPerSec).toBe(0.3);
+
+    const lato = allWeapons.find((w) => w.id === "lato")!;
+    const penance = mergeIncarnonStatChanges(incarnonDataMap.get("lato")!, { 3: 2 }, "lato");
+    expect(penance?.instantReloadOnKillChance).toBe(0.5);
+    expect(calculateWeaponBuild(lato, [], modsMap(), penance).instantReloadOnKillChance).toBe(0.5);
+
+    const furis = allWeapons.find((w) => w.id === "furis")!;
+    const fortune = mergeIncarnonStatChanges(incarnonDataMap.get("furis")!, { 3: 2 }, "furis");
+    expect(fortune?.instantReloadOnHeadshotChance).toBe(0.1);
+    expect(calculateWeaponBuild(furis, [], modsMap(), fortune).instantReloadOnHeadshotChance).toBe(0.1);
+
+    const phenmor = allWeapons.find((w) => w.id === "phenmor")!;
+    const hsKill = mergeIncarnonStatChanges(incarnonDataMap.get("phenmor")!, { 3: 2 }, "phenmor");
+    expect(hsKill?.instantReloadOnHeadshotChance).toBe(0.2);
+    expect(calculateWeaponBuild(phenmor, [], modsMap(), hsKill).instantReloadOnHeadshotChance).toBe(0.2);
+
+    const vasto = allWeapons.find((w) => w.id === "vasto")!;
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("vasto")!, { 3: 2 }, "vasto")?.holsterReloadPerSec,
+    ).toBe(0.2);
+  });
+
   it("accuracy and recoil appear on CalculatedStats (aim-feel Genesis)", () => {
     const boltor = allWeapons.find((w) => w.id === "boltor")!;
     const mantra = mergeIncarnonStatChanges(incarnonDataMap.get("boltor")!, { 2: 0 }, "boltor");

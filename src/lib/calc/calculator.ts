@@ -1031,6 +1031,22 @@ export function calculateWeaponBuild(
           // Negative = recoil reduction (e.g. -0.5 = −50% Weapon Recoil). Display only.
           stats.recoil = (stats.recoil ?? 0) + value;
           break;
+        case 'holsterReloadPerSec':
+          // Fraction of magazine filled per second while holstered (e.g. 0.5 = 50%/s).
+          stats.holsterReloadPerSec = (stats.holsterReloadPerSec ?? 0) + value;
+          break;
+        case 'instantReloadOnKillChance':
+          stats.instantReloadOnKillChance = Math.min(
+            1,
+            (stats.instantReloadOnKillChance ?? 0) + value,
+          );
+          break;
+        case 'instantReloadOnHeadshotChance':
+          stats.instantReloadOnHeadshotChance = Math.min(
+            1,
+            (stats.instantReloadOnHeadshotChance ?? 0) + value,
+          );
+          break;
       }
     }
     // Recalculate total damage after incarnon/riven changes (keep residual)

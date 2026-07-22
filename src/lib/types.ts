@@ -461,6 +461,12 @@ export interface CalculatedStats {
   accuracy?: number;
   /** Recoil change fraction from incarnon/rivens (negative = less recoil) — display only. */
   recoil?: number;
+  /** Fraction of magazine reloaded per second while holstered (Incarnon) — display only. */
+  holsterReloadPerSec?: number;
+  /** Chance to instantly reload on kill (Incarnon) — display only. */
+  instantReloadOnKillChance?: number;
+  /** Chance to instantly reload on headshot / headshot-kill (Incarnon) — display only. */
+  instantReloadOnHeadshotChance?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

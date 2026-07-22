@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + PT/projSpeed/followThrough + **accuracy/recoil** panel; remain: holster / reload procs |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + PT/projSpeed/followThrough + accuracy/recoil + **holster/instant-reload** panel; remain: fold holster/reload procs into sustained DPS |
 
 ---
 
@@ -272,6 +272,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Hunter set vs Slash DPS | 2026-07-22 | Optional +25%/piece companion weapon DPS vs Slash (beast claws / sentinel); wiki Slash not generic status |
 | Mecha mark + Empowered DPS | 2026-07-22 | Mark CD/dur/range by pieces (60→15s / 3→12s / 7.5→30m); optional Empowered ×2.5 vs marked |
 | Genesis aim-feel panel | 2026-07-22 | Accuracy/recoil on CalculatedStats + Void's Guidance / Marksman's Hand / Kinetic Battle / Practiced Grip / Attuned Accuracy / Hunter's Mantra |
+| Genesis holster / reload procs | 2026-07-22 | Holster reload %/s + instant reload on kill/HS panel (Autoloader / Awakened / Rogue / Exact Penance / Executioner's Fortune) |
 
 ## New / extended test files
 
