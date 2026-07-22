@@ -18,6 +18,7 @@ import {
   computeThermalSunderRedlineArmorStrip,
   computeThuribleEnergyPerKill,
   computeMetamorphosisBonusAtTime,
+  computeCovenantCritChance,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -221,6 +222,26 @@ describe("Metamorphosis linear decay", () => {
     expect(computeMetamorphosisBonusAtTime(0.25, 1.3, 0, 25)).toBeCloseTo(0.325, 5);
     expect(computeMetamorphosisBonusAtTime(0.15, 1.3, 12.5, 25)).toBeCloseTo(0.0975, 5);
     expect(computeMetamorphosisBonusAtTime(250, 1.3, 12.5, 50)).toBe(243.75); // 200% DUR
+  });
+});
+
+describe("Covenant Retaliation crit chance", () => {
+  it("matches wiki base / absorb / caps", () => {
+    const z = computeCovenantCritChance(0, 1);
+    expect(z.body).toBeCloseTo(0.05, 5);
+    expect(z.headshot).toBeCloseTo(0.2, 5);
+
+    const cap = computeCovenantCritChance(3000, 1);
+    expect(cap.body).toBeCloseTo(0.5, 5);
+    expect(cap.headshot).toBeCloseTo(2, 5);
+
+    const mid = computeCovenantCritChance(2000, 1.3);
+    expect(mid.body).toBeCloseTo(0.455, 5);
+    expect(mid.headshot).toBeCloseTo(1.82, 5);
+
+    const baseStr = computeCovenantCritChance(0, 1.3);
+    expect(baseStr.body).toBeCloseTo(0.065, 5);
+    expect(baseStr.headshot).toBeCloseTo(0.26, 5);
   });
 });
 

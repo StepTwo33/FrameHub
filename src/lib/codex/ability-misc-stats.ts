@@ -2256,6 +2256,36 @@ export function computeMetamorphosisBonusAtTime(
   return peak * remain;
 }
 
+/**
+ * wiki Covenant Retaliation flat crit chance:
+ * CC = (base + (absorbed÷100)×per100) × STR
+ * body = Min(bodyCap, CC); headshot = Min(hsCap, CC × hsMult)
+ */
+export function computeCovenantCritChance(
+  absorbedDamage: number,
+  strength: number,
+  opts?: {
+    baseCriticalChance?: number;
+    critChancePer100Damage?: number;
+    headshotMultiplier?: number;
+    bodyshotCritChanceCap?: number;
+    headshotCritChanceCap?: number;
+  },
+): { body: number; headshot: number; uncapped: number } {
+  const base = opts?.baseCriticalChance ?? 0.05;
+  const per100 = opts?.critChancePer100Damage ?? 0.015;
+  const hsMult = opts?.headshotMultiplier ?? 4;
+  const bodyCap = opts?.bodyshotCritChanceCap ?? 0.5;
+  const hsCap = opts?.headshotCritChanceCap ?? 2;
+  const uncapped =
+    (base + (Math.max(0, absorbedDamage) / 100) * per100) * strength;
+  return {
+    uncapped,
+    body: Math.min(bodyCap, uncapped),
+    headshot: Math.min(hsCap, uncapped * hsMult),
+  };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

@@ -22,6 +22,7 @@ import {
   computeMassVitrifyEnemyAbsorb,
   computeThuribleEnergyPerKill,
   computeMetamorphosisBonusAtTime,
+  computeCovenantCritChance,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -355,6 +356,10 @@ export function AbilityStatsBlock({
   const hasMetamorphosisDecay = display.abilityName === "Metamorphosis";
   const [metaElapsedSec, setMetaElapsedSec] = useState(0);
   const metaDurationSec = Math.max(0, (ability.duration ?? 25) * dur);
+  const hasCovenantCrit =
+    display.abilityName === "Covenant" &&
+    typeof ability.miscStats?.baseCriticalChance === "number";
+  const [covenantAbsorbK, setCovenantAbsorbK] = useState(0);
   const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
   const hasHeatEnergyLerp =
     display.abilityName === "Fire Blast" &&
@@ -964,6 +969,16 @@ export function AbilityStatsBlock({
     ) {
       continue;
     }
+    if (
+      hasCovenantCrit &&
+      (line.label === "Base Critical Chance" ||
+        line.label === "Crit Chance per 100 Damage" ||
+        line.label === "Headshot Multiplier" ||
+        line.label === "Bodyshot Crit Chance Cap" ||
+        line.label === "Headshot Crit Chance Cap")
+    ) {
+      continue;
+    }
     rows.push(
       <AbilityStatRow
         key={line.label}
@@ -1154,6 +1169,45 @@ export function AbilityStatsBlock({
         />,
       );
     }
+  }
+  if (hasCovenantCrit && ability.miscStats) {
+    const absorbed = covenantAbsorbK * 1000;
+    const opts = {
+      baseCriticalChance: Number(ability.miscStats.baseCriticalChance),
+      critChancePer100Damage: Number(ability.miscStats.critChancePer100Damage),
+      headshotMultiplier: Number(ability.miscStats.headshotMultiplier),
+      bodyshotCritChanceCap: Number(ability.miscStats.bodyshotCritChanceCap),
+      headshotCritChanceCap: Number(ability.miscStats.headshotCritChanceCap),
+    };
+    const baseCc = computeCovenantCritChance(absorbed, 1, opts);
+    const scaledCc = computeCovenantCritChance(absorbed, str, opts);
+    const atLabel = absorbed > 0 ? " (at Absorb)" : " (Base)";
+    rows.push(
+      <AbilityStatRow
+        key="covenantBodyCc"
+        compact={compact}
+        label={`Retaliation CC${atLabel}`}
+        baseValue={(baseCc.body * 100).toFixed(1)}
+        modifiedValue={(scaledCc.body * 100).toFixed(1)}
+        unit="%"
+        isModified={str !== 1 || absorbed > 0}
+        isPositive={scaledCc.body >= baseCc.body}
+        scaleHint="strength"
+      />,
+    );
+    rows.push(
+      <AbilityStatRow
+        key="covenantHsCc"
+        compact={compact}
+        label={`Retaliation HS CC${atLabel}`}
+        baseValue={(baseCc.headshot * 100).toFixed(1)}
+        modifiedValue={(scaledCc.headshot * 100).toFixed(1)}
+        unit="%"
+        isModified={str !== 1 || absorbed > 0}
+        isPositive={scaledCc.headshot >= baseCc.headshot}
+        scaleHint="strength"
+      />,
+    );
   }
   if (hasMetamorphosisDecay && ability.miscStats) {
     const nightArmor = Number(ability.miscStats.nightArmor);
@@ -1360,6 +1414,16 @@ export function AbilityStatsBlock({
           max={Math.max(1, Math.ceil(metaDurationSec))}
           onChange={setMetaElapsedSec}
           tooltip="Metamorphosis bonuses decay linearly to 0 over duration×DUR (wiki)."
+        />
+      )}
+      {hasCovenantCrit && (
+        <SimSlider
+          label="Absorbed Damage (k)"
+          value={covenantAbsorbK}
+          min={0}
+          max={20}
+          onChange={setCovenantAbsorbK}
+          tooltip="Covenant Retaliation: CC = (5% + absorb÷100 × 1.5%) × STR; body cap 50%, HS ×4 cap 200%."
         />
       )}
       {rows}

@@ -1079,7 +1079,8 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     energyConvert: { scale: "strength" },
   },
 
-  // wiki: Covenant — base CC + CC per damage × STR; invuln via duration; crit window × DUR
+  // wiki: Covenant — base CC + CC/100 dmg × STR; Retaliation panel:
+  // CC=(base+(absorbed÷100)×per100)×STR; body min 50%, HS min 200% (×4); crit window × DUR
   "harrow::Covenant": {
     baseCriticalChance: { scale: "strength" },
     critChancePer100Damage: { scale: "strength" },
