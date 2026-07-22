@@ -315,6 +315,7 @@
       {
         "stat": "statusResistance",
         "maxValue": 102,
+        "baseValue": 17,
         "flat": false,
         "stacking": false
       }
@@ -383,14 +384,20 @@
     "trigger": "conditional",
     "effects": [
       {
-        "stat": "dodgeSpeed",
+        "stat": "sprintSpeed",
         "maxValue": 60,
         "baseValue": 10
       },
       {
-        "stat": "healthRegenChance",
+        "stat": "sprintSpeedChance",
         "maxValue": 45,
-        "baseValue": 45
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 18,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1476,12 +1483,12 @@
   },
   "pax_charge": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "kitgunRecharge",
         "maxValue": 50,
-        "baseValue": 12.5
+        "valuesByRank": [12.5, 25, 37.5, 50]
       }
     ]
   },
@@ -1493,7 +1500,7 @@
         "stat": "kitgunHoming",
         "maxValue": 4,
         "flat": true,
-        "baseValue": 1
+        "valuesByRank": [1, 2, 3, 4]
       }
     ]
   },
@@ -1504,18 +1511,18 @@
       {
         "stat": "airborneAccuracy",
         "maxValue": 50,
-        "baseValue": 12.5
+        "valuesByRank": [12.5, 25, 37.5, 50]
       },
       {
         "stat": "airborneRecoilReduction",
         "maxValue": 50,
-        "baseValue": 12.5
+        "valuesByRank": [12.5, 25, 37.5, 50]
       },
       {
         "stat": "aimGlideDuration",
         "maxValue": 5,
         "flat": true,
-        "baseValue": 1.3
+        "valuesByRank": [1.25, 2.5, 3.75, 5]
       }
     ]
   },

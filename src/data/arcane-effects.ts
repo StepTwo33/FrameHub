@@ -672,14 +672,20 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "dodgeSpeed",
+        "stat": "sprintSpeed",
         "maxValue": 60.0,
         "baseValue": 10.0
       },
       {
-        "stat": "healthRegenChance",
+        "stat": "sprintSpeedChance",
         "maxValue": 45.0,
-        "baseValue": 7.5
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 18,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2069,7 +2075,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "pax_charge": {
     "name": "Pax Charge",
-    "trigger": "conditional",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
@@ -2132,9 +2138,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "maxValue": 5,
         "flat": true,
         "valuesByRank": [
-          1.3,
+          1.25,
           2.5,
-          3.8,
+          3.75,
           5
         ]
       }

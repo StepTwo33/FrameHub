@@ -180,6 +180,9 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "primary_debilitate",
   "primary_obstruct",
   "melee_vortex",
+  "pax_charge",
+  "pax_seeker",
+  "pax_soar",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -269,6 +272,11 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "zid_an_asheir",
   "zid_an_sek_eel",
   "pax_bolt",
+  "arcane_phantasm",
+  "arcane_healing",
+  "arcane_ice",
+  "arcane_nullifier",
+  "arcane_resistance",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1348,6 +1356,37 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "pax_charge": {
+      // wiki R3: battery mag; +12.5–50% reload speed (reduces recharge delay). Passive.
+      const rechargeLine = findEffect(def, "kitgunRecharge");
+      const recharge = rechargeLine ? scaleArcaneEffectLine(rechargeLine, rank, def.maxRank) : 0;
+      if (recharge > 0) stats.reloadTime /= 1 + recharge / 100;
+      trackBonus(stats, "kitgunRecharge", recharge);
+      return true;
+    }
+
+    case "pax_seeker": {
+      // wiki R3: On Headshot Kill — 1–4 homing bolts (P/S). Paper: stacks>0 = HS kill.
+      const boltsLine = findEffect(def, "kitgunHoming");
+      trackBonus(stats, "kitgunHoming", boltsLine ? scaleArcaneEffectLine(boltsLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "pax_soar": {
+      // wiki R3: while airborne — +acc/−recoil 12.5–50%; +1.25–5s aim glide/wall latch. Passive.
+      const accLine = findEffect(def, "airborneAccuracy");
+      const recoilLine = findEffect(def, "airborneRecoilReduction");
+      const glideLine = findEffect(def, "aimGlideDuration");
+      trackBonus(stats, "airborneAccuracy", accLine ? scaleArcaneEffectLine(accLine, rank, def.maxRank) : 0);
+      trackBonus(
+        stats,
+        "airborneRecoilReduction",
+        recoilLine ? scaleArcaneEffectLine(recoilLine, rank, def.maxRank) : 0,
+      );
+      trackBonus(stats, "aimGlideDuration", glideLine ? scaleArcaneEffectLine(glideLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
     default:
       return false;
   }
@@ -1885,6 +1924,37 @@ export function applyCustomArcaneToWarframe(
       trackBonus(stats, "companionHeal", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
       trackBonus(stats, "companionHealKillThreshold", killLine ? scaleArcaneEffectLine(killLine, rank, def.maxRank) : 6);
       trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 30);
+      return true;
+    }
+
+    case "arcane_phantasm": {
+      // wiki R5: On Block — 45% chance for +10–60% Movement Speed for 18s. Paper: equipped = buff up.
+      const spdLine = findEffect(def, "sprintSpeed");
+      const spd = spdLine ? scaleArcaneEffectLine(spdLine, rank, def.maxRank) : 0;
+      if (spd > 0) stats.sprintSpeedBonus += spd / 100;
+      trackBonus(stats, "sprintSpeed", spd);
+      const chanceLine = findEffect(def, "sprintSpeedChance");
+      trackBonus(stats, "sprintSpeedChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 45);
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 18);
+      return true;
+    }
+
+    case "arcane_healing": {
+      // wiki R5: 17–102% chance to resist Slash. Panel only (not elemental resist).
+      const resistLine = findEffect(def, "statusResistance");
+      trackBonus(stats, "statusResistance", resistLine ? scaleArcaneEffectLine(resistLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "arcane_ice":
+    case "arcane_nullifier":
+    case "arcane_resistance": {
+      // wiki R5: 17–102% chance to resist Cold / Magnetic / Toxin. Panel + elementalResistance UI.
+      const resistLine = findEffect(def, "statusResistance");
+      const resist = resistLine ? scaleArcaneEffectLine(resistLine, rank, def.maxRank) : 0;
+      if (resist > 0) stats.elementalResistance += resist;
+      trackBonus(stats, "statusResistance", resist);
       return true;
     }
 

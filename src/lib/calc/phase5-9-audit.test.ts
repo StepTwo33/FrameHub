@@ -2764,6 +2764,107 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(30, 4);
   });
 
+  it("Pax Charge: passive +50% reload (recharge delay)", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const charge = allArcanes.find((a) => a.id === "pax_charge")!;
+    expect(getArcaneEffectDef("pax_charge")!.trigger).toBe("passive");
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [charge],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(full.reloadTime).toBeCloseTo(bare.reloadTime / 1.5, 4);
+    expect(full.arcaneBonuses?.kitgunRecharge).toBeCloseTo(50, 4);
+  });
+
+  it("Pax Seeker: stacks>0 → 4 homing bolts", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const seeker = allArcanes.find((a) => a.id === "pax_seeker")!;
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [seeker],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.kitgunHoming ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [seeker],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.kitgunHoming).toBe(4);
+  });
+
+  it("Pax Soar: +50% airborne acc/recoil / +5s glide", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const soar = allArcanes.find((a) => a.id === "pax_soar")!;
+    const glideLine = getArcaneEffectDef("pax_soar")!.effects.find((e) => e.stat === "aimGlideDuration")!;
+    expect(glideLine.valuesByRank?.[0]).toBeCloseTo(1.25, 4);
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [soar],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(full.arcaneBonuses?.airborneAccuracy).toBeCloseTo(50, 4);
+    expect(full.arcaneBonuses?.airborneRecoilReduction).toBeCloseTo(50, 4);
+    expect(full.arcaneBonuses?.aimGlideDuration).toBeCloseTo(5, 4);
+  });
+
+  it("Arcane Phantasm: +60% sprint / 45% chance / 18s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const phantasm = allArcanes.find((a) => a.id === "arcane_phantasm")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [phantasm],
+    );
+    expect(full.sprintSpeedBonus).toBeCloseTo(bare.sprintSpeedBonus + 0.6, 4);
+    expect(full.arcaneBonuses?.sprintSpeed).toBeCloseTo(60, 4);
+    expect(full.arcaneBonuses?.sprintSpeedChance).toBeCloseTo(45, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(18, 4);
+  });
+
+  it("Arcane Ice/Nullifier/Resistance: +102% status resist", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    for (const id of ["arcane_ice", "arcane_nullifier", "arcane_resistance"] as const) {
+      const arc = allArcanes.find((a) => a.id === id)!;
+      const bare = calculateWarframeBuild(excal, [], new Map());
+      const full = applyWarframeShardsAndArcanes(
+        calculateWarframeBuild(excal, [], new Map()),
+        undefined,
+        [arc],
+      );
+      expect(full.elementalResistance).toBeCloseTo(bare.elementalResistance + 102, 4);
+      expect(full.arcaneBonuses?.statusResistance).toBeCloseTo(102, 4);
+    }
+  });
+
+  it("Arcane Healing: 102% Slash resist panel (not elemental)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const healing = allArcanes.find((a) => a.id === "arcane_healing")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [healing],
+    );
+    expect(full.elementalResistance).toBeCloseTo(bare.elementalResistance, 4);
+    expect(full.arcaneBonuses?.statusResistance).toBeCloseTo(102, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;

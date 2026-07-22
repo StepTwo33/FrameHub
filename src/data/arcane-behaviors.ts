@@ -215,8 +215,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_healing": {
     arcaneId: "arcane_healing",
+    customHandler: "arcane_healing",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Healing: statusResistance (on status proc)"},
+      {"statKey": "statusResistance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Healing — 17–102% chance to resist Slash (panel)"},
     ],
   },
   "arcane_hot_shot": {
@@ -229,8 +230,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_ice": {
     arcaneId: "arcane_ice",
+    customHandler: "arcane_ice",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Ice: statusResistance (always active while equipped)"},
+      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Ice — 17–102% chance to resist Cold"},
     ],
   },
   "arcane_ice_storm": {
@@ -270,8 +272,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_nullifier": {
     arcaneId: "arcane_nullifier",
+    customHandler: "arcane_nullifier",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Nullifier: statusResistance (always active while equipped)"},
+      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Nullifier — 17–102% chance to resist Magnetic"},
     ],
   },
   "arcane_persistence": {
@@ -284,9 +287,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_phantasm": {
     arcaneId: "arcane_phantasm",
+    customHandler: "arcane_phantasm",
     effects: [
-      {"statKey": "dodgeSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Phantasm: dodgeSpeed (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Phantasm: healthRegenChance (conditional proc)"},
+      {"statKey": "sprintSpeed", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Phantasm — +10–60% Movement Speed on block (paper: equipped = buff up)"},
+      {"statKey": "sprintSpeedChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Phantasm — 45% chance on block (constant)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Phantasm — 18s duration (constant)"},
     ],
   },
   "arcane_pistoleer": {
@@ -374,8 +379,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_resistance": {
     arcaneId: "arcane_resistance",
+    customHandler: "arcane_resistance",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Resistance: statusResistance (always active while equipped)"},
+      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Resistance — 17–102% chance to resist Toxin"},
     ],
   },
   "arcane_rise": {
@@ -929,22 +935,25 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "pax_charge": {
     arcaneId: "pax_charge",
+    customHandler: "pax_charge",
     effects: [
-      {"statKey": "kitgunRecharge", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Charge: kitgunRecharge (conditional proc)"},
+      {"statKey": "kitgunRecharge", "target": "weapon_dps", "mode": "custom", "source": "wiki: Pax Charge — +12.5–50% reload speed (reduces battery recharge delay; passive)"},
     ],
   },
   "pax_seeker": {
     arcaneId: "pax_seeker",
+    customHandler: "pax_seeker",
     effects: [
-      {"statKey": "kitgunHoming", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Seeker: kitgunHoming (on headshot proc)"},
+      {"statKey": "kitgunHoming", "target": "arcane_panel", "mode": "custom", "source": "wiki: Pax Seeker — 1–4 homing bolts on kitgun HS kill (paper: stacks>0)"},
     ],
   },
   "pax_soar": {
     arcaneId: "pax_soar",
+    customHandler: "pax_soar",
     effects: [
-      {"statKey": "airborneAccuracy", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: airborneAccuracy (always active while equipped)"},
-      {"statKey": "airborneRecoilReduction", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: airborneRecoilReduction (always active while equipped)"},
-      {"statKey": "aimGlideDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Soar: aimGlideDuration (always active while equipped)"},
+      {"statKey": "airborneAccuracy", "target": "arcane_panel", "mode": "custom", "source": "wiki: Pax Soar — +12.5–50% airborne accuracy (passive)"},
+      {"statKey": "airborneRecoilReduction", "target": "arcane_panel", "mode": "custom", "source": "wiki: Pax Soar — −12.5–50% airborne recoil (passive)"},
+      {"statKey": "aimGlideDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Pax Soar — +1.25–5s aim glide / wall latch (passive)"},
     ],
   },
   "primary_blight": {
