@@ -679,6 +679,31 @@ describe("evolution numeric fixes", () => {
     ).toBe(0.6);
   });
 
+  it("accuracy and recoil appear on CalculatedStats (aim-feel Genesis)", () => {
+    const boltor = allWeapons.find((w) => w.id === "boltor")!;
+    const mantra = mergeIncarnonStatChanges(incarnonDataMap.get("boltor")!, { 2: 0 }, "boltor");
+    expect(mantra?.punchThrough).toBe(4);
+    expect(mantra?.accuracy).toBe(0.4);
+    expect(calculateWeaponBuild(boltor, [], modsMap(), mantra).accuracy).toBe(0.4);
+
+    const ballistica = allWeapons.find((w) => w.id === "ballistica")!;
+    const voids = mergeIncarnonStatChanges(incarnonDataMap.get("ballistica")!, { 3: 2 }, "ballistica");
+    expect(voids).toMatchObject({ accuracy: 0.4, recoil: -0.4 });
+    const voidsStats = calculateWeaponBuild(ballistica, [], modsMap(), voids);
+    expect(voidsStats.accuracy).toBe(0.4);
+    expect(voidsStats.recoil).toBe(-0.4);
+
+    const bronco = allWeapons.find((w) => w.id === "bronco")!;
+    const kinetic = mergeIncarnonStatChanges(incarnonDataMap.get("bronco")!, { 3: 0 }, "bronco");
+    expect(kinetic?.recoil).toBe(-0.5);
+    expect(calculateWeaponBuild(bronco, [], modsMap(), kinetic).recoil).toBe(-0.5);
+
+    const boar = allWeapons.find((w) => w.id === "boar")!;
+    const grip = mergeIncarnonStatChanges(incarnonDataMap.get("boar")!, { 3: 2 }, "boar");
+    expect(grip?.accuracy).toBe(0.5);
+    expect(calculateWeaponBuild(boar, [], modsMap(), grip).accuracy).toBe(0.5);
+  });
+
   it("melee followThrough panel: Crushing Verdict / Lone Blade", () => {
     const magistar = allWeapons.find((w) => w.id === "magistar")!;
     const verdict = mergeIncarnonStatChanges(incarnonDataMap.get("magistar")!, { 2: 0 }, "magistar");

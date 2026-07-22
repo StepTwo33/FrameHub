@@ -457,6 +457,10 @@ export interface CalculatedStats {
   projectileSpeed?: number;
   /** Melee follow-through bonus fraction from incarnon — display only (no DPS model). */
   followThrough?: number;
+  /** Accuracy bonus fraction from incarnon/rivens — display only (no DPS model). */
+  accuracy?: number;
+  /** Recoil change fraction from incarnon/rivens (negative = less recoil) — display only. */
+  recoil?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

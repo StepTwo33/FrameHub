@@ -317,6 +317,21 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Incarnon follow-through bonus (display; not modeled in DPS)."
           />
         )}
+        {stats.accuracy != null && stats.accuracy !== 0 && (
+          <StatRow
+            label="Accuracy"
+            value={`${stats.accuracy > 0 ? "+" : ""}${(stats.accuracy * 100).toFixed(0)}%`}
+            tooltip="Incarnon / riven accuracy (display; not modeled in DPS). Aim-gated perks assume uptime."
+          />
+        )}
+        {stats.recoil != null && stats.recoil !== 0 && (
+          <StatRow
+            label="Recoil"
+            value={`${stats.recoil > 0 ? "+" : ""}${(stats.recoil * 100).toFixed(0)}%`}
+            color={stats.recoil < 0 ? "text-green-400" : undefined}
+            tooltip="Incarnon / riven recoil (display; negative = less recoil). Not modeled in DPS."
+          />
+        )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
           <StatRow
             label="Sprint Speed"
@@ -629,6 +644,8 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "punchThrough") return `PT: +${n}m`;
                         if (s === "projectileSpeed") return `projSpeed: +${(n * 100).toFixed(0)}%`;
                         if (s === "followThrough") return `followThrough: +${(n * 100).toFixed(0)}%`;
+                        if (s === "accuracy") return `acc: +${(n * 100).toFixed(0)}%`;
+                        if (s === "recoil") return `recoil: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
                         if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
                         if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
                         return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;

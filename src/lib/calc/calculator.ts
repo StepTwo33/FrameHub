@@ -1017,6 +1017,9 @@ export function calculateWeaponBuild(
         case 'punchThrough':
           stats.punchThrough = (stats.punchThrough ?? 0) + value;
           break;
+        case 'accuracy':
+          stats.accuracy = (stats.accuracy ?? 0) + value;
+          break;
         case 'ammoMax': /* riven % of ammo max — no base ammoMax on Weapon yet */ break;
         case 'flatAmmoMax':
           stats.ammoMax = (stats.ammoMax ?? 0) + value;
@@ -1024,7 +1027,10 @@ export function calculateWeaponBuild(
         case 'ammoMaxSet':
           stats.ammoMax = value;
           break;
-        case 'recoil': /* visual only */ break;
+        case 'recoil':
+          // Negative = recoil reduction (e.g. -0.5 = −50% Weapon Recoil). Display only.
+          stats.recoil = (stats.recoil ?? 0) + value;
+          break;
       }
     }
     // Recalculate total damage after incarnon/riven changes (keep residual)
