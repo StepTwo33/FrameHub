@@ -37,6 +37,70 @@ describe("scaleAbilityMiscStats", () => {
     });
   });
 
+  it("formats flat heal/shield/count misc without percent (Evade/Condemn/packs)", () => {
+    const evade = scaleAbilityMiscStats(
+      { healthRestore: 100 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "cyte_09", abilityName: "Evade" },
+    );
+    expect(evade.find((l) => l.label === "Health Restore")!).toMatchObject({
+      base: "100",
+      scaled: "130",
+      scaleAttr: "strength",
+    });
+    const remedium = scaleAbilityMiscStats(
+      { healthRestore: 0.5 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "uriel", abilityName: "Remedium" },
+    );
+    expect(remedium.find((l) => l.label === "Health Restore")!).toMatchObject({
+      base: "50%",
+      scaled: "65%",
+      scaleAttr: "strength",
+    });
+    const condemn = scaleAbilityMiscStats(
+      { shieldsPerEnemy: 150 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "harrow", abilityName: "Condemn" },
+    );
+    expect(condemn.find((l) => l.label === "Shields per Enemy")!).toMatchObject({
+      base: "150",
+      scaled: "195",
+    });
+    const meta = scaleAbilityMiscStats(
+      { nightShields: 150 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "equinox", abilityName: "Metamorphosis" },
+    );
+    expect(meta.find((l) => l.label === "Night Shields")!).toMatchObject({
+      base: "150",
+      scaled: "195",
+    });
+    const packs = scaleAbilityMiscStats(
+      { ammoPacks: 2, maxAmmoPacks: 6 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "cyte_09", abilityName: "Resupply" },
+    );
+    expect(packs.find((l) => l.label === "Ammo Packs")!).toMatchObject({
+      base: "2",
+      scaled: "2",
+      modified: false,
+    });
+    expect(packs.find((l) => l.label === "Max Ammo Packs")!.base).toBe("6");
+    const mark = scaleAbilityMiscStats(
+      { hitsPerMark: 1 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "ash", abilityName: "Blade Storm" },
+    );
+    expect(mark.find((l) => l.label === "Hits per Mark")!.base).toBe("1");
+    const globe = scaleAbilityMiscStats(
+      { healthCap: 1_000_000 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "frost", abilityName: "Snow Globe" },
+    );
+    expect(globe.find((l) => l.label === "Health Cap")!.base).toBe("1000000");
+  });
+
   it("keeps Warding Halo halo/armor/absorb mults Misc-fixed", () => {
     const lines = scaleAbilityMiscStats(
       { haloHealth: 1000, armorMultiplier: 2.5, absorptionMultiplier: 2.5 },

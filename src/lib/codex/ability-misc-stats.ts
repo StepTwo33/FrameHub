@@ -411,6 +411,8 @@ const LABELS: Record<string, string> = {
   invisibleMarkDiscount: "Invisible Mark Discount",
   shadowClones: "Shadow Clones",
   hitsPerMark: "Hits per Mark",
+  ammoPacks: "Ammo Packs",
+  maxAmmoPacks: "Max Ammo Packs",
   hit2Radius: "2nd Hit Radius",
   hit3Radius: "3rd Hit Radius",
   comboWindow: "Combo Window",
@@ -889,7 +891,7 @@ function isFractionPercentKey(key: string): boolean {
     key === "toxinStatusChance" ||
     key === "toxinWeaponDamage" ||
     key === "wallLatchToxinWeaponDamage" ||
-    key === "healthRestore" ||
+    // healthRestore: Cyte Evade is flat (100); Uriel Remedium is % (0.5) — handled in format/scale
     key === "healthRestorePerSecond" ||
     key === "rareDecreeChance" ||
     key === "instantKillThreshold" ||
@@ -1058,6 +1060,10 @@ function formatBaseValue(key: string, value: unknown): string {
   // Wiki card rates already in percent points (e.g. 0.025% convert, 0.06% Mind Control).
   if (typeof value === "number" && (key === "weaponDamageConvert" || key === "damageConversionRate")) {
     return `${value}%`;
+  }
+  // Evade flat heal (100) vs Remedium % heal (0.5) share healthRestore.
+  if (typeof value === "number" && key === "healthRestore") {
+    return value <= 1 ? fmtPct(value) : Number.isInteger(value) ? String(value) : value.toFixed(1);
   }
   if (
     typeof value === "number" &&
@@ -1290,6 +1296,12 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "shroudHealth" ||
       key === "shieldHealth" ||
       key === "segmentHealth" ||
+      key === "hitsPerMark" ||
+      key === "ammoPacks" ||
+      key === "maxAmmoPacks" ||
+      key === "nightShields" ||
+      key === "healthCap" ||
+      key === "shieldsPerEnemy" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||
@@ -1752,6 +1764,12 @@ function scaleVerifiedValue(
       key === "shroudHealth" ||
       key === "shieldHealth" ||
       key === "segmentHealth" ||
+      key === "hitsPerMark" ||
+      key === "ammoPacks" ||
+      key === "maxAmmoPacks" ||
+      key === "nightShields" ||
+      key === "healthCap" ||
+      key === "shieldsPerEnemy" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||
@@ -1799,6 +1817,24 @@ function scaleVerifiedValue(
           : key === "travelDistance"
             ? `${scaledNum}m`
           : String(scaledNum),
+      modified: Math.abs(scaledNum - num) > 0.001,
+      positive: scaledNum >= num,
+    };
+  }
+
+  // Evade flat heal vs Remedium % heal share healthRestore.
+  if (num != null && key === "healthRestore") {
+    if (num <= 1) {
+      const scaled = applyBounds(num * mult, cap, floor);
+      return {
+        scaled: fmtPct(scaled),
+        modified: Math.abs(scaled - num) > 0.001,
+        positive,
+      };
+    }
+    const scaledNum = Math.round(applyBounds(num * mult, cap, floor));
+    return {
+      scaled: String(scaledNum),
       modified: Math.abs(scaledNum - num) > 0.001,
       positive: scaledNum >= num,
     };

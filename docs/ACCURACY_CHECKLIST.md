@@ -159,7 +159,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Dagath kit | 2026-07-21 | Wyrd 500/1000 Viral +35% slow; Doom 500/15m; Grave +50% CD×STR; Cavalry 30k/strip; Helminth→Wyrd (was Doom) |
 | B5 Caliban kit | 2026-07-21 | Gyre 500 Tau/s; Wrath 2000/+35% vuln; Progeny 50/45s; Fusion 15k/s +50% strip; Helminth Wrath filled |
 | B5 Baruuk kit | 2026-07-21 | Elude 25+2.5/s 180°; Lull 50/20s/25m; Hands 250 Blast/8 daggers×STR; Storm 250 +25% DR (cap 40%) |
-| B5 Harrow kit | 2026-07-21 | Condemn 150 shields/enemy; Penance +35% FR/+70% reload×STR; Thurible 15% convert; Covenant 5%+1.5%/100 CC |
+| B5 Harrow kit | 2026-07-21 | Condemn 150 shields/enemy×STR (flat); Penance +35% FR/+70% reload×STR; Thurible 15% convert; Covenant 5%+1.5%/100 CC |
 | B5 Garuda kit | 2026-07-21 | Mirror 2× capture/20s/30m; Altar 25%/s heal; Bloodletting 40% energy×EFF; Talons 300/75% SC |
 | B5 Nezha kit | 2026-07-21 | Walker 200 Heat/s +1250 blast; Chakram 250/+100% vuln; Halo 1000 HP/2.5× armor+absorb Misc + Initial=(base+mult×armor)×STR; Spears 600/19m/12s |
 | B5 Styanax Helminth | 2026-07-21 | Helminth→Tharros Strike (was wrongly Rally Point); native Tharros 1000 Impact / 50% strip / 100 heal |
@@ -171,7 +171,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Mag kit | 2026-07-21 | Pull 300/25m; Magnetize 300 Blast/2×/15s; Polarize 400/8m; Crush 1500/18m |
 | B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m/5× Misc + Initial HP=(base+mult×armor)×STR; Avalanche 1500/15m/60% strip |
 | B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln/1600 seg/5× Misc + Initial seg pool |
-| B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day buffs; Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
+| B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day +150 Night Shields×STR (flat); Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
 | B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5× +growth÷DUR +drain/growth×EFF/DUR; Prowl +40% HS/stealTime÷DUR +melee/dmg energy×EFF; Artemis 240×7 |
 | B5 Ash kit | 2026-07-21 | Shuriken 750×5; Smoke 12s/10m; Teleport +200% finisher; Blade Storm 1500 True/12e/mark×EFF |
 | B5 Atlas kit | 2026-07-21 | Landslide 350/12m; Tectonics 1500 HP/5× Misc + Initial=(base+mult×armor)×STR; Petrify 20s/14m/+50% vuln; Rumblers 2000/1200 HP |
@@ -206,7 +206,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Citrine kit | 2026-07-21 | Fractured 500/14m/50%/20% orbs; Shell 40% DR (cap 90%, Affinity); Gem 1000/15m/30s; Crystallize 500 Impact/300% crit; Helminth→Fractured Blast 250/25%/10% (was wrongly Preserving Shell) |
 | B5 Jade kit | 2026-07-21 | Judgment 500 Heat/tick/8% HPS/6m; Symphony +25% STR/+100% weapon/10% shield regen; Eyes 50/10% strip/s/20m; Glory 150/1500/35% DR (cap 50%) |
 | B5 Styanax kit | 2026-07-21 | Axios 1250/1250/50m/15m; Tharros 1000/50% strip/100 heal; Rally 50 shields/kill/3 EPS/30m; Final Stand 1500×30 javelins×DUR |
-| B5 Cyte-09 kit | 2026-07-21 | Seek 60m/75% WP/35s; Resupply +25%/+50% sniper; Evade 75e/10s/cap 30/100 heal; Neutralize 1.25×/10m ricochet; Helminth→Evade cap 25 (was wrongly Resupply) |
+| B5 Cyte-09 kit | 2026-07-21 | Seek 60m/75% WP/35s; Resupply +25%/+50% sniper/2–6 packs; Evade 75e/10s/cap 30/100 heal×STR (flat); Neutralize 1.25×/10m ricochet; Helminth→Evade cap 25 (was wrongly Resupply) |
 | B5 Temple kit | 2026-07-21 | Pyrotechnics 1000 IPS/25m/20m/5 pillars; Overdrive 750 Heat/25% crit vuln/20m; Ripper's Wail 50e/+75% Heat (cap 750%)/30s; Exalted Solo 75e/1.25× Lizzie; Helminth Pyro 1000 |
 | B5 Koumei kit | 2026-07-21 | Kumihimo 25×dice/30m/12s/15 threads; Omikuji rare 15%/CD cap 150; Omamori 75e/heal×1/50% block (no duration); Bunraku 500 Puncture/20s/30m; Helminth Omamori 75e/10–20 charms |
 | B5 Oraxia kit | 2026-07-21 | Mercy's Kiss 4000 Toxin/40m/200% HP orb/50% energy/50% threshold; Embrace 250/50% vuln/10m/25s; Brood 750/25m/45s Scuttlers; Stride 2× HP/+40% Toxin/5eps; Helminth Embrace 6.67m |
