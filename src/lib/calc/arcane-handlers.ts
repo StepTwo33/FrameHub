@@ -103,6 +103,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "virtuos_tempo",
   "virtuos_shadow",
   "melee_influence",
+  "melee_duplicate",
   "magus_aggress",
   "secondary_irradiate",
   "exodia_brave",
@@ -153,6 +154,10 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_ultimatum",
   "arcane_guardian",
   "arcane_reaper",
+  "arcane_agility",
+  "arcane_consequence",
+  "arcane_double_back",
+  "arcane_grace",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -700,6 +705,16 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "melee_duplicate": {
+      // wiki R5: 100% chance yellow crits create a second damage instance.
+      // Paper: stacks>0 = all hits qualify → damage × (1 + chance%).
+      const chanceLine = findEffect(def, "duplicateAttackChance");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      if (chance > 0) applyWeaponDamageMult(stats, chance);
+      trackBonus(stats, "duplicateAttackChance", chance);
+      return true;
+    }
+
     case "zid_an_haras": {
       // wiki: +18% amp AE always; +48% WF AE for 30s after Tauron Strike (paper: stacks>0).
       const ampAeLine = findEffect(def, "ampAmmoEfficiency");
@@ -1046,6 +1061,44 @@ export function applyCustomArcaneToWarframe(
       const buffLine = findEffect(def, "buffDuration");
       if (buffLine) {
         trackBonus(stats, "buffDuration", scaleArcaneEffectLine(buffLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_agility":
+    case "arcane_consequence": {
+      // wiki R5: +60% Parkour Velocity. Paper: equipped = buff up.
+      const pvLine = findEffect(def, "parkourVelocity");
+      const pv = pvLine ? scaleArcaneEffectLine(pvLine, rank, def.maxRank) : 0;
+      if (pv > 0) stats.parkourVelocityBonus += pv / 100;
+      trackBonus(stats, "parkourVelocity", pv);
+      for (const line of def.effects ?? []) {
+        if (line.stat === "parkourVelocity") continue;
+        trackBonus(stats, line.stat, scaleArcaneEffectLine(line, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_double_back": {
+      // wiki R5: +25% DR per maneuver stack (cap 3 → +75%). Folded into damageReduction after armor DR.
+      const drLine = findEffect(def, "damageReduction");
+      const perStack = drLine ? scaleArcaneEffectLine(drLine, rank, def.maxRank) : 0;
+      const totalDr = perStack * Math.max(stacks, 1);
+      trackBonus(stats, "damageReduction", totalDr);
+      return true;
+    }
+
+    case "arcane_grace": {
+      // wiki R5: 9% chance → regen 6% max HP/s. Paper: equipped = buff up.
+      const amtLine = findEffect(def, "healthRegenAmount");
+      const pct = amtLine ? scaleArcaneEffectLine(amtLine, rank, def.maxRank) : 0;
+      const hp =
+        stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus;
+      if (pct > 0) stats.healthRegenPerSec += (pct / 100) * hp;
+      trackBonus(stats, "healthRegenAmount", pct);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
       }
       return true;
     }

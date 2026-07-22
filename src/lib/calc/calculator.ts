@@ -1669,8 +1669,14 @@ export function applyWarframeShardsAndArcanes(
     stats.persistenceActive = stats.totalArmor >= 700;
   }
   const armorDR = stats.totalArmor / (stats.totalArmor + 300);
-  stats.effectiveHealth = (stats.totalHealth / (1 - armorDR)) + stats.totalShield;
-  stats.damageReduction = armorDR * 100;
+  const arcaneDrPct = stats.arcaneBonuses?.damageReduction ?? 0;
+  if (arcaneDrPct > 0) {
+    const arcFrac = Math.min(0.9, Math.max(0, arcaneDrPct / 100));
+    stats.damageReduction = (1 - (1 - armorDR) * (1 - arcFrac)) * 100;
+  } else {
+    stats.damageReduction = armorDR * 100;
+  }
+  stats.effectiveHealth = (stats.totalHealth / (1 - Math.min(0.9, stats.damageReduction / 100))) + stats.totalShield;
 
   return stats;
 }

@@ -1692,6 +1692,118 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 660, 4);
     expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + 24, 4);
   });
+
+  it("Arcane Intention: paper max channel stacks → +1000 flat Health", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const intention = allArcanes.find((a) => a.id === "arcane_intention")!;
+    const def = getArcaneEffectDef("arcane_intention")!;
+    expect(def.stackCap).toBe(4);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [intention],
+    );
+    expect(full.totalHealth).toBeCloseTo(bare.totalHealth + 1000, 4);
+  });
+
+  it("Molt Efficiency: equipped → +36% Ability Duration (shields-up paper)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const eff = allArcanes.find((a) => a.id === "molt_efficiency")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [eff],
+    );
+    expect(full.abilityDuration).toBeCloseTo(bare.abilityDuration + 0.36, 4);
+  });
+
+  it("Arcane Agility / Consequence: equipped → +60% Parkour Velocity", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const agility = allArcanes.find((a) => a.id === "arcane_agility")!;
+    const consequence = allArcanes.find((a) => a.id === "arcane_consequence")!;
+    const bare = calculateWarframeBuild(excal, [], new Map()).parkourVelocityBonus;
+    const withAgility = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [agility],
+    );
+    expect(withAgility.parkourVelocityBonus).toBeCloseTo(bare + 0.6, 4);
+    const withConsequence = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [consequence],
+    );
+    expect(withConsequence.parkourVelocityBonus).toBeCloseTo(bare + 0.6, 4);
+  });
+
+  it("Arcane Double Back: paper max stacks → +75% DR combined with armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const db = allArcanes.find((a) => a.id === "arcane_double_back")!;
+    const def = getArcaneEffectDef("arcane_double_back")!;
+    expect(def.stackCap).toBe(3);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [db],
+    );
+    const armorFrac = bare.totalArmor / (bare.totalArmor + 300);
+    const expected = (1 - (1 - armorFrac) * (1 - 0.75)) * 100;
+    expect(full.damageReduction).toBeCloseTo(expected, 4);
+    expect(full.arcaneBonuses?.damageReduction).toBeCloseTo(75, 4);
+  });
+
+  it("Arcane Grace: equipped → regen 6% of max Health per second", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const grace = allArcanes.find((a) => a.id === "arcane_grace")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [grace],
+    );
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + bare.totalHealth * 0.06, 4);
+  });
+
+  it("Melee Duplicate: stacks>0 → ×2 damage at R5 (100% yellow-crit paper)", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const dup = allArcanes.find((a) => a.id === "melee_duplicate")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [dup],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [dup],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2, 4);
+  });
+
+  it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const fort = allArcanes.find((a) => a.id === "melee_fortification")!;
+    const def = getArcaneEffectDef("melee_fortification")!;
+    expect(def.stackCap).toBe(30);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [fort],
+    );
+    expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 6300, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

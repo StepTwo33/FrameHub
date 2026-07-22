@@ -102,9 +102,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
+        "stat": "parkourProcChance",
+        "maxValue": 60,
+        "baseValue": 60,
+        "constantAtAllRanks": true
+      },
+      {
         "stat": "parkourVelocity",
-        "maxValue": 60.0,
-        "baseValue": 10.0
+        "maxValue": 60,
+        "baseValue": 10
       }
     ]
   },
@@ -302,8 +308,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "parkourVelocity",
-        "maxValue": 60.0,
-        "baseValue": 10.0
+        "maxValue": 60,
+        "baseValue": 10
       }
     ]
   },
@@ -344,9 +350,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "damageReduction",
-        "maxValue": 25.0,
+        "maxValue": 25,
         "stacking": true,
-        "baseValue": 4.166667
+        "baseValue": 5
       }
     ],
     "stackCap": 3
@@ -442,14 +448,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "healthRegenChance",
-        "maxValue": 9.0,
+        "maxValue": 9,
         "flat": true,
-        "baseValue": 1.5
+        "baseValue": 9,
+        "constantAtAllRanks": true
       },
       {
         "stat": "healthRegenAmount",
-        "maxValue": 6.0,
-        "baseValue": 1.0
+        "maxValue": 6,
+        "baseValue": 1
       }
     ]
   },
@@ -563,16 +570,18 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "arcane_intention": {
     "name": "Arcane Intention",
-    "trigger": "passive",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
         "stat": "healthFlat",
-        "maxValue": 250.0,
+        "maxValue": 250,
         "flat": true,
-        "baseValue": 41.666667
+        "stacking": true,
+        "baseValue": 40
       }
-    ]
+    ],
+    "stackCap": 4
   },
   "arcane_momentum": {
     "name": "Arcane Momentum",
@@ -1787,8 +1796,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "duplicateAttackChance",
-        "maxValue": 100.0,
-        "baseValue": 16.666667
+        "maxValue": 100,
+        "baseValue": 25
       }
     ]
   },
@@ -1813,15 +1822,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "melee_fortification": {
     "name": "Melee Fortification",
-    "trigger": "onMeleeKill",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
         "stat": "flatArmorBonus",
-        "maxValue": 210.0,
+        "maxValue": 210,
         "flat": true,
-        "stacking": false,
-        "baseValue": 35.0
+        "stacking": true,
+        "baseValue": 35
       },
       {
         "stat": "buffDuration",
@@ -1829,7 +1838,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "flat": true,
         "constantAtAllRanks": true
       }
-    ]
+    ],
+    "stackCap": 30
   },
   "melee_influence": {
     "name": "Melee Influence",

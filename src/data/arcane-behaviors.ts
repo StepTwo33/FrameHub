@@ -32,8 +32,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_agility": {
     arcaneId: "arcane_agility",
+    customHandler: "arcane_agility",
     effects: [
-      {"statKey": "parkourVelocity", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Agility: parkourVelocity (when damaged proc)"},
+      {"statKey": "parkourProcChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Arcane Agility — 60% chance on damaged (panel)"},
+      {"statKey": "parkourVelocity", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Agility — +60% Parkour Velocity for 18s (paper: equipped = buff up)"},
     ],
   },
   "arcane_arachne": {
@@ -122,8 +124,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_consequence": {
     arcaneId: "arcane_consequence",
+    customHandler: "arcane_consequence",
     effects: [
-      {"statKey": "parkourVelocity", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Consequence: parkourVelocity (on headshot proc)"},
+      {"statKey": "parkourVelocity", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Consequence — +60% Parkour Velocity for 18s on headshot (paper: equipped = buff up)"},
     ],
   },
   "arcane_crepuscular": {
@@ -142,8 +145,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_double_back": {
     arcaneId: "arcane_double_back",
+    customHandler: "arcane_double_back",
     effects: [
-      {"statKey": "damageReduction", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Double Back: damageReduction (stacking — applies at sim stack count)"},
+      {"statKey": "damageReduction", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Double Back — +25% DR/maneuver stack (cap 3 → +75%; paper assumes max stacks; multiplies with armor DR)"},
     ],
   },
   "arcane_energize": {
@@ -187,9 +191,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_grace": {
     arcaneId: "arcane_grace",
+    customHandler: "arcane_grace",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Grace: healthRegenChance (when damaged proc)"},
-      {"statKey": "healthRegenAmount", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Grace: healthRegenAmount (when damaged proc)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Arcane Grace — 9% chance on damaged (panel)"},
+      {"statKey": "healthRegenAmount", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Grace — +6% max HP/s regen (paper: equipped = buff up)"},
     ],
   },
   "arcane_guardian": {
@@ -237,7 +242,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_intention": {
     arcaneId: "arcane_intention",
     effects: [
-      {"statKey": "healthFlat", "target": "warframe_totals", "mode": "flat", "source": "Arcane Intention: healthFlat (always active while equipped)"},
+      {"statKey": "healthFlat", "target": "warframe_totals", "mode": "flat", "source": "wiki: Arcane Intention — +250 Max Health / channeled ability (cap 4 → +1000; paper assumes max stacks)"},
     ],
   },
   "arcane_melee_animosity": {
@@ -805,8 +810,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_duplicate": {
     arcaneId: "melee_duplicate",
+    customHandler: "melee_duplicate",
     effects: [
-      {"statKey": "duplicateAttackChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Duplicate: duplicateAttackChance (conditional proc)"},
+      {"statKey": "duplicateAttackChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Duplicate — chance to duplicate yellow crit hits (paper: stacks>0 = all hits qualify → damage × (1 + chance))"},
     ],
   },
   "melee_exposure": {
@@ -820,8 +826,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "melee_fortification": {
     arcaneId: "melee_fortification",
     effects: [
-      {"statKey": "flatArmorBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Fortification: flatArmorBonus (on melee kill proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Fortification: buffDuration (on melee kill proc)"},
+      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "flat", "source": "wiki: Melee Fortification — +210 Armor/melee kill (paper cap 30 stacks → +6300; duration 10s panel)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Melee Fortification — 10s per stack (panel)"},
     ],
   },
   "melee_influence": {
@@ -859,7 +865,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "molt_efficiency": {
     arcaneId: "molt_efficiency",
     effects: [
-      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Molt Efficiency: abilityDuration (always active while equipped)"},
+      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Molt Efficiency — +36% DUR while shields active (paper assumes shields up at cap)"},
     ],
   },
   "molt_reconstruct": {

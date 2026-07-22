@@ -50,6 +50,12 @@
     "trigger": "onDamaged",
     "effects": [
       {
+        "stat": "parkourProcChance",
+        "maxValue": 60,
+        "baseValue": 60,
+        "constantAtAllRanks": true
+      },
+      {
         "stat": "parkourVelocity",
         "maxValue": 60,
         "baseValue": 10
@@ -245,7 +251,8 @@
         "stat": "healthRegenChance",
         "maxValue": 9,
         "flat": true,
-        "baseValue": 9
+        "baseValue": 9,
+        "constantAtAllRanks": true
       },
       {
         "stat": "healthRegenAmount",
@@ -1252,13 +1259,15 @@
   },
   "melee_fortification": {
     "replace": true,
-    "trigger": "onMeleeKill",
+    "trigger": "stacks",
+    "stackCap": 30,
     "effects": [
       {
         "stat": "flatArmorBonus",
         "maxValue": 210,
         "flat": true,
-        "stacking": false
+        "stacking": true,
+        "baseValue": 35
       },
       {
         "stat": "buffDuration",
@@ -2287,12 +2296,14 @@
   },
   "arcane_intention": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "stacks",
+    "stackCap": 4,
     "effects": [
       {
         "stat": "healthFlat",
         "maxValue": 250,
         "flat": true,
+        "stacking": true,
         "baseValue": 40
       }
     ]

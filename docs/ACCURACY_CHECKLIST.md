@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Blessing/Augmented/Concentration/Sculptor/armor arcanes + prior | **Improved** |
+| B6 | Arcane custom handlers | Intention/Agility/Consequence/Double Back/Grace/Duplicate/Fortification + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -300,6 +300,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Virtuos Fury/Strike/Tempo/Shadow + Camisado/Pax/Influence | 2026-07-22 | Virtuos stacks>0 buffs; Strike/Shadow multiplicative; Camisado ×10; Pax +30% STR/EFF; Influence sum(elements) splash |
 | Power Ramp/Ice Storm/Vigor/Overcharge/Haras/Osbok | 2026-07-22 | Ramp ×4→+36% STR; Ice ×20→+40% STR/DUR; Vigor +45%; Overcharge stacks>0; Haras AE; Osbok +3 flat CD |
 | Blessing/Augmented/Concentration/Sculptor/armor procs | 2026-07-22 | Blessing +1200 HP; Augmented +60% STR; Conc +60% DUR; Sculptor lock 175% EFF; Ultimatum/Tanker/Guardian/Reaper flat armor |
+| Intention/Agility/Consequence/Double Back/Grace/Duplicate/Fortification | 2026-07-22 | Intention ×4→+1000 HP; parkour +60%; Double Back ×3 DR; Grace 6% HP/s; Duplicate ×2; Fortification ×30 armor |
 
 ## New / extended test files
 
