@@ -15,6 +15,7 @@ import {
   countMechaSetPieces,
   hunterCompanionDamageMultiplier,
   MECHA_EMPOWERED_VS_MARKED_MULTIPLIER,
+  sumClawElementalBonuses,
   weaponSupportsHunterCompanionSet,
 } from "@/lib/calc/set-bonuses";
 import { scaledAbilityEnergyCost } from "@/lib/codex/ability-misc-stats";
@@ -256,14 +257,34 @@ describe("Mecha set (wiki: mark timing + Empowered vs marked)", () => {
     // tickSum = 175+250 = 425; 2 enemies × 425 × 6 / 15s CD = 340
     expect(dps).toBeCloseTo(340, 5);
 
+    // Wiki Sepsis Claws: Toxin tick (500)×0.5×(1+3.30)=1075; Slash unchanged 175
+    const sepsis = sumClawElementalBonuses(
+      [{ modId: "sepsis_claws", rank: 10, slotIndex: 0 }],
+      modsMap(),
+    );
+    expect(sepsis.toxin).toBeCloseTo(3.3, 5);
+    const withClaw = computeMechaSpreadPaperDps({
+      pieces: 4,
+      enemies: 1,
+      dotTicks: [
+        { type: "slash", damagePerTick: 100 },
+        { type: "toxin", damagePerTick: 400 },
+      ],
+      remainingDurationSec: 6,
+      clawElementalBonuses: sepsis,
+    });
+    // tickSum = 175 + 1075 = 1250; 1 × 1250 × 6 / 15 = 500
+    expect(withClaw).toBeCloseTo(500, 5);
+
     const rifle: Weapon = {
       id: "t",
       name: "T",
       category: "rifle",
-      damage: 100,
+      damage: 200,
       impact: 0,
       puncture: 0,
       slash: 100,
+      toxin: 100,
       fireRate: 1,
       criticalChance: 0,
       criticalMultiplier: 2,
@@ -295,6 +316,20 @@ describe("Mecha set (wiki: mark timing + Empowered vs marked)", () => {
     expect(off.mechaSpreadDps ?? 0).toBe(0);
     expect(on.mechaSpreadDps ?? 0).toBeGreaterThan(0);
     expect(on.burstDps).toBeGreaterThan(off.burstDps);
+
+    const withSepsis = calculateWeaponBuild(
+      rifle,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, mechaSpreadEnemies: 3 },
+      undefined,
+      {
+        ...linkage,
+        companionWeaponMods: [{ modId: "sepsis_claws", rank: 10, slotIndex: 0 }],
+      },
+    );
+    expect(withSepsis.mechaSpreadDps ?? 0).toBeGreaterThan(on.mechaSpreadDps ?? 0);
   });
 });
 

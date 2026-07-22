@@ -145,14 +145,24 @@ export function WeaponSimControls({
             </>
           )}
           {weapon?.id === "thalys" && (
-            <SimSlider
-              label="Shard hosts"
-              value={simParams.shardHosts ?? 0}
-              min={0}
-              max={12}
-              onChange={(v) => onSimParamsChange({ ...simParams, shardHosts: v })}
-              tooltip="Thalys Incarnon: enemies with embedded shards (0 = off). Papers form embed triggers + Chain Shatter heavy detonations (combo on host only)."
-            />
+            <>
+              <SimSlider
+                label="Shard hosts"
+                value={simParams.shardHosts ?? 0}
+                min={0}
+                max={12}
+                onChange={(v) => onSimParamsChange({ ...simParams, shardHosts: v })}
+                tooltip="Thalys Incarnon: enemies with embedded shards (0 = off). Papers form embed triggers + Chain Shatter heavy detonations (combo on host only)."
+              />
+              <SimSlider
+                label="Fully-grown shards"
+                value={simParams.shardFullyGrownHosts ?? 0}
+                min={0}
+                max={12}
+                onChange={(v) => onSimParamsChange({ ...simParams, shardFullyGrownHosts: v })}
+                tooltip="Explosive Growth: hosts that erupt at ×2 trigger damage on embed (clamped to hosts−1). 0 = all normal triggers. Needs Explosive Growth evolution."
+              />
+            </>
           )}
           <div className="pt-1 space-y-1.5">
             {weapon?.id === "onos" && (

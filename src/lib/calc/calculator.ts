@@ -28,6 +28,7 @@ import {
   linkageHasMechaEmpowered,
   MECHA_EMPOWERED_VS_MARKED_MULTIPLIER,
   computeMechaSpreadPaperDps,
+  sumClawElementalBonuses,
   buildWarframeSetBonusSummary,
   buildWeaponSetBonusSummary,
   countSynthSetPieces,
@@ -393,13 +394,19 @@ function applyMechaSpreadDps(
   stats: CalculatedStats,
   sim: SimulationParams,
   mechaPieces: number,
+  clawElementalBonuses?: Record<string, number>,
 ): void {
   const enemies = sim.mechaSpreadEnemies ?? 0;
   if (enemies <= 0 || mechaPieces <= 0) return;
   const dots = (stats.statusProcs ?? [])
     .filter((p) => p.damagePerTick > 0)
     .map((p) => ({ type: p.type, damagePerTick: p.damagePerTick }));
-  const dps = computeMechaSpreadPaperDps({ pieces: mechaPieces, enemies, dotTicks: dots });
+  const dps = computeMechaSpreadPaperDps({
+    pieces: mechaPieces,
+    enemies,
+    dotTicks: dots,
+    clawElementalBonuses,
+  });
   if (dps <= 0) return;
   stats.mechaSpreadDps = dps;
   stats.burstDps += dps;
@@ -407,7 +414,7 @@ function applyMechaSpreadDps(
 }
 
 /**
- * Thalys form shard embed triggers + Chain Shatter heavy detonations.
+ * Thalys form shard embed triggers + Explosive Growth erupts + Chain Shatter detonations.
  * Sim-gated by shardHosts; not in TTK.
  */
 function applyShardChainDps(
@@ -425,10 +432,17 @@ function applyShardChainDps(
   const shardDmgMult = 1 + (incarnonStatChanges.shardDamageMult ?? 0);
   const stance = stats.stanceDamageMultiplier ?? 1;
   const triggerMult = incarnonStatChanges.shardTriggerMult ?? 0;
-  // New embed triggers all other hosts at 75% modded base × stance (not CO/IPS/elem).
+  const grownMult = incarnonStatChanges.shardFullyGrownDamageMult ?? 0;
+  // New embed triggers other hosts at 75% modded base × stance (not CO/IPS/elem).
+  // Explosive Growth: fully-grown hosts erupt at ×grownMult instead of ×1.
   if (triggerMult > 0 && hosts > 1 && moddedBaseDamage > 0) {
-    const perEmbed =
-      moddedBaseDamage * triggerMult * Math.max(0, shardDmgMult) * stance * (hosts - 1);
+    const others = hosts - 1;
+    const grown =
+      grownMult > 0
+        ? Math.min(others, Math.max(0, Math.floor(sim.shardFullyGrownHosts ?? 0)))
+        : 0;
+    const unit = moddedBaseDamage * triggerMult * Math.max(0, shardDmgMult) * stance;
+    const perEmbed = unit * (others - grown + grown * (grownMult > 0 ? grownMult : 1));
     const rate = Math.max(0, stats.effectiveFireRate ?? stats.fireRate);
     shardDps += perEmbed * rate;
   }
@@ -1554,7 +1568,12 @@ export function calculateWeaponBuild(
     incarnonStatChanges,
   );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
-  applyMechaSpreadDps(stats, sim, mechaPiecesForMark);
+  applyMechaSpreadDps(
+    stats,
+    sim,
+    mechaPiecesForMark,
+    sumClawElementalBonuses(linkage?.companionWeaponMods, allMods),
+  );
   applyShardChainDps(
     stats,
     incarnonStatChanges,

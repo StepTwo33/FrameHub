@@ -1296,6 +1296,38 @@ describe("evolution numeric fixes", () => {
     expect(on.shardChainDps).toBeCloseTo(detonate + trigger, 0);
   });
 
+  it("Thalys Explosive Growth papers fully-grown hosts at ×2 trigger", () => {
+    const thalys = allWeapons.find((w) => w.id === "thalys")!;
+    const data = incarnonDataMap.get("thalys")!;
+    const changes = mergeIncarnonStatChanges(data, { 1: 0, 5: 0 }, "thalys");
+    expect(changes?.shardFullyGrownDamageMult).toBe(2);
+    expect(changes?.chainShatterDetonateMult).toBeUndefined();
+
+    const base = calculateWeaponBuild(
+      thalys,
+      [],
+      modsMap(),
+      changes,
+      { ...DEFAULT_SIM_PARAMS, shardHosts: 5, applyStanceMultiplier: false },
+      { incarnonFormActive: true },
+    );
+    const grown = calculateWeaponBuild(
+      thalys,
+      [],
+      modsMap(),
+      changes,
+      {
+        ...DEFAULT_SIM_PARAMS,
+        shardHosts: 5,
+        shardFullyGrownHosts: 2,
+        applyStanceMultiplier: false,
+      },
+      { incarnonFormActive: true },
+    );
+    // 4 others: 2 normal + 2×2 grown → 6 unit-triggers vs 4 → 1.5× trigger DPS
+    expect(grown.shardChainDps ?? 0).toBeCloseTo((base.shardChainDps ?? 0) * 1.5, 0);
+  });
+
   it("Swooping Lunge is PP-additive per airborne stack; Destreza puncture is sim-gated", () => {
     const innodem = allWeapons.find((w) => w.id === "innodem")!;
     const swoop = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 4: 1 }, "innodem");

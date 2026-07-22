@@ -140,6 +140,7 @@ export function setBonusLinkageFromLoadout(loadout: Loadout): SetBonusLinkage {
     secondaryMods: loadout.secondaryBuild?.mods ?? (m?.slot === "secondary" ? m.mods : undefined),
     meleeMods: loadout.meleeBuild?.mods ?? (m?.slot === "melee" ? m.mods : undefined),
     companionMods: loadout.companionBuild?.mods,
+    companionWeaponMods: loadout.companionBuild?.weaponMods,
   };
 }
 

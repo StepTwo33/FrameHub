@@ -1,4 +1,4 @@
-import type { ModSlot, SetBonusLinkage, SetBonusSummaryLine } from "../types";
+import type { Mod, ModSlot, SetBonusLinkage, SetBonusSummaryLine } from "../types";
 
 export const VIGILANTE_MOD_IDS = [
   "vigilante_armaments",
@@ -191,10 +191,47 @@ const MECHA_SPREAD_DOT_FRAC: Record<string, number> = {
   gas: 0.5,
 };
 
+const CLAW_ELEMENTAL_STAT_KEYS = [
+  "heat",
+  "cold",
+  "toxin",
+  "electricity",
+  "magnetic",
+  "radiation",
+  "viral",
+  "corrosive",
+  "gas",
+  "blast",
+] as const;
+
 /**
- * wiki Mecha Set: transferred DoT tick = sum(DoT procs on marked) × type fraction.
- * Paper DPS amortizes one mark-kill spread over mark cooldown (not in TTK).
- * Ignores claw elemental boosts and cascade re-procs.
+ * Sum matching elemental fractions from beast claw mods (per-rank % × (rank+1)).
+ * wiki Mecha: Sepsis Claws R10 +330% Toxin → 3.3 on transferred Toxin ticks.
+ */
+export function sumClawElementalBonuses(
+  clawMods: ModSlot[] | undefined,
+  allMods: Map<string, Mod>,
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (!clawMods?.length) return out;
+  for (const slot of clawMods) {
+    const mod = allMods.get(slot.modId);
+    if (!mod?.stats) continue;
+    const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod.maxRank);
+    for (const key of CLAW_ELEMENTAL_STAT_KEYS) {
+      const perRank = mod.stats[key];
+      if (typeof perRank === "number" && perRank !== 0) {
+        out[key] = (out[key] ?? 0) + (perRank * (rank + 1)) / 100;
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * wiki Mecha Set: transferred DoT tick = sum(DoT procs on marked) × type fraction
+ * × (1 + matching claw elemental %). Paper DPS amortizes one mark-kill spread over
+ * mark cooldown (not in TTK). Cascade re-procs remain out of scope.
  */
 export function computeMechaSpreadPaperDps(opts: {
   pieces: number;
@@ -203,6 +240,8 @@ export function computeMechaSpreadPaperDps(opts: {
   dotTicks: { type: string; damagePerTick: number }[];
   /** Assumed remaining duration of transferred DoTs (s). Default 6. */
   remainingDurationSec?: number;
+  /** Claw elemental fractions by type (e.g. toxin: 3.3 for Sepsis R10). */
+  clawElementalBonuses?: Record<string, number>;
 }): number {
   const enemies = Math.max(0, Math.floor(opts.enemies));
   if (enemies <= 0) return 0;
@@ -215,9 +254,12 @@ export function computeMechaSpreadPaperDps(opts: {
   if (!present.length) return 0;
 
   const sum = present.reduce((s, d) => s + d.damagePerTick, 0);
+  const claw = opts.clawElementalBonuses ?? {};
   let tickSum = 0;
   for (const d of present) {
-    tickSum += sum * (MECHA_SPREAD_DOT_FRAC[d.type] ?? 0);
+    const frac = MECHA_SPREAD_DOT_FRAC[d.type] ?? 0;
+    const clawMult = 1 + (claw[d.type] ?? 0);
+    tickSum += sum * frac * clawMult;
   }
   const duration = opts.remainingDurationSec ?? 6;
   // 1 tick/s for duration, once per mark cycle

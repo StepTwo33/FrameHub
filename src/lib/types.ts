@@ -208,6 +208,8 @@ export interface SetBonusLinkage {
   secondaryMods?: ModSlot[];
   meleeMods?: ModSlot[];
   companionMods?: ModSlot[];
+  /** Beast claw / companion weapon mods (elementals for Mecha transferred DoT). */
+  companionWeaponMods?: ModSlot[];
 }
 
 export interface SetBonusSummaryLine {
@@ -383,6 +385,11 @@ export interface SimulationParams {
    * Papers form embed triggers + Chain Shatter heavy detonations.
    */
   shardHosts?: number;
+  /**
+   * Thalys Explosive Growth: how many of those hosts are fully grown and erupt
+   * at ×shardFullyGrownDamageMult on embed trigger (0 = off; clamped to hosts−1).
+   */
+  shardFullyGrownHosts?: number;
   /**
    * Innodem Swooping Lunge stacks (0–3). When unset and perk is equipped, paper
    * assumes max (3).

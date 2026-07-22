@@ -88,6 +88,9 @@ function cloneLinkage(linkage?: SetBonusLinkage): SetBonusLinkage | undefined {
     secondaryMods: linkage.secondaryMods ? [...linkage.secondaryMods] : undefined,
     meleeMods: linkage.meleeMods ? [...linkage.meleeMods] : undefined,
     companionMods: linkage.companionMods ? [...linkage.companionMods] : undefined,
+    companionWeaponMods: linkage.companionWeaponMods
+      ? [...linkage.companionWeaponMods]
+      : undefined,
   };
 }
 

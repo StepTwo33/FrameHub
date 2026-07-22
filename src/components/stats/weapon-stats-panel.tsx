@@ -798,7 +798,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   value={mechaSpread.toFixed(0)}
                   color="text-cyan-300"
                   changed={flash.has("mechaSpreadDps")}
-                  tooltip="Mecha mark-kill status spread: transferred DoT ticks × sim enemies / mark cooldown. Not in TTK."
+                  tooltip="Mecha mark-kill status spread: transferred DoT ticks × claw elemental × sim enemies / mark cooldown. Cascade re-procs not modeled. Not in TTK."
                 />
               )}
               {shardChain > 0 && (
@@ -807,7 +807,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   value={shardChain.toFixed(0)}
                   color="text-violet-300"
                   changed={flash.has("shardChainDps")}
-                  tooltip="Thalys form embed triggers + Chain Shatter heavy detonations (sim shard hosts). Combo on host only. Not in TTK."
+                  tooltip="Thalys form embed triggers (+ Explosive Growth ×2 erupts) + Chain Shatter heavy detonations (sim shard hosts). Combo on host only. Not in TTK."
                 />
               )}
               {showTotals && (
