@@ -238,6 +238,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Virulence × Mutation stacks | 2026-07-21 | floor(base×STR×(1+stacks)); wiki 200×1.45×101=29290; Field DPS = half base × same |
 | Valkyr Rage passive | 2026-07-21 | Melee dmg bonus = Rage% (cap 300%); death prevention ≥150%; passive text filled |
 | Passive placeholder hygiene | 2026-07-22 | Filled wiki-known \|PLACEHOLDER\| passives (Ash→Zephyr batch); Ember Heat-enemy STR + Garuda kill-stack panel sims |
+| Fireball combo×heat | 2026-07-22 | Chain 1/2/4/8 + 4×heat; dmg=(base÷2)×(combo+1)×STR; wiki 3600/5200 goldens + Prior Casts slider |
+| Frost Fortifying Freeze | 2026-07-22 | +50 Armor × Cold enemies in Affinity Range (panel; after mods, not × STR) |
 
 ## New / extended test files
 

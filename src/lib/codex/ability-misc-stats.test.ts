@@ -11,6 +11,7 @@ import {
   computeImmolationDrAtHeat,
   computeFireBlastArmorStripAtHeat,
   computeFireballHeatDamage,
+  computeFireballComboMultiplier,
   computeKineticPlatingDrAtBattery,
   computeRedlineBuffAtBattery,
   computeGaussPassiveShieldRecharge,
@@ -25,6 +26,7 @@ import {
   valkyrRageDeathPreventionActive,
   computeEmberPassiveAbilityStrength,
   computeGarudaPassiveDamageBonus,
+  computeFrostPassiveArmor,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -157,6 +159,26 @@ describe("Ember Immolation heat formulas", () => {
     expect(computeFireballHeatDamage(800, 1, 1)).toBe(2400);
     expect(computeFireballHeatDamage(300, 1, 1)).toBe(900);
     expect(computeFireballHeatDamage(800, 1, 1.3)).toBe(3120);
+  });
+
+  // wiki: combo 1/2/4/8 + 4×heat; dmg = 400×(combo+1) / 150×(combo+1)
+  it("Fireball combo×heat matches wiki chain goldens", () => {
+    expect(computeFireballComboMultiplier(0, 0)).toBe(1);
+    expect(computeFireballComboMultiplier(1, 0)).toBe(2);
+    expect(computeFireballComboMultiplier(2, 0)).toBe(4);
+    expect(computeFireballComboMultiplier(3, 0)).toBe(8);
+    expect(computeFireballComboMultiplier(0, 1)).toBe(5);
+    expect(computeFireballComboMultiplier(1, 1)).toBe(6);
+    expect(computeFireballComboMultiplier(2, 1)).toBe(8);
+    expect(computeFireballComboMultiplier(3, 1)).toBe(12);
+    expect(computeFireballComboMultiplier(0, 0.75)).toBe(4); // 1 + 3
+    // max combo, 0 heat → 3600 / 1350
+    expect(computeFireballHeatDamage(800, 0, 1, 3)).toBe(3600);
+    expect(computeFireballHeatDamage(300, 0, 1, 3)).toBe(1350);
+    // max combo + max heat → 5200 / 1950
+    expect(computeFireballHeatDamage(800, 1, 1, 3)).toBe(5200);
+    expect(computeFireballHeatDamage(300, 1, 1, 3)).toBe(1950);
+    expect(computeFireballHeatDamage(800, 1, 1.3, 3)).toBe(6760);
   });
 });
 
@@ -297,6 +319,15 @@ describe("Garuda Death's Gate passive", () => {
     expect(computeGarudaPassiveDamageBonus(1)).toBeCloseTo(0.05, 5);
     expect(computeGarudaPassiveDamageBonus(20)).toBeCloseTo(1, 5);
     expect(computeGarudaPassiveDamageBonus(25)).toBeCloseTo(1, 5);
+  });
+});
+
+describe("Frost Fortifying Freeze passive", () => {
+  it("grants +50 Armor per Cold-status enemy", () => {
+    expect(computeFrostPassiveArmor(0)).toBe(0);
+    expect(computeFrostPassiveArmor(1)).toBe(50);
+    expect(computeFrostPassiveArmor(5)).toBe(250);
+    expect(computeFrostPassiveArmor(2.9)).toBe(100);
   });
 });
 

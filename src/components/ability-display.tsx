@@ -16,6 +16,7 @@ import {
   computeImmolationDrAtHeat,
   computeFireBlastArmorStripAtHeat,
   computeFireballHeatDamage,
+  computeFireballComboMultiplier,
   computeKineticPlatingDrAtBattery,
   computeRedlineBuffAtBattery,
   computeThermalSunderRedlineArmorStrip,
@@ -391,6 +392,7 @@ export function AbilityStatsBlock({
     hasFireballHeat;
   const [immolationHeatPct, setImmolationHeatPct] = useState(0);
   const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
+  const [fireballPriorCasts, setFireballPriorCasts] = useState(0);
   const hasKineticPlatingBattery = display.abilityName === "Kinetic Plating";
   const sunderStatusMin = Number(ability.miscStats?.statusDurationMin);
   const sunderStatusMax = Number(ability.miscStats?.statusDurationMax);
@@ -463,19 +465,21 @@ export function AbilityStatsBlock({
   const rows: React.ReactNode[] = [];
 
   if (hasFireballHeat && ability.damage != null) {
-    const baseHit = computeFireballHeatDamage(ability.damage, heatT, 1);
-    const scaledHit = computeFireballHeatDamage(ability.damage, heatT, str);
-    const baseAoe = computeFireballHeatDamage(fireballArea, heatT, 1);
-    const scaledAoe = computeFireballHeatDamage(fireballArea, heatT, str);
+    const combo = computeFireballComboMultiplier(fireballPriorCasts, heatT);
+    const comboActive = heatT > 0 || fireballPriorCasts > 0;
+    const baseHit = computeFireballHeatDamage(ability.damage, heatT, 1, fireballPriorCasts);
+    const scaledHit = computeFireballHeatDamage(ability.damage, heatT, str, fireballPriorCasts);
+    const baseAoe = computeFireballHeatDamage(fireballArea, heatT, 1, fireballPriorCasts);
+    const scaledAoe = computeFireballHeatDamage(fireballArea, heatT, str, fireballPriorCasts);
     rows.push(
       <AbilityStatRow
         key="damage"
         compact={compact}
-        label={heatT > 0 ? "Damage (at Heat)" : "Damage"}
+        label={comboActive ? `Damage (×${combo} combo)` : "Damage"}
         baseValue={baseHit.toFixed(0)}
         modifiedValue={scaledHit.toFixed(0)}
-        isModified={str !== 1 || heatT > 0}
-        isPositive={str > 1 || heatT > 0}
+        isModified={str !== 1 || comboActive}
+        isPositive={str > 1 || comboActive}
         scaleHint="strength"
       />,
     );
@@ -483,11 +487,11 @@ export function AbilityStatsBlock({
       <AbilityStatRow
         key="fireball-aoe"
         compact={compact}
-        label={heatT > 0 ? "AoE dmg (at Heat)" : "AoE dmg"}
+        label={comboActive ? `AoE dmg (×${combo} combo)` : "AoE dmg"}
         baseValue={baseAoe.toFixed(0)}
         modifiedValue={scaledAoe.toFixed(0)}
-        isModified={str !== 1 || heatT > 0}
-        isPositive={str > 1 || heatT > 0}
+        isModified={str !== 1 || comboActive}
+        isPositive={str > 1 || comboActive}
         scaleHint="strength"
       />,
     );
@@ -1405,13 +1409,23 @@ export function AbilityStatsBlock({
           onChange={setImmolationHeatPct}
           tooltip={
             hasFireballHeat
-              ? "Fireball damage × (1 + 2×heat) × STR (×3 at max heat; first-cast / min combo)."
+              ? "Fireball: heat adds up to +4× to the combo multiplier (first cast ×3 dmg at max heat)."
               : hasInfernoRingHeat
                 ? "Inferno Ring DPS = minRing × (1 + heat) × STR (double at max heat)."
                 : hasImmolationDrHeat
                   ? "Immolation DR lerps from initial DR cap to max-heat DR cap with heat (wiki formula)."
                   : "Fire Blast: energy lerps 75→25 × EFF; armor strip lerps 50%→100% × STR (capped at heat value)."
           }
+        />
+      )}
+      {hasFireballHeat && (
+        <SimSlider
+          label="Prior Casts"
+          value={fireballPriorCasts}
+          min={0}
+          max={3}
+          onChange={setFireballPriorCasts}
+          tooltip="Fireball 1.5s combo window: chain 1×/2×/4×/8× + up to 4× from heat. Dmg = (base÷2)×(combo+1)×STR (wiki: max 5200/1950)."
         />
       )}
       {usesBattery && (

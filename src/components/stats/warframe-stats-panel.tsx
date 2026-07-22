@@ -18,6 +18,7 @@ import {
   valkyrRageDeathPreventionActive,
   computeEmberPassiveAbilityStrength,
   computeGarudaPassiveDamageBonus,
+  computeFrostPassiveArmor,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -156,6 +157,36 @@ function GarudaDeathsGatePassive() {
   );
 }
 
+function FrostFortifyingFreezePassive({ moddedArmor }: { moddedArmor: number }) {
+  const [coldEnemies, setColdEnemies] = useState(5);
+  const bonusArmor = computeFrostPassiveArmor(coldEnemies);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Cold Enemies"
+        value={coldEnemies}
+        min={0}
+        max={40}
+        onChange={setColdEnemies}
+        tooltip="Frost Fortifying Freeze: +50 Armor per enemy with Cold status in Affinity Range."
+      />
+      <StatRow
+        label="Bonus Armor"
+        value={`+${bonusArmor}`}
+        color="text-sky-400"
+        tooltip="Flat armor after mods (not × Ability Strength). Ability Cold status also lasts +100%."
+      />
+      <StatRow
+        label="Armor w/ Passive"
+        value={(moddedArmor + bonusArmor).toFixed(0)}
+        color="text-sky-400"
+        tooltip="Modded armor + Fortifying Freeze bonus."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -259,6 +290,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "valkyr" || warframe.id === "valkyr_prime") && <ValkyrRagePassive />}
           {(warframe.id === "ember" || warframe.id === "ember_prime") && <EmberHeatPassive />}
           {(warframe.id === "garuda" || warframe.id === "garuda_prime") && <GarudaDeathsGatePassive />}
+          {(warframe.id === "frost" || warframe.id === "frost_prime") && (
+            <FrostFortifyingFreezePassive moddedArmor={stats.totalArmor} />
+          )}
         </CollapsibleSection>
       )}
 

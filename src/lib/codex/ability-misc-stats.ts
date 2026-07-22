@@ -2133,17 +2133,37 @@ export function computeFireBlastArmorStripAtHeat(
   return Math.min(heatCap * strength, heatCap);
 }
 
+/** wiki Fireball combo chain before heat: 1× / 2× / 4× / 8× (0…3 prior casts in window). */
+const FIREBALL_COMBO_CHAIN = [1, 2, 4, 8] as const;
+
 /**
- * wiki Fireball first-cast / min combo at Immolation heat:
- * 800→2400 / 300→900 (= ×3 at max heat). Formula: base × (1 + 2×heat) × STR.
- * (Combo-chain heat mult is separate and not modeled here.)
+ * wiki Fireball combo multiplier (UI “×N”):
+ * chain[casts] + 4×heat → 1/2/4/8 at 0% heat, 5/6/8/12 at max heat.
+ * Damage = internalBase × (combo + 1) × STR; stored catalog bases are first-cast
+ * (800/300 = 2 × 400/150), so internal = catalogBase / 2.
+ */
+export function computeFireballComboMultiplier(
+  priorCastsInWindow: number,
+  heatFraction: number,
+): number {
+  const step = Math.min(3, Math.max(0, Math.floor(priorCastsInWindow)));
+  return FIREBALL_COMBO_CHAIN[step]! + 4 * clampHeatFraction(heatFraction);
+}
+
+/**
+ * wiki Fireball direct/AoE damage with Immolation heat + combo chain.
+ * First cast @ 0% heat → catalog base; @ max heat → ×3; max combo+heat → ×6.5
+ * (800→5200 / 300→1950).
  */
 export function computeFireballHeatDamage(
-  base: number,
+  catalogBase: number,
   heatFraction: number,
   strength: number,
+  priorCastsInWindow = 0,
 ): number {
-  return base * (1 + 2 * clampHeatFraction(heatFraction)) * strength;
+  const internalBase = catalogBase / 2;
+  const combo = computeFireballComboMultiplier(priorCastsInWindow, heatFraction);
+  return internalBase * (combo + 1) * strength;
 }
 
 /**
@@ -2332,6 +2352,14 @@ export function computeEmberPassiveAbilityStrength(heatEnemies: number): number 
  */
 export function computeGarudaPassiveDamageBonus(kills: number): number {
   return Math.min(1, Math.max(0, Math.floor(kills)) * 0.05);
+}
+
+/**
+ * wiki Frost Fortifying Freeze: +50 Armor per enemy with Cold status in Affinity Range
+ * (flat after armor mods; not × STR).
+ */
+export function computeFrostPassiveArmor(coldEnemies: number): number {
+  return Math.max(0, Math.floor(coldEnemies)) * 50;
 }
 
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
