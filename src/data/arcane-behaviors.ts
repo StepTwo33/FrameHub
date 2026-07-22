@@ -623,14 +623,14 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_triumph",
     customHandler: "exodia_triumph",
     effects: [
-      {"statKey": "meleeComboChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Triumph: custom handler"},
+      {"statKey": "meleeComboChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Triumph — +50% Additional Combo Count Chance on Zaw hit (panel; combo DPS → C6)"},
     ],
   },
   "exodia_valor": {
     arcaneId: "exodia_valor",
     customHandler: "exodia_valor",
     effects: [
-      {"statKey": "meleeComboChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Valor: custom handler"},
+      {"statKey": "meleeComboChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Valor — +200% Combo Count Chance vs Lifted on Zaw (paper: stacks>0 = Lifted; panel; combo DPS → C6)"},
     ],
   },
   "fractalized_reset": {
@@ -698,9 +698,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_elevate": {
     arcaneId: "magus_elevate",
+    customHandler: "magus_elevate",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Elevate: healthRegenChance (conditional proc)"},
-      {"statKey": "operatorToWarframeHeal", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Elevate: operatorToWarframeHeal (conditional proc)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Elevate — 95% chance (constant all ranks) on Transference In"},
+      {"statKey": "operatorToWarframeHeal", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Elevate — restore 50–300 Warframe Health (Operator panel; E[heal]=chance×heal)"},
     ],
   },
   "magus_firewall": {
@@ -720,8 +721,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_husk": {
     arcaneId: "magus_husk",
+    customHandler: "magus_husk",
     effects: [
-      {"statKey": "operatorArmor", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Husk: operatorArmor (always active while equipped)"},
+      {"statKey": "operatorArmor", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Husk — +300 Operator Armor (Operator panel only; not Warframe armor)"},
     ],
   },
   "magus_lockdown": {
@@ -774,8 +776,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_vigor": {
     arcaneId: "magus_vigor",
+    customHandler: "magus_vigor",
     effects: [
-      {"statKey": "operatorHealth", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Vigor: operatorHealth (always active while equipped)"},
+      {"statKey": "operatorHealth", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Vigor — +600 Operator Health (Operator panel only; not Warframe HP)"},
     ],
   },
   "melee_afflictions": {
@@ -950,8 +953,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "primary_debilitate",
     customHandler: "primary_debilitate",
     effects: [
-      {"statKey": "debilitateStackThreshold", "target": "arcane_panel", "mode": "custom", "source": "Primary Debilitate: custom handler"},
-      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "Primary Debilitate: custom handler"},
+      {"statKey": "debilitateStackThreshold", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Debilitate — requires ≥10 stacks of a combined status (constant)"},
+      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Debilitate — 50–100% chance to apply one base component on re-proc (paper: stacks>0 = threshold; expected component chances on statusProcs)"},
     ],
   },
   "primary_exhilarate": {

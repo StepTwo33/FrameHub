@@ -1531,7 +1531,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "healthRegenChance",
         "maxValue": 95.0,
-        "baseValue": 15.833333
+        "constantAtAllRanks": true
       },
       {
         "stat": "operatorToWarframeHeal",
@@ -2166,7 +2166,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "statusProcChance",
         "maxValue": 100.0,
-        "baseValue": 16.666667
+        "baseValue": 50.0
       }
     ]
   },

@@ -2190,6 +2190,117 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(withShock.residualZoneDps).toBeCloseTo(200, 4);
   });
 
+  it("Exodia Triumph: Zaw +50% combo chance panel; non-Zaw gated", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const triumph = allArcanes.find((a) => a.id === "exodia_triumph")!;
+    const onZaw = calculateWeaponBuildWithArcanes(zaw, [], new Map(), [triumph]);
+    expect(onZaw.arcaneBonuses?.meleeComboChance).toBeCloseTo(50, 4);
+    expect(onZaw.totalDamage).toBeCloseTo(calculateWeaponBuild(zaw, [], new Map()).totalDamage, 4);
+    const onSkana = calculateWeaponBuildWithArcanes(skana, [], new Map(), [triumph]);
+    expect(onSkana.arcaneBonuses?.meleeComboChance ?? 0).toBe(0);
+  });
+
+  it("Exodia Valor: stacks>0 → +200% combo chance on Zaw Lifted paper", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const valor = allArcanes.find((a) => a.id === "exodia_valor")!;
+    const zero = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [valor],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.meleeComboChance ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [valor],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.meleeComboChance).toBeCloseTo(200, 4);
+  });
+
+  it("Primary Debilitate: Phage Viral stacks>0 → expected Toxin/Cold component chances", () => {
+    const phage = allWeapons.find((w) => w.id === "phage")!;
+    const debilitate = allArcanes.find((a) => a.id === "primary_debilitate")!;
+    const def = getArcaneEffectDef("primary_debilitate")!;
+    const chanceLine = def.effects.find((e) => e.stat === "statusProcChance")!;
+    expect(chanceLine.baseValue).toBe(50);
+    expect(chanceLine.maxValue).toBe(100);
+
+    const bare = calculateWeaponBuild(phage, [], new Map());
+    const viralBare = bare.statusProcs.find((p) => p.type === "viral")!;
+    expect(viralBare.chance).toBeGreaterThan(0);
+
+    const zero = calculateWeaponBuildWithArcanes(
+      phage,
+      [],
+      new Map(),
+      [debilitate],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.statusProcs.find((p) => p.type === "toxin")).toBeUndefined();
+
+    const full = calculateWeaponBuildWithArcanes(
+      phage,
+      [],
+      new Map(),
+      [debilitate],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.debilitateStackThreshold).toBe(10);
+    expect(full.arcaneBonuses?.statusProcChance).toBeCloseTo(100, 4);
+    expect(full.arcaneBonuses?.debilitateExpectedExtra).toBeCloseTo(viralBare.chance * 100, 4);
+    const toxin = full.statusProcs.find((p) => p.type === "toxin")!;
+    const cold = full.statusProcs.find((p) => p.type === "cold")!;
+    expect(toxin.chance).toBeCloseTo(viralBare.chance * 0.5, 5);
+    expect(cold.chance).toBeCloseTo(viralBare.chance * 0.5, 5);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+  });
+
+  it("Magus Elevate: 95% × 300 expected heal panel; no Warframe HP change", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const elevate = allArcanes.find((a) => a.id === "magus_elevate")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [elevate],
+    );
+    expect(full.arcaneBonuses?.healthRegenChance).toBeCloseTo(95, 4);
+    expect(full.arcaneBonuses?.operatorToWarframeHeal).toBeCloseTo(300, 4);
+    expect(full.arcaneBonuses?.elevateExpectedHeal).toBeCloseTo(285, 4);
+    expect(full.totalHealth).toBeCloseTo(bare.totalHealth, 4);
+  });
+
+  it("Magus Husk/Vigor: Operator armor/health panel only", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const husk = allArcanes.find((a) => a.id === "magus_husk")!;
+    const vigor = allArcanes.find((a) => a.id === "magus_vigor")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const withHusk = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [husk],
+    );
+    expect(withHusk.arcaneBonuses?.operatorArmor).toBeCloseTo(300, 4);
+    expect(withHusk.totalArmor).toBeCloseTo(bare.totalArmor, 4);
+
+    const withVigor = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [vigor],
+    );
+    expect(withVigor.arcaneBonuses?.operatorHealth).toBeCloseTo(600, 4);
+    expect(withVigor.totalHealth).toBeCloseTo(bare.totalHealth, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;

@@ -177,6 +177,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "exodia_epidemic",
   "exodia_triumph",
   "exodia_valor",
+  "primary_debilitate",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -237,7 +238,6 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "zid_an_asheir",
   "zid_an_sek_eel",
   "melee_vortex",
-  "primary_debilitate",
   "primary_obstruct",
   "pax_bolt",
   "molt_vigor",
@@ -255,6 +255,9 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_aegis",
   "magus_firewall",
   "magus_overload",
+  "magus_elevate",
+  "magus_husk",
+  "magus_vigor",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1203,11 +1206,76 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "exodia_triumph": {
+      // wiki R3: +50% Additional Combo Count Chance on hit (Zaw). Panel only — combo strings → C6.
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const chanceLine = findEffect(def, "meleeComboChance");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "meleeComboChance", isZaw ? chance : 0);
+      return true;
+    }
+
+    case "exodia_valor": {
+      // wiki R3: +200% Additional Combo Count Chance vs Lifted (Zaw).
+      // Paper: stacks>0 = Lifted target. Panel only — combo strings → C6.
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const chanceLine = findEffect(def, "meleeComboChance");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "meleeComboChance", isZaw ? chance : 0);
+      return true;
+    }
+
+    case "primary_debilitate": {
+      // wiki R5: at ≥10 stacks of a combined status, re-applying it has 50–100% chance to also
+      // inflict one of its base components (separate instance; Heat/Elec/Toxin DoTs benefit).
+      // Paper: stacks>0 = threshold met. Expected component proc chance = combinedChance × p × 1/n.
+      const threshLine = findEffect(def, "debilitateStackThreshold");
+      const chanceLine = findEffect(def, "statusProcChance");
+      const threshold = threshLine ? scaleArcaneEffectLine(threshLine, rank, def.maxRank) : 10;
+      const chancePct = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "debilitateStackThreshold", threshold);
+      trackBonus(stats, "statusProcChance", chancePct);
+
+      const COMBINED: Record<string, string[]> = {
+        viral: ["toxin", "cold"],
+        corrosive: ["heat", "toxin"],
+        gas: ["heat", "toxin"],
+        magnetic: ["cold", "electricity"],
+        radiation: ["heat", "electricity"],
+        blast: ["heat", "cold"],
+      };
+      let expectedExtra = 0;
+      for (const proc of stats.statusProcs ?? []) {
+        const comps = COMBINED[proc.type];
+        if (!comps || proc.chance <= 0) continue;
+        const p = chancePct / 100;
+        expectedExtra += proc.chance * p;
+        for (const comp of comps) {
+          const addChance = (proc.chance * p) / comps.length;
+          if (addChance <= 0) continue;
+          const existing = stats.statusProcs!.find((x) => x.type === comp);
+          if (existing) {
+            existing.chance += addChance;
+          } else {
+            stats.statusProcs!.push({
+              type: comp,
+              chance: addChance,
+              damagePerTick: 0,
+              duration: 6,
+              ticks: 1,
+              totalDamage: 0,
+              description: `Debilitate component (${proc.type})`,
+            });
+          }
+        }
+      }
+      trackBonus(stats, "debilitateExpectedExtra", expectedExtra * 100);
+      return true;
+    }
+
     case "exodia_hunt":
     case "exodia_might":
     case "exodia_epidemic":
-    case "exodia_triumph":
-    case "exodia_valor":
       trackAllEffects(stats, def, rank, stacks);
       return true;
 
@@ -1473,6 +1541,35 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
+    case "magus_elevate": {
+      // wiki: On Transference In — 95% chance (constant) to restore 50–300 Health to Warframe.
+      // Operator → Warframe heal panel only (does not change Warframe max HP).
+      const chanceLine = findEffect(def, "healthRegenChance");
+      const healLine = findEffect(def, "operatorToWarframeHeal");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      const heal = healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "healthRegenChance", chance);
+      trackBonus(stats, "operatorToWarframeHeal", heal);
+      trackBonus(stats, "elevateExpectedHeal", (chance / 100) * heal);
+      return true;
+    }
+
+    case "magus_husk": {
+      // wiki R5: +300 Operator Armor on Transference Out. Operator panel only.
+      const armorLine = findEffect(def, "operatorArmor");
+      const armor = armorLine ? scaleArcaneEffectLine(armorLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "operatorArmor", armor);
+      return true;
+    }
+
+    case "magus_vigor": {
+      // wiki R5: +600 Operator Health. Operator panel only (not Warframe HP).
+      const hpLine = findEffect(def, "operatorHealth");
+      const hp = hpLine ? scaleArcaneEffectLine(hpLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "operatorHealth", hp);
+      return true;
+    }
+
     case "arcane_eruption":
     case "arcane_escapist":
     case "arcane_steadfast":
@@ -1488,7 +1585,6 @@ export function applyCustomArcaneToWarframe(
     case "theorem_contagion":
     case "zid_an_sek_eel":
     case "melee_vortex":
-    case "primary_debilitate":
     case "primary_obstruct":
       trackAllEffects(stats, def, rank, stacks);
       return true;

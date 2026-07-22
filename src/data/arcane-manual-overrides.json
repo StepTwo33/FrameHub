@@ -1005,7 +1005,7 @@
       {
         "stat": "healthRegenChance",
         "maxValue": 95,
-        "baseValue": 95
+        "constantAtAllRanks": true
       },
       {
         "stat": "operatorToWarframeHeal",
@@ -1506,7 +1506,7 @@
         "stat": "debilitateStackThreshold",
         "maxValue": 10,
         "flat": true,
-        "baseValue": 10
+        "constantAtAllRanks": true
       },
       {
         "stat": "statusProcChance",
