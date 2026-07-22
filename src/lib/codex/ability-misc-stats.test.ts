@@ -79,6 +79,9 @@ import {
   computeGaraPassiveBlindChance,
   computeLimboRiftPassive,
   computeLimboRiftEnergyGained,
+  computeMagVacuumPassive,
+  computeKoumeiFatePassive,
+  computeKoumeiFateRemaining,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -789,6 +792,21 @@ describe("Limbo Rift energy passive", () => {
     });
     expect(computeLimboRiftEnergyGained(3, 10)).toBe(50); // 30 + 20
     expect(computeLimboRiftEnergyGained(0, 5)).toBe(10);
+  });
+});
+
+describe("Mag vacuum passive", () => {
+  it("vacuums pickups within 8m", () => {
+    expect(computeMagVacuumPassive()).toEqual({ radiusM: 8 });
+  });
+});
+
+describe("Koumei Fate status passive", () => {
+  it("selects a weapon every 60s for 60s of random status", () => {
+    expect(computeKoumeiFatePassive()).toEqual({ intervalSec: 60, durationSec: 60 });
+    expect(computeKoumeiFateRemaining(0)).toBe(60);
+    expect(computeKoumeiFateRemaining(20)).toBe(40);
+    expect(computeKoumeiFateRemaining(60)).toBe(0);
   });
 });
 

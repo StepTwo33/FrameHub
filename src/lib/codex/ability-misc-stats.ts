@@ -2966,6 +2966,36 @@ export function computeLimboRiftEnergyGained(
   );
 }
 
+export interface MagVacuumPassive {
+  /** Pickup vacuum radius in meters. */
+  radiusM: number;
+}
+
+/** wiki Mag: automatically vacuum pickups within 8m (overridden by larger vacuum mods). */
+export function computeMagVacuumPassive(): MagVacuumPassive {
+  return { radiusM: 8 };
+}
+
+export interface KoumeiFatePassive {
+  /** Interval between weapon selections. */
+  intervalSec: number;
+  /** Duration the selected weapon inflicts random status effects. */
+  durationSec: number;
+}
+
+/** wiki Koumei: every 60s, one equipped weapon deals random Status Effects for 60s. */
+export function computeKoumeiFatePassive(): KoumeiFatePassive {
+  return { intervalSec: 60, durationSec: 60 };
+}
+
+/** Remaining Fate buff time from elapsed seconds since the weapon was selected. */
+export function computeKoumeiFateRemaining(
+  elapsedSec: number,
+  passive: KoumeiFatePassive = computeKoumeiFatePassive(),
+): number {
+  return Math.max(0, passive.durationSec - Math.max(0, elapsedSec));
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

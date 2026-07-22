@@ -71,6 +71,9 @@ import {
   computeGaraPassiveBlindChance,
   computeLimboRiftPassive,
   computeLimboRiftEnergyGained,
+  computeMagVacuumPassive,
+  computeKoumeiFatePassive,
+  computeKoumeiFateRemaining,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1413,6 +1416,52 @@ function LimboRiftPassivePanel() {
   );
 }
 
+function MagVacuumPassivePanel() {
+  const vacuum = computeMagVacuumPassive();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Vacuum Radius"
+        value={`${vacuum.radiusM}m`}
+        color="text-sky-400"
+        tooltip="Mag: pickups within 8m gravitate to her. Overridden by larger vacuum sources (e.g. Fetch / Vacuum)."
+      />
+    </div>
+  );
+}
+
+function KoumeiFatePassivePanel() {
+  const fate = computeKoumeiFatePassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeKoumeiFateRemaining(elapsedSec, fate);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={fate.durationSec}
+        onChange={setElapsedSec}
+        tooltip="Koumei: every 60s, fate picks one equipped weapon to inflict random Status Effects for 60s."
+      />
+      <StatRow
+        label="Fate Status"
+        value={remaining > 0 ? `${remaining.toFixed(0)}s left` : "Waiting"}
+        color={remaining > 0 ? "text-rose-400" : "text-muted-foreground"}
+        tooltip={`Interval ${fate.intervalSec}s · Duration ${fate.durationSec}s. Can select unequipped weapon types.`}
+      />
+      <StatRow
+        label="Cycle"
+        value={`${fate.intervalSec}s / ${fate.durationSec}s`}
+        color="text-muted-foreground"
+        tooltip="Separate from The Five Fates dice rolls on ability casts."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1576,6 +1625,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "rhino" || warframe.id === "rhino_prime") && <RhinoHardLandingPassivePanel />}
           {(warframe.id === "gara" || warframe.id === "gara_prime") && <GaraPassiveBlindPanel />}
           {(warframe.id === "limbo" || warframe.id === "limbo_prime") && <LimboRiftPassivePanel />}
+          {(warframe.id === "mag" || warframe.id === "mag_prime") && <MagVacuumPassivePanel />}
+          {warframe.id === "koumei" && <KoumeiFatePassivePanel />}
         </CollapsibleSection>
       )}
 
