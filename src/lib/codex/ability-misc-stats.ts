@@ -2419,6 +2419,29 @@ export function computeYareliCriticalFlowCritChance(moving: boolean): number {
   return moving ? 2 : 0;
 }
 
+/**
+ * wiki Zephyr passive: +150% weapon Critical Chance while airborne
+ * (additive to CC mods; not × STR).
+ */
+export function computeZephyrAirborneCritChance(airborne: boolean): number {
+  return airborne ? 1.5 : 0;
+}
+
+export interface XakuPassiveEvasion {
+  /** Chance to phase through enemy weapon attacks. */
+  dodgeChance: number;
+  /** Damage reduction vs area-of-effect damage. */
+  aoeDamageReduction: number;
+}
+
+/**
+ * wiki Xaku passive: 25% dodge + 25% AoE DR; both rise to 75% during The Vast Untime.
+ */
+export function computeXakuPassiveEvasion(vastUntimeActive: boolean): XakuPassiveEvasion {
+  const v = vastUntimeActive ? 0.75 : 0.25;
+  return { dodgeChance: v, aoeDamageReduction: v };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

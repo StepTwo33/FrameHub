@@ -25,6 +25,8 @@ import {
   computeProteaPassiveStrengthBonus,
   computeStyanaxHopliteCritChance,
   computeYareliCriticalFlowCritChance,
+  computeZephyrAirborneCritChance,
+  computeXakuPassiveEvasion,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -380,6 +382,60 @@ function YareliCriticalFlowPassive() {
   );
 }
 
+function ZephyrAirbornePassive() {
+  const [airborne, setAirborne] = useState(1);
+  const cc = computeZephyrAirborneCritChance(airborne > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Airborne"
+        value={airborne}
+        min={0}
+        max={1}
+        onChange={setAirborne}
+        tooltip="Zephyr passive: +150% weapon Critical Chance while airborne (also slower fall / more maneuverable)."
+      />
+      <StatRow
+        label="Weapon CC"
+        value={cc > 0 ? `+${(cc * 100).toFixed(0)}%` : "Inactive"}
+        color={cc > 0 ? "text-sky-400" : "text-muted-foreground"}
+        tooltip="Additive to all equipped weapons' crit chance while airborne (panel-only)."
+      />
+    </div>
+  );
+}
+
+function XakuEvasionPassive() {
+  const [vastUntime, setVastUntime] = useState(0);
+  const { dodgeChance, aoeDamageReduction } = computeXakuPassiveEvasion(vastUntime > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Vast Untime"
+        value={vastUntime}
+        min={0}
+        max={1}
+        onChange={setVastUntime}
+        tooltip="Xaku passive: 25% dodge + 25% AoE DR; both become 75% while The Vast Untime is active."
+      />
+      <StatRow
+        label="Dodge Chance"
+        value={`${(dodgeChance * 100).toFixed(0)}%`}
+        color="text-violet-300"
+        tooltip="Chance to phase through enemy weapon attacks (separate from Evasion)."
+      />
+      <StatRow
+        label="AoE DR"
+        value={`${(aoeDamageReduction * 100).toFixed(0)}%`}
+        color="text-violet-400"
+        tooltip="Damage reduction vs area-of-effect damage (explosions are not dodged)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -503,6 +559,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
             <StyanaxHoplitePassive moddedShield={stats.totalShield} />
           )}
           {(warframe.id === "yareli" || warframe.id === "yareli_prime") && <YareliCriticalFlowPassive />}
+          {(warframe.id === "zephyr" || warframe.id === "zephyr_prime") && <ZephyrAirbornePassive />}
+          {(warframe.id === "xaku" || warframe.id === "xaku_prime") && <XakuEvasionPassive />}
         </CollapsibleSection>
       )}
 

@@ -33,6 +33,8 @@ import {
   computeProteaPassiveStrengthBonus,
   computeStyanaxHopliteCritChance,
   computeYareliCriticalFlowCritChance,
+  computeZephyrAirborneCritChance,
+  computeXakuPassiveEvasion,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -391,6 +393,26 @@ describe("Yareli Critical Flow passive", () => {
   it("grants +200% secondary CC while moving", () => {
     expect(computeYareliCriticalFlowCritChance(false)).toBe(0);
     expect(computeYareliCriticalFlowCritChance(true)).toBe(2);
+  });
+});
+
+describe("Zephyr airborne crit passive", () => {
+  it("grants +150% weapon CC while airborne", () => {
+    expect(computeZephyrAirborneCritChance(false)).toBe(0);
+    expect(computeZephyrAirborneCritChance(true)).toBeCloseTo(1.5, 5);
+  });
+});
+
+describe("Xaku dodge / AoE DR passive", () => {
+  it("is 25%/25% baseline and 75%/75% during Vast Untime", () => {
+    expect(computeXakuPassiveEvasion(false)).toEqual({
+      dodgeChance: 0.25,
+      aoeDamageReduction: 0.25,
+    });
+    expect(computeXakuPassiveEvasion(true)).toEqual({
+      dodgeChance: 0.75,
+      aoeDamageReduction: 0.75,
+    });
   });
 });
 
