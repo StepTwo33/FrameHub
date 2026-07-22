@@ -131,7 +131,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
-  // wiki: Virulence — length scales RNG; width is fixed 4 m (not listed)
+  // wiki: Virulence — length scales RNG; width Misc-fixed 4 m;
+  // energy refund/hit = 25% of cast cost → scales with EFF via cast_cost (base 10)
+  "nidus::Virulence": {
+    energyRefundPerHit: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Larva — Mutation stack chance × STR (100% at 200% STR)
   "nidus::Larva": {

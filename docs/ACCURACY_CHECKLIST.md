@@ -220,6 +220,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Misc flat≠% root fix | 2026-07-21 | Bare numbers ≥1 no longer auto-% (was Shuriken 5%, AMD 25000%, angles…); true fraction keys + cooldown/angles/× growth; Plunder/Covenant caps 200% |
 | Exalted/Inferno cast costs | 2026-07-21 | Artemis/Noctua/Neutralize energyPerShot (+ altFire) × EFF; Inferno energyPerEnemy × EFF; combo/kill windows + kavat lifespan as seconds |
 | Fire Blast max-heat + Glory alt | 2026-07-21 | Ember Fire Blast maxHeatEnergyCost 25 × EFF (heat lerp still unmodeled); Jade Glory altFireEnergy 25 × EFF |
+| Virulence energy refund × EFF | 2026-07-21 | energyRefundPerHit follows cast_cost (¼ of ability cost); low EFF increases refund |
 
 ## New / extended test files
 

@@ -1522,6 +1522,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(virulence.range).toBe(16);
     expect(virulence.damageType).toBe("Puncture");
     expect(virulence.miscStats).toMatchObject({ energyRefundPerHit: 10, width: 4 });
+    expect(getVerifiedMiscScaling("nidus", "Virulence", "energyRefundPerHit")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     const larva = nidus.abilities.find((a) => a.name === "Larva")!;
     expect(larva.range).toBe(12);
     expect(larva.duration).toBe(7);

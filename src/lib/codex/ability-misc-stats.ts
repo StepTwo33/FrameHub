@@ -1240,6 +1240,7 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "energyPerAbility" ||
       key === "energyPerCorpse" ||
       key === "energyPerPulse" ||
+      key === "energyRefundPerHit" ||
       key === "energyDrainGrowth" ||
       key === "mutationStackCost" ||
       key === "backbeatAmmoCost" ||
@@ -1466,11 +1467,12 @@ function scaleVerifiedValue(
     const scaled = applyBounds(scaledAbilityEnergyCost(base, ctx.efficiency ?? 1), cap, floor);
     const fmt =
       Math.abs(scaled - Math.round(scaled)) < 0.05 ? String(Math.round(scaled)) : scaled.toFixed(1);
+    // Refunds/gains use the same EFF curve but higher values are better (Virulence).
+    const isRefund = /Refund|Restore|Gain/i.test(key);
     return {
       scaled: fmt,
       modified: Math.abs(scaled - base) > 0.001,
-      // Lower cast cost is better.
-      positive: scaled <= base,
+      positive: isRefund ? scaled >= base : scaled <= base,
     };
   }
 
@@ -1712,6 +1714,7 @@ function scaleVerifiedValue(
       key === "energyPerAbility" ||
       key === "energyPerCorpse" ||
       key === "energyPerPulse" ||
+      key === "energyRefundPerHit" ||
       key === "energyDrainGrowth" ||
       key === "mutationStackCost" ||
       key === "backbeatAmmoCost" ||

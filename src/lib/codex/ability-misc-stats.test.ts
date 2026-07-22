@@ -571,6 +571,27 @@ describe("scaleAbilityMiscStats", () => {
       scaled: "17.5",
       scaleAttr: "efficiency",
     });
+    // wiki Virulence: refund = 25% of cast cost → follows cast_cost; higher EFF lowers refund
+    const virulence = scaleAbilityMiscStats(
+      { energyRefundPerHit: 10 },
+      ctx,
+      { warframeId: "nidus", abilityName: "Virulence" },
+    );
+    expect(virulence.find((l) => l.label === "Energy per Hit")!).toMatchObject({
+      base: "10",
+      scaled: "7",
+      scaleAttr: "efficiency",
+      positive: false,
+    });
+    const virulenceLowEff = scaleAbilityMiscStats(
+      { energyRefundPerHit: 10 },
+      { ...ctx, efficiency: 0.7 },
+      { warframeId: "nidus", abilityName: "Virulence" },
+    );
+    expect(virulenceLowEff.find((l) => l.label === "Energy per Hit")!).toMatchObject({
+      scaled: "13",
+      positive: true,
+    });
     const desecrate = scaleAbilityMiscStats(
       { energyPerCorpse: 10 },
       ctx,
