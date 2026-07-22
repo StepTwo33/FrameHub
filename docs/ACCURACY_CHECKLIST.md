@@ -47,7 +47,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur/Hunter **panel %** locked (40%/piece, 25%/piece); Mecha mark/spread summary only; shield-cast / companion timing / Mecha burst still unmodeled in DPS | Panel goldens in `set-bonus-audit.test.ts`; DPS remains C |
-| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion + EFF + Absorb √buff + Nourish + drains + Hildryn + armor-pool invuln absorb sim |
+| B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + PT/projSpeed/followThrough panel; remain: aim-feel / holster / reload procs |
@@ -170,7 +170,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Loki kit | 2026-07-21 | Decoy 25s/15% absorb; Invis 12s (was 30); Switch 75m/+50% speed; Disarm 500 Impact/20m |
 | B5 Mag kit | 2026-07-21 | Pull 300/25m; Magnetize 300 Blast/2×/15s; Polarize 400/8m; Crush 1500/18m |
 | B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m/5× Misc + Initial HP=(base+mult×armor)×STR; Avalanche 1500/15m/60% strip |
-| B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln/1600 seg/5× Misc + Initial seg pool |
+| B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln/1600 seg/5× Misc + Initial seg pool + crystallized absorb |
 | B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day +150 Night Shields×STR (flat); Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
 | B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5× +growth÷DUR +drain/growth×EFF/DUR; Prowl +40% HS/stealTime÷DUR +melee/dmg energy×EFF; Artemis 240×7 |
 | B5 Ash kit | 2026-07-21 | Shuriken 750×5; Smoke 12s/10m; Teleport +200% finisher; Blade Storm 1500 True/12e/mark×EFF |
@@ -230,6 +230,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis followThrough panel | 2026-07-21 | Magistar Crushing Verdict +40% (channel); Nami Solo Lone Blade +60% (melee equipped) |
 | Gauss passive battery shields | 2026-07-21 | Shield recharge +delay reduction × battery (wiki 80%→96%/64%; full 120%/80%); not × STR |
 | Thermal Sunder Redline strip | 2026-07-21 | Blast armor strip 0% at ≤80% battery → 100% at full (Redline synergy; not × STR) |
+| Mass Vitrify enemy absorb | 2026-07-21 | Segment += N×max((320+5×armor)×STR, enemyEHP÷10); wiki 4160+2496; Enemy HP+Shields (k) for max path |
 
 ## New / extended test files
 

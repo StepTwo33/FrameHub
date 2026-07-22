@@ -1259,7 +1259,7 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
 
   // wiki: Mass Vitrify — explosion via damage; vuln × STR; segmentHealth / armorMult Misc-fixed;
-  // Initial Segment Health = (base + mult × totalArmor) × STR;
+  // Initial = (base + mult × totalArmor) × STR; +enemies × max((320+5×armor)×STR, enemyEHP/10);
   // expansion × DUR; explosion range × RNG; channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "gara::Mass Vitrify": {
     damageVulnerability: { scale: "strength" },

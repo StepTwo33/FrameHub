@@ -19,6 +19,7 @@ import {
   computeKineticPlatingDrAtBattery,
   computeRedlineBuffAtBattery,
   computeThermalSunderRedlineArmorStrip,
+  computeMassVitrifyEnemyAbsorb,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -337,6 +338,9 @@ export function AbilityStatsBlock({
         absorptionMultiplier: poolAbsorb.absorptionMultiplier,
       }
     : undefined;
+  const hasMassVitrifyAbsorb = display.abilityName === "Mass Vitrify";
+  const [vitrifyEnemies, setVitrifyEnemies] = useState(0);
+  const [vitrifyEnemyEhpK, setVitrifyEnemyEhpK] = useState(0);
   const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
   const hasHeatEnergyLerp =
     display.abilityName === "Fire Blast" &&
@@ -975,21 +979,37 @@ export function AbilityStatsBlock({
       ? Number.isFinite(poolMult) && poolMult > 0
       : true;
     if (Number.isFinite(poolBase) && poolBase > 0 && armorOk) {
-      const unscaled = computeArmorScaledPool(
+      const armorForPool = needsArmor ? stats.totalArmor : 0;
+      let unscaled = computeArmorScaledPool(
         poolBase,
         armorMult,
-        needsArmor ? stats.totalArmor : 0,
+        armorForPool,
         1,
         poolAbsorbOpts,
       );
-      const scaled = computeArmorScaledPool(
+      let scaled = computeArmorScaledPool(
         poolBase,
         armorMult,
-        needsArmor ? stats.totalArmor : 0,
+        armorForPool,
         str,
         poolAbsorbOpts,
       );
-      const withAbsorb = absorbedDamage > 0;
+      let withEnemyAbsorb = false;
+      if (hasMassVitrifyAbsorb && vitrifyEnemies > 0) {
+        const enemyEhp = vitrifyEnemyEhpK * 1000;
+        const perBase = computeMassVitrifyEnemyAbsorb(armorForPool, 1, enemyEhp, {
+          absorbBase: poolBase / armorMult,
+          armorMultiplier: armorMult,
+        });
+        const perScaled = computeMassVitrifyEnemyAbsorb(armorForPool, str, enemyEhp, {
+          absorbBase: poolBase / armorMult,
+          armorMultiplier: armorMult,
+        });
+        unscaled += vitrifyEnemies * perBase;
+        scaled += vitrifyEnemies * perScaled;
+        withEnemyAbsorb = true;
+      }
+      const withAbsorb = absorbedDamage > 0 || withEnemyAbsorb;
       rows.push(
         <AbilityStatRow
           key={`${display.abilityName}-armorPool`}
@@ -1140,6 +1160,26 @@ export function AbilityStatsBlock({
               : "Damage taken during cast invulnerability. Wiki: (base + armor×mult) × STR + absorbed."
           }
         />
+      )}
+      {hasMassVitrifyAbsorb && (
+        <>
+          <SimSlider
+            label="Crystallized Enemies"
+            value={vitrifyEnemies}
+            min={0}
+            max={24}
+            onChange={setVitrifyEnemies}
+            tooltip="Each crystallized enemy adds max((320+5×armor)×STR, enemy EHP÷10) to every segment."
+          />
+          <SimSlider
+            label="Enemy HP+Shields (k)"
+            value={vitrifyEnemyEhpK}
+            min={0}
+            max={100}
+            onChange={setVitrifyEnemyEhpK}
+            tooltip="0 uses the armor floor absorb. Set higher so enemy EHP÷10 can beat the floor (e.g. 30 → 3000)."
+          />
+        </>
       )}
       {usesImmolationHeat && (
         <SimSlider

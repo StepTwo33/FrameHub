@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   computeArmorScaledPool,
+  computeMassVitrifyAbsorbFloor,
+  computeMassVitrifyEnemyAbsorb,
+  computeMassVitrifySegmentHealth,
   getArmorPoolInvulnAbsorb,
   scaleAbilityMiscStats,
   scaledAbilityEnergyCost,
@@ -38,6 +41,16 @@ describe("computeArmorScaledPool", () => {
   // wiki Mass Vitrify segment: (1600 + 5 × (160 × 2)) × 1.3 = 4160
   it("matches wiki Mass Vitrify segment health before absorb", () => {
     expect(computeArmorScaledPool(1600, 5, 320, 1.3)).toBe(4160);
+  });
+
+  // wiki: floor/enemy (320 + 5×320)×1.3 = 2496; segment +1 enemy = 6656
+  it("matches wiki Mass Vitrify crystallized-enemy absorb", () => {
+    expect(computeMassVitrifyAbsorbFloor(320, 1.3)).toBe(2496);
+    expect(computeMassVitrifyEnemyAbsorb(320, 1.3, 0)).toBe(2496);
+    expect(computeMassVitrifyEnemyAbsorb(320, 1.3, 30_000)).toBe(3000); // max path
+    expect(computeMassVitrifySegmentHealth(1600, 5, 320, 1.3, 0)).toBe(4160);
+    expect(computeMassVitrifySegmentHealth(1600, 5, 320, 1.3, 1)).toBe(6656);
+    expect(computeMassVitrifySegmentHealth(1600, 5, 320, 1.3, 1, 30_000)).toBe(7160);
   });
   // wiki Shield Maiden: (2000 + (2.5 × 480)) × 1.6 = 7040
   it("matches wiki Shield Maiden health before absorb", () => {

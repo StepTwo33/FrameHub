@@ -1997,6 +1997,58 @@ export function computeArmorScaledPool(
   return (base + armorMultiplier * armor) * strength + absorbed;
 }
 
+/**
+ * wiki Mass Vitrify: min absorb per crystallized enemy =
+ * (320 + 5 × totalArmor) × STR  (320 = rank-3 segment base / armorMult).
+ */
+export function computeMassVitrifyAbsorbFloor(
+  totalArmor: number,
+  strength: number,
+  opts?: { absorbBase?: number; armorMultiplier?: number },
+): number {
+  const absorbBase = opts?.absorbBase ?? 320;
+  const armorMult = opts?.armorMultiplier ?? 5;
+  return (absorbBase + armorMult * Math.max(0, totalArmor)) * strength;
+}
+
+/**
+ * wiki Mass Vitrify per-enemy absorb =
+ * max(floor, (enemyMaxHP + enemyMaxShields) ÷ 10).
+ */
+export function computeMassVitrifyEnemyAbsorb(
+  totalArmor: number,
+  strength: number,
+  enemyMaxHpAndShields: number,
+  opts?: { absorbBase?: number; armorMultiplier?: number },
+): number {
+  const floor = computeMassVitrifyAbsorbFloor(totalArmor, strength, opts);
+  return Math.max(floor, Math.max(0, enemyMaxHpAndShields) / 10);
+}
+
+/** Segment HP = Initial + enemies × per-enemy absorb (absorb added after Initial×STR). */
+export function computeMassVitrifySegmentHealth(
+  segmentBase: number,
+  armorMultiplier: number,
+  totalArmor: number,
+  strength: number,
+  crystallizedEnemies: number,
+  enemyMaxHpAndShields = 0,
+): number {
+  const initial = computeArmorScaledPool(
+    segmentBase,
+    armorMultiplier,
+    totalArmor,
+    strength,
+  );
+  const perEnemy = computeMassVitrifyEnemyAbsorb(
+    totalArmor,
+    strength,
+    enemyMaxHpAndShields,
+    { absorbBase: segmentBase / armorMultiplier, armorMultiplier },
+  );
+  return initial + Math.max(0, crystallizedEnemies) * perEnemy;
+}
+
 /** Abilities whose cast invuln adds absorbed damage into the armor-scaled pool. */
 export function getArmorPoolInvulnAbsorb(
   abilityName: string,
