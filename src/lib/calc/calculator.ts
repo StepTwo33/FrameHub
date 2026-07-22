@@ -999,6 +999,9 @@ export function calculateWeaponBuild(
         case 'slideAttack': /* slide attack bonus — visual only */ break;
         case 'finisherDamage': /* finisher bonus — visual only */ break;
         case 'comboDuration': stats.comboDuration += value; break;
+        case 'followThrough':
+          stats.followThrough = (stats.followThrough ?? 0) + value;
+          break;
         // Ranged-specific riven / incarnon stats (panel display; no DPS model)
         case 'projectileSpeed':
           stats.projectileSpeed = (stats.projectileSpeed ?? 0) + value;

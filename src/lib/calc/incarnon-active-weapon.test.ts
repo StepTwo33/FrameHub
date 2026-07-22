@@ -679,6 +679,22 @@ describe("evolution numeric fixes", () => {
     ).toBe(0.6);
   });
 
+  it("melee followThrough panel: Crushing Verdict / Lone Blade", () => {
+    const magistar = allWeapons.find((w) => w.id === "magistar")!;
+    const verdict = mergeIncarnonStatChanges(incarnonDataMap.get("magistar")!, { 2: 0 }, "magistar");
+    expect(verdict?.followThrough).toBe(0.4);
+    expect(calculateWeaponBuild(magistar, [], modsMap(), verdict).followThrough).toBe(0.4);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("magistar")!, { 2: 0 }, "sancti_magistar")
+        ?.followThrough,
+    ).toBe(0.4);
+
+    const nami = allWeapons.find((w) => w.id === "nami_solo")!;
+    const lone = mergeIncarnonStatChanges(incarnonDataMap.get("nami_solo")!, { 3: 0 }, "nami_solo");
+    expect(lone?.followThrough).toBe(0.6);
+    expect(calculateWeaponBuild(nami, [], modsMap(), lone).followThrough).toBe(0.6);
+  });
+
   it("Braton Daring Reverie / Munitions Grit variant flats", () => {
     const data = incarnonDataMap.get("braton")!;
     // Channel-active paper: X+Y (24+30)

@@ -443,6 +443,8 @@ export interface CalculatedStats {
   punchThrough?: number;
   /** Projectile speed bonus fraction from incarnon/rivens — display only. */
   projectileSpeed?: number;
+  /** Melee follow-through bonus fraction from incarnon — display only (no DPS model). */
+  followThrough?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

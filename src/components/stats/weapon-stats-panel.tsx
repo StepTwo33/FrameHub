@@ -310,6 +310,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Incarnon / riven projectile speed (display; not modeled in DPS)."
           />
         )}
+        {stats.followThrough != null && stats.followThrough !== 0 && (
+          <StatRow
+            label="Follow Through"
+            value={`${stats.followThrough > 0 ? "+" : ""}${(stats.followThrough * 100).toFixed(0)}%`}
+            tooltip="Incarnon follow-through bonus (display; not modeled in DPS)."
+          />
+        )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
           <StatRow
             label="Sprint Speed"
@@ -621,6 +628,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "range") return `range: +${n}m`;
                         if (s === "punchThrough") return `PT: +${n}m`;
                         if (s === "projectileSpeed") return `projSpeed: +${(n * 100).toFixed(0)}%`;
+                        if (s === "followThrough") return `followThrough: +${(n * 100).toFixed(0)}%`;
                         if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
                         if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
                         return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;

@@ -426,7 +426,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "magistar_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form increases Initial Combo and Wind Up Speed +100% Melee Damage +30 Initial Combo +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Bullet Jump.", statChanges: {"damage":1,"initialCombo":30,"heavyAttackWindUp":0.5} },
-    { tier: 2, slot: 0, name: "Crushing Verdict", description: "Increase Base Damage by +100. With Channeled Ability active: Increase Follow Through by +40%.", statChanges: {"flatBaseDamage":100}, variantStatChanges: {"magistar":{"flatBaseDamage":100},"sancti_magistar":{"flatBaseDamage":20}} },
+    // Assumes channeled ability active for paper panel follow-through
+    { tier: 2, slot: 0, name: "Crushing Verdict", description: "Increase Base Damage by +100. With Channeled Ability active: Increase Follow Through by +40%.", statChanges: {"flatBaseDamage":100,"followThrough":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"followThrough":0.4},"sancti_magistar":{"flatBaseDamage":20,"followThrough":0.4}} },
     { tier: 2, slot: 1, name: "Edge Of Justice", description: "Increase Base Damage by +100. With Melee Weapon Equipped: +40% Attack Speed.", statChanges: {"flatBaseDamage":100,"fireRate":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"fireRate":0.4},"sancti_magistar":{"flatBaseDamage":20,"fireRate":0.4}} },
     { tier: 3, slot: 0, name: "Seismic Slam", description: "+100% Slam Radius.", statChanges: {} },
     { tier: 3, slot: 1, name: "Orokin Reach", description: "+1.4 Range", statChanges: {"range":1.4} },
@@ -452,7 +453,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes equip buff up for paper DPS
     { tier: 2, slot: 0, name: "Brigand's Frenzy", description: "Increase Base Damage by +80. On Equip: +30% Attack Speed for 4s.", statChanges: {"flatBaseDamage":80,"fireRate":0.3} },
     { tier: 2, slot: 1, name: "Master's Flourish", description: "Increase Base Damage by +80. On Finisher Kill: +40 Health per second for 10s.", statChanges: {"flatBaseDamage":80} },
-    { tier: 3, slot: 0, name: "Lone Blade", description: "With Melee Weapon Equipped: Increase Base Follow Through by +60%", statChanges: {} },
+    // Assumes melee equipped (this weapon) for paper panel follow-through
+    { tier: 3, slot: 0, name: "Lone Blade", description: "With Melee Weapon Equipped: Increase Base Follow Through by +60%", statChanges: {"followThrough":0.6} },
     { tier: 3, slot: 1, name: "Swift Break", description: "+50% Heavy Attack Windup Speed", statChanges: {"heavyAttackWindUp":0.5} },
     { tier: 3, slot: 2, name: "Resolute Force", description: "+6s Combo Duration", statChanges: {"comboDuration":6} },
     { tier: 4, slot: 0, name: "Absolute Valor", description: "Increase Base Critical Chance by +21%.", statChanges: {"criticalChance":0.21} },
