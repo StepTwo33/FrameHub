@@ -60,6 +60,10 @@ import {
   DEFAULT_ENEMY_RADAR_M,
   computeNezhaSlidePassiveBonuses,
   computeMirageParkourPassiveBonuses,
+  computeLokiWallLatchPassive,
+  DEFAULT_WALL_LATCH_SEC,
+  computeLavosValenceBlockPassive,
+  computeLavosValenceBlockRemaining,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -661,6 +665,25 @@ describe("Mirage parkour passive", () => {
       slideDurationBonus: 0.85,
       maneuverSpeedBonus: 0.5,
     });
+  });
+});
+
+describe("Loki wall latch passive", () => {
+  it("is 10× default latch (60s)", () => {
+    expect(DEFAULT_WALL_LATCH_SEC).toBe(6);
+    expect(computeLokiWallLatchPassive()).toEqual({ multiplier: 10, durationSec: 60 });
+  });
+});
+
+describe("Lavos Valence Block passive", () => {
+  it("grants 10s status immunity with 5s orb cooldown", () => {
+    expect(computeLavosValenceBlockPassive()).toEqual({
+      immunityDurationSec: 10,
+      orbPickupCooldownSec: 5,
+    });
+    expect(computeLavosValenceBlockRemaining(0)).toBe(10);
+    expect(computeLavosValenceBlockRemaining(4)).toBe(6);
+    expect(computeLavosValenceBlockRemaining(10)).toBe(0);
   });
 });
 

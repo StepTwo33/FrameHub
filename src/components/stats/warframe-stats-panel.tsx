@@ -52,6 +52,10 @@ import {
   DEFAULT_ENEMY_RADAR_M,
   computeNezhaSlidePassiveBonuses,
   computeMirageParkourPassiveBonuses,
+  computeLokiWallLatchPassive,
+  DEFAULT_WALL_LATCH_SEC,
+  computeLavosValenceBlockPassive,
+  computeLavosValenceBlockRemaining,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1079,6 +1083,58 @@ function MirageParkourPassive() {
   );
 }
 
+function LokiWallLatchPassive() {
+  const latch = computeLokiWallLatchPassive();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Wall Latch"
+        value={`${latch.durationSec}s`}
+        color="text-emerald-400"
+        tooltip={`Loki: hang from walls ${latch.multiplier}× longer than normal (${DEFAULT_WALL_LATCH_SEC}s → ${latch.durationSec}s).`}
+      />
+      <StatRow
+        label="vs Default"
+        value={`×${latch.multiplier}`}
+        color="text-muted-foreground"
+        tooltip={`Default wall latch is ${DEFAULT_WALL_LATCH_SEC}s.`}
+      />
+    </div>
+  );
+}
+
+function LavosValenceBlockPassivePanel() {
+  const valence = computeLavosValenceBlockPassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeLavosValenceBlockRemaining(elapsedSec, valence);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={valence.immunityDurationSec}
+        onChange={setElapsedSec}
+        tooltip="Lavos Valence Block: Energy/Universal Orbs grant status immunity for 10s (orb pickup cooldown 5s)."
+      />
+      <StatRow
+        label="Status Immunity"
+        value={remaining > 0 ? `${remaining.toFixed(0)}s left` : "Inactive"}
+        color={remaining > 0 ? "text-cyan-400" : "text-muted-foreground"}
+        tooltip="Cleanses and blocks negative status effects while active. Renewed to full on a new orb pickup."
+      />
+      <StatRow
+        label="Orb Cooldown"
+        value={`${valence.orbPickupCooldownSec}s`}
+        color="text-muted-foreground"
+        tooltip="Cooldown before another Energy/Universal Orb can refresh Valence Block (Universal still heals if injured)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1230,6 +1286,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "ivara" || warframe.id === "ivara_prime") && <IvaraRadarPassive />}
           {(warframe.id === "nezha" || warframe.id === "nezha_prime") && <NezhaSlidePassive />}
           {(warframe.id === "mirage" || warframe.id === "mirage_prime") && <MirageParkourPassive />}
+          {(warframe.id === "loki" || warframe.id === "loki_prime") && <LokiWallLatchPassive />}
+          {(warframe.id === "lavos" || warframe.id === "lavos_prime") && <LavosValenceBlockPassivePanel />}
         </CollapsibleSection>
       )}
 

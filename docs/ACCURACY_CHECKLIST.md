@@ -254,6 +254,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Octavia + Nekros passives | 2026-07-22 | Inspiration 1 energy/s × 30s @ 15m; Nekros +5 Health per death within 10m |
 | Nova + Ivara passives | 2026-07-22 | Nova 15% Health/Energy orb on slow/sped kills; Ivara 50m radar (+ extras) |
 | Nezha + Mirage passives | 2026-07-22 | Nezha +60% slide speed / +35% distance; Mirage +85% slide dur / +50% maneuvers |
+| Loki + Lavos passives | 2026-07-22 | Loki wall latch 60s (×10); Lavos Valence Block 10s status immunity / 5s orb CD |
 
 ## New / extended test files
 

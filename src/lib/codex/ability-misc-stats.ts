@@ -2762,6 +2762,41 @@ export function computeMirageParkourPassiveBonuses(): MirageParkourPassiveBonuse
   return { slideDurationBonus: 0.85, maneuverSpeedBonus: 0.5 };
 }
 
+/** Default wall-latch duration for non-Loki Warframes. */
+export const DEFAULT_WALL_LATCH_SEC = 6;
+
+export interface LokiWallLatchPassive {
+  /** ×10 longer than normal wall latch. */
+  multiplier: number;
+  /** Cap 60s (10 × 6s default). */
+  durationSec: number;
+}
+
+/** wiki Loki: wall latch up to 60s (10× the normal 6s). */
+export function computeLokiWallLatchPassive(): LokiWallLatchPassive {
+  return { multiplier: 10, durationSec: DEFAULT_WALL_LATCH_SEC * 10 };
+}
+
+export interface LavosValenceBlockPassive {
+  /** Status immunity duration after picking up an Energy/Universal Orb. */
+  immunityDurationSec: number;
+  /** Cooldown before another Energy/Universal Orb can refresh Valence Block. */
+  orbPickupCooldownSec: number;
+}
+
+/** wiki Lavos Valence Block: 10s status immunity on Energy/Universal orb; 5s orb cooldown. */
+export function computeLavosValenceBlockPassive(): LavosValenceBlockPassive {
+  return { immunityDurationSec: 10, orbPickupCooldownSec: 5 };
+}
+
+/** Remaining Valence Block immunity from elapsed time since last proc. */
+export function computeLavosValenceBlockRemaining(
+  elapsedSec: number,
+  passive: LavosValenceBlockPassive = computeLavosValenceBlockPassive(),
+): number {
+  return Math.max(0, passive.immunityDurationSec - Math.max(0, elapsedSec));
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
