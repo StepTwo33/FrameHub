@@ -2583,14 +2583,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "secondary_shiver": {
     "name": "Secondary Shiver",
-    "trigger": "conditional",
+    "trigger": "stacks",
     "maxRank": 5,
+    "stackCap": 10,
     "effects": [
       {
-        "stat": "damageTakenBonus",
+        "stat": "damage",
         "maxValue": 45.0,
         "flat": false,
-        "stacking": false,
+        "stacking": true,
         "baseValue": 7.5
       }
     ]
@@ -2640,10 +2641,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "name": "Theorem Demulcent",
     "trigger": "stacks",
     "maxRank": 5,
+    "stackCap": 15,
     "effects": [
       {
         "stat": "damage",
         "maxValue": 12.0,
+        "flat": false,
+        "stacking": true,
         "baseValue": 2.0
       }
     ]

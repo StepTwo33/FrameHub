@@ -1765,13 +1765,15 @@
   },
   "secondary_shiver": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "stacks",
+    "stackCap": 10,
     "effects": [
       {
-        "stat": "damageTakenBonus",
+        "stat": "damage",
         "maxValue": 45,
         "flat": false,
-        "stacking": false
+        "stacking": true,
+        "baseValue": 7.5
       }
     ]
   },
@@ -1816,10 +1818,13 @@
   "theorem_demulcent": {
     "replace": true,
     "trigger": "stacks",
+    "stackCap": 15,
     "effects": [
       {
         "stat": "damage",
         "maxValue": 12,
+        "flat": false,
+        "stacking": true,
         "baseValue": 2
       }
     ]

@@ -1021,6 +1021,62 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4, 4);
   });
+
+  it("Theorem Demulcent: 0 stacks = no buff; 15 stacks R5 → +180% damage", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const demulcent = allArcanes.find((a) => a.id === "theorem_demulcent")!;
+    const def = getArcaneEffectDef("theorem_demulcent")!;
+    expect(def.stackCap).toBe(15);
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [demulcent],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [demulcent],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 15 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.8, 4);
+  });
+
+  it("Secondary Shiver: 0 stacks = no buff; 10 Cold stacks R5 → +450% damage", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const shiver = allArcanes.find((a) => a.id === "secondary_shiver")!;
+    const def = getArcaneEffectDef("secondary_shiver")!;
+    expect(def.stackCap).toBe(10);
+
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [shiver],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [shiver],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 10 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 5.5, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

@@ -1044,7 +1044,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "secondary_shiver": {
     arcaneId: "secondary_shiver",
     effects: [
-      {"statKey": "damageTakenBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Shiver: damageTakenBonus (conditional proc)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Secondary Shiver — +45% damage / Cold stack on target at R5 (cap 10 → +450%; applies at sim stack count)"},
     ],
   },
   "secondary_surge": {
@@ -1072,7 +1072,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "theorem_demulcent": {
     arcaneId: "theorem_demulcent",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Theorem Demulcent: damage (stacking — applies at sim stack count)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Theorem Demulcent — +12% weapon damage / Residual tick stack at R5 (cap 15 → +180%; applies at sim stack count)"},
     ],
   },
   "theorem_infection": {
