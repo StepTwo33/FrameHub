@@ -258,6 +258,21 @@ describe("scaleAbilityMiscStats", () => {
     expect(lines.find((l) => l.label === "Fury Max")!.scaled).toBe("550%");
   });
 
+  // wiki Bloodletting R3: 40% energy gain × Ability Efficiency (Streamline 130% → 52%)
+  it("scales Bloodletting energyGainPercent with Efficiency", () => {
+    const lines = scaleAbilityMiscStats(
+      { energyGainPercent: 0.4, healthDeducted: 0.5, minimumHealth: 2 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1.3 },
+      { warframeId: "garuda", abilityName: "Bloodletting" },
+    );
+    const gain = lines.find((l) => l.label === "Energy Gain")!;
+    expect(gain.base).toBe("40%");
+    expect(gain.scaled).toBe("52%");
+    expect(gain.modified).toBe(true);
+    expect(gain.scaleAttr).toBe("efficiency");
+    expect(lines.find((l) => l.label === "Health Deducted")!.modified).toBe(false);
+  });
+
   // wiki Transmutation Probe: 1.5s CDR × Ability Efficiency (Streamline 130% → 1.95s)
   it("scales Transmutation Probe cooldownReduction with Efficiency", () => {
     const lines = scaleAbilityMiscStats(

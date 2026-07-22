@@ -871,7 +871,7 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     });
   });
 
-  it("Garuda Mirror capture × STR; Altar heal × STR; Talons Slash SC × STR", () => {
+  it("Garuda Mirror/Altar/Talons × STR; Bloodletting energy × EFF", () => {
     expect(getVerifiedMiscScaling("garuda", "Dread Mirror", "damageCaptureMultiplier")).toEqual({
       scale: "strength",
     });
@@ -883,6 +883,11 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("garuda", "Blood Altar", "maxAltars")).toBeNull();
+    expect(getVerifiedMiscScaling("garuda", "Bloodletting", "energyGainPercent")).toEqual({
+      scale: "efficiency",
+    });
+    expect(getVerifiedMiscScaling("garuda", "Bloodletting", "healthDeducted")).toBeNull();
+    expect(getVerifiedMiscScaling("garuda", "Bloodletting", "minimumHealth")).toBeNull();
     expect(getVerifiedMiscScaling("garuda", "Seeking Talons", "slashStatusChance")).toEqual({
       scale: "strength",
       cap: 1,
@@ -890,6 +895,9 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("garuda", "Seeking Talons", "initialProjectiles")).toBeNull();
     expect(getVerifiedMiscScaling("garuda_prime", "Blood Altar", "healthPerSecond")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("garuda_prime", "Bloodletting", "energyGainPercent")).toEqual({
+      scale: "efficiency",
     });
   });
 

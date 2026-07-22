@@ -982,7 +982,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     healthPerSecond: { scale: "strength" },
   },
 
-  // wiki: Bloodletting — energy gain scales Efficiency (unmodeled); health deduct Misc-fixed
+  // wiki: Bloodletting — energy gain % × EFF; health deduct / min HP Misc-fixed
+  "garuda::Bloodletting": {
+    energyGainPercent: { scale: "efficiency" },
+  },
 
   // wiki: Seeking Talons — Slash via damage; mark Slash SC × STR (cap 100%); charge Misc-fixed
   "garuda::Seeking Talons": {
