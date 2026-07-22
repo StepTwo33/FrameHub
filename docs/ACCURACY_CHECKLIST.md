@@ -223,6 +223,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Virulence energy refund × EFF | 2026-07-21 | energyRefundPerHit follows cast_cost (¼ of ability cost); low EFF increases refund |
 | Armor-pool invuln absorb | 2026-07-21 | Sim-gated Invuln Absorb (k): Iron Skin/Globe/Tectonics/Maiden +absorb; Halo absorb×2.5 inside STR |
 | Storm Shroud + FB heat | 2026-07-21 | Shroud Initial=(base+absorb×mult)×STR; absorbMult×STR; Fire Blast Immolation Heat% lerps 75→25 × EFF |
+| Ember heat lerps | 2026-07-21 | Inferno ring DPS×(1+heat)×STR; Immolation DR wiki blend (75%@130%→80%); Fire Blast strip 50–100%×STR cap |
 
 ## New / extended test files
 

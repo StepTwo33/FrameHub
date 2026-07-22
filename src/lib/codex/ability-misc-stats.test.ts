@@ -4,6 +4,9 @@ import {
   getArmorPoolInvulnAbsorb,
   scaleAbilityMiscStats,
   scaledAbilityEnergyCost,
+  computeInfernoRingDps,
+  computeImmolationDrAtHeat,
+  computeFireBlastArmorStripAtHeat,
 } from "@/lib/codex/ability-misc-stats";
 
 describe("computeArmorScaledPool", () => {
@@ -93,6 +96,30 @@ describe("Fire Blast heat energy lerp", () => {
     expect(scaledAbilityEnergyCost(lerp(75, 25, 0), 1.3)).toBe(52.5);
     expect(scaledAbilityEnergyCost(lerp(75, 25, 1), 1.3)).toBe(17.5);
     expect(scaledAbilityEnergyCost(lerp(75, 25, 0.5), 1)).toBe(50);
+  });
+});
+
+describe("Ember Immolation heat formulas", () => {
+  it("Inferno ring DPS doubles at max heat then × STR", () => {
+    expect(computeInfernoRingDps(350, 0, 1)).toBe(350);
+    expect(computeInfernoRingDps(350, 1, 1)).toBe(700);
+    expect(computeInfernoRingDps(350, 1, 1.3)).toBe(910);
+    expect(computeInfernoRingDps(350, 0.5, 1)).toBe(525);
+  });
+
+  // wiki Immolation example at 75% heat, 130% STR → 80% DR
+  it("matches wiki Immolation DR at 75% heat with Intensify", () => {
+    expect(computeImmolationDrAtHeat(0.75, 1.3)).toBeCloseTo(0.8, 5);
+    expect(computeImmolationDrAtHeat(0, 1.3)).toBeCloseTo(0.5, 5); // initial cap
+    expect(computeImmolationDrAtHeat(1, 1.3)).toBeCloseTo(0.9, 5); // max cap
+  });
+
+  it("Fire Blast strip lerps 50–100% with heat and caps at heat value", () => {
+    expect(computeFireBlastArmorStripAtHeat(0, 1)).toBe(0.5);
+    expect(computeFireBlastArmorStripAtHeat(1, 1)).toBe(1);
+    expect(computeFireBlastArmorStripAtHeat(1, 1.3)).toBe(1); // STR above 100% no extra
+    expect(computeFireBlastArmorStripAtHeat(0, 1.3)).toBe(0.5);
+    expect(computeFireBlastArmorStripAtHeat(0.5, 0.7)).toBeCloseTo(0.75 * 0.7, 5);
   });
 });
 

@@ -12,6 +12,9 @@ import {
   abilityPercentFraction,
   computeArmorScaledPool,
   getArmorPoolInvulnAbsorb,
+  computeInfernoRingDps,
+  computeImmolationDrAtHeat,
+  computeFireBlastArmorStripAtHeat,
   type AbilityDisplayContext,
 } from "@/lib/codex/ability-misc-stats";
 import { SimSlider } from "@/components/stats/stat-primitives";
@@ -334,7 +337,17 @@ export function AbilityStatsBlock({
     typeof ability.energyCost === "number" &&
     Number.isFinite(maxHeatEnergyCost) &&
     maxHeatEnergyCost > 0;
+  const minRingDps = Number(ability.miscStats?.minRingDamagePerSecond);
+  const hasInfernoRingHeat =
+    display.abilityName === "Inferno" && Number.isFinite(minRingDps) && minRingDps > 0;
+  const hasImmolationDrHeat = display.abilityName === "Immolation";
+  const hasFireBlastStripHeat =
+    display.abilityName === "Fire Blast" &&
+    typeof ability.miscStats?.armorStrip === "number";
+  const usesImmolationHeat =
+    hasHeatEnergyLerp || hasInfernoRingHeat || hasImmolationDrHeat || hasFireBlastStripHeat;
   const [immolationHeatPct, setImmolationHeatPct] = useState(0);
+  const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
 
   const scaledMisc = ability.miscStats
     ? scaleAbilityMiscStats(
@@ -400,7 +413,22 @@ export function AbilityStatsBlock({
       />,
     );
   }
-  if (ability.damagePerSecond != null && ability.damagePerSecond > 0) {
+  if (hasInfernoRingHeat) {
+    const baseRing = computeInfernoRingDps(minRingDps, heatT, 1);
+    const scaledRing = computeInfernoRingDps(minRingDps, heatT, str);
+    rows.push(
+      <AbilityStatRow
+        key="inferno-ring-dps"
+        compact={compact}
+        label={heatT > 0 ? "Ring DPS (at Heat)" : "Ring DPS (Min Heat)"}
+        baseValue={baseRing.toFixed(0)}
+        modifiedValue={scaledRing.toFixed(0)}
+        isModified={str !== 1 || heatT > 0}
+        isPositive={str > 1 || heatT > 0}
+        scaleHint="strength"
+      />,
+    );
+  } else if (ability.damagePerSecond != null && ability.damagePerSecond > 0) {
     rows.push(
       <AbilityStatRow
         key="dps"
@@ -663,19 +691,63 @@ export function AbilityStatsBlock({
     );
   }
   if (scaledDr) {
-    rows.push(
-      <AbilityStatRow
-        key="dr"
-        compact={compact}
-        label="Dmg Reduction"
-        baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
-        modifiedValue={(scaledDr.value * 100).toFixed(0)}
-        unit="%"
-        isModified={scaledDr.modified}
-        isPositive={str >= 1}
-        scaleHint="strength"
-      />,
-    );
+    if (hasImmolationDrHeat) {
+      const initialDr = Number(ability.miscStats?.initialDamageReduction ?? 0.4);
+      const maxCap = Number(ability.miscStats?.drCap ?? 0.9);
+      const baseDr = computeImmolationDrAtHeat(heatT, 1, {
+        initialDr,
+        maxDr: abilityPercentFraction(ability.damageReduction!),
+        maxCap,
+      });
+      const scaledHeatDr = computeImmolationDrAtHeat(heatT, str, {
+        initialDr,
+        maxDr: abilityPercentFraction(ability.damageReduction!),
+        maxCap,
+      });
+      rows.push(
+        <AbilityStatRow
+          key="dr"
+          compact={compact}
+          label={heatT > 0 ? "Dmg Reduction (at Heat)" : "Dmg Reduction (0% Heat)"}
+          baseValue={(baseDr * 100).toFixed(0)}
+          modifiedValue={(scaledHeatDr * 100).toFixed(0)}
+          unit="%"
+          isModified={str !== 1 || heatT > 0}
+          isPositive={str >= 1 || heatT > 0}
+          scaleHint="strength"
+        />,
+      );
+      // Keep max-heat DR visible as reference when not already at 100% heat
+      if (heatT < 1) {
+        rows.push(
+          <AbilityStatRow
+            key="dr-max-heat"
+            compact={compact}
+            label="Dmg Reduction (Max Heat)"
+            baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
+            modifiedValue={(scaledDr.value * 100).toFixed(0)}
+            unit="%"
+            isModified={scaledDr.modified}
+            isPositive={str >= 1}
+            scaleHint="strength"
+          />,
+        );
+      }
+    } else {
+      rows.push(
+        <AbilityStatRow
+          key="dr"
+          compact={compact}
+          label="Dmg Reduction"
+          baseValue={(abilityPercentFraction(ability.damageReduction!) * 100).toFixed(0)}
+          modifiedValue={(scaledDr.value * 100).toFixed(0)}
+          unit="%"
+          isModified={scaledDr.modified}
+          isPositive={str >= 1}
+          scaleHint="strength"
+        />,
+      );
+    }
   }
   if (ability.statusChance != null && ability.statusChance > 0) {
     rows.push(
@@ -721,6 +793,8 @@ export function AbilityStatsBlock({
     );
   }
   for (const line of scaledMisc) {
+    // Heat-aware Armor Strip row replaces the max-heat misc strip on Fire Blast.
+    if (hasFireBlastStripHeat && line.label === "Armor Strip") continue;
     rows.push(
       <AbilityStatRow
         key={line.label}
@@ -793,7 +867,6 @@ export function AbilityStatsBlock({
     }
   }
   if (hasHeatEnergyLerp && typeof ability.energyCost === "number") {
-    const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
     const baseAtHeat = ability.energyCost + (maxHeatEnergyCost - ability.energyCost) * heatT;
     const scaledAtHeat = scaledAbilityEnergyCost(baseAtHeat, eff);
     const fmt = (n: number) =>
@@ -808,6 +881,23 @@ export function AbilityStatsBlock({
         isModified={eff !== 1 || heatT > 0}
         isPositive={scaledAtHeat <= ability.energyCost}
         scaleHint="efficiency"
+      />,
+    );
+  }
+  if (hasFireBlastStripHeat) {
+    const baseStrip = computeFireBlastArmorStripAtHeat(heatT, 1);
+    const scaledStrip = computeFireBlastArmorStripAtHeat(heatT, str);
+    rows.push(
+      <AbilityStatRow
+        key="fireBlastHeatStrip"
+        compact={compact}
+        label={heatT > 0 ? "Armor Strip (at Heat)" : "Armor Strip (0% Heat)"}
+        baseValue={(baseStrip * 100).toFixed(0)}
+        modifiedValue={(scaledStrip * 100).toFixed(0)}
+        unit="%"
+        isModified={str !== 1 || heatT > 0}
+        isPositive={scaledStrip >= baseStrip}
+        scaleHint="strength"
       />,
     );
   }
@@ -840,14 +930,20 @@ export function AbilityStatsBlock({
           }
         />
       )}
-      {hasHeatEnergyLerp && (
+      {usesImmolationHeat && (
         <SimSlider
           label="Immolation Heat %"
           value={immolationHeatPct}
           min={0}
           max={100}
           onChange={setImmolationHeatPct}
-          tooltip="Fire Blast energy lerps from cast cost (0% heat) to max-heat floor (100%). Both ends use Ability Efficiency cast_cost."
+          tooltip={
+            hasInfernoRingHeat
+              ? "Inferno Ring DPS = minRing × (1 + heat) × STR (double at max heat)."
+              : hasImmolationDrHeat
+                ? "Immolation DR lerps from initial DR cap to max-heat DR cap with heat (wiki formula)."
+                : "Fire Blast: energy lerps 75→25 × EFF; armor strip lerps 50%→100% × STR (capped at heat value)."
+          }
         />
       )}
       {rows}

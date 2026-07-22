@@ -2028,6 +2028,59 @@ export function getArmorPoolInvulnAbsorb(
   }
 }
 
+/** Clamp heat gauge to unit interval. */
+export function clampHeatFraction(heatFraction: number): number {
+  return Math.min(1, Math.max(0, heatFraction));
+}
+
+/**
+ * wiki Inferno: Ring DPS gains +heat% bonus (double at max heat).
+ * ringDps = minRing × (1 + heat) × STR
+ */
+export function computeInfernoRingDps(
+  minRingDps: number,
+  heatFraction: number,
+  strength: number,
+): number {
+  return minRingDps * (1 + clampHeatFraction(heatFraction)) * strength;
+}
+
+/**
+ * wiki Immolation:
+ * DR = H×Min(maxCap, maxBase×STR) + (1−H)×Min(initialCap, initialBase×STR)
+ */
+export function computeImmolationDrAtHeat(
+  heatFraction: number,
+  strength: number,
+  opts?: {
+    initialDr?: number;
+    maxDr?: number;
+    initialCap?: number;
+    maxCap?: number;
+  },
+): number {
+  const h = clampHeatFraction(heatFraction);
+  const initialBase = opts?.initialDr ?? 0.4;
+  const maxBase = opts?.maxDr ?? 0.85;
+  const initialCap = opts?.initialCap ?? 0.5;
+  const maxCap = opts?.maxCap ?? 0.9;
+  const maxTerm = Math.min(maxCap, maxBase * strength);
+  const initialTerm = Math.min(initialCap, initialBase * strength);
+  return h * maxTerm + (1 - h) * initialTerm;
+}
+
+/**
+ * wiki Fire Blast: armor strip lerps 50%→100% with Immolation heat; × STR, hard-capped at the heat value.
+ * strip = Min(lerp(0.5, 1, H) × STR, lerp(0.5, 1, H))
+ */
+export function computeFireBlastArmorStripAtHeat(
+  heatFraction: number,
+  strength: number,
+): number {
+  const heatCap = 0.5 + 0.5 * clampHeatFraction(heatFraction);
+  return Math.min(heatCap * strength, heatCap);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
