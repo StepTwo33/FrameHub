@@ -2996,6 +2996,26 @@ export function computeKoumeiFateRemaining(
   return Math.max(0, passive.durationSec - Math.max(0, elapsedSec));
 }
 
+export interface BansheeSilencePassive {
+  /** All equipped weapons (incl. Gunblades / Sentinel weapons) are treated as silent. */
+  weaponsSilent: boolean;
+}
+
+/** wiki Banshee: equipped weapons are hushed so enemies cannot hear them. */
+export function computeBansheeSilencePassive(): BansheeSilencePassive {
+  return { weaponsSilent: true };
+}
+
+export interface AtlasKnockdownPassive {
+  /** Immune to Knockdown while in contact with the ground. */
+  knockdownImmuneWhileGrounded: boolean;
+}
+
+/** wiki Atlas: knockdown immunity while grounded (not in air; pushback still applies). */
+export function computeAtlasKnockdownPassive(grounded: boolean): AtlasKnockdownPassive {
+  return { knockdownImmuneWhileGrounded: grounded };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

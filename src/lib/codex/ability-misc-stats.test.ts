@@ -82,6 +82,8 @@ import {
   computeMagVacuumPassive,
   computeKoumeiFatePassive,
   computeKoumeiFateRemaining,
+  computeBansheeSilencePassive,
+  computeAtlasKnockdownPassive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -807,6 +809,19 @@ describe("Koumei Fate status passive", () => {
     expect(computeKoumeiFateRemaining(0)).toBe(60);
     expect(computeKoumeiFateRemaining(20)).toBe(40);
     expect(computeKoumeiFateRemaining(60)).toBe(0);
+  });
+});
+
+describe("Banshee silence passive", () => {
+  it("marks all equipped weapons as silent", () => {
+    expect(computeBansheeSilencePassive()).toEqual({ weaponsSilent: true });
+  });
+});
+
+describe("Atlas knockdown passive", () => {
+  it("grants knockdown immunity only while grounded", () => {
+    expect(computeAtlasKnockdownPassive(true)).toEqual({ knockdownImmuneWhileGrounded: true });
+    expect(computeAtlasKnockdownPassive(false)).toEqual({ knockdownImmuneWhileGrounded: false });
   });
 });
 

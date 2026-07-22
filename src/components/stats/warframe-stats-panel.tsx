@@ -74,6 +74,8 @@ import {
   computeMagVacuumPassive,
   computeKoumeiFatePassive,
   computeKoumeiFateRemaining,
+  computeBansheeSilencePassive,
+  computeAtlasKnockdownPassive,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1462,6 +1464,45 @@ function KoumeiFatePassivePanel() {
   );
 }
 
+function BansheeSilencePassivePanel() {
+  const silence = computeBansheeSilencePassive();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Weapon Noise"
+        value={silence.weaponsSilent ? "Silent" : "Normal"}
+        color="text-violet-300"
+        tooltip="Banshee: all equipped weapons (incl. Gunblades and Sentinel weapons) are treated as silent so enemies cannot hear them."
+      />
+    </div>
+  );
+}
+
+function AtlasKnockdownPassivePanel() {
+  const [grounded, setGrounded] = useState(1);
+  const kd = computeAtlasKnockdownPassive(grounded > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Grounded"
+        value={grounded}
+        min={0}
+        max={1}
+        onChange={setGrounded}
+        tooltip="Atlas: immune to Knockdown while on the ground. Does not apply in the air or to pushback."
+      />
+      <StatRow
+        label="Knockdown"
+        value={kd.knockdownImmuneWhileGrounded ? "Immune" : "Vulnerable"}
+        color={kd.knockdownImmuneWhileGrounded ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Rubble armor from petrified enemies is a separate Atlas passive mechanic."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1627,6 +1668,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "limbo" || warframe.id === "limbo_prime") && <LimboRiftPassivePanel />}
           {(warframe.id === "mag" || warframe.id === "mag_prime") && <MagVacuumPassivePanel />}
           {warframe.id === "koumei" && <KoumeiFatePassivePanel />}
+          {(warframe.id === "banshee" || warframe.id === "banshee_prime") && <BansheeSilencePassivePanel />}
+          {(warframe.id === "atlas" || warframe.id === "atlas_prime") && <AtlasKnockdownPassivePanel />}
         </CollapsibleSection>
       )}
 
