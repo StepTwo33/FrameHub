@@ -237,7 +237,7 @@ export function applyArcaneEffectsToWeapon(
   rank: number,
   simStacks: number,
   baseWeapon?: Weapon,
-  opts?: { applyHeadshots?: boolean },
+  opts?: { applyHeadshots?: boolean; warframeArmor?: number },
 ): void {
   const def = getArcaneEffectDef(arcaneId);
   if (!def || def.effects.length === 0) return;
@@ -253,6 +253,7 @@ export function applyArcaneEffectsToWeapon(
     baseWeapon,
     simStacks,
     applyHeadshots: opts?.applyHeadshots,
+    warframeArmor: opts?.warframeArmor,
   };
   if (applyCustomArcaneToWeapon(stats, handlerCtx)) return;
 
@@ -320,7 +321,7 @@ export function applyArcaneToWeaponFromMod(
   arcane: Mod,
   stacks: number = 1,
   baseWeapon?: Weapon,
-  opts?: { applyHeadshots?: boolean },
+  opts?: { applyHeadshots?: boolean; warframeArmor?: number },
 ): void {
   const rank = arcane.maxRank;
   if (getArcaneEffectDef(arcane.id)) {

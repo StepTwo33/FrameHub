@@ -1077,6 +1077,114 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 5.5, 4);
   });
+
+  it("Primary Bulwark: warframeArmor 1500 → +500% damage at R5; 0 armor → no bonus", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const bulwark = allArcanes.find((a) => a.id === "primary_bulwark")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const none = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [bulwark],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, warframeArmor: 0 },
+    );
+    expect(none.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const capped = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [bulwark],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, warframeArmor: 1500 },
+    );
+    // wiki: min(500, 500) × 1%/armor = +500%
+    expect(capped.totalDamage).toBeCloseTo(bare.totalDamage * 6, 4);
+
+    const mid = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [bulwark],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, warframeArmor: 1250 },
+    );
+    // 250 armor pts × 1% = +250%
+    expect(mid.totalDamage).toBeCloseTo(bare.totalDamage * 3.5, 4);
+  });
+
+  it("Secondary Fortifier: stacks>0 → ×8 damage vs Overguard at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const fortifier = allArcanes.find((a) => a.id === "secondary_fortifier")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const body = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [fortifier],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(body.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const vsOg = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [fortifier],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(vsOg.totalDamage).toBeCloseTo(bare.totalDamage * 8, 4);
+  });
+
+  it("Cascadia Empowered: flat +750 × SC × MS added to totalDamage at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const empowered = allArcanes.find((a) => a.id === "cascadia_empowered")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [empowered],
+      undefined,
+      DEFAULT_SIM_PARAMS,
+    );
+    const expectedFlat = 750 * bare.statusChance * Math.max(1, bare.multishot);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage + expectedFlat, 4);
+  });
+
+  it("Eternal Eradicate: stacks>0 → +60% amp damage at R5", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const eradicate = allArcanes.find((a) => a.id === "eternal_eradicate")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [eradicate],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 1.6, 4);
+  });
+
+  it("Eternal Onslaught: stacks>0 → +180% amp CC at R5", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const onslaught = allArcanes.find((a) => a.id === "eternal_onslaught")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [onslaught],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalChance).toBeCloseTo(bare.criticalChance * 2.8, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

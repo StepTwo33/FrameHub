@@ -18,6 +18,8 @@ export interface ArcaneHandlerContext {
   warframeCtx?: WarframeArcaneContext;
   /** From sim — gates weakpoint-only bonuses (e.g. Cascadia Accuracy). */
   applyHeadshots?: boolean;
+  /** From sim — Primary Bulwark armor input. */
+  warframeArmor?: number;
 }
 
 function trackBonus(stats: { arcaneBonuses?: Record<string, number> }, stat: string, value: number): void {
@@ -86,6 +88,11 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
+  "primary_bulwark",
+  "secondary_fortifier",
+  "cascadia_empowered",
+  "eternal_eradicate",
+  "eternal_onslaught",
   "exodia_brave",
   "exodia_force",
   "exodia_hunt",
@@ -455,6 +462,78 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
       if (dmg > 0) applyWeaponDamageMult(stats, dmg);
       trackBonus(stats, "damage", dmg);
+      return true;
+    }
+
+    case "primary_bulwark": {
+      // wiki: Damage% = min(max(Armor−1000,0), 500) × (0.5%…1%/armor). Cap at 1500 armor for all ranks.
+      const armor = ctx.warframeArmor ?? 0;
+      const threshold = findEffect(def, "damagePerArmorThreshold")?.maxValue ?? 1000;
+      const armorPtsTowardCap = 500;
+      const perArmorPct = scaleArcaneEffectLine(
+        { maxValue: 1, baseValue: 0.5 },
+        rank,
+        def.maxRank,
+      );
+      const armorPts = Math.min(Math.max(armor - threshold, 0), armorPtsTowardCap);
+      const dmgPct = armorPts * perArmorPct;
+      if (dmgPct > 0) applyWeaponDamageMult(stats, dmgPct);
+      trackBonus(stats, "damagePerArmorOver", dmgPct);
+      trackBonus(stats, "damagePerArmorThreshold", threshold);
+      return true;
+    }
+
+    case "secondary_fortifier": {
+      // wiki R5: ×8 damage vs Overguard (passive). Paper: simStacks>0 = target has Overguard.
+      if ((ctx.simStacks ?? 0) <= 0) {
+        trackBonus(stats, "overguardDamage", 0);
+        return true;
+      }
+      const ogLine = findEffect(def, "overguardDamage");
+      const mult = ogLine ? scaleArcaneEffectLine(ogLine, rank, def.maxRank) : 0;
+      if (mult > 1) applyWeaponDamageMult(stats, (mult - 1) * 100);
+      trackBonus(stats, "overguardDamage", mult);
+      return true;
+    }
+
+    case "cascadia_empowered": {
+      // wiki R5: flat +750 typed damage per status proc (not scaled by weapon dmg/crit).
+      // Paper: expected procs/shot ≈ SC × multishot; always-on while equipped.
+      const flatLine = findEffect(def, "bonusDamageOnStatus");
+      const flat = flatLine ? scaleArcaneEffectLine(flatLine, rank, def.maxRank) : 0;
+      const expectedProcs = Math.max(0, stats.statusChance) * Math.max(1, stats.multishot);
+      const bonus = flat * expectedProcs;
+      if (bonus > 0) stats.totalDamage += bonus;
+      trackBonus(stats, "bonusDamageOnStatus", flat);
+      trackBonus(stats, "cascadiaEmpoweredExpected", bonus);
+      return true;
+    }
+
+    case "eternal_eradicate": {
+      // wiki R5: +60% amp damage for 8s after Operator ability. Paper: stacks>0 = buff up.
+      const dmgLine = findEffect(def, "ampDamage") ?? findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "ampDamage", dmg);
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "eternal_onslaught": {
+      // wiki R5: +180% amp CC for 8s while Operator energy ≤25. Paper: stacks>0 = buff up.
+      // Absolute? Wiki "Critical Chance Increase" table is % of amp base CC (like Hot Shot).
+      const ccLine = findEffect(def, "criticalChance");
+      const ccPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      const baseCc = ctx.baseWeapon?.criticalChance ?? stats.criticalChance;
+      if (ccPct > 0) stats.criticalChance += baseCc * (ccPct / 100);
+      trackBonus(stats, "criticalChance", ccPct);
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
       return true;
     }
 

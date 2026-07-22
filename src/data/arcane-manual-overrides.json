@@ -2343,7 +2343,7 @@
   },
   "cascadia_empowered": {
     "replace": true,
-    "trigger": "onStatus",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "bonusDamageOnStatus",

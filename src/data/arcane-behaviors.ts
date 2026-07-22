@@ -484,8 +484,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "cascadia_empowered": {
     arcaneId: "cascadia_empowered",
+    customHandler: "cascadia_empowered",
     effects: [
-      {"statKey": "bonusDamageOnStatus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Cascadia Empowered: bonusDamageOnStatus (on status proc)"},
+      {"statKey": "bonusDamageOnStatus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Cascadia Empowered — flat +750 typed dmg / status proc at R5 (paper: E[procs]=SC×MS; not weapon-mod scaled)"},
     ],
   },
   "cascadia_flare": {
@@ -535,9 +536,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "eternal_eradicate": {
     arcaneId: "eternal_eradicate",
+    customHandler: "eternal_eradicate",
     effects: [
-      {"statKey": "ampDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Eradicate: ampDamage (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Eradicate: buffDuration (conditional proc)"},
+      {"statKey": "ampDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Eternal Eradicate — +60% amp damage for 8s after Operator ability (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Eradicate: buffDuration (panel)"},
     ],
   },
   "eternal_logistics": {
@@ -549,9 +551,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "eternal_onslaught": {
     arcaneId: "eternal_onslaught",
+    customHandler: "eternal_onslaught",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Onslaught: criticalChance (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Onslaught: buffDuration (conditional proc)"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Eternal Onslaught — +180% amp CC for 8s while Operator energy ≤25 (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Onslaught: buffDuration (panel)"},
     ],
   },
   "exodia_brave": {
@@ -895,9 +898,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "primary_bulwark": {
     arcaneId: "primary_bulwark",
+    customHandler: "primary_bulwark",
     effects: [
-      {"statKey": "damagePerArmorOver", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Primary Bulwark: damagePerArmorOver (always active while equipped)"},
-      {"statKey": "damagePerArmorThreshold", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Primary Bulwark: damagePerArmorThreshold (always active while equipped)"},
+      {"statKey": "damagePerArmorOver", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Bulwark — +1%/armor over 1000 at R5 (cap +500% at 1500 armor; uses sim.warframeArmor)"},
+      {"statKey": "damagePerArmorThreshold", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Bulwark — armor threshold 1000"},
     ],
   },
   "primary_compression": {
@@ -1016,8 +1020,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "secondary_fortifier": {
     arcaneId: "secondary_fortifier",
+    customHandler: "secondary_fortifier",
     effects: [
-      {"statKey": "overguardDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Fortifier: overguardDamage (always active while equipped)"},
+      {"statKey": "overguardDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Fortifier — ×8 damage vs Overguard at R5 (paper: simStacks>0 = target has Overguard)"},
     ],
   },
   "secondary_irradiate": {

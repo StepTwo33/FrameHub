@@ -397,6 +397,11 @@ export interface SimulationParams {
    * the in-game arsenal never includes them.
    */
   applyTriggerBuffs?: boolean;
+  /**
+   * Warframe armor used by Primary Bulwark (wiki: +% dmg per armor over 1000).
+   * Undefined / 0 = no Bulwark bonus on paper DPS.
+   */
+  warframeArmor?: number;
 }
 
 export const DEFAULT_SIM_PARAMS: SimulationParams = {

@@ -1535,7 +1535,7 @@ export function applyArcaneToWeapon(
   arcane: Mod,
   stacks: number = 1,
   baseWeapon?: Weapon,
-  opts?: { applyHeadshots?: boolean },
+  opts?: { applyHeadshots?: boolean; warframeArmor?: number },
 ): void {
   applyArcaneToWeaponFromMod(stats, arcane, stacks, baseWeapon, opts);
 }
@@ -1697,6 +1697,7 @@ export function calculateWeaponBuildWithArcanes(
     // Pass raw sim.arcaneStacks — applyArcaneEffectsToWeapon computes effective stacks per arcane.
     applyArcaneToWeapon(stats, arcane, sim.arcaneStacks, baseWeapon, {
       applyHeadshots: sim.applyHeadshots,
+      warframeArmor: sim.warframeArmor,
     });
   }
   if (isMelee && stats.meleeComboModContext && stats.comboCount !== preArcaneCombo) {

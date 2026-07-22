@@ -998,14 +998,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "cascadia_empowered": {
     "name": "Cascadia Empowered",
-    "trigger": "onStatus",
+    "trigger": "passive",
     "maxRank": 5,
     "effects": [
       {
         "stat": "bonusDamageOnStatus",
         "maxValue": 750.0,
         "flat": true,
-        "baseValue": 125.0
+        "baseValue": 250.0
       }
     ]
   },
