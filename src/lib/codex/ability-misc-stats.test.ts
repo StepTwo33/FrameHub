@@ -101,6 +101,29 @@ describe("scaleAbilityMiscStats", () => {
     expect(globe.find((l) => l.label === "Health Cap")!.base).toBe("1000000");
   });
 
+  it("formats combo/kill windows and lifespans as seconds", () => {
+    const landslide = scaleAbilityMiscStats(
+      { comboWindow: 5 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "atlas", abilityName: "Landslide" },
+    );
+    expect(landslide.find((l) => l.label === "Combo Window")!.base).toBe("5.0s");
+    const omikuji = scaleAbilityMiscStats(
+      { allyKillWindow: 2, cooldownCap: 150 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "koumei", abilityName: "Omikuji" },
+    );
+    expect(omikuji.find((l) => l.label === "Ally Kill Window")!.base).toBe("2.0s");
+    // wiki Omikuji: decree cooldown hard-cap is 150 seconds
+    expect(omikuji.find((l) => l.label === "Cooldown Cap")!.base).toBe("150.0s");
+    const swarm = scaleAbilityMiscStats(
+      { swarmKavatLifespan: 20 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "inaros", abilityName: "Scarab Swarm" },
+    );
+    expect(swarm.find((l) => l.label === "Swarm Kavat Lifespan")!.base).toBe("20.0s");
+  });
+
   it("does not format flat counts/damage/angles as percent points", () => {
     const shuriken = scaleAbilityMiscStats(
       { shurikenCount: 5, homingAngle: 90 },
@@ -494,6 +517,39 @@ describe("scaleAbilityMiscStats", () => {
     expect(mark.find((l) => l.label === "Energy per Mark")!).toMatchObject({
       base: "12",
       scaled: "8.4",
+    });
+    const artemis = scaleAbilityMiscStats(
+      { energyPerShot: 15 },
+      ctx,
+      { warframeId: "ivara", abilityName: "Artemis Bow" },
+    );
+    expect(artemis.find((l) => l.label === "Energy per Shot")!).toMatchObject({
+      base: "15",
+      scaled: "10.5",
+      scaleAttr: "efficiency",
+    });
+    const noctua = scaleAbilityMiscStats(
+      { energyPerShot: 2 },
+      ctx,
+      { warframeId: "dante", abilityName: "Noctua" },
+    );
+    expect(noctua.find((l) => l.label === "Energy per Shot")!.scaled).toBe("1.4");
+    const neutralize = scaleAbilityMiscStats(
+      { energyPerShot: 10, altFireEnergy: 20 },
+      ctx,
+      { warframeId: "cyte_09", abilityName: "Neutralize" },
+    );
+    expect(neutralize.find((l) => l.label === "Energy per Shot")!.scaled).toBe("7");
+    expect(neutralize.find((l) => l.label === "Alt-Fire Energy")!.scaled).toBe("14");
+    const inferno = scaleAbilityMiscStats(
+      { energyPerEnemy: 10 },
+      ctx,
+      { warframeId: "ember", abilityName: "Inferno" },
+    );
+    expect(inferno.find((l) => l.label === "Energy per Enemy")!).toMatchObject({
+      base: "10",
+      scaled: "7",
+      scaleAttr: "efficiency",
     });
     const desecrate = scaleAbilityMiscStats(
       { energyPerCorpse: 10 },

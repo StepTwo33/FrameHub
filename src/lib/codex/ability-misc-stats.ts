@@ -97,6 +97,7 @@ const LABELS: Record<string, string> = {
   rewindCountdown: "Rewind Countdown",
   lethalHealthRestore: "Lethal Health Restore",
   energyPerShot: "Energy per Shot",
+  energyPerEnemy: "Energy per Enemy",
   altFireDamage: "Alt-Fire Damage",
   pageFragments: "Page Fragments",
   seekAngle: "Seek Angle",
@@ -997,7 +998,7 @@ function parseSeconds(value: unknown): number | null {
 
 /** Keys that store duration as a bare number of seconds (not a "5s" string). */
 function isDurationSecondsKey(key: string): boolean {
-  return /duration|delay|cooldown|interval|lifetime|countdown|travelTime|airtime|invulnerability|stealTime|assemblyTime/i.test(
+  return /duration|delay|cooldown|interval|lifetime|lifespan|countdown|travelTime|airtime|invulnerability|stealTime|assemblyTime|comboWindow|allyKillWindow|overguardRegenTimer/i.test(
     key,
   );
 }

@@ -577,16 +577,19 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("protea", "Temporal Anchor", "lethalHealthRestore")).toBeNull();
   });
 
-  it("Noctua alt-fire × STR / seek distance × RNG; fragments Misc-fixed", () => {
+  it("Noctua alt-fire × STR / seek distance × RNG; energy/shot × EFF; fragments Misc-fixed", () => {
     expect(getVerifiedMiscScaling("dante", "Noctua", "altFireDamage")).toEqual({
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("dante", "Noctua", "seekDistance")).toEqual({
       scale: "range",
     });
+    expect(getVerifiedMiscScaling("dante", "Noctua", "energyPerShot")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("dante", "Noctua", "pageFragments")).toBeNull();
     expect(getVerifiedMiscScaling("dante", "Noctua", "seekAngle")).toBeNull();
-    expect(getVerifiedMiscScaling("dante", "Noctua", "energyPerShot")).toBeNull();
   });
 
   it("Light Verse Overguard/heal × STR; invuln Misc-fixed", () => {
@@ -2358,6 +2361,11 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       energyPerEnemy: 10,
       maxEnergyTargets: 10,
     });
+    expect(getVerifiedMiscScaling("ember", "Inferno", "energyPerEnemy")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("ember", "Inferno", "maxEnergyTargets")).toBeNull();
     const blast = ember.abilities.find((a) => a.name === "Fire Blast")!;
     expect(blast.damage).toBe(200);
     expect(blast.range).toBe(25);

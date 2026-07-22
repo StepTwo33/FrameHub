@@ -396,7 +396,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "helminth::Evade": {
     healthRestore: { scale: "strength" },
   },
-  // wiki: Neutralize — exalted Neutralizer; damageMultiplier × STR; ricochet Misc-fixed
+  // wiki: Neutralize — exalted Neutralizer; damageMultiplier × STR; energy/shot + alt-fire × EFF; ricochet Misc-fixed
+  "cyte_09::Neutralize": {
+    damageMultiplier: { scale: "strength" },
+    energyPerShot: { scale: "efficiency", formula: "cast_cost" },
+    altFireEnergy: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Pyrotechnics — IPS via damage; pillars Misc-fixed; Helminth unaltered damage
   // wiki: Overdrive — Heat via damage; crit vuln × STR
@@ -754,6 +759,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     armorStrip: { scale: "strength", cap: 1 },
   },
   // wiki: Fireball — impact/area via ability; Inferno meteor/ring via ability.damage / DPS
+  // wiki: Inferno — 10 energy/enemy × EFF (cast_cost), capped at maxEnergyTargets (Misc-fixed)
+  "ember::Inferno": {
+    energyPerEnemy: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Ophanim Eyes — Heat/strip × STR; slow %/s is Misc (ability-rank); cone/ticks fixed
   "jade::Ophanim Eyes": {
@@ -863,10 +872,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     damageConversion: { scale: "strength" },
   },
 
-  // wiki: Noctua — alt-fire dmg × STR; fragment seek distance × RNG; fragment count / angle Misc-fixed
+  // wiki: Noctua — alt-fire dmg × STR; fragment seek distance × RNG; energy/shot × EFF; fragment count / angle Misc-fixed
   "dante::Noctua": {
     altFireDamage: { scale: "strength" },
     seekDistance: { scale: "range" },
+    energyPerShot: { scale: "efficiency", formula: "cast_cost" },
   },
 
   // wiki: Light Verse — Overguard gain/cap + heal% × STR; invuln Misc-fixed
@@ -1319,7 +1329,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     damageEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
 
-  // wiki: Artemis Bow — Puncture-heavy via damage; arrow count / energy per shot Misc-fixed
+  // wiki: Artemis Bow — Puncture-heavy via damage; energy/shot × EFF (cast_cost); arrow count Misc-fixed
+  "ivara::Artemis Bow": {
+    energyPerShot: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Shuriken — Slash via damage; count / auto-target / angle Misc-fixed
   // wiki: Smoke Screen — duration via ability.duration; stagger radius via ability.range

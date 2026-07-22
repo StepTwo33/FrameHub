@@ -218,6 +218,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP Misc/2× reflect×STR/2.5× armor Misc + Initial pool/Kiss 15e×EFF; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
 | B5 Helminth unique | 2026-07-21 | Infested Mobility +60% sprint/+30% parkour/8s; Energized Munitions 75% ammo/5s; Empower +50% next STR; Marked for Death 75% spread; Rebuild Shields 12s CD |
 | Misc flat≠% root fix | 2026-07-21 | Bare numbers ≥1 no longer auto-% (was Shuriken 5%, AMD 25000%, angles…); true fraction keys + cooldown/angles/× growth; Plunder/Covenant caps 200% |
+| Exalted/Inferno cast costs | 2026-07-21 | Artemis/Noctua/Neutralize energyPerShot (+ altFire) × EFF; Inferno energyPerEnemy × EFF; combo/kill windows + kavat lifespan as seconds |
 
 ## New / extended test files
 
