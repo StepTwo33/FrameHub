@@ -16,11 +16,8 @@
     "effects": [
       {
         "stat": "fireRate",
-        "maxValue": 90
-      },
-      {
-        "stat": "holsterDamage",
-        "maxValue": 90
+        "maxValue": 90,
+        "baseValue": 15
       },
       {
         "stat": "fireRateOnCrit",
@@ -2369,18 +2366,19 @@
     "effects": [
       {
         "stat": "abilityStrengthPerHealth",
-        "maxValue": 6
+        "maxValue": 6,
+        "baseValue": 1
       },
       {
         "stat": "abilityStrengthPerHealthStep",
         "maxValue": 250,
-        "flat": true
+        "flat": true,
+        "constantAtAllRanks": true
       },
       {
-        "stat": "abilityStrength",
-        "maxValue": 6,
-        "stacking": true,
-        "baseValue": 1
+        "stat": "abilityStrengthMaximum",
+        "maxValue": 72,
+        "baseValue": 12
       }
     ]
   },

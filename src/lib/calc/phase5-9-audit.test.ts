@@ -801,11 +801,12 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(fullH.fireRate).toBeCloseTo(bareH.fireRate, 4);
   });
 
-  it("Arcane Tempo: stacks>0 → +90% shotgun FR at R5", () => {
+  it("Arcane Tempo: stacks>0 → +90% shotgun FR at R5; no FR on rifle", () => {
     const hek = allWeapons.find((w) => w.id === "hek")!;
+    const braton = allWeapons.find((w) => w.id === "braton")!;
     const tempo = allArcanes.find((a) => a.id === "arcane_tempo")!;
-    const bare = calculateWeaponBuild(hek, [], new Map());
-    const full = calculateWeaponBuildWithArcanes(
+    const bareH = calculateWeaponBuild(hek, [], new Map());
+    const fullH = calculateWeaponBuildWithArcanes(
       hek,
       [],
       new Map(),
@@ -813,14 +814,26 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
-    expect(full.fireRate).toBeCloseTo(bare.fireRate * 1.9, 4);
+    expect(fullH.fireRate).toBeCloseTo(bareH.fireRate * 1.9, 4);
+
+    const bareB = calculateWeaponBuild(braton, [], new Map());
+    const fullB = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [tempo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullB.fireRate).toBeCloseTo(bareB.fireRate, 4);
   });
 
-  it("Arcane Velocity: stacks>0 → +120% secondary FR at R5", () => {
+  it("Arcane Velocity: stacks>0 → +120% secondary FR at R5; no FR on rifle", () => {
     const lex = allWeapons.find((w) => w.id === "lex")!;
+    const braton = allWeapons.find((w) => w.id === "braton")!;
     const velocity = allArcanes.find((a) => a.id === "arcane_velocity")!;
-    const bare = calculateWeaponBuild(lex, [], new Map());
-    const full = calculateWeaponBuildWithArcanes(
+    const bareL = calculateWeaponBuild(lex, [], new Map());
+    const fullL = calculateWeaponBuildWithArcanes(
       lex,
       [],
       new Map(),
@@ -828,7 +841,18 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
-    expect(full.fireRate).toBeCloseTo(bare.fireRate * 2.2, 4);
+    expect(fullL.fireRate).toBeCloseTo(bareL.fireRate * 2.2, 4);
+
+    const bareB = calculateWeaponBuild(braton, [], new Map());
+    const fullB = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [velocity],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullB.fireRate).toBeCloseTo(bareB.fireRate, 4);
   });
 
   it("Arcane Strike: stacks>0 → +60% melee attack speed at R5", () => {
@@ -1242,6 +1266,81 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       [crepuscular],
     );
     expect(full.abilityStrength).toBeCloseTo(bareStr + 0.3, 4);
+  });
+
+  it("Arcane Bellicose: round(HP/250×6%) capped at 72% (wiki)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const bell = allArcanes.find((a) => a.id === "arcane_bellicose")!;
+    const def = getArcaneEffectDef("arcane_bellicose")!;
+    expect(def.effects.find((e) => e.stat === "abilityStrengthMaximum")?.maxValue).toBe(72);
+
+    const cases: Array<[number, number]> = [
+      [2480, 0.6], // matches Molt Augmented at 250 kills
+      [2980, 0.72], // wiki: reaches cap at 2980, not 3000
+      [3500, 0.72], // overcap clamps
+    ];
+    for (const [hp, strBonus] of cases) {
+      const bare = calculateWarframeBuild(excal, [], new Map());
+      const stats = calculateWarframeBuild(excal, [], new Map());
+      // applyArcaneToWarframe reads health from base×bonus+flat (not totalHealth).
+      const derived = stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus;
+      stats.flatHealthBonus += hp - derived;
+      applyWarframeShardsAndArcanes(stats, undefined, [bell]);
+      expect(stats.abilityStrength).toBeCloseTo(bare.abilityStrength + strBonus, 4);
+      expect(stats.arcaneBonuses?.abilityStrengthMaximum).toBeCloseTo(72, 4);
+    }
+  });
+
+  it("Arcane Persistence: R5 cap 500 DPS; shields null; active only at ≥700 armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const pers = allArcanes.find((a) => a.id === "arcane_persistence")!;
+
+    const low = calculateWarframeBuild(excal, [], new Map());
+    applyWarframeShardsAndArcanes(low, undefined, [pers]);
+    expect(low.persistenceDamageCapPerSecond).toBe(500);
+    expect(low.shieldsNullifiedByPersistence).toBe(true);
+    expect(low.totalShield).toBe(0);
+    expect(low.persistenceActive).toBe(false);
+
+    const high = calculateWarframeBuild(excal, [], new Map());
+    high.flatArmorBonus += 700;
+    applyWarframeShardsAndArcanes(high, undefined, [pers]);
+    expect(high.totalArmor).toBeGreaterThanOrEqual(700);
+    expect(high.persistenceActive).toBe(true);
+    expect(high.persistenceDamageCapPerSecond).toBe(500);
+    expect(high.totalShield).toBe(0);
+  });
+
+  it("Secondary Merciless: 12 stacks R5 → +360% damage; reload flat +30%", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const merciless = allArcanes.find((a) => a.id === "arcane_secondary_merciless")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [merciless],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 12 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.reloadTime).toBeCloseTo(bare.reloadTime / 1.3, 4);
+  });
+
+  it("Secondary Deadhead: 3 stacks R5 → +360% damage and +30% headshot mult", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const deadhead = allArcanes.find((a) => a.id === "arcane_secondary_deadhead")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [deadhead],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.headshotDamageBonus).toBeCloseTo((bare.headshotDamageBonus ?? 0) + 0.3, 4);
   });
 
   it("Magus Melt: 0 stacks = no Heat; 7 stacks → +210% Heat on amp", () => {

@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Stack-duration fix + Energize/Conjunction + prior | **Improved** |
+| B6 | Arcane custom handlers | Bellicose round+cap; Tempo/Velocity class gates + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -315,6 +315,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Pax Bolt + Secondary Cryogenic + Universal Fallout + Virtuos Null | 2026-07-22 | Bolt onHeadshot +4s window; Cryogenic 1–3 Cold / 10–15m; Fallout 6%/60% cap; Null +20% amp regen/4s |
 | Arcane Energize + Conjunction Voltage duration | 2026-07-22 | Energize was healthRegenChance→energyPickupChance 60% + 150 Energy/15m/15s CD; Conjunction +12s stack window panel |
 | Stacking arcane buffDuration windows | 2026-07-22 | Duration/cooldown/radius no longer × stacks (Hot Shot/Fortification/Exhilarate stay 10s); `stacking: true` still × stacks (Ice Storm) |
+| Bellicose + Tempo/Velocity gates + Persistence | 2026-07-22 | Bellicose round(HP/250×%) cap 72%; Tempo shotgun-only / Velocity pistol-only FR; Persistence 500 DPS + armor≥700; Secondary Merciless/Deadhead goldens; drop Acceleration holsterDamage |
 
 ## New / extended test files
 

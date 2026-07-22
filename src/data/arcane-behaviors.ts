@@ -79,9 +79,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_bellicose",
     customHandler: "arcane_bellicose",
     effects: [
-      {"statKey": "abilityStrengthPerHealth", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Bellicose — +STR per 250 Health (applies from warframe totals)"},
-      {"statKey": "abilityStrengthPerHealthStep", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bellicose — 250 Health per step"},
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Bellicose — Ability Strength from Health steps"},
+      {"statKey": "abilityStrengthPerHealth", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Bellicose — round(HP÷250×STR%) capped (R5 72%)"},
+      {"statKey": "abilityStrengthPerHealthStep", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bellicose — 250 Health divisor"},
+      {"statKey": "abilityStrengthMaximum", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bellicose — Ability Strength Maximum (R5 72%)"},
     ],
   },
   "arcane_blade_charger": {

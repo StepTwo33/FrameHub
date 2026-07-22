@@ -68,14 +68,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "baseValue": 15.0
       },
       {
-        "stat": "holsterDamage",
-        "maxValue": 90.0,
-        "baseValue": 15.0
-      },
-      {
         "stat": "fireRateOnCrit",
         "maxValue": 30.0,
-        "baseValue": 5.0
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -198,10 +193,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "constantAtAllRanks": true
       },
       {
-        "stat": "abilityStrength",
-        "maxValue": 6.0,
-        "stacking": true,
-        "baseValue": 1.0
+        "stat": "abilityStrengthMaximum",
+        "maxValue": 72.0,
+        "baseValue": 12.0
       }
     ]
   },

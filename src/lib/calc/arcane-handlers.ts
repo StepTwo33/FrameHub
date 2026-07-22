@@ -1033,15 +1033,27 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
-    case "arcane_tempo":
-    case "arcane_velocity": {
-      // Tempo: +90% shotgun FR on crit. Velocity: +120% secondary FR on crit. Paper: stacks>0 = buff up.
+    case "arcane_tempo": {
+      // wiki R5: +90% shotgun FR on crit for 12s. Paper: stacks>0 = buff up; shotguns only.
       const frLine = findEffect(def, "fireRate");
       const fr = frLine ? scaleArcaneEffectLine(frLine, rank, def.maxRank) : 0;
-      if (fr > 0 && !stats.fireRateLocked) {
+      const isShotgun = ctx.baseWeapon?.category === "shotgun";
+      if (fr > 0 && isShotgun && !stats.fireRateLocked) {
         stats.fireRate *= 1 + fr / 100;
       }
-      trackBonus(stats, "fireRate", fr);
+      trackBonus(stats, "fireRate", isShotgun ? fr : 0);
+      return true;
+    }
+
+    case "arcane_velocity": {
+      // wiki R5: +120% secondary FR on crit for 9s. Paper: stacks>0 = buff up; pistols/secondaries only.
+      const frLine = findEffect(def, "fireRate");
+      const fr = frLine ? scaleArcaneEffectLine(frLine, rank, def.maxRank) : 0;
+      const isSecondary = /secondary|pistol|kitgun/i.test(ctx.baseWeapon?.category ?? "");
+      if (fr > 0 && isSecondary && !stats.fireRateLocked) {
+        stats.fireRate *= 1 + fr / 100;
+      }
+      trackBonus(stats, "fireRate", isSecondary ? fr : 0);
       return true;
     }
 
@@ -1466,11 +1478,18 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_bellicose": {
+      // wiki: round(Max Health ÷ 250 × Strength%) capped at Ability Strength Maximum (R5: 72%).
       const perStep = scaledLine(def, findEffect(def, "abilityStrengthPerHealth"), rank, stacks);
       const step = findEffect(def, "abilityStrengthPerHealthStep")?.maxValue ?? 250;
-      const steps = step > 0 ? Math.floor(wfCtx.totalHealth / step) : 0;
-      stats.abilityStrength += (steps * perStep) / 100;
-      trackBonus(stats, "abilityStrengthPerHealth", steps * perStep);
+      const capLine = findEffect(def, "abilityStrengthMaximum");
+      const cap = capLine
+        ? scaleArcaneEffectLine(capLine, rank, def.maxRank)
+        : perStep * 12;
+      const raw = step > 0 ? Math.round((wfCtx.totalHealth / step) * perStep) : 0;
+      const bonusPct = Math.min(cap, raw);
+      stats.abilityStrength += bonusPct / 100;
+      trackBonus(stats, "abilityStrengthPerHealth", bonusPct);
+      trackBonus(stats, "abilityStrengthMaximum", cap);
       return true;
     }
 
