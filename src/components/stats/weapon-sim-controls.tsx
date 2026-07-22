@@ -116,6 +116,44 @@ export function WeaponSimControls({
             onChange={(v) => onSimParamsChange({ ...simParams, applyMechaEmpoweredVsMarkedDamage: v >= 1 })}
             tooltip="When Mecha Empowered is equipped and ≥1 Mecha set piece marks a target, apply +150% squad damage vs that marked enemy."
           />
+          <SimSlider
+            label="Mecha spread enemies"
+            value={simParams.mechaSpreadEnemies ?? 0}
+            min={0}
+            max={12}
+            onChange={(v) => onSimParamsChange({ ...simParams, mechaSpreadEnemies: v })}
+            tooltip="Enemies hit by Mecha mark-kill status spread (0 = off). Papers transferred DoT DPS amortized over mark cooldown. Needs ≥1 Mecha set piece in the loadout."
+          />
+          {isMelee && (
+            <>
+              <SimSlider
+                label="Airborne kill stacks"
+                value={simParams.airborneKillStacks ?? 3}
+                min={0}
+                max={3}
+                onChange={(v) => onSimParamsChange({ ...simParams, airborneKillStacks: v })}
+                tooltip="Innodem Swooping Lunge: +50% melee damage per airborne kill (PP-additive, max 3). Unset defaults to 3 when the perk is equipped."
+              />
+              <SimSlider
+                label="Heavy-kill stacks"
+                value={simParams.heavyKillStacks ?? 0}
+                min={0}
+                max={30}
+                onChange={(v) => onSimParamsChange({ ...simParams, heavyKillStacks: v })}
+                tooltip="Destreza Incarnon Form: +10% Puncture per heavy-attack kill while transformed (max +300%). 0 = off."
+              />
+            </>
+          )}
+          {weapon?.id === "thalys" && (
+            <SimSlider
+              label="Shard hosts"
+              value={simParams.shardHosts ?? 0}
+              min={0}
+              max={12}
+              onChange={(v) => onSimParamsChange({ ...simParams, shardHosts: v })}
+              tooltip="Thalys Incarnon: enemies with embedded shards (0 = off). Papers form embed triggers + Chain Shatter heavy detonations (combo on host only)."
+            />
+          )}
           <div className="pt-1 space-y-1.5">
             {weapon?.id === "onos" && (
               <label className="block text-[10px] text-muted-foreground" title="Wiki: Held Radiation beam vs full-charge Heat blast">

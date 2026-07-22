@@ -1213,21 +1213,30 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "mk1_furis")?.flatBaseDamage).toBe(64);
   });
 
-  it("melee T1 +100% Melee Damage encodes as damage:1", () => {
+  it("melee T1 +100% Melee Damage encodes as additiveBaseDamage (PP-additive)", () => {
     const data = incarnonDataMap.get("hate")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "hate")?.damage).toBe(1);
+    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "hate")?.additiveBaseDamage).toBe(1);
+    const hate = allWeapons.find((w) => w.id === "hate")!;
+    const bare = calculateWeaponBuild(hate, [], modsMap());
+    const form = calculateWeaponBuild(
+      hate,
+      [],
+      modsMap(),
+      { additiveBaseDamage: 1 },
+    );
+    expect(form.totalDamage).toBeCloseTo(bare.totalDamage * 2, 5);
   });
 
   it("Bo T1 form encodes +100% Melee Damage, +4 Range, +50% HAE", () => {
     const data = incarnonDataMap.get("bo")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "bo")?.damage).toBe(1);
+    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "bo")?.additiveBaseDamage).toBe(1);
     expect(mergeIncarnonStatChanges(data, { 1: 0 }, "bo")?.range).toBe(4);
     expect(mergeIncarnonStatChanges(data, { 1: 0 }, "bo")?.heavyAttackEfficiency).toBe(0.5);
   });
 
   it("Nami Solo T1 form encodes +100% Melee Damage and +3 Range", () => {
     const data = incarnonDataMap.get("nami_solo")!;
-    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "nami_solo")?.damage).toBe(1);
+    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "nami_solo")?.additiveBaseDamage).toBe(1);
     expect(mergeIncarnonStatChanges(data, { 1: 0 }, "nami_solo")?.range).toBe(3);
   });
 
@@ -1254,7 +1263,64 @@ describe("evolution numeric fixes", () => {
     expect(form.triggerType).toBe(thalys.triggerType);
     expect(mergeIncarnonStatChanges(data, { 1: 0 }, "thalys")?.range).toBe(3);
     expect(mergeIncarnonStatChanges(data, { 1: 0 }, "thalys")?.fireRate).toBe(0.4);
+    expect(mergeIncarnonStatChanges(data, { 1: 0 }, "thalys")?.shardTriggerMult).toBeCloseTo(0.75, 5);
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "thalys")?.fireRate).toBe(0.2);
+  });
+
+  it("Thalys Chain Shatter + form shard triggers paper sim-gated DPS", () => {
+    const thalys = allWeapons.find((w) => w.id === "thalys")!;
+    const data = incarnonDataMap.get("thalys")!;
+    const changes = mergeIncarnonStatChanges(data, { 1: 0, 5: 1 }, "thalys");
+    expect(changes?.chainShatterDetonateMult).toBe(2);
+    expect(changes?.shardTriggerMult).toBeCloseTo(0.75, 5);
+
+    const off = calculateWeaponBuild(thalys, [], modsMap(), changes, DEFAULT_SIM_PARAMS, {
+      incarnonFormActive: true,
+    });
+    expect(off.shardChainDps ?? 0).toBe(0);
+
+    const on = calculateWeaponBuild(
+      thalys,
+      [],
+      modsMap(),
+      changes,
+      { ...DEFAULT_SIM_PARAMS, shardHosts: 5, applyStanceMultiplier: false },
+      { incarnonFormActive: true },
+    );
+    expect(on.shardChainDps ?? 0).toBeGreaterThan(0);
+    // Detonate: host×2×combo + 4×chain×2, / windUp; plus embed triggers
+    const windUp = on.heavyAttackWindUp;
+    const detonate = (on.totalDamage * 2 * on.comboMultiplier + on.totalDamage * 2 * 4) / windUp;
+    const trigger =
+      (on.moddedBaseDamage ?? thalys.damage) * 0.75 * 4 * (on.effectiveFireRate ?? on.fireRate);
+    expect(on.shardChainDps).toBeCloseTo(detonate + trigger, 0);
+  });
+
+  it("Swooping Lunge is PP-additive per airborne stack; Destreza puncture is sim-gated", () => {
+    const innodem = allWeapons.find((w) => w.id === "innodem")!;
+    const swoop = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 4: 1 }, "innodem");
+    expect(swoop?.airborneKillAdditivePerStack).toBeCloseTo(0.5, 5);
+    const bare = calculateWeaponBuild(innodem, [], modsMap());
+    const max = calculateWeaponBuild(innodem, [], modsMap(), swoop, {
+      ...DEFAULT_SIM_PARAMS,
+      airborneKillStacks: 3,
+    });
+    const zero = calculateWeaponBuild(innodem, [], modsMap(), swoop, {
+      ...DEFAULT_SIM_PARAMS,
+      airborneKillStacks: 0,
+    });
+    expect(max.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 5);
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 5);
+
+    const destreza = allWeapons.find((w) => w.id === "destreza")!;
+    const form = mergeIncarnonStatChanges(incarnonDataMap.get("destreza")!, { 1: 0 }, "destreza");
+    expect(form?.heavyKillPuncturePerStack).toBeCloseTo(0.1, 5);
+    const noStacks = calculateWeaponBuild(destreza, [], modsMap(), form);
+    const stacked = calculateWeaponBuild(destreza, [], modsMap(), form, {
+      ...DEFAULT_SIM_PARAMS,
+      heavyKillStacks: 10,
+    });
+    expect(stacked.puncture).toBeCloseTo(noStacks.puncture * 2, 5);
   });
 
   it("Destreza Piercing Stature / Weighted Impetus and Dual Ichor Ronin paper", () => {
@@ -1394,7 +1460,9 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(ceramic, { 2: 1 }, "ceramic_dagger")?.flatBaseDamage).toBe(200);
 
     const innodem = incarnonDataMap.get("innodem")!;
-    expect(mergeIncarnonStatChanges(innodem, { 4: 1 }, "innodem")?.damage).toBe(1.5);
+    expect(mergeIncarnonStatChanges(innodem, { 4: 1 }, "innodem")?.airborneKillAdditivePerStack).toBe(
+      0.5,
+    );
     expect(mergeIncarnonStatChanges(innodem, { 5: 0 }, "innodem")?.heavyAttackEfficiency).toBe(0.4);
 
     const onos = incarnonDataMap.get("onos")!;

@@ -27,6 +27,7 @@ import {
   countMechaSetPieces,
   linkageHasMechaEmpowered,
   MECHA_EMPOWERED_VS_MARKED_MULTIPLIER,
+  computeMechaSpreadPaperDps,
   buildWarframeSetBonusSummary,
   buildWeaponSetBonusSummary,
   countSynthSetPieces,
@@ -387,6 +388,68 @@ function applyAbilityCloudDps(
   stats.sustainedDps += cloud;
 }
 
+/** Mecha mark-kill status-spread DoT DPS (sim-gated; not in TTK). */
+function applyMechaSpreadDps(
+  stats: CalculatedStats,
+  sim: SimulationParams,
+  mechaPieces: number,
+): void {
+  const enemies = sim.mechaSpreadEnemies ?? 0;
+  if (enemies <= 0 || mechaPieces <= 0) return;
+  const dots = (stats.statusProcs ?? [])
+    .filter((p) => p.damagePerTick > 0)
+    .map((p) => ({ type: p.type, damagePerTick: p.damagePerTick }));
+  const dps = computeMechaSpreadPaperDps({ pieces: mechaPieces, enemies, dotTicks: dots });
+  if (dps <= 0) return;
+  stats.mechaSpreadDps = dps;
+  stats.burstDps += dps;
+  stats.sustainedDps += dps;
+}
+
+/**
+ * Thalys form shard embed triggers + Chain Shatter heavy detonations.
+ * Sim-gated by shardHosts; not in TTK.
+ */
+function applyShardChainDps(
+  stats: CalculatedStats,
+  incarnonStatChanges: Record<string, number> | undefined,
+  sim: SimulationParams,
+  incarnonFormActive: boolean,
+  moddedBaseDamage: number,
+): void {
+  if (!incarnonFormActive || !incarnonStatChanges) return;
+  const hosts = Math.max(0, Math.floor(sim.shardHosts ?? 0));
+  if (hosts <= 0) return;
+
+  let shardDps = 0;
+  const shardDmgMult = 1 + (incarnonStatChanges.shardDamageMult ?? 0);
+  const stance = stats.stanceDamageMultiplier ?? 1;
+  const triggerMult = incarnonStatChanges.shardTriggerMult ?? 0;
+  // New embed triggers all other hosts at 75% modded base × stance (not CO/IPS/elem).
+  if (triggerMult > 0 && hosts > 1 && moddedBaseDamage > 0) {
+    const perEmbed =
+      moddedBaseDamage * triggerMult * Math.max(0, shardDmgMult) * stance * (hosts - 1);
+    const rate = Math.max(0, stats.effectiveFireRate ?? stats.fireRate);
+    shardDps += perEmbed * rate;
+  }
+
+  const detonateMult = incarnonStatChanges.chainShatterDetonateMult ?? 0;
+  if (detonateMult > 0) {
+    // Detonation uses modded total (PP + IPS + elem + CO); combo on host only.
+    const base = stats.totalDamage;
+    const combo = stats.comboMultiplier > 0 ? stats.comboMultiplier : 1;
+    const host = base * detonateMult * combo;
+    const chain = base * detonateMult * Math.max(0, hosts - 1);
+    const windUp = Math.max(0.2, stats.heavyAttackWindUp || 1);
+    shardDps += (host + chain) / windUp;
+  }
+
+  if (shardDps <= 0) return;
+  stats.shardChainDps = shardDps;
+  stats.burstDps += shardDps;
+  stats.sustainedDps += shardDps;
+}
+
 function applyWeaponExternalBuffs(
   acc: WeaponModAccumulators,
   buffs?: WeaponExternalBuff[],
@@ -682,6 +745,15 @@ export function calculateWeaponBuild(
   }
   // Reaver's Rapture etc.: stack-capped +Damage additive with Serration (not late ×damage).
   damageBonus += incarnonStatChanges?.additiveBaseDamage ?? 0;
+  // Swooping Lunge: +50% PP-additive per airborne kill stack (cap 3; default max when unset).
+  const airbornePer = incarnonStatChanges?.airborneKillAdditivePerStack ?? 0;
+  if (airbornePer > 0) {
+    const stacks = Math.min(
+      3,
+      Math.max(0, Math.floor(sim.airborneKillStacks ?? 3)),
+    );
+    damageBonus += airbornePer * stacks;
+  }
 
   // King's Gambit / Prolific-style: relative CC% (paper uptime)
   critChanceBonus += incarnonStatChanges?.critChanceBonus ?? 0;
@@ -976,6 +1048,10 @@ export function calculateWeaponBuild(
         case 'sawbladeStormBlast':
         case 'sawbladeStormRadius':
         case 'bodyshotCritChanceMult':
+        case 'airborneKillAdditivePerStack':
+        case 'heavyKillPuncturePerStack':
+        case 'shardTriggerMult':
+        case 'chainShatterDetonateMult':
           break;
         case 'headshotDamageBonus':
           stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + value;
@@ -1376,6 +1452,19 @@ export function calculateWeaponBuild(
     stats.totalDamage = physMecha + eleMecha;
   }
 
+  // Destreza form: +10% Puncture per heavy-kill stack (cap 30); sim-gated (0 = off).
+  const heavyPuncturePer = incarnonStatChanges?.heavyKillPuncturePerStack ?? 0;
+  if (heavyPuncturePer > 0 && stats.puncture > 0) {
+    const stacks = Math.min(30, Math.max(0, Math.floor(sim.heavyKillStacks ?? 0)));
+    if (stacks > 0) {
+      const pm = 1 + heavyPuncturePer * stacks;
+      stats.puncture *= pm;
+      const physP = stats.impact + stats.puncture + stats.slash;
+      const eleP = stats.elements.reduce((sum, e) => sum + e.value, 0);
+      stats.totalDamage = physP + eleP;
+    }
+  }
+
   // Snapshot arsenal-style display damage before quantization (the in-game arsenal
   // shows theoretical values; actual hits are quantized below).
   stats.arsenalDamage = {
@@ -1465,6 +1554,14 @@ export function calculateWeaponBuild(
     incarnonStatChanges,
   );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
+  applyMechaSpreadDps(stats, sim, mechaPiecesForMark);
+  applyShardChainDps(
+    stats,
+    incarnonStatChanges,
+    sim,
+    calcOptions?.incarnonFormActive === true,
+    moddedBaseDamage,
+  );
 
   return stats;
 }

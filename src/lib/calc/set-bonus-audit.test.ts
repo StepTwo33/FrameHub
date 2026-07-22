@@ -9,6 +9,7 @@ import {
   augurShieldsFromEnergySpent,
   buildWarframeSetBonusSummary,
   computeMechaSetMarkStats,
+  computeMechaSpreadPaperDps,
   countAugurSetPieces,
   countHunterSetPieces,
   countMechaSetPieces,
@@ -239,6 +240,61 @@ describe("Mecha set (wiki: mark timing + Empowered vs marked)", () => {
       { warframeMods: [{ modId: "mecha_pulse_r3", rank: 3, slotIndex: 0 }] },
     );
     expect(noEmpowered.mechaEmpoweredVsMarkedDamageMultiplier).toBeUndefined();
+  });
+
+  it("papers mark-kill status-spread DoT (wiki sum × type fraction / CD)", () => {
+    // Wiki: Slash 100 + Toxin 400 → Slash (500)×0.35=175, Toxin (500)×0.5=250
+    const dps = computeMechaSpreadPaperDps({
+      pieces: 4,
+      enemies: 2,
+      dotTicks: [
+        { type: "slash", damagePerTick: 100 },
+        { type: "toxin", damagePerTick: 400 },
+      ],
+      remainingDurationSec: 6,
+    });
+    // tickSum = 175+250 = 425; 2 enemies × 425 × 6 / 15s CD = 340
+    expect(dps).toBeCloseTo(340, 5);
+
+    const rifle: Weapon = {
+      id: "t",
+      name: "T",
+      category: "rifle",
+      damage: 100,
+      impact: 0,
+      puncture: 0,
+      slash: 100,
+      fireRate: 1,
+      criticalChance: 0,
+      criticalMultiplier: 2,
+      statusChance: 1,
+      magazine: 30,
+      reloadTime: 2,
+      multishot: 1,
+      triggerType: "Auto",
+      modSlots: 8,
+      hasPrimaryArcaneSlot: false,
+      hasSecondaryArcaneSlot: false,
+      isIncarnon: false,
+      hasRivenSlot: true,
+    };
+    const linkage = {
+      warframeMods: [{ modId: "mecha_pulse_r3", rank: 3, slotIndex: 0 }],
+      companionMods: [{ modId: "mecha_recharge", rank: 5, slotIndex: 0 }],
+    };
+    const off = calculateWeaponBuild(rifle, [], modsMap(), undefined, DEFAULT_SIM_PARAMS, undefined, linkage);
+    const on = calculateWeaponBuild(
+      rifle,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, mechaSpreadEnemies: 3 },
+      undefined,
+      linkage,
+    );
+    expect(off.mechaSpreadDps ?? 0).toBe(0);
+    expect(on.mechaSpreadDps ?? 0).toBeGreaterThan(0);
+    expect(on.burstDps).toBeGreaterThan(off.burstDps);
   });
 });
 

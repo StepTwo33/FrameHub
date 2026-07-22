@@ -740,12 +740,15 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           const radialBurst = stats.radialBurstDps ?? 0;
           const radialSustained = stats.radialSustainedDps ?? 0;
           const contagionCloud = stats.contagionCloudDps ?? 0;
-          const directBurst = Math.max(0, stats.burstDps - radialBurst - contagionCloud);
-          const directSustained = Math.max(0, stats.sustainedDps - radialSustained - contagionCloud);
+          const mechaSpread = stats.mechaSpreadDps ?? 0;
+          const shardChain = stats.shardChainDps ?? 0;
+          const extraAoE = contagionCloud + mechaSpread + shardChain;
+          const directBurst = Math.max(0, stats.burstDps - radialBurst - extraAoE);
+          const directSustained = Math.max(0, stats.sustainedDps - radialSustained - extraAoE);
           const showOverflow = [directBurst, directSustained, stats.burstDps, stats.sustainedDps].some(
             exceedsWarframeInt32,
           );
-          const showTotals = radialBurst > 0 || contagionCloud > 0;
+          const showTotals = radialBurst > 0 || extraAoE > 0;
           return (
             <>
               <StatRow
@@ -753,7 +756,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 value={directBurst.toFixed(0)}
                 highlighted
                 changed={flash.has("directBurstDps") || flash.has("burstDps")}
-                tooltip="Projectile / hit DPS only (no radial / Contagion Cloud). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
+                tooltip="Projectile / hit DPS only (no radial / Contagion / Mecha spread / shards). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
               />
               <StatRow
                 label="Direct Sustained DPS"
@@ -789,6 +792,24 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   tooltip="Toxic Lash Contagion Cloud (augment): ability toxin DPS × Strength (×2 melee) × sim enemies. Not in TTK."
                 />
               )}
+              {mechaSpread > 0 && (
+                <StatRow
+                  label="Mecha Spread DPS"
+                  value={mechaSpread.toFixed(0)}
+                  color="text-cyan-300"
+                  changed={flash.has("mechaSpreadDps")}
+                  tooltip="Mecha mark-kill status spread: transferred DoT ticks × sim enemies / mark cooldown. Not in TTK."
+                />
+              )}
+              {shardChain > 0 && (
+                <StatRow
+                  label="Shard Chain DPS"
+                  value={shardChain.toFixed(0)}
+                  color="text-violet-300"
+                  changed={flash.has("shardChainDps")}
+                  tooltip="Thalys form embed triggers + Chain Shatter heavy detonations (sim shard hosts). Combo on host only. Not in TTK."
+                />
+              )}
               {showTotals && (
                 <>
                   <div className="border-t border-border/50 my-1" />
@@ -796,13 +817,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                     label="Total Burst DPS"
                     value={stats.burstDps.toFixed(0)}
                     changed={flash.has("burstDps")}
-                    tooltip="Direct + radial + Contagion Cloud burst DPS combined."
+                    tooltip="Direct + radial + Contagion / Mecha spread / shard chain burst DPS combined."
                   />
                   <StatRow
                     label="Total Sustained DPS"
                     value={stats.sustainedDps.toFixed(0)}
                     changed={flash.has("sustainedDps")}
-                    tooltip="Direct + radial + Contagion Cloud sustained DPS combined."
+                    tooltip="Direct + radial + Contagion / Mecha spread / shard chain sustained DPS combined."
                   />
                 </>
               )}
@@ -966,6 +987,10 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "capacityMsDamageMult") return `MS-pellet dmg: +${(n * 100).toFixed(0)}%`;
                         if (s === "capacityMsBonusMult") return `MS bonus ×${(1 + n).toFixed(2)}`;
                         if (s === "flatMsPelletDamage") return `MS-pellet flat: +${n}`;
+                        if (s === "airborneKillAdditivePerStack") return `airborne +dmg/stack: +${(n * 100).toFixed(0)}%`;
+                        if (s === "heavyKillPuncturePerStack") return `HA-kill Puncture/stack: +${(n * 100).toFixed(0)}%`;
+                        if (s === "shardTriggerMult") return `shard trigger: ×${n}`;
+                        if (s === "chainShatterDetonateMult") return `Chain Shatter: ×${n}`;
                         if (s === "stunRadiusOnFinisher") return `stun: ${n}m`;
                         if (s === "knockdownRadiusOnFinisher") return `KD: ${n}m`;
                         if (s === "shardDuration") return `shard: ${n}s`;

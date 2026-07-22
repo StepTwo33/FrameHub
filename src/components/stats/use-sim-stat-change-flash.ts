@@ -19,6 +19,9 @@ export function buildSimFlashSnapshot(stats: CalculatedStats): Record<string, nu
   const radialBurst = stats.radialBurstDps ?? 0;
   const radialSustained = stats.radialSustainedDps ?? 0;
   const contagionCloud = stats.contagionCloudDps ?? 0;
+  const mechaSpread = stats.mechaSpreadDps ?? 0;
+  const shardChain = stats.shardChainDps ?? 0;
+  const extraAoE = contagionCloud + mechaSpread + shardChain;
 
   const procsPerSec = (stats.statusProcs ?? []).reduce(
     (sum, p) => sum + efr * stats.multishot * p.chance,
@@ -49,11 +52,13 @@ export function buildSimFlashSnapshot(stats: CalculatedStats): Record<string, nu
     redHit: round(hitBase * critTierDamage(3, cm), 1),
     avgHit: round(hitBase * avgCritMultiplier(cc, cm), 1),
     heavyAttack: round(stats.heavyAttackDamage ?? 0, 1),
-    directBurstDps: round(Math.max(0, stats.burstDps - radialBurst - contagionCloud), 0),
-    directSustainedDps: round(Math.max(0, stats.sustainedDps - radialSustained - contagionCloud), 0),
+    directBurstDps: round(Math.max(0, stats.burstDps - radialBurst - extraAoE), 0),
+    directSustainedDps: round(Math.max(0, stats.sustainedDps - radialSustained - extraAoE), 0),
     radialBurstDps: round(radialBurst, 0),
     radialSustainedDps: round(radialSustained, 0),
     contagionCloudDps: round(contagionCloud, 0),
+    mechaSpreadDps: round(mechaSpread, 0),
+    shardChainDps: round(shardChain, 0),
     burstDps: round(stats.burstDps, 0),
     sustainedDps: round(stats.sustainedDps, 0),
     procsPerSec: round(procsPerSec, 2),

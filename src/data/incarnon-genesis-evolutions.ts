@@ -6,7 +6,7 @@ import type { IncarnonEvolution } from "./incarnon";
 
 export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "ack_brunt_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Send forth a spectral axe during aerial and slide attacks. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Send forth a spectral axe during aerial and slide attacks. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     // Assumes Armor ≥450 for paper DPS
     { tier: 2, slot: 0, name: "Templar's Wrath", description: "Increase Base Damage by +150. With Armor Over 450: +70% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":150,"heavyAttackEfficiency":0.7} },
     { tier: 2, slot: 1, name: "Shieldmaiden's Rush", description: "Increase Base Damage by +150. On Shield Break: +300% Combo Count Chance while Blocking for 11 seconds.", statChanges: {"flatBaseDamage":150} },
@@ -31,7 +31,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Fatal Affliction", description: "+40% Direct Damage per Status Type affecting the target.", statChanges: {"fatalAfflictionPerStatus":0.4} },
   ],
   "anku_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon form temporarily increases Range and inflicts guaranteed Slash Status for all attacks after a successful slide attack. +100% Melee Damage +20% Sprint Speed +20% Bullet Jump", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon form temporarily increases Range and inflicts guaranteed Slash Status for all attacks after a successful slide attack. +100% Melee Damage +20% Sprint Speed +20% Bullet Jump", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Edge of Justice", description: "Increase Base Damage by +50. With Melee Weapon Equipped: +40% Attack Speed.", statChanges: {"flatBaseDamage":50,"fireRate":0.4} },
     // Assumes overshields for paper DPS
     { tier: 2, slot: 1, name: "Guardian's Promise", description: "Increase Base Damage by +50. With Overshields: +80% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":50,"heavyAttackEfficiency":0.8} },
@@ -70,7 +70,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Critical Parallel", description: "Increase Base Critical Chance by +15. Increase Base Critical Damage Multiplier by +1x.", statChanges: {"criticalChance":0.15,"criticalMultiplier":1}, variantStatChanges: {"ballistica":{"criticalChance":0.15,"criticalMultiplier":1},"rakta_ballistica":{"criticalChance":0.14,"criticalMultiplier":1},"ballistica_prime":{"criticalChance":0.12,"criticalMultiplier":1}} },
   ],
   "bo_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon form increases Range and Heavy Attack Efficiency. +100% Melee Damage +4 Range +50% Heavy Attack Efficiency +20% Sprint Speed +20% to Bullet Jump", statChanges: {"damage":1,"range":4,"heavyAttackEfficiency":0.5} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon form increases Range and Heavy Attack Efficiency. +100% Melee Damage +4 Range +50% Heavy Attack Efficiency +20% Sprint Speed +20% to Bullet Jump", statChanges: {"additiveBaseDamage":1,"range":4,"heavyAttackEfficiency":0.5} },
     { tier: 2, slot: 0, name: "Stalwart Oak", description: "Increase Base Damage by +110. With Armor over 450: +30 Parry Angle +300% Combo Count Chance while Blocking.", statChanges: {"flatBaseDamage":110}, variantStatChanges: {"bo":{"flatBaseDamage":110},"mk1_bo":{"flatBaseDamage":90},"bo_prime":{"flatBaseDamage":34}} },
     { tier: 2, slot: 1, name: "Swordsman's Flourish", description: "Increase Base Damage by +100. With Melee Weapon Equipped: +100% Combo Count Chance.", statChanges: {"flatBaseDamage":100}, variantStatChanges: {"bo":{"flatBaseDamage":100},"mk1_bo":{"flatBaseDamage":85},"bo_prime":{"flatBaseDamage":30}} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.5 Range", statChanges: {"range":0.5} },
@@ -147,7 +147,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Fatal Affliction", description: "+40% Direct Damage per Status Type affecting the target.", statChanges: {"fatalAfflictionPerStatus":0.4} },
   ],
   "ceramic_dagger_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Heavy Attacks sends forth spectral daggers. +100% Melee Damage +25% Sprint Speed +25% to Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Heavy Attacks sends forth spectral daggers. +100% Melee Damage +25% Sprint Speed +25% to Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     // Max stacks assumed for paper DPS (+1 IC × 100)
     { tier: 2, slot: 0, name: "Gun and Blade", description: "Increase Base Damage by +100. On Primary Kill: +1 Initial Combo. Stacks up to 100x.", statChanges: {"flatBaseDamage":100,"initialCombo":100} },
     // Assumes shield-break buff up for paper DPS
@@ -201,7 +201,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Critical Parallel", description: "Increase Base Critical Chance by +18% Increase Base Critical Damage Multiplier by +0.4x", statChanges: {"criticalChance":0.18,"criticalMultiplier":0.4} },
   ],
   "destreza_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Heavy Attacks spawn ghostly rapiers +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity +10% Puncture Damage per Heavy Attack kill, up to 300% while transformed", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Heavy Attacks spawn ghostly rapiers +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity +10% Puncture Damage per Heavy Attack kill, up to 300% while transformed", statChanges: {"additiveBaseDamage":1,"heavyKillPuncturePerStack":0.1} },
     // Assumes HA-kill windup buff up for paper DPS
     { tier: 2, slot: 0, name: "Weighted Impetus", description: "Increase Base Damage by +50 On Heavy Attack Kill: +100% Heavy Attack Wind Up Speed for 8s", statChanges: {"flatBaseDamage":50,"heavyAttackWindUp":1}, variantStatChanges: {"destreza":{"flatBaseDamage":50,"heavyAttackWindUp":1},"destreza_prime":{"flatBaseDamage":40,"heavyAttackWindUp":1}} },
     // Max stacks assumed for paper DPS (+20% SC × 5)
@@ -228,7 +228,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Zeroed In", description: "Increase Base Critical Damage Multiplier by +1x", statChanges: {"criticalMultiplier":1} },
   ],
   "dual_ichor_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills create a Toxin Damage field +100% Melee Damage +20% Sprint Speed +20% to Bullet Jump", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills create a Toxin Damage field +100% Melee Damage +20% Sprint Speed +20% to Bullet Jump", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Alchemist's Wrath", description: "Increase Base Damage by +90. 5 additional Combos on targets affected by Toxin.", statChanges: {"flatBaseDamage":90,"comboOnToxinStatus":5} },
     // Assumes Neutral finisher AS buff up for paper DPS
     { tier: 2, slot: 1, name: "Ronin's Rush", description: "Increase Base Damage by +90. On striking target with final move of Neutral Combo: +30% Attack Speed for 33s.", statChanges: {"flatBaseDamage":90,"fireRate":0.3} },
@@ -271,7 +271,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 5, slot: 2, name: "Agile Executor", description: "Gain 50% Ammo Efficiency while Aim Gliding and Sliding", statChanges: {"ammoEfficiency":0.5} },
   ],
   "furax_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form gains Heavy Slam Efficiency and leaves behind Heat Damage fields after Heavy Slams. +100% Melee Damage +25% Sprint Speed +25% to Bullet Jump", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form gains Heavy Slam Efficiency and leaves behind Heat Damage fields after Heavy Slams. +100% Melee Damage +25% Sprint Speed +25% to Bullet Jump", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Swordsman's Flourish", description: "Increase Base Damage by +110. With Melee Weapon Equipped: +100% Combo Count Chance", statChanges: {"flatBaseDamage":110}, variantStatChanges: {"furia":{"flatBaseDamage":110},"mk1_furax":{"flatBaseDamage":100},"furia_wraith":{"flatBaseDamage":65},"furax":{"flatBaseDamage":110},"furax_wraith":{"flatBaseDamage":65}} },
     // Max stacks assumed for paper DPS (+10% × 5)
     { tier: 2, slot: 1, name: "Kill Joy", description: "Increase Base Damage by +90. +10% Attack Speed per enemy within 6m, stacks up to 5x.", statChanges: {"flatBaseDamage":90,"fireRate":0.5}, variantStatChanges: {"furia":{"flatBaseDamage":90,"fireRate":0.5},"mk1_furax":{"flatBaseDamage":80,"fireRate":0.5},"furia_wraith":{"flatBaseDamage":55,"fireRate":0.5},"furax":{"flatBaseDamage":90,"fireRate":0.5},"furax_wraith":{"flatBaseDamage":55,"fireRate":0.5}} },
@@ -325,7 +325,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Absolute Valor", description: "Increase Base Critical Chance by +14", statChanges: {"criticalChance":0.14}, variantStatChanges: {"gorgon":{"criticalChance":0.14},"gorgon_wraith":{"criticalChance":0.14},"prisma_gorgon":{"criticalChance":0.06}} },
   ],
   "hate_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Forward and Neutral Combos embed explosive blades. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Forward and Neutral Combos embed explosive blades. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Swordsman's Flourish", description: "Increase Base Damage by +30. With Melee Weapon Equipped: +100% Combo Count Chance", statChanges: {"flatBaseDamage":30} },
     // Assumes Dread+Despair set for paper DPS
     { tier: 2, slot: 1, name: "Stalker's Legacy", description: "Increase Base Damage by +30. With Dread and Despair equipped: +30 Initial Combo.", statChanges: {"flatBaseDamage":30,"initialCombo":30} },
@@ -346,8 +346,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 1, name: "Skyborne Hunter", description: "Increase range of aerial melee attacks by +0.5m.", statChanges: {"range":0.5} },
     { tier: 3, slot: 2, name: "Blade Twister", description: "+60% Finisher Damage", statChanges: {"finisherDamage":0.6} },
     { tier: 4, slot: 0, name: "Incarnon Imago", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
-    // Max stacks assumed for paper DPS (+50% × 3)
-    { tier: 4, slot: 1, name: "Swooping Lunge", description: "On Airborne Melee Kill: +50% Melee Damage for 10s. Stacks up to 3x.", statChanges: {"damage":1.5} },
+    // airborneKillAdditivePerStack: +50%/stack PP-additive; sim airborneKillStacks 0–3 (default 3)
+    { tier: 4, slot: 1, name: "Swooping Lunge", description: "On Airborne Melee Kill: +50% Melee Damage for 10s. Stacks up to 3x.", statChanges: {"airborneKillAdditivePerStack":0.5} },
     { tier: 4, slot: 2, name: "Protracted Execution", description: "On Finisher: 20 Combo on Finisher", statChanges: {"comboOnFinisher":20} },
     // Assumes finisher buff up for paper DPS
     { tier: 5, slot: 0, name: "Blood Anointed", description: "On Finisher: +40% Heavy Attack Efficiency for 40s", statChanges: {"heavyAttackEfficiency":0.4} },
@@ -436,7 +436,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Critical Parallel", description: "Increase Base Critical Chance by +20%. Increase Base Critical Damage Multiplier by +0.4x.", statChanges: {"criticalChance":0.2,"criticalMultiplier":0.4}, variantStatChanges: {"lex":{"criticalChance":0.2,"criticalMultiplier":0.4},"lex_prime":{"criticalChance":0.19,"criticalMultiplier":0.4}} },
   ],
   "magistar_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form increases Initial Combo and Wind Up Speed +100% Melee Damage +30 Initial Combo +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Bullet Jump.", statChanges: {"damage":1,"initialCombo":30,"heavyAttackWindUp":0.5} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form increases Initial Combo and Wind Up Speed +100% Melee Damage +30 Initial Combo +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Bullet Jump.", statChanges: {"additiveBaseDamage":1,"initialCombo":30,"heavyAttackWindUp":0.5} },
     // Assumes channeled ability active for paper panel follow-through
     { tier: 2, slot: 0, name: "Crushing Verdict", description: "Increase Base Damage by +100. With Channeled Ability active: Increase Follow Through by +40%.", statChanges: {"flatBaseDamage":100,"followThrough":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"followThrough":0.4},"sancti_magistar":{"flatBaseDamage":20,"followThrough":0.4}} },
     { tier: 2, slot: 1, name: "Edge Of Justice", description: "Increase Base Damage by +100. With Melee Weapon Equipped: +40% Attack Speed.", statChanges: {"flatBaseDamage":100,"fireRate":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"fireRate":0.4},"sancti_magistar":{"flatBaseDamage":20,"fireRate":0.4}} },
@@ -462,7 +462,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Critical Parallel", description: "Increase Base Critical Chance by +12% Increase Base Status Chance by +12%", statChanges: {"criticalChance":0.12,"statusChance":0.12} },
   ],
   "nami_solo_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Greatly increase Range +3 Range +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"damage":1,"range":3} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Greatly increase Range +3 Range +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"additiveBaseDamage":1,"range":3} },
     // Assumes equip buff up for paper DPS
     { tier: 2, slot: 0, name: "Brigand's Frenzy", description: "Increase Base Damage by +80. On Equip: +30% Attack Speed for 4s.", statChanges: {"flatBaseDamage":80,"fireRate":0.3} },
     { tier: 2, slot: 1, name: "Master's Flourish", description: "Increase Base Damage by +80. On Finisher Kill: +40 Health per second for 10s.", statChanges: {"flatBaseDamage":80} },
@@ -475,7 +475,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Absolute Dominion", description: "Increase Base Status Chance by +30%.", statChanges: {"statusChance":0.3} },
   ],
   "obex_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Perform a large radial attack for each Finisher strike. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Perform a large radial attack for each Finisher strike. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Balanced Stagger", description: "Increase Base Damage by +50 20% chance to stun enemies hit by a Neutral Combo, opening them to finishers.", statChanges: {"flatBaseDamage":50}, variantStatChanges: {"obex":{"flatBaseDamage":50},"prisma_obex":{"flatBaseDamage":10}} },
     // Assumes Armor ≥450 for paper panel finisher damage
     { tier: 2, slot: 1, name: "Armored Finisher", description: "Increase Base Damage by +X With Armor over 450: +80% Finisher Damage.", statChanges: {"flatBaseDamage":50,"finisherDamage":0.8}, variantStatChanges: {"obex":{"flatBaseDamage":50,"finisherDamage":0.8},"prisma_obex":{"flatBaseDamage":10,"finisherDamage":0.8}} },
@@ -488,7 +488,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Critical Coefficient", description: "Increase Base Critical Damage Multiplier by +0.6x. Effect doubles in Incarnon Form.", statChanges: {"criticalMultiplier":0.6}, formStatChanges: {"criticalMultiplier":0.6} },
   ],
   "okina_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills generate spectral daggers that target enemies, applying max Cold Status stacks. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills generate spectral daggers that target enemies, applying max Cold Status stacks. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Seeing Red", description: "Increase Base Damage by +60. 5 additional Combos on targets affected by Slash Status", statChanges: {"flatBaseDamage":60,"comboOnSlashStatus":5}, variantStatChanges: {"okina":{"flatBaseDamage":60,"comboOnSlashStatus":5},"okina_prime":{"flatBaseDamage":20,"comboOnSlashStatus":5}} },
     // Max stacks assumed for paper DPS (+8% status damage × 5)
     { tier: 2, slot: 1, name: "Synergist Surety", description: "Increase Base Damage by +60. On Critical Hit: +8% Status Damage for 10s. Stacks up to 5x.", statChanges: {"flatBaseDamage":60,"statusDamageBonus":0.4}, variantStatChanges: {"okina":{"flatBaseDamage":60,"statusDamageBonus":0.4},"okina_prime":{"flatBaseDamage":20,"statusDamageBonus":0.4}} },
@@ -589,7 +589,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 5, slot: 2, name: "Permanent Perforation", description: "Enemies suffer 5 Puncture Status while impaled", statChanges: {"punctureStatusOnImpale":5} },
   ],
   "sibear_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Create a Cold Blast Radius with Heavy Slams. +100% Melee Damage +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Create a Cold Blast Radius with Heavy Slams. +100% Melee Damage +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     { tier: 2, slot: 0, name: "Master's Shatter", description: "Increase Base Damage by +20. 10 additional Combo on targets affected by Cold Status.", statChanges: {"flatBaseDamage":20,"comboOnColdStatus":10} },
     // Assumes Armor ≥450 for paper DPS
     { tier: 2, slot: 1, name: "Thane's Wrath", description: "Increase Base Damage by +20. With Armor Over 450: Increase Base Damage by +40.", statChanges: {"flatBaseDamage":60} },
@@ -619,7 +619,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Wiseman's Regard", description: "Increase Base Status Chance by 30% of current Critical Chance, up to 40%", statChanges: {"statusFromCritFraction":0.3,"statusFromCritCap":0.4} },
   ],
   "skana_incarnon": [
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form stuns nearby enemies when it enters Incarnon Form and after Finisher attacks. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"damage":1} },
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form stuns nearby enemies when it enters Incarnon Form and after Finisher attacks. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"additiveBaseDamage":1} },
     // Assumes overshields for paper DPS
     { tier: 2, slot: 0, name: "Guardian's Promise", description: "Increase Base Damage by +100. With Overshields: +80% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":100,"heavyAttackEfficiency":0.8}, variantStatChanges: {"skana":{"flatBaseDamage":100,"heavyAttackEfficiency":0.8},"prisma_skana":{"flatBaseDamage":100,"heavyAttackEfficiency":0.8},"skana_prime":{"flatBaseDamage":10,"heavyAttackEfficiency":0.8}} },
     { tier: 2, slot: 1, name: "Wartime Nerve", description: "Increase Base Damage by +90. +9 Combo Count on undamaged enemies.", statChanges: {"flatBaseDamage":90,"comboOnUndamaged":9}, variantStatChanges: {"skana":{"flatBaseDamage":90,"comboOnUndamaged":9},"prisma_skana":{"flatBaseDamage":90,"comboOnUndamaged":9},"skana_prime":{"flatBaseDamage":10,"comboOnUndamaged":9}} },
@@ -685,8 +685,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 2, name: "Survivor's Edge", description: "Increase Critical Chance by +5%. Increase Status Chance by +10%.", statChanges: {"criticalChance":0.05,"statusChance":0.1} },
   ],
   "thalys": [
-    // wiki: Reach 6x Combo + Heavy → form; +3 Range +40% Attack Speed (shard mechanic unmodeled)
-    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Attacks embed a damaging shard in enemies. +3 Range +40% Attack Speed", statChanges: {"fireRate":0.4,"range":3} },
+    // wiki: form embeds shards; shardTriggerMult 75% base (PP/stance, not CO/IPS/elem)
+    { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Attacks embed a damaging shard in enemies. +3 Range +40% Attack Speed", statChanges: {"fireRate":0.4,"range":3,"shardTriggerMult":0.75} },
     // Max stacks assumed for paper DPS (+0.1m × 20)
     { tier: 2, slot: 0, name: "Dreadful Reach", description: "On Weapon Status Effect: Gain +0.1 Range for 8 Seconds. Stacks 20x.", statChanges: {"range":2} },
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
@@ -699,7 +699,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 4, slot: 1, name: "Vaulting Leap", description: "+100% Jump and Double Jump Height", statChanges: {"jumpStrength":1} },
     { tier: 4, slot: 2, name: "Devastating Mercy", description: "Ground Finishers knock enemies down in 6m radius", statChanges: {"knockdownRadiusOnFinisher":6} },
     { tier: 5, slot: 0, name: "Explosive Growth", description: "Shards grow when a new shard is created, up to 3 times. Fully grown shards erupt dealing x2 damage.", statChanges: {"shardFullyGrownDamageMult":2} },
-    { tier: 5, slot: 1, name: "Chain Shatter", description: "Heavy attacks detonate shards. Nearby shards also detonate.", statChanges: {} },
+    // chainShatterDetonateMult: 200% base (IPS/elem/CO; combo on host only)
+    { tier: 5, slot: 1, name: "Chain Shatter", description: "Heavy attacks detonate shards. Nearby shards also detonate.", statChanges: {"chainShatterDetonateMult":2} },
     { tier: 5, slot: 2, name: "Void Splinters", description: "Shard duration 30s; shards are weak spots (+100% CC). Shard damage -50%.", statChanges: {"shardDuration":30,"shardWeakSpotCritBonus":1,"shardDamageMult":-0.5} },
   ],
   "torid_incarnon": [

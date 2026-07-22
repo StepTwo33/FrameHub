@@ -182,6 +182,48 @@ export function computeMechaSetMarkStats(pieces: number): MechaSetMarkStats | nu
   return { pieces: p, ...row };
 }
 
+/** Wiki DoT tick fractions used when Mecha spreads status on mark-kill. */
+const MECHA_SPREAD_DOT_FRAC: Record<string, number> = {
+  slash: 0.35,
+  heat: 0.5,
+  toxin: 0.5,
+  electricity: 0.5,
+  gas: 0.5,
+};
+
+/**
+ * wiki Mecha Set: transferred DoT tick = sum(DoT procs on marked) × type fraction.
+ * Paper DPS amortizes one mark-kill spread over mark cooldown (not in TTK).
+ * Ignores claw elemental boosts and cascade re-procs.
+ */
+export function computeMechaSpreadPaperDps(opts: {
+  pieces: number;
+  enemies: number;
+  /** damagePerTick of each DoT type present on the marked target */
+  dotTicks: { type: string; damagePerTick: number }[];
+  /** Assumed remaining duration of transferred DoTs (s). Default 6. */
+  remainingDurationSec?: number;
+}): number {
+  const enemies = Math.max(0, Math.floor(opts.enemies));
+  if (enemies <= 0) return 0;
+  const mark = computeMechaSetMarkStats(opts.pieces);
+  if (!mark || mark.cooldownSec <= 0) return 0;
+
+  const present = opts.dotTicks.filter(
+    (d) => d.damagePerTick > 0 && MECHA_SPREAD_DOT_FRAC[d.type] != null,
+  );
+  if (!present.length) return 0;
+
+  const sum = present.reduce((s, d) => s + d.damagePerTick, 0);
+  let tickSum = 0;
+  for (const d of present) {
+    tickSum += sum * (MECHA_SPREAD_DOT_FRAC[d.type] ?? 0);
+  }
+  const duration = opts.remainingDurationSec ?? 6;
+  // 1 tick/s for duration, once per mark cycle
+  return (enemies * tickSum * duration) / mark.cooldownSec;
+}
+
 /** True when Mecha Empowered aura is equipped (squad +150% vs marked). */
 export function linkageHasMechaEmpowered(linkage: SetBonusLinkage | undefined): boolean {
   return (linkage?.warframeMods ?? []).some((s) => s.modId === "mecha_empowered");

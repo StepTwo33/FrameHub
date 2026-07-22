@@ -374,6 +374,25 @@ export interface SimulationParams {
    */
   contagionCloudEnemies?: number;
   /**
+   * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
+   * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
+   */
+  mechaSpreadEnemies?: number;
+  /**
+   * Thalys Incarnon: number of enemies with embedded shards (0 = off).
+   * Papers form embed triggers + Chain Shatter heavy detonations.
+   */
+  shardHosts?: number;
+  /**
+   * Innodem Swooping Lunge stacks (0–3). When unset and perk is equipped, paper
+   * assumes max (3).
+   */
+  airborneKillStacks?: number;
+  /**
+   * Destreza form: Heavy Attack kills granting +10% Puncture (0–30). 0 = off.
+   */
+  heavyKillStacks?: number;
+  /**
    * Nyx Absorb: damage absorbed before release (0 = off). Drives post-blast
    * additive weapon damage buff √(0.025% × STR × absorbed), capped at 400%.
    */
@@ -628,6 +647,16 @@ export interface CalculatedStats {
    * Included in burstDps/sustainedDps totals when > 0; excluded from TTK.
    */
   contagionCloudDps?: number;
+  /**
+   * Mecha mark-kill status-spread DoT DPS (sim enemies × transferred ticks / CD).
+   * Included in burst/sustained; excluded from TTK.
+   */
+  mechaSpreadDps?: number;
+  /**
+   * Thalys shard embed-trigger + Chain Shatter detonation DPS (sim shardHosts).
+   * Included in burst/sustained; excluded from TTK.
+   */
+  shardChainDps?: number;
   /**
    * Residual Boils/Shock/Malodor/Viremia kitgun zone DPS (paper: stacks>0 = zone up).
    * Included in burstDps/sustainedDps; flat unmodded zone damage.

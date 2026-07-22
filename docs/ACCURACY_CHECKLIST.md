@@ -46,11 +46,11 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B1 | Stance DPS | PvE Neutral hit avgs wiki-locked (81/81 mapped); Conclave/Contempt→1.0 | **Locked** — Neutral hit-avg scalar only; full combo strings → C6 |
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
-| B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
+| B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** + **mark-kill status-spread DoT** (sim enemies) | **Improved** — claw elemental / cascade re-procs still out of scope |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
-| B8 | Incarnon + radials | … + capacity-MS pellet % (Grit/Vendetta/Torid); Torid form MS-bonus ×1.6 | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
+| B8 | Incarnon + radials | … + capacity-MS; Thalys shard trigger + Chain Shatter; melee form PP-additive +100%; Swooping/Destreza gated stacks | **Improved** — Explosive Growth stage sim / claw Mecha boosts still open |
 
 ---
 
@@ -64,7 +64,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
 | C6 | Stance full combo strings | Forward/Block/Heavy/Slide strings, AS-scaled cycle DPS, combo picker — B1 ships Neutral hit-avg scalars only |
-| C7 | Mecha set status-spread DoT | Mark-kill status spread damage not modeled; mark timing + Empowered vs marked are B4 |
+| C7 | Mecha set status-spread DoT | **Moved → B4** (sim-gated transferred DoT DPS); claw elemental boosts + cascade re-procs remain out of scope |
 
 ---
 
@@ -323,6 +323,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Miter Sawblade Storm radial | 2026-07-22 | Evolution-gated 1400 Blast / 5m no falloff; excluded in Incarnon form; papers into radial DPS |
 | Attrition / Gambit / Swift form / Seeing Red | 2026-07-22 | Laetum Overwhelming additiveBaseDamage 12; King's Gambit body CC×0; Kunai Swift form ×damage; Slash/Toxin/Cold/undamaged combo panels |
 | Capacity-MS pellet % (Grit/Vendetta/Torid) | 2026-07-22 | capacityMsDamageMult EV (MS−1)/MS; Torid form capacityMsBonusMult ×1.6 on MS bonuses |
+| Mecha spread + Thalys shards + melee form stacks | 2026-07-22 | Mecha mark-kill DoT DPS (sum×frac/CD); Thalys shardTrigger+Chain Shatter; form additiveBaseDamage; Swooping/Destreza sim stacks |
 
 ## New / extended test files
 
