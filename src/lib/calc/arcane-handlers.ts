@@ -62,6 +62,10 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "cascadia_accuracy",
   "melee_doughty",
   "melee_retaliation",
+  "melee_crescendo",
+  "melee_assimilation",
+  "shotgun_vendetta",
+  "arcane_pistoleer",
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
@@ -304,8 +308,65 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       applyStackingDamageHandler(stats, ctx, { bonusKey: "cascadiaFlareStacks" });
       return true;
 
+    case "melee_crescendo": {
+      // wiki: +1…+6 initial combo per finisher (R5 +6); accumulates for the mission.
+      // Paper: simStacks = finisher count; cap initial combo contribution at 220 (12×).
+      const perFinisher = rank + 1;
+      const finishers = Math.max(ctx.simStacks ?? 0, 0);
+      const added = Math.min(220, perFinisher * finishers);
+      if (added > 0) stats.comboCount += added;
+      trackBonus(stats, "meleeComboInitial", added);
+      return true;
+    }
+
+    case "melee_assimilation": {
+      // wiki: after shield break, +150% heavy damage at R5 for 20s. Paper: stacks>0 = buff up.
+      const heavyLine = findEffect(def, "meleeHeavyDamage");
+      const heavy = heavyLine ? scaleArcaneEffectLine(heavyLine, rank, def.maxRank) : 0;
+      if (heavy > 0) stats.heavyAttackDamage *= 1 + heavy / 100;
+      trackBonus(stats, "meleeHeavyDamage", heavy);
+      const shieldLine = findEffect(def, "shieldRestorePercent");
+      if (shieldLine) {
+        trackBonus(stats, "shieldRestorePercent", scaleArcaneEffectLine(shieldLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "shotgun_vendetta": {
+      // wiki R5: +180% MS / +75% reload for 15s after close shotgun kill. Paper: stacks>0 = buff up.
+      const msLine = findEffect(def, "multishot");
+      const ms = msLine ? scaleArcaneEffectLine(msLine, rank, def.maxRank) : 0;
+      if (ms > 0 && !stats.multishotLocked) {
+        const baseMs = ctx.baseWeapon?.multishot ?? 1;
+        stats.multishot += baseMs * (ms / 100);
+      }
+      trackBonus(stats, "multishot", ms);
+      const reloadLine = findEffect(def, "reloadSpeed");
+      const reload = reloadLine ? scaleArcaneEffectLine(reloadLine, rank, def.maxRank) : 0;
+      if (reload > 0) stats.reloadTime /= 1 + reload / 100;
+      trackBonus(stats, "reloadSpeed", reload);
+      return true;
+    }
+
+    case "arcane_pistoleer": {
+      // wiki R5: on pistol HS kill (60%), +102% AE for 12s. Paper: stacks>0 = buff up.
+      const aeLine = findEffect(def, "ammoEfficiency");
+      const ae = aeLine ? scaleArcaneEffectLine(aeLine, rank, def.maxRank) : 0;
+      if (ae > 0) stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + ae / 100;
+      trackBonus(stats, "ammoEfficiency", ae);
+      const chanceLine = findEffect(def, "headshotProcChance");
+      if (chanceLine) {
+        trackBonus(stats, "headshotProcChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "secondary_surge": {
-      trackBonus(stats, "damagePerEnergy", scaledLine(def, findEffect(def, "damagePerEnergy"), rank, stacks));
+      // wiki: +0.5% dmg / energy after cast; R5 cap +700% (×8). Paper: stacks>0 = at damage cap.
+      const caps = [200, 300, 400, 500, 600, 700];
+      const cap = caps[Math.min(rank, caps.length - 1)] ?? 700;
+      if (cap > 0) applyWeaponDamageMult(stats, cap);
+      trackBonus(stats, "damagePerEnergy", cap);
       return true;
     }
 

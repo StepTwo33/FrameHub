@@ -269,10 +269,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_pistoleer": {
     arcaneId: "arcane_pistoleer",
+    customHandler: "arcane_pistoleer",
     effects: [
-      {"statKey": "headshotProcChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pistoleer: headshotProcChance (conditional proc)"},
-      {"statKey": "ammoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pistoleer: ammoEfficiency (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pistoleer: buffDuration (conditional proc)"},
+      {"statKey": "headshotProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pistoleer — 60% chance on pistol HS kill"},
+      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Pistoleer — +102% Ammo Efficiency for 12s (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pistoleer — 12s buff duration"},
     ],
   },
   "arcane_power_ramp": {
@@ -747,9 +748,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_assimilation": {
     arcaneId: "melee_assimilation",
+    customHandler: "melee_assimilation",
     effects: [
-      {"statKey": "meleeHeavyDamage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Melee Assimilation: meleeHeavyDamage (conditional proc)"},
-      {"statKey": "shieldRestorePercent", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Assimilation: shieldRestorePercent (conditional proc)"},
+      {"statKey": "meleeHeavyDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Assimilation — +150% heavy damage for 20s after shield break (paper: stacks>0 = buff up)"},
+      {"statKey": "shieldRestorePercent", "target": "arcane_panel", "mode": "custom", "source": "wiki: Melee Assimilation — +30% shields restored on heavy kill at R5 (panel)"},
     ],
   },
   "melee_careen": {
@@ -760,8 +762,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_crescendo": {
     arcaneId: "melee_crescendo",
+    customHandler: "melee_crescendo",
     effects: [
-      {"statKey": "meleeComboInitial", "target": "weapon_dps", "mode": "flat", "source": "Melee Crescendo: meleeComboInitial (on finisher proc)"},
+      {"statKey": "meleeComboInitial", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Crescendo — +6 initial combo / finisher at R5 (sim stacks = finishers; capped at 220)"},
     ],
   },
   "melee_doughty": {
@@ -1031,14 +1034,15 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "secondary_surge",
     customHandler: "secondary_surge",
     effects: [
-      {"statKey": "damagePerEnergy", "target": "arcane_panel", "mode": "custom", "source": "Secondary Surge: custom handler"},
+      {"statKey": "damagePerEnergy", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Surge — +0.5% dmg/energy after cast; R5 cap +700% (paper: stacks>0 = at cap)"},
     ],
   },
   "shotgun_vendetta": {
     arcaneId: "shotgun_vendetta",
+    customHandler: "shotgun_vendetta",
     effects: [
-      {"statKey": "reloadSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Shotgun Vendetta: reloadSpeed (conditional proc)"},
-      {"statKey": "multishot", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Shotgun Vendetta: multishot (conditional proc)"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Shotgun Vendetta — +75% reload for 15s after ≤5m shotgun kill (paper: stacks>0 = buff up)"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "custom", "source": "wiki: Shotgun Vendetta — +180% multishot for 15s after ≤5m shotgun kill (paper: stacks>0 = buff up)"},
     ],
   },
   "theorem_contagion": {

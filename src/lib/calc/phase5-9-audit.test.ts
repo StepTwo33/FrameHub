@@ -667,6 +667,82 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       4,
     );
   });
+
+  it("Melee Crescendo: 10 finishers R5 → +60 initial combo (6 each)", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const crescendo = allArcanes.find((a) => a.id === "melee_crescendo")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [crescendo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 10 },
+    );
+    expect(full.comboCount).toBeCloseTo(bare.comboCount + 60, 4);
+    expect(full.arcaneBonuses?.meleeComboInitial).toBeCloseTo(60, 4);
+  });
+
+  it("Melee Assimilation: stacks>0 → +150% heavy attack damage at R5", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const assimilation = allArcanes.find((a) => a.id === "melee_assimilation")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [assimilation],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.heavyAttackDamage).toBeCloseTo(bare.heavyAttackDamage * 2.5, 4);
+  });
+
+  it("Shotgun Vendetta: stacks>0 → +180% MS / +75% reload at R5", () => {
+    const hek = allWeapons.find((w) => w.id === "hek")!;
+    const vendetta = allArcanes.find((a) => a.id === "shotgun_vendetta")!;
+    const bare = calculateWeaponBuild(hek, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      hek,
+      [],
+      new Map(),
+      [vendetta],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.multishot).toBeCloseTo(bare.multishot + hek.multishot * 1.8, 4);
+    expect(full.reloadTime).toBeCloseTo(bare.reloadTime / 1.75, 4);
+  });
+
+  it("Secondary Surge: stacks>0 → +700% damage at R5 cap (×8)", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const surge = allArcanes.find((a) => a.id === "secondary_surge")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [surge],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 8, 4);
+  });
+
+  it("Arcane Pistoleer: stacks>0 → +102% ammo efficiency at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const pistoleer = allArcanes.find((a) => a.id === "arcane_pistoleer")!;
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [pistoleer],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.ammoEfficiency).toBeCloseTo(1.02, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {
