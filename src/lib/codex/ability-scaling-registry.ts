@@ -749,14 +749,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     statusDurationBonus: { scale: "duration" },
   },
 
-  // wiki: Immolation — initial DR × STR (cap 50%); max-heat DR is the ability.damageReduction field
-  // (heat interpolation between initial/max is not modeled on the panel)
+  // wiki: Immolation — initial DR × STR (cap 50%); panel heat slider lerps to max-heat DR
   "ember::Immolation": {
     initialDamageReduction: { scale: "strength", cap: 0.5 },
   },
 
-  // wiki: Fire Blast — armor strip × STR at max Immolation heat (cap 100%; heat lerp unmodeled);
-  // cast cost falls with heat to maxHeatEnergyCost 25 × EFF (cast_cost); Helminth has no Immolation heat
+  // wiki: Fire Blast — strip × STR with Immolation heat lerp (panel); energy 75→25 × EFF at heat
   "ember::Fire Blast": {
     armorStrip: { scale: "strength", cap: 1 },
     maxHeatEnergyCost: { scale: "efficiency", formula: "cast_cost" },

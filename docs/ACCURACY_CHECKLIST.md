@@ -219,7 +219,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Helminth unique | 2026-07-21 | Infested Mobility +60% sprint/+30% parkour/8s; Energized Munitions 75% ammo/5s; Empower +50% next STR; Marked for Death 75% spread; Rebuild Shields 12s CD |
 | Misc flat≠% root fix | 2026-07-21 | Bare numbers ≥1 no longer auto-% (was Shuriken 5%, AMD 25000%, angles…); true fraction keys + cooldown/angles/× growth; Plunder/Covenant caps 200% |
 | Exalted/Inferno cast costs | 2026-07-21 | Artemis/Noctua/Neutralize energyPerShot (+ altFire) × EFF; Inferno energyPerEnemy × EFF; combo/kill windows + kavat lifespan as seconds |
-| Fire Blast max-heat + Glory alt | 2026-07-21 | Ember Fire Blast maxHeatEnergyCost 25 × EFF (heat lerp still unmodeled); Jade Glory altFireEnergy 25 × EFF |
+| Fire Blast max-heat + Glory alt | 2026-07-21 | Ember Fire Blast maxHeatEnergyCost 25 × EFF (heat energy/strip later panel-lerped); Jade Glory altFireEnergy 25 × EFF |
 | Virulence energy refund × EFF | 2026-07-21 | energyRefundPerHit follows cast_cost (¼ of ability cost); low EFF increases refund |
 | Armor-pool invuln absorb | 2026-07-21 | Sim-gated Invuln Absorb (k): Iron Skin/Globe/Tectonics/Maiden +absorb; Halo absorb×2.5 inside STR |
 | Storm Shroud + FB heat | 2026-07-21 | Shroud Initial=(base+absorb×mult)×STR; absorbMult×STR; Fire Blast Immolation Heat% lerps 75→25 × EFF |
@@ -228,6 +228,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Gauss Redline + Sunder battery | 2026-07-21 | Redline FR/AS/reload/cast lerp min→max (÷5) × battery × DUR; Thermal Sunder Cold/Heat dmg + status dur × battery (not radius; Helminth fixed) |
 | Genesis PT + projectileSpeed | 2026-07-21 | CalculatedStats punchThrough/projectileSpeed; Swift Deliverance/Frictionless; Fortress Salvo/Hunter's Mantra/Tenno/Inciting PT; Speeding Bullet (assume uptime) |
 | Genesis followThrough panel | 2026-07-21 | Magistar Crushing Verdict +40% (channel); Nami Solo Lone Blade +60% (melee equipped) |
+| Gauss passive battery shields | 2026-07-21 | Shield recharge +delay reduction × battery (wiki 80%→96%/64%; full 120%/80%); not × STR |
 
 ## New / extended test files
 

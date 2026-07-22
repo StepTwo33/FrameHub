@@ -2257,7 +2257,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.4,
     "description": "Burst into a hyper-sprint bowling over enemies and charging the battery. Crashing into solid objects generates a powerful shockwave. Hold to rush continuously.",
-    "passive": "Moving generates an electrical current that fills Gauss\" battery. Shields recharge up to |SPEED|% faster while the Recharge Delay is up to |DELAY|% shorter, based on the battery level.",
+    "passive": "Moving generates an electrical current that fills Gauss' battery. Shields recharge up to 120% faster while the Recharge Delay is up to 80% shorter, based on the battery level.",
     "abilities": [
       {
         "name": "Mach Rush",
@@ -2336,7 +2336,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.5,
     "description": "Burst into a hyper-sprint bowling over enemies and charging the battery. Crashing into solid objects generates a powerful shockwave. Hold to rush continuously.",
-    "passive": "Moving generates an electrical current that fills Gauss\" battery. Shields recharge up to |SPEED|% faster while the Recharge Delay is up to |DELAY|% shorter, based on the battery level.",
+    "passive": "Moving generates an electrical current that fills Gauss' battery. Shields recharge up to 120% faster while the Recharge Delay is up to 80% shorter, based on the battery level.",
     "abilities": [
       {
         "name": "Mach Rush",

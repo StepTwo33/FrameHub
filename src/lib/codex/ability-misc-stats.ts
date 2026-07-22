@@ -2141,6 +2141,20 @@ export function computeRedlineBuffAtBattery(
   return lerpBatteryMaxStat(maxBuff, batteryFraction) * duration;
 }
 
+/**
+ * wiki Gauss passive: linear across battery gauge (not × STR/DUR).
+ * Full battery → +120% shield recharge rate, −80% recharge delay.
+ */
+export function computeGaussPassiveShieldRecharge(batteryFraction: number): number {
+  return clampHeatFraction(batteryFraction) * 1.2;
+}
+
+export function computeGaussPassiveRechargeDelayReduction(
+  batteryFraction: number,
+): number {
+  return clampHeatFraction(batteryFraction) * 0.8;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

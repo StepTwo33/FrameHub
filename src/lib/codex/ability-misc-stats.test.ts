@@ -10,6 +10,8 @@ import {
   computeFireballHeatDamage,
   computeKineticPlatingDrAtBattery,
   computeRedlineBuffAtBattery,
+  computeGaussPassiveShieldRecharge,
+  computeGaussPassiveRechargeDelayReduction,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -158,6 +160,16 @@ describe("Gauss battery formulas", () => {
     expect(computeRedlineBuffAtBattery(0.75, 1, 1)).toBeCloseTo(0.75, 5);
     expect(computeRedlineBuffAtBattery(0.75, 1, 1.275)).toBeCloseTo(0.95625, 5);
     expect(computeRedlineBuffAtBattery(0.4, 0.8, 1)).toBeCloseTo(0.336, 5);
+  });
+
+  // wiki: 80% battery → 96% recharge / 64% delay (linear; not × STR)
+  it("matches wiki Gauss passive shield recharge at battery", () => {
+    expect(computeGaussPassiveShieldRecharge(0)).toBe(0);
+    expect(computeGaussPassiveRechargeDelayReduction(0)).toBe(0);
+    expect(computeGaussPassiveShieldRecharge(0.8)).toBeCloseTo(0.96, 5);
+    expect(computeGaussPassiveRechargeDelayReduction(0.8)).toBeCloseTo(0.64, 5);
+    expect(computeGaussPassiveShieldRecharge(1)).toBeCloseTo(1.2, 5);
+    expect(computeGaussPassiveRechargeDelayReduction(1)).toBeCloseTo(0.8, 5);
   });
 });
 

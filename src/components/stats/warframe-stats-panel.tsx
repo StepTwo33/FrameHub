@@ -10,7 +10,43 @@ import {
   ADAPTATION_MAX_STACKS,
   computeAdaptationSurvivability,
 } from "@/lib/calc/calculator";
+import {
+  computeGaussPassiveShieldRecharge,
+  computeGaussPassiveRechargeDelayReduction,
+} from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
+
+function GaussPassiveBattery() {
+  const [batteryPct, setBatteryPct] = useState(80);
+  const batteryT = Math.min(1, Math.max(0, batteryPct / 100));
+  const recharge = computeGaussPassiveShieldRecharge(batteryT);
+  const delay = computeGaussPassiveRechargeDelayReduction(batteryT);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Battery %"
+        value={batteryPct}
+        min={0}
+        max={100}
+        onChange={setBatteryPct}
+        tooltip="Gauss passive: shield recharge and delay reduction scale linearly with battery (wiki: 80% → 96%/64%)."
+      />
+      <StatRow
+        label="Shield Recharge"
+        value={`+${(recharge * 100).toFixed(0)}%`}
+        color="text-sky-400"
+        tooltip="Max +120% at full battery (not affected by Ability Strength)."
+      />
+      <StatRow
+        label="Recharge Delay"
+        value={`−${(delay * 100).toFixed(0)}%`}
+        color="text-sky-400"
+        tooltip="Max −80% delay at full battery (not affected by Ability Strength)."
+      />
+    </div>
+  );
+}
 
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
@@ -110,6 +146,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
       {warframe?.passive && (
         <CollapsibleSection title="PASSIVE" defaultOpen>
           <p className="text-[11px] text-muted-foreground leading-relaxed py-1">{formatAbilityDescription(warframe.passive)}</p>
+          {(warframe.id === "gauss" || warframe.id === "gauss_prime") && <GaussPassiveBattery />}
         </CollapsibleSection>
       )}
 
