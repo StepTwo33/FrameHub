@@ -71,6 +71,10 @@ import {
   computeJadeJudgmentRemaining,
   computeJadeJudgmentDamageMultiplier,
   computeTempleBackbeatEfficiencyBonus,
+  computeOraxiaPredatorsLurkPassive,
+  computeOraxiaPredatorsLurkRemaining,
+  computeRhinoHardLandingPulse,
+  computeRhinoHardLandingDamageAtDistance,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -732,6 +736,28 @@ describe("Temple Backbeat efficiency", () => {
   it("grants +50% Ability Efficiency on Backbeat casts", () => {
     expect(computeTempleBackbeatEfficiencyBonus(false)).toBe(0);
     expect(computeTempleBackbeatEfficiencyBonus(true)).toBeCloseTo(0.5, 5);
+  });
+});
+
+describe("Oraxia Predator's Lurk passive", () => {
+  it("grants 8s invisibility from wall latch", () => {
+    expect(computeOraxiaPredatorsLurkPassive()).toEqual({ invisibilitySec: 8 });
+    expect(computeOraxiaPredatorsLurkRemaining(0)).toBe(8);
+    expect(computeOraxiaPredatorsLurkRemaining(3)).toBe(5);
+    expect(computeOraxiaPredatorsLurkRemaining(8)).toBe(0);
+  });
+});
+
+describe("Rhino hard-landing pulse", () => {
+  it("is 100 damage / 6m with 90% edge falloff", () => {
+    expect(computeRhinoHardLandingPulse()).toEqual({
+      damage: 100,
+      radius: 6,
+      maxFalloff: 0.9,
+    });
+    expect(computeRhinoHardLandingDamageAtDistance(0)).toBe(100);
+    expect(computeRhinoHardLandingDamageAtDistance(1)).toBeCloseTo(10, 5);
+    expect(computeRhinoHardLandingDamageAtDistance(0.5)).toBeCloseTo(55, 5);
   });
 });
 

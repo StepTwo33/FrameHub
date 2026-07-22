@@ -63,6 +63,10 @@ import {
   computeJadeJudgmentRemaining,
   computeJadeJudgmentDamageMultiplier,
   computeTempleBackbeatEfficiencyBonus,
+  computeOraxiaPredatorsLurkPassive,
+  computeOraxiaPredatorsLurkRemaining,
+  computeRhinoHardLandingPulse,
+  computeRhinoHardLandingDamageAtDistance,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1278,6 +1282,62 @@ function TempleBackbeatPassivePanel({ abilityEfficiency }: { abilityEfficiency: 
   );
 }
 
+function OraxiaPredatorsLurkPassivePanel() {
+  const lurk = computeOraxiaPredatorsLurkPassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeOraxiaPredatorsLurkRemaining(elapsedSec, lurk);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={lurk.invisibilitySec}
+        onChange={setElapsedSec}
+        tooltip="Oraxia Predator's Lurk: wall latch grants 8s invisibility (refresh by re-latching). Does not break on attacks."
+      />
+      <StatRow
+        label="Invisibility"
+        value={remaining > 0 ? `${remaining.toFixed(0)}s left` : "Inactive"}
+        color={remaining > 0 ? "text-violet-400" : "text-muted-foreground"}
+        tooltip="Also applies to Oraxia's companion. Silken Thread wall latch triggers the same duration."
+      />
+    </div>
+  );
+}
+
+function RhinoHardLandingPassivePanel() {
+  const pulse = computeRhinoHardLandingPulse();
+  const [distancePct, setDistancePct] = useState(0);
+  const dmg = computeRhinoHardLandingDamageAtDistance(distancePct / 100, pulse);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Distance % of Radius"
+        value={distancePct}
+        min={0}
+        max={100}
+        onChange={setDistancePct}
+        tooltip={`Rhino: hard landing shockwave deals ${pulse.damage} Impact in ${pulse.radius}m (${(pulse.maxFalloff * 100).toFixed(0)}% falloff at edge). Stacks with Heavy Impact.`}
+      />
+      <StatRow
+        label="Pulse Damage"
+        value={dmg.toFixed(0)}
+        color="text-amber-400"
+        tooltip="Not affected by Ability Strength. Knocks down enemies in range."
+      />
+      <StatRow
+        label="Radius"
+        value={`${pulse.radius}m`}
+        color="text-muted-foreground"
+        tooltip="Fixed 6m radial pulse on hard landing."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1437,6 +1497,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {warframe.id === "temple" && (
             <TempleBackbeatPassivePanel abilityEfficiency={stats.abilityEfficiency} />
           )}
+          {warframe.id === "oraxia" && <OraxiaPredatorsLurkPassivePanel />}
+          {(warframe.id === "rhino" || warframe.id === "rhino_prime") && <RhinoHardLandingPassivePanel />}
         </CollapsibleSection>
       )}
 

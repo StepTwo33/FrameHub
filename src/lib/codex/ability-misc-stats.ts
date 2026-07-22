@@ -2867,6 +2867,47 @@ export function computeTempleBackbeatEfficiencyBonus(onBackbeat: boolean): numbe
   return onBackbeat ? 0.5 : 0;
 }
 
+export interface OraxiaPredatorsLurkPassive {
+  /** Invisibility duration from wall latch. */
+  invisibilitySec: number;
+}
+
+/** wiki Oraxia Predator's Lurk: wall latch grants 8s invisibility (refreshable). */
+export function computeOraxiaPredatorsLurkPassive(): OraxiaPredatorsLurkPassive {
+  return { invisibilitySec: 8 };
+}
+
+export function computeOraxiaPredatorsLurkRemaining(
+  elapsedSec: number,
+  passive: OraxiaPredatorsLurkPassive = computeOraxiaPredatorsLurkPassive(),
+): number {
+  return Math.max(0, passive.invisibilitySec - Math.max(0, elapsedSec));
+}
+
+export interface RhinoHardLandingPulse {
+  damage: number;
+  radius: number;
+  /** Max damage falloff at the edge (wiki 90%). */
+  maxFalloff: number;
+}
+
+/** wiki Rhino: hard landing emits 100 Impact knockdown shockwave in 6m (90% edge falloff). */
+export function computeRhinoHardLandingPulse(): RhinoHardLandingPulse {
+  return { damage: 100, radius: 6, maxFalloff: 0.9 };
+}
+
+/**
+ * Linear falloff from center (0) to edge (maxFalloff) across Rhino pulse radius.
+ * distanceFraction = distance / radius, clamped 0–1.
+ */
+export function computeRhinoHardLandingDamageAtDistance(
+  distanceFraction: number,
+  pulse: RhinoHardLandingPulse = computeRhinoHardLandingPulse(),
+): number {
+  const t = Math.min(1, Math.max(0, distanceFraction));
+  return pulse.damage * (1 - pulse.maxFalloff * t);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
