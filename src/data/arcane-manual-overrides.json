@@ -785,7 +785,7 @@
         "stat": "dissipateRadius",
         "maxValue": 10,
         "flat": true,
-        "baseValue": 10
+        "constantAtAllRanks": true
       },
       {
         "stat": "voidMoteEnergy",
@@ -803,12 +803,18 @@
         "stat": "lethalInvulnDuration",
         "maxValue": 5,
         "flat": true,
-        "baseValue": 5
+        "constantAtAllRanks": true
       },
       {
         "stat": "lethalHealPercent",
         "maxValue": 60,
         "baseValue": 10
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 90,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -968,17 +974,29 @@
         "stat": "sprintSpeed",
         "maxValue": 90,
         "baseValue": 15
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "magus_cloud": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "voidSlingRadius",
         "maxValue": 300,
         "baseValue": 50
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1069,13 +1087,19 @@
         "stat": "voidTrapDuration",
         "maxValue": 4,
         "flat": true,
-        "baseValue": 4
+        "constantAtAllRanks": true
       },
       {
         "stat": "voidTrapRadius",
         "maxValue": 15,
         "flat": true,
-        "baseValue": 3
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "voidTrapTetherCount",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1152,13 +1176,19 @@
         "stat": "revertWindow",
         "maxValue": 3,
         "flat": true,
-        "stacking": false
+        "constantAtAllRanks": true
       },
       {
         "stat": "revertHeal",
         "maxValue": 60,
         "flat": true,
-        "stacking": false
+        "baseValue": 10
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 3,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

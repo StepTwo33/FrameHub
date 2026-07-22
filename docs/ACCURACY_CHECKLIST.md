@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Exodia CC/lifesteal + Obstruct + Magus heals + prior | **Improved** |
+| B6 | Arcane custom handlers | Magus utility + Emergence + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -307,6 +307,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Aegis + Residuals + Magus Destruct | 2026-07-22 | Aegis +30% shield recharge; Residual zone DPS (DoT 40/s; Boils/Shock 1 hit/s paper); Destruct Puncture ×(1+0.65×stacks) |
 | Exodia Triumph/Valor + Debilitate + Magus Husk/Vigor/Elevate | 2026-07-22 | Zaw combo chance panel; Debilitate expected component procs @≥10; Operator armor/HP/heal panels (Elevate 95%×300) |
 | Exodia Hunt/Might/Epidemic + Obstruct + Nourish/Repair/Replenish | 2026-07-22 | Zaw slam pull / lifesteal / suspend panels; Obstruct jam 15m CD 60→10; Nourish +35 HP/s; Repair 25% HP/s @30m; Replenish 30% Operator heal |
+| Magus Cadence/Cloud/Glitch/Lockdown/Revert + Emergence trio | 2026-07-22 | Operator sprint/sling/static/tether/revert panels; Dissipate mote energy 5–10; Savior Operator lethal; Renewed +300% energy regen panel |
 
 ## New / extended test files
 

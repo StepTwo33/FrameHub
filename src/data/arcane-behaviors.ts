@@ -528,24 +528,26 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "emergence_dissipate",
     customHandler: "emergence_dissipate",
     effects: [
-      {"statKey": "dissipateRadius", "target": "arcane_panel", "mode": "custom", "source": "Emergence Dissipate: custom handler"},
-      {"statKey": "voidMoteEnergy", "target": "arcane_panel", "mode": "custom", "source": "Emergence Dissipate: custom handler"},
+      {"statKey": "dissipateRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Dissipate — 10m cancel radius (constant)"},
+      {"statKey": "voidMoteEnergy", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Dissipate — Void Motes restore 5–10 Energy"},
     ],
   },
   "emergence_renewed": {
     arcaneId: "emergence_renewed",
+    customHandler: "emergence_renewed",
     effects: [
-      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Emergence Renewed: energyRegen (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Emergence Renewed: buffDuration (conditional proc)"},
-      {"statKey": "cooldown", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Emergence Renewed: cooldown (conditional proc)"},
+      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Renewed — +300% Energy Regen for 5s on empty (paper: equipped = buff up; panel)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Renewed — 5s duration (constant)"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Renewed — 30s cooldown (constant)"},
     ],
   },
   "emergence_savior": {
     arcaneId: "emergence_savior",
     customHandler: "emergence_savior",
     effects: [
-      {"statKey": "lethalInvulnDuration", "target": "arcane_panel", "mode": "custom", "source": "Emergence Savior: custom handler"},
-      {"statKey": "lethalHealPercent", "target": "arcane_panel", "mode": "custom", "source": "Emergence Savior: custom handler"},
+      {"statKey": "lethalInvulnDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Savior — 5s Operator invuln on lethal (constant; Operator panel)"},
+      {"statKey": "lethalHealPercent", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Savior — recover 10–60% Operator Health"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Emergence Savior — 90s cooldown (constant)"},
     ],
   },
   "eternal_eradicate": {
@@ -674,14 +676,16 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "magus_cadence",
     customHandler: "magus_cadence",
     effects: [
-      {"statKey": "sprintSpeed", "target": "arcane_panel", "mode": "custom", "source": "Magus Cadence: custom handler"},
+      {"statKey": "sprintSpeed", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Cadence — +15–90% Operator Sprint Speed for 12s (Operator only; not Warframe)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Cadence — 12s duration (constant)"},
     ],
   },
   "magus_cloud": {
     arcaneId: "magus_cloud",
     customHandler: "magus_cloud",
     effects: [
-      {"statKey": "voidSlingRadius", "target": "arcane_panel", "mode": "custom", "source": "Magus Cloud: custom handler"},
+      {"statKey": "voidSlingRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Cloud — +50–300% Void Sling Radius for 6s after Void Mode"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Cloud — 6s duration (constant)"},
     ],
   },
   "magus_destruct": {
@@ -717,7 +721,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "magus_glitch",
     customHandler: "magus_glitch",
     effects: [
-      {"statKey": "transferenceStaticNegate", "target": "arcane_panel", "mode": "custom", "source": "Magus Glitch: custom handler"},
+      {"statKey": "transferenceStaticNegate", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Glitch — 17–102% chance to negate Transference Static"},
     ],
   },
   "magus_husk": {
@@ -729,9 +733,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_lockdown": {
     arcaneId: "magus_lockdown",
+    customHandler: "magus_lockdown",
     effects: [
-      {"statKey": "voidTrapDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Lockdown: voidTrapDuration (on void sling proc)"},
-      {"statKey": "voidTrapRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Lockdown: voidTrapRadius (on void sling proc)"},
+      {"statKey": "voidTrapDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Lockdown — 4s tether duration (constant)"},
+      {"statKey": "voidTrapRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Lockdown — 15m radius (constant)"},
+      {"statKey": "voidTrapTetherCount", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Lockdown — up to 10 enemies (constant; CC only)"},
     ],
   },
   "magus_melt": {
@@ -774,8 +780,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "magus_revert",
     customHandler: "magus_revert",
     effects: [
-      {"statKey": "revertWindow", "target": "arcane_panel", "mode": "custom", "source": "Magus Revert: custom handler"},
-      {"statKey": "revertHeal", "target": "arcane_panel", "mode": "custom", "source": "Magus Revert: custom handler"},
+      {"statKey": "revertWindow", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Revert — 3s window to return (constant)"},
+      {"statKey": "revertHeal", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Revert — restore 10–60 Operator Health"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Revert — 3s cooldown (constant)"},
     ],
   },
   "magus_vigor": {

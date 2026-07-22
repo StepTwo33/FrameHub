@@ -84,6 +84,7 @@ const STAT_LABELS: Record<string, string> = {
   operatorHealthRegen: "Operator Health Regen",
   operatorHealth: "Operator Health",
   operatorArmor: "Operator Armor",
+  operatorSprintSpeed: "Operator Sprint Speed",
   repairRadius: "Repair Radius",
   voidConversion: "Void Conversion",
   utilityEffect: "Special Effect",

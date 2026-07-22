@@ -1098,7 +1098,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "voidMoteEnergy",
         "maxValue": 10,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 5
       }
     ]
   },
@@ -1143,6 +1143,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "lethalHealPercent",
         "maxValue": 60.0,
         "baseValue": 10.0
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 90,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1480,18 +1486,30 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "sprintSpeed",
         "maxValue": 90.0,
         "baseValue": 15.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "magus_cloud": {
     "name": "Magus Cloud",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
         "stat": "voidSlingRadius",
         "maxValue": 300.0,
         "baseValue": 50.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1597,6 +1615,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "maxValue": 15,
         "flat": true,
         "constantAtAllRanks": true
+      },
+      {
+        "stat": "voidTrapTetherCount",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1678,14 +1702,18 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "revertWindow",
         "maxValue": 3,
         "flat": true,
-        "stacking": false,
         "constantAtAllRanks": true
       },
       {
         "stat": "revertHeal",
         "maxValue": 60,
         "flat": true,
-        "stacking": false,
+        "baseValue": 10
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 3,
+        "flat": true,
         "constantAtAllRanks": true
       }
     ]

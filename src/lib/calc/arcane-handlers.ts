@@ -235,6 +235,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "magus_revert",
   "magus_cadence",
   "magus_cloud",
+  "magus_lockdown",
   "molt_reconstruct",
   "theorem_contagion",
   "theorem_infection",
@@ -260,6 +261,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "magus_elevate",
   "magus_husk",
   "magus_vigor",
+  "emergence_renewed",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1647,16 +1649,91 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
+    case "magus_cadence": {
+      // wiki R5: On Void Sling — +90% Operator Sprint Speed for 12s. Operator only (not Warframe).
+      const spdLine = findEffect(def, "sprintSpeed");
+      const spd = spdLine ? scaleArcaneEffectLine(spdLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "operatorSprintSpeed", spd);
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 12);
+      return true;
+    }
+
+    case "magus_cloud": {
+      // wiki R5: On Void Mode — +300% Void Sling Radius for 6s. Operator panel.
+      const radLine = findEffect(def, "voidSlingRadius");
+      const rad = radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "voidSlingRadius", rad);
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 6);
+      return true;
+    }
+
+    case "magus_glitch": {
+      // wiki R5: On Transference Static — 102% chance to negate. Operator panel.
+      const chanceLine = findEffect(def, "transferenceStaticNegate");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "transferenceStaticNegate", chance);
+      return true;
+    }
+
+    case "magus_lockdown": {
+      // wiki: Void Sling → tether mine, up to 10 enemies in 15m for 4s (CC only).
+      const durLine = findEffect(def, "voidTrapDuration");
+      const radLine = findEffect(def, "voidTrapRadius");
+      const countLine = findEffect(def, "voidTrapTetherCount");
+      trackBonus(stats, "voidTrapDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 4);
+      trackBonus(stats, "voidTrapRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 15);
+      trackBonus(stats, "voidTrapTetherCount", countLine ? scaleArcaneEffectLine(countLine, rank, def.maxRank) : 10);
+      return true;
+    }
+
+    case "magus_revert": {
+      // wiki: Void Sling again within 3s → return + heal 10–60 Operator HP; 3s cooldown.
+      const winLine = findEffect(def, "revertWindow");
+      const healLine = findEffect(def, "revertHeal");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "revertWindow", winLine ? scaleArcaneEffectLine(winLine, rank, def.maxRank) : 3);
+      trackBonus(stats, "revertHeal", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 3);
+      return true;
+    }
+
+    case "emergence_dissipate": {
+      // wiki R5: cancel Void Sling → 10m dissipate; motes restore 5–10 Energy. Operator utility panel.
+      const radLine = findEffect(def, "dissipateRadius");
+      const energyLine = findEffect(def, "voidMoteEnergy");
+      trackBonus(stats, "dissipateRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 10);
+      trackBonus(stats, "voidMoteEnergy", energyLine ? scaleArcaneEffectLine(energyLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "emergence_savior": {
+      // wiki R5: Operator lethal → 5s invuln + 60% Operator HP heal; 90s CD. Operator panel only.
+      const invLine = findEffect(def, "lethalInvulnDuration");
+      const healLine = findEffect(def, "lethalHealPercent");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "lethalInvulnDuration", invLine ? scaleArcaneEffectLine(invLine, rank, def.maxRank) : 5);
+      trackBonus(stats, "lethalHealPercent", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 90);
+      return true;
+    }
+
+    case "emergence_renewed": {
+      // wiki R5: On Energy Depleted — +300% Energy Regen for 5s; 30s CD. Panel (paper: equipped = buff up).
+      const regenLine = findEffect(def, "energyRegen");
+      const durLine = findEffect(def, "buffDuration");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "energyRegen", regenLine ? scaleArcaneEffectLine(regenLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 5);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 30);
+      return true;
+    }
+
     case "arcane_eruption":
     case "arcane_escapist":
     case "arcane_steadfast":
     case "arcane_truculence":
-    case "emergence_dissipate":
-    case "emergence_savior":
-    case "magus_glitch":
-    case "magus_revert":
-    case "magus_cadence":
-    case "magus_cloud":
     case "molt_reconstruct":
     case "theorem_contagion":
     case "zid_an_sek_eel":

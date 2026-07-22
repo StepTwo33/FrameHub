@@ -2428,6 +2428,116 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec, 4);
   });
 
+  it("Magus Cadence: Operator sprint panel only — no Warframe sprint", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const cadence = allArcanes.find((a) => a.id === "magus_cadence")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [cadence],
+    );
+    expect(full.arcaneBonuses?.operatorSprintSpeed).toBeCloseTo(90, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(12, 4);
+    expect(full.sprintSpeedBonus).toBeCloseTo(bare.sprintSpeedBonus, 4);
+  });
+
+  it("Magus Cloud: +300% Void Sling Radius / 6s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const cloud = allArcanes.find((a) => a.id === "magus_cloud")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [cloud],
+    );
+    expect(full.arcaneBonuses?.voidSlingRadius).toBeCloseTo(300, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(6, 4);
+  });
+
+  it("Magus Glitch: 102% Transference Static negate", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const glitch = allArcanes.find((a) => a.id === "magus_glitch")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [glitch],
+    );
+    expect(full.arcaneBonuses?.transferenceStaticNegate).toBeCloseTo(102, 4);
+  });
+
+  it("Magus Lockdown: 4s / 15m / 10 tether panel", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const lockdown = allArcanes.find((a) => a.id === "magus_lockdown")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [lockdown],
+    );
+    expect(full.arcaneBonuses?.voidTrapDuration).toBeCloseTo(4, 4);
+    expect(full.arcaneBonuses?.voidTrapRadius).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.voidTrapTetherCount).toBeCloseTo(10, 4);
+  });
+
+  it("Magus Revert: 3s window / 60 heal / 3s CD", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const revert = allArcanes.find((a) => a.id === "magus_revert")!;
+    const healLine = getArcaneEffectDef("magus_revert")!.effects.find((e) => e.stat === "revertHeal")!;
+    expect(healLine.baseValue).toBe(10);
+    expect(healLine.constantAtAllRanks).toBeFalsy();
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [revert],
+    );
+    expect(full.arcaneBonuses?.revertWindow).toBeCloseTo(3, 4);
+    expect(full.arcaneBonuses?.revertHeal).toBeCloseTo(60, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(3, 4);
+  });
+
+  it("Emergence Dissipate: 10m / 10 energy mote", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const dissipate = allArcanes.find((a) => a.id === "emergence_dissipate")!;
+    const energyLine = getArcaneEffectDef("emergence_dissipate")!.effects.find(
+      (e) => e.stat === "voidMoteEnergy",
+    )!;
+    expect(energyLine.baseValue).toBe(5);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [dissipate],
+    );
+    expect(full.arcaneBonuses?.dissipateRadius).toBeCloseTo(10, 4);
+    expect(full.arcaneBonuses?.voidMoteEnergy).toBeCloseTo(10, 4);
+  });
+
+  it("Emergence Savior: Operator lethal panel — no Warframe HP change", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const savior = allArcanes.find((a) => a.id === "emergence_savior")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [savior],
+    );
+    expect(full.arcaneBonuses?.lethalInvulnDuration).toBeCloseTo(5, 4);
+    expect(full.arcaneBonuses?.lethalHealPercent).toBeCloseTo(60, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(90, 4);
+    expect(full.totalHealth).toBeCloseTo(bare.totalHealth, 4);
+  });
+
+  it("Emergence Renewed: +300% energy regen panel / 5s / 30s CD", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const renewed = allArcanes.find((a) => a.id === "emergence_renewed")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [renewed],
+    );
+    expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(300, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(5, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(30, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;
