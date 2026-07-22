@@ -67,7 +67,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_battery",
     customHandler: "arcane_battery",
     effects: [
-      {"statKey": "energyPerArmor", "target": "arcane_panel", "mode": "custom", "source": "Arcane Battery: custom handler"},
+      {"statKey": "energyPerArmor", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Battery — +0.3 Max Energy / Armor at R5 (cap +1000)"},
     ],
   },
   "arcane_bellicose": {
@@ -173,7 +173,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_expertise",
     customHandler: "arcane_expertise",
     effects: [
-      {"statKey": "abilityStrengthToShield", "target": "arcane_panel", "mode": "custom", "source": "Arcane Expertise: custom handler"},
+      {"statKey": "abilityStrengthToShield", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Expertise — shields += (STR−100%) × conversion (R5 100%)"},
     ],
   },
   "arcane_fury": {
@@ -228,8 +228,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_impetus": {
     arcaneId: "arcane_impetus",
     effects: [
-      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Impetus: abilityEfficiency (conditional proc)"},
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Impetus: abilityStrength (conditional proc)"},
+      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Impetus — +3% EFF / unique ability status (cap 14 → +42%; paper assumes max stacks)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Impetus — +6% STR / unique ability status (cap 14 → +84%; paper assumes max stacks)"},
     ],
   },
   "arcane_intention": {
@@ -585,8 +585,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_force",
     customHandler: "exodia_force",
     effects: [
-      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: custom handler"},
-      {"statKey": "procDamageMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Exodia Force: custom handler"},
+      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Force — 50% chance on status (panel)"},
+      {"statKey": "procDamageMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Exodia Force — 200% weapon damage radial at R3 (paper: stacks>0 = 1 nearby at point-blank)"},
     ],
   },
   "exodia_hunt": {
@@ -641,10 +641,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_aggress": {
     arcaneId: "magus_aggress",
+    customHandler: "magus_aggress",
     effects: [
-      {"statKey": "criticalMultiplier", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Aggress: criticalMultiplier (conditional proc)"},
-      {"statKey": "attackCount", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Aggress: attackCount (conditional proc)"},
-      {"statKey": "cooldown", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Aggress: cooldown (conditional proc)"},
+      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Magus Aggress — +300% CD on heavy blade/hammer for 4 attacks (paper: stacks>0 = buff up)"},
+      {"statKey": "attackCount", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Aggress: 4 attacks (panel)"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Aggress: 20s cooldown (panel)"},
     ],
   },
   "magus_anomaly": {
@@ -1028,9 +1029,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "secondary_irradiate": {
     arcaneId: "secondary_irradiate",
+    customHandler: "secondary_irradiate",
     effects: [
-      {"statKey": "procDamageMultiplier", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Irradiate: procDamageMultiplier (on hit proc)"},
-      {"statKey": "procAuraRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Irradiate: procAuraRadius (on hit proc)"},
+      {"statKey": "procDamageMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Irradiate — 180% hit damage to nearby at 10 Radiation stacks (paper: stacks>0 = 1 nearby)"},
+      {"statKey": "procAuraRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Secondary Irradiate — 7m radius at R5 (panel)"},
     ],
   },
   "secondary_kinship": {

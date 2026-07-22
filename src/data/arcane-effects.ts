@@ -413,7 +413,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityStrengthToShield",
         "maxValue": 100.0,
-        "baseValue": 16.666667
+        "baseValue": 50.0
       }
     ]
   },
@@ -539,18 +539,21 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "arcane_impetus": {
     "name": "Arcane Impetus",
-    "trigger": "conditional",
+    "trigger": "stacks",
     "maxRank": 5,
+    "stackCap": 14,
     "effects": [
       {
         "stat": "abilityEfficiency",
         "maxValue": 3.0,
-        "baseValue": 0.5
+        "baseValue": 0.5,
+        "stacking": true
       },
       {
         "stat": "abilityStrength",
         "maxValue": 6.0,
-        "baseValue": 1.0
+        "baseValue": 1.0,
+        "stacking": true
       }
     ]
   },

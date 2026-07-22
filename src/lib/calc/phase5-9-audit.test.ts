@@ -1277,6 +1277,107 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.statusChance).toBeCloseTo(bare.statusChance * 1.6, 4);
   });
+
+  it("Arcane Expertise: 150% STR → +50% shields at R5", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const expertise = allArcanes.find((a) => a.id === "arcane_expertise")!;
+    const stats = calculateWarframeBuild(excal, [], new Map());
+    stats.abilityStrength = 1.5;
+    const beforeShieldBonus = stats.shieldBonus;
+    applyWarframeShardsAndArcanes(stats, undefined, [expertise]);
+    expect(stats.shieldBonus).toBeCloseTo(beforeShieldBonus + 0.5, 4);
+  });
+
+  it("Arcane Battery: energy from armor capped at +1000", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const battery = allArcanes.find((a) => a.id === "arcane_battery")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [battery],
+    );
+    const perArmor = 0.3;
+    const expected = Math.min(1000, perArmor * bare.totalArmor);
+    expect(full.totalEnergy).toBeCloseTo(bare.totalEnergy + expected, 4);
+  });
+
+  it("Arcane Impetus: paper max stacks → +84% STR / +42% EFF", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const impetus = allArcanes.find((a) => a.id === "arcane_impetus")!;
+    const def = getArcaneEffectDef("arcane_impetus")!;
+    expect(def.stackCap).toBe(14);
+    const bareStr = calculateWarframeBuild(excal, [], new Map()).abilityStrength;
+    const bareEff = calculateWarframeBuild(excal, [], new Map()).abilityEfficiency;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [impetus],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bareStr + 0.84, 4);
+    expect(full.abilityEfficiency).toBeCloseTo(bareEff + 0.42, 4);
+  });
+
+  it("Magus Aggress: stacks>0 → +300% CM on Gram; no buff on Skana", () => {
+    const gram = allWeapons.find((w) => w.id === "gram")!;
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const aggress = allArcanes.find((a) => a.id === "magus_aggress")!;
+    const bareG = calculateWeaponBuild(gram, [], new Map());
+    const fullG = calculateWeaponBuildWithArcanes(
+      gram,
+      [],
+      new Map(),
+      [aggress],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    // Additive CD vs base weapon CM (same pool as Organ Shatter).
+    expect(fullG.criticalMultiplier).toBeCloseTo(
+      bareG.criticalMultiplier + gram.criticalMultiplier * 3,
+      4,
+    );
+
+    const bareS = calculateWeaponBuild(skana, [], new Map());
+    const fullS = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [aggress],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullS.criticalMultiplier).toBeCloseTo(bareS.criticalMultiplier, 4);
+  });
+
+  it("Exodia Force: stacks>0 → +200% splash (1 nearby) at R3", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const force = allArcanes.find((a) => a.id === "exodia_force")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [force],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 3, 4);
+  });
+
+  it("Secondary Irradiate: stacks>0 → +180% splash (1 nearby) at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const irradiate = allArcanes.find((a) => a.id === "secondary_irradiate")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [irradiate],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.8, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

@@ -97,6 +97,8 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "magus_melt",
   "arcane_crepuscular",
   "virtuos_ghost",
+  "magus_aggress",
+  "secondary_irradiate",
   "exodia_brave",
   "exodia_force",
   "exodia_hunt",
@@ -712,7 +714,55 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
-    case "exodia_force":
+    case "exodia_force": {
+      // wiki R3: 50% on status → 200% weapon damage radial (6m). Paper: stacks>0 = blast hits
+      // 1 nearby enemy at point-blank (no falloff; chance assumed).
+      const dmgLine = findEffect(def, "procDamageMultiplier");
+      const dmgPct = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmgPct > 0) {
+        const splash = stats.totalDamage * (dmgPct / 100);
+        stats.totalDamage += splash;
+        trackBonus(stats, "procDamageMultiplier", dmgPct);
+        trackBonus(stats, "exodiaForceSplash", splash);
+      }
+      const chanceLine = findEffect(def, "statusProcChance");
+      if (chanceLine) {
+        trackBonus(stats, "statusProcChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "magus_aggress": {
+      // wiki R5: +300% CD for 4 heavy-blade/hammer attacks after melee transfer.
+      // Paper: stacks>0 = buff up; only heavy_blade / hammer.
+      const stance = ctx.baseWeapon?.stanceType ?? "";
+      const eligible = stance === "heavy_blade" || stance === "hammer";
+      const cmLine = findEffect(def, "criticalMultiplier");
+      const cmPct = cmLine ? scaleArcaneEffectLine(cmLine, rank, def.maxRank) : 0;
+      const baseCm = ctx.baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
+      if (eligible && cmPct > 0) stats.criticalMultiplier += baseCm * (cmPct / 100);
+      trackBonus(stats, "criticalMultiplier", eligible ? cmPct : 0);
+      return true;
+    }
+
+    case "secondary_irradiate": {
+      // wiki R5: at 10 Radiation stacks, spread 180% of hit damage to nearby enemies.
+      // Paper: stacks>0 = threshold met + 1 nearby enemy at full (no LoS loss).
+      const multLine = findEffect(def, "procDamageMultiplier");
+      const multPct = multLine ? scaleArcaneEffectLine(multLine, rank, def.maxRank) : 0;
+      if (multPct > 0) {
+        const splash = stats.totalDamage * (multPct / 100);
+        stats.totalDamage += splash;
+        trackBonus(stats, "procDamageMultiplier", multPct);
+        trackBonus(stats, "irradiateSplash", splash);
+      }
+      const radLine = findEffect(def, "procAuraRadius");
+      if (radLine) {
+        trackBonus(stats, "procAuraRadius", scaleArcaneEffectLine(radLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "exodia_hunt":
     case "exodia_might":
     case "exodia_contagion":
@@ -747,9 +797,13 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_battery": {
+      // wiki: +0.05…0.30 Max Energy per Armor, capped at +1000 energy.
       const perArmor = scaledLine(def, findEffect(def, "energyPerArmor"), rank, stacks);
-      stats.flatEnergyBonus += perArmor * wfCtx.totalArmor;
+      const raw = perArmor * wfCtx.totalArmor;
+      const capped = Math.min(1000, raw);
+      stats.flatEnergyBonus += capped;
       trackBonus(stats, "energyPerArmor", perArmor);
+      trackBonus(stats, "batteryEnergyBonus", capped);
       return true;
     }
 
@@ -763,9 +817,14 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_expertise": {
+      // wiki: shields += (Ability Strength − 100%) × conversion (R5 100%).
+      // e.g. 150% STR → +50% shields at R5.
       const ratio = scaledLine(def, findEffect(def, "abilityStrengthToShield"), rank, stacks);
-      stats.abilityStrength += (wfCtx.totalShield * ratio) / 100 / 100;
+      const strAboveBase = stats.abilityStrength - 1;
+      const shieldPct = strAboveBase * (ratio / 100);
+      stats.shieldBonus += shieldPct;
       trackBonus(stats, "abilityStrengthToShield", ratio);
+      trackBonus(stats, "expertiseShieldBonus", shieldPct * 100);
       return true;
     }
 

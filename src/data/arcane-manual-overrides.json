@@ -295,17 +295,20 @@
   },
   "arcane_impetus": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "stacks",
+    "stackCap": 14,
     "effects": [
       {
         "stat": "abilityEfficiency",
         "maxValue": 3,
-        "baseValue": 0.5
+        "baseValue": 0.5,
+        "stacking": true
       },
       {
         "stat": "abilityStrength",
         "maxValue": 6,
-        "baseValue": 1
+        "baseValue": 1,
+        "stacking": true
       }
     ]
   },
