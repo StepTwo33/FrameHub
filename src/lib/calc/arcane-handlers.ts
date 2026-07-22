@@ -93,6 +93,10 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "cascadia_empowered",
   "eternal_eradicate",
   "eternal_onslaught",
+  "eternal_logistics",
+  "magus_melt",
+  "arcane_crepuscular",
+  "virtuos_ghost",
   "exodia_brave",
   "exodia_force",
   "exodia_hunt",
@@ -537,6 +541,70 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "eternal_logistics": {
+      // wiki R5: +72% amp ammo efficiency for 8s after Void Sling. Paper: stacks>0 = buff up.
+      const aeLine = findEffect(def, "ampAmmoEfficiency") ?? findEffect(def, "ammoEfficiency");
+      const ae = aeLine ? scaleArcaneEffectLine(aeLine, rank, def.maxRank) : 0;
+      if (ae > 0) stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + ae / 100;
+      trackBonus(stats, "ampAmmoEfficiency", ae);
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "magus_melt": {
+      // wiki: +30% Operator Heat / Void Sling stack (cap 7 → +210%). Paper: amp weapons only.
+      const isAmp = /amp/i.test(ctx.baseWeapon?.category ?? "");
+      const heatLine = findEffect(def, "operatorHeatDamage");
+      const heatPct = heatLine ? scaledLine(def, heatLine, rank, stacks) : 0;
+      if (isAmp && heatPct > 0 && ctx.baseWeapon) {
+        const base = ctx.baseWeapon.damage;
+        const baseIps =
+          (ctx.baseWeapon.impact ?? 0) +
+          (ctx.baseWeapon.puncture ?? 0) +
+          (ctx.baseWeapon.slash ?? 0);
+        const phys = stats.impact + stats.puncture + stats.slash;
+        const dmgMult = baseIps > 0 ? phys / baseIps : 1;
+        const amount = base * (heatPct / 100) * dmgMult;
+        const existing = stats.elements.find((e) => e.type === "heat");
+        if (existing) existing.value += amount;
+        else stats.elements.push({ type: "heat", value: amount });
+        if (stats.rawElements) {
+          const raw = stats.rawElements.find((e) => e.type === "heat");
+          if (raw) raw.value += amount;
+          else stats.rawElements.push({ type: "heat", value: amount });
+        }
+        stats.totalDamage += amount;
+      }
+      trackBonus(stats, "operatorHeatDamage", heatPct);
+      return true;
+    }
+
+    case "arcane_crepuscular": {
+      // wiki: +0.5…+3 final crit mult while invisible (flat final). Paper: stacks>0 = invisible.
+      const cmLine = findEffect(def, "criticalMultiplier");
+      const cmFlat = cmLine ? scaleArcaneEffectLine(cmLine, rank, def.maxRank) : 0;
+      if (cmFlat > 0) stats.criticalMultiplier += cmFlat;
+      trackBonus(stats, "criticalMultiplier", cmFlat);
+      return true;
+    }
+
+    case "virtuos_ghost": {
+      // wiki R3: +60% amp SC for 12s on headshot (40% chance). Paper: stacks>0 = buff up.
+      const scLine = findEffect(def, "ampStatusChance");
+      const scPct = scLine ? scaleArcaneEffectLine(scLine, rank, def.maxRank) : 0;
+      const baseSc = ctx.baseWeapon?.statusChance ?? stats.statusChance;
+      if (scPct > 0) stats.statusChance += baseSc * (scPct / 100);
+      trackBonus(stats, "ampStatusChance", scPct);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "arcane_precision": {
       // wiki R5: +300% secondary damage for 18s on headshot (not HS-only multiplier).
       const dmgLine = findEffect(def, "headshotDamage") ?? findEffect(def, "damage");
@@ -709,9 +777,16 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_crepuscular": {
-      // While invisible — tracked for panel; not applied to passive totals without sim toggle.
-      trackBonus(stats, "abilityStrength", scaledLine(def, findEffect(def, "abilityStrength"), rank, stacks));
-      trackBonus(stats, "criticalMultiplier", scaledLine(def, findEffect(def, "criticalMultiplier"), rank, stacks));
+      // wiki R5: +30% Ability Strength while invisible. Paper: equipped = invisible (warframe path).
+      const strLine = findEffect(def, "abilityStrength");
+      const str = strLine ? scaleArcaneEffectLine(strLine, rank, def.maxRank) : 0;
+      if (str > 0) stats.abilityStrength += str / 100;
+      trackBonus(stats, "abilityStrength", str);
+      // Final CM applies on weapons via weapon custom handler (not warframe totals).
+      const cmLine = findEffect(def, "criticalMultiplier");
+      if (cmLine) {
+        trackBonus(stats, "criticalMultiplier", scaleArcaneEffectLine(cmLine, rank, def.maxRank));
+      }
       return true;
     }
 

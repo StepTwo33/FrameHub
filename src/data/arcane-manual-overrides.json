@@ -153,8 +153,9 @@
       },
       {
         "stat": "criticalMultiplier",
-        "maxValue": 300,
-        "baseValue": 100
+        "maxValue": 3,
+        "flat": true,
+        "baseValue": 0.5
       }
     ]
   },
@@ -1060,17 +1061,14 @@
   "magus_melt": {
     "replace": true,
     "trigger": "stacks",
+    "stackCap": 7,
     "effects": [
-      {
-        "stat": "damage",
-        "maxValue": 7,
-        "flat": true,
-        "baseValue": 2
-      },
       {
         "stat": "operatorHeatDamage",
         "maxValue": 30,
-        "baseValue": 30
+        "baseValue": 30,
+        "constantAtAllRanks": true,
+        "stacking": true
       }
     ]
   },
@@ -1870,12 +1868,13 @@
   },
   "virtuos_ghost": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "healthRegenChance",
         "maxValue": 40,
-        "baseValue": 40
+        "baseValue": 40,
+        "constantAtAllRanks": true
       },
       {
         "stat": "ampStatusChance",

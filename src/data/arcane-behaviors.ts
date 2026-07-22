@@ -74,9 +74,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_bellicose",
     customHandler: "arcane_bellicose",
     effects: [
-      {"statKey": "abilityStrengthPerHealth", "target": "arcane_panel", "mode": "custom", "source": "Arcane Bellicose: custom handler"},
-      {"statKey": "abilityStrengthPerHealthStep", "target": "arcane_panel", "mode": "custom", "source": "Arcane Bellicose: custom handler"},
-      {"statKey": "abilityStrength", "target": "arcane_panel", "mode": "custom", "source": "Arcane Bellicose: custom handler"},
+      {"statKey": "abilityStrengthPerHealth", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Bellicose — +STR per 250 Health (applies from warframe totals)"},
+      {"statKey": "abilityStrengthPerHealthStep", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bellicose — 250 Health per step"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Bellicose — Ability Strength from Health steps"},
     ],
   },
   "arcane_blade_charger": {
@@ -129,8 +129,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_crepuscular",
     customHandler: "arcane_crepuscular",
     effects: [
-      {"statKey": "abilityStrength", "target": "arcane_panel", "mode": "custom", "source": "Arcane Crepuscular: custom handler"},
-      {"statKey": "criticalMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Arcane Crepuscular: custom handler"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Crepuscular — +30% Ability Strength while invisible (paper: stacks>0 / equipped on warframe = invisible)"},
+      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Crepuscular — +3 final crit mult while invisible (paper: stacks>0 = invisible)"},
     ],
   },
   "arcane_deflection": {
@@ -544,9 +544,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "eternal_logistics": {
     arcaneId: "eternal_logistics",
+    customHandler: "eternal_logistics",
     effects: [
-      {"statKey": "ampAmmoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Logistics: ampAmmoEfficiency (on void sling proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Logistics: buffDuration (on void sling proc)"},
+      {"statKey": "ampAmmoEfficiency", "target": "weapon_dps", "mode": "custom", "source": "wiki: Eternal Logistics — +72% amp ammo efficiency for 8s after Void Sling (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Eternal Logistics: buffDuration (panel)"},
     ],
   },
   "eternal_onslaught": {
@@ -715,9 +716,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_melt": {
     arcaneId: "magus_melt",
+    customHandler: "magus_melt",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Melt: damage (stacking — applies at sim stack count)"},
-      {"statKey": "operatorHeatDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Melt: operatorHeatDamage (stacking — applies at sim stack count)"},
+      {"statKey": "operatorHeatDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Magus Melt — +30% Operator Heat / Void Sling stack at R5 (cap 7 → +210%; applies at sim stack count on amps)"},
     ],
   },
   "magus_nourish": {
@@ -1102,9 +1103,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_ghost": {
     arcaneId: "virtuos_ghost",
+    customHandler: "virtuos_ghost",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Ghost: healthRegenChance (always active while equipped)"},
-      {"statKey": "ampStatusChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Ghost: ampStatusChance (always active while equipped)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Virtuos Ghost — 40% chance on headshot (panel)"},
+      {"statKey": "ampStatusChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Ghost — +60% amp Status Chance for 12s on HS (paper: stacks>0 = buff up)"},
     ],
   },
   "virtuos_null": {

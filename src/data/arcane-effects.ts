@@ -319,8 +319,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       },
       {
         "stat": "criticalMultiplier",
-        "maxValue": 300.0,
-        "baseValue": 50.0
+        "maxValue": 3.0,
+        "flat": true,
+        "baseValue": 0.5
       }
     ]
   },
@@ -1585,17 +1586,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "name": "Magus Melt",
     "trigger": "stacks",
     "maxRank": 5,
+    "stackCap": 7,
     "effects": [
-      {
-        "stat": "damage",
-        "maxValue": 7.0,
-        "flat": true,
-        "baseValue": 1.166667
-      },
       {
         "stat": "operatorHeatDamage",
         "maxValue": 30.0,
-        "baseValue": 5.0
+        "baseValue": 30.0,
+        "constantAtAllRanks": true,
+        "stacking": true
       }
     ]
   },
@@ -2696,13 +2694,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_ghost": {
     "name": "Virtuos Ghost",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 3,
     "effects": [
       {
         "stat": "healthRegenChance",
         "maxValue": 40.0,
-        "baseValue": 10.0
+        "baseValue": 40.0,
+        "constantAtAllRanks": true
       },
       {
         "stat": "ampStatusChance",

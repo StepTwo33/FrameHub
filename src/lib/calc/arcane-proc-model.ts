@@ -75,6 +75,10 @@ export function isArcaneMetadataStat(stat: string): boolean {
 
 export function isArcaneProcChanceStat(stat: string): boolean {
   if (PROC_CHANCE_STATS.has(stat)) return true;
+  // Status chance bonuses are real build stats — not proc rolls.
+  if (stat === "statusChance" || stat === "ampStatusChance" || stat === "statusChancePerHit") {
+    return false;
+  }
   if (stat.endsWith("Chance") && stat !== "criticalChance") return true;
   return false;
 }

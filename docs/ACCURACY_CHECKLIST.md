@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Bulwark/Fortifier/Empowered/Eternal + Demulcent/Shiver/Rise… | **Improved** |
+| B6 | Arcane custom handlers | Crepuscular/Melt/Logistics/Ghost + Bulwark/Fortifier/Empowered… | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -295,6 +295,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Rise/Momentum/Longbow Sharpshot/Fractalized Reset | 2026-07-22 | Rise +150% pri; Momentum +150% sniper reload; Longbow ×4 next shot; Fractalized +240% reload |
 | Theorem Demulcent + Secondary Shiver | 2026-07-22 | Demulcent +12%/stack cap 15 → +180%; Shiver +45%/Cold stack cap 10 → +450% |
 | Bulwark/Fortifier/Empowered/Eternal amp | 2026-07-22 | Bulwark via warframeArmor; Fortifier ×8 vs OG; Empowered flat×SC×MS; Eradicate +60%; Onslaught +180% CC |
+| Crepuscular/Melt/Logistics/Ghost + Bellicose | 2026-07-22 | Crepuscular +3 final CM/+30% STR; Melt +30% Heat×7; Logistics +72% AE; Ghost +60% SC; Bellicose → totals |
 
 ## New / extended test files
 

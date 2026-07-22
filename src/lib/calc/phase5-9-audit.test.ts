@@ -17,6 +17,7 @@ import {
   resolveStanceDamageMultiplier,
 } from "@/lib/calc/combat-multipliers";
 import {
+  applyWarframeShardsAndArcanes,
   calculateWarframeBuild,
   calculateWeaponBuild,
   calculateWeaponBuildWithArcanes,
@@ -1184,6 +1185,97 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
     expect(full.criticalChance).toBeCloseTo(bare.criticalChance * 2.8, 4);
+  });
+
+  it("Arcane Crepuscular: stacks>0 → +3 final crit mult at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const crepuscular = allArcanes.find((a) => a.id === "arcane_crepuscular")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [crepuscular],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier + 3, 4);
+  });
+
+  it("Arcane Crepuscular on warframe: +30% Ability Strength at R5", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const crepuscular = allArcanes.find((a) => a.id === "arcane_crepuscular")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const bareStr = bare.abilityStrength;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [crepuscular],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bareStr + 0.3, 4);
+  });
+
+  it("Magus Melt: 0 stacks = no Heat; 7 stacks → +210% Heat on amp", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const melt = allArcanes.find((a) => a.id === "magus_melt")!;
+    const def = getArcaneEffectDef("magus_melt")!;
+    expect(def.stackCap).toBe(7);
+
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [melt],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [melt],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 7 },
+    );
+    const baseIps = (amp.impact ?? 0) + (amp.puncture ?? 0) + (amp.slash ?? 0);
+    const dmgMult = baseIps > 0 ? (bare.impact + bare.puncture + bare.slash) / baseIps : 1;
+    const heatBonus = amp.damage * 2.1 * dmgMult;
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage + heatBonus, 4);
+    const heat = full.elements.find((e) => e.type === "heat");
+    expect(heat?.value ?? 0).toBeCloseTo(heatBonus, 4);
+  });
+
+  it("Eternal Logistics: stacks>0 → +72% amp ammo efficiency at R5", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const logistics = allArcanes.find((a) => a.id === "eternal_logistics")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [logistics],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.ammoEfficiency ?? 0).toBeCloseTo((bare.ammoEfficiency ?? 0) + 0.72, 4);
+  });
+
+  it("Virtuos Ghost: stacks>0 → +60% amp Status Chance at R3", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const ghost = allArcanes.find((a) => a.id === "virtuos_ghost")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [ghost],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.statusChance).toBeCloseTo(bare.statusChance * 1.6, 4);
   });
 });
 
