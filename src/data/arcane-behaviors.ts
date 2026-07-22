@@ -648,8 +648,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_accelerant": {
     arcaneId: "magus_accelerant",
+    customHandler: "magus_accelerant",
     effects: [
-      {"statKey": "enemyResistanceReduction", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Accelerant: enemyResistanceReduction (on void sling proc)"},
+      {"statKey": "enemyResistanceReduction", "target": "weapon_dps", "mode": "custom", "source": "wiki: Magus Accelerant — −65% Heat resistance / Void Sling stack (paper: Heat ×(1+0.65×stacks))"},
     ],
   },
   "magus_aggress": {
@@ -1116,8 +1117,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_forge": {
     arcaneId: "virtuos_forge",
+    customHandler: "virtuos_forge",
     effects: [
-      {"statKey": "voidConversion", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Forge: voidConversion (always active while equipped)"},
+      {"statKey": "voidConversion", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Forge — convert 24–96% Void→Heat on amp (R3=96%; hard cap 98% with multiple converters)"},
     ],
   },
   "virtuos_fury": {
@@ -1153,8 +1155,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_spike": {
     arcaneId: "virtuos_spike",
+    customHandler: "virtuos_spike",
     effects: [
-      {"statKey": "voidConversion", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Spike: voidConversion (always active while equipped)"},
+      {"statKey": "voidConversion", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Spike — convert 24–96% Void→Puncture on amp"},
     ],
   },
   "virtuos_strike": {
@@ -1167,8 +1170,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_surge": {
     arcaneId: "virtuos_surge",
+    customHandler: "virtuos_surge",
     effects: [
-      {"statKey": "voidConversion", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Surge: voidConversion (on hit proc)"},
+      {"statKey": "voidConversion", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Surge — convert 24–96% Void→Electricity on amp"},
     ],
   },
   "virtuos_tempo": {
@@ -1181,8 +1185,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_trojan": {
     arcaneId: "virtuos_trojan",
+    customHandler: "virtuos_trojan",
     effects: [
-      {"statKey": "voidConversion", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Trojan: voidConversion (always active while equipped)"},
+      {"statKey": "voidConversion", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Trojan — convert 24–96% Void→Viral on amp"},
     ],
   },
   "zid_an_asheir": {

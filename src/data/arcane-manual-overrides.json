@@ -1877,7 +1877,7 @@
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
+        "maxValue": 96,
         "baseValue": 24
       }
     ]
@@ -1957,7 +1957,7 @@
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
+        "maxValue": 96,
         "baseValue": 24
       }
     ]
@@ -1981,11 +1981,11 @@
   },
   "virtuos_surge": {
     "replace": true,
-    "trigger": "onHit",
+    "trigger": "passive",
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
+        "maxValue": 96,
         "baseValue": 24
       }
     ]
@@ -2013,7 +2013,7 @@
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
+        "maxValue": 96,
         "baseValue": 24
       }
     ]

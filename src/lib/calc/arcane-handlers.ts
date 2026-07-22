@@ -50,6 +50,50 @@ function applyWeaponDamageMult(stats: CalculatedStats, pct: number): void {
   for (const e of stats.rawElements ?? []) e.value *= 1 + scaled;
 }
 
+/** Virtuos Forge/Spike/Surge/Trojan: convert a fraction of amp (Void-proxy) damage to an element/IPS type. */
+const VIRTUOS_VOID_CONVERSION: Record<string, "heat" | "puncture" | "electricity" | "viral"> = {
+  virtuos_forge: "heat",
+  virtuos_spike: "puncture",
+  virtuos_surge: "electricity",
+  virtuos_trojan: "viral",
+};
+
+function applyVirtuosVoidConversion(stats: CalculatedStats, ctx: ArcaneHandlerContext): boolean {
+  const element = VIRTUOS_VOID_CONVERSION[ctx.arcaneId];
+  if (!element) return false;
+  const isAmp = /amp/i.test(ctx.baseWeapon?.category ?? "");
+  // wiki: R3 is 96% (UI wrongly shows 98%); hard cap 98% when multiple converters.
+  const convLine = findEffect(ctx.def, "voidConversion");
+  const convPct = convLine ? scaleArcaneEffectLine(convLine, ctx.rank, ctx.def.maxRank) : 0;
+  const frac = Math.min(0.98, Math.max(0, convPct / 100));
+  trackBonus(stats, "voidConversion", convPct);
+  if (!isAmp || frac <= 0 || stats.totalDamage <= 0) return true;
+
+  const convertAmount = stats.totalDamage * frac;
+  const remain = 1 - frac;
+  stats.impact *= remain;
+  stats.puncture *= remain;
+  stats.slash *= remain;
+  for (const e of stats.elements ?? []) e.value *= remain;
+  for (const e of stats.rawElements ?? []) e.value *= remain;
+
+  if (element === "puncture") {
+    stats.puncture += convertAmount;
+  } else {
+    const existing = stats.elements.find((e) => e.type === element);
+    if (existing) existing.value += convertAmount;
+    else stats.elements.push({ type: element, value: convertAmount });
+    if (stats.rawElements) {
+      const raw = stats.rawElements.find((e) => e.type === element);
+      if (raw) raw.value += convertAmount;
+      else stats.rawElements.push({ type: element, value: convertAmount });
+    }
+  }
+  // totalDamage unchanged (conversion, not bonus)
+  trackBonus(stats, `voidTo_${element}`, convertAmount);
+  return true;
+}
+
 /** Arcane IDs handled by applyCustomArcaneToWeapon (for coverage detection without full stats). */
 export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_primary_merciless",
@@ -105,6 +149,11 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "virtuos_strike",
   "virtuos_tempo",
   "virtuos_shadow",
+  "virtuos_forge",
+  "virtuos_spike",
+  "virtuos_surge",
+  "virtuos_trojan",
+  "magus_accelerant",
   "melee_influence",
   "melee_duplicate",
   "arcane_melee_animosity",
@@ -734,6 +783,36 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "virtuos_forge":
+    case "virtuos_spike":
+    case "virtuos_surge":
+    case "virtuos_trojan":
+      return applyVirtuosVoidConversion(stats, ctx);
+
+    case "magus_accelerant": {
+      // wiki R5: Void Sling → −65% enemy Heat resistance / stack (additive vuln).
+      // Paper: sim stacks = sling stacks; Heat damage × (1 + 0.65×stacks).
+      const redLine = findEffect(def, "enemyResistanceReduction");
+      const perStack = redLine ? scaleArcaneEffectLine(redLine, rank, def.maxRank) : 0;
+      const vulnPct = perStack * Math.max(stacks, 0);
+      const heatMult = 1 + vulnPct / 100;
+      let heatBefore = 0;
+      for (const e of stats.elements ?? []) {
+        if (e.type === "heat") {
+          heatBefore += e.value;
+          e.value *= heatMult;
+        }
+      }
+      for (const e of stats.rawElements ?? []) {
+        if (e.type === "heat") e.value *= heatMult;
+      }
+      if (heatBefore > 0) {
+        stats.totalDamage += heatBefore * (heatMult - 1);
+      }
+      trackBonus(stats, "enemyResistanceReduction", vulnPct);
+      return true;
+    }
+
     case "melee_influence": {
       // wiki R5: on Electricity status (20%), elemental melee statuses spread + deal matching
       // elemental damage to nearby. Paper: stacks>0 = buff up; 1 nearby hit = sum(elements).
@@ -1137,9 +1216,9 @@ export function applyCustomArcaneToWarframe(
 
     case "arcane_expertise": {
       // wiki: shields += (Ability Strength − 100%) × conversion (R5 100%).
-      // e.g. 150% STR → +50% shields at R5.
+      // e.g. 150% STR → +50% shields at R5. Clamp: STR below 100% grants no penalty.
       const ratio = scaledLine(def, findEffect(def, "abilityStrengthToShield"), rank, stacks);
-      const strAboveBase = stats.abilityStrength - 1;
+      const strAboveBase = Math.max(0, stats.abilityStrength - 1);
       const shieldPct = strAboveBase * (ratio / 100);
       stats.shieldBonus += shieldPct;
       trackBonus(stats, "abilityStrengthToShield", ratio);

@@ -2702,8 +2702,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
-        "constantAtAllRanks": true
+        "maxValue": 96,
+        "baseValue": 24
       }
     ]
   },
@@ -2787,8 +2787,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
-        "constantAtAllRanks": true
+        "maxValue": 96,
+        "baseValue": 24
       }
     ]
   },
@@ -2812,13 +2812,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "virtuos_surge": {
     "name": "Virtuos Surge",
-    "trigger": "onHit",
+    "trigger": "passive",
     "maxRank": 3,
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
-        "constantAtAllRanks": true
+        "maxValue": 96,
+        "baseValue": 24
       }
     ]
   },
@@ -2847,8 +2847,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "voidConversion",
-        "maxValue": 98,
-        "constantAtAllRanks": true
+        "maxValue": 96,
+        "baseValue": 24
       }
     ]
   },

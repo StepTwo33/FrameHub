@@ -1314,6 +1314,16 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(stats.shieldBonus).toBeCloseTo(beforeShieldBonus + 0.5, 4);
   });
 
+  it("Arcane Expertise: STR below 100% does not reduce shields", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const expertise = allArcanes.find((a) => a.id === "arcane_expertise")!;
+    const stats = calculateWarframeBuild(excal, [], new Map());
+    stats.abilityStrength = 0.8;
+    const beforeShieldBonus = stats.shieldBonus;
+    applyWarframeShardsAndArcanes(stats, undefined, [expertise]);
+    expect(stats.shieldBonus).toBeCloseTo(beforeShieldBonus, 4);
+  });
+
   it("Arcane Battery: energy from armor capped at +1000", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const battery = allArcanes.find((a) => a.id === "arcane_battery")!;
@@ -2049,6 +2059,59 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
     );
     expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(3.6, 4);
+  });
+
+  it("Virtuos Forge R3: converts 96% amp damage to Heat (total unchanged)", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const forge = allArcanes.find((a) => a.id === "virtuos_forge")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(amp, [], new Map(), [forge]);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    const heat = full.elements.find((e) => e.type === "heat")?.value ?? 0;
+    expect(heat).toBeCloseTo(bare.totalDamage * 0.96, 4);
+    expect(full.impact + full.puncture + full.slash).toBeCloseTo(bare.totalDamage * 0.04, 4);
+    expect(full.arcaneBonuses?.voidConversion).toBeCloseTo(96, 4);
+  });
+
+  it("Virtuos Spike/Surge/Trojan: convert to Puncture / Electricity / Viral", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const spike = allArcanes.find((a) => a.id === "virtuos_spike")!;
+    const surge = allArcanes.find((a) => a.id === "virtuos_surge")!;
+    const trojan = allArcanes.find((a) => a.id === "virtuos_trojan")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+
+    const withSpike = calculateWeaponBuildWithArcanes(amp, [], new Map(), [spike]);
+    expect(withSpike.puncture).toBeCloseTo(bare.totalDamage * 0.96 + bare.puncture * 0.04, 3);
+
+    const withSurge = calculateWeaponBuildWithArcanes(amp, [], new Map(), [surge]);
+    expect(withSurge.elements.find((e) => e.type === "electricity")?.value ?? 0).toBeCloseTo(
+      bare.totalDamage * 0.96,
+      4,
+    );
+
+    const withTrojan = calculateWeaponBuildWithArcanes(amp, [], new Map(), [trojan]);
+    expect(withTrojan.elements.find((e) => e.type === "viral")?.value ?? 0).toBeCloseTo(
+      bare.totalDamage * 0.96,
+      4,
+    );
+  });
+
+  it("Magus Accelerant: 1 sling stack → Heat ×1.65 on Forge amp", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const forge = allArcanes.find((a) => a.id === "virtuos_forge")!;
+    const accelerant = allArcanes.find((a) => a.id === "magus_accelerant")!;
+    const forged = calculateWeaponBuildWithArcanes(amp, [], new Map(), [forge]);
+    const heatBare = forged.elements.find((e) => e.type === "heat")?.value ?? 0;
+    const withAcc = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [forge, accelerant],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    const heatFull = withAcc.elements.find((e) => e.type === "heat")?.value ?? 0;
+    expect(heatFull).toBeCloseTo(heatBare * 1.65, 4);
   });
 
   it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {
