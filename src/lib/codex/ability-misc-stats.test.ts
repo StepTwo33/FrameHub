@@ -86,6 +86,8 @@ import {
   computeAtlasKnockdownPassive,
   computeNyxPsychicCritChance,
   computeHarrowPassive,
+  computeGyreAbilityCritChance,
+  computeCitrineGeoluminesence,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -843,6 +845,41 @@ describe("Harrow overshield / energy passive", () => {
       overshieldCap: 2400,
       startAtMaxEnergy: true,
     });
+  });
+});
+
+describe("Gyre ability crit passive", () => {
+  it("grants +10% ability CC per Electric status with yellow/orange/red tiers", () => {
+    expect(computeGyreAbilityCritChance(0)).toMatchObject({ critChance: 0, tier: "none" });
+    expect(computeGyreAbilityCritChance(1)).toMatchObject({
+      critChance: 0.1,
+      critMultiplier: 2,
+      tier: "yellow",
+    });
+    expect(computeGyreAbilityCritChance(11)).toMatchObject({
+      critChance: 1.1,
+      critMultiplier: 3,
+      tier: "orange",
+    });
+    expect(computeGyreAbilityCritChance(21)).toMatchObject({
+      critChance: 2.1,
+      critMultiplier: 4,
+      tier: "red",
+    });
+    expect(computeGyreAbilityCritChance(40).critChance).toBe(3);
+  });
+});
+
+describe("Citrine Geoluminesence passive", () => {
+  it("scales heal rate from 5 to 25 HP/s over 200 Health Orbs", () => {
+    expect(computeCitrineGeoluminesence(0)).toMatchObject({
+      healPerSec: 5,
+      radiusM: 50,
+      orbsToMax: 200,
+    });
+    expect(computeCitrineGeoluminesence(50).healPerSec).toBeCloseTo(10, 5);
+    expect(computeCitrineGeoluminesence(200).healPerSec).toBe(25);
+    expect(computeCitrineGeoluminesence(300).healPerSec).toBe(25);
   });
 });
 

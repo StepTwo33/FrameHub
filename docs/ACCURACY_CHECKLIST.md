@@ -262,6 +262,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mag + Koumei passives | 2026-07-22 | Mag 8m pickup vacuum; Koumei Fate random status 60s every 60s |
 | Banshee + Atlas passives | 2026-07-22 | Banshee all weapons silent; Atlas knockdown immune while grounded |
 | Nyx + Harrow passives | 2026-07-22 | Nyx +40% gun CC/Confused (cap +200%); Harrow overshield ×2 (2400) + start max Energy |
+| Gyre + Citrine passives | 2026-07-22 | Gyre +10% ability CC/Electric (tiers/cap 300%); Citrine Geoluminesence 5→25 HP/s @ 50m |
 
 ## New / extended test files
 

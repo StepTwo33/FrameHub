@@ -78,6 +78,8 @@ import {
   computeAtlasKnockdownPassive,
   computeNyxPsychicCritChance,
   computeHarrowPassive,
+  computeGyreAbilityCritChance,
+  computeCitrineGeoluminesence,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1550,6 +1552,78 @@ function HarrowPassivePanel() {
   );
 }
 
+function GyreAbilityCritPassivePanel() {
+  const [stacks, setStacks] = useState(5);
+  const crit = computeGyreAbilityCritChance(stacks);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Electric Stacks"
+        value={stacks}
+        min={0}
+        max={30}
+        onChange={setStacks}
+        tooltip="Gyre: +10% ability Critical Chance per Electricity status on the target (cap 300% with Cathode Grace)."
+      />
+      <StatRow
+        label="Ability Crit"
+        value={`+${(crit.critChance * 100).toFixed(0)}%`}
+        color="text-yellow-300"
+        tooltip="Flat ability Critical Chance vs that enemy. Helminth/Railjack abilities do not benefit."
+      />
+      <StatRow
+        label="Crit Tier"
+        value={
+          crit.tier === "none"
+            ? "—"
+            : `${crit.tier[0].toUpperCase()}${crit.tier.slice(1)} ×${crit.critMultiplier.toFixed(1)}`
+        }
+        color={
+          crit.tier === "red"
+            ? "text-red-400"
+            : crit.tier === "orange"
+              ? "text-orange-400"
+              : crit.tier === "yellow"
+                ? "text-yellow-300"
+                : "text-muted-foreground"
+        }
+        tooltip="Orange from 11 stacks (110%); red from 21 stacks (210%)."
+      />
+    </div>
+  );
+}
+
+function CitrineGeoluminesencePassivePanel() {
+  const [orbs, setOrbs] = useState(0);
+  const geo = computeCitrineGeoluminesence(orbs);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Health Orbs"
+        value={orbs}
+        min={0}
+        max={geo.orbsToMax}
+        onChange={setOrbs}
+        tooltip="Citrine Geoluminesence: +0.1 Health/s per Health/Universal Orb permanently (mission), up to 25/s."
+      />
+      <StatRow
+        label="Heal / s"
+        value={`${geo.healPerSec.toFixed(1)}`}
+        color="text-green-400"
+        tooltip={`Base ${geo.baseHealPerSec}/s + ${geo.healPerOrb}/s per orb. Allies in ${geo.radiusM}m gain the buff.`}
+      />
+      <StatRow
+        label="Aura Radius"
+        value={`${geo.radiusM}m`}
+        color="text-muted-foreground"
+        tooltip="Matches Affinity Range distance but is a separate aura (not affected by Affinity Range mods)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1719,6 +1793,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "atlas" || warframe.id === "atlas_prime") && <AtlasKnockdownPassivePanel />}
           {(warframe.id === "nyx" || warframe.id === "nyx_prime") && <NyxPsychicPassivePanel />}
           {(warframe.id === "harrow" || warframe.id === "harrow_prime") && <HarrowPassivePanel />}
+          {(warframe.id === "gyre" || warframe.id === "gyre_prime") && <GyreAbilityCritPassivePanel />}
+          {warframe.id === "citrine" && <CitrineGeoluminesencePassivePanel />}
         </CollapsibleSection>
       )}
 
