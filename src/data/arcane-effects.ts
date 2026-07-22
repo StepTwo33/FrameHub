@@ -1310,23 +1310,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "energyRegen",
         "maxValue": 5.0,
-        "valuesByRank": [
-          1.25,
-          2.5,
-          3.75,
-          5.0
-        ]
+        "baseValue": 1.25,
+        "stacking": true
       },
       {
         "stat": "buffDuration",
         "maxValue": 4,
         "flat": true,
-        "valuesByRank": [
-          4,
-          4,
-          4,
-          4
-        ]
+        "constantAtAllRanks": true
       }
     ],
     "stackCap": 3

@@ -608,16 +608,16 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_brave",
     customHandler: "exodia_brave",
     effects: [
-      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "Exodia Brave: custom handler"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "Exodia Brave: custom handler"},
+      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Brave — +5 Energy/s × stacks (cap 3 → 15) for 4s on Zaw heavy-kill"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Brave — 4s window (not × stacks; Zaw-only)"},
     ],
   },
   "exodia_contagion": {
     arcaneId: "exodia_contagion",
     customHandler: "exodia_contagion",
     effects: [
-      {"statKey": "contagionProjectileDamage", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — paper 1× point-blank hit = zawDmg×(2+5×stanceMult)×avgCrit (burst panel; not sustained DPS)"},
-      {"statKey": "contagionExplosionRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — 8m explosion (fixed)"},
+      {"statKey": "contagionProjectileDamage", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — paper 1× point-blank hit = zawDmg×(2+5×stanceMult)×avgCrit (Zaw burst panel; not sustained DPS)"},
+      {"statKey": "contagionExplosionRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — 8m explosion (fixed; Zaw-only)"},
     ],
   },
   "exodia_epidemic": {
@@ -631,8 +631,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_force",
     customHandler: "exodia_force",
     effects: [
-      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Force — 50% chance on status (panel)"},
-      {"statKey": "procDamageMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Exodia Force — 200% weapon damage radial at R3 (paper: stacks>0 = 1 nearby at point-blank)"},
+      {"statKey": "statusProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Force — 50% chance on status (Zaw panel)"},
+      {"statKey": "procDamageMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Exodia Force — 200% weapon damage radial at R3 (Zaw; paper: stacks>0 = 1 nearby at point-blank)"},
     ],
   },
   "exodia_hunt": {

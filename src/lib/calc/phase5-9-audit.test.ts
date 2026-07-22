@@ -501,6 +501,22 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.comboDuration).toBeCloseTo(7.5, 4);
   });
 
+  it("Secondary Dexterity: 6 stacks R5 → +360% damage; combo duration stays +7.5s", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const dex = allArcanes.find((a) => a.id === "arcane_secondary_dexterity")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [dex],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 6 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.arcaneBonuses?.comboDuration).toBeCloseTo(7.5, 4);
+  });
+
   it("Cascadia Accuracy: +300% CC only with roll stacks + applyHeadshots (weakpoint)", () => {
     const lex = allWeapons.find((w) => w.id === "lex")!;
     const acc = allArcanes.find((a) => a.id === "cascadia_accuracy")!;
@@ -1487,11 +1503,23 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(fullS.criticalMultiplier).toBeCloseTo(bareS.criticalMultiplier, 4);
   });
 
-  it("Exodia Force: stacks>0 → +200% splash (1 nearby) at R3", () => {
+  it("Exodia Force: stacks>0 → +200% splash on Zaw; gated on Skana", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const force = allArcanes.find((a) => a.id === "exodia_force")!;
-    const bare = calculateWeaponBuild(skana, [], new Map());
-    const full = calculateWeaponBuildWithArcanes(
+    const bareZ = calculateWeaponBuild(zaw, [], new Map());
+    const fullZ = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [force],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullZ.totalDamage).toBeCloseTo(bareZ.totalDamage * 3, 4);
+
+    const bareS = calculateWeaponBuild(skana, [], new Map());
+    const fullS = calculateWeaponBuildWithArcanes(
       skana,
       [],
       new Map(),
@@ -1499,7 +1527,36 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
-    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 3, 4);
+    expect(fullS.totalDamage).toBeCloseTo(bareS.totalDamage, 4);
+  });
+
+  it("Exodia Brave: R3 @ 3 stacks → +15 Energy/s / 4s on Zaw; gated on Skana", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const brave = allArcanes.find((a) => a.id === "exodia_brave")!;
+    expect(getArcaneEffectDef("exodia_brave")!.stackCap).toBe(3);
+
+    const onZaw = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [brave],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
+    );
+    expect(onZaw.arcaneBonuses?.energyRegen).toBeCloseTo(15, 4);
+    expect(onZaw.arcaneBonuses?.buffDuration).toBeCloseTo(4, 4);
+
+    const onSkana = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [brave],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
+    );
+    expect(onSkana.arcaneBonuses?.energyRegen ?? 0).toBe(0);
+    expect(onSkana.arcaneBonuses?.buffDuration ?? 0).toBe(0);
   });
 
   it("Secondary Irradiate: stacks>0 → +180% splash (1 nearby) at R5", () => {
@@ -1997,11 +2054,27 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.statusStackBonus).toBeCloseTo(6, 4);
   });
 
-  it("Exodia Contagion: paper 1× point-blank burst on panel (sword stanceMult 1)", () => {
+  it("Exodia Contagion: paper 1× point-blank burst on Zaw; gated on Skana", () => {
+    const zaw = allWeapons.find((w) => w.id === "zaw_sepfahn")!;
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const contagion = allArcanes.find((a) => a.id === "exodia_contagion")!;
-    const bare = calculateWeaponBuild(skana, [], new Map());
+    const bare = calculateWeaponBuild(zaw, [], new Map());
     const full = calculateWeaponBuildWithArcanes(
+      zaw,
+      [],
+      new Map(),
+      [contagion],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    // no stanceType → stanceMult 1; hit = dmg × (2+5) × avgCrit
+    const expected =
+      bare.totalDamage * 7 * avgCritMultiplier(bare.criticalChance, bare.criticalMultiplier);
+    expect(full.arcaneBonuses?.contagionProjectileDamage).toBeCloseTo(expected, 2);
+    expect(full.arcaneBonuses?.contagionStanceMult).toBe(1);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const onSkana = calculateWeaponBuildWithArcanes(
       skana,
       [],
       new Map(),
@@ -2009,12 +2082,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
-    // sword None → stanceMult 1; hit = dmg × (2+5) × avgCrit
-    const expected =
-      bare.totalDamage * 7 * avgCritMultiplier(bare.criticalChance, bare.criticalMultiplier);
-    expect(full.arcaneBonuses?.contagionProjectileDamage).toBeCloseTo(expected, 2);
-    expect(full.arcaneBonuses?.contagionStanceMult).toBe(1);
-    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    expect(onSkana.arcaneBonuses?.contagionProjectileDamage ?? 0).toBe(0);
   });
 
   it("Magus Firewall: Operator DR panel only — no Warframe damageReduction", () => {

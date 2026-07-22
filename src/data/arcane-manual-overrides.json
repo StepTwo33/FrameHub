@@ -896,7 +896,8 @@
       {
         "stat": "energyRegen",
         "maxValue": 5,
-        "baseValue": 1.25
+        "baseValue": 1.25,
+        "stacking": true
       },
       {
         "stat": "buffDuration",

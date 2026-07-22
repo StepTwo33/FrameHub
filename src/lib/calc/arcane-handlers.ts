@@ -1173,25 +1173,35 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "exodia_brave": {
-      trackBonus(stats, "energyRegen", scaledLine(def, findEffect(def, "energyRegen"), rank, stacks));
-      trackBonus(stats, "exodiaBraveStacks", stacks);
+      // wiki R3: On Heavy Attack Kill — +5 Energy/s for 4s, stacks ×3 → 15 Energy/s. Zaw-only.
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      const regen = isZaw ? scaledLine(def, findEffect(def, "energyRegen"), rank, stacks) : 0;
+      const durLine = findEffect(def, "buffDuration");
+      const dur = durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 4;
+      trackBonus(stats, "energyRegen", regen);
+      trackBonus(stats, "buffDuration", isZaw ? dur : 0);
+      trackBonus(stats, "exodiaBraveStacks", isZaw ? stacks : 0);
       return true;
     }
 
     case "exodia_force": {
       // wiki R3: 50% on status → 200% weapon damage radial (6m). Paper: stacks>0 = blast hits
-      // 1 nearby enemy at point-blank (no falloff; chance assumed).
+      // 1 nearby enemy at point-blank (no falloff; chance assumed). Zaw-only.
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
       const dmgLine = findEffect(def, "procDamageMultiplier");
       const dmgPct = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
-      if (dmgPct > 0) {
+      if (isZaw && dmgPct > 0) {
         const splash = stats.totalDamage * (dmgPct / 100);
         stats.totalDamage += splash;
         trackBonus(stats, "procDamageMultiplier", dmgPct);
         trackBonus(stats, "exodiaForceSplash", splash);
+      } else {
+        trackBonus(stats, "procDamageMultiplier", 0);
+        trackBonus(stats, "exodiaForceSplash", 0);
       }
       const chanceLine = findEffect(def, "statusProcChance");
       if (chanceLine) {
-        trackBonus(stats, "statusProcChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+        trackBonus(stats, "statusProcChance", isZaw ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
       }
       return true;
     }
@@ -1228,9 +1238,16 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "exodia_contagion": {
-      // wiki R3: aim-glide aerial melee launches projectile.
+      // wiki R3: aim-glide aerial melee launches projectile. Zaw-only.
       // Paper 1× point-blank: direct 2× + explosion 5××stanceMult (ignore 30m bonus / stick DoT).
       // Burst add-on only — does not fold into sustained DPS.
+      const isZaw = /zaw/i.test(ctx.baseWeapon?.category ?? "");
+      if (!isZaw) {
+        trackBonus(stats, "contagionProjectileDamage", 0);
+        trackBonus(stats, "contagionExplosionRadius", 0);
+        trackBonus(stats, "contagionStanceMult", 0);
+        return true;
+      }
       const stanceMult = contagionStanceExplosionMult(ctx.baseWeapon?.stanceType);
       const zawDmg = stats.totalDamage;
       const hit =
