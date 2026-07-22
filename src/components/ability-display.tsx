@@ -21,6 +21,7 @@ import {
   computeThermalSunderRedlineArmorStrip,
   computeMassVitrifyEnemyAbsorb,
   computeThuribleEnergyPerKill,
+  computeMetamorphosisBonusAtTime,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -351,6 +352,9 @@ export function AbilityStatsBlock({
   const [thuribleChannel, setThuribleChannel] = useState(
     typeof ability.energyCost === "number" ? ability.energyCost : 25,
   );
+  const hasMetamorphosisDecay = display.abilityName === "Metamorphosis";
+  const [metaElapsedSec, setMetaElapsedSec] = useState(0);
+  const metaDurationSec = Math.max(0, (ability.duration ?? 25) * dur);
   const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
   const hasHeatEnergyLerp =
     display.abilityName === "Fire Blast" &&
@@ -951,6 +955,15 @@ export function AbilityStatsBlock({
     ) {
       continue;
     }
+    if (
+      hasMetamorphosisDecay &&
+      (line.label === "Night Armor" ||
+        line.label === "Night Shields" ||
+        line.label === "Day Damage Bonus" ||
+        line.label === "Day Speed Bonus")
+    ) {
+      continue;
+    }
     rows.push(
       <AbilityStatRow
         key={line.label}
@@ -1142,6 +1155,75 @@ export function AbilityStatsBlock({
       );
     }
   }
+  if (hasMetamorphosisDecay && ability.miscStats) {
+    const nightArmor = Number(ability.miscStats.nightArmor);
+    const nightShields = Number(ability.miscStats.nightShields);
+    const dayDmg = Number(ability.miscStats.dayDamageBonus);
+    const daySpeed = Number(ability.miscStats.daySpeedBonus);
+    const dBase = ability.duration ?? 25;
+    const dScaled = metaDurationSec;
+    const atLabel = metaElapsedSec > 0 ? " (at Elapsed)" : " (Peak)";
+    const metaRows: {
+      key: string;
+      label: string;
+      base: number;
+      scaled: number;
+      percent?: boolean;
+    }[] = [];
+    if (Number.isFinite(nightArmor) && nightArmor > 0) {
+      metaRows.push({
+        key: "metaNightArmor",
+        label: `Night Armor${atLabel}`,
+        base: computeMetamorphosisBonusAtTime(nightArmor, 1, metaElapsedSec, dBase),
+        scaled: computeMetamorphosisBonusAtTime(nightArmor, str, metaElapsedSec, dScaled),
+      });
+    }
+    if (Number.isFinite(nightShields) && nightShields > 0) {
+      metaRows.push({
+        key: "metaNightShields",
+        label: `Night Shields${atLabel}`,
+        base: computeMetamorphosisBonusAtTime(nightShields, 1, metaElapsedSec, dBase),
+        scaled: computeMetamorphosisBonusAtTime(nightShields, str, metaElapsedSec, dScaled),
+      });
+    }
+    if (Number.isFinite(dayDmg) && dayDmg > 0) {
+      metaRows.push({
+        key: "metaDayDmg",
+        label: `Day Damage${atLabel}`,
+        base: computeMetamorphosisBonusAtTime(dayDmg, 1, metaElapsedSec, dBase),
+        scaled: computeMetamorphosisBonusAtTime(dayDmg, str, metaElapsedSec, dScaled),
+        percent: true,
+      });
+    }
+    if (Number.isFinite(daySpeed) && daySpeed > 0) {
+      metaRows.push({
+        key: "metaDaySpeed",
+        label: `Day Speed${atLabel}`,
+        base: computeMetamorphosisBonusAtTime(daySpeed, 1, metaElapsedSec, dBase),
+        scaled: computeMetamorphosisBonusAtTime(daySpeed, str, metaElapsedSec, dScaled),
+        percent: true,
+      });
+    }
+    for (const r of metaRows) {
+      rows.push(
+        <AbilityStatRow
+          key={r.key}
+          compact={compact}
+          label={r.label}
+          baseValue={
+            r.percent ? (r.base * 100).toFixed(1) : r.base.toFixed(0)
+          }
+          modifiedValue={
+            r.percent ? (r.scaled * 100).toFixed(1) : r.scaled.toFixed(0)
+          }
+          unit={r.percent ? "%" : undefined}
+          isModified={str !== 1 || dur !== 1 || metaElapsedSec > 0}
+          isPositive={r.scaled >= r.base || metaElapsedSec === 0}
+          scaleHint="strength"
+        />,
+      );
+    }
+  }
   if (hasThuribleEpk) {
     const baseEpk = computeThuribleEnergyPerKill(thuribleChannel, 1, 1, {
       energyConvert: thuribleConvert,
@@ -1268,6 +1350,16 @@ export function AbilityStatsBlock({
           max={500}
           onChange={setThuribleChannel}
           tooltip="Thurible: Energy/Kill = 1 + [channel × 15% ÷ (2−EFF)] × STR; headshots ×4 (wiki)."
+        />
+      )}
+      {hasMetamorphosisDecay && (
+        <SimSlider
+          label="Elapsed (s)"
+          value={metaElapsedSec}
+          min={0}
+          max={Math.max(1, Math.ceil(metaDurationSec))}
+          onChange={setMetaElapsedSec}
+          tooltip="Metamorphosis bonuses decay linearly to 0 over duration×DUR (wiki)."
         />
       )}
       {rows}

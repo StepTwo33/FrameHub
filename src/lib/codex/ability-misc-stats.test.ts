@@ -17,6 +17,7 @@ import {
   computeGaussPassiveRechargeDelayReduction,
   computeThermalSunderRedlineArmorStrip,
   computeThuribleEnergyPerKill,
+  computeMetamorphosisBonusAtTime,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -207,6 +208,19 @@ describe("Thurible energy per kill", () => {
   it("gives 1 energy at zero channel", () => {
     expect(computeThuribleEnergyPerKill(0, 1, 1).body).toBe(1);
     expect(computeThuribleEnergyPerKill(0, 1.3, 1.3).headshot).toBe(4);
+  });
+});
+
+describe("Metamorphosis linear decay", () => {
+  // wiki: peak × STR, linear to 0 over D (DUR-scaled)
+  it("decays Night/Day bonuses linearly over duration", () => {
+    expect(computeMetamorphosisBonusAtTime(250, 1.3, 0, 25)).toBe(325);
+    expect(computeMetamorphosisBonusAtTime(250, 1.3, 12.5, 25)).toBe(162.5);
+    expect(computeMetamorphosisBonusAtTime(250, 1.3, 25, 25)).toBe(0);
+    expect(computeMetamorphosisBonusAtTime(150, 1.3, 12.5, 25)).toBe(97.5);
+    expect(computeMetamorphosisBonusAtTime(0.25, 1.3, 0, 25)).toBeCloseTo(0.325, 5);
+    expect(computeMetamorphosisBonusAtTime(0.15, 1.3, 12.5, 25)).toBeCloseTo(0.0975, 5);
+    expect(computeMetamorphosisBonusAtTime(250, 1.3, 12.5, 50)).toBe(243.75); // 200% DUR
   });
 });
 

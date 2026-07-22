@@ -2239,6 +2239,23 @@ export function computeThuribleEnergyPerKill(
   return { body, headshot: body * hsMult };
 }
 
+/**
+ * wiki Metamorphosis: bonuses decay linearly to 0 over Ability Duration.
+ * remaining = (base × STR) × max(0, 1 − elapsed / (duration × DUR))
+ */
+export function computeMetamorphosisBonusAtTime(
+  base: number,
+  strength: number,
+  elapsedSec: number,
+  durationSec: number,
+): number {
+  const peak = base * strength;
+  const d = Math.max(0, durationSec);
+  if (d <= 0) return 0;
+  const remain = Math.max(0, 1 - Math.max(0, elapsedSec) / d);
+  return peak * remain;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

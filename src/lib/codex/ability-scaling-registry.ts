@@ -1269,7 +1269,8 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
-  // wiki: Metamorphosis — Night armor/shields + Day dmg/speed × STR; decay over duration
+  // wiki: Metamorphosis — Night armor/shields + Day dmg/speed × STR;
+  // panel: linear decay to 0 over duration×DUR (computeMetamorphosisBonusAtTime)
   "equinox::Metamorphosis": {
     nightArmor: { scale: "strength" },
     nightShields: { scale: "strength" },

@@ -232,6 +232,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Thermal Sunder Redline strip | 2026-07-21 | Blast armor strip 0% at ≤80% battery → 100% at full (Redline synergy; not × STR) |
 | Mass Vitrify enemy absorb | 2026-07-21 | Segment += N×max((320+5×armor)×STR, enemyEHP÷10); wiki 4160+2496; Enemy HP+Shields (k) for max path |
 | Thurible energy per kill | 2026-07-21 | EPK = 1+[channel×0.15÷(2−EFF)]×STR; HS ×4; wiki 25/130%/130% → ≈7.96 / ≈31.86 |
+| Metamorphosis linear decay | 2026-07-21 | Peak×STR decays linearly to 0 over duration×DUR; wiki mid-duration half peak (250→162.5 @130% STR) |
 
 ## New / extended test files
 
