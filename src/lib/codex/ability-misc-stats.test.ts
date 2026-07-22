@@ -47,6 +47,9 @@ import {
   computeHydroidCorrosiveArmorStrip,
   computeDanteChroniclersMarkStatusChance,
   computeDagathAbundantAbyss,
+  computeEquinoxOrbConversion,
+  computeRevenantShieldDepletionPulse,
+  computeRevenantShieldPulseDamageAtDistance,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -545,6 +548,34 @@ describe("Dagath Abundant Abyss passive", () => {
     expect(avg.effectiveValue).toBeCloseTo(51.25, 5);
     expect(computeDagathAbundantAbyss(25, { forceProc: true }).effectiveValue).toBe(100);
     expect(computeDagathAbundantAbyss(25, { forceProc: false }).effectiveValue).toBe(25);
+  });
+});
+
+describe("Equinox orb conversion passive", () => {
+  it("converts 10% of Health orbs to Energy and Energy orbs to Health", () => {
+    expect(computeEquinoxOrbConversion(50, "health")).toEqual({
+      primaryAmount: 50,
+      convertedAmount: 5,
+      convertedResource: "energy",
+    });
+    expect(computeEquinoxOrbConversion(25, "energy")).toEqual({
+      primaryAmount: 25,
+      convertedAmount: 2.5,
+      convertedResource: "health",
+    });
+  });
+});
+
+describe("Revenant shield-depletion pulse", () => {
+  it("is 100 damage / 7.5m with 75% edge falloff", () => {
+    expect(computeRevenantShieldDepletionPulse()).toEqual({
+      damage: 100,
+      radius: 7.5,
+      maxFalloff: 0.75,
+    });
+    expect(computeRevenantShieldPulseDamageAtDistance(0)).toBe(100);
+    expect(computeRevenantShieldPulseDamageAtDistance(1)).toBeCloseTo(25, 5);
+    expect(computeRevenantShieldPulseDamageAtDistance(0.5)).toBeCloseTo(62.5, 5);
   });
 });
 

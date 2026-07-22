@@ -39,6 +39,9 @@ import {
   computeHydroidCorrosiveArmorStrip,
   computeDanteChroniclersMarkStatusChance,
   computeDagathAbundantAbyss,
+  computeEquinoxOrbConversion,
+  computeRevenantShieldDepletionPulse,
+  computeRevenantShieldPulseDamageAtDistance,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -805,6 +808,77 @@ function DagathAbundantAbyssPassive() {
   );
 }
 
+function EquinoxOrbConversionPassive() {
+  const [orbKind, setOrbKind] = useState(0); // 0 health, 1 energy
+  const [orbValue, setOrbValue] = useState(50);
+  const kind = orbKind > 0 ? "energy" : "health";
+  const result = computeEquinoxOrbConversion(orbValue, kind);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Orb (0 Health / 1 Energy)"
+        value={orbKind}
+        min={0}
+        max={1}
+        onChange={setOrbKind}
+        tooltip="Equinox: 10% of Health Orbs convert to Energy; 10% of Energy Orbs convert to Health."
+      />
+      <SimSlider
+        label="Orb Value"
+        value={orbValue}
+        min={25}
+        max={100}
+        onChange={setOrbValue}
+        tooltip="Primary restore amount before conversion (small 25 / large 50 / Empowered 100)."
+      />
+      <StatRow
+        label={kind === "health" ? "Health" : "Energy"}
+        value={`+${result.primaryAmount.toFixed(0)}`}
+        color="text-sky-400"
+        tooltip="Full orb value applied to its primary resource."
+      />
+      <StatRow
+        label={result.convertedResource === "energy" ? "→ Energy" : "→ Health"}
+        value={`+${result.convertedAmount.toFixed(1)}`}
+        color="text-amber-400"
+        tooltip="10% of the orb value converted to the other resource (stacks additively with Equilibrium)."
+      />
+    </div>
+  );
+}
+
+function RevenantShieldPulsePassive() {
+  const pulse = computeRevenantShieldDepletionPulse();
+  const [distancePct, setDistancePct] = useState(0);
+  const dmg = computeRevenantShieldPulseDamageAtDistance(distancePct / 100, pulse);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Distance % of Radius"
+        value={distancePct}
+        min={0}
+        max={100}
+        onChange={setDistancePct}
+        tooltip={`Revenant: on shield break, ${pulse.damage} Impact knockdown in ${pulse.radius}m (${(pulse.maxFalloff * 100).toFixed(0)}% falloff at edge).`}
+      />
+      <StatRow
+        label="Pulse Damage"
+        value={dmg.toFixed(0)}
+        color="text-violet-400"
+        tooltip="Not affected by Ability Strength. Knocks down enemies in range."
+      />
+      <StatRow
+        label="Radius"
+        value={`${pulse.radius}m`}
+        color="text-muted-foreground"
+        tooltip="Fixed 7.5m radial pulse on shield depletion."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -948,6 +1022,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "hydroid" || warframe.id === "hydroid_prime") && <HydroidCorrosivePassive />}
           {warframe.id === "dante" && <DanteChroniclersMarkPassive />}
           {warframe.id === "dagath" && <DagathAbundantAbyssPassive />}
+          {(warframe.id === "equinox" || warframe.id === "equinox_prime") && <EquinoxOrbConversionPassive />}
+          {(warframe.id === "revenant" || warframe.id === "revenant_prime") && <RevenantShieldPulsePassive />}
         </CollapsibleSection>
       )}
 

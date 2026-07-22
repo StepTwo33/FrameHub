@@ -2607,6 +2607,54 @@ export function computeDagathAbundantAbyss(
   return { procChance, procYieldMultiplier, expectedYieldMultiplier, effectiveValue };
 }
 
+export interface EquinoxOrbConversion {
+  /** Primary restore from the orb (full value). */
+  primaryAmount: number;
+  /** Converted amount (10% of orb value). */
+  convertedAmount: number;
+  convertedResource: "health" | "energy";
+}
+
+/**
+ * wiki Equinox passive: 10% of Health Orbs → Energy, 10% of Energy Orbs → Health.
+ */
+export function computeEquinoxOrbConversion(
+  orbValue: number,
+  orbKind: "health" | "energy",
+): EquinoxOrbConversion {
+  const primaryAmount = Math.max(0, orbValue);
+  const convertedAmount = primaryAmount * 0.1;
+  return {
+    primaryAmount,
+    convertedAmount,
+    convertedResource: orbKind === "health" ? "energy" : "health",
+  };
+}
+
+export interface RevenantShieldPulse {
+  damage: number;
+  radius: number;
+  /** Max damage falloff at the edge (wiki 75%). */
+  maxFalloff: number;
+}
+
+/** wiki Revenant: on shield break, 100 Impact knockdown pulse in 7.5m (75% edge falloff). */
+export function computeRevenantShieldDepletionPulse(): RevenantShieldPulse {
+  return { damage: 100, radius: 7.5, maxFalloff: 0.75 };
+}
+
+/**
+ * Linear falloff from center (0) to edge (maxFalloff) across pulse radius.
+ * distanceFraction = distance / radius, clamped 0–1.
+ */
+export function computeRevenantShieldPulseDamageAtDistance(
+  distanceFraction: number,
+  pulse: RevenantShieldPulse = computeRevenantShieldDepletionPulse(),
+): number {
+  const t = Math.min(1, Math.max(0, distanceFraction));
+  return pulse.damage * (1 - pulse.maxFalloff * t);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
