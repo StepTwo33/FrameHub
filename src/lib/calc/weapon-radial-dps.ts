@@ -72,13 +72,36 @@ export function radialAttacksPerSecond(
   return efr * stats.multishot;
 }
 
+/**
+ * Evolution-gated radials (e.g. Miter Sawblade Storm) merged from incarnonStatChanges.
+ * Excluded while Incarnon Form is active when the perk does not affect form.
+ */
+export function evolutionExtraRadials(
+  incarnonStatChanges: Record<string, number> | undefined,
+  incarnonFormActive: boolean,
+): WeaponRadialAttack[] {
+  if (incarnonFormActive || !incarnonStatChanges) return [];
+  const blast = incarnonStatChanges.sawbladeStormBlast;
+  if (blast == null || blast <= 0) return [];
+  return [
+    {
+      name: "Sawblade Storm Explosion",
+      blast,
+      totalDamage: blast,
+      radius: incarnonStatChanges.sawbladeStormRadius ?? 5,
+    },
+  ];
+}
+
 export function scaleRadialAttacksWithDps(
   baseWeapon: Weapon,
   stats: CalculatedStats,
   /** Whether Incarnon form is active (evolutions selected) — gates Incarnon-only radials. */
   incarnonActive = false,
+  /** Extra radials from selected evolutions (Sawblade Storm, etc.). */
+  extraRadials: WeaponRadialAttack[] = [],
 ): { attacks: ScaledRadialAttack[]; radialBurstDps: number; radialSustainedDps: number } {
-  const attacks = getWeaponRadialAttacks(baseWeapon);
+  const attacks = [...getWeaponRadialAttacks(baseWeapon), ...extraRadials];
   if (!attacks.length || !baseWeapon.damage) {
     return { attacks: [], radialBurstDps: 0, radialSustainedDps: 0 };
   }

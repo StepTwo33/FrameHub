@@ -2,7 +2,7 @@
 import { Mod, Weapon, Warframe, ModSlot, CalculatedStats, WarframeCalculatedStats, ElementalDamage, StatusProc, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions, SetBonusLinkage, EquippedArchonShard, WeaponExternalBuff } from '../types';
 import { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import { resolveEffectiveFireRate } from './effective-fire-rate';
-import { scaleRadialAttacksWithDps } from './weapon-radial-dps';
+import { evolutionExtraRadials, scaleRadialAttacksWithDps } from './weapon-radial-dps';
 import {
   applyMeleeComboToStats,
   resolveEffectiveComboCount,
@@ -352,8 +352,15 @@ function applyRadialAttacks(
   baseWeapon: Weapon,
   stats: CalculatedStats,
   incarnonActive = false,
+  incarnonStatChanges?: Record<string, number>,
 ): void {
-  const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(baseWeapon, stats, incarnonActive);
+  const extra = evolutionExtraRadials(incarnonStatChanges, incarnonActive);
+  const { attacks, radialBurstDps, radialSustainedDps } = scaleRadialAttacksWithDps(
+    baseWeapon,
+    stats,
+    incarnonActive,
+    extra,
+  );
   if (!attacks.length) return;
   stats.radialAttacks = attacks;
   stats.radialBurstDps = radialBurstDps;
@@ -959,6 +966,8 @@ export function calculateWeaponBuild(
         case 'halfHealthAdditiveDamage':
         case 'lastShotBaseMultishot':
         case 'flatMsPelletDamage':
+        case 'sawbladeStormBlast':
+        case 'sawbladeStormRadius':
           break;
         case 'headshotDamageBonus':
           stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + value;
@@ -1403,7 +1412,12 @@ export function calculateWeaponBuild(
 
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
-  applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
+  applyRadialAttacks(
+    baseWeapon,
+    stats,
+    calcOptions?.incarnonFormActive === true,
+    incarnonStatChanges,
+  );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
 
   return stats;
@@ -1796,7 +1810,12 @@ export function calculateWeaponBuildWithArcanes(
   });
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
-  applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
+  applyRadialAttacks(
+    baseWeapon,
+    stats,
+    calcOptions?.incarnonFormActive === true,
+    incarnonStatChanges,
+  );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
   if ((stats.residualZoneDps ?? 0) > 0) {
     stats.burstDps += stats.residualZoneDps!;

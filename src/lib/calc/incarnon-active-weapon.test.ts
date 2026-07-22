@@ -1030,6 +1030,31 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
   });
 
+  it("Miter Sawblade Storm papers 1400 Blast / 5m radial (base form only)", () => {
+    const data = incarnonDataMap.get("miter")!;
+    const storm = mergeIncarnonStatChanges(data, { 4: 0 }, "miter");
+    expect(storm?.sawbladeStormBlast).toBe(1400);
+    expect(storm?.sawbladeStormRadius).toBe(5);
+
+    const miter = allWeapons.find((w) => w.id === "miter")!;
+    const bare = calculateWeaponBuild(miter, [], modsMap());
+    const withStorm = calculateWeaponBuild(miter, [], modsMap(), storm);
+    const aoe = (withStorm.radialAttacks ?? []).find((a) => /sawblade storm/i.test(a.name));
+    expect(aoe).toBeDefined();
+    // Radial scales with modded total / catalog base (same as other radials)
+    expect(aoe!.blast).toBeCloseTo(1400 * (withStorm.totalDamage / miter.damage), 5);
+    expect(aoe!.radius).toBe(5);
+    expect(aoe!.falloffReduction).toBeUndefined();
+    expect(withStorm.radialBurstDps ?? 0).toBeGreaterThan(bare.radialBurstDps ?? 0);
+    expect(withStorm.burstDps).toBeGreaterThan(bare.burstDps);
+
+    // Wiki: does not affect Incarnon form
+    const formOff = calculateWeaponBuild(miter, [], modsMap(), storm, undefined, {
+      incarnonFormActive: true,
+    });
+    expect((formOff.radialAttacks ?? []).some((a) => /sawblade storm/i.test(a.name))).toBe(false);
+  });
+
   it("half-HP Feigned/Hitman/Swift ignore own flat; Impaler is Serration-additive", () => {
     const sicarusData = incarnonDataMap.get("sicarus")!;
     const feigned = mergeIncarnonStatChanges(sicarusData, { 2: 0 }, "sicarus");

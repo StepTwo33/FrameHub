@@ -453,7 +453,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 2, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to 160", statChanges: {"ammoMaxSet":160} },
-    { tier: 4, slot: 0, name: "Sawblade Storm", description: "Hold charged shot for 1s to increase area of effect.", statChanges: {} },
+    // Base form only: each charged bounce → 1400 Blast / 5m, no falloff (wiki); not in Incarnon form
+    { tier: 4, slot: 0, name: "Sawblade Storm", description: "Hold charged shot for 1s to increase area of effect.", statChanges: {"sawbladeStormBlast":1400,"sawbladeStormRadius":5} },
     { tier: 4, slot: 1, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +22%", statChanges: {"criticalChance":0.22} },
     { tier: 4, slot: 2, name: "Critical Parallel", description: "Increase Base Critical Chance by +12% Increase Base Status Chance by +12%", statChanges: {"criticalChance":0.12,"statusChance":0.12} },
   ],
