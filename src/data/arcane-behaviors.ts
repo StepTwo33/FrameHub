@@ -299,17 +299,17 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_primary_deadhead",
     customHandler: "arcane_primary_deadhead",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Primary Deadhead: custom handler"},
-      {"statKey": "headshotMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Primary Deadhead: custom handler"},
-      {"statKey": "recoilReduction", "target": "arcane_panel", "mode": "custom", "source": "Primary Deadhead: custom handler"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Deadhead — +120% damage / HS-kill stack at R5 (cap 3 → +360%; applies at sim stack count)"},
+      {"statKey": "headshotMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Deadhead — +30% headshot multiplier passive at R5"},
+      {"statKey": "recoilReduction", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Deadhead — −50% recoil passive at R5 (panel)"},
     ],
   },
   "arcane_primary_dexterity": {
     arcaneId: "arcane_primary_dexterity",
     customHandler: "arcane_primary_dexterity",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Primary Dexterity: custom handler"},
-      {"statKey": "comboDuration", "target": "arcane_panel", "mode": "custom", "source": "Primary Dexterity: custom handler"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Dexterity — +60% damage / melee-kill stack at R5 (cap 6 → +360%; applies at sim stack count)"},
+      {"statKey": "comboDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Dexterity — +7.5s melee combo duration passive at R5 (panel)"},
     ],
   },
   "arcane_primary_merciless": {
@@ -366,17 +366,17 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_secondary_deadhead",
     customHandler: "arcane_secondary_deadhead",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Secondary Deadhead: custom handler"},
-      {"statKey": "headshotMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Secondary Deadhead: custom handler"},
-      {"statKey": "recoilReduction", "target": "arcane_panel", "mode": "custom", "source": "Secondary Deadhead: custom handler"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Deadhead — +120% damage / HS-kill stack at R5 (cap 3 → +360%; applies at sim stack count)"},
+      {"statKey": "headshotMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Deadhead — +30% headshot multiplier passive at R5"},
+      {"statKey": "recoilReduction", "target": "arcane_panel", "mode": "custom", "source": "wiki: Secondary Deadhead — −50% recoil passive at R5 (panel)"},
     ],
   },
   "arcane_secondary_dexterity": {
     arcaneId: "arcane_secondary_dexterity",
     customHandler: "arcane_secondary_dexterity",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Secondary Dexterity: custom handler"},
-      {"statKey": "comboDuration", "target": "arcane_panel", "mode": "custom", "source": "Secondary Dexterity: custom handler"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Dexterity — +60% damage / melee-kill stack at R5 (cap 6 → +360%; applies at sim stack count)"},
+      {"statKey": "comboDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Secondary Dexterity — +7.5s melee combo duration passive at R5 (panel)"},
     ],
   },
   "arcane_secondary_merciless": {

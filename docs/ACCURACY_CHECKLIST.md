@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Merciless reload fix + Crux/Blight/Flare/Frostbite/Slip Shot/Overcharge DPS goldens | **Improved** |
+| B6 | Arcane custom handlers | Merciless/Deadhead/Dexterity passives fixed; Crux–Overcharge stack goldens | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -286,6 +286,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Conjunction Voltage → DPS | 2026-07-22 | R5 @ 40 Electricity stacks: +120% multishot / +60% reload (weapon_dps; was arcane_panel) |
 | Primary Crux SC → DPS | 2026-07-22 | statusChancePerHit maps to SC; R5 @ 10: +300% SC / +60% AE; Blight +72% MS / +144% CD; Flare +480% dmg |
 | Merciless reload + Frostbite/Slip/Overcharge | 2026-07-22 | Merciless R5 reload flat +30% (not ×12); Frostbite +90% MS/+120% CD; Slip Shot +65% AE; Overcharge +350% MS |
+| Deadhead/Dexterity passives | 2026-07-22 | Deadhead +30% HS mult into headshotDamageBonus (not × stacks); Dexterity combo +7.5s once; both +360% dmg at cap |
 
 ## New / extended test files
 

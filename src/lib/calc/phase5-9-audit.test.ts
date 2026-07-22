@@ -451,6 +451,48 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(withArc.multishot).toBeCloseTo(bare.multishot + braton.multishot * 3.5, 4);
     expect(withArc.burstDps).toBeGreaterThan(bare.burstDps);
   });
+
+  it("Primary Deadhead: 3 stacks R5 → +360% damage and +30% headshot mult (passive)", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const deadhead = allArcanes.find((a) => a.id === "arcane_primary_deadhead")!;
+    const def = getArcaneEffectDef("arcane_primary_deadhead")!;
+    expect(def.stackCap).toBe(3);
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [deadhead],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
+    );
+    // wiki R5: +120% damage × 3 = +360%; +30% headshot mult passive
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.headshotDamageBonus).toBeCloseTo((bare.headshotDamageBonus ?? 0) + 0.3, 4);
+    expect(full.arcaneBonuses?.headshotMultiplier).toBeCloseTo(30, 4);
+    expect(full.arcaneBonuses?.recoilReduction).toBeCloseTo(50, 4);
+  });
+
+  it("Primary Dexterity: 6 stacks R5 → +360% damage; combo duration stays +7.5s (not × stacks)", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const dex = allArcanes.find((a) => a.id === "arcane_primary_dexterity")!;
+    const def = getArcaneEffectDef("arcane_primary_dexterity")!;
+    expect(def.stackCap).toBe(6);
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [dex],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 6 },
+    );
+    // wiki R5: +60% damage × 6 = +360%; +7.5s combo duration passive
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
+    expect(full.arcaneBonuses?.comboDuration).toBeCloseTo(7.5, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

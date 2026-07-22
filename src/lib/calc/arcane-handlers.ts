@@ -146,14 +146,36 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
 
     case "arcane_primary_deadhead":
-    case "arcane_secondary_deadhead":
-      applyStackingDamageHandler(stats, ctx, { bonusKey: "deadheadStacks" });
+    case "arcane_secondary_deadhead": {
+      // Damage stacks; R5 headshot mult / recoil are passives (wiki — not per-stack).
+      const dmg = scaledLine(def, findEffect(def, "damage"), rank, stacks);
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "deadheadStacks", stacks);
+      const hsLine = findEffect(def, "headshotMultiplier");
+      if (hsLine) {
+        const hs = scaleArcaneEffectLine(hsLine, rank, def.maxRank);
+        stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + hs / 100;
+        trackBonus(stats, "headshotMultiplier", hs);
+      }
+      const recoilLine = findEffect(def, "recoilReduction");
+      if (recoilLine) {
+        trackBonus(stats, "recoilReduction", scaleArcaneEffectLine(recoilLine, rank, def.maxRank));
+      }
       return true;
+    }
 
     case "arcane_primary_dexterity":
-    case "arcane_secondary_dexterity":
-      applyStackingDamageHandler(stats, ctx, { bonusKey: "dexterityStacks" });
+    case "arcane_secondary_dexterity": {
+      // Damage stacks; R5 combo duration is a flat passive (wiki — not per-stack).
+      const dmg = scaledLine(def, findEffect(def, "damage"), rank, stacks);
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "dexterityStacks", stacks);
+      const comboLine = findEffect(def, "comboDuration");
+      if (comboLine) {
+        trackBonus(stats, "comboDuration", scaleArcaneEffectLine(comboLine, rank, def.maxRank));
+      }
       return true;
+    }
 
     case "primary_overcharge": {
       const ms = scaledLine(def, findEffect(def, "multishot"), rank, stacks);
