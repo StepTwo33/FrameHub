@@ -508,6 +508,14 @@ export interface CalculatedStats {
   finisherComboCountChance?: number;
   /** Flat combo granted on finisher — display only. */
   comboOnFinisher?: number;
+  /** Combo on Slash-status targets (Seeing Red) — display only. */
+  comboOnSlashStatus?: number;
+  /** Combo on Toxin-status targets (Alchemist's Wrath) — display only. */
+  comboOnToxinStatus?: number;
+  /** Combo on Cold-status targets (Master's Shatter) — display only. */
+  comboOnColdStatus?: number;
+  /** Combo on undamaged enemies (Wartime Nerve) — display only. */
+  comboOnUndamaged?: number;
   /** Combo granted per slam-radius enemy hit — display only. */
   comboPerSlamHit?: number;
   /** Combo granted per slide-attack enemy hit — display only. */

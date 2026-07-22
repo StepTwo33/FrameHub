@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
-| B8 | Incarnon + radials | … + Miter Sawblade Storm 1400 Blast/5m (base form) | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
+| B8 | Incarnon + radials | … + Overwhelming Attrition additive; King's Gambit body×0; Swift form mult; Seeing Red combo panels | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
 ---
 
@@ -321,6 +321,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Miter Plentiful + last-shot MS + Reaver Rapture | 2026-07-22 | flatMsPelletDamage +20 EV; Forceful/Fusillade lastShotBaseMultishot mag EV; Rapture 5×/+100% & 4×/+80% Serration-additive |
 | Half-HP / Lone Gun / Cascade charge gate | 2026-07-22 | Feigned/Hitman/Swift halfHealthAdditiveDamage (ignore own flat); Impaler additiveBaseDamage; Vasto Lone Gun X+40/+14 mag; Cascade chargeStatChanges |
 | Miter Sawblade Storm radial | 2026-07-22 | Evolution-gated 1400 Blast / 5m no falloff; excluded in Incarnon form; papers into radial DPS |
+| Attrition / Gambit / Swift form / Seeing Red | 2026-07-22 | Laetum Overwhelming additiveBaseDamage 12; King's Gambit body CC×0; Kunai Swift form ×damage; Slash/Toxin/Cold/undamaged combo panels |
 
 ## New / extended test files
 

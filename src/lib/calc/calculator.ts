@@ -783,6 +783,11 @@ export function calculateWeaponBuild(
   if (critChanceFlatBonus.chance !== 0) {
     stats.criticalChance += critChanceFlatBonus.chance;
   }
+  // King's Gambit: ×0 CC on bodyshots (paper when headshot sim is off)
+  const bodyCritMult = incarnonStatChanges?.bodyshotCritChanceMult;
+  if (bodyCritMult != null && !sim.applyHeadshots) {
+    stats.criticalChance *= bodyCritMult;
+  }
   stats.criticalMultiplier =
     quantizeBaseCritMultiplier(evolvedBaseCM) * (1 + critMultBonus);
   if (critMultFlatBonus.critEventBonus > 0) {
@@ -968,6 +973,7 @@ export function calculateWeaponBuild(
         case 'flatMsPelletDamage':
         case 'sawbladeStormBlast':
         case 'sawbladeStormRadius':
+        case 'bodyshotCritChanceMult':
           break;
         case 'headshotDamageBonus':
           stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + value;
@@ -1104,6 +1110,18 @@ export function calculateWeaponBuild(
           break;
         case 'comboOnFinisher':
           stats.comboOnFinisher = (stats.comboOnFinisher ?? 0) + value;
+          break;
+        case 'comboOnSlashStatus':
+          stats.comboOnSlashStatus = (stats.comboOnSlashStatus ?? 0) + value;
+          break;
+        case 'comboOnToxinStatus':
+          stats.comboOnToxinStatus = (stats.comboOnToxinStatus ?? 0) + value;
+          break;
+        case 'comboOnColdStatus':
+          stats.comboOnColdStatus = (stats.comboOnColdStatus ?? 0) + value;
+          break;
+        case 'comboOnUndamaged':
+          stats.comboOnUndamaged = (stats.comboOnUndamaged ?? 0) + value;
           break;
         case 'comboPerSlamHit':
           stats.comboPerSlamHit = (stats.comboPerSlamHit ?? 0) + value;

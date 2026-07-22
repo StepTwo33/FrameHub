@@ -227,7 +227,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "dual_ichor_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills create a Toxin Damage field +100% Melee Damage +20% Sprint Speed +20% to Bullet Jump", statChanges: {"damage":1} },
-    { tier: 2, slot: 0, name: "Alchemist's Wrath", description: "Increase Base Damage by +90. 5 additional Combos on targets affected by Toxin.", statChanges: {"flatBaseDamage":90} },
+    { tier: 2, slot: 0, name: "Alchemist's Wrath", description: "Increase Base Damage by +90. 5 additional Combos on targets affected by Toxin.", statChanges: {"flatBaseDamage":90,"comboOnToxinStatus":5} },
     // Assumes Neutral finisher AS buff up for paper DPS
     { tier: 2, slot: 1, name: "Ronin's Rush", description: "Increase Base Damage by +90. On striking target with final move of Neutral Combo: +30% Attack Speed for 33s.", statChanges: {"flatBaseDamage":90,"fireRate":0.3} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.6 Range", statChanges: {"range":0.6} },
@@ -355,8 +355,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "kunai_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Projectiles seek Headshots and have increased Multishot.", statChanges: {} },
     // Assumes target below half health for paper DPS
-    // Base-form paper: +200% Hornet-additive (wiki: multiplicative in Incarnon form — not papered)
-    { tier: 2, slot: 0, name: "Swift Conclusion", description: "Increase Damage by +70. Increase Damage by +200% if enemy has less than half health.", statChanges: {"flatBaseDamage":70,"halfHealthAdditiveDamage":2}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"halfHealthAdditiveDamage":2},"mk1_kunai":{"flatBaseDamage":80,"halfHealthAdditiveDamage":2}} },
+    // Base: +200% Hornet-additive; form: multiplicative (wiki) via formStatChanges
+    { tier: 2, slot: 0, name: "Swift Conclusion", description: "Increase Damage by +70. Increase Damage by +200% if enemy has less than half health.", statChanges: {"flatBaseDamage":70,"halfHealthAdditiveDamage":2}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"halfHealthAdditiveDamage":2},"mk1_kunai":{"flatBaseDamage":80,"halfHealthAdditiveDamage":2}}, formStatChanges: {"halfHealthAdditiveDamage":-2,"damage":2} },
     // Assumes channeled ability active for paper DPS
     { tier: 2, slot: 1, name: "Sage's Resolve", description: "Increase Base Damage by +70 With Channeled Ability active: +100% Multishot.", statChanges: {"flatBaseDamage":70,"multishot":1}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"multishot":1},"mk1_kunai":{"flatBaseDamage":80,"multishot":1}} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
@@ -386,7 +386,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes headshot AE buff up for paper DPS
     { tier: 5, slot: 1, name: "Reaper's Plenty", description: "On Headshot: +40% Ammo Efficiency for 6 seconds.", statChanges: {"ammoEfficiency":0.4} },
     // Max stacks assumed for paper DPS (+400% × 3; additive to HS)
-    { tier: 5, slot: 2, name: "Overwhelming Attrition", description: "On Hit that is neither Critical nor applies a Status Effect: +400% damage for 10 seconds. Stacks up to 3 times.", statChanges: {"damage":12} },
+    // Max stacks assumed for paper DPS (3× +400% = +1200%); Hornet-additive (wiki)
+    { tier: 5, slot: 2, name: "Overwhelming Attrition", description: "On Hit that is neither Critical nor applies a Status Effect: +400% damage for 10 seconds. Stacks up to 3 times.", statChanges: {"additiveBaseDamage":12} },
   ],
   "lato_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain Punch Through and Ricochet.", statChanges: {} },
@@ -486,7 +487,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "okina_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Kills generate spectral daggers that target enemies, applying max Cold Status stacks. +100% Melee Damage +20% Sprint Speed +20% to Parkour Velocity", statChanges: {"damage":1} },
-    { tier: 2, slot: 0, name: "Seeing Red", description: "Increase Base Damage by +60. 5 additional Combos on targets affected by Slash Status", statChanges: {"flatBaseDamage":60}, variantStatChanges: {"okina":{"flatBaseDamage":60},"okina_prime":{"flatBaseDamage":20}} },
+    { tier: 2, slot: 0, name: "Seeing Red", description: "Increase Base Damage by +60. 5 additional Combos on targets affected by Slash Status", statChanges: {"flatBaseDamage":60,"comboOnSlashStatus":5}, variantStatChanges: {"okina":{"flatBaseDamage":60,"comboOnSlashStatus":5},"okina_prime":{"flatBaseDamage":20,"comboOnSlashStatus":5}} },
     // Max stacks assumed for paper DPS (+8% status damage × 5)
     { tier: 2, slot: 1, name: "Synergist Surety", description: "Increase Base Damage by +60. On Critical Hit: +8% Status Damage for 10s. Stacks up to 5x.", statChanges: {"flatBaseDamage":60,"statusDamageBonus":0.4}, variantStatChanges: {"okina":{"flatBaseDamage":60,"statusDamageBonus":0.4},"okina_prime":{"flatBaseDamage":20,"statusDamageBonus":0.4}} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+1 Range", statChanges: {"range":1} },
@@ -587,7 +588,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "sibear_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Create a Cold Blast Radius with Heavy Slams. +100% Melee Damage +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Parkour Velocity", statChanges: {"damage":1} },
-    { tier: 2, slot: 0, name: "Master's Shatter", description: "Increase Base Damage by +20. 10 additional Combo on targets affected by Cold Status.", statChanges: {"flatBaseDamage":20} },
+    { tier: 2, slot: 0, name: "Master's Shatter", description: "Increase Base Damage by +20. 10 additional Combo on targets affected by Cold Status.", statChanges: {"flatBaseDamage":20,"comboOnColdStatus":10} },
     // Assumes Armor ≥450 for paper DPS
     { tier: 2, slot: 1, name: "Thane's Wrath", description: "Increase Base Damage by +20. With Armor Over 450: Increase Base Damage by +40.", statChanges: {"flatBaseDamage":60} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+1 Range", statChanges: {"range":1} },
@@ -605,7 +606,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // half-HP % Hornet-additive; ignores this perk's flat (wiki)
     { tier: 2, slot: 0, name: "Feigned Retreat", description: "Increase Base Damage by +50. +40% Damage to enemies below half Health.", statChanges: {"flatBaseDamage":50,"halfHealthAdditiveDamage":0.4}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"halfHealthAdditiveDamage":0.4},"sicarus_prime":{"flatBaseDamage":40,"halfHealthAdditiveDamage":0.4}} },
     // Assumes weakpoint hits for paper DPS (+150% CC additive w/ Gambit; body ×0 unmodeled)
-    { tier: 2, slot: 1, name: "King's Gambit", description: "Increase Base Damage by +50 (Sicarus) / +50 (Prime) x0 Critical Chance on Bodyshots, +150% Critical Chance on Weakpoint Hits.", statChanges: {"flatBaseDamage":50,"critChanceBonus":1.5}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"critChanceBonus":1.5},"sicarus_prime":{"flatBaseDamage":40,"critChanceBonus":1.5}} },
+    // WP +150% relative CC; bodyshotCritChanceMult 0 zeros CC when applyHeadshots is off
+    { tier: 2, slot: 1, name: "King's Gambit", description: "Increase Base Damage by +50 (Sicarus) / +50 (Prime) x0 Critical Chance on Bodyshots, +150% Critical Chance on Weakpoint Hits.", statChanges: {"flatBaseDamage":50,"critChanceBonus":1.5,"bodyshotCritChanceMult":0}, variantStatChanges: {"sicarus":{"flatBaseDamage":50,"critChanceBonus":1.5,"bodyshotCritChanceMult":0},"sicarus_prime":{"flatBaseDamage":40,"critChanceBonus":1.5,"bodyshotCritChanceMult":0}} },
     { tier: 3, slot: 0, name: "Void's Guidance", description: "+40% Accuracy.", statChanges: {"accuracy":0.4} },
     { tier: 3, slot: 1, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {"reloadSpeed":0.5} },
     { tier: 3, slot: 2, name: "Extended Volley", description: "Increase Base Magazine Capacity by +9 (Sicarus) / +12 (Prime).", statChanges: {"flatMagazine":9}, variantStatChanges: {"sicarus":{"flatMagazine":9},"sicarus_prime":{"flatMagazine":12}} },
@@ -618,7 +620,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Incarnon Form stuns nearby enemies when it enters Incarnon Form and after Finisher attacks. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"damage":1} },
     // Assumes overshields for paper DPS
     { tier: 2, slot: 0, name: "Guardian's Promise", description: "Increase Base Damage by +100. With Overshields: +80% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":100,"heavyAttackEfficiency":0.8}, variantStatChanges: {"skana":{"flatBaseDamage":100,"heavyAttackEfficiency":0.8},"prisma_skana":{"flatBaseDamage":100,"heavyAttackEfficiency":0.8},"skana_prime":{"flatBaseDamage":10,"heavyAttackEfficiency":0.8}} },
-    { tier: 2, slot: 1, name: "Wartime Nerve", description: "Increase Base Damage by +90. +9 Combo Count on undamaged enemies.", statChanges: {"flatBaseDamage":90}, variantStatChanges: {"skana":{"flatBaseDamage":90},"prisma_skana":{"flatBaseDamage":90},"skana_prime":{"flatBaseDamage":10}} },
+    { tier: 2, slot: 1, name: "Wartime Nerve", description: "Increase Base Damage by +90. +9 Combo Count on undamaged enemies.", statChanges: {"flatBaseDamage":90,"comboOnUndamaged":9}, variantStatChanges: {"skana":{"flatBaseDamage":90,"comboOnUndamaged":9},"prisma_skana":{"flatBaseDamage":90,"comboOnUndamaged":9},"skana_prime":{"flatBaseDamage":10,"comboOnUndamaged":9}} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.4 Range", statChanges: {"range":0.4} },
     { tier: 3, slot: 1, name: "Resolute Force", description: "+6s Combo Duration", statChanges: {"comboDuration":6} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+50% Heavy Attack Wind Up Speed.", statChanges: {"heavyAttackWindUp":0.5} },

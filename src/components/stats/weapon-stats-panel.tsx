@@ -603,6 +603,38 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               tooltip="Flat combo granted on finisher (display)."
             />
           )}
+          {stats.comboOnSlashStatus != null && stats.comboOnSlashStatus > 0 && (
+            <StatRow
+              label="Combo on Slash Status"
+              value={`+${stats.comboOnSlashStatus}`}
+              color="text-orange-400"
+              tooltip="Extra combo on Slash-status targets (display)."
+            />
+          )}
+          {stats.comboOnToxinStatus != null && stats.comboOnToxinStatus > 0 && (
+            <StatRow
+              label="Combo on Toxin Status"
+              value={`+${stats.comboOnToxinStatus}`}
+              color="text-orange-400"
+              tooltip="Extra combo on Toxin-status targets (display)."
+            />
+          )}
+          {stats.comboOnColdStatus != null && stats.comboOnColdStatus > 0 && (
+            <StatRow
+              label="Combo on Cold Status"
+              value={`+${stats.comboOnColdStatus}`}
+              color="text-orange-400"
+              tooltip="Extra combo on Cold-status targets (display)."
+            />
+          )}
+          {stats.comboOnUndamaged != null && stats.comboOnUndamaged > 0 && (
+            <StatRow
+              label="Combo on Undamaged"
+              value={`+${stats.comboOnUndamaged}`}
+              color="text-orange-400"
+              tooltip="Extra combo on undamaged enemies (display)."
+            />
+          )}
           {stats.comboPerSlamHit != null && stats.comboPerSlamHit > 0 && (
             <StatRow
               label="Combo per Slam Hit"
@@ -919,11 +951,18 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "punctureStatusOnImpale") return `impale PT status: ${n}`;
                         if (s === "finisherComboCountChance") return `finisher combo: +${(n * 100).toFixed(0)}%`;
                         if (s === "comboOnFinisher") return `combo@finisher: +${n}`;
+                        if (s === "comboOnSlashStatus") return `combo@slash: +${n}`;
+                        if (s === "comboOnToxinStatus") return `combo@toxin: +${n}`;
+                        if (s === "comboOnColdStatus") return `combo@cold: +${n}`;
+                        if (s === "comboOnUndamaged") return `combo@undamaged: +${n}`;
                         if (s === "comboPerSlamHit") return `combo@slam: +${n}`;
                         if (s === "comboPerSlideHit") return `combo@slide: +${n}`;
                         if (s === "comboPerSlideMeters") return `combo@slide: +${n}`;
                         if (s === "comboSlideMeterInterval") return `every ${n}m`;
                         if (s === "comboOnShardDamage") return `combo@shard: +${n}`;
+                        if (s === "bodyshotCritChanceMult") return `body CC: ×${n}`;
+                        if (s === "additiveBaseDamage") return `+dmg (Serration): +${(n * 100).toFixed(0)}%`;
+                        if (s === "halfHealthAdditiveDamage") return `half-HP +dmg: +${(n * 100).toFixed(0)}%`;
                         if (s === "stunRadiusOnFinisher") return `stun: ${n}m`;
                         if (s === "knockdownRadiusOnFinisher") return `KD: ${n}m`;
                         if (s === "shardDuration") return `shard: ${n}s`;

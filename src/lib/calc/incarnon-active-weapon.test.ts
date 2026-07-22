@@ -1030,6 +1030,56 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
   });
 
+  it("Overwhelming Attrition / King's Gambit / Swift form / Seeing Red family", () => {
+    const laetumData = incarnonDataMap.get("laetum")!;
+    expect(mergeIncarnonStatChanges(laetumData, { 5: 2 }, "laetum")?.additiveBaseDamage).toBe(12);
+    const laetum = allWeapons.find((w) => w.id === "laetum")!;
+    const bareLaetum = calculateWeaponBuild(laetum, [], modsMap());
+    const attrition = calculateWeaponBuild(laetum, [], modsMap(), { additiveBaseDamage: 12 });
+    expect(attrition.totalDamage).toBeCloseTo(bareLaetum.totalDamage * 13, 5);
+
+    const sicarus = allWeapons.find((w) => w.id === "sicarus")!;
+    const gambit = mergeIncarnonStatChanges(incarnonDataMap.get("sicarus")!, { 2: 1 }, "sicarus");
+    const body = calculateWeaponBuild(
+      sicarus,
+      [],
+      modsMap(),
+      gambit,
+      { ...DEFAULT_SIM_PARAMS, applyHeadshots: false },
+    );
+    expect(body.criticalChance).toBe(0);
+    const weakpoint = calculateWeaponBuild(
+      sicarus,
+      [],
+      modsMap(),
+      gambit,
+      { ...DEFAULT_SIM_PARAMS, applyHeadshots: true },
+    );
+    expect(weakpoint.criticalChance).toBeCloseTo(sicarus.criticalChance * 2.5, 5);
+
+    const kunaiData = incarnonDataMap.get("kunai")!;
+    expect(mergeIncarnonStatChanges(kunaiData, { 2: 0 }, "kunai")?.halfHealthAdditiveDamage).toBe(2);
+    const formSwift = mergeIncarnonStatChanges(kunaiData, { 2: 0 }, "kunai", { formActive: true });
+    expect(formSwift?.halfHealthAdditiveDamage).toBe(0);
+    expect(formSwift?.damage).toBe(2);
+
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("okina")!, { 2: 0 }, "okina")?.comboOnSlashStatus).toBe(5);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("dual_ichor")!, { 2: 0 }, "dual_ichor")
+        ?.comboOnToxinStatus,
+    ).toBe(5);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("sibear")!, { 2: 0 }, "sibear")?.comboOnColdStatus,
+    ).toBe(10);
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("skana")!, { 2: 1 }, "skana")?.comboOnUndamaged).toBe(
+      9,
+    );
+    const okina = allWeapons.find((w) => w.id === "okina")!;
+    expect(
+      calculateWeaponBuild(okina, [], modsMap(), { comboOnSlashStatus: 5 }).comboOnSlashStatus,
+    ).toBe(5);
+  });
+
   it("Miter Sawblade Storm papers 1400 Blast / 5m radial (base form only)", () => {
     const data = incarnonDataMap.get("miter")!;
     const storm = mergeIncarnonStatChanges(data, { 4: 0 }, "miter");
@@ -1534,13 +1584,14 @@ describe("evolution numeric fixes", () => {
 
     const laetum = incarnonDataMap.get("laetum")!;
     expect(mergeIncarnonStatChanges(laetum, { 3: 0 }, "laetum")?.reloadSpeed).toBe(0.9);
-    expect(mergeIncarnonStatChanges(laetum, { 5: 2 }, "laetum")?.damage).toBe(12);
+    expect(mergeIncarnonStatChanges(laetum, { 5: 2 }, "laetum")?.additiveBaseDamage).toBe(12);
 
     const miter = incarnonDataMap.get("miter")!;
     expect(mergeIncarnonStatChanges(miter, { 2: 0 }, "miter")?.fireRate).toBe(0.7);
 
     const sicarus = incarnonDataMap.get("sicarus")!;
     expect(mergeIncarnonStatChanges(sicarus, { 2: 1 }, "sicarus")?.critChanceBonus).toBe(1.5);
+    expect(mergeIncarnonStatChanges(sicarus, { 2: 1 }, "sicarus")?.bodyshotCritChanceMult).toBe(0);
     expect(mergeIncarnonStatChanges(sicarus, { 2: 1 }, "sicarus_prime")?.flatBaseDamage).toBe(40);
 
     const cestraWpn = allWeapons.find((w) => w.id === "cestra")!;
