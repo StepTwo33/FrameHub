@@ -1005,7 +1005,33 @@ export function calculateWeaponBuild(
           stats.range = (stats.range ?? 0) + value;
           break;
         case 'slideAttack': /* slide attack bonus — visual only */ break;
-        case 'finisherDamage': /* finisher bonus — visual only */ break;
+        case 'finisherDamage':
+          stats.finisherDamage = (stats.finisherDamage ?? 0) + value;
+          break;
+        case 'slamRadius':
+          stats.slamRadius = (stats.slamRadius ?? 0) + value;
+          break;
+        case 'movementSpeed':
+          stats.movementSpeedBonus = (stats.movementSpeedBonus ?? 0) + value;
+          break;
+        case 'comboTimerPauseWhenHolstered':
+          stats.comboTimerPauseWhenHolstered = value > 0;
+          break;
+        case 'ammoRestoreChance':
+          stats.ammoRestoreChance = Math.min(1, (stats.ammoRestoreChance ?? 0) + value);
+          break;
+        case 'ammoRestoreFlat':
+          stats.ammoRestoreFlat = (stats.ammoRestoreFlat ?? 0) + value;
+          break;
+        case 'ammoRestoreMagFraction':
+          stats.ammoRestoreMagFraction = (stats.ammoRestoreMagFraction ?? 0) + value;
+          break;
+        case 'incarnonHeadshotChargeBonus':
+          stats.incarnonHeadshotChargeBonus = (stats.incarnonHeadshotChargeBonus ?? 0) + value;
+          break;
+        case 'silentWeapon':
+          stats.silentWeapon = value > 0;
+          break;
         case 'comboDuration': stats.comboDuration += value; break;
         case 'followThrough':
           stats.followThrough = (stats.followThrough ?? 0) + value;

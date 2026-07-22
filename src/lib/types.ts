@@ -469,6 +469,24 @@ export interface CalculatedStats {
   instantReloadOnHeadshotChance?: number;
   /** Zoom change fraction from incarnon/rivens (negative = less zoom) — display only. */
   zoom?: number;
+  /** Movement speed fraction (not sprint) from incarnon — display only. */
+  movementSpeedBonus?: number;
+  /** Slam attack radius bonus fraction from incarnon — display only. */
+  slamRadius?: number;
+  /** Finisher damage bonus fraction from incarnon/rivens — display only. */
+  finisherDamage?: number;
+  /** Combo timer pauses while holstered (Standoff / Abiding Hold) — display only. */
+  comboTimerPauseWhenHolstered?: boolean;
+  /** Chance to restore ammo on perk trigger (kill / PT hit / Electric status) — display only. */
+  ammoRestoreChance?: number;
+  /** Flat rounds restored when ammoRestoreChance procs — display only. */
+  ammoRestoreFlat?: number;
+  /** Magazine fraction restored when ammoRestoreChance procs — display only. */
+  ammoRestoreMagFraction?: number;
+  /** Extra Incarnon charge from headshots (e.g. +50% → 0.5) — display only. */
+  incarnonHeadshotChargeBonus?: number;
+  /** Weapon is silent (enemies won't hear gunfire) — display only. */
+  silentWeapon?: boolean;
   // DPS
   burstDps: number;
   sustainedDps: number;

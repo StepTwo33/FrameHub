@@ -388,6 +388,50 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Warframe parkour velocity while this weapon is equipped (display)."
           />
         )}
+        {(stats.movementSpeedBonus ?? 0) !== 0 && (
+          <StatRow
+            label="Movement Speed"
+            value={`${(stats.movementSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.movementSpeedBonus ?? 0) * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Warframe movement speed while this weapon is equipped (display; aim-gated perks assume uptime)."
+          />
+        )}
+        {stats.ammoRestoreChance != null && stats.ammoRestoreChance > 0 && (
+          <StatRow
+            label="Ammo Restore"
+            value={
+              stats.ammoRestoreMagFraction != null && stats.ammoRestoreMagFraction > 0
+                ? `${(stats.ammoRestoreChance * 100).toFixed(0)}% → ${(stats.ammoRestoreMagFraction * 100).toFixed(0)}% mag`
+                : `${(stats.ammoRestoreChance * 100).toFixed(0)}% → ${stats.ammoRestoreFlat ?? 0} rnd`
+            }
+            color="text-amber-400"
+            tooltip="Chance to restore ammo on perk trigger (kill / punch-through / Electric status). Display only; not folded into sustained DPS."
+          />
+        )}
+        {stats.incarnonHeadshotChargeBonus != null && stats.incarnonHeadshotChargeBonus > 0 && (
+          <StatRow
+            label="Incarnon Charge (HS)"
+            value={`+${(stats.incarnonHeadshotChargeBonus * 100).toFixed(0)}%`}
+            color="text-violet-400"
+            tooltip="Extra Incarnon Transmutation charge from headshots (display)."
+          />
+        )}
+        {stats.silentWeapon && (
+          <StatRow
+            label="Silent"
+            value="Yes"
+            color="text-emerald-400"
+            tooltip="Weapon fire does not alert enemies (Silent Running)."
+          />
+        )}
+        {stats.comboTimerPauseWhenHolstered && (
+          <StatRow
+            label="Holster Combo Pause"
+            value="Yes"
+            color="text-sky-400"
+            tooltip="Melee combo timer pauses while this weapon is holstered (Standoff / Abiding Hold)."
+          />
+        )}
       </CollapsibleSection>
 
       {stats.radialAttacks && stats.radialAttacks.length > 0 && (
@@ -471,6 +515,22 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
           />
           <StatRow label="Combo Duration" value={`${stats.comboDuration.toFixed(0)}s`} />
           <StatRow label="Heavy Attack" value={stats.heavyAttackDamage.toFixed(0)} highlighted changed={flash.has("heavyAttack")} />
+          {stats.finisherDamage != null && stats.finisherDamage !== 0 && (
+            <StatRow
+              label="Finisher Damage"
+              value={`${stats.finisherDamage > 0 ? "+" : ""}${(stats.finisherDamage * 100).toFixed(0)}%`}
+              color="text-orange-400"
+              tooltip="Incarnon finisher damage bonus (display; not modeled in DPS)."
+            />
+          )}
+          {stats.slamRadius != null && stats.slamRadius !== 0 && (
+            <StatRow
+              label="Slam Radius"
+              value={`${stats.slamRadius > 0 ? "+" : ""}${(stats.slamRadius * 100).toFixed(0)}%`}
+              color="text-orange-400"
+              tooltip="Incarnon slam radius bonus (display; not modeled in DPS)."
+            />
+          )}
           {stats.bloodRushStacks > 0 && (
             <StatRow
               label="Blood Rush"
@@ -690,6 +750,15 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "sprintSpeed") return `sprint: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
                         if (s === "slideSpeed") return `slide: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
                         if (s === "parkourVelocity") return `parkour: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "movementSpeed") return `move: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "finisherDamage") return `finisher: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "slamRadius") return `slamR: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "comboTimerPauseWhenHolstered") return "holster combo pause";
+                        if (s === "ammoRestoreChance") return `ammoChance: ${(n * 100).toFixed(0)}%`;
+                        if (s === "ammoRestoreFlat") return `ammo: +${n}`;
+                        if (s === "ammoRestoreMagFraction") return `ammo: ${(n * 100).toFixed(0)}% mag`;
+                        if (s === "incarnonHeadshotChargeBonus") return `charge@HS: +${(n * 100).toFixed(0)}%`;
+                        if (s === "silentWeapon") return "silent";
                         if (s === "holsterReloadPerSec") return `holster: ${(n * 100).toFixed(0)}%/s`;
                         if (s === "instantReloadOnKillChance") return `reload@kill: ${(n * 100).toFixed(0)}%`;
                         if (s === "instantReloadOnHeadshotChance") return `reload@HS: ${(n * 100).toFixed(0)}%`;

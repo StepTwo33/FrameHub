@@ -11,7 +11,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Templar's Wrath", description: "Increase Base Damage by +150. With Armor Over 450: +70% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":150,"heavyAttackEfficiency":0.7} },
     { tier: 2, slot: 1, name: "Shieldmaiden's Rush", description: "Increase Base Damage by +150. On Shield Break: +300% Combo Count Chance while Blocking for 11 seconds.", statChanges: {"flatBaseDamage":150} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.7 Range", statChanges: {"range":0.7} },
-    { tier: 3, slot: 1, name: "Abiding Hold", description: "Combo Timer pauses when weapon is holstered.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Abiding Hold", description: "Combo Timer pauses when weapon is holstered.", statChanges: {"comboTimerPauseWhenHolstered":1} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+70% Heavy Attack Windup Speed", statChanges: {"heavyAttackWindUp":0.7} },
     { tier: 4, slot: 0, name: "Rogue Readiness", description: "On Kill: 50% chance for Primary and Secondary weapons instantly reload.", statChanges: {"instantReloadOnKillChance":0.5} },
     { tier: 4, slot: 1, name: "Absolute Valor", description: "Increase Base Critical Chance by +17%.", statChanges: {"criticalChance":0.17} },
@@ -35,8 +35,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Edge of Justice", description: "Increase Base Damage by +50. With Melee Weapon Equipped: +40% Attack Speed.", statChanges: {"flatBaseDamage":50,"fireRate":0.4} },
     // Assumes overshields for paper DPS
     { tier: 2, slot: 1, name: "Guardian's Promise", description: "Increase Base Damage by +50. With Overshields: +80% Heavy Attack Efficiency.", statChanges: {"flatBaseDamage":50,"heavyAttackEfficiency":0.8} },
-    { tier: 3, slot: 0, name: "Standoff", description: "Combo Timer paused when weapon is holstered.", statChanges: {} },
-    { tier: 3, slot: 1, name: "Swordsman's Celerity", description: "+20% Movement Speed", statChanges: {} },
+    { tier: 3, slot: 0, name: "Standoff", description: "Combo Timer paused when weapon is holstered.", statChanges: {"comboTimerPauseWhenHolstered":1} },
+    { tier: 3, slot: 1, name: "Swordsman's Celerity", description: "+20% Movement Speed", statChanges: {"movementSpeed":0.2} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+60% Heavy Attack Wind Up Speed", statChanges: {"heavyAttackWindUp":0.6} },
     { tier: 4, slot: 0, name: "Absolute Dominion", description: "Increase Base Status Chance by +20%.", statChanges: {"statusChance":0.2} },
     { tier: 4, slot: 1, name: "Subtle Force", description: "Increase Base Critical Chance by +6%. Increase Base Status Chance by +14%.", statChanges: {"criticalChance":0.06,"statusChance":0.14} },
@@ -75,7 +75,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Swordsman's Flourish", description: "Increase Base Damage by +100. With Melee Weapon Equipped: +100% Combo Count Chance.", statChanges: {"flatBaseDamage":100}, variantStatChanges: {"bo":{"flatBaseDamage":100},"mk1_bo":{"flatBaseDamage":85},"bo_prime":{"flatBaseDamage":30}} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+0.5 Range", statChanges: {"range":0.5} },
     { tier: 3, slot: 1, name: "Overhand", description: "Base Heavy Attack Efficiency set at 20%", statChanges: {"heavyAttackEfficiencySet":0.2} },
-    { tier: 3, slot: 2, name: "Swordsman's Celerity", description: "+20% Movement Speed", statChanges: {} },
+    { tier: 3, slot: 2, name: "Swordsman's Celerity", description: "+20% Movement Speed", statChanges: {"movementSpeed":0.2} },
     { tier: 4, slot: 0, name: "Flashing Bleed", description: "+40% chance of Slash Status on Impact Status Effect.", statChanges: {"slashOnImpactProcChance":0.4} },
     { tier: 4, slot: 1, name: "Subtle Force", description: "Increase Base Critical Chance by +12%. Increase Base Status Chance by +12%.", statChanges: {"criticalChance":0.12,"statusChance":0.12}, variantStatChanges: {"bo":{"criticalChance":0.12,"statusChance":0.12},"mk1_bo":{"criticalChance":0.15,"statusChance":0.15},"bo_prime":{"criticalChance":0.06,"statusChance":0.06}} },
     { tier: 4, slot: 2, name: "Absolute Dominion", description: "Increase Base Status Chance by +34%.", statChanges: {"statusChance":0.34}, variantStatChanges: {"bo":{"statusChance":0.34},"mk1_bo":{"statusChance":0.38},"bo_prime":{"statusChance":0.3}} },
@@ -113,7 +113,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Munitions Grit", description: "Increase Base Damage by +X. Multishot consumes ammo directly from Capacity and does +Y Damage. +20% Multishot.", statChanges: {"flatBaseDamage":14,"multishot":0.2}, variantStatChanges: {"braton":{"flatBaseDamage":14,"multishot":0.2},"mk1_braton":{"flatBaseDamage":20,"multishot":0.2},"braton_vandal":{"flatBaseDamage":8,"multishot":0.2},"braton_prime":{"flatBaseDamage":2,"multishot":0.2}} },
     { tier: 3, slot: 0, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to X.", statChanges: {"ammoMaxSet":675}, variantStatChanges: {"braton":{"ammoMaxSet":675},"mk1_braton":{"ammoMaxSet":600},"braton_vandal":{"ammoMaxSet":750},"braton_prime":{"ammoMaxSet":1125}} },
     { tier: 3, slot: 1, name: "Void's Guidance", description: "+60% Accuracy -60% Recoil", statChanges: {"accuracy":0.6,"recoil":-0.6} },
-    { tier: 3, slot: 2, name: "Gunsmoke Pick Up", description: "On Punch Through Hit: 20% chance for 10% Ammo restored.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Gunsmoke Pick Up", description: "On Punch Through Hit: 20% chance for 10% Ammo restored.", statChanges: {"ammoRestoreChance":0.2,"ammoRestoreMagFraction":0.1} },
     { tier: 4, slot: 0, name: "Critical Parallel", description: "Increase Base Critical Chance by +16. Increase Base Critical Damage Multiplier by +0.4x.", statChanges: {"criticalChance":0.16,"criticalMultiplier":0.4}, variantStatChanges: {"braton":{"criticalChance":0.16,"criticalMultiplier":0.4},"mk1_braton":{"criticalChance":0.18,"criticalMultiplier":0.5},"braton_vandal":{"criticalChance":0.16,"criticalMultiplier":0.4},"braton_prime":{"criticalChance":0.18,"criticalMultiplier":0.2}} },
     { tier: 4, slot: 1, name: "Prelude of Might", description: "With Critical Chance Below 50%: Increase Base Critical Damage Multiplier by +3.4x.", statChanges: {"preludeMightBaseCm":3.4,"preludeMightMaxCc":0.5} },
     { tier: 4, slot: 2, name: "Survivor's Edge", description: "Increase Base Critical Chance by +10. Increase Base Status Chance by +12.", statChanges: {"criticalChance":0.1,"statusChance":0.12}, variantStatChanges: {"braton":{"criticalChance":0.1,"statusChance":0.12},"mk1_braton":{"criticalChance":0.12,"statusChance":0.12},"braton_vandal":{"criticalChance":0.1,"statusChance":0.12},"braton_prime":{"criticalChance":0.1,"statusChance":0.14}} },
@@ -258,7 +258,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Paper: one full base mag (6 shells) reload → +60% FR (not infinite 99-stack)
     { tier: 3, slot: 1, name: "Mounting Momentum", description: "Reload increases Fire Rate by +10% per shell. Resets on reload.", statChanges: {"fireRate":0.6} },
     { tier: 4, slot: 0, name: "Brutal Edge", description: "+10% Critical Chance +10% Status Chance", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
-    { tier: 4, slot: 1, name: "Incarnon Catalyst", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Incarnon Catalyst", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {"incarnonHeadshotChargeBonus":0.5} },
     { tier: 4, slot: 2, name: "Racking Wrath", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     { tier: 5, slot: 0, name: "Devastating Attrition", description: "50% chance to deal +2000% damage on non-critical hits", statChanges: {"devouringAttrition":20} },
     // Assumes PT-3 buff up for paper DPS
@@ -273,7 +273,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Kill Joy", description: "Increase Base Damage by +90. +10% Attack Speed per enemy within 6m, stacks up to 5x.", statChanges: {"flatBaseDamage":90,"fireRate":0.5}, variantStatChanges: {"furia":{"flatBaseDamage":90,"fireRate":0.5},"mk1_furax":{"flatBaseDamage":80,"fireRate":0.5},"furia_wraith":{"flatBaseDamage":55,"fireRate":0.5},"furax":{"flatBaseDamage":90,"fireRate":0.5},"furax_wraith":{"flatBaseDamage":55,"fireRate":0.5}} },
     { tier: 3, slot: 0, name: "Moonrise Velocity", description: "+1 Range", statChanges: {"range":1} },
     { tier: 3, slot: 1, name: "Overhand", description: "Heavy Attack Efficiency set at 20%", statChanges: {"heavyAttackEfficiencySet":0.2} },
-    { tier: 3, slot: 2, name: "Standoff", description: "Combo Timer pauses when weapon is holstered.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Standoff", description: "Combo Timer pauses when weapon is holstered.", statChanges: {"comboTimerPauseWhenHolstered":1} },
     { tier: 4, slot: 0, name: "Flashing Bleed", description: "+40% chance of Slash on Impact Status Effect.", statChanges: {"slashOnImpactProcChance":0.4} },
     // Assumes slide attacks for paper DPS (sets base CM to 4x; not sliding heavies)
     { tier: 4, slot: 1, name: "Kinetic Killer", description: "Increase Base Critical Damage Multiplier to 4x on Slide Attacks.", statChanges: {"criticalMultiplierSet":4} },
@@ -340,7 +340,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Hawk Momentum", description: "Gain 5 Combo for every 10m of continuous slide", statChanges: {} },
     // Assumes aerial attacks for paper display range
     { tier: 3, slot: 1, name: "Skyborne Hunter", description: "Increase range of aerial melee attacks by +0.5m.", statChanges: {"range":0.5} },
-    { tier: 3, slot: 2, name: "Blade Twister", description: "+60% Finisher Damage", statChanges: {} },
+    { tier: 3, slot: 2, name: "Blade Twister", description: "+60% Finisher Damage", statChanges: {"finisherDamage":0.6} },
     { tier: 4, slot: 0, name: "Incarnon Imago", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
     // Max stacks assumed for paper DPS (+50% × 3)
     { tier: 4, slot: 1, name: "Swooping Lunge", description: "On Airborne Melee Kill: +50% Melee Damage for 10s. Stacks up to 3x.", statChanges: {"damage":1.5} },
@@ -369,14 +369,15 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint Hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge.", statChanges: {} },
     { tier: 2, slot: 0, name: "Marksman's Hand", description: "-40% Recoil", statChanges: {"recoil":-0.4} },
     { tier: 2, slot: 1, name: "Rapid Wrath", description: "+20% Fire Rate", statChanges: {"fireRate":0.2} },
-    { tier: 2, slot: 2, name: "Raptor's Chase", description: "+50% Movement Speed while Aiming", statChanges: {} },
+    // Assumes aiming for paper panel movement speed
+    { tier: 2, slot: 2, name: "Raptor's Chase", description: "+50% Movement Speed while Aiming", statChanges: {"movementSpeed":0.5} },
     // Max stacks assumed for paper DPS (+30% × 3)
     { tier: 3, slot: 0, name: "Lethal Rearmament", description: "On Headshot: +30% Reload Speed for 12 seconds. Stacks up to 3 times.", statChanges: {"reloadSpeed":0.9} },
     { tier: 3, slot: 1, name: "Awakened Readiness", description: "30% Magazine Reloaded per second while Holstered", statChanges: {"holsterReloadPerSec":0.3} },
     // Assumes aim-glide/slide for paper DPS
     { tier: 3, slot: 2, name: "Feather of Justice", description: "Gain 60% Ammo Efficiency while Aim Gliding or Sliding.", statChanges: {"ammoEfficiency":0.6} },
     { tier: 4, slot: 0, name: "Caput Mortuum", description: "+50% Headshot damage", statChanges: {"headshotDamageBonus":0.5} },
-    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {"incarnonHeadshotChargeBonus":0.5} },
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     { tier: 5, slot: 0, name: "Devouring Attrition", description: "50% chance to deal +2000% damage on non-critical hits", statChanges: {"devouringAttrition":20} },
     // Assumes headshot AE buff up for paper DPS
@@ -433,7 +434,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes channeled ability active for paper panel follow-through
     { tier: 2, slot: 0, name: "Crushing Verdict", description: "Increase Base Damage by +100. With Channeled Ability active: Increase Follow Through by +40%.", statChanges: {"flatBaseDamage":100,"followThrough":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"followThrough":0.4},"sancti_magistar":{"flatBaseDamage":20,"followThrough":0.4}} },
     { tier: 2, slot: 1, name: "Edge Of Justice", description: "Increase Base Damage by +100. With Melee Weapon Equipped: +40% Attack Speed.", statChanges: {"flatBaseDamage":100,"fireRate":0.4}, variantStatChanges: {"magistar":{"flatBaseDamage":100,"fireRate":0.4},"sancti_magistar":{"flatBaseDamage":20,"fireRate":0.4}} },
-    { tier: 3, slot: 0, name: "Seismic Slam", description: "+100% Slam Radius.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Seismic Slam", description: "+100% Slam Radius.", statChanges: {"slamRadius":1} },
     { tier: 3, slot: 1, name: "Orokin Reach", description: "+1.4 Range", statChanges: {"range":1.4} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+30% Heavy Attack Wind Up Speed.", statChanges: {"heavyAttackWindUp":0.3} },
     { tier: 4, slot: 0, name: "Flashing Bleed", description: "+50% Chance of Slash on Impact Status Effect.", statChanges: {"slashOnImpactProcChance":0.5} },
@@ -468,10 +469,12 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "obex_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Perform a large radial attack for each Finisher strike. +100% Melee Damage +20% Sprint Speed +20% Parkour Velocity", statChanges: {"damage":1} },
     { tier: 2, slot: 0, name: "Balanced Stagger", description: "Increase Base Damage by +50 20% chance to stun enemies hit by a Neutral Combo, opening them to finishers.", statChanges: {"flatBaseDamage":50}, variantStatChanges: {"obex":{"flatBaseDamage":50},"prisma_obex":{"flatBaseDamage":10}} },
-    { tier: 2, slot: 1, name: "Armored Finisher", description: "Increase Base Damage by +X With Armor over 450: +80% Finisher Damage.", statChanges: {"flatBaseDamage":50}, variantStatChanges: {"obex":{"flatBaseDamage":50},"prisma_obex":{"flatBaseDamage":10}} },
-    { tier: 3, slot: 0, name: "Rapid Conclusion", description: "On Finisher Kill: +2.5% Parkour Velocity. Stacks up to 16x.", statChanges: {} },
+    // Assumes Armor ≥450 for paper panel finisher damage
+    { tier: 2, slot: 1, name: "Armored Finisher", description: "Increase Base Damage by +X With Armor over 450: +80% Finisher Damage.", statChanges: {"flatBaseDamage":50,"finisherDamage":0.8}, variantStatChanges: {"obex":{"flatBaseDamage":50,"finisherDamage":0.8},"prisma_obex":{"flatBaseDamage":10,"finisherDamage":0.8}} },
+    // Max stacks assumed for paper panel (+2.5% × 16)
+    { tier: 3, slot: 0, name: "Rapid Conclusion", description: "On Finisher Kill: +2.5% Parkour Velocity. Stacks up to 16x.", statChanges: {"parkourVelocity":0.4} },
     { tier: 3, slot: 1, name: "Orokin Reach", description: "+1.2 Range", statChanges: {"range":1.2} },
-    { tier: 3, slot: 2, name: "Standoff", description: "Combo Timer pauses when weapon is holstered.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Standoff", description: "Combo Timer pauses when weapon is holstered.", statChanges: {"comboTimerPauseWhenHolstered":1} },
     { tier: 4, slot: 0, name: "Subtle Force", description: "Increase Base Critical Chance by +10% Increase Base Status Chance by +18", statChanges: {"criticalChance":0.1,"statusChance":0.18}, variantStatChanges: {"obex":{"criticalChance":0.1,"statusChance":0.18},"prisma_obex":{"criticalChance":0.1,"statusChance":0.12}} },
     { tier: 4, slot: 1, name: "Absolute Dominion", description: "Increase Base Status Chance by +28", statChanges: {"statusChance":0.28}, variantStatChanges: {"obex":{"statusChance":0.28},"prisma_obex":{"statusChance":0.2}} },
     { tier: 4, slot: 2, name: "Critical Coefficient", description: "Increase Base Critical Damage Multiplier by +0.6x. Effect doubles in Incarnon Form.", statChanges: {"criticalMultiplier":0.6}, formStatChanges: {"criticalMultiplier":0.6} },
@@ -482,8 +485,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+8% status damage × 5)
     { tier: 2, slot: 1, name: "Synergist Surety", description: "Increase Base Damage by +60. On Critical Hit: +8% Status Damage for 10s. Stacks up to 5x.", statChanges: {"flatBaseDamage":60,"statusDamageBonus":0.4}, variantStatChanges: {"okina":{"flatBaseDamage":60,"statusDamageBonus":0.4},"okina_prime":{"flatBaseDamage":20,"statusDamageBonus":0.4}} },
     { tier: 3, slot: 0, name: "Orokin Reach", description: "+1 Range", statChanges: {"range":1} },
-    { tier: 3, slot: 1, name: "Standoff", description: "Combo Timer pauses when weapon is holstered", statChanges: {} },
-    { tier: 3, slot: 2, name: "Swordsman's Celerity", description: "+30% Movement Speed", statChanges: {} },
+    { tier: 3, slot: 1, name: "Standoff", description: "Combo Timer pauses when weapon is holstered", statChanges: {"comboTimerPauseWhenHolstered":1} },
+    { tier: 3, slot: 2, name: "Swordsman's Celerity", description: "+30% Movement Speed", statChanges: {"movementSpeed":0.3} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +12%.", statChanges: {"criticalChance":0.12}, variantStatChanges: {"okina":{"criticalChance":0.12},"okina_prime":{"criticalChance":0.06}} },
     { tier: 4, slot: 1, name: "Alchemy of War", description: "Increase Base Status Chance by +16%. +25% Status Duration", statChanges: {"statusChance":0.16,"statusDuration":0.25}, variantStatChanges: {"okina":{"statusChance":0.16,"statusDuration":0.25},"okina_prime":{"statusChance":0.12,"statusDuration":0.25}} },
     { tier: 4, slot: 2, name: "Survivor's Edge", description: "Increase Base Critical Chance by +6 Increase Base Status Chance by +10%", statChanges: {"criticalChance":0.06,"statusChance":0.1}, variantStatChanges: {"okina":{"criticalChance":0.06,"statusChance":0.1},"okina_prime":{"criticalChance":0.02,"statusChance":0.08}} },
@@ -495,10 +498,10 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 0, name: "Extended Volley", description: "+10 Base Magazine Capacity", statChanges: {"flatMagazine":10} },
     { tier: 3, slot: 1, name: "Rapid Reinforcement", description: "+30% Reload Speed", statChanges: {"reloadSpeed":0.3} },
-    { tier: 3, slot: 2, name: "Hunter's Rearmament", description: "On Kill: 10% chance to replenish 10 Ammo", statChanges: {} },
+    { tier: 3, slot: 2, name: "Hunter's Rearmament", description: "On Kill: 10% chance to replenish 10 Ammo", statChanges: {"ammoRestoreChance":0.1,"ammoRestoreFlat":10} },
     // Assumes kill punch-through buff up for paper panel
     { tier: 4, slot: 0, name: "Lethal Lance", description: "On Kill: +2.5 Punch Through for 20s", statChanges: {"punchThrough":2.5} },
-    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {"incarnonHeadshotChargeBonus":0.5} },
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     // Max stacks assumed for paper DPS (+30% × 4)
     { tier: 5, slot: 0, name: "Sequential Skullbuster", description: "On Consecutive Weakpoint Hits: +30% Headshot Damage. Stacks up to 4x", statChanges: {"headshotDamageBonus":1.2} },
@@ -533,7 +536,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed for 6 seconds", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot kill: 20% chance to instant Reload.", statChanges: {"instantReloadOnHeadshotChance":0.2} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "+10% Critical Chance +10% Status Chance", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
-    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {"incarnonHeadshotChargeBonus":0.5} },
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     { tier: 5, slot: 0, name: "Devouring Attrition", description: "50% chance to deal +2000% damage on non-critical hits", statChanges: {"devouringAttrition":20} },
     // Assumes <3 status types on target for paper DPS (flat +1.0 CM after mods)
@@ -543,7 +546,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "praedos": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 5x Combo and then Heavy Attack to activate Incarnon Form. +3 Range +40% Attack Speed", statChanges: {"fireRate":0.4,"range":3} },
-    { tier: 2, slot: 0, name: "Seismic Slam", description: "+50% Slam Radius", statChanges: {} },
+    { tier: 2, slot: 0, name: "Seismic Slam", description: "+50% Slam Radius", statChanges: {"slamRadius":0.5} },
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
     { tier: 2, slot: 2, name: "Drifting Grace", description: "+20% Sprint Speed +20% Slide", statChanges: {"sprintSpeed":0.2,"slideSpeed":0.2} },
     { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count", statChanges: {} },
@@ -565,7 +568,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Lethal Impetus", description: "On Kill: +15% Attack Speed for 15s. Stacks up to 3x.", statChanges: {"fireRate":0.45} },
     { tier: 2, slot: 2, name: "Gathering Momentum", description: "Gain +5% Movement Speed per Melee Combo Multiplier", statChanges: {} },
     { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count.", statChanges: {} },
-    { tier: 3, slot: 1, name: "Seismic Slam", description: "+60% Slam Radius", statChanges: {} },
+    { tier: 3, slot: 1, name: "Seismic Slam", description: "+60% Slam Radius", statChanges: {"slamRadius":0.6} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
     { tier: 4, slot: 1, name: "Ternary Vault", description: "Gain +1 mid-air jumps", statChanges: {} },
@@ -635,7 +638,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+0.05 base MS × 5)
     { tier: 2, slot: 1, name: "Blazing Barrel", description: "Increase Base Damage by +54. On Firing: +0.05 Base Multishot. Stacks up to 5x.", statChanges: {"flatBaseDamage":54,"multishot":0.25}, variantStatChanges: {"strun":{"flatBaseDamage":54,"multishot":0.25},"mk1_strun":{"flatBaseDamage":68,"multishot":0.25},"strun_wraith":{"flatBaseDamage":24,"multishot":0.25},"strun_prime":{"flatBaseDamage":2,"multishot":0.25}} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {"reloadSpeed":0.6} },
-    { tier: 3, slot: 1, name: "Galvanic Reload", description: "On hitting a target affected by an Electricity status, 40% chance to restore 1 round in the magazine from ammo pool.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Galvanic Reload", description: "On hitting a target affected by an Electricity status, 40% chance to restore 1 round in the magazine from ammo pool.", statChanges: {"ammoRestoreChance":0.4,"ammoRestoreFlat":1} },
     { tier: 3, slot: 2, name: "Swift Deliverance", description: "+30% Projectile Speed.", statChanges: {"projectileSpeed":0.3} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status Chance by +11%. Increase Base Status Chance by +132% for Incarnon Form.", statChanges: {"statusChance":0.11}, variantStatChanges: {"strun":{"statusChance":0.11},"mk1_strun":{"statusChance":0.11},"strun_wraith":{"statusChance":0.1},"strun_prime":{"statusChance":0.113}}, formStatChanges: {"statusChance":1.21}, variantFormStatChanges: {"strun":{"statusChance":1.21},"mk1_strun":{"statusChance":0.99},"strun_wraith":{"statusChance":0.9},"strun_prime":{"statusChance":1.247}} },
     { tier: 4, slot: 1, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +16%.", statChanges: {"criticalChance":0.16}, variantStatChanges: {"strun":{"criticalChance":0.16},"mk1_strun":{"criticalChance":0.1},"strun_wraith":{"criticalChance":0.12},"strun_prime":{"criticalChance":0.12}} },
@@ -721,7 +724,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Lone Enforcer", description: "Increase Base Damage by +75. +25% Multishot if no enemies are within 5m.", statChanges: {"flatBaseDamage":75,"multishot":0.25}, variantStatChanges: {"vectis":{"flatBaseDamage":75,"multishot":0.25},"vectis_prime":{"flatBaseDamage":150,"multishot":0.25}} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {"reloadSpeed":0.6} },
     { tier: 3, slot: 1, name: "Marksman's Hand", description: "-60% Recoil.", statChanges: {"recoil":-0.6} },
-    { tier: 3, slot: 2, name: "Silent Running", description: "Reduce the chance an enemy will hear gunfire by 100%.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Silent Running", description: "Reduce the chance an enemy will hear gunfire by 100%.", statChanges: {"silentWeapon":1} },
     { tier: 4, slot: 0, name: "Deadhead", description: "+25% Headshot Damage.", statChanges: {"headshotDamageBonus":0.25} },
     { tier: 4, slot: 1, name: "Critical Parallel", description: "Increase Base Critical Chance by +10. Increase Base Critical Damage Multiplier by +0.5x.", statChanges: {"criticalChance":0.1,"criticalMultiplier":0.5}, variantStatChanges: {"vectis":{"criticalChance":0.1,"criticalMultiplier":0.5},"vectis_prime":{"criticalChance":0.08,"criticalMultiplier":0.5}} },
     // Wiki text matches Wiseman's Regard (base SC from current CC); encode that mechanic.

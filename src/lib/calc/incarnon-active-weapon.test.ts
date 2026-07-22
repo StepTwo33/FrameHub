@@ -784,6 +784,81 @@ describe("evolution numeric fixes", () => {
     );
   });
 
+  it("melee utility / ammo restore / charge / silent Genesis panel", () => {
+    const innodem = allWeapons.find((w) => w.id === "innodem")!;
+    const twister = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 3: 2 }, "innodem");
+    expect(twister?.finisherDamage).toBe(0.6);
+    expect(calculateWeaponBuild(innodem, [], modsMap(), twister).finisherDamage).toBe(0.6);
+
+    const magistar = allWeapons.find((w) => w.id === "magistar")!;
+    const slam = mergeIncarnonStatChanges(incarnonDataMap.get("magistar")!, { 3: 0 }, "magistar");
+    expect(slam?.slamRadius).toBe(1);
+    expect(calculateWeaponBuild(magistar, [], modsMap(), slam).slamRadius).toBe(1);
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 2: 0 }, "praedos")?.slamRadius).toBe(
+      0.5,
+    );
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 3: 1 }, "ruvox")?.slamRadius).toBe(
+      0.6,
+    );
+
+    const anku = allWeapons.find((w) => w.id === "anku")!;
+    const celerity = mergeIncarnonStatChanges(incarnonDataMap.get("anku")!, { 3: 1 }, "anku");
+    expect(celerity?.movementSpeed).toBe(0.2);
+    expect(calculateWeaponBuild(anku, [], modsMap(), celerity).movementSpeedBonus).toBe(0.2);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("okina")!, { 3: 2 }, "okina")?.movementSpeed,
+    ).toBe(0.3);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("laetum")!, { 2: 2 }, "laetum")?.movementSpeed,
+    ).toBe(0.5);
+
+    const standoff = mergeIncarnonStatChanges(incarnonDataMap.get("anku")!, { 3: 0 }, "anku");
+    expect(standoff?.comboTimerPauseWhenHolstered).toBe(1);
+    expect(calculateWeaponBuild(anku, [], modsMap(), standoff).comboTimerPauseWhenHolstered).toBe(
+      true,
+    );
+    const ack =
+      incarnonDataMap.get("ack_&_brunt") ?? incarnonDataMap.get("ack_brunt")!;
+    expect(mergeIncarnonStatChanges(ack, { 3: 1 }, "ack_brunt")?.comboTimerPauseWhenHolstered).toBe(
+      1,
+    );
+
+    const obex = allWeapons.find((w) => w.id === "obex")!;
+    const rapid = mergeIncarnonStatChanges(incarnonDataMap.get("obex")!, { 3: 0 }, "obex");
+    expect(rapid?.parkourVelocity).toBe(0.4);
+    expect(calculateWeaponBuild(obex, [], modsMap(), rapid).parkourVelocityBonus).toBe(0.4);
+
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const gunsmoke = mergeIncarnonStatChanges(incarnonDataMap.get("braton")!, { 3: 2 }, "braton");
+    expect(gunsmoke).toMatchObject({ ammoRestoreChance: 0.2, ammoRestoreMagFraction: 0.1 });
+    expect(calculateWeaponBuild(braton, [], modsMap(), gunsmoke)).toMatchObject({
+      ammoRestoreChance: 0.2,
+      ammoRestoreMagFraction: 0.1,
+    });
+
+    const onos = allWeapons.find((w) => w.id === "onos")!;
+    const rearm = mergeIncarnonStatChanges(incarnonDataMap.get("onos")!, { 3: 2 }, "onos");
+    expect(rearm).toMatchObject({ ammoRestoreChance: 0.1, ammoRestoreFlat: 10 });
+    expect(calculateWeaponBuild(onos, [], modsMap(), rearm).ammoRestoreFlat).toBe(10);
+
+    const strun = allWeapons.find((w) => w.id === "strun")!;
+    const galvanic = mergeIncarnonStatChanges(incarnonDataMap.get("strun")!, { 3: 1 }, "strun");
+    expect(galvanic).toMatchObject({ ammoRestoreChance: 0.4, ammoRestoreFlat: 1 });
+    expect(calculateWeaponBuild(strun, [], modsMap(), galvanic).ammoRestoreChance).toBe(0.4);
+
+    const felarx = allWeapons.find((w) => w.id === "felarx")!;
+    const catalyst = mergeIncarnonStatChanges(incarnonDataMap.get("felarx")!, { 4: 1 }, "felarx");
+    expect(catalyst?.incarnonHeadshotChargeBonus).toBe(0.5);
+    expect(calculateWeaponBuild(felarx, [], modsMap(), catalyst).incarnonHeadshotChargeBonus).toBe(
+      0.5,
+    );
+
+    const vectis = allWeapons.find((w) => w.id === "vectis")!;
+    const silent = mergeIncarnonStatChanges(incarnonDataMap.get("vectis")!, { 3: 2 }, "vectis");
+    expect(silent?.silentWeapon).toBe(1);
+    expect(calculateWeaponBuild(vectis, [], modsMap(), silent).silentWeapon).toBe(true);
+  });
+
   it("zoom and movement Genesis appear on CalculatedStats", () => {
     const despair = allWeapons.find((w) => w.id === "despair")!;
     const focus = mergeIncarnonStatChanges(incarnonDataMap.get("despair")!, { 3: 0 }, "despair");
@@ -967,8 +1042,14 @@ describe("evolution numeric fixes", () => {
 
   it("Obex Armored Finisher / Overhand / Swift Break / Ready Retaliation encode", () => {
     const obex = incarnonDataMap.get("obex")!;
-    expect(mergeIncarnonStatChanges(obex, { 2: 1 }, "obex")?.flatBaseDamage).toBe(50);
-    expect(mergeIncarnonStatChanges(obex, { 2: 1 }, "prisma_obex")?.flatBaseDamage).toBe(10);
+    expect(mergeIncarnonStatChanges(obex, { 2: 1 }, "obex")).toMatchObject({
+      flatBaseDamage: 50,
+      finisherDamage: 0.8,
+    });
+    expect(mergeIncarnonStatChanges(obex, { 2: 1 }, "prisma_obex")).toMatchObject({
+      flatBaseDamage: 10,
+      finisherDamage: 0.8,
+    });
 
     const bo = incarnonDataMap.get("bo")!;
     expect(mergeIncarnonStatChanges(bo, { 3: 1 }, "bo")?.heavyAttackEfficiencySet).toBe(0.2);
