@@ -27,6 +27,8 @@ import {
   computeEmberPassiveAbilityStrength,
   computeGarudaPassiveDamageBonus,
   computeFrostPassiveArmor,
+  computeCyte09PracticedAimCritChance,
+  computeGrendelPassiveArmor,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -328,6 +330,27 @@ describe("Frost Fortifying Freeze passive", () => {
     expect(computeFrostPassiveArmor(1)).toBe(50);
     expect(computeFrostPassiveArmor(5)).toBe(250);
     expect(computeFrostPassiveArmor(2.9)).toBe(100);
+  });
+});
+
+describe("Cyte-09 Practiced Aim passive", () => {
+  it("grants +1% WP crit chance per kill up to 300%", () => {
+    expect(computeCyte09PracticedAimCritChance(0)).toBe(0);
+    expect(computeCyte09PracticedAimCritChance(1)).toBeCloseTo(0.01, 5);
+    expect(computeCyte09PracticedAimCritChance(150)).toBeCloseTo(1.5, 5);
+    expect(computeCyte09PracticedAimCritChance(300)).toBeCloseTo(3, 5);
+    expect(computeCyte09PracticedAimCritChance(400)).toBeCloseTo(3, 5);
+  });
+});
+
+describe("Grendel belly armor passive", () => {
+  it("grants +250 Armor per gut enemy up to 5 (+1250)", () => {
+    expect(computeGrendelPassiveArmor(0)).toBe(0);
+    expect(computeGrendelPassiveArmor(1)).toBe(250);
+    expect(computeGrendelPassiveArmor(5)).toBe(1250);
+    expect(computeGrendelPassiveArmor(8)).toBe(1250);
+    // Catgut max-rank path: 400/enemy → 2000 at cap
+    expect(computeGrendelPassiveArmor(5, { armorPerEnemy: 400 })).toBe(2000);
   });
 });
 

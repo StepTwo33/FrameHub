@@ -2362,6 +2362,27 @@ export function computeFrostPassiveArmor(coldEnemies: number): number {
   return Math.max(0, Math.floor(coldEnemies)) * 50;
 }
 
+/**
+ * wiki Cyte-09 Practiced Aim: +1% Weak Point Critical Chance per WP kill, cap 300%
+ * (mission-long; additive to CC mods; not × STR).
+ */
+export function computeCyte09PracticedAimCritChance(weakPointKills: number): number {
+  return Math.min(3, Math.max(0, Math.floor(weakPointKills)) * 0.01);
+}
+
+/**
+ * wiki Grendel passive: +250 Armor per living enemy in belly, cap 5 → +1,250
+ * (flat after armor mods; not × STR). Catgut (+150/enemy) is separate.
+ */
+export function computeGrendelPassiveArmor(
+  enemiesInGut: number,
+  opts?: { armorPerEnemy?: number; enemyCap?: number },
+): number {
+  const per = opts?.armorPerEnemy ?? 250;
+  const cap = opts?.enemyCap ?? 5;
+  return Math.min(cap, Math.max(0, Math.floor(enemiesInGut))) * per;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

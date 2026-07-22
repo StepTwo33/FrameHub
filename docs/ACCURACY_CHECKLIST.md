@@ -240,6 +240,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Passive placeholder hygiene | 2026-07-22 | Filled wiki-known \|PLACEHOLDER\| passives (Ash→Zephyr batch); Ember Heat-enemy STR + Garuda kill-stack panel sims |
 | Fireball combo×heat | 2026-07-22 | Chain 1/2/4/8 + 4×heat; dmg=(base÷2)×(combo+1)×STR; wiki 3600/5200 goldens + Prior Casts slider |
 | Frost Fortifying Freeze | 2026-07-22 | +50 Armor × Cold enemies in Affinity Range (panel; after mods, not × STR) |
+| Cyte-09 + Grendel passives | 2026-07-22 | Practiced Aim +1% WP CC/kill cap 300%; Grendel +250 Armor/gut enemy cap 5 (+1250) |
 
 ## New / extended test files
 

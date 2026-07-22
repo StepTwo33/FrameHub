@@ -19,6 +19,8 @@ import {
   computeEmberPassiveAbilityStrength,
   computeGarudaPassiveDamageBonus,
   computeFrostPassiveArmor,
+  computeCyte09PracticedAimCritChance,
+  computeGrendelPassiveArmor,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -187,6 +189,60 @@ function FrostFortifyingFreezePassive({ moddedArmor }: { moddedArmor: number }) 
   );
 }
 
+function Cyte09PracticedAimPassive() {
+  const [wpKills, setWpKills] = useState(100);
+  const wpCc = computeCyte09PracticedAimCritChance(wpKills);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="WP Kills"
+        value={wpKills}
+        min={0}
+        max={300}
+        onChange={setWpKills}
+        tooltip="Cyte-09 Practiced Aim: +1% Weak Point Critical Chance per WP kill (mission-long, cap 300%)."
+      />
+      <StatRow
+        label="WP Crit Chance"
+        value={`+${(wpCc * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Additive to weapon crit chance vs weak points (not × Ability Strength)."
+      />
+    </div>
+  );
+}
+
+function GrendelBellyArmorPassive({ moddedArmor }: { moddedArmor: number }) {
+  const [gutEnemies, setGutEnemies] = useState(3);
+  const bonusArmor = computeGrendelPassiveArmor(gutEnemies);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Enemies in Gut"
+        value={gutEnemies}
+        min={0}
+        max={5}
+        onChange={setGutEnemies}
+        tooltip="Grendel passive: +250 Armor per living Feast victim (cap 5 → +1,250). Catgut not included."
+      />
+      <StatRow
+        label="Bonus Armor"
+        value={`+${bonusArmor}`}
+        color="text-amber-400"
+        tooltip="Flat armor after mods (not × Ability Strength)."
+      />
+      <StatRow
+        label="Armor w/ Passive"
+        value={(moddedArmor + bonusArmor).toFixed(0)}
+        color="text-amber-400"
+        tooltip="Modded armor + belly armor. Max +1,250 at 5 enemies (base; Catgut can raise per-enemy)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -292,6 +348,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "garuda" || warframe.id === "garuda_prime") && <GarudaDeathsGatePassive />}
           {(warframe.id === "frost" || warframe.id === "frost_prime") && (
             <FrostFortifyingFreezePassive moddedArmor={stats.totalArmor} />
+          )}
+          {warframe.id === "cyte_09" && <Cyte09PracticedAimPassive />}
+          {(warframe.id === "grendel" || warframe.id === "grendel_prime") && (
+            <GrendelBellyArmorPassive moddedArmor={stats.totalArmor} />
           )}
         </CollapsibleSection>
       )}
