@@ -46,7 +46,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B1 | Stance DPS | PvE Neutral hit avgs wiki-locked across stance table; Conclave→1.0; fake catalog stances remain defaulted | **Improved** — still not full combo strings |
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
-| B4 | Set effects not in DPS | Augur/Hunter **panel %** locked; Augur **shields/cast** panel sim (EFF×40%/piece); Mecha mark/spread summary only; Hunter companion combat / Mecha burst still unmodeled in DPS | Panel goldens in `set-bonus-audit.test.ts`; DPS remains C |
+| B4 | Set effects not in DPS | Augur panel % + shields/cast sim; Hunter **+25%/piece vs Slash** optional companion DPS toggle (claws/sentinel); Mecha mark/spread summary only — Mecha burst still unmodeled in DPS | Panel/DPS goldens in `set-bonus-audit.test.ts`; Mecha remains C |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
@@ -269,6 +269,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Inaros + Nokko + Wukong passives | 2026-07-22 | Inaros Sarcophagus + 20% Finisher heal; Nokko Vital Decay 15s; Wukong 3 of 5 techniques |
 | Voruna + Uriel passives | 2026-07-22 | Voruna Dynar/Raksh/Lycath/Ulfrun hold-passives; Uriel Catenach/Gulphagor/Vythelas + 60s rez |
 | Augur shields/cast panel | 2026-07-22 | Augur energy→shields sim: EFF-scaled cast cost × 40%/piece (not weapon DPS) |
+| Hunter set vs Slash DPS | 2026-07-22 | Optional +25%/piece companion weapon DPS vs Slash (beast claws / sentinel); wiki Slash not generic status |
 
 ## New / extended test files
 

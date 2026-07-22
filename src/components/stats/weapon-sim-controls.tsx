@@ -1,7 +1,11 @@
 "use client";
 
 import type { CalculatedStats, SimulationParams, Weapon } from "@/lib/types";
-import { weaponSupportsPrimaryStyleSets, weaponAcceptsSynthReloadBonus } from "@/lib/calc/set-bonuses";
+import {
+  weaponSupportsPrimaryStyleSets,
+  weaponAcceptsSynthReloadBonus,
+  weaponSupportsHunterCompanionSet,
+} from "@/lib/calc/set-bonuses";
 import { getModStatLabel } from "@/lib/overrides/override-stat-catalog";
 import { CollapsibleSection, SimSlider } from "./stat-primitives";
 
@@ -92,6 +96,16 @@ export function WeaponSimControls({
               max={3}
               onChange={(v) => onSimParamsChange({ ...simParams, extraSynthSetPiecesOffWeapon: v })}
               tooltip="Synth Fiber + Deconstruct on companion and Synth Reflex on Warframe (max 3 off this pistol). At 4 total with Synth Charge here, +15% reload speed applies."
+            />
+          )}
+          {weapon && weaponSupportsHunterCompanionSet(weapon) && (
+            <SimSlider
+              label="Hunter vs Slash (DPS)"
+              value={simParams.applyHunterSetVsSlashDamage ? 1 : 0}
+              min={0}
+              max={1}
+              onChange={(v) => onSimParamsChange({ ...simParams, applyHunterSetVsSlashDamage: v >= 1 })}
+              tooltip="When Hunter set pieces are equipped across the loadout, apply +25%/piece companion damage vs Slash-status targets (max +150%)."
             />
           )}
           <div className="pt-1 space-y-1.5">

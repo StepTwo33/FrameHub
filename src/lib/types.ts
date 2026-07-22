@@ -342,6 +342,11 @@ export interface SimulationParams {
   extraTekSetPiecesOffWeapon?: number;
   /** If Tek 4-set is complete and this is enabled, apply +60% damage vs marked enemies to primary DPS. */
   applyTekSetVsMarkedDamage?: boolean;
+  /**
+   * If Hunter set pieces are equipped and this is enabled, apply +25%/piece companion
+   * weapon damage vs Slash-status targets (beast claws / sentinel weapons only).
+   */
+  applyHunterSetVsSlashDamage?: boolean;
   /** Warframe ability names treated as active weapon damage buffs (e.g. "Roar", "Eclipse"). */
   activeWeaponAbilityBuffs?: string[];
   /**
@@ -399,6 +404,7 @@ export const DEFAULT_SIM_PARAMS: SimulationParams = {
   extraSynthSetPiecesOffWeapon: 0,
   extraTekSetPiecesOffWeapon: 0,
   applyTekSetVsMarkedDamage: false,
+  applyHunterSetVsSlashDamage: false,
   targetFaction: undefined,
   applyHeadshots: false,
   applyStanceMultiplier: true,
@@ -516,6 +522,8 @@ export interface CalculatedStats {
   synthSetReloadBonusApplied?: number;
   /** Tek 4-set: damage multiplier vs marked when sim + set complete (primary only). */
   tekSetVsMarkedDamageMultiplier?: number;
+  /** Hunter set: companion weapon damage multiplier vs Slash-status when sim toggle on. */
+  hunterSetVsSlashDamageMultiplier?: number;
   /** Cross-slot set detection (optional). */
   setBonusSummary?: SetBonusSummaryLine[];
   /** Mod-scaled radial / AoE attacks when the weapon has them. */
@@ -628,7 +636,7 @@ export interface WarframeCalculatedStats {
   setBonusSummary?: SetBonusSummaryLine[];
   /** Augur 6-set: percent of energy spent converted to shields (display / future EHP modeling). */
   augurEnergyToShieldsPercent?: number;
-  /** Hunter 6-set: companion damage bonus vs status-affected enemies (+150% → 150 here). */
+  /** Hunter set: companion damage bonus vs Slash-status enemies (+150% → 150 here). */
   hunterCompanionVsStatusDamagePercent?: number;
   /**
    * When Adaptation is equipped: typed DR stacks (see computeAdaptationSurvivability in UI).

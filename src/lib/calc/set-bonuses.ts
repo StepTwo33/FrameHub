@@ -132,6 +132,24 @@ export function countHunterSetPieces(linkage: SetBonusLinkage | undefined, warfr
   );
 }
 
+/** Beast claws / sentinel weapons receive the Hunter set companion damage bonus. */
+export function weaponSupportsHunterCompanionSet(weapon: {
+  category: string;
+  triggerType?: string;
+}): boolean {
+  const c = weapon.category;
+  return c === "beast_claw" || c === "sentinel_weapon";
+}
+
+/**
+ * wiki Hunter Set: companions gain +25% damage per piece vs Slash-status targets
+ * (max +150% at 6 → 2.5×). Returns 1 when inactive.
+ */
+export function hunterCompanionDamageMultiplier(pieces: number): number {
+  if (pieces <= 0) return 1;
+  return 1 + Math.min(pieces, 6) * 0.25;
+}
+
 export function countMechaSetPieces(warframeMods: ModSlot[], companionMods?: ModSlot[]): number {
   return countSetModsInSlots(concatSlots(warframeMods, companionMods), MECHA_SET);
 }
@@ -178,6 +196,7 @@ export function buildWeaponSetBonusSummary(
     extraSynthSetPiecesOffWeapon?: number;
     extraTekSetPiecesOffWeapon?: number;
     applyTekSetVsMarkedDamage?: boolean;
+    applyHunterSetVsSlashDamage?: boolean;
   },
 ): SetBonusSummaryLine[] {
   const vigSet = new Set<string>(VIGILANTE_MOD_IDS);
@@ -193,7 +212,10 @@ export function buildWeaponSetBonusSummary(
     ? countTekSetPieces(linkage, localMods)
     : countTekSetPieces(undefined, localMods) + (sim.extraTekSetPiecesOffWeapon ?? 0);
 
+  const hunterPieces = countHunterSetPieces(linkage, linkage?.warframeMods ?? []);
   const primaryStyle = weaponSupportsPrimaryStyleSets(weapon);
+  const companionStyle = weaponSupportsHunterCompanionSet(weapon);
+  const hunterMult = hunterCompanionDamageMultiplier(hunterPieces);
 
   return [
     {
@@ -222,6 +244,20 @@ export function buildWeaponSetBonusSummary(
         !!sim.applyTekSetVsMarkedDamage &&
         primaryStyle,
       description: "4-piece: +60% damage to marked enemies (optional DPS toggle)",
+    },
+    {
+      setId: "hunter",
+      label: "Hunter",
+      pieces: hunterPieces,
+      required: 6,
+      active:
+        hunterPieces >= 1 &&
+        !!sim.applyHunterSetVsSlashDamage &&
+        companionStyle,
+      description:
+        companionStyle && hunterPieces >= 1
+          ? `+${((hunterMult - 1) * 100).toFixed(0)}% companion damage vs Slash-status (optional DPS toggle)`
+          : "Each piece: +25% companion damage vs Slash-status enemies (max +150% at 6)",
     },
   ];
 }
@@ -268,12 +304,12 @@ export function buildWarframeSetBonusSummary(
       label: "Hunter",
       pieces: hunter,
       required: 6,
-      // wiki: +25% companion dmg vs status targets per piece (max +150% at 6)
+      // wiki: +25% companion dmg vs Slash-status targets per piece (max +150% at 6)
       active: hunter >= 1,
       description:
         hunter >= 1
-          ? `Companion +${hunter * 25}% damage vs status-affected enemies (${hunter} piece${hunter === 1 ? "" : "s"})`
-          : "Each piece: Companion +25% damage vs status-affected enemies (max +150% at 6)",
+          ? `Companion +${hunter * 25}% damage vs Slash-status enemies (${hunter} piece${hunter === 1 ? "" : "s"}; optional DPS toggle)`
+          : "Each piece: Companion +25% damage vs Slash-status enemies (max +150% at 6)",
     },
     {
       setId: "mecha",

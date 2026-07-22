@@ -387,6 +387,21 @@ function enumerateSources(ctx: WeaponDpsCalcContext): OmitSource[] {
     });
   }
 
+  if (sim.applyHunterSetVsSlashDamage) {
+    sources.push({
+      id: "hunter-slash",
+      label: "Hunter vs Slash",
+      category: "external",
+      nominal: "+25%/piece companion dmg vs Slash",
+      tooltip: "Hunter set bonus on beast claws / sentinel weapons vs Slash-status targets.",
+      apply: (base) => {
+        const next = cloneCtx(base);
+        next.simParams = { ...(next.simParams ?? DEFAULT_SIM_PARAMS), applyHunterSetVsSlashDamage: false };
+        return next;
+      },
+    });
+  }
+
   if ((sim.extraSynthSetPiecesOffWeapon ?? 0) > 0) {
     sources.push({
       id: "wf-synth-pieces",

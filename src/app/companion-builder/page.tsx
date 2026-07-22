@@ -14,9 +14,10 @@ import {
 import { ModSlotCard } from "@/components/mod-slot";
 import { ModPicker } from "@/components/mod-picker";
 import { useCompanions, useWeapons, useMods } from "@/lib/weapons/use-data";
-import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats } from "@/lib/types";
+import { Companion, Mod, Weapon, EquippedMod, CompanionCalculatedStats, DEFAULT_SIM_PARAMS } from "@/lib/types";
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
+import { weaponSupportsHunterCompanionSet } from "@/lib/calc/set-bonuses";
 import { mergeRivenStatChanges } from "@/lib/calc/weapon-stat-merges";
 import { avgCritMultiplier, critTierDamage, critTiersToShow, critTierLabel, critTierColorClass, exceedsWarframeInt32 } from "@/lib/calc/crit-utils";
 import {
@@ -127,6 +128,7 @@ export default function CompanionBuilderPage() {
   const [weaponSlotPolarities, setWeaponSlotPolarities] = useState<Record<number, string>>({});
   const [modPickerTarget, setModPickerTarget] = useState<"companion" | "weapon">("companion");
   const [weaponRivenStatsMap, setWeaponRivenStatsMap] = useState<Record<number, Record<string, number>>>();
+  const [applyHunterVsSlash, setApplyHunterVsSlash] = useState(false);
 
   const handleSaveBuildConfirm = useCallback(async ({ name, description, isPublic, tags }: SaveBuildDialogValues) => {
     if (!selectedCompanion) return;
@@ -277,17 +279,27 @@ export default function CompanionBuilderPage() {
   const weaponStats = useMemo(() => {
     if (!selectedWeapon) return null;
     const rivenStatChanges = mergeRivenStatChanges(weaponRivenStatsMap, weaponMods);
+    const linkage = {
+      companionMods: equippedMods.map((m) => ({
+        modId: m.modId,
+        rank: m.rank,
+        slotIndex: m.slotIndex,
+      })),
+    };
     return calculateWeaponBuild(
       selectedWeapon,
       weaponMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
       modsMap,
       undefined,
+      {
+        ...DEFAULT_SIM_PARAMS,
+        applyHunterSetVsSlashDamage: applyHunterVsSlash,
+      },
       undefined,
-      undefined,
-      undefined,
+      linkage,
       rivenStatChanges,
     );
-  }, [selectedWeapon, weaponMods, weaponRivenStatsMap, modsMap]);
+  }, [selectedWeapon, weaponMods, weaponRivenStatsMap, modsMap, equippedMods, applyHunterVsSlash]);
 
   const weaponCapacity = hasCatalyst ? 60 : 30;
   const weaponCapacityUsed = useMemo(() => {
@@ -815,6 +827,26 @@ export default function CompanionBuilderPage() {
                               <StatRow label="Reload" value={`${weaponStats.reloadTime.toFixed(2)}s`} />
                             )}
                             <div className="border-t border-border my-2" />
+                            {weaponSupportsHunterCompanionSet(selectedWeapon) && (
+                              <>
+                                <label className="flex items-center gap-2 py-1 text-[11px] text-muted-foreground cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={applyHunterVsSlash}
+                                    onChange={(e) => setApplyHunterVsSlash(e.target.checked)}
+                                    className="rounded border-border"
+                                  />
+                                  Hunter set vs Slash-status DPS
+                                </label>
+                                {weaponStats.hunterSetVsSlashDamageMultiplier != null && (
+                                  <StatRow
+                                    label="Hunter vs Slash"
+                                    value={`×${weaponStats.hunterSetVsSlashDamageMultiplier.toFixed(2)}`}
+                                    color="text-amber-400"
+                                  />
+                                )}
+                              </>
+                            )}
                             <StatRow label="Burst DPS" value={weaponStats.burstDps.toFixed(0)} highlighted />
                             <StatRow label="Sustained DPS" value={weaponStats.sustainedDps.toFixed(0)} highlighted />
                           </div>

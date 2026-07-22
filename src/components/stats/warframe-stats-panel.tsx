@@ -2414,7 +2414,12 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
               </>
             )}
             {(stats.hunterCompanionVsStatusDamagePercent ?? 0) > 0 && (
-              <StatRow label="Hunter (companion)" value={`+${stats.hunterCompanionVsStatusDamagePercent}% dmg vs status targets`} color="text-amber-400" />
+              <StatRow
+                label="Hunter (companion)"
+                value={`+${stats.hunterCompanionVsStatusDamagePercent}% dmg vs Slash (${(1 + (stats.hunterCompanionVsStatusDamagePercent ?? 0) / 100).toFixed(2)}×)`}
+                color="text-amber-400"
+                tooltip="Applies to beast claws / sentinel weapons when the Hunter vs Slash DPS toggle is on (companion builder / loadout sim)."
+              />
             )}
           </div>
         </CollapsibleSection>

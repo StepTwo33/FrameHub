@@ -21,6 +21,9 @@ import {
   VIGILANTE_MOD_IDS,
   UMBRAL_MOD_IDS,
   weaponSupportsPrimaryStyleSets,
+  weaponSupportsHunterCompanionSet,
+  countHunterSetPieces,
+  hunterCompanionDamageMultiplier,
   buildWarframeSetBonusSummary,
   buildWeaponSetBonusSummary,
   countSynthSetPieces,
@@ -323,7 +326,8 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 //   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe; folded into avg crit for DPS).
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
 // Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % (per piece).
-// Augur shields/cast is panel-sim only (EFF × 40%/piece). Not in weapon DPS: Hunter companion combat, Mecha mark/status-spread.
+// Augur shields/cast panel-sim; Hunter companion DPS via applyHunterSetVsSlashDamage on claws/sentinel.
+// Not in weapon DPS: Mecha mark/status-spread.
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
 // Sacrificial full set bonus: +75% when both mods equipped
@@ -1083,6 +1087,25 @@ export function calculateWeaponBuild(
     const physTek = stats.impact + stats.puncture + stats.slash;
     const eleTek = stats.elements.reduce((sum, e) => sum + e.value, 0);
     stats.totalDamage = physTek + eleTek;
+  }
+
+  // Hunter set: +25%/piece companion damage vs Slash-status (beast claws / sentinel weapons; optional sim)
+  const hunterPieces = countHunterSetPieces(linkage, linkage?.warframeMods ?? []);
+  if (
+    sim.applyHunterSetVsSlashDamage &&
+    hunterPieces > 0 &&
+    weaponSupportsHunterCompanionSet(baseWeapon)
+  ) {
+    const hm = hunterCompanionDamageMultiplier(hunterPieces);
+    stats.hunterSetVsSlashDamageMultiplier = hm;
+    stats.impact *= hm;
+    stats.puncture *= hm;
+    stats.slash *= hm;
+    for (const e of stats.elements) e.value *= hm;
+    for (const e of stats.rawElements) e.value *= hm;
+    const physHunter = stats.impact + stats.puncture + stats.slash;
+    const eleHunter = stats.elements.reduce((sum, e) => sum + e.value, 0);
+    stats.totalDamage = physHunter + eleHunter;
   }
 
   // Snapshot arsenal-style display damage before quantization (the in-game arsenal

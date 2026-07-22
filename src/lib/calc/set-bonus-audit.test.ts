@@ -10,7 +10,10 @@ import {
   buildWarframeSetBonusSummary,
   countAugurSetPieces,
   countHunterSetPieces,
+  hunterCompanionDamageMultiplier,
+  weaponSupportsHunterCompanionSet,
 } from "@/lib/calc/set-bonuses";
+import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { scaledAbilityEnergyCost } from "@/lib/codex/ability-misc-stats";
 import { resolveWeaponExternalBuffs } from "@/lib/weapons/weapon-external-buffs";
 import type { Ability, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
@@ -67,7 +70,7 @@ describe("Augur set (wiki: +40% energy→shields per piece)", () => {
   });
 });
 
-describe("Hunter set (wiki: +25% companion dmg per piece)", () => {
+describe("Hunter set (wiki: +25% companion dmg per piece vs Slash)", () => {
   it("scales with piece count", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const hunterAdrenaline = allMods.find((m) => m.id === "hunter_adrenaline")!;
@@ -75,6 +78,71 @@ describe("Hunter set (wiki: +25% companion dmg per piece)", () => {
     expect(countHunterSetPieces(undefined, slots)).toBe(1);
     const stats = calculateWarframeBuild(excal, slots, modsMap());
     expect(stats.hunterCompanionVsStatusDamagePercent).toBe(25);
+  });
+
+  it("multiplies companion claw DPS when vs-Slash toggle is on", () => {
+    expect(hunterCompanionDamageMultiplier(0)).toBe(1);
+    expect(hunterCompanionDamageMultiplier(1)).toBeCloseTo(1.25, 5);
+    expect(hunterCompanionDamageMultiplier(6)).toBeCloseTo(2.5, 5);
+    expect(weaponSupportsHunterCompanionSet({ category: "beast_claw" })).toBe(true);
+    expect(weaponSupportsHunterCompanionSet({ category: "rifle" })).toBe(false);
+
+    const claw: Weapon = {
+      id: "test_claws",
+      name: "Test Claws",
+      category: "beast_claw",
+      damage: 100,
+      impact: 0,
+      puncture: 0,
+      slash: 100,
+      fireRate: 1,
+      criticalChance: 0,
+      criticalMultiplier: 2,
+      statusChance: 0,
+      magazine: 0,
+      reloadTime: 0,
+      multishot: 1,
+      triggerType: "Melee",
+      modSlots: 8,
+      hasPrimaryArcaneSlot: false,
+      hasSecondaryArcaneSlot: false,
+      isIncarnon: false,
+      hasRivenSlot: false,
+    };
+    const linkage = {
+      warframeMods: [{ modId: "hunter_adrenaline", rank: 5, slotIndex: 0 }],
+      companionMods: [
+        { modId: "hunter_recovery", rank: 5, slotIndex: 0 },
+        { modId: "hunter_command", rank: 5, slotIndex: 1 },
+      ],
+    };
+    expect(countHunterSetPieces(linkage, linkage.warframeMods)).toBe(3);
+
+    const off = calculateWeaponBuild(claw, [], modsMap(), undefined, DEFAULT_SIM_PARAMS, undefined, linkage);
+    const on = calculateWeaponBuild(
+      claw,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, applyHunterSetVsSlashDamage: true },
+      undefined,
+      linkage,
+    );
+    expect(off.hunterSetVsSlashDamageMultiplier).toBeUndefined();
+    expect(on.hunterSetVsSlashDamageMultiplier).toBeCloseTo(1.75, 5);
+    expect(on.totalDamage / off.totalDamage).toBeCloseTo(1.75, 5);
+
+    const rifle: Weapon = { ...claw, id: "t", name: "T", category: "rifle", triggerType: "Auto", magazine: 30, reloadTime: 2 };
+    const rifleOn = calculateWeaponBuild(
+      rifle,
+      [],
+      modsMap(),
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, applyHunterSetVsSlashDamage: true },
+      undefined,
+      linkage,
+    );
+    expect(rifleOn.hunterSetVsSlashDamageMultiplier).toBeUndefined();
   });
 });
 
