@@ -255,6 +255,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Nova + Ivara passives | 2026-07-22 | Nova 15% Health/Energy orb on slow/sped kills; Ivara 50m radar (+ extras) |
 | Nezha + Mirage passives | 2026-07-22 | Nezha +60% slide speed / +35% distance; Mirage +85% slide dur / +50% maneuvers |
 | Loki + Lavos passives | 2026-07-22 | Loki wall latch 60s (×10); Lavos Valence Block 10s status immunity / 5s orb CD |
+| Khora + Oberon passives | 2026-07-22 | Venari +15% move speed / 45s respawn; Righteous Negation cap 3 (0.25s / 0.5s final invuln) |
 
 ## New / extended test files
 

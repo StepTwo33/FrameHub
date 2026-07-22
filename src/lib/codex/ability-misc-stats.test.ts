@@ -64,6 +64,9 @@ import {
   DEFAULT_WALL_LATCH_SEC,
   computeLavosValenceBlockPassive,
   computeLavosValenceBlockRemaining,
+  computeKhoraVenariPassive,
+  computeOberonRighteousNegationPassive,
+  computeOberonRighteousNegationStacks,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -684,6 +687,26 @@ describe("Lavos Valence Block passive", () => {
     expect(computeLavosValenceBlockRemaining(0)).toBe(10);
     expect(computeLavosValenceBlockRemaining(4)).toBe(6);
     expect(computeLavosValenceBlockRemaining(10)).toBe(0);
+  });
+});
+
+describe("Khora Venari passive", () => {
+  it("grants +15% move speed while Venari is alive; 45s respawn", () => {
+    expect(computeKhoraVenariPassive(true)).toEqual({ moveSpeedBonus: 0.15, respawnSec: 45 });
+    expect(computeKhoraVenariPassive(false)).toEqual({ moveSpeedBonus: 0, respawnSec: 45 });
+  });
+});
+
+describe("Oberon Righteous Negation passive", () => {
+  it("caps at 3 stacks with 0.25s / 0.5s final invuln", () => {
+    expect(computeOberonRighteousNegationPassive()).toEqual({
+      maxStacks: 3,
+      invulnOnConsumeSec: 0.25,
+      invulnOnFinalSec: 0.5,
+    });
+    expect(computeOberonRighteousNegationStacks(0)).toBe(0);
+    expect(computeOberonRighteousNegationStacks(2)).toBe(2);
+    expect(computeOberonRighteousNegationStacks(5)).toBe(3);
   });
 });
 

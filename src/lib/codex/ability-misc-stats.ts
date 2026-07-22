@@ -2797,6 +2797,39 @@ export function computeLavosValenceBlockRemaining(
   return Math.max(0, passive.immunityDurationSec - Math.max(0, elapsedSec));
 }
 
+export interface KhoraVenariPassive {
+  /** +15% movement speed while Venari is alive. */
+  moveSpeedBonus: number;
+  /** Seconds until Venari respawns if killed (instant via Venari ability cast). */
+  respawnSec: number;
+}
+
+/** wiki Khora: Venari grants +15% move speed while alive; respawns after 45s if killed. */
+export function computeKhoraVenariPassive(venariAlive: boolean): KhoraVenariPassive {
+  return {
+    moveSpeedBonus: venariAlive ? 0.15 : 0,
+    respawnSec: 45,
+  };
+}
+
+export interface OberonRighteousNegationPassive {
+  maxStacks: number;
+  /** Invulnerability on consuming a non-final charge. */
+  invulnOnConsumeSec: number;
+  /** Invulnerability when consuming the final charge. */
+  invulnOnFinalSec: number;
+}
+
+/** wiki Oberon: Health Orbs grant Righteous Negation stacks (cap 3) that block the next hit. */
+export function computeOberonRighteousNegationPassive(): OberonRighteousNegationPassive {
+  return { maxStacks: 3, invulnOnConsumeSec: 0.25, invulnOnFinalSec: 0.5 };
+}
+
+/** Clamp displayed Negation stacks to the wiki max of 3. */
+export function computeOberonRighteousNegationStacks(stacks: number): number {
+  return Math.min(3, Math.max(0, Math.floor(stacks)));
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

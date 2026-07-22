@@ -56,6 +56,9 @@ import {
   DEFAULT_WALL_LATCH_SEC,
   computeLavosValenceBlockPassive,
   computeLavosValenceBlockRemaining,
+  computeKhoraVenariPassive,
+  computeOberonRighteousNegationPassive,
+  computeOberonRighteousNegationStacks,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1135,6 +1138,69 @@ function LavosValenceBlockPassivePanel() {
   );
 }
 
+function KhoraVenariPassivePanel() {
+  const [venariAlive, setVenariAlive] = useState(1);
+  const venari = computeKhoraVenariPassive(venariAlive > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Venari Alive"
+        value={venariAlive}
+        min={0}
+        max={1}
+        onChange={setVenariAlive}
+        tooltip="Khora: Venari grants +15% move speed while alive; respawns after 45s if killed (or instantly via Venari ability)."
+      />
+      <StatRow
+        label="Move Speed"
+        value={venari.moveSpeedBonus > 0 ? `+${(venari.moveSpeedBonus * 100).toFixed(0)}%` : "Inactive"}
+        color={venari.moveSpeedBonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Tied to Venari's presence (modifiable via Venari ability mods)."
+      />
+      <StatRow
+        label="Respawn"
+        value={`${venari.respawnSec}s`}
+        color="text-muted-foreground"
+        tooltip="Passive respawn timer when Venari dies; summoning via ability is instant for an energy cost."
+      />
+    </div>
+  );
+}
+
+function OberonRighteousNegationPassivePanel() {
+  const negation = computeOberonRighteousNegationPassive();
+  const [stacks, setStacks] = useState(3);
+  const clamped = computeOberonRighteousNegationStacks(stacks);
+  const nextInvuln =
+    clamped <= 0 ? 0 : clamped === 1 ? negation.invulnOnFinalSec : negation.invulnOnConsumeSec;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Negation Stacks"
+        value={stacks}
+        min={0}
+        max={negation.maxStacks}
+        onChange={setStacks}
+        tooltip="Oberon: Health Orbs grant Righteous Negation (cap 3). Each stack blocks the next instance of damage."
+      />
+      <StatRow
+        label="Stacks"
+        value={`${clamped} / ${negation.maxStacks}`}
+        color={clamped > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip="Granted to Oberon and allies in Affinity Range; each ally consumes their own stacks."
+      />
+      <StatRow
+        label="Next Hit Invuln"
+        value={clamped > 0 ? `${nextInvuln}s` : "—"}
+        color={clamped > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip={`0.25s on a normal consume; 0.5s when consuming the final charge.`}
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1288,6 +1354,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "mirage" || warframe.id === "mirage_prime") && <MirageParkourPassive />}
           {(warframe.id === "loki" || warframe.id === "loki_prime") && <LokiWallLatchPassive />}
           {(warframe.id === "lavos" || warframe.id === "lavos_prime") && <LavosValenceBlockPassivePanel />}
+          {(warframe.id === "khora" || warframe.id === "khora_prime") && <KhoraVenariPassivePanel />}
+          {(warframe.id === "oberon" || warframe.id === "oberon_prime") && <OberonRighteousNegationPassivePanel />}
         </CollapsibleSection>
       )}
 
