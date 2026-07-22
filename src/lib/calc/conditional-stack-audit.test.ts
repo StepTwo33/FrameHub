@@ -125,3 +125,50 @@ describe("Blood Rush (wiki: +40% crit per combo multiplier tier above 1×)", () 
     expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 5.4, 5);
   });
 });
+
+describe("Galvanized Steel (wiki: +110% CC; +30% CD/kill stack, cap 4)", () => {
+  it("paper (0 stacks): +110% CC only — no CD", () => {
+    const weapon = requireWeapon("skana");
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const stats = build("skana", "galvanized_steel", { killStacks: 0 });
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 2.1, 5);
+    expect(stats.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier, 5);
+  });
+
+  it("4 kill stacks: +120% Critical Damage", () => {
+    const at0 = build("skana", "galvanized_steel", { killStacks: 0 });
+    const at4 = build("skana", "galvanized_steel", { killStacks: 4 });
+    expect(at4.criticalMultiplier).toBeCloseTo(at0.criticalMultiplier * 2.2, 4);
+  });
+
+  it("caps kill stacks at 4", () => {
+    const at4 = build("skana", "galvanized_steel", { killStacks: 4 });
+    const at9 = build("skana", "galvanized_steel", { killStacks: 9 });
+    expect(at9.criticalMultiplier).toBeCloseTo(at4.criticalMultiplier, 8);
+  });
+});
+
+describe("Galvanized Elementalist (wiki: +80% status dmg; +30% SC/kill stack, cap 4)", () => {
+  it("paper: +80% status damage, no SC", () => {
+    const weapon = requireWeapon("skana");
+    const stats = build("skana", "galvanized_elementalist", { killStacks: 0 });
+    expect(stats.statusDamageBonus).toBeCloseTo(0.8, 5);
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance, 5);
+  });
+
+  it("4 kill stacks: +120% Status Chance", () => {
+    const weapon = requireWeapon("skana");
+    const stats = build("skana", "galvanized_elementalist", { killStacks: 4 });
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 2.2, 5);
+  });
+});
+
+describe("Melee Elementalist (wiki: +90% status dmg; +60% heavy wind-up speed)", () => {
+  it("shortens wind-up and adds status damage", () => {
+    const weapon = requireWeapon("skana");
+    const empty = calculateWeaponBuild(weapon, [], modsMap());
+    const stats = build("skana", "melee_elementalist", {});
+    expect(stats.statusDamageBonus).toBeCloseTo(0.9, 5);
+    expect(stats.heavyAttackWindUp).toBeCloseTo(empty.heavyAttackWindUp / 1.6, 5);
+  });
+});

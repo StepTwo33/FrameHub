@@ -10270,8 +10270,7 @@ const RAW_MODS: Mod[] = [
     "subCategory": "",
     "stats": {
       "statusDamage": 15,
-      "heavyAttackSpeed": 10,
-      "heavyAttackEfficiency": 10.0
+      "heavyAttackSpeed": 10
     },
     "description": "+90% Status Damage, +60% Heavy Attack Wind Up Speed",
     "rarity": "uncommon"

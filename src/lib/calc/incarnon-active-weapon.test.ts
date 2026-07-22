@@ -564,11 +564,12 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "dex_sybaris")?.flatBaseDamage).toBe(30);
   });
 
-  it("Despair Vendetta papers +60 flat +30% MS (Dread+Hate set)", () => {
+  it("Despair Vendetta papers +60 flat +30% MS +100% capacity-MS damage (Dread+Hate set)", () => {
     const data = incarnonDataMap.get("despair")!;
     const changes = mergeIncarnonStatChanges(data, { 2: 1 }, "despair");
     expect(changes?.flatBaseDamage).toBe(60);
     expect(changes?.multishot).toBeCloseTo(0.3, 5);
+    expect(changes?.damage).toBeCloseTo(1, 5);
   });
 
   it("Paris Vicious Promise papers undamaged +40% CC / +2× CM", () => {
@@ -1010,6 +1011,11 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "braton_prime")?.flatBaseDamage).toBe(42);
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.flatBaseDamage).toBe(2);
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.multishot).toBe(0.2);
+    // Capacity-MS pellet damage Y% (paper assumes clause up, like Torid Plentiful)
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.damage).toBeCloseTo(0.6, 5);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "mk1_braton")?.damage).toBeCloseTo(0.48, 5);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_vandal")?.damage).toBeCloseTo(0.58, 5);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
   });
 
   it("Latron Riddled Target / Critical Parallel", () => {

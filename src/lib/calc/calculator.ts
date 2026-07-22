@@ -554,6 +554,9 @@ export function calculateWeaponBuild(
     galvCritOnHeadshotBase: 0,
     galvCritOnHeadshotPerStack: 0,
     onKillStatBonuses: {},
+    onKillPerStackBonuses: {},
+    onKillPerStackCap: 4,
+    heavyAttackWindUpBonus: 0,
     triggerStatBonuses: {},
     slashOnCritChance: 0,
     slashOnImpactProcChance: 0,
@@ -708,6 +711,18 @@ export function calculateWeaponBuild(
     multishotBonus += pool.multishot ?? 0;
     reloadBonus += pool.reloadSpeed ?? 0;
   }
+  // Galvanized Steel / Elementalist: per-kill-stack bonuses (cap 4).
+  const onKillStacks = Math.min(sim.killStacks, weaponModAcc.onKillPerStackCap);
+  if (onKillStacks > 0) {
+    const per = weaponModAcc.onKillPerStackBonuses;
+    critMultBonus += (per.criticalMultiplier ?? 0) * onKillStacks;
+    statusBonus += (per.statusChance ?? 0) * onKillStacks;
+    damageBonus += (per.damage ?? 0) * onKillStacks;
+    critChanceBonus += (per.criticalChance ?? 0) * onKillStacks;
+    fireRateBonus += (per.fireRate ?? 0) * onKillStacks;
+    multishotBonus += (per.multishot ?? 0) * onKillStacks;
+    reloadBonus += (per.reloadSpeed ?? 0) * onKillStacks;
+  }
   stats.onKillStatBonuses = { ...onKill };
   stats.triggerStatBonuses = { ...trigger };
 
@@ -735,6 +750,12 @@ export function calculateWeaponBuild(
     fireRateBonus += berserkerFuryPerStack * bfStacks;
   }
   stats.berserkerFuryBonus = berserkerFuryPerStack;
+
+  // Melee Elementalist / wind-up speed mods: +N% shortens windup time.
+  const windUpBonus = weaponModAcc.heavyAttackWindUpBonus;
+  if (windUpBonus > -1 && windUpBonus !== 0) {
+    stats.heavyAttackWindUp /= 1 + windUpBonus;
+  }
 
   // Apply IPS bonuses additively, then global damage multiplier
   stats.impact *= (1 + impactBonus);

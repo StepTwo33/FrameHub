@@ -42,6 +42,12 @@ export type WeaponModAccumulators = {
   galvCritOnHeadshotPerStack: number;
   /** Non-stacking buffs active while kill stacks > 0 (statKey → summed bonus). */
   onKillStatBonuses: Record<string, number>;
+  /** Per-kill-stack buffs (statKey → bonus per stack); cap in onKillPerStackCap. */
+  onKillPerStackBonuses: Record<string, number>;
+  /** In-game stack cap for onKillPerStackBonuses (Galvanized Steel/Elementalist: 4). */
+  onKillPerStackCap: number;
+  /** +% Heavy Attack Wind Up Speed (shortens windup time). */
+  heavyAttackWindUpBonus: number;
   /** Aim/reload/cast/latch buffs gated by sim.applyTriggerBuffs (statKey → summed bonus). */
   triggerStatBonuses: Record<string, number>;
   /** Chance to force a Slash proc on crits (Hunter Munitions). */
@@ -88,6 +94,8 @@ const GALV_STACK_CAPS: Record<string, number> = {
   galvanized_shot: 3,
   galvanized_scope: 5,
   galvanized_crosshairs: 5,
+  galvanized_steel: 4,
+  galvanized_elementalist: 4,
 };
 
 function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): boolean {
@@ -140,6 +148,10 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
           return true;
         case "statusDuration":
           acc.statusDurationBonus += modValue;
+          return true;
+        case "heavyAttackSpeed":
+        case "heavyAttackWindUp":
+          acc.heavyAttackWindUpBonus += modValue;
           return true;
         default: {
           const factionId = FACTION_STAT_TO_ID[statKey];
@@ -203,6 +215,10 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       return true;
     case "conditional_stat_on_kill":
       acc.onKillStatBonuses[statKey] = (acc.onKillStatBonuses[statKey] ?? 0) + modValue;
+      return true;
+    case "conditional_stat_per_kill_stack":
+      acc.onKillPerStackBonuses[statKey] = (acc.onKillPerStackBonuses[statKey] ?? 0) + modValue;
+      acc.onKillPerStackCap = GALV_STACK_CAPS[ctx.modId] ?? acc.onKillPerStackCap ?? 4;
       return true;
     case "conditional_stat_on_trigger":
       acc.triggerStatBonuses[statKey] = (acc.triggerStatBonuses[statKey] ?? 0) + modValue;

@@ -140,17 +140,18 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("attackSpeed", "weapon_dps", "multiplicative_percent", "Fury: attackSpeed \u2014 +30% Attack Speed"),
   ]),
   galvanized_elementalist: mod("galvanized_elementalist", [
-    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Elementalist: duration \u2014 buff duration 20s (panel only)"),
-    line("statusChance", "weapon_dps", "conditional_stat_on_kill", "wiki: Galvanized Elementalist \u2014 +30% Status Chance per melee kill (stacks 4x; modeled as flat on-kill buff)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Elementalist: buff duration 20s (panel only)"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Elementalist — +80% Status Damage (always)"),
+    line("statusChance", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Galvanized Elementalist — +30% Status Chance per melee kill (cap 4 → +120%)"),
   ]),
   galvanized_reflex: mod("galvanized_reflex", [
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Reflex: duration \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
     line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Galvanized Reflex: heavyAttackEfficiency \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
   ]),
   galvanized_steel: mod("galvanized_steel", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Galvanized Steel: criticalChance \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Galvanized Steel: criticalMultiplier \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Steel: duration \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Steel — +110% Critical Chance (x2 for Heavy Attacks)"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Galvanized Steel — +30% Critical Damage per melee kill (cap 4 → +120%)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Galvanized Steel: buff duration 20s (panel only)"),
   ]),
 
   gladiator_might: mod("gladiator_might", [
@@ -221,9 +222,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
 
   melee_elementalist: mod("melee_elementalist", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Melee Elementalist: damage \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Melee Elementalist: heavyAttackEfficiency \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
-    line("heavyAttackSpeed", "mod_panel", "multiplicative_percent", "Melee Elementalist: heavyAttackSpeed \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Melee Elementalist — +90% Status Damage"),
+    line("heavyAttackSpeed", "weapon_dps", "multiplicative_percent", "wiki: Melee Elementalist — +60% Heavy Attack Wind Up Speed"),
   ]),
   melee_prowess: mod("melee_prowess", [
     line("statusChance", "weapon_dps", "multiplicative_percent", "Melee Prowess: statusChance \u2014 +90% Status Chance"),
