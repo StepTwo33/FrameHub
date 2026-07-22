@@ -499,9 +499,9 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   // wiki: Sporespring — Toxin via damage; bounce distance via misc; bounce mult Misc-fixed
 
   // wiki: Necraweb — Blast via damage; slow Misc-fixed 50%
-  // wiki: Storm Shroud — shroud HP + absorb × STR; reflect chance Misc-fixed (rank)
+  // wiki: Storm Shroud — absorb Mult × STR; shroudHealth Misc-fixed base;
+  // Initial Health = (base + absorbed × absorbMult) × STR (no armor); reflect Misc-fixed
   "voidrig::Storm Shroud": {
-    shroudHealth: { scale: "strength" },
     absorptionMultiplier: { scale: "strength" },
   },
   // wiki: Gravemines — Heat via damage; charges × DUR; scatter × RNG

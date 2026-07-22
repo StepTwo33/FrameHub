@@ -8,6 +8,7 @@ import {
   scaleAbilityMiscStats,
   scaledAbilityDamageReduction,
   scaledAbilityDamageBuff,
+  scaledAbilityEnergyCost,
   abilityPercentFraction,
   computeArmorScaledPool,
   getArmorPoolInvulnAbsorb,
@@ -280,6 +281,7 @@ export function AbilitiesSectionHeader({
 
 type AbilityStatSource = Pick<
   Ability,
+  | "energyCost"
   | "damage"
   | "directDamage"
   | "aoeDamage"
@@ -326,6 +328,13 @@ export function AbilityStatsBlock({
         absorptionMultiplier: poolAbsorb.absorptionMultiplier,
       }
     : undefined;
+  const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
+  const hasHeatEnergyLerp =
+    display.abilityName === "Fire Blast" &&
+    typeof ability.energyCost === "number" &&
+    Number.isFinite(maxHeatEnergyCost) &&
+    maxHeatEnergyCost > 0;
+  const [immolationHeatPct, setImmolationHeatPct] = useState(0);
 
   const scaledMisc = ability.miscStats
     ? scaleAbilityMiscStats(
@@ -726,27 +735,41 @@ export function AbilityStatsBlock({
     );
   }
   // wiki armor-scaled pools stored in misc: (base + armorMult × totalArmor) × STR
-  const miscArmorPool: Record<string, { baseKey: string; label: string }> = {
+  // Storm Shroud: no armor term — (base + absorbed × absorbMult) × STR
+  const miscArmorPool: Record<
+    string,
+    { baseKey: string; label: string; requiresArmorMult?: boolean }
+  > = {
     "Warding Halo": { baseKey: "haloHealth", label: "Initial Health" },
     "Shield Maiden": { baseKey: "shieldHealth", label: "Initial Health" },
     "Mass Vitrify": { baseKey: "segmentHealth", label: "Initial Segment Health" },
+    "Storm Shroud": {
+      baseKey: "shroudHealth",
+      label: "Initial Health",
+      requiresArmorMult: false,
+    },
   };
   const miscPool = miscArmorPool[display.abilityName];
   if (miscPool && stats != null && ability.miscStats) {
     const poolBase = Number(ability.miscStats[miscPool.baseKey]);
     const poolMult = Number(ability.miscStats.armorMultiplier);
-    if (Number.isFinite(poolBase) && poolBase > 0 && Number.isFinite(poolMult) && poolMult > 0) {
+    const needsArmor = miscPool.requiresArmorMult !== false;
+    const armorMult = needsArmor ? poolMult : Number.isFinite(poolMult) ? poolMult : 0;
+    const armorOk = needsArmor
+      ? Number.isFinite(poolMult) && poolMult > 0
+      : true;
+    if (Number.isFinite(poolBase) && poolBase > 0 && armorOk) {
       const unscaled = computeArmorScaledPool(
         poolBase,
-        poolMult,
-        stats.totalArmor,
+        armorMult,
+        needsArmor ? stats.totalArmor : 0,
         1,
         poolAbsorbOpts,
       );
       const scaled = computeArmorScaledPool(
         poolBase,
-        poolMult,
-        stats.totalArmor,
+        armorMult,
+        needsArmor ? stats.totalArmor : 0,
         str,
         poolAbsorbOpts,
       );
@@ -768,6 +791,25 @@ export function AbilityStatsBlock({
         />,
       );
     }
+  }
+  if (hasHeatEnergyLerp && typeof ability.energyCost === "number") {
+    const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
+    const baseAtHeat = ability.energyCost + (maxHeatEnergyCost - ability.energyCost) * heatT;
+    const scaledAtHeat = scaledAbilityEnergyCost(baseAtHeat, eff);
+    const fmt = (n: number) =>
+      Math.abs(n - Math.round(n)) < 0.05 ? String(Math.round(n)) : n.toFixed(1);
+    rows.push(
+      <AbilityStatRow
+        key="fireBlastHeatEnergy"
+        compact={compact}
+        label="Energy Cost (at Heat)"
+        baseValue={fmt(baseAtHeat)}
+        modifiedValue={fmt(scaledAtHeat)}
+        isModified={eff !== 1 || heatT > 0}
+        isPositive={scaledAtHeat <= ability.energyCost}
+        scaleHint="efficiency"
+      />,
+    );
   }
   if (ability.miscStats?.channeled === true) {
     rows.push(
@@ -793,9 +835,19 @@ export function AbilityStatsBlock({
           onChange={setInvulnAbsorbK}
           tooltip={
             poolAbsorb.mode === "inside_strength"
-              ? "Damage taken during cast invulnerability. Wiki: (base + armor×mult + absorb×absorbMult) × STR (Warding Halo absorbMult Misc-fixed)."
+              ? "Damage taken during cast invulnerability. Wiki: (base + armor×mult + absorb×absorbMult) × STR. Halo absorbMult Misc-fixed; Storm Shroud absorbMult also × STR (same form)."
               : "Damage taken during cast invulnerability. Wiki: (base + armor×mult) × STR + absorbed."
           }
+        />
+      )}
+      {hasHeatEnergyLerp && (
+        <SimSlider
+          label="Immolation Heat %"
+          value={immolationHeatPct}
+          min={0}
+          max={100}
+          onChange={setImmolationHeatPct}
+          tooltip="Fire Blast energy lerps from cast cost (0% heat) to max-heat floor (100%). Both ends use Ability Efficiency cast_cost."
         />
       )}
       {rows}

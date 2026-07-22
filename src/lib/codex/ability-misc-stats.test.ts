@@ -3,6 +3,7 @@ import {
   computeArmorScaledPool,
   getArmorPoolInvulnAbsorb,
   scaleAbilityMiscStats,
+  scaledAbilityEnergyCost,
 } from "@/lib/codex/ability-misc-stats";
 
 describe("computeArmorScaledPool", () => {
@@ -43,10 +44,21 @@ describe("computeArmorScaledPool", () => {
       }),
     ).toBe(9100);
   });
+  // wiki Storm Shroud: no armor — (base + absorbed × absorbMult) × STR
+  it("matches Storm Shroud pool with invuln absorb inside Strength", () => {
+    expect(computeArmorScaledPool(1200, 0, 0, 1.3)).toBe(1560);
+    expect(
+      computeArmorScaledPool(1200, 0, 0, 1.3, {
+        absorbedDamage: 1000,
+        absorbMode: "inside_strength",
+        absorptionMultiplier: 2,
+      }),
+    ).toBe(4160); // (1200 + 2000) × 1.3
+  });
 });
 
 describe("getArmorPoolInvulnAbsorb", () => {
-  it("maps additive pools and Halo inside_strength absorb Mult", () => {
+  it("maps additive pools and Halo/Shroud inside_strength absorb Mult", () => {
     expect(getArmorPoolInvulnAbsorb("Iron Skin")).toEqual({
       mode: "additive",
       absorptionMultiplier: 1,
@@ -67,7 +79,20 @@ describe("getArmorPoolInvulnAbsorb", () => {
       mode: "inside_strength",
       absorptionMultiplier: 2.5,
     });
+    expect(getArmorPoolInvulnAbsorb("Storm Shroud", { absorptionMultiplier: 2 })).toEqual({
+      mode: "inside_strength",
+      absorptionMultiplier: 2,
+    });
     expect(getArmorPoolInvulnAbsorb("Mass Vitrify")).toBeNull();
+  });
+});
+
+describe("Fire Blast heat energy lerp", () => {
+  it("lerps cast cost from 75 to 25 then applies Efficiency", () => {
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    expect(scaledAbilityEnergyCost(lerp(75, 25, 0), 1.3)).toBe(52.5);
+    expect(scaledAbilityEnergyCost(lerp(75, 25, 1), 1.3)).toBe(17.5);
+    expect(scaledAbilityEnergyCost(lerp(75, 25, 0.5), 1)).toBe(50);
   });
 });
 

@@ -2022,7 +2022,9 @@ describe("Phase 8 — ability scaling registry + sets", () => {
   });
 
   it("Voidrig Necraweb 2000 Blast; Storm Shroud 1200 HP/2× absorb; Gravemines 200×24; Guard 50e/5eps", () => {
-    expect(getVerifiedMiscScaling("voidrig", "Storm Shroud", "shroudHealth")).toEqual({
+    // shroudHealth Misc-fixed base; Initial Health / absorb via computeArmorScaledPool × STR
+    expect(getVerifiedMiscScaling("voidrig", "Storm Shroud", "shroudHealth")).toBeNull();
+    expect(getVerifiedMiscScaling("voidrig", "Storm Shroud", "absorptionMultiplier")).toEqual({
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("voidrig", "Gravemines", "charges")).toEqual({

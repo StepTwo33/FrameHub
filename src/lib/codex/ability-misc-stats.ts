@@ -2015,6 +2015,14 @@ export function getArmorPoolInvulnAbsorb(
         absorptionMultiplier: Number.isFinite(m) && m > 0 ? m : 2.5,
       };
     }
+    case "Storm Shroud": {
+      // wiki: absorb Mult scales with STR → effective rate absorbMult×STR ≡ inside_strength
+      const m = Number(miscStats?.absorptionMultiplier);
+      return {
+        mode: "inside_strength",
+        absorptionMultiplier: Number.isFinite(m) && m > 0 ? m : 2,
+      };
+    }
     default:
       return null;
   }
