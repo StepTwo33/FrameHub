@@ -76,6 +76,8 @@ import {
   computeKoumeiFateRemaining,
   computeBansheeSilencePassive,
   computeAtlasKnockdownPassive,
+  computeNyxPsychicCritChance,
+  computeHarrowPassive,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1503,6 +1505,51 @@ function AtlasKnockdownPassivePanel() {
   );
 }
 
+function NyxPsychicPassivePanel() {
+  const [confused, setConfused] = useState(3);
+  const cc = computeNyxPsychicCritChance(confused);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Confused Enemies"
+        value={confused}
+        min={0}
+        max={8}
+        onChange={setConfused}
+        tooltip="Nyx: +40% Primary/Secondary Critical Chance per Confused enemy within Affinity Range (cap +200%)."
+      />
+      <StatRow
+        label="Gun Crit Chance"
+        value={`+${(cc * 100).toFixed(0)}%`}
+        color="text-violet-300"
+        tooltip="Additive to Primary/Secondary crit chance mods. Cap at 5 Confused enemies."
+      />
+    </div>
+  );
+}
+
+function HarrowPassivePanel() {
+  const harrow = computeHarrowPassive();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Overshield Cap"
+        value={`${harrow.overshieldCap}`}
+        color="text-sky-400"
+        tooltip={`Harrow: overshield capacity doubled (${harrow.baseOvershieldCap} → ${harrow.overshieldCap}).`}
+      />
+      <StatRow
+        label="Mission Start"
+        value={harrow.startAtMaxEnergy ? "Max Energy" : "Normal"}
+        color="text-amber-400"
+        tooltip="Starts missions at maximum Energy."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1670,6 +1717,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {warframe.id === "koumei" && <KoumeiFatePassivePanel />}
           {(warframe.id === "banshee" || warframe.id === "banshee_prime") && <BansheeSilencePassivePanel />}
           {(warframe.id === "atlas" || warframe.id === "atlas_prime") && <AtlasKnockdownPassivePanel />}
+          {(warframe.id === "nyx" || warframe.id === "nyx_prime") && <NyxPsychicPassivePanel />}
+          {(warframe.id === "harrow" || warframe.id === "harrow_prime") && <HarrowPassivePanel />}
         </CollapsibleSection>
       )}
 

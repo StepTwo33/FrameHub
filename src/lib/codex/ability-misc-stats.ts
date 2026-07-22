@@ -3016,6 +3016,91 @@ export function computeAtlasKnockdownPassive(grounded: boolean): AtlasKnockdownP
   return { knockdownImmuneWhileGrounded: grounded };
 }
 
+/** wiki Nyx: +40% Primary/Secondary Critical Chance per Confused enemy in Affinity Range (cap +200%). */
+export function computeNyxPsychicCritChance(confusedEnemies: number): number {
+  const perEnemy = 0.4;
+  const cap = 2;
+  return Math.min(Math.max(0, Math.floor(confusedEnemies)) * perEnemy, cap);
+}
+
+export interface HarrowPassive {
+  /** Default Warframe overshield cap before Harrow's passive. */
+  baseOvershieldCap: number;
+  /** Overshield capacity with passive (×2). */
+  overshieldCap: number;
+  /** Missions begin at maximum Energy. */
+  startAtMaxEnergy: boolean;
+}
+
+/** wiki Harrow: Overshield capacity doubled; start missions at maximum energy. */
+export function computeHarrowPassive(
+  baseOvershieldCap = 1200,
+): HarrowPassive {
+  return {
+    baseOvershieldCap,
+    overshieldCap: baseOvershieldCap * 2,
+    startAtMaxEnergy: true,
+  };
+}
+
+export interface GyreAbilityCritPassive {
+  /** Flat ability Critical Chance from Electric status stacks (fraction). */
+  critChance: number;
+  /** Base ability Critical Damage multiplier at yellow crit. */
+  critMultiplier: number;
+  /** Yellow / orange / red tier from chance alone (before Cathode Grace). */
+  tier: "none" | "yellow" | "orange" | "red";
+}
+
+/**
+ * wiki Gyre: abilities gain +10% Critical Chance per Electricity status on the target
+ * (2.0× yellow / 3.0× orange / 4.0× red). Combined with Cathode Grace, ability CC caps at 300%.
+ */
+export function computeGyreAbilityCritChance(electricStacks: number): GyreAbilityCritPassive {
+  const stacks = Math.max(0, Math.floor(electricStacks));
+  const critChance = stacks * 0.1;
+  const capped = Math.min(critChance, 3);
+  let tier: GyreAbilityCritPassive["tier"] = "none";
+  if (capped >= 2.1) tier = "red";
+  else if (capped >= 1.1) tier = "orange";
+  else if (capped > 0) tier = "yellow";
+  const critMultiplier = tier === "red" ? 4 : tier === "orange" ? 3 : tier === "yellow" ? 2 : 1;
+  return { critChance: capped, critMultiplier, tier };
+}
+
+export interface CitrineGeoluminesencePassive {
+  /** Affinity-range-sized heal aura radius (m). */
+  radiusM: number;
+  /** Base Health/s before orb stacks. */
+  baseHealPerSec: number;
+  /** Heal/s gained per Health/Universal Orb collected. */
+  healPerOrb: number;
+  /** Maximum Health/s after 200 orbs. */
+  maxHealPerSec: number;
+  /** Orbs needed to reach max heal rate. */
+  orbsToMax: number;
+  /** Current Geoluminesence heal rate. */
+  healPerSec: number;
+}
+
+/** wiki Citrine: 5 HP/s aura in 50m; +0.1/s per Health Orb up to 25/s (200 orbs). */
+export function computeCitrineGeoluminesence(orbsCollected: number): CitrineGeoluminesencePassive {
+  const baseHealPerSec = 5;
+  const healPerOrb = 0.1;
+  const maxHealPerSec = 25;
+  const orbsToMax = 200;
+  const orbs = Math.max(0, Math.floor(orbsCollected));
+  const healPerSec = Math.min(baseHealPerSec + orbs * healPerOrb, maxHealPerSec);
+  return {
+    radiusM: 50,
+    baseHealPerSec,
+    healPerOrb,
+    maxHealPerSec,
+    orbsToMax,
+    healPerSec,
+  };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

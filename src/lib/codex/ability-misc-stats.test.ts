@@ -84,6 +84,8 @@ import {
   computeKoumeiFateRemaining,
   computeBansheeSilencePassive,
   computeAtlasKnockdownPassive,
+  computeNyxPsychicCritChance,
+  computeHarrowPassive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -822,6 +824,25 @@ describe("Atlas knockdown passive", () => {
   it("grants knockdown immunity only while grounded", () => {
     expect(computeAtlasKnockdownPassive(true)).toEqual({ knockdownImmuneWhileGrounded: true });
     expect(computeAtlasKnockdownPassive(false)).toEqual({ knockdownImmuneWhileGrounded: false });
+  });
+});
+
+describe("Nyx psychic crit passive", () => {
+  it("grants +40% gun CC per Confused enemy up to +200%", () => {
+    expect(computeNyxPsychicCritChance(0)).toBe(0);
+    expect(computeNyxPsychicCritChance(1)).toBeCloseTo(0.4, 5);
+    expect(computeNyxPsychicCritChance(5)).toBeCloseTo(2, 5);
+    expect(computeNyxPsychicCritChance(8)).toBeCloseTo(2, 5);
+  });
+});
+
+describe("Harrow overshield / energy passive", () => {
+  it("doubles overshield cap and starts at max energy", () => {
+    expect(computeHarrowPassive()).toEqual({
+      baseOvershieldCap: 1200,
+      overshieldCap: 2400,
+      startAtMaxEnergy: true,
+    });
   });
 });
 
