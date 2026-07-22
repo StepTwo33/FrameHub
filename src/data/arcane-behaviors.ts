@@ -476,7 +476,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "cascadia_flare",
     customHandler: "cascadia_flare",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "Cascadia Flare: custom handler"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Cascadia Flare — +12% damage / Heat stack at R5 (cap 40 → +480%; applies at sim stack count)"},
     ],
   },
   "cascadia_overcharge": {
@@ -866,8 +866,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "primary_blight": {
     arcaneId: "primary_blight",
     effects: [
-      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Blight: multishot (stacking — applies at sim stack count)"},
-      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Blight: criticalMultiplier (stacking — applies at sim stack count)"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Blight — +1.8% Multishot / Toxin stack at R5 (cap 40 → +72%; applies at sim stack count)"},
+      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Blight — +3.6% Critical Damage / Toxin stack at R5 (cap 40 → +144%; applies at sim stack count)"},
     ],
   },
   "primary_bulwark": {
@@ -887,8 +887,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "primary_crux": {
     arcaneId: "primary_crux",
     effects: [
-      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Crux: ammoEfficiency (stacking — applies at sim stack count)"},
-      {"statKey": "statusChancePerHit", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Primary Crux: statusChancePerHit (stacking — applies at sim stack count)"},
+      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Crux — +6% Ammo Efficiency / weak-point stack at R5 (cap 10 → +60%; applies at sim stack count)"},
+      {"statKey": "statusChancePerHit", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Primary Crux — +30% Status Chance / weak-point stack at R5 (cap 10 → +300%; applies at sim stack count)"},
     ],
   },
   "primary_debilitate": {

@@ -128,6 +128,7 @@ function applyWeaponStatToBuild(
       }
       break;
     case "statusChance":
+    case "statusChancePerHit":
     case "ampStatusChance":
     case "elementalProcChance":
       stats.statusChance += baseStatusChance * scaled;

@@ -279,6 +279,102 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.reloadTime).toBeCloseTo(lex.reloadTime / 1.6, 4);
     expect(full.burstDps).toBeGreaterThan(zero.burstDps);
   });
+
+  it("Primary Crux: 0 stacks = no buff; 10 stacks R5 → +300% SC / +60% AE", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const crux = allArcanes.find((a) => a.id === "primary_crux")!;
+    const def = getArcaneEffectDef("primary_crux")!;
+    expect(def.trigger).toBe("stacks");
+    expect(def.stackCap).toBe(10);
+
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [crux],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.statusChance).toBeCloseTo(braton.statusChance, 5);
+    expect(zero.ammoEfficiency ?? 0).toBeCloseTo(0, 5);
+
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [crux],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 10 },
+    );
+    // wiki R5: +30% SC × 10 = +300%; +6% AE × 10 = +60%
+    expect(full.statusChance).toBeCloseTo(braton.statusChance * 4, 4);
+    expect(full.ammoEfficiency).toBeCloseTo(0.6, 4);
+  });
+
+  it("Primary Blight: 0 stacks = no buff; 40 stacks R5 → +72% MS / +144% CD", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const blight = allArcanes.find((a) => a.id === "primary_blight")!;
+    const def = getArcaneEffectDef("primary_blight")!;
+    expect(def.stackCap).toBe(40);
+
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [blight],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.multishot).toBeCloseTo(bare.multishot, 5);
+    expect(zero.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier, 5);
+
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [blight],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 40 },
+    );
+    // wiki R5: +1.8% MS × 40 = +72%; +3.6% CD × 40 = +144% (of weapon base CM)
+    expect(full.multishot).toBeCloseTo(bare.multishot + braton.multishot * 0.72, 4);
+    expect(full.criticalMultiplier).toBeCloseTo(
+      bare.criticalMultiplier + braton.criticalMultiplier * 1.44,
+      4,
+    );
+    expect(full.burstDps).toBeGreaterThan(zero.burstDps);
+  });
+
+  it("Cascadia Flare: 0 stacks = no buff; 40 stacks R5 → +480% damage", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const flare = allArcanes.find((a) => a.id === "cascadia_flare")!;
+    const def = getArcaneEffectDef("cascadia_flare")!;
+    expect(def.stackCap).toBe(40);
+
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [flare],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [flare],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 40 },
+    );
+    // wiki R5: +12% damage × 40 = +480%
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 5.8, 4);
+    expect(full.burstDps).toBeGreaterThan(zero.burstDps);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {
