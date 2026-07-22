@@ -196,6 +196,83 @@ const LABELS: Record<string, string> = {
   restraintRestorePerSecond: "Restraint Restore/s",
   shieldsPerEnemy: "Shields per Enemy",
   waveWidth: "Wave Width",
+  waveRange: "Wave Range",
+  meleeRange: "Melee Range",
+  slideEnergyCost: "Slide Energy Cost",
+  maxReservoirs: "Max Reservoirs",
+  vitalityHealth: "Vitality Health",
+  vitalityHealPerSecond: "Vitality Heal/s",
+  hasteMoveSpeed: "Haste Move Speed",
+  hasteAttackSpeed: "Haste Attack Speed",
+  hasteFireRate: "Haste Fire Rate",
+  shockDamage: "Shock Damage",
+  shockRange: "Shock Range",
+  shockTargets: "Shock Targets",
+  shockCooldown: "Shock Cooldown",
+  teleportInvulnerability: "Teleport Invulnerability",
+  radiationStatusChance: "Radiation Status Chance",
+  sparkSeekRange: "Spark Seek Range",
+  sparkChanceOnHit: "Spark Chance on Hit",
+  sparkCritMultiplier: "Spark Crit Multiplier",
+  reservoirSurgeRangeBonus: "Reservoir Surge Range Bonus",
+  boostedDamagePerSecond: "Boosted Damage/s",
+  boostedEnergyDrain: "Boosted Energy Drain",
+  damageRampCap: "Damage Ramp Cap",
+  boostedMoveSpeedPenalty: "Boosted Move Speed Penalty",
+  diveBombDamage: "Dive Bomb Damage",
+  airSpeed: "Air Speed",
+  airborneEnergyCost: "Airborne Energy Cost",
+  dashDuration: "Dash Duration",
+  travelDistance: "Travel Distance",
+  damageGrowthPerEnemy: "Damage Growth per Enemy",
+  pullForceDuration: "Pull Force Duration",
+  tickDamage: "Tick Damage",
+  tornadoCount: "Tornadoes",
+  pullRadius: "Pull Radius",
+  tornadoHeight: "Tornado Height",
+  stunDuration: "Stun Duration",
+  radiationStatusChance: "Radiation Status Chance",
+  initialDamageBonus: "Initial Damage Bonus",
+  damageConversionRate: "Damage Conversion Rate",
+  damageConversionDuration: "Damage Conversion Duration",
+  maxTargets: "Max Targets",
+  boltCount: "Bolts",
+  boltsOnKill: "Bolts on Kill",
+  targetingRange: "Targeting Range",
+  infestedSlow: "Infested Slow",
+  armorSteal: "Armor Steal",
+  shieldSteal: "Shield Steal",
+  overguardSteal: "Overguard Steal",
+  armorStealCap: "Armor Steal Cap",
+  overguardStealCap: "Overguard Steal Cap",
+  armorStealDuration: "Armor Steal Duration",
+  radiationStacks: "Radiation Stacks",
+  absorbDuration: "Absorb Duration",
+  weaponDamageConvert: "Weapon Damage Convert",
+  weaponDamageCap: "Weapon Damage Cap",
+  invulnAbsorbThreshold: "Invuln Absorb Threshold",
+  invulnDurationBoost: "Invuln Duration Boost",
+  invulnDurationCap: "Invuln Duration Cap",
+  damagePercentage: "Damage Stored",
+  maxDamagePerInstance: "Max Damage per Instance",
+  maxStoredDamage: "Max Stored Damage",
+  stunTargets: "Stun Targets",
+  stunInterval: "Stun Interval",
+  rampUpDamageBonus: "Ramp-Up Damage Bonus",
+  maxShootingDistance: "Max Shooting Distance",
+  minFov: "Min FoV",
+  hologramCount: "Holograms",
+  cloneMeleeDamage: "Clone Melee Damage",
+  cloneRangedDamage: "Clone Ranged Damage",
+  blindDuration: "Blind Duration",
+  jewelCharmRadius: "Jewel Charm Radius",
+  blindRadius: "Blind Radius",
+  jewelCastRange: "Jewel Cast Range",
+  jewelDuration: "Jewel Duration",
+  laserCount: "Lasers",
+  prismSpeed: "Prism Speed",
+  tickRate: "Tick Rate",
+  damageBonusPerHit: "Damage Bonus per Hit",
   initialHealPercent: "Initial Heal",
   durationPer100Shields: "Duration per 100 Shields",
   energyConvert: "Energy Convert",
@@ -243,6 +320,178 @@ const LABELS: Record<string, string> = {
   spawnRadius: "Spawn Radius",
   statusDamageBonus: "Status Damage Bonus",
   critDamagePerKill: "Crit Damage per Kill",
+  barrageRadius: "Barrage Radius",
+  salvosPerSecond: "Salvos/s",
+  recastEnergyDiscount: "Recast Energy Discount",
+  armorPerEnemy: "Armor per Enemy",
+  armorPerCorrosiveStatus: "Armor per Corrosive Status",
+  armorCap: "Armor Cap",
+  corrosiveBonusPerEnemy: "Corrosive Bonus per Enemy",
+  corrosiveBonusPerStatus: "Corrosive Bonus per Status",
+  corrosiveBonusCap: "Corrosive Bonus Cap",
+  tentacleCount: "Tentacles",
+  overguardContactDamage: "Overguard Contact Damage",
+  transitionalDamage: "Transitional Damage",
+  coneInitialRadius: "Cone Initial Radius",
+  spreadAngle: "Spread Angle",
+  gunfireObjectLimit: "Gunfire Object Limit",
+  banishDuration: "Banish Duration",
+  finalRadius: "Final Radius",
+  collapseDamageBonus: "Collapse Damage Bonus",
+  healthShieldAbsorb: "Health/Shield Absorb",
+  decoyShields: "Decoy Shields",
+  decoyHealth: "Decoy Health",
+  radialPull: "Radial Pull",
+  pullAngle: "Pull Angle",
+  magneticPull: "Magnetic Pull",
+  damageAbsorption: "Damage Absorption",
+  explosionDamageMultiplier: "Explosion Damage Mult.",
+  shardDamage: "Shard Damage",
+  shardPickupRadius: "Shard Pickup Radius",
+  magnetizeExtraDamage: "Magnetize Extra Damage",
+  shieldsPerHit: "Shields per Hit",
+  shieldsPerHitCap: "Shields per Hit Cap",
+  areaDamage: "Area Damage",
+  waveAngle: "Wave Angle",
+  initialWidth: "Initial Width",
+  breakDamage: "Break Damage",
+  globeLimit: "Globe Limit",
+  healthCap: "Health Cap",
+  shatterDamage: "Shatter Damage",
+  shatterRadius: "Shatter Radius",
+  sweepArc: "Sweep Arc",
+  bladeRadius: "Blade Radius",
+  absorbedDamage: "Absorbed Damage",
+  collapseDamage: "Collapse Damage",
+  mirrorCount: "Mirrors",
+  collapseThreshold: "Collapse Threshold",
+  charmRadius: "Charm Radius",
+  castRange: "Cast Range",
+  segmentHealth: "Segment Health",
+  expansionTime: "Expansion Time",
+  ringInitialRadius: "Ring Initial Radius",
+  ringExpansionRate: "Ring Expansion Rate",
+  explosionRange: "Explosion Range",
+  crystallizationTime: "Crystallization Time",
+  ringSegments: "Ring Segments",
+  nightArmor: "Night Armor",
+  nightShields: "Night Shields",
+  dayDamageBonus: "Day Damage Bonus",
+  daySpeedBonus: "Day Speed Bonus",
+  enemySpeedBonus: "Enemy Speed Bonus",
+  wakeupHealthThreshold: "Wakeup Health Threshold",
+  pacifyDamageReduction: "Pacify Damage Reduction",
+  abilityStrengthBonus: "Ability Strength Bonus",
+  abilityStrengthBonusCap: "Ability Strength Bonus Cap",
+  energyDrainPerEnemy: "Energy Drain per Enemy",
+  energyPerAbility: "Energy per Ability",
+  hitpointConversion: "Hitpoint Conversion",
+  damageConversion: "Damage Conversion",
+  noiseRadius: "Noise Radius",
+  sleepDuration: "Sleep Duration",
+  sleepRadius: "Sleep Radius",
+  sleepHealthThreshold: "Sleep Health Threshold",
+  maxCloakBubbles: "Max Cloak Bubbles",
+  maxZiplines: "Max Ziplines",
+  ziplineRange: "Zipline Range",
+  maxDamageMultiplier: "Max Damage Multiplier",
+  multiplierGrowth: "Multiplier Growth",
+  energyDrainGrowth: "Energy Drain Growth",
+  headshotBonus: "Headshot Bonus",
+  lootChance: "Loot Chance",
+  stealTime: "Steal Time",
+  movementSpeedPenalty: "Movement Speed Penalty",
+  energyDrainMoving: "Energy Drain (Moving)",
+  meleeEnergyCost: "Melee Energy Cost",
+  damageEnergyCost: "Damage Energy Cost",
+  arrowCount: "Arrow Count",
+  shurikenCount: "Shuriken Count",
+  autoTargetRadius: "Auto-Target Radius",
+  homingAngle: "Homing Angle",
+  finisherDamageBonus: "Finisher Damage Bonus",
+  energyRefund: "Energy Refund",
+  energyPerMark: "Energy per Mark",
+  invisibleMarkDiscount: "Invisible Mark Discount",
+  shadowClones: "Shadow Clones",
+  hitsPerMark: "Hits per Mark",
+  hit2Radius: "2nd Hit Radius",
+  hit3Radius: "3rd Hit Radius",
+  comboWindow: "Combo Window",
+  rollDamage: "Roll Damage",
+  rollDistance: "Roll Distance",
+  slashHealthMultiplier: "Slash Health Multiplier",
+  rumblerHeal: "Rumbler Heal",
+  rockDamage: "Rock Damage",
+  blastDamage: "Blast Damage",
+  rumblerCount: "Rumblers",
+  speedMultiplier: "Speed Multiplier",
+  stoneDuration: "Stone Duration",
+  propagationSpeed: "Propagation Speed",
+  stunDuration: "Stun Duration",
+  pillarDuration: "Pillar Duration",
+  pillarRadius: "Pillar Radius",
+  projectileDamage: "Projectile Damage",
+  projectileSeekRange: "Projectile Seek Range",
+  maxThralls: "Max Thralls",
+  hitpointsDrain: "Hitpoints Drain",
+  thrallHitpointsDrain: "Thrall Hitpoints Drain",
+  travelSpeed: "Travel Speed",
+  boostedDamage: "Boosted Damage",
+  beamRadius: "Beam Radius",
+  boostedBeamRadius: "Boosted Beam Radius",
+  beamCount: "Beams",
+  sweepArea: "Sweep Area",
+  boostedEnergyDrain: "Boosted Energy Drain",
+  boostedStatusChance: "Boosted Status Chance",
+  percentageDamage: "Percentage Damage",
+  aoePercentageDamage: "AoE Percentage Damage",
+  percentageDamageCap: "Percentage Damage Cap",
+  aoePercentageDamageCap: "AoE Percentage Damage Cap",
+  groundCap: "Ground Cap",
+  armorBuff: "Armor Buff",
+  armorBuffCap: "Armor Buff Cap",
+  initialHeal: "Initial Heal",
+  bleedoutSlow: "Bleedout Slow",
+  bleedoutSlowCap: "Bleedout Slow Cap",
+  allyArmorMultiplier: "Ally Armor Multiplier",
+  radiationBonusDamage: "Radiation Bonus Damage",
+  bonusArmorPerEnemy: "Bonus Armor per Enemy",
+  bonusArmorPerRadiation: "Bonus Armor per Radiation",
+  maxCharmRadius: "Max Charm Radius",
+  enemiesToMaxRadius: "Enemies to Max Radius",
+  armorBonus: "Armor Bonus",
+  speedBonus: "Speed Bonus",
+  multishotBonus: "Multishot Bonus",
+  meleeDamageBonus: "Melee Damage Bonus",
+  buffDuration: "Buff Duration",
+  maxDamageBuff: "Max Damage Buff",
+  malletRangeBonus: "Mallet Range Bonus",
+  lifesteal: "Lifesteal",
+  healingRadius: "Healing Radius",
+  maxTargets: "Max Targets",
+  energyPerPulse: "Energy per Pulse",
+  pulseRadius: "Pulse Radius",
+  pulseInterval: "Pulse Interval",
+  damagePercentage: "Damage Percentage",
+  damageHealthThreshold: "Damage Health Threshold",
+  damageRedirection: "Damage Redirection",
+  healthShieldRestore: "Health/Shield Restore",
+  affinityRange: "Affinity Range",
+  particles: "Particles",
+  damageReductionPerParticle: "DR per Particle",
+  attackInterval: "Attack Interval",
+  absorbMultiplier: "Absorb Multiplier",
+  contactDamage: "Contact Damage",
+  maxHitsAbsorbed: "Max Hits Absorbed",
+  absorbedDamageCap: "Absorbed Damage Cap",
+  maxPortals: "Max Portals",
+  portalUses: "Portal Uses",
+  startingWaveRadius: "Starting Wave Radius",
+  waveSpeed: "Wave Speed",
+  allySpeedCap: "Ally Speed Cap",
+  shieldLimit: "Shield Limit",
+  pulseDuration: "Pulse Duration",
+  damageDelay: "Damage Delay",
   decoyDamage: "Decoy Damage",
   decoyRadius: "Decoy Radius",
   decoyDuration: "Decoy Duration",
@@ -273,6 +522,17 @@ const LABELS: Record<string, string> = {
   contagionCloudDuration: "Contagion Cloud Duration",
   contagionCloudMeleeMult: "Contagion Melee Mult.",
   damageBonus: "Damage Bonus",
+  releaseDelay: "Release Delay",
+  maggotHealth: "Maggot Health",
+  maggotDamage: "Maggot Damage",
+  dashSpeed: "Dash Speed",
+  invulnerabilityDuration: "Invulnerability",
+  pullRadius: "Pull Radius",
+  terrainPullSpeed: "Terrain Pull Speed",
+  enemyPullSpeed: "Enemy Pull Speed",
+  armorBuff: "Armor Buff",
+  meleeDamageVulnerability: "Melee Damage Vulnerability",
+  warcryArmorMultiplier: "Warcry Armor Mult.",
   strengthBonus: "Strength Bonus",
   enemyLinkRange: "Link Range",
   explosionRadius: "Explosion Radius",
@@ -282,7 +542,125 @@ const LABELS: Record<string, string> = {
   critDamageBonus: "Crit Damage Bonus",
   viralDamageBonus: "Viral Damage Bonus",
   voidDamageBonus: "Void Damage Bonus",
-  energyDrain: "Energy Drain",
+  energyMultiplier: "Energy Multiplier",
+  selfHeal: "Self Heal",
+  viralDamage: "Viral Damage",
+  digestionDamage: "Digestion Damage",
+  viralStacks: "Viral Stacks",
+  maxEnemies: "Max Enemies",
+  vomitConeRange: "Vomit Cone Range",
+  mawOpenDuration: "Maw Open Duration",
+  minCollisionDamage: "Min Collision Damage",
+  healPerSecond: "Heal/s",
+  toxinDamagePerSecond: "Toxin Damage/s",
+  minSlamRadius: "Min Slam Radius",
+  collisionRadius: "Collision Radius",
+  slowDuration: "Slow Duration",
+  shieldCost: "Shield Cost",
+  minDamage: "Min Damage",
+  allyShieldBonus: "Ally Shields",
+  shieldRechargeRate: "Shield Recharge Rate",
+  shieldDrainPerAlly: "Shield Drain/Ally",
+  shieldDrainPerEnemy: "Shield Drain/Enemy",
+  deactivationDamage: "Deactivation Damage",
+  shieldDrain: "Shield Drain",
+  maxAltitude: "Max Altitude",
+  auraDuration: "Aura Duration",
+  maxLanterns: "Max Lanterns",
+  droneDamage: "Drone Damage",
+  evasion: "Evasion",
+  razorflies: "Razorflies",
+  vacuumRadius: "Vacuum Radius",
+  spreadRadius: "Spread Radius",
+  resetDecay: "Reset Decay",
+  damageDecayRate: "Damage Decay Rate",
+  growthEnemyCap: "Growth Enemy Cap",
+  initialSpores: "Initial Spores",
+  miasmaDamageMultiplier: "Miasma Damage Mult.",
+  speedBuffDuration: "Speed Buff Duration",
+  decoyShields: "Decoy Shields",
+  decoyInvulnerability: "Decoy Invulnerability",
+  moveSpeedBonus: "Move Speed Bonus",
+  moveSpeedPenalty: "Move Speed Penalty",
+  armorDuration: "Armor Duration",
+  minArmorBonus: "Min Armor Bonus",
+  rangePerCombo: "Range per Combo",
+  targetRange: "Target Range",
+  accuseMaxTargets: "Accuse Max Targets",
+  accuseDuration: "Accuse Duration",
+  accuseRange: "Accuse Range",
+  gazeDefenseStrip: "Gaze Defense Strip",
+  gazeDuration: "Gaze Duration",
+  gazeCastRange: "Gaze Cast Range",
+  gazeAuraRadius: "Gaze Aura Radius",
+  gazeMaxTargets: "Gaze Max Targets",
+  denyRange: "Deny Range",
+  denyDuration: "Deny Duration",
+  voidDamageVulnerability: "Void Damage Vulnerability",
+  dodgeChance: "Dodge Chance",
+  areaDamageReduction: "Area Damage Reduction",
+  damageGrowthPerSecond: "Damage Growth/s",
+  globules: "Globules",
+  globuleLifetime: "Globule Lifetime",
+  globuleTargetRadius: "Globule Target Radius",
+  activeGlobuleCap: "Active Globule Cap",
+  merulinaHealth: "Merulina Health",
+  initialInvulnerability: "Initial Invulnerability",
+  dismountInvulnerability: "Dismount Invulnerability",
+  blades: "Blades",
+  bladeRadius: "Blade Radius",
+  hitsPerInterval: "Hits per Interval",
+  intervalTime: "Interval Time",
+  attackCooldown: "Attack Cooldown",
+  burstDamage: "Burst Damage",
+  vortexRadius: "Vortex Radius",
+  extraDamagePerEnemy: "Extra Damage per Enemy",
+  ensnareDamageMultiplier: "Ensnare Damage Mult.",
+  spreadDelay: "Spread Delay",
+  snareDamage: "Snare Damage",
+  markDuration: "Mark Duration",
+  respawnTime: "Respawn Time",
+  healAuraRadius: "Heal Aura Radius",
+  grabRadius: "Grab Radius",
+  maxDomes: "Max Domes",
+  vertices: "Vertices",
+  healthPerEnemy: "Health per Enemy",
+  armorBonus: "Armor Bonus",
+  totalHealthCost: "Total Health Cost",
+  statusProtectionCost: "Status Protection Cost",
+  minHealthThreshold: "Min Health Threshold",
+  healthAsDamage: "Health as Damage",
+  spreadRange: "Spread Range",
+  swarmKavatLimit: "Swarm Kavat Limit",
+  swarmKavatLifespan: "Swarm Kavat Lifespan",
+  streamLinkRange: "Stream Link Range",
+  scornPerMeleeKill: "Scorn per Melee Kill",
+  furyPerRangedKill: "Fury per Ranged Kill",
+  armorReduction: "Armor Reduction",
+  knockbackDamage: "Knockback Damage",
+  knockbackRadius: "Knockback Radius",
+  creditChance: "Credit Chance",
+  creditBonus: "Credit Bonus",
+  charges: "Charges",
+  dischargeInterval: "Discharge Interval",
+  maxDrones: "Max Drones",
+  capsuleDamage: "Capsule Damage",
+  flechetteDamage: "Flechette Damage",
+  tetherMaxTargets: "Tether Max Targets",
+  flechetteTargetRadius: "Flechette Target Radius",
+  maxOrbs: "Max Orbs",
+  vectorSpeed: "Vector Speed",
+  weaponDamageBonus: "Weapon Damage Bonus",
+  maxPads: "Max Pads",
+  overguardDamageMultiplier: "Overguard Damage Mult.",
+  strikeDelay: "Strike Delay",
+  armorBuffRate: "Armor Buff Rate",
+  armorBuffDuration: "Armor Buff Duration",
+  vortexDamagePerSecond: "Vortex Damage/s",
+  vortexDuration: "Vortex Duration",
+  vortexStatusChance: "Vortex Status Chance",
+  maxBastilles: "Max Bastilles",
+  maxVortices: "Max Vortices",
   energyRefundPerHit: "Energy per Hit",
   width: "Width",
   mutationStackChance: "Mutation Chance",
@@ -337,6 +715,141 @@ const LABELS: Record<string, string> = {
   furyMax: "Fury Max",
   sentryArmor: "Sentry Armor",
   creditPickupRadius: "Credit Pickup Radius",
+  pillars: "Pillars",
+  heatStatusChance: "Heat Status Chance",
+  wailDurationBonus: "Wail Duration Bonus",
+  backbeatPillarMultiplier: "Backbeat Pillars",
+  criticalChanceVulnerability: "Crit Chance Vulnerability",
+  stunDuration: "Stun Duration",
+  backbeatCritMultiplier: "Backbeat Crit Mult.",
+  heatDamageBonus: "Heat Damage Bonus",
+  heatDamageCap: "Heat Damage Cap",
+  healthRestore: "Health Restore",
+  healthRestorePerSecond: "Health Restore/s",
+  backbeatInvulnerabilityBonus: "Backbeat Invuln Bonus",
+  backbeatBonus: "Backbeat Bonus",
+  maxBuffDuration: "Max Buff Duration",
+  backbeatAmmoCost: "Backbeat Ammo Cost",
+  backbeatStatusBonus: "Backbeat Status Stacks",
+  bounceRadius: "Bounce Radius",
+  threadLength: "Thread Length",
+  threads: "Threads",
+  maxThreads: "Max Threads",
+  tripleSixBounceDamage: "Triple Six Bounce Damage",
+  rareDecreeChance: "Rare Decree Chance",
+  unluckyThreshold: "Unlucky Roll Threshold",
+  cooldownCap: "Cooldown Cap",
+  allyKillWindow: "Ally Kill Window",
+  healMultiplier: "Heal Multiplier",
+  blockChance: "Block Chance",
+  healCooldown: "Heal Cooldown",
+  recastThreshold: "Recast Threshold",
+  statusDurationPause: "Status Duration Pause",
+  minCharms: "Min Charms",
+  maxCharms: "Max Charms",
+  finisherPromptDuration: "Finisher Prompt",
+  maxWebs: "Max Webs",
+  toxinStatusChance: "Toxin Status Chance",
+  darts: "Darts",
+  forcedToxinStacks: "Forced Toxin Stacks",
+  scuttlerDuration: "Scuttler Duration",
+  maxScuttlers: "Max Scuttlers",
+  scuttlerDamage: "Scuttler Damage",
+  recallRadius: "Recall Radius",
+  toxinWeaponDamage: "Toxin Weapon Damage",
+  wallLatchToxinWeaponDamage: "Wall-Latch Toxin Damage",
+  dodgeRange: "Dodge Range",
+  explosionRadiusCap: "Explosion Radius Cap",
+  parkourVelocityBonus: "Parkour Velocity",
+  statusImmunity: "Status Immunity",
+  flightSpeed: "Flight Speed",
+  catenachChainDamage: "Catenach Chain DPS",
+  catenachSlow: "Catenach Slow",
+  catenachSlowCap: "Catenach Slow Cap",
+  catenachChainDuration: "Catenach Chain Duration",
+  catenachChainRange: "Catenach Chain Range",
+  catenachMaxTargets: "Catenach Max Targets",
+  gulphagorDamage: "Gulphagor Damage/Tick",
+  gulphagorHealthOrbChance: "Gulphagor Health Orb Chance",
+  gulphagorEnergyOrbChance: "Gulphagor Energy Orb Chance",
+  gulphagorFieldDamage: "Gulphagor Field DPS",
+  gulphagorFieldDuration: "Gulphagor Field Duration",
+  gulphagorFieldRadius: "Gulphagor Field Radius",
+  demonHealthDrain: "Demon Health Drain",
+  maxProjectiles: "Max Projectiles",
+  vythelasFireRate: "Vythelas Fire Rate",
+  vythelasHeatDamage: "Vythelas Heat Damage",
+  vythelasDuration: "Vythelas Duration",
+  maxRunes: "Max Runes",
+  damageGrowthPercent: "Damage Growth",
+  damageGrowthInterval: "Damage Growth Interval",
+  damageMultiplierCap: "Damage Mult Cap",
+  objectTypes: "Object Types",
+  maxBrushLayers: "Max Brush Layers",
+  startingDamageReduction: "Starting Damage Reduction",
+  maxRadius: "Max Radius",
+  durationBonusPerKill: "Duration per Kill",
+  minFallDamage: "Min Fall Damage",
+  defenseReduction: "Defense Reduction",
+  motes: "Motes",
+  moteRecoveryPerSecond: "Mote Recovery/s",
+  maxAttackRange: "Max Attack Range",
+  decoyDuration: "Decoy Duration",
+  decoyDamage: "Decoy Damage",
+  decoyRadius: "Decoy Radius",
+  decoyCooldown: "Decoy Cooldown",
+  tauntRadius: "Taunt Radius",
+  minHealthRegen: "Min Health Regen",
+  maxHealthRegen: "Max Health Regen",
+  minDamageReduction: "Min Damage Reduction",
+  expansionTime: "Expansion Time",
+  reviveCooldown: "Revive Cooldown",
+  sanctuaryLimit: "Sanctuary Limit",
+  blackHoleLimit: "Black Hole Limit",
+  matchedDamageBonus: "Matched Damage Bonus",
+  maxConstellationStars: "Max Constellation Stars",
+  sleepDuration: "Sleep Duration",
+  finisherVulnerability: "Finisher Vulnerability",
+  maxMushrooms: "Max Mushrooms",
+  invigoratedPulseInterval: "Invigorated Pulse Interval",
+  viralStatusChance: "Viral Status Chance",
+  energyRestore: "Energy Restore",
+  strengthBonusDuration: "Strength Bonus Duration",
+  strengthBonusCap: "Strength Bonus Cap",
+  invigoratedStrengthBonusCap: "Invigorated STR Cap",
+  sproutDamage: "Sprout Damage",
+  sproutRadius: "Sprout Radius",
+  healthShieldPerSecond: "Health/Shields/s",
+  pickupHeal: "Pickup Heal",
+  fungalSpores: "Fungal Spores",
+  sporeSpawnRadius: "Spore Spawn Radius",
+  moveSpeedBonusDuration: "Move Speed Bonus Duration",
+  baseMoveSpeed: "Base Move Speed",
+  bounces: "Bounces",
+  bounceDistance: "Bounce Distance",
+  bounceDamageMultiplier: "Bounce Damage Mult.",
+  initialCriticalChance: "Initial Crit Chance",
+  criticalChancePerBounce: "Crit Chance per Bounce",
+  maxSporesprings: "Max Sporesprings",
+  shroudHealth: "Shroud Health",
+  absorptionMultiplier: "Absorption Mult.",
+  reflectChance: "Reflect Chance",
+  selfDetonationTime: "Self-Detonation Time",
+  healthDrainPerSecond: "Health Drain/s",
+  explosionHealthPercent: "Explosion Health %",
+  impactStatusChance: "Impact Status Chance",
+  shieldHealth: "Shield Health",
+  reflectMultiplier: "Reflect Mult.",
+  armorMultiplier: "Armor Mult.",
+  blockAngle: "Block Angle",
+  augmentBlockAngle: "Augment Block Angle",
+  breakCooldown: "Break Cooldown",
+  kissEnergyCost: "Maiden's Kiss Energy",
+  sweepSpeed: "Sweep Speed",
+  sprintSpeedBonus: "Sprint Speed Bonus",
+  parkourVelocityBonus: "Parkour Velocity Bonus",
+  ammoEfficiency: "Ammo Efficiency",
+  damageSpread: "Damage Spread",
 };
 
 /** Fraction keys where 1 = 100% and values may exceed 1 (Cold Ward, Vex caps). */
@@ -363,7 +876,89 @@ function isFractionPercentKey(key: string): boolean {
     key === "damageRedirection" ||
     key === "toxinHolsterDamage" ||
     key === "toxinProcChance" ||
-    key === "mutationStackChance"
+    key === "mutationStackChance" ||
+    key === "hasteMoveSpeed" ||
+    key === "hasteAttackSpeed" ||
+    key === "hasteFireRate" ||
+    key === "radiationStatusChance" ||
+    key === "sparkChanceOnHit" ||
+    key === "boostedMoveSpeedPenalty" ||
+    key === "damageGrowthPerEnemy" ||
+    key === "radiationStatusChance" ||
+    key === "infestedSlow" ||
+    key === "weaponDamageCap" ||
+    key === "damagePercentage" ||
+    key === "rampUpDamageBonus" ||
+    key === "cloneMeleeDamage" ||
+    key === "cloneRangedDamage" ||
+    key === "damageBonusPerHit" ||
+    key === "slowPercent" ||
+    key === "armorBuff" ||
+    key === "meleeDamageVulnerability" ||
+    key === "attackSpeedBuff" ||
+    key === "digestionDamage" ||
+    key === "evasion" ||
+    key === "armorStrip" ||
+    key === "shieldStrip" ||
+    key === "resetDecay" ||
+    key === "damageDecayRate" ||
+    key === "healPerMeter" ||
+    key === "moveSpeedPenalty" ||
+    key === "gazeDefenseStrip" ||
+    key === "voidDamageVulnerability" ||
+    key === "dodgeChance" ||
+    key === "areaDamageReduction" ||
+    key === "moveSpeedBonus" ||
+    key === "speedBuff" ||
+    key === "moveSpeedBuff" ||
+    key === "weaponDamageBonus" ||
+    key === "armorReduction" ||
+    key === "creditChance" ||
+    key === "creditBonus" ||
+    key === "vortexStatusChance" ||
+    key === "scornPerMeleeKill" ||
+    key === "furyPerRangedKill" ||
+    key === "healthOrbChance" ||
+    key === "energyOrbChance" ||
+    key === "criticalChanceVulnerability" ||
+    key === "blockChance" ||
+    key === "heatDamageCap" ||
+    key === "heatStatusChance" ||
+    key === "toxinStatusChance" ||
+    key === "toxinWeaponDamage" ||
+    key === "wallLatchToxinWeaponDamage" ||
+    key === "healthRestore" ||
+    key === "healthRestorePerSecond" ||
+    key === "rareDecreeChance" ||
+    key === "instantKillThreshold" ||
+    key === "parkourVelocityBonus" ||
+    key === "catenachSlow" ||
+    key === "demonHealthDrain" ||
+    key === "vythelasFireRate" ||
+    key === "vythelasHeatDamage" ||
+    key === "damageGrowthPercent" ||
+    key === "gulphagorHealthOrbChance" ||
+    key === "gulphagorEnergyOrbChance" ||
+    key === "startingDamageReduction" ||
+    key === "defenseReduction" ||
+    key === "minDamageReduction" ||
+    key === "matchedDamageBonus" ||
+    key === "criticalChanceBonus" ||
+    key === "finisherVulnerability" ||
+    key === "viralStatusChance" ||
+    key === "strengthBonusCap" ||
+    key === "invigoratedStrengthBonusCap" ||
+    key === "initialCriticalChance" ||
+    key === "criticalChancePerBounce" ||
+    key === "slow" ||
+    key === "reflectChance" ||
+    key === "healthDrainPerSecond" ||
+    key === "lifesteal" ||
+    key === "explosionHealthPercent" ||
+    key === "impactStatusChance" ||
+    key === "ammoEfficiency" ||
+    key === "damageSpread" ||
+    key === "sprintSpeedBonus"
   );
 }
 
@@ -427,7 +1022,7 @@ function parseSeconds(value: unknown): number | null {
 
 /** Keys that store duration as a bare number of seconds (not a "5s" string). */
 function isDurationSecondsKey(key: string): boolean {
-  return /duration|Duration|delay|Delay|Cooldown|Interval|tickInterval|Lifetime|Countdown|travelTime|Airtime/.test(
+  return /duration|Duration|delay|Delay|Cooldown|Interval|tickInterval|Lifetime|Countdown|travelTime|Airtime|Invulnerability/.test(
     key,
   );
 }
@@ -477,15 +1072,32 @@ function applyCap(value: number, cap: number | undefined): number {
 
 function formatBaseValue(key: string, value: unknown): string {
   if (typeof value === "boolean") return String(value);
-  if (key === "arc" || key === "coneAngle" || key === "firingArc" || key === "seekAngle") {
+  if (key === "arc" || key === "coneAngle" || key === "firingArc" || key === "seekAngle" || key === "minFov") {
     const deg = parseDegrees(value);
     if (deg != null) return `${deg.toFixed(1)}°`;
   }
   if (typeof value === "number" && key === "shieldGateExtension") {
     return `${value.toFixed(0)}x`;
   }
-  if (typeof value === "number" && (key === "probeSpeed" || key === "chargeSpeed")) {
-    return `${value.toFixed(2)}m/s`;
+  // Wiki card rates already in percent points (e.g. 0.025% convert, 0.06% Mind Control).
+  if (typeof value === "number" && (key === "weaponDamageConvert" || key === "damageConversionRate")) {
+    return `${value}%`;
+  }
+  if (
+    typeof value === "number" &&
+    (key === "probeSpeed" ||
+      key === "chargeSpeed" ||
+      key === "waveSpeed" ||
+      key === "airSpeed" ||
+      key === "prismSpeed" ||
+      key === "dashSpeed")
+  ) {
+    return key === "waveSpeed" ||
+      key === "airSpeed" ||
+      key === "prismSpeed" ||
+      key === "dashSpeed"
+      ? `${value.toFixed(0)}m/s`
+      : `${value.toFixed(2)}m/s`;
   }
   if (typeof value === "number" && key === "cooldownReduction") {
     return `${value.toFixed(1)}s`;
@@ -506,7 +1118,10 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "damageRadius" ||
       key === "beamRadius" ||
       key === "residueRadius" ||
-      key === "gelMistReach")
+      key === "gelMistReach" ||
+      key === "tornadoHeight" ||
+      key === "travelDistance" ||
+      key === "maxShootingDistance")
   ) {
     return `${meters.toFixed(1)}m`;
   }
@@ -522,6 +1137,10 @@ function formatBaseValue(key: string, value: unknown): string {
   // Shroud of Dynar-style flat melee crit damage (not a 200% bonus).
   if (typeof value === "number" && key === "critDamageBonus") {
     return `+${value.toFixed(1)}x`;
+  }
+  // Crystallize-style absolute crit (3 → 300%).
+  if (typeof value === "number" && key === "absoluteCritChance") {
+    return `${(value * 100).toFixed(0)}%`;
   }
   // Flat counts / heal amounts must not go through percent parsing (250 → 250%).
   if (
@@ -582,7 +1201,109 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "ticksPerSecond" ||
       key === "sentryArmor" ||
       key === "statusTypes" ||
-      key === "statusStacks")
+      key === "statusStacks" ||
+      key === "maxReservoirs" ||
+      key === "vitalityHealth" ||
+      key === "vitalityHealPerSecond" ||
+      key === "shockDamage" ||
+      key === "shockTargets" ||
+      key === "boostedDamagePerSecond" ||
+      key === "boostedEnergyDrain" ||
+      key === "damageRampCap" ||
+      key === "slideEnergyCost" ||
+      key === "diveBombDamage" ||
+      key === "airborneEnergyCost" ||
+      key === "tickDamage" ||
+      key === "tornadoCount" ||
+      key === "travelDistance" ||
+      key === "boltCount" ||
+      key === "boltsOnKill" ||
+      key === "maxTargets" ||
+      key === "armorSteal" ||
+      key === "shieldSteal" ||
+      key === "overguardSteal" ||
+      key === "armorStealCap" ||
+      key === "overguardStealCap" ||
+      key === "radiationStacks" ||
+      key === "invulnAbsorbThreshold" ||
+      key === "maxDamagePerInstance" ||
+      key === "maxStoredDamage" ||
+      key === "stunTargets" ||
+      key === "maxShootingDistance" ||
+      key === "hologramCount" ||
+      key === "laserCount" ||
+      key === "healthRegen" ||
+      key === "maggotHealth" ||
+      key === "maggotDamage" ||
+      key === "selfHeal" ||
+      key === "viralDamage" ||
+      key === "viralStacks" ||
+      key === "maxEnemies" ||
+      key === "minCollisionDamage" ||
+      key === "slamDamage" ||
+      key === "healPerSecond" ||
+      key === "toxinDamagePerSecond" ||
+      key === "shieldCost" ||
+      key === "minDamage" ||
+      key === "allyShieldBonus" ||
+      key === "shieldDrainPerAlly" ||
+      key === "shieldDrainPerEnemy" ||
+      key === "deactivationDamage" ||
+      key === "shieldDrain" ||
+      key === "maxAltitude" ||
+      key === "maxLanterns" ||
+      key === "droneDamage" ||
+      key === "razorflies" ||
+      key === "meleeDamage" ||
+      key === "growthEnemyCap" ||
+      key === "initialSpores" ||
+      key === "decoyShields" ||
+      key === "decoyHealth" ||
+      key === "minArmorBonus" ||
+      key === "accuseMaxTargets" ||
+      key === "gazeMaxTargets" ||
+      key === "damageGrowthPerSecond" ||
+      key === "globules" ||
+      key === "activeGlobuleCap" ||
+      key === "merulinaHealth" ||
+      key === "blades" ||
+      key === "hitsPerInterval" ||
+      key === "burstDamage" ||
+      key === "snareDamage" ||
+      key === "maxDomes" ||
+      key === "vertices" ||
+      key === "healthPerEnemy" ||
+      key === "armorBonus" ||
+      key === "totalHealthCost" ||
+      key === "minHealthThreshold" ||
+      key === "swarmKavatLimit" ||
+      key === "charges" ||
+      key === "maxDrones" ||
+      key === "capsuleDamage" ||
+      key === "flechetteDamage" ||
+      key === "tetherMaxTargets" ||
+      key === "maxOrbs" ||
+      key === "maxPads" ||
+      key === "knockbackDamage" ||
+      key === "armorBuffRate" ||
+      key === "vortexDamagePerSecond" ||
+      key === "maxBastilles" ||
+      key === "maxVortices" ||
+      key === "areaDamage" ||
+      key === "comboDamageCap" ||
+      key === "minRingDamagePerSecond" ||
+      key === "energyPerEnemy" ||
+      key === "maxEnergyTargets" ||
+      key === "energyRestore" ||
+      key === "pickupHeal" ||
+      key === "healthShieldPerSecond" ||
+      key === "fungalSpores" ||
+      key === "maxMushrooms" ||
+      key === "maxSporesprings" ||
+      key === "bounces" ||
+      key === "sproutDamage" ||
+      key === "minHealthRegen" ||
+      key === "maxHealthRegen")
   ) {
     return key === "contagionCloudDps" ||
       key === "heatDps" ||
@@ -594,8 +1315,25 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "shieldsPerSecond" ||
       key === "overguardRegenPerSecond" ||
       key === "beamTicksPerSecond" ||
-      key === "ticksPerSecond"
+      key === "ticksPerSecond" ||
+      key === "vitalityHealPerSecond" ||
+      key === "boostedDamagePerSecond" ||
+      key === "boostedEnergyDrain" ||
+      key === "healthRegen" ||
+      key === "healthShieldPerSecond" ||
+      key === "minHealthRegen" ||
+      key === "maxHealthRegen" ||
+      key === "healPerSecond" ||
+      key === "toxinDamagePerSecond" ||
+      key === "shieldDrain" ||
+      key === "shieldDrainPerAlly" ||
+      key === "shieldDrainPerEnemy" ||
+      key === "vortexDamagePerSecond"
       ? `${Number.isInteger(value) ? value : value.toFixed(1)}/s`
+      : key === "damageRampCap"
+        ? `${value.toFixed(0)}x`
+      : key === "travelDistance"
+        ? `${value.toFixed(0)}m`
       : Number.isInteger(value)
         ? String(value)
         : value.toFixed(2);
@@ -665,7 +1403,9 @@ function scaleVerifiedValue(
       key === "damageRadius" ||
       key === "beamRadius" ||
       key === "residueRadius" ||
-      key === "gelMistReach")
+      key === "gelMistReach" ||
+      key === "tornadoHeight" ||
+      key === "travelDistance")
   ) {
     const scaled = applyCap(meters * mult, cap);
     return {
@@ -675,10 +1415,14 @@ function scaleVerifiedValue(
     };
   }
 
-  if (typeof value === "number" && (key === "probeSpeed" || key === "chargeSpeed")) {
+  if (
+    typeof value === "number" &&
+    (key === "probeSpeed" || key === "chargeSpeed" || key === "waveSpeed" || key === "airSpeed")
+  ) {
     const scaled = applyCap(value * mult, cap);
+    const fmt = key === "waveSpeed" || key === "airSpeed" ? scaled.toFixed(0) : scaled.toFixed(2);
     return {
-      scaled: `${scaled.toFixed(2)}m/s`,
+      scaled: `${fmt}m/s`,
       modified: mult !== 1,
       positive: mult >= 1,
     };
@@ -814,7 +1558,99 @@ function scaleVerifiedValue(
       key === "altFireEnergy" ||
       key === "sentryArmor" ||
       key === "statusTypes" ||
-      key === "statusStacks")
+      key === "statusStacks" ||
+      key === "maxReservoirs" ||
+      key === "vitalityHealth" ||
+      key === "vitalityHealPerSecond" ||
+      key === "shockDamage" ||
+      key === "shockTargets" ||
+      key === "boostedDamagePerSecond" ||
+      key === "boostedEnergyDrain" ||
+      key === "damageRampCap" ||
+      key === "slideEnergyCost" ||
+      key === "diveBombDamage" ||
+      key === "airborneEnergyCost" ||
+      key === "tickDamage" ||
+      key === "tornadoCount" ||
+      key === "travelDistance" ||
+      key === "boltCount" ||
+      key === "boltsOnKill" ||
+      key === "maxTargets" ||
+      key === "armorSteal" ||
+      key === "shieldSteal" ||
+      key === "overguardSteal" ||
+      key === "armorStealCap" ||
+      key === "overguardStealCap" ||
+      key === "radiationStacks" ||
+      key === "invulnAbsorbThreshold" ||
+      key === "maxDamagePerInstance" ||
+      key === "maxStoredDamage" ||
+      key === "stunTargets" ||
+      key === "maxShootingDistance" ||
+      key === "hologramCount" ||
+      key === "laserCount" ||
+      key === "healthRegen" ||
+      key === "maggotHealth" ||
+      key === "maggotDamage" ||
+      key === "selfHeal" ||
+      key === "viralDamage" ||
+      key === "viralStacks" ||
+      key === "maxEnemies" ||
+      key === "minCollisionDamage" ||
+      key === "slamDamage" ||
+      key === "healPerSecond" ||
+      key === "toxinDamagePerSecond" ||
+      key === "shieldCost" ||
+      key === "minDamage" ||
+      key === "allyShieldBonus" ||
+      key === "shieldDrainPerAlly" ||
+      key === "shieldDrainPerEnemy" ||
+      key === "deactivationDamage" ||
+      key === "shieldDrain" ||
+      key === "maxAltitude" ||
+      key === "maxLanterns" ||
+      key === "droneDamage" ||
+      key === "razorflies" ||
+      key === "meleeDamage" ||
+      key === "growthEnemyCap" ||
+      key === "initialSpores" ||
+      key === "decoyShields" ||
+      key === "decoyHealth" ||
+      key === "minArmorBonus" ||
+      key === "accuseMaxTargets" ||
+      key === "gazeMaxTargets" ||
+      key === "damageGrowthPerSecond" ||
+      key === "globules" ||
+      key === "activeGlobuleCap" ||
+      key === "merulinaHealth" ||
+      key === "blades" ||
+      key === "hitsPerInterval" ||
+      key === "burstDamage" ||
+      key === "snareDamage" ||
+      key === "maxDomes" ||
+      key === "vertices" ||
+      key === "healthPerEnemy" ||
+      key === "armorBonus" ||
+      key === "totalHealthCost" ||
+      key === "minHealthThreshold" ||
+      key === "swarmKavatLimit" ||
+      key === "charges" ||
+      key === "maxDrones" ||
+      key === "capsuleDamage" ||
+      key === "flechetteDamage" ||
+      key === "tetherMaxTargets" ||
+      key === "maxOrbs" ||
+      key === "maxPads" ||
+      key === "knockbackDamage" ||
+      key === "armorBuffRate" ||
+      key === "vortexDamagePerSecond" ||
+      key === "maxBastilles" ||
+      key === "maxVortices" ||
+      key === "areaDamage" ||
+      key === "comboDamageCap" ||
+      key === "minRingDamagePerSecond" ||
+      key === "energyPerEnemy" ||
+      key === "maxEnergyTargets")
   ) {
     const scaledNum =
       key === "energyRegen" ? Math.round(num * mult * 100) / 100 : Math.round(num * mult);
@@ -830,8 +1666,22 @@ function scaleVerifiedValue(
         key === "shieldsPerSecond" ||
         key === "overguardRegenPerSecond" ||
         key === "beamTicksPerSecond" ||
-        key === "ticksPerSecond"
+        key === "ticksPerSecond" ||
+        key === "vitalityHealPerSecond" ||
+        key === "boostedDamagePerSecond" ||
+        key === "boostedEnergyDrain" ||
+        key === "healthRegen" ||
+        key === "healPerSecond" ||
+        key === "toxinDamagePerSecond" ||
+        key === "shieldDrain" ||
+        key === "shieldDrainPerAlly" ||
+        key === "shieldDrainPerEnemy" ||
+        key === "vortexDamagePerSecond"
           ? `${scaledNum}/s`
+          : key === "damageRampCap"
+            ? `${scaledNum}x`
+          : key === "travelDistance"
+            ? `${scaledNum}m`
           : String(scaledNum),
       modified: Math.abs(scaledNum - num) > 0.001,
       positive: scaledNum >= num,

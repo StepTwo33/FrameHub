@@ -55,12 +55,13 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     decoyDamage: { scale: "strength" },
     decoyRadius: { scale: "range" },
   },
-  // wiki: Light's Sanctuary — DR scales STR; cap 75% (drCap in miscStats)
+  // wiki: Light's Sanctuary — heal/radius × STR/RNG; max DR via field (cap 75%)
   "sirius_orion::Light's Sanctuary": {
     minRadius: { scale: "range" },
     maxRadius: { scale: "range" },
-    healthRegen: { scale: "strength" },
-    damageReduction: { scale: "strength", useSiblingDrCap: true },
+    minHealthRegen: { scale: "strength" },
+    maxHealthRegen: { scale: "strength" },
+    minDamageReduction: { scale: "strength" },
   },
   // wiki: Event Horizon — explosion radius scales RNG
   "sirius_orion::Event Horizon": {
@@ -73,9 +74,34 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     splashRadius: { scale: "range" },
   },
 
-  // wiki: Peacemaker — innate damage bonus scales STR
+  // wiki: Hall of Mirrors — clone damage fractions × STR; hologram count Misc-fixed
+  "mirage::Hall Of Mirrors": {
+    cloneMeleeDamage: { scale: "strength" },
+    cloneRangedDamage: { scale: "strength" },
+  },
+  // wiki: Sleight of Hand — charm/explosion/blind radii × RNG; jewel duration Misc-fixed
+  "mirage::Sleight Of Hand": {
+    jewelCharmRadius: { scale: "range" },
+    explosionRadius: { scale: "range" },
+    blindRadius: { scale: "range" },
+    blindDuration: { scale: "duration" },
+  },
+  // wiki: Prism — laser count Misc-fixed; blind duration × DUR; seeking via ability.range
+  "mirage::Prism": {
+    blindDuration: { scale: "duration" },
+    damageBonusPerHit: { scale: "strength" },
+  },
+
+  // wiki: Ballistic Battery — store % / caps × STR
+  "mesa::Ballistic Battery": {
+    damagePercentage: { scale: "strength" },
+    maxDamagePerInstance: { scale: "strength" },
+    maxStoredDamage: { scale: "strength" },
+  },
+  // wiki: Peacemaker — innate damage bonus scales STR; FoV/max distance Misc; drain fixed
   "mesa::Peacemaker": {
     damageBonus: { scale: "strength" },
+    rampUpDamageBonus: { scale: "strength" },
   },
 
   // wiki: Virulence — length scales RNG; width is fixed 4 m (not listed)
@@ -95,23 +121,55 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     explosionRadius: { scale: "range" },
   },
 
-  // wiki: Psychic Bolts — max-rank 80% defense strip × STR, cap 100% at 125% STR
+  // wiki: Psychic Bolts — 80% defense strip × STR (cap 100% @125% STR); Infested slow × STR
+  // bolt count / targeting range / steal amounts Misc-fixed; strip duration via ability.duration
   "nyx::Psychic Bolts": {
     defenseStrip: { scale: "strength", cap: 1 },
+    infestedSlow: { scale: "strength" },
+  },
+  // wiki: Absorb — min Magnetic via ability.damage × STR; min radius via ability.range;
+  // absorbDuration × DUR; weapon buff duration via ability.duration; convert/cap Misc
+  "nyx::Absorb": {
+    absorbDuration: { scale: "duration" },
   },
 
-  // wiki: Iron Skin — armor multiplier in overguard formula scales STR
+  // wiki: Iron Skin — armor multiplier in overguard formula scales STR; invuln Misc-fixed
   "rhino::Iron Skin": {
     armorMultiplier: { scale: "strength" },
   },
+  // wiki: Rhino Charge — charge range/impact radius via ability; dash speed Misc-fixed
+  // wiki: Rhino Stomp — Blast via ability.damage; slow Misc-fixed (97.5%)
 
-  // wiki: Molt — movement speed buff scales STR
+  // wiki: Warcry — AS/armor × STR; Affinity Range Misc-fixed (not ability.range)
+  "valkyr::Warcry": {
+    attackSpeedBuff: { scale: "strength" },
+    armorBuff: { scale: "strength" },
+  },
+  "helminth::Warcry": {
+    attackSpeedBuff: { scale: "strength" },
+    armorBuff: { scale: "strength" },
+  },
+  // wiki: Paralysis — slow × STR (cap 75%); melee vuln × STR
+  "valkyr::Paralysis": {
+    slowPercent: { scale: "strength", useSiblingSlowCap: true },
+    meleeDamageVulnerability: { scale: "strength" },
+  },
+  // wiki: Hysteria — claw damage via ability.damage; heal/hit × STR; drain Misc-fixed
+  "valkyr::Hysteria": {
+    healthPerHit: { scale: "strength" },
+  },
+
+  // wiki: Molt — decoy health/explosion via ability; speed buff × STR (cap 100%); Helminth unaltered
   "saryn::Molt": {
     speedBuff: { scale: "strength", cap: 1 },
   },
-  // wiki: Spores — damage growth per infected enemy scales STR
+  "helminth::Molt": {
+    speedBuff: { scale: "strength", cap: 1 },
+  },
+  // wiki: Spores — damage growth per infected enemy scales STR; spreadRadius×RNG via misc
   "saryn::Spores": {
     damageGrowth: { scale: "strength" },
+    spreadRadius: { scale: "range" },
   },
   // wiki: Toxic Lash — Extra Hit % scales STR (cap 100%)
   // Contagion Cloud augment (max-rank base): DPS×STR, range×RNG, duration×DUR;
@@ -123,13 +181,42 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     contagionCloudRange: { scale: "range" },
     contagionCloudDuration: { scale: "duration" },
   },
-  // wiki: Nourish — Viral weapon bonus scales STR (Helminth base 45%)
+  // wiki: Miasma — Viral DPS via ability.damagePerSecond; Spores ×4 Misc-fixed
+  // wiki: Nourish — Viral weapon bonus/heal/retaliation × STR (Helminth base 45%/no heal);
+  // energy multiplier uses 1+(bonus×STR) and is Misc-displayed unscaled.
   "grendel::Nourish": {
     viralDamageBonus: { scale: "strength" },
+    selfHeal: { scale: "strength" },
+    viralDamage: { scale: "strength" },
+    digestionDamage: { scale: "strength" },
   },
   "helminth::Nourish": {
     viralDamageBonus: { scale: "strength" },
+    viralDamage: { scale: "strength" },
   },
+  // wiki: Pulverize — heal/toxin DPS/strip × STR; collision enemy-count formula unmodeled
+  "grendel::Pulverize": {
+    healPerSecond: { scale: "strength" },
+    armorStrip: { scale: "strength", cap: 1 },
+    toxinDamagePerSecond: { scale: "strength" },
+  },
+  // wiki: Regurgitate — armor strip × STR; slow Misc-fixed 80%/6s
+  "grendel::Regurgitate": {
+    armorStrip: { scale: "strength", cap: 1 },
+  },
+  // wiki: Haven — ally shields × STR; Rad DPS via ability.damagePerSecond
+  "hildryn::Haven": {
+    allyShieldBonus: { scale: "strength" },
+  },
+  // wiki: Aegis Storm — deactivation Impact × STR; Rad DPS via ability.damagePerSecond
+  "hildryn::Aegis Storm": {
+    deactivationDamage: { scale: "strength" },
+  },
+  // wiki: Balefire — charge damage via ability.damage; explosion radius Misc-fixed 3m
+  // wiki: Spellbind — range/duration/radius top-level; Helminth→Spellbind (not Tribute)
+  // wiki: Tribute — Impact via ability.damage; aura duration/radius Misc-fixed
+  // wiki: Lantern — DPS/explode via ability; attract radius via ability.radius
+  // wiki: Razorwing — Dex Pixia via ability.damage; Diwata/drone Misc; drain Misc-fixed
   // wiki: Xata's Whisper — Void Extra Hit % scales STR
   "xaku::Xata's Whisper": {
     voidDamageBonus: { scale: "strength" },
@@ -163,11 +250,34 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     coldArmorBonus: { scale: "strength" },
     coldReflectMult: { scale: "strength" },
   },
-  // wiki: Vex Armor — aura × RNG; Scorn/Fury max × STR
+  // wiki: Spectral Scream — elemental DPS via ability.damagePerSecond; drain Misc-fixed 3/s
+  // wiki: Vex Armor — aura × RNG; Scorn/Fury max × STR; kill rates Misc-fixed
   "chroma::Vex Armor": {
     auraRadius: { scale: "range" },
     scornMax: { scale: "strength" },
     furyMax: { scale: "strength" },
+  },
+  // wiki: Effigy — sentry damage/HP via ability; drain/stun/credits Misc-fixed
+
+  // wiki: Tesla Nervos — discharge via ability.damage; DPS × STR; shock radius × RNG; charges × DUR
+  "vauban::Tesla Nervos": {
+    charges: { scale: "duration" },
+  },
+  "helminth::Tesla Nervos": {
+    charges: { scale: "duration" },
+  },
+  // wiki: Minelayer — tether/flechette/vector; weaponDamageBonus × STR
+  "vauban::Minelayer": {
+    weaponDamageBonus: { scale: "strength" },
+    moveSpeedBuff: { scale: "strength" },
+    flechetteDamage: { scale: "strength" },
+  },
+  // wiki: Photon Strike — Blast via ability.damage; radius × RNG; Overguard ×2 Misc-fixed
+  // wiki: Bastille — capture radius via ability.range; strip/vortex DPS × STR; armorCap Misc-fixed 1500
+  "vauban::Bastille": {
+    armorStripPerSecond: { scale: "strength" },
+    armorBuffRate: { scale: "strength" },
+    vortexDamagePerSecond: { scale: "strength" },
   },
 
   // wiki: Tharros Strike — Impact via damage; 50% defense strip × STR (full at 200%); heal × STR
@@ -204,19 +314,169 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     energyRegen: { scale: "strength" },
     shieldsPerKill: { scale: "strength" },
   },
-  // wiki: Final Stand — javelin count scales DUR (not STR); ~50% status unverified
+  // wiki: Final Stand — javelin count scales DUR (not STR)
   "styanax::Final Stand": {
     javelins: { scale: "duration" },
   },
+  // wiki: Axios Javelin — Puncture/Blast via directDamage/aoeDamage; ranges via ability
 
-  // wiki: Speed — reload buff scales STR; movement buff scales STR (ally move cap is separate)
+  // wiki: Seek — weak point bonus × STR; seek range via ability.range
+  "cyte_09::Seek": {
+    weakPointDamageBonus: { scale: "strength" },
+  },
+  // wiki: Resupply — weapon/sniper damage bonuses × STR
+  "cyte_09::Resupply": {
+    weaponDamageBonus: { scale: "strength" },
+    sniperDamageBonus: { scale: "strength" },
+  },
+  // wiki: Evade — health restore × STR; Helminth durationCap 25
+  "cyte_09::Evade": {
+    healthRestore: { scale: "strength" },
+  },
+  "helminth::Evade": {
+    healthRestore: { scale: "strength" },
+  },
+  // wiki: Neutralize — exalted Neutralizer; damageMultiplier × STR; ricochet Misc-fixed
+
+  // wiki: Pyrotechnics — IPS via damage; pillars Misc-fixed; Helminth unaltered damage
+  // wiki: Overdrive — Heat via damage; crit vuln × STR
+  "temple::Overdrive": {
+    criticalChanceVulnerability: { scale: "strength" },
+  },
+  // wiki: Ripper's Wail — Heat weapon bonus × STR (cap 750%); heal%/invuln Misc-fixed
+  "temple::Ripper's Wail": {
+    heatDamageBonus: { scale: "strength", cap: 7.5 },
+  },
+  // wiki: Exalted Solo — Lizzie multiplier × STR; weapon stats on Lizzie
+
+  // wiki: Kumihimo — bounce/thread contact = damage × dice (dice unmodeled); threads × RNG
+  "koumei::Kumihimo": {
+    threads: { scale: "range" },
+  },
+  // wiki: Omamori — heal multiplier × STR; block chance Misc-fixed; Helminth 10–20 charms
+  "koumei::Omamori": {
+    healMultiplier: { scale: "strength" },
+  },
+  "helminth::Omamori": {
+    healMultiplier: { scale: "strength" },
+  },
+  // wiki: Bunraku — Puncture via damage; status stacks from dice unmodeled
+
+  // wiki: Mercy's Kiss — Toxin via damage; orb chances × STR
+  "oraxia::Mercy's Kiss": {
+    healthOrbChance: { scale: "strength" },
+    energyOrbChance: { scale: "strength" },
+  },
+  // wiki: Webbed Embrace — Toxin via damage; vuln × STR; Helminth radius 6.67m
+  "oraxia::Webbed Embrace": {
+    damageVulnerability: { scale: "strength" },
+  },
+  "helminth::Webbed Embrace": {
+    damageVulnerability: { scale: "strength" },
+  },
+  // wiki: Widow's Brood — Toxin via damage; mark/scuttler durations × DUR
+  "oraxia::Widow's Brood": {
+    scuttlerDuration: { scale: "duration" },
+  },
+  // wiki: Silken Stride — health mult / toxin weapon / explosion × STR; drain Misc-fixed
+  "oraxia::Silken Stride": {
+    healthMultiplier: { scale: "strength" },
+    toxinWeaponDamage: { scale: "strength" },
+    wallLatchToxinWeaponDamage: { scale: "strength" },
+  },
+
+  // wiki: Infernalis — cast Heat via damage; aura DPS via damagePerSecond; Catenach slow × STR (cap 95%)
+  "uriel::Infernalis": {
+    catenachSlow: { scale: "strength", cap: 0.95 },
+  },
+  // wiki: Remedium — health restore × STR; Helminth 35% (no demons)
+  "uriel::Remedium": {
+    healthRestore: { scale: "strength" },
+  },
+  "helminth::Remedium": {
+    healthRestore: { scale: "strength" },
+  },
+  // wiki: Demonium — Heat via damage; vuln × STR
+  "uriel::Demonium": {
+    damageVulnerability: { scale: "strength" },
+  },
+  // wiki: Brimstone — Heat via damage; growth/cap Misc-fixed
+
+  // wiki: Forced Perspective — Corrosive via damage; invuln Misc-fixed 3.5s
+  // wiki: Self Portrait — max DR field × STR (cap via misc drCap 90% / Helminth 75%)
+  // wiki: Plein Air — see earlier entry (defenseReduction + splashRadius)
+
+  // wiki: Sirius & Orion — see earlier entries (Gravitic / Astral / Sanctuary / Event Horizon)
+  // wiki: Jade Stars — Heat via damage; motes Misc-fixed 7
+  // wiki: Celestial Clash — Blast via damage; match bonuses Misc-fixed
+
+  // wiki: Stinkbrain — Viral via damage; pulse radius via ability.radius; sleep/finisher Misc-fixed
+  // wiki: Brightbonnet — energy restore + STR bonus × STR (cap 150% / Helminth 100%); Helminth energy 10
+  "nokko::Brightbonnet": {
+    energyRestore: { scale: "strength" },
+    strengthBonus: { scale: "strength", cap: 1.5 },
+  },
+  "helminth::Brightbonnet": {
+    energyRestore: { scale: "strength" },
+    strengthBonus: { scale: "strength", cap: 1 },
+  },
+  // wiki: Reroot — HPS + pickup heal × STR; spore count/speed Misc-fixed
+  "nokko::Reroot": {
+    healthShieldPerSecond: { scale: "strength" },
+    pickupHeal: { scale: "strength" },
+  },
+  // wiki: Sporespring — Toxin via damage; bounce distance via misc; bounce mult Misc-fixed
+
+  // wiki: Necraweb — Blast via damage; slow Misc-fixed 50%
+  // wiki: Storm Shroud — shroud HP + absorb × STR; reflect chance Misc-fixed (rank)
+  "voidrig::Storm Shroud": {
+    shroudHealth: { scale: "strength" },
+    absorptionMultiplier: { scale: "strength" },
+  },
+  // wiki: Gravemines — Heat via damage; charges × DUR; scatter × RNG
+  "voidrig::Gravemines": {
+    charges: { scale: "duration" },
+  },
+  // wiki: Guard Mode — Blast/Heat via damage; Arquebex exalted; drain Misc-fixed 5/s
+
+  // wiki: Meathook — % max HP drain/lifesteal/explosion × STR
+  "bonewidow::Meathook": {
+    healthDrainPerSecond: { scale: "strength" },
+    lifesteal: { scale: "strength" },
+    explosionHealthPercent: { scale: "strength" },
+  },
+  // wiki: Shield Maiden — shield HP + reflect + armor mult × STR
+  "bonewidow::Shield Maiden": {
+    shieldHealth: { scale: "strength" },
+    reflectMultiplier: { scale: "strength" },
+    armorMultiplier: { scale: "strength" },
+  },
+  // wiki: Firing Line — Lifted vulnerability Misc-fixed 1.5×; range via ability
+  // wiki: Exalted Ironbride — Blast/Heat via damage; Ironbride weapon; drain 2.5/s
+
+  // wiki: Infested Mobility — sprint/parkour × STR
+  "helminth::Infested Mobility": {
+    sprintSpeedBonus: { scale: "strength" },
+    parkourVelocityBonus: { scale: "strength" },
+  },
+  // wiki: Energized Munitions — 75% ammo efficiency Misc-fixed; duration × DUR
+  // wiki: Empower — +50% next-cast STR Misc-fixed (Strength N/A)
+
+  // wiki: Excalibur — Slash Dash Strength N/A (Exalted Blade weapon); chainRange×RNG via Ability.chainRange
+  // Radial Blind/Howl — range/duration top-level; Radial Javelin damage×STR; Exalted Blade
+  // damage×STR, slide blind via duration/range, energyDrain/wave misc fixed
+
+  // wiki: Speed — reload buff scales STR; movement buff scales STR (ally move cap 150%)
   "volt::Speed": {
-    speedBuff: { scale: "strength", cap: 1 },
-    reloadBuff: { scale: "strength", cap: 1 },
+    speedBuff: { scale: "strength", cap: 1.5 },
+    reloadBuff: { scale: "strength" },
   },
   // wiki: Electric Shield — +50% Electricity / +100% crit damage are FIXED
   // (Strength N/A). Intentionally omitted from VERIFIED_MISC_SCALING so the
   // panel shows base values; weapon DPS applies them via weapon-external-buffs.
+
+  // wiki: Shock — Electricity via damage; chain links Misc-fixed (rank); chain range via ability.range
+  // wiki: Discharge — Electricity DPS via damage; stun via ability.duration; arc via ability.radius
 
   // wiki: Cloud Walker
   "wukong::Cloud Walker": {
@@ -227,11 +487,79 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "wukong::Celestial Twin": {
     healthMultiplier: { scale: "strength" },
   },
-  // wiki: Defy — damage/armor multipliers scale STR; armor bonus cap 1500 is fixed
+  // wiki: Defy — damage/armor multipliers × STR; armor duration × DUR; Helminth armorCap 750
   "wukong::Defy": {
     armorDuration: { scale: "duration" },
     damageMultiplier: { scale: "strength" },
+    armorMultiplier: { scale: "strength" },
   },
+  "helminth::Defy": {
+    armorDuration: { scale: "duration" },
+    damageMultiplier: { scale: "strength" },
+    armorMultiplier: { scale: "strength" },
+  },
+  // wiki: Primal Fury — staff damage via ability.damage / Iron Staff; drain Misc-fixed
+  // wiki: Grasp of Lohk — Void scaling dmg × STR; maxTargets × STR; targetRange × RNG
+  "xaku::Grasp Of Lohk": {
+    maxTargets: { scale: "strength" },
+    targetRange: { scale: "range" },
+  },
+  // wiki: The Lost — Accuse targets × STR; Gaze strip × STR (cap 100%); Deny via ability.damage
+  "xaku::The Lost": {
+    accuseMaxTargets: { scale: "strength" },
+    gazeDefenseStrip: { scale: "strength", cap: 1 },
+    gazeAuraRadius: { scale: "range" },
+    accuseRange: { scale: "range" },
+  },
+  // wiki: The Vast Untime — slow × STR (cap 95%); void vuln Misc-fixed 50%
+  "xaku::The Vast Untime": {
+    slowPercent: { scale: "strength", useSiblingSlowCap: true },
+  },
+
+  // wiki: Sea Snares — Cold DPS/growth/vuln × STR; seek range via ability.range
+  "yareli::Sea Snares": {
+    damageGrowthPerSecond: { scale: "strength" },
+    damageVulnerability: { scale: "strength" },
+  },
+  // wiki: Merulina — health pool × STR; 90% redirection Misc-fixed
+  "yareli::Merulina": {
+    merulinaHealth: { scale: "strength" },
+  },
+  // wiki: Aquablades — Slash via ability.damage; blade radius Misc-fixed 5m; Helminth unaltered
+  // wiki: Riptide — tick/burst × STR; extra/enemy Misc-fixed 50%
+  "yareli::Riptide": {
+    burstDamage: { scale: "strength" },
+  },
+
+  // wiki: Whipclaw — damage via ability.damage (+ weapon mods unmodeled); Ensare ×2 Misc-fixed
+  // wiki: Ensnare — spreadRadius × RNG; Helminth cast range 30m
+  "khora::Ensnare": {
+    spreadRadius: { scale: "range" },
+  },
+  "helminth::Ensnare": {
+    spreadRadius: { scale: "range" },
+  },
+  // wiki: Venari — move speed/snare/heal × STR
+  "khora::Venari": {
+    moveSpeedMultiplier: { scale: "strength" },
+    snareDamage: { scale: "strength" },
+    healthRegen: { scale: "strength" },
+  },
+  // wiki: Strangledome — Slash via ability.damage; grabRadius × RNG; 200% vuln Misc-fixed
+  "khora::Strangledome": {
+    grabRadius: { scale: "range" },
+  },
+
+  // wiki: Desiccation — True dmg/DPS via ability fields; 25% lifesteal Misc-fixed
+  // wiki: Sandstorm — Slash DPS via ability; heal/enemy × STR
+  "inaros::Sandstorm": {
+    healthPerEnemy: { scale: "strength" },
+  },
+  // wiki: Scarab Shell — armor bonus × STR; health cost Misc-fixed
+  "inaros::Scarab Shell": {
+    armorBonus: { scale: "strength" },
+  },
+  // wiki: Scarab Swarm — % health as Corrosive Misc-fixed (scales with Inaros health, not STR)
 
   // wiki: Gloom — slow/lifesteal × STR (slow cap 95%); radii × RNG; range growth × DUR
   "sevagoth::Gloom": {
@@ -249,12 +577,36 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     rangeGrowthPerSecond: { scale: "duration" },
   },
 
-  // wiki: Breach Surge — spark damage multiplier scales STR (not a weapon damageBuff)
+  // wiki: Reservoirs — Vitality/Haste/Shock STR buffs; Shock range × RNG; mote lifespan via duration
+  "wisp::Reservoirs": {
+    vitalityHealth: { scale: "strength" },
+    vitalityHealPerSecond: { scale: "strength" },
+    hasteMoveSpeed: { scale: "strength" },
+    hasteAttackSpeed: { scale: "strength" },
+    hasteFireRate: { scale: "strength" },
+    shockDamage: { scale: "strength" },
+    shockRange: { scale: "range" },
+  },
+  // wiki: Breach Surge — spark damage multiplier scales STR; Rad SC × STR; seek range Misc-fixed
   "wisp::Breach Surge": {
     sparkDamageMultiplier: { scale: "strength" },
+    radiationStatusChance: { scale: "strength" },
   },
   "helminth::Breach Surge": {
     sparkDamageMultiplier: { scale: "strength" },
+    radiationStatusChance: { scale: "strength" },
+  },
+  // wiki: Sol Gate — beam DPS via damagePerSecond × STR; drain/ramp/boost misc (drain also × EFF/DUR in-game unmodeled)
+
+  // wiki: Tail Wind — dash damage via ability.damage × STR; dive bomb × STR; contact/explosion radii × RNG
+  "zephyr::Tail Wind": {
+    diveBombDamage: { scale: "strength" },
+  },
+  // wiki: Airburst — +35% damage growth per enemy is Misc-fixed (not STR); explosion via ability.range
+
+  // wiki: Tornado — tick damage × STR (DPS via damagePerSecond); count/height/pull Misc-fixed
+  "zephyr::Tornado": {
+    tickDamage: { scale: "strength" },
   },
 
   // wiki: Voruna — Shroud of Dynar
@@ -273,8 +625,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
   // Ulfrun's Descent: move speed / kill bonuses Misc — Slash dmg via ability.damage / DPS
 
-  // wiki: Citrine — Fractured Blast (orb drop chances scale STR)
+  // wiki: Citrine — Fractured Blast (orb drop chances scale STR); Helminth 250/25%/10%
   "citrine::Fractured Blast": {
+    healthOrbChance: { scale: "strength" },
+    energyOrbChance: { scale: "strength" },
+  },
+  "helminth::Fractured Blast": {
     healthOrbChance: { scale: "strength" },
     energyOrbChance: { scale: "strength" },
   },
@@ -301,6 +657,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "ember::Fire Blast": {
     armorStrip: { scale: "strength", cap: 1 },
   },
+  "helminth::Fire Blast": {
+    armorStrip: { scale: "strength", cap: 1 },
+  },
+  // wiki: Fireball — impact/area via ability; Inferno meteor/ring via ability.damage / DPS
 
   // wiki: Ophanim Eyes — Heat/strip × STR; slow %/s is Misc (ability-rank); cone/ticks fixed
   "jade::Ophanim Eyes": {
@@ -662,12 +1022,368 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     shieldBonus: { scale: "strength" },
     healthBonus: { scale: "strength" },
   },
+
+  // wiki: Tempest Barrage — Corrosive via damage; barrage radius / salvos Misc-fixed
+
+  // wiki: Plunder — armor / Corrosive bonus per enemy × STR (caps Misc)
+  "hydroid::Plunder": {
+    armorPerEnemy: { scale: "strength" },
+    armorPerCorrosiveStatus: { scale: "strength" },
+    corrosiveBonusPerEnemy: { scale: "strength" },
+    corrosiveBonusPerStatus: { scale: "strength" },
+  },
+
+  // wiki: Tentacle Swarm — Corrosive DPS via damage; tentacle count Misc-fixed; spawn radius Misc-fixed
+  "hydroid::Tentacle Swarm": {
+    overguardContactDamage: { scale: "strength" },
+  },
+
+  // wiki: Banish — Impact via damage; transitional / Rift regen Misc-fixed
+  // wiki: Stasis — duration via ability.duration; gunfire limit Misc-fixed
+
+  // wiki: Rift Surge — banish duration × DUR (surge duration via ability.duration)
+  "limbo::Rift Surge": {
+    banishDuration: { scale: "duration" },
+  },
+
+  // wiki: Cataclysm — Blast via damage; final radius × RNG (initial via ability.range)
+  "limbo::Cataclysm": {
+    finalRadius: { scale: "range" },
+  },
+
+  // wiki: Decoy — health/shield absorb × STR; base decoy HP/SP Misc-fixed
+  "loki::Decoy": {
+    healthShieldAbsorb: { scale: "strength" },
+  },
+  "helminth::Decoy": {
+    healthShieldAbsorb: { scale: "strength" },
+  },
+
+  // wiki: Switch Teleport — move speed buff × STR
+  "loki::Switch Teleport": {
+    speedBuff: { scale: "strength" },
+  },
+
+  // wiki: Radial Disarm — Impact via damage; disarm Misc-fixed
+  // wiki: Invisibility — duration via ability.duration
+
+  // wiki: Magnetize — Blast via damage; dmg mult / magnetic pull / absorption × STR
+  "mag::Magnetize": {
+    damageMultiplier: { scale: "strength" },
+    magneticPull: { scale: "strength" },
+    damageAbsorption: { scale: "strength" },
+  },
+
+  // wiki: Polarize — True/shield via damage; explosion mult × STR; shard dmg Misc-fixed
+  "mag::Polarize": {
+    explosionDamageMultiplier: { scale: "strength" },
+  },
+
+  // wiki: Crush — Magnetic via damage; Magnetize extra + shields/hit × STR (cap Misc)
+  "mag::Crush": {
+    magnetizeExtraDamage: { scale: "strength" },
+    shieldsPerHit: { scale: "strength" },
+  },
+
+  // wiki: Freeze — Cold via damage; area Cold × STR; freeze via ability.duration
+  "frost::Freeze": {
+    areaDamage: { scale: "strength" },
+  },
+
+  // wiki: Ice Wave — Cold via damage; angle × RNG (cap 60°); initial width × RNG; length via ability.range
+  "frost::Ice Wave": {
+    waveAngle: { scale: "range", cap: 60 },
+    initialWidth: { scale: "range" },
+  },
+  "helminth::Ice Wave": {
+    waveAngle: { scale: "range", cap: 60 },
+    initialWidth: { scale: "range" },
+  },
+
+  // wiki: Snow Globe — base HP via ability.health×STR; break dmg × STR; armor mult Misc-fixed (outer STR in formula)
+  "frost::Snow Globe": {
+    breakDamage: { scale: "strength" },
+  },
+
+  // wiki: Avalanche — Cold via damage; shatter dmg × STR; shatter radius × RNG; armor strip × STR
+  "frost::Avalanche": {
+    shatterDamage: { scale: "strength" },
+    shatterRadius: { scale: "range" },
+    armorStrip: { scale: "strength", cap: 1 },
+  },
+
+  // wiki: Shattered Lash — Puncture/Slash via damage; sweep arc / blade radius Misc-fixed
+
+  // wiki: Splinter Storm — DPS via damage; vulnerability × STR; absorbed % Misc-fixed; DR via field
+  "gara::Splinter Storm": {
+    damageVulnerability: { scale: "strength" },
+  },
+
+  // wiki: Spectrorage — mirror dmg via damage; collapse × STR; mirrors/threshold/charm × RNG
+  "gara::Spectrorage": {
+    collapseDamage: { scale: "strength" },
+    mirrorCount: { scale: "range" },
+    collapseThreshold: { scale: "range" },
+    charmRadius: { scale: "range" },
+  },
+  "helminth::Spectrorage": {
+    collapseDamage: { scale: "strength" },
+    mirrorCount: { scale: "range" },
+    collapseThreshold: { scale: "range" },
+    charmRadius: { scale: "range" },
+  },
+
+  // wiki: Mass Vitrify — explosion via damage; vuln / segment HP × STR; armor mult Misc-fixed; expansion × DUR; explosion range × RNG
+  "gara::Mass Vitrify": {
+    damageVulnerability: { scale: "strength" },
+    segmentHealth: { scale: "strength" },
+    expansionTime: { scale: "duration" },
+    explosionRange: { scale: "range" },
+  },
+
+  // wiki: Metamorphosis — Night armor/shields + Day dmg/speed × STR; decay over duration
+  "equinox::Metamorphosis": {
+    nightArmor: { scale: "strength" },
+    nightShields: { scale: "strength" },
+    dayDamageBonus: { scale: "strength" },
+    daySpeedBonus: { scale: "strength" },
+  },
+
+  // wiki: Rest & Rage — Rage vuln/speed × STR; Rest wakeup threshold Misc-fixed; sleep via duration
+  "equinox::Rest & Rage": {
+    damageVulnerability: { scale: "strength" },
+    enemySpeedBonus: { scale: "strength" },
+  },
+  "helminth::Rest & Rage": {
+    damageVulnerability: { scale: "strength" },
+    enemySpeedBonus: { scale: "strength" },
+  },
+
+  // wiki: Pacify & Provoke — Provoke STR bonus × STR (cap 50%); Pacify DR uses 1−(base÷STR) unmodeled as ×STR
+  "equinox::Pacify & Provoke": {
+    abilityStrengthBonus: { scale: "strength", cap: 0.5 },
+  },
+
+  // wiki: Mend & Maim — Slash aura via damage; shields/kill × STR; conversion % Misc-fixed
+  "equinox::Mend & Maim": {
+    shieldsPerKill: { scale: "strength" },
+  },
+
+  // wiki: Quiver — Cloak/Sleep durations via ability/misc; radii × RNG; Helminth Cloak+Noise only
+  "ivara::Quiver": {
+    noiseRadius: { scale: "range" },
+    sleepRadius: { scale: "range" },
+    sleepDuration: { scale: "duration" },
+  },
+  "helminth::Quiver": {
+    noiseRadius: { scale: "range" },
+  },
+
+  // wiki: Navigator — max dmg mult × STR; growth inverse-DUR unmodeled
+  "ivara::Navigator": {
+    maxDamageMultiplier: { scale: "strength" },
+  },
+
+  // wiki: Prowl — headshot bonus / loot chance × STR; steal time inverse-DUR unmodeled
+  "ivara::Prowl": {
+    headshotBonus: { scale: "strength" },
+    lootChance: { scale: "strength", cap: 1 },
+  },
+
+  // wiki: Artemis Bow — Puncture-heavy via damage; arrow count / energy per shot Misc-fixed
+
+  // wiki: Shuriken — Slash via damage; count / auto-target / angle Misc-fixed
+  // wiki: Smoke Screen — duration via ability.duration; stagger radius via ability.range
+
+  // wiki: Teleport — finisher damage bonus × STR; energy refund Misc-fixed
+  "ash::Teleport": {
+    finisherDamageBonus: { scale: "strength" },
+  },
+
+  // wiki: Blade Storm — True via damage; mark cost / clones Misc-fixed
+
+  // wiki: Landslide — Impact via damage; hit radii × RNG; combo window Misc-fixed
+  "atlas::Landslide": {
+    hit2Radius: { scale: "range" },
+    hit3Radius: { scale: "range" },
+  },
+
+  // wiki: Tectonics — Puncture explosion via damage; roll Impact × STR; armor mult Misc-fixed (outer STR on health)
+  "atlas::Tectonics": {
+    rollDamage: { scale: "strength" },
+  },
+
+  // wiki: Petrify — vuln Misc-fixed (+50%); Rumbler heal × STR; FOV Misc-fixed
+  "atlas::Petrify": {
+    rumblerHeal: { scale: "strength" },
+  },
+  "helminth::Petrify": {
+    rumblerHeal: { scale: "strength" },
+  },
+
+  // wiki: Rumblers — melee Impact via damage; rock/blast × STR; speed mult × RNG (0.5–1.5); stone duration Misc
+  "atlas::Rumblers": {
+    rockDamage: { scale: "strength" },
+    blastDamage: { scale: "strength" },
+    speedMultiplier: { scale: "range", cap: 1.5 },
+  },
+
+  // wiki: Sonic Boom — Impact via damage; 180° cone Misc-fixed
+  // wiki: Sonar — weak-spot mult × STR; propagation Misc-fixed
+  "banshee::Sonar": {
+    damageMultiplier: { scale: "strength" },
+  },
+
+  // wiki: Silence — stun Misc-fixed; aura via ability.range/duration
+  // wiki: Sound Quake — Blast DPS via damage; drain Misc-fixed
+
+  // wiki: Enthrall — pillar DPS via damage; projectile / pillar radius × STR/RNG; thrall duration via ability.duration
+  "revenant::Enthrall": {
+    projectileDamage: { scale: "strength" },
+    pillarRadius: { scale: "range" },
+    pillarDuration: { scale: "duration" },
+  },
+
+  // wiki: Mesmer Skin — charges × STR; stun × DUR
+  "revenant::Mesmer Skin": {
+    charges: { scale: "strength" },
+    stunDuration: { scale: "duration" },
+  },
+
+  // wiki: Reave — drain % × STR; thrall drain × STR; width via ability.range; duration via ability.duration
+  "revenant::Reave": {
+    hitpointsDrain: { scale: "strength" },
+    thrallHitpointsDrain: { scale: "strength" },
+  },
+  "helminth::Reave": {
+    hitpointsDrain: { scale: "strength" },
+  },
+
+  // wiki: Danse Macabre — DPS via damage; boosted DPS × STR; beam radii × RNG
+  "revenant::Danse Macabre": {
+    boostedDamage: { scale: "strength" },
+    beamRadius: { scale: "range" },
+    boostedBeamRadius: { scale: "range" },
+  },
+
+  // wiki: Smite — Radiation via damage; % current HP × STR (cap 75% native / 50% Helminth)
+  "oberon::Smite": {
+    percentageDamage: { scale: "strength", cap: 0.75 },
+    aoePercentageDamage: { scale: "strength", cap: 0.3 },
+  },
+  "helminth::Smite": {
+    percentageDamage: { scale: "strength", cap: 0.5 },
+    aoePercentageDamage: { scale: "strength", cap: 0.2 },
+  },
+
+  // wiki: Hallowed Ground — Radiation tick via damage; tick interval / ground cap Misc-fixed
+
+  // wiki: Renewal — armor / heal / HPS × STR; bleedout slow × DUR
+  "oberon::Renewal": {
+    armorBuff: { scale: "strength", cap: 1 },
+    initialHeal: { scale: "strength" },
+    healthPerSecond: { scale: "strength" },
+    bleedoutSlow: { scale: "duration", cap: 0.9 },
+  },
+
+  // wiki: Reckoning — Radiation via damage; armor strip / Rad bonus / armor per enemy × STR; orb chance Misc
+  "oberon::Reckoning": {
+    armorStrip: { scale: "strength", cap: 1 },
+    radiationBonusDamage: { scale: "strength" },
+    bonusArmorPerEnemy: { scale: "strength" },
+    bonusArmorPerRadiation: { scale: "strength" },
+  },
+
+  // wiki: Mallet — absorbed-damage mult × STR
+  "octavia::Mallet": {
+    damageMultiplier: { scale: "strength" },
+  },
+
+  // wiki: Resonator — Blast loop total via damage; max charm radius × RNG
+  "octavia::Resonator": {
+    maxCharmRadius: { scale: "range" },
+  },
+  "helminth::Resonator": {
+    maxCharmRadius: { scale: "range" },
+  },
+
+  // wiki: Metronome — armor/speed/MS/melee buffs × STR; sync buff duration × DUR
+  "octavia::Metronome": {
+    armorBonus: { scale: "strength" },
+    speedBonus: { scale: "strength" },
+    multishotBonus: { scale: "strength" },
+    meleeDamageBonus: { scale: "strength" },
+    buffDuration: { scale: "duration" },
+  },
+
+  // wiki: Amp — max damage buff × STR; mallet range bonus Misc-fixed (min via field)
+  "octavia::Amp": {
+    maxDamageBuff: { scale: "strength" },
+  },
+
+  // wiki: Well of Life — HPS / lifesteal × STR; healing radius × RNG; revive CD Misc (Helminth 120s)
+  "trinity::Well Of Life": {
+    healthPerSecond: { scale: "strength" },
+    lifesteal: { scale: "strength" },
+    healingRadius: { scale: "range" },
+  },
+  "helminth::Well of Life": {
+    healthPerSecond: { scale: "strength" },
+    lifesteal: { scale: "strength" },
+    healingRadius: { scale: "range" },
+  },
+
+  // wiki: Energy Vampire — energy/pulse × STR; pulse radius × RNG; interval inverse-DUR (capped) unmodeled
+  "trinity::Energy Vampire": {
+    energyPerPulse: { scale: "strength" },
+    pulseRadius: { scale: "range" },
+  },
+
+  // wiki: Link — affected enemies × STR; damage redirection Misc-fixed (rank)
+  "trinity::Link": {
+    affectedEnemies: { scale: "strength" },
+  },
+
+  // wiki: Blessing — restore % × STR; DR via field (cap 75%)
+  "trinity::Blessing": {
+    healthShieldRestore: { scale: "strength" },
+  },
+
+  // wiki: Null Star — Blast via damage (in-game base 200); particles × DUR; DR/particle × STR
+  "nova::Null Star": {
+    particles: { scale: "duration" },
+    damageReductionPerParticle: { scale: "strength" },
+  },
+  "helminth::Null Star": {
+    particles: { scale: "duration" },
+    damageReductionPerParticle: { scale: "strength" },
+  },
+
+  // wiki: Antimatter Drop — Blast base via damage; absorb mult × STR
+  "nova::Antimatter Drop": {
+    absorbMultiplier: { scale: "strength" },
+  },
+
+  // wiki: Wormhole — max portals Misc-fixed (rank); range via ability.range
+
+  // wiki: Molecular Prime — Blast via damage; slow/speed × STR (cap 75%); wave duration × DUR; vuln Misc
+  "nova::Molecular Prime": {
+    slow: { scale: "strength", cap: 0.75 },
+    waveDuration: { scale: "duration" },
+  },
 };
 
 /** Top-level ability field scaling (damageReduction, damageBuff on the Ability object). */
 const VERIFIED_FIELD_SCALING: Record<string, VerifiedAbilityFields> = {
-  // wiki: Self Portrait — DR grows with kills; max 50% at 180% STR, hard cap 90%
+  // wiki: Self Portrait — DR grows with kills; max 50%×STR, hard cap 90% (Helminth 75%)
   "follie::Self Portrait": {
+    damageReduction: { scale: "strength", useSiblingDrCap: true },
+  },
+  "helminth::Self Portrait": {
+    damageReduction: { scale: "strength", useSiblingDrCap: true },
+  },
+  // wiki: Light's Sanctuary — max DR 45%×STR, hard cap 75%
+  "sirius_orion::Light's Sanctuary": {
     damageReduction: { scale: "strength", useSiblingDrCap: true },
   },
   // wiki: Eclipse — DR cap 90% (native Mirage); weapon buff scales STR
@@ -685,12 +1401,24 @@ const VERIFIED_FIELD_SCALING: Record<string, VerifiedAbilityFields> = {
     damageReduction: { scale: "strength", cap: 0.75 },
     damageBuff: { scale: "strength" },
   },
+  // wiki: Splinter Storm — DR 70%×STR, hard cap 90%
+  "gara::Splinter Storm": {
+    damageReduction: { scale: "strength", useSiblingDrCap: true },
+  },
   // wiki: Roar — weapon damage bonus scales STR
   "rhino::Roar": {
     damageBuff: { scale: "strength" },
   },
   "helminth::Roar": {
     damageBuff: { scale: "strength" },
+  },
+  // wiki: Amp — min damage buff × STR (max via misc)
+  "octavia::Amp": {
+    damageBuff: { scale: "strength" },
+  },
+  // wiki: Blessing — DR 50%×STR, hard cap 75%
+  "trinity::Blessing": {
+    damageReduction: { scale: "strength", useSiblingDrCap: true },
   },
   // wiki: Shooting Gallery — ally weapon damage scales STR (additive with Serration)
   "mesa::Shooting Gallery": {

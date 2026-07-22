@@ -5,6 +5,7 @@
 import { describe, expect, it } from "vitest";
 import { allArcanes } from "@/data/arcanes";
 import { allCompanions } from "@/data/companions";
+import { allHelminthAbilities } from "@/data/helminth";
 import { allMods } from "@/data/mods";
 import { STANCE_WEAPON_TYPE } from "@/data/stances";
 import { allWarframes } from "@/data/warframes";
@@ -972,6 +973,1769 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
       cap: 1,
     });
+  });
+
+  it("Hydroid Plunder armor/Corrosive bonus × STR; Tentacle overguard dmg × STR", () => {
+    expect(getVerifiedMiscScaling("hydroid", "Plunder", "armorPerEnemy")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("hydroid", "Plunder", "corrosiveBonusPerEnemy")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("hydroid", "Plunder", "armorCap")).toBeNull();
+    expect(getVerifiedMiscScaling("hydroid", "Tentacle Swarm", "overguardContactDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("hydroid", "Tentacle Swarm", "tentacleCount")).toBeNull();
+    expect(getVerifiedMiscScaling("hydroid_prime", "Plunder", "armorPerCorrosiveStatus")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Limbo Rift Surge banish duration × DUR; Cataclysm final radius × RNG", () => {
+    expect(getVerifiedMiscScaling("limbo", "Rift Surge", "banishDuration")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("limbo", "Rift Surge", "transitionalDamage")).toBeNull();
+    expect(getVerifiedMiscScaling("limbo", "Cataclysm", "finalRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("limbo_prime", "Cataclysm", "finalRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("limbo", "Stasis", "gunfireObjectLimit")).toBeNull();
+  });
+
+  it("Loki Decoy absorb × STR; Switch Teleport speed × STR", () => {
+    expect(getVerifiedMiscScaling("loki", "Decoy", "healthShieldAbsorb")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Decoy", "healthShieldAbsorb")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("loki", "Decoy", "decoyHealth")).toBeNull();
+    expect(getVerifiedMiscScaling("loki", "Switch Teleport", "speedBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("loki_prime", "Switch Teleport", "speedBuff")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Mag Magnetize/Polarize/Crush scaling", () => {
+    expect(getVerifiedMiscScaling("mag", "Magnetize", "damageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mag", "Magnetize", "magneticPull")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mag", "Polarize", "explosionDamageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mag", "Polarize", "shardDamage")).toBeNull();
+    expect(getVerifiedMiscScaling("mag", "Crush", "magnetizeExtraDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mag", "Crush", "shieldsPerHit")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mag_prime", "Crush", "shieldsPerHitCap")).toBeNull();
+  });
+
+  it("Frost Freeze/Ice Wave/Snow Globe/Avalanche scaling", () => {
+    expect(getVerifiedMiscScaling("frost", "Freeze", "areaDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("frost", "Ice Wave", "waveAngle")).toEqual({
+      scale: "range",
+      cap: 60,
+    });
+    expect(getVerifiedMiscScaling("frost", "Ice Wave", "initialWidth")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Ice Wave", "waveAngle")).toEqual({
+      scale: "range",
+      cap: 60,
+    });
+    expect(getVerifiedMiscScaling("frost", "Snow Globe", "breakDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("frost", "Snow Globe", "armorMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("frost", "Avalanche", "shatterDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("frost", "Avalanche", "shatterRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("frost", "Avalanche", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("frost_prime", "Avalanche", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+  });
+
+  it("Gara Splinter Storm / Spectrorage / Mass Vitrify scaling", () => {
+    expect(getVerifiedMiscScaling("gara", "Splinter Storm", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("gara", "Splinter Storm", "absorbedDamage")).toBeNull();
+    expect(getVerifiedFieldScaling("gara", "Splinter Storm", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedMiscScaling("gara", "Spectrorage", "collapseDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("gara", "Spectrorage", "mirrorCount")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Spectrorage", "charmRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "segmentHealth")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("gara", "Mass Vitrify", "armorMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("gara_prime", "Mass Vitrify", "explosionRange")).toEqual({
+      scale: "range",
+    });
+  });
+
+  it("Equinox Metamorphosis / Rest & Rage / Pacify / Mend scaling", () => {
+    expect(getVerifiedMiscScaling("equinox", "Metamorphosis", "nightArmor")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Metamorphosis", "dayDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Rest & Rage", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Rest & Rage", "enemySpeedBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Rest & Rage", "wakeupHealthThreshold")).toBeNull();
+    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "abilityStrengthBonus")).toEqual({
+      scale: "strength",
+      cap: 0.5,
+    });
+    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "pacifyDamageReduction")).toBeNull();
+    expect(getVerifiedMiscScaling("equinox", "Mend & Maim", "shieldsPerKill")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("equinox_prime", "Mend & Maim", "damageConversion")).toBeNull();
+  });
+
+  it("Ivara Quiver / Navigator / Prowl scaling", () => {
+    expect(getVerifiedMiscScaling("ivara", "Quiver", "noiseRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("ivara", "Quiver", "sleepDuration")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Quiver", "noiseRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("ivara", "Quiver", "ziplineRange")).toBeNull();
+    expect(getVerifiedMiscScaling("ivara", "Navigator", "maxDamageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("ivara", "Navigator", "multiplierGrowth")).toBeNull();
+    expect(getVerifiedMiscScaling("ivara", "Prowl", "headshotBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("ivara", "Prowl", "lootChance")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("ivara_prime", "Prowl", "stealTime")).toBeNull();
+  });
+
+  it("Ash Teleport finisher bonus × STR; Blade Storm mark cost fixed", () => {
+    expect(getVerifiedMiscScaling("ash", "Teleport", "finisherDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("ash", "Teleport", "energyRefund")).toBeNull();
+    expect(getVerifiedMiscScaling("ash", "Blade Storm", "energyPerMark")).toBeNull();
+    expect(getVerifiedMiscScaling("ash_prime", "Teleport", "finisherDamageBonus")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Atlas Landslide / Tectonics / Petrify / Rumblers scaling", () => {
+    expect(getVerifiedMiscScaling("atlas", "Landslide", "hit2Radius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("atlas", "Tectonics", "rollDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("atlas", "Tectonics", "armorMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("atlas", "Petrify", "rumblerHeal")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Petrify", "rumblerHeal")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("atlas", "Petrify", "damageVulnerability")).toBeNull();
+    expect(getVerifiedMiscScaling("atlas", "Rumblers", "rockDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("atlas", "Rumblers", "blastDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("atlas_prime", "Rumblers", "speedMultiplier")).toEqual({
+      scale: "range",
+      cap: 1.5,
+    });
+  });
+
+  it("Banshee Sonar mult × STR; Silence stun Misc-fixed", () => {
+    expect(getVerifiedMiscScaling("banshee", "Sonar", "damageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("banshee", "Sonar", "propagationSpeed")).toBeNull();
+    expect(getVerifiedMiscScaling("banshee", "Silence", "stunDuration")).toBeNull();
+    expect(getVerifiedMiscScaling("banshee_prime", "Sonar", "damageMultiplier")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Revenant Mesmer / Reave / Danse / Enthrall scaling", () => {
+    expect(getVerifiedMiscScaling("revenant", "Mesmer Skin", "charges")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Mesmer Skin", "stunDuration")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Reave", "hitpointsDrain")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Reave", "thrallHitpointsDrain")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Reave", "hitpointsDrain")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Reave", "thrallHitpointsDrain")).toBeNull();
+    expect(getVerifiedMiscScaling("revenant", "Danse Macabre", "boostedDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Enthrall", "pillarRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("revenant_prime", "Enthrall", "projectileDamage")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Oberon Smite / Renewal / Reckoning scaling", () => {
+    expect(getVerifiedMiscScaling("oberon", "Smite", "percentageDamage")).toEqual({
+      scale: "strength",
+      cap: 0.75,
+    });
+    expect(getVerifiedMiscScaling("helminth", "Smite", "percentageDamage")).toEqual({
+      scale: "strength",
+      cap: 0.5,
+    });
+    expect(getVerifiedMiscScaling("oberon", "Renewal", "armorBuff")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("oberon", "Renewal", "healthPerSecond")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("oberon", "Renewal", "bleedoutSlow")).toEqual({
+      scale: "duration",
+      cap: 0.9,
+    });
+    expect(getVerifiedMiscScaling("oberon", "Reckoning", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("oberon", "Reckoning", "radiationBonusDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("oberon_prime", "Reckoning", "healthOrbChance")).toBeNull();
+  });
+
+  it("Octavia Mallet / Resonator / Metronome / Amp scaling", () => {
+    expect(getVerifiedMiscScaling("octavia", "Mallet", "damageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("octavia", "Resonator", "maxCharmRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Resonator", "maxCharmRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("octavia", "Metronome", "armorBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("octavia", "Metronome", "multishotBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("octavia", "Metronome", "buffDuration")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("octavia", "Amp", "maxDamageBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("octavia", "Amp", "damageBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("octavia_prime", "Amp", "malletRangeBonus")).toBeNull();
+  });
+
+  it("Trinity Well of Life / Vampire / Link / Blessing scaling", () => {
+    expect(getVerifiedMiscScaling("trinity", "Well Of Life", "healthPerSecond")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Well of Life", "lifesteal")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("trinity", "Energy Vampire", "energyPerPulse")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("trinity", "Energy Vampire", "pulseInterval")).toBeNull();
+    expect(getVerifiedMiscScaling("trinity", "Link", "affectedEnemies")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("trinity", "Link", "damageRedirection")).toBeNull();
+    expect(getVerifiedMiscScaling("trinity", "Blessing", "healthShieldRestore")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("trinity", "Blessing", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedMiscScaling("trinity_prime", "Blessing", "affinityRange")).toBeNull();
+  });
+
+  it("Nova Null Star / Antimatter / Molecular Prime scaling", () => {
+    expect(getVerifiedMiscScaling("nova", "Null Star", "particles")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("nova", "Null Star", "damageReductionPerParticle")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Null Star", "damageReductionPerParticle")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("nova", "Antimatter Drop", "absorbMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("nova", "Molecular Prime", "slow")).toEqual({
+      scale: "strength",
+      cap: 0.75,
+    });
+    expect(getVerifiedMiscScaling("nova", "Molecular Prime", "waveDuration")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("nova_prime", "Molecular Prime", "damageVulnerability")).toBeNull();
+  });
+
+  it("Volt Speed ally move cap 150%; Electric Shield bonuses fixed", () => {
+    expect(getVerifiedMiscScaling("volt", "Speed", "speedBuff")).toEqual({
+      scale: "strength",
+      cap: 1.5,
+    });
+    expect(getVerifiedMiscScaling("volt", "Speed", "reloadBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("volt", "Electric Shield", "electricDamageBonus")).toBeNull();
+    expect(getVerifiedMiscScaling("volt_prime", "Speed", "speedBuff")).toEqual({
+      scale: "strength",
+      cap: 1.5,
+    });
+  });
+
+  it("Valkyr Warcry Affinity AS/armor; Paralysis 400/10m; Hysteria 250/5/s; Helminth AS 30%", () => {
+    expect(getVerifiedMiscScaling("valkyr", "Warcry", "attackSpeedBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("valkyr", "Warcry", "armorBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Warcry", "attackSpeedBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("valkyr", "Paralysis", "slowPercent")).toEqual({
+      scale: "strength",
+      useSiblingSlowCap: true,
+    });
+    expect(getVerifiedMiscScaling("valkyr", "Hysteria", "healthPerHit")).toEqual({
+      scale: "strength",
+    });
+    const valkyr = allWarframes.find((w) => w.id === "valkyr")!;
+    const rip = valkyr.abilities.find((a) => a.name === "Rip Line")!;
+    expect(rip.damage).toBe(600);
+    expect(rip.range).toBe(75);
+    expect(rip.miscStats?.pullRadius).toBe(9);
+    const warcry = valkyr.abilities.find((a) => a.name === "Warcry")!;
+    expect(warcry.duration).toBe(20);
+    expect(warcry.range).toBeUndefined();
+    expect(warcry.miscStats).toMatchObject({ attackSpeedBuff: 0.5, armorBuff: 0.5 });
+    const paralysis = valkyr.abilities.find((a) => a.name === "Paralysis")!;
+    expect(paralysis.energyCost).toBe(25);
+    expect(paralysis.damage).toBe(400);
+    expect(paralysis.range).toBe(10);
+    expect(paralysis.duration).toBe(15);
+    expect(paralysis.miscStats).toMatchObject({ slowPercent: 0.3, meleeDamageVulnerability: 0.5 });
+    const hysteria = valkyr.abilities.find((a) => a.name === "Hysteria")!;
+    expect(hysteria.damage).toBe(250);
+    expect(hysteria.miscStats).toMatchObject({ energyDrain: 5, healthPerHit: 100 });
+    const talons = allWeapons.find((w) => w.id === "talons")!;
+    expect(talons.damage).toBe(250);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_valkyr")!;
+    expect(helminth.duration).toBe(20);
+    expect(helminth.miscStats?.attackSpeedBuff).toBe(0.3);
+    expect(helminth.miscStats?.armorBuff).toBe(0.5);
+    expect(getVerifiedMiscScaling("valkyr_prime", "Warcry", "armorBuff")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Nidus Larva 12m/Helminth 8m; Ravenous 20 HPS; Parasitic Link stack cost", () => {
+    expect(getVerifiedMiscScaling("nidus", "Larva", "mutationStackChance")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("nidus", "Ravenous", "healthRegen")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("nidus", "Parasitic Link", "damageBuff")).toEqual({
+      scale: "strength",
+    });
+    const nidus = allWarframes.find((w) => w.id === "nidus")!;
+    const virulence = nidus.abilities.find((a) => a.name === "Virulence")!;
+    expect(virulence.damage).toBe(200);
+    expect(virulence.range).toBe(16);
+    expect(virulence.damageType).toBe("Puncture");
+    expect(virulence.miscStats).toMatchObject({ energyRefundPerHit: 10, width: 4 });
+    const larva = nidus.abilities.find((a) => a.name === "Larva")!;
+    expect(larva.range).toBe(12);
+    expect(larva.duration).toBe(7);
+    expect(larva.miscStats?.mutationStackChance).toBe(0.5);
+    const link = nidus.abilities.find((a) => a.name === "Parasitic Link")!;
+    expect(link.energyCost).toBe(0);
+    expect(link.miscStats?.mutationStackCost).toBe(1);
+    expect(link.range).toBe(40);
+    expect(link.miscStats?.enemyLinkRange).toBe(20);
+    const ravenous = nidus.abilities.find((a) => a.name === "Ravenous")!;
+    expect(ravenous.damage).toBe(150);
+    expect(ravenous.range).toBe(8);
+    expect(ravenous.miscStats).toMatchObject({ healthRegen: 20, maggots: 9, explosionRadius: 4 });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_nidus")!;
+    expect(helminth.range).toBe(8);
+    expect(helminth.duration).toBe(7);
+    expect(getVerifiedMiscScaling("nidus_prime", "Larva", "mutationStackChance")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+  });
+
+  it("Rhino Charge 12m/2m; Iron Skin 1200/2.5×; Stomp 97.5% slow; Helminth Roar 30%", () => {
+    expect(getVerifiedMiscScaling("rhino", "Iron Skin", "armorMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("rhino", "Roar", "damageBuff")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("helminth", "Roar", "damageBuff")).toEqual({
+      scale: "strength",
+    });
+    const rhino = allWarframes.find((w) => w.id === "rhino")!;
+    const charge = rhino.abilities.find((a) => a.name === "Rhino Charge")!;
+    expect(charge.damage).toBe(650);
+    expect(charge.range).toBe(12);
+    expect(charge.radius).toBe(2);
+    expect(charge.duration).toBe(1);
+    expect(charge.miscStats?.dashSpeed).toBe(48);
+    const skin = rhino.abilities.find((a) => a.name === "Iron Skin")!;
+    expect(skin.armor).toBe(1200);
+    expect(skin.range).toBeUndefined();
+    expect(skin.miscStats).toMatchObject({ armorMultiplier: 2.5, invulnerabilityDuration: 3 });
+    const roar = rhino.abilities.find((a) => a.name === "Roar")!;
+    expect(roar.damageBuff).toBe(0.5);
+    expect(roar.range).toBe(25);
+    expect(roar.duration).toBe(30);
+    const stomp = rhino.abilities.find((a) => a.name === "Rhino Stomp")!;
+    expect(stomp.damage).toBe(800);
+    expect(stomp.miscStats?.slowPercent).toBe(0.975);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_rhino")!;
+    expect(helminth.damageBuff).toBe(0.3);
+    expect(helminth.range).toBe(25);
+    expect(getVerifiedMiscScaling("rhino_prime", "Iron Skin", "armorMultiplier")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Mirage Hall clones×STR; Eclipse 25s/drCap 90%; Prism 12s/20 lasers; Helminth Eclipse 25s", () => {
+    expect(getVerifiedMiscScaling("mirage", "Hall Of Mirrors", "cloneMeleeDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mirage", "Hall Of Mirrors", "hologramCount")).toBeNull();
+    expect(getVerifiedMiscScaling("mirage", "Sleight Of Hand", "jewelCharmRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("mirage", "Prism", "blindDuration")).toEqual({
+      scale: "duration",
+    });
+    const mirage = allWarframes.find((w) => w.id === "mirage")!;
+    const hall = mirage.abilities.find((a) => a.name === "Hall Of Mirrors")!;
+    expect(hall.duration).toBe(25);
+    expect(hall.range).toBeUndefined();
+    expect(hall.miscStats).toMatchObject({ hologramCount: 4, cloneRangedDamage: 0.4 });
+    const sleight = mirage.abilities.find((a) => a.name === "Sleight Of Hand")!;
+    expect(sleight.damage).toBe(200);
+    expect(sleight.range).toBe(40);
+    expect(sleight.duration).toBe(18);
+    const eclipse = mirage.abilities.find((a) => a.name === "Eclipse")!;
+    expect(eclipse.duration).toBe(25);
+    expect(eclipse.damageBuff).toBe(2);
+    expect(eclipse.damageReduction).toBe(0.75);
+    expect(eclipse.miscStats?.drCap).toBe(0.9);
+    expect(eclipse.range).toBeUndefined();
+    const prism = mirage.abilities.find((a) => a.name === "Prism")!;
+    expect(prism.damage).toBe(250);
+    expect(prism.duration).toBe(12);
+    expect(prism.range).toBe(30);
+    expect(prism.radius).toBe(25);
+    expect(prism.miscStats).toMatchObject({ energyDrain: 10, laserCount: 20, blindDuration: 15 });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_mirage")!;
+    expect(helminth.duration).toBe(25);
+    expect(helminth.damageBuff).toBe(0.3);
+    expect(helminth.energyCost).toBe(50);
+    expect(getVerifiedMiscScaling("mirage_prime", "Hall Of Mirrors", "cloneRangedDamage")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Mesa Ballistic Battery store×STR; Peacemaker bonuses; Shatter DR cap 95%", () => {
+    expect(getVerifiedMiscScaling("mesa", "Ballistic Battery", "damagePercentage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mesa", "Ballistic Battery", "maxStoredDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mesa", "Peacemaker", "damageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("mesa", "Peacemaker", "rampUpDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedFieldScaling("mesa", "Shatter Shield", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedFieldScaling("mesa", "Shooting Gallery", "damageBuff")).toEqual({
+      scale: "strength",
+    });
+    const mesa = allWarframes.find((w) => w.id === "mesa")!;
+    const battery = mesa.abilities.find((a) => a.name === "Ballistic Battery")!;
+    expect(battery.range).toBeUndefined();
+    expect(battery.miscStats).toMatchObject({
+      damagePercentage: 0.7,
+      maxDamagePerInstance: 140,
+      maxStoredDamage: 5000,
+    });
+    const gallery = mesa.abilities.find((a) => a.name === "Shooting Gallery")!;
+    expect(gallery.damageBuff).toBe(0.25);
+    expect(gallery.range).toBe(16);
+    expect(gallery.duration).toBe(30);
+    const peace = mesa.abilities.find((a) => a.name === "Peacemaker")!;
+    expect(peace.damage).toBe(50);
+    expect(peace.range).toBeUndefined();
+    expect(peace.miscStats).toMatchObject({
+      energyDrain: 15,
+      damageBonus: 1.5,
+      maxShootingDistance: 50,
+      minFov: 15,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_mesa")!;
+    expect(helminth.damageBuff).toBe(0.25);
+    expect(helminth.range).toBe(16);
+    expect(getVerifiedMiscScaling("mesa_prime", "Ballistic Battery", "maxStoredDamage")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Nyx Psychic Bolts strip; Absorb min radius/duration; Helminth Mind Control 60s", () => {
+    expect(getVerifiedMiscScaling("nyx", "Psychic Bolts", "defenseStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("nyx", "Psychic Bolts", "infestedSlow")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("nyx", "Psychic Bolts", "boltCount")).toBeNull();
+    expect(getVerifiedMiscScaling("nyx", "Absorb", "absorbDuration")).toEqual({
+      scale: "duration",
+    });
+    const nyx = allWarframes.find((w) => w.id === "nyx")!;
+    const mind = nyx.abilities.find((a) => a.name === "Mind Control")!;
+    expect(mind.range).toBe(60);
+    expect(mind.duration).toBe(60);
+    expect(mind.miscStats).toMatchObject({ initialDamageBonus: 7.5, maxTargets: 1 });
+    const bolts = nyx.abilities.find((a) => a.name === "Psychic Bolts")!;
+    expect(bolts.range).toBeUndefined();
+    expect(bolts.duration).toBe(11);
+    expect(bolts.miscStats).toMatchObject({
+      boltCount: 6,
+      defenseStrip: 0.8,
+      targetingRange: 60,
+      armorSteal: 25,
+    });
+    const chaos = nyx.abilities.find((a) => a.name === "Chaos")!;
+    expect(chaos.range).toBe(25);
+    expect(chaos.duration).toBe(25);
+    expect(chaos.miscStats).toMatchObject({ radiationStacks: 10 });
+    const absorb = nyx.abilities.find((a) => a.name === "Absorb")!;
+    expect(absorb.damage).toBe(1500);
+    expect(absorb.range).toBe(15);
+    expect(absorb.duration).toBe(8);
+    expect(absorb.miscStats).toMatchObject({
+      absorbDuration: 5,
+      maxRadius: 50,
+      weaponDamageCap: 4,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_nyx")!;
+    expect(helminth.duration).toBe(60);
+    expect(helminth.range).toBe(60);
+    expect(getVerifiedMiscScaling("nyx_prime", "Psychic Bolts", "defenseStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+  });
+
+  it("Zephyr Tail Wind dive bomb; Turbulence 6m/20s; Tornado 640 DPS; Helminth Airburst", () => {
+    expect(getVerifiedMiscScaling("zephyr", "Tail Wind", "diveBombDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("zephyr", "Tornado", "tickDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("zephyr", "Airburst", "damageGrowthPerEnemy")).toBeNull();
+    const zephyr = allWarframes.find((w) => w.id === "zephyr")!;
+    const dash = zephyr.abilities.find((a) => a.name === "Tail Wind")!;
+    expect(dash.damage).toBe(750);
+    expect(dash.range).toBe(2);
+    expect(dash.radius).toBe(7);
+    expect(dash.miscStats).toMatchObject({ diveBombDamage: 4500, airSpeed: 30, energyDrain: 5 });
+    const burst = zephyr.abilities.find((a) => a.name === "Airburst")!;
+    expect(burst.damage).toBe(500);
+    expect(burst.range).toBe(8);
+    expect(burst.miscStats).toMatchObject({ damageGrowthPerEnemy: 0.35, statusChance: 0.5 });
+    const turb = zephyr.abilities.find((a) => a.name === "Turbulence")!;
+    expect(turb.range).toBe(6);
+    expect(turb.duration).toBe(20);
+    const tornado = zephyr.abilities.find((a) => a.name === "Tornado")!;
+    expect(tornado.damagePerSecond).toBe(640);
+    expect(tornado.range).toBe(25);
+    expect(tornado.duration).toBe(20);
+    expect(tornado.miscStats).toMatchObject({ tickDamage: 160, tornadoCount: 3, pullRadius: 10 });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_zephyr")!;
+    expect(helminth.energyCost).toBe(50);
+    expect(helminth.damage).toBe(500);
+    expect(helminth.range).toBe(8);
+    expect(getVerifiedMiscScaling("zephyr_prime", "Tail Wind", "diveBombDamage")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Wisp Reservoirs STR motes; Breach Surge multiplier; Sol Gate DPS; Helminth range 18", () => {
+    expect(getVerifiedMiscScaling("wisp", "Reservoirs", "vitalityHealth")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Reservoirs", "hasteFireRate")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Reservoirs", "shockRange")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Reservoirs", "maxReservoirs")).toBeNull();
+    expect(getVerifiedMiscScaling("wisp", "Breach Surge", "sparkDamageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Breach Surge", "radiationStatusChance")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Breach Surge", "sparkSeekRange")).toBeNull();
+    expect(getVerifiedMiscScaling("helminth", "Breach Surge", "sparkDamageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    const wisp = allWarframes.find((w) => w.id === "wisp")!;
+    const reservoirs = wisp.abilities.find((a) => a.name === "Reservoirs")!;
+    expect(reservoirs.range).toBe(5);
+    expect(reservoirs.duration).toBe(30);
+    expect(reservoirs.miscStats).toMatchObject({
+      vitalityHealth: 300,
+      vitalityHealPerSecond: 30,
+      hasteFireRate: 0.3,
+      shockDamage: 10,
+      shockRange: 15,
+      maxReservoirs: 6,
+    });
+    const wil = wisp.abilities.find((a) => a.name === "Wil-O-Wisp")!;
+    expect(wil.range).toBeUndefined();
+    expect(wil.duration).toBe(4);
+    expect(wil.miscStats).toMatchObject({ teleportInvulnerability: 3 });
+    const surge = wisp.abilities.find((a) => a.name === "Breach Surge")!;
+    expect(surge.damage).toBeUndefined();
+    expect(surge.range).toBe(18);
+    expect(surge.miscStats?.sparkDamageMultiplier).toBe(2);
+    const gate = wisp.abilities.find((a) => a.name === "Sol Gate")!;
+    expect(gate.damagePerSecond).toBe(1500);
+    expect(gate.miscStats).toMatchObject({ energyDrain: 12, boostedDamagePerSecond: 3000 });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_wisp")!;
+    expect(helminth.range).toBe(18);
+    expect(helminth.duration).toBe(16);
+    expect(helminth.miscStats?.sparkDamageMultiplier).toBe(2);
+    expect(getVerifiedMiscScaling("wisp_prime", "Reservoirs", "vitalityHealth")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Excalibur Slash Dash chain×RNG; Exalted Blade drain/blind; Helminth Blind", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const prime = allWarframes.find((w) => w.id === "excalibur_prime")!;
+    const umbra = allWarframes.find((w) => w.id === "excalibur_umbra")!;
+    const dash = excal.abilities.find((a) => a.name === "Slash Dash")!;
+    expect(dash.damage).toBeUndefined();
+    expect(dash.range).toBe(20);
+    expect(dash.chainRange).toBe(7);
+    const blade = excal.abilities.find((a) => a.name === "Exalted Blade")!;
+    expect(blade.damage).toBe(250);
+    expect(blade.range).toBe(5);
+    expect(blade.duration).toBe(6);
+    expect(blade.miscStats).toMatchObject({
+      energyDrain: 2.5,
+      meleeRange: 2.5,
+      waveRange: 70,
+      waveSpeed: 30,
+      slideEnergyCost: 25,
+    });
+    const javelin = excal.abilities.find((a) => a.name === "Radial Javelin")!;
+    expect(javelin.damage).toBe(1000);
+    expect(javelin.range).toBe(25);
+    expect(prime.abilities.find((a) => a.name === "Slash Dash")!.chainRange).toBe(7);
+    const howl = umbra.abilities.find((a) => a.name === "Radial Howl")!;
+    expect(howl.range).toBe(25);
+    expect(howl.duration).toBe(15);
+    expect(howl.damage).toBeUndefined();
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_excalibur")!;
+    expect(helminth.name).toBe("Radial Blind");
+    expect(helminth.range).toBe(25);
+    expect(helminth.duration).toBe(15);
+    expect(helminth.energyCost).toBe(50);
+  });
+
+  it("Jade Judgment 500/8% HPS; Symphony 25%/100%; Glory 150/1500/35% DR; Helminth Eyes", () => {
+    expect(getVerifiedMiscScaling("jade", "Light's Judgment", "healthRegen")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("jade", "Symphony Of Mercy", "strengthBonus")).toEqual({
+      scale: "strength",
+      cap: 1.5,
+    });
+    expect(getVerifiedFieldScaling("jade", "Glory On High", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedMiscScaling("helminth", "Ophanim Eyes", "armorStripPerSecond")).toEqual({
+      scale: "strength",
+    });
+    const jade = allWarframes.find((w) => w.id === "jade")!;
+    const judgment = jade.abilities.find((a) => a.name === "Light's Judgment")!;
+    expect(judgment.damage).toBe(500);
+    expect(judgment.radius).toBe(6);
+    expect(judgment.miscStats?.healthRegen).toBe(0.08);
+    const symphony = jade.abilities.find((a) => a.name === "Symphony Of Mercy")!;
+    expect(symphony.damageBuff).toBe(1);
+    expect(symphony.miscStats?.strengthBonus).toBe(0.25);
+    const eyes = jade.abilities.find((a) => a.name === "Ophanim Eyes")!;
+    expect(eyes.range).toBe(20);
+    expect(eyes.miscStats?.armorStripPerSecond).toBe(0.1);
+    const glory = jade.abilities.find((a) => a.name === "Glory On High")!;
+    expect(glory.damage).toBe(150);
+    expect(glory.aoeDamage).toBe(1500);
+    expect(glory.damageReduction).toBe(0.35);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_jade")!;
+    expect(helminth.name).toBe("Ophanim Eyes");
+    expect(helminth.range).toBe(20);
+  });
+
+  it("Styanax Axios 1250; Tharros 1000/50%; Rally 50 shields/kill; Final Stand 30 javelins", () => {
+    expect(getVerifiedMiscScaling("styanax", "Tharros Strike", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("styanax", "Rally Point", "shieldsPerKill")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("styanax", "Final Stand", "javelins")).toEqual({
+      scale: "duration",
+    });
+    const styanax = allWarframes.find((w) => w.id === "styanax")!;
+    const axios = styanax.abilities.find((a) => a.name === "Axios Javelin")!;
+    expect(axios.directDamage).toBe(1250);
+    expect(axios.aoeDamage).toBe(1250);
+    expect(axios.range).toBe(50);
+    expect(axios.radius).toBe(15);
+    const tharros = styanax.abilities.find((a) => a.name === "Tharros Strike")!;
+    expect(tharros.damage).toBe(1000);
+    expect(tharros.miscStats?.healthPerHit).toBe(100);
+    const rally = styanax.abilities.find((a) => a.name === "Rally Point")!;
+    expect(rally.range).toBe(30);
+    expect(rally.miscStats).toMatchObject({ energyRegen: 3, shieldsPerKill: 50 });
+    const stand = styanax.abilities.find((a) => a.name === "Final Stand")!;
+    expect(stand.directDamage).toBe(1500);
+    expect(stand.miscStats?.javelins).toBe(30);
+    expect(stand.duration).toBeUndefined();
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_styanax")!;
+    expect(helminth.name).toBe("Tharros Strike");
+    expect(helminth.miscStats?.armorStrip).toBe(0.5);
+    expect(getVerifiedMiscScaling("styanax_prime", "Final Stand", "javelins")).toEqual({
+      scale: "duration",
+    });
+  });
+
+  it("Temple Pyro 1000/25m/20m; Overdrive 750/25% crit; Wail 75% Heat/50e; Solo 75e/1.25×", () => {
+    expect(getVerifiedMiscScaling("temple", "Overdrive", "criticalChanceVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("temple", "Ripper's Wail", "heatDamageBonus")).toEqual({
+      scale: "strength",
+      cap: 7.5,
+    });
+    const temple = allWarframes.find((w) => w.id === "temple")!;
+    const pyro = temple.abilities.find((a) => a.name === "Pyrotechnics")!;
+    expect(pyro.damage).toBe(1000);
+    expect(pyro.range).toBe(25);
+    expect(pyro.radius).toBe(20);
+    expect(pyro.miscStats?.pillars).toBe(5);
+    const overdrive = temple.abilities.find((a) => a.name === "Overdrive")!;
+    expect(overdrive.damage).toBe(750);
+    expect(overdrive.range).toBe(20);
+    expect(overdrive.miscStats?.criticalChanceVulnerability).toBe(0.25);
+    const wail = temple.abilities.find((a) => a.name === "Ripper's Wail")!;
+    expect(wail.energyCost).toBe(50);
+    expect(wail.duration).toBe(30);
+    expect(wail.miscStats?.heatDamageBonus).toBe(0.75);
+    const solo = temple.abilities.find((a) => a.name === "Exalted Solo")!;
+    expect(solo.energyCost).toBe(75);
+    expect(solo.miscStats?.damageMultiplier).toBe(1.25);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_temple")!;
+    expect(helminth.name).toBe("Pyrotechnics");
+    expect(helminth.damage).toBe(1000);
+    expect(helminth.radius).toBe(20);
+  });
+
+  it("Koumei Kumihimo 25×dice/30m/12s; Omamori 75e heal×STR; Bunraku 500 Puncture/20s; Helminth Omamori 10–20", () => {
+    expect(getVerifiedMiscScaling("koumei", "Kumihimo", "threads")).toEqual({ scale: "range" });
+    expect(getVerifiedMiscScaling("koumei", "Omamori", "healMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Omamori", "healMultiplier")).toEqual({
+      scale: "strength",
+    });
+    const koumei = allWarframes.find((w) => w.id === "koumei")!;
+    const kumi = koumei.abilities.find((a) => a.name === "Kumihimo")!;
+    expect(kumi.damage).toBe(25);
+    expect(kumi.range).toBe(30);
+    expect(kumi.duration).toBe(12);
+    expect(kumi.miscStats?.threads).toBe(15);
+    const omikuji = koumei.abilities.find((a) => a.name === "Omikuji")!;
+    expect(omikuji.range).toBeUndefined();
+    expect(omikuji.miscStats?.rareDecreeChance).toBe(0.15);
+    const omamori = koumei.abilities.find((a) => a.name === "Omamori")!;
+    expect(omamori.energyCost).toBe(75);
+    expect(omamori.duration).toBeUndefined();
+    expect(omamori.miscStats?.healMultiplier).toBe(1);
+    const bunraku = koumei.abilities.find((a) => a.name === "Bunraku")!;
+    expect(bunraku.damage).toBe(500);
+    expect(bunraku.damageType).toBe("Puncture");
+    expect(bunraku.duration).toBe(20);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_koumei")!;
+    expect(helminth.energyCost).toBe(75);
+    expect(helminth.miscStats).toMatchObject({ minCharms: 10, maxCharms: 20 });
+  });
+
+  it("Voidrig Necraweb 2000 Blast; Storm Shroud 1200 HP/2× absorb; Gravemines 200×24; Guard 50e/5eps", () => {
+    expect(getVerifiedMiscScaling("voidrig", "Storm Shroud", "shroudHealth")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("voidrig", "Gravemines", "charges")).toEqual({
+      scale: "duration",
+    });
+    const voidrig = allWarframes.find((w) => w.id === "voidrig")!;
+    const necraweb = voidrig.abilities.find((a) => a.name === "Necraweb")!;
+    expect(necraweb.damage).toBe(2000);
+    expect(necraweb.radius).toBe(25);
+    expect(necraweb.miscStats?.slow).toBe(0.5);
+    const shroud = voidrig.abilities.find((a) => a.name === "Storm Shroud")!;
+    expect(shroud.energyCost).toBe(50);
+    expect(shroud.miscStats).toMatchObject({ shroudHealth: 1200, absorptionMultiplier: 2 });
+    const mines = voidrig.abilities.find((a) => a.name === "Gravemines")!;
+    expect(mines.energyCost).toBe(75);
+    expect(mines.damage).toBe(200);
+    expect(mines.miscStats?.charges).toBe(24);
+    const guard = voidrig.abilities.find((a) => a.name === "Guard Mode")!;
+    expect(guard.energyCost).toBe(50);
+    expect(guard.damage).toBe(500);
+    expect(guard.miscStats?.energyDrain).toBe(5);
+  });
+
+  it("Bonewidow Meathook %HP; Maiden 2000 HP/2× reflect; Firing Line 25m/1.5× vuln; Ironbride 1500/2.5eps", () => {
+    expect(getVerifiedMiscScaling("bonewidow", "Meathook", "healthDrainPerSecond")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "shieldHealth")).toEqual({
+      scale: "strength",
+    });
+    const bonewidow = allWarframes.find((w) => w.id === "bonewidow")!;
+    const hook = bonewidow.abilities.find((a) => a.name === "Meathook")!;
+    expect(hook.damage).toBeUndefined();
+    expect(hook.radius).toBe(17);
+    expect(hook.miscStats).toMatchObject({
+      healthDrainPerSecond: 0.2,
+      lifesteal: 0.4,
+      explosionHealthPercent: 0.5,
+    });
+    const maiden = bonewidow.abilities.find((a) => a.name === "Shield Maiden")!;
+    expect(maiden.energyCost).toBe(25);
+    expect(maiden.miscStats).toMatchObject({ shieldHealth: 2000, reflectMultiplier: 2 });
+    const line = bonewidow.abilities.find((a) => a.name === "Firing Line")!;
+    expect(line.energyCost).toBe(50);
+    expect(line.damage).toBeUndefined();
+    expect(line.range).toBe(25);
+    expect(line.miscStats?.damageVulnerability).toBe(0.5);
+    const iron = bonewidow.abilities.find((a) => a.name === "Exalted Ironbride")!;
+    expect(iron.energyCost).toBe(50);
+    expect(iron.damage).toBe(1500);
+    expect(iron.miscStats?.energyDrain).toBe(2.5);
+  });
+
+  it("Helminth Infested Mobility 60%/30%; Energized Munitions 75% ammo/5s; Empower +50% STR", () => {
+    expect(getVerifiedMiscScaling("helminth", "Infested Mobility", "sprintSpeedBonus")).toEqual({
+      scale: "strength",
+    });
+    const mobility = allHelminthAbilities.find((h) => h.id === "helminth_infested_mobility")!;
+    expect(mobility.duration).toBe(8);
+    expect(mobility.miscStats).toMatchObject({
+      sprintSpeedBonus: 0.6,
+      parkourVelocityBonus: 0.3,
+    });
+    const munitions = allHelminthAbilities.find((h) => h.id === "helminth_energized_munitions")!;
+    expect(munitions.duration).toBe(5);
+    expect(munitions.miscStats?.ammoEfficiency).toBe(0.75);
+    const empower = allHelminthAbilities.find((h) => h.id === "helminth_empower")!;
+    expect(empower.miscStats?.strengthBonus).toBe(0.5);
+    const marked = allHelminthAbilities.find((h) => h.id === "helminth_marked_for_death")!;
+    expect(marked.miscStats?.damageSpread).toBe(0.75);
+  });
+
+  it("Nokko Stinkbrain 250 Viral/5m/25s; Brightbonnet +30% STR/15e; Sporespring 2500 Toxin/75e; Helminth 20%/10e", () => {
+    expect(getVerifiedMiscScaling("nokko", "Brightbonnet", "strengthBonus")).toEqual({
+      scale: "strength",
+      cap: 1.5,
+    });
+    expect(getVerifiedMiscScaling("helminth", "Brightbonnet", "strengthBonus")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("nokko", "Reroot", "healthShieldPerSecond")).toEqual({
+      scale: "strength",
+    });
+    const nokko = allWarframes.find((w) => w.id === "nokko")!;
+    const stink = nokko.abilities.find((a) => a.name === "Stinkbrain")!;
+    expect(stink.damage).toBe(250);
+    expect(stink.duration).toBe(25);
+    expect(stink.radius).toBe(5);
+    expect(stink.miscStats?.maxMushrooms).toBe(4);
+    const bright = nokko.abilities.find((a) => a.name === "Brightbonnet")!;
+    expect(bright.duration).toBe(25);
+    expect(bright.radius).toBe(15);
+    expect(bright.miscStats).toMatchObject({
+      energyRestore: 15,
+      strengthBonus: 0.3,
+      strengthBonusCap: 1.5,
+    });
+    const reroot = nokko.abilities.find((a) => a.name === "Reroot")!;
+    expect(reroot.energyCost).toBe(50);
+    expect(reroot.duration).toBe(10);
+    expect(reroot.miscStats).toMatchObject({ healthShieldPerSecond: 10, pickupHeal: 80 });
+    const spore = nokko.abilities.find((a) => a.name === "Sporespring")!;
+    expect(spore.energyCost).toBe(75);
+    expect(spore.damage).toBe(2500);
+    expect(spore.damageType).toBe("Toxin");
+    expect(spore.radius).toBe(3);
+    expect(spore.miscStats?.bounces).toBe(10);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_nokko")!;
+    expect(helminth.miscStats).toMatchObject({
+      energyRestore: 10,
+      strengthBonus: 0.2,
+      strengthBonusCap: 1,
+    });
+  });
+
+  it("Sirius Coronal 1500; Gravitic 2000/50% strip; Stars 500/35s/7; Clash 10k/26m; Helminth Stars", () => {
+    expect(getVerifiedMiscScaling("sirius_orion", "Gravitic Slash", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedFieldScaling("sirius_orion", "Light's Sanctuary", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    const sirius = allWarframes.find((w) => w.id === "sirius_orion")!;
+    expect(sirius.abilities.find((a) => a.name === "Coronal Ejection")!.damage).toBe(1500);
+    const gravitic = sirius.abilities.find((a) => a.name === "Gravitic Slash")!;
+    expect(gravitic.damage).toBe(2000);
+    expect(gravitic.radius).toBe(8);
+    expect(gravitic.miscStats?.armorStrip).toBe(0.5);
+    const stars = sirius.abilities.find((a) => a.name === "Jade Stars")!;
+    expect(stars.damage).toBe(500);
+    expect(stars.duration).toBe(35);
+    expect(stars.miscStats?.motes).toBe(7);
+    const sanctuary = sirius.abilities.find((a) => a.name === "Light's Sanctuary")!;
+    expect(sanctuary.duration).toBe(30);
+    expect(sanctuary.damageReduction).toBe(0.45);
+    expect(sanctuary.miscStats?.maxHealthRegen).toBe(55);
+    const shell = sirius.abilities.find((a) => a.name === "Astral Shell")!;
+    expect(shell.duration).toBe(35);
+    expect(shell.miscStats?.decoyDamage).toBe(200);
+    const horizon = sirius.abilities.find((a) => a.name === "Event Horizon")!;
+    expect(horizon.radius).toBe(8);
+    expect(horizon.miscStats?.explosionRadius).toBe(12);
+    const clash = sirius.abilities.find((a) => a.name === "Celestial Clash")!;
+    expect(clash.damage).toBe(10000);
+    expect(clash.radius).toBe(26);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_sirius_orion")!;
+    expect(helminth.name).toBe("Jade Stars");
+    expect(helminth.damage).toBe(500);
+    expect(helminth.duration).toBe(35);
+  });
+
+  it("Uriel Infernalis 1500/250 DPS; Remedium 50% heal; Demonium 250/50% vuln; Brimstone 1500; Helminth Remedium 35%", () => {
+    expect(getVerifiedMiscScaling("uriel", "Infernalis", "catenachSlow")).toEqual({
+      scale: "strength",
+      cap: 0.95,
+    });
+    expect(getVerifiedMiscScaling("uriel", "Remedium", "healthRestore")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Remedium", "healthRestore")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("uriel", "Demonium", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    const uriel = allWarframes.find((w) => w.id === "uriel")!;
+    const infernalis = uriel.abilities.find((a) => a.name === "Infernalis")!;
+    expect(infernalis.damage).toBe(1500);
+    expect(infernalis.damagePerSecond).toBe(250);
+    expect(infernalis.duration).toBe(35);
+    expect(infernalis.radius).toBe(2);
+    const remedium = uriel.abilities.find((a) => a.name === "Remedium")!;
+    expect(remedium.energyCost).toBe(50);
+    expect(remedium.miscStats?.healthRestore).toBe(0.5);
+    const demonium = uriel.abilities.find((a) => a.name === "Demonium")!;
+    expect(demonium.energyCost).toBe(75);
+    expect(demonium.damage).toBe(250);
+    expect(demonium.miscStats?.damageVulnerability).toBe(0.5);
+    const brimstone = uriel.abilities.find((a) => a.name === "Brimstone")!;
+    expect(brimstone.energyCost).toBe(75);
+    expect(brimstone.damage).toBe(1500);
+    expect(brimstone.radius).toBe(15);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_uriel")!;
+    expect(helminth.name).toBe("Remedium");
+    expect(helminth.miscStats?.healthRestore).toBe(0.35);
+  });
+
+  it("Follie Perspective 750/5m/3.5s invuln; Portrait 50% DR/cap 90%; Plein Air 25k/50% strip; Helminth DR cap 75%", () => {
+    expect(getVerifiedFieldScaling("follie", "Self Portrait", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedFieldScaling("helminth", "Self Portrait", "damageReduction")).toEqual({
+      scale: "strength",
+      useSiblingDrCap: true,
+    });
+    expect(getVerifiedMiscScaling("follie", "Plein Air", "defenseReduction")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("follie", "Plein Air", "splashRadius")).toEqual({
+      scale: "range",
+    });
+    const follie = allWarframes.find((w) => w.id === "follie")!;
+    const perspective = follie.abilities.find((a) => a.name === "Forced Perspective")!;
+    expect(perspective.damage).toBe(750);
+    expect(perspective.radius).toBe(5);
+    expect(perspective.duration).toBeUndefined();
+    expect(perspective.miscStats?.invulnerabilityDuration).toBe(3.5);
+    const portrait = follie.abilities.find((a) => a.name === "Self Portrait")!;
+    expect(portrait.damageReduction).toBe(0.5);
+    expect(portrait.radius).toBe(8);
+    expect(portrait.miscStats).toMatchObject({ drCap: 0.9, maxRadius: 20, maxDuration: 60 });
+    const plein = follie.abilities.find((a) => a.name === "Plein Air")!;
+    expect(plein.damage).toBe(25000);
+    expect(plein.miscStats?.defenseReduction).toBe(0.5);
+    expect(plein.miscStats?.minFallDamage).toBe(250);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_follie")!;
+    expect(helminth.damageReduction).toBe(0.5);
+    expect(helminth.miscStats?.drCap).toBe(0.75);
+    expect(helminth.radius).toBe(8);
+  });
+
+  it("Oraxia Kiss 4000/40m/200% orbs; Embrace 250/50% vuln/10m; Brood 750; Stride 2× HP; Helminth 6.67m", () => {
+    expect(getVerifiedMiscScaling("oraxia", "Mercy's Kiss", "healthOrbChance")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("oraxia", "Webbed Embrace", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Webbed Embrace", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("oraxia", "Silken Stride", "healthMultiplier")).toEqual({
+      scale: "strength",
+    });
+    const oraxia = allWarframes.find((w) => w.id === "oraxia")!;
+    const kiss = oraxia.abilities.find((a) => a.name === "Mercy's Kiss")!;
+    expect(kiss.damage).toBe(4000);
+    expect(kiss.range).toBe(40);
+    expect(kiss.miscStats?.healthOrbChance).toBe(2);
+    const embrace = oraxia.abilities.find((a) => a.name === "Webbed Embrace")!;
+    expect(embrace.energyCost).toBe(50);
+    expect(embrace.damage).toBe(250);
+    expect(embrace.radius).toBe(10);
+    expect(embrace.miscStats?.damageVulnerability).toBe(0.5);
+    const brood = oraxia.abilities.find((a) => a.name === "Widow's Brood")!;
+    expect(brood.damage).toBe(750);
+    expect(brood.range).toBe(25);
+    expect(brood.miscStats?.scuttlerDuration).toBe(45);
+    const stride = oraxia.abilities.find((a) => a.name === "Silken Stride")!;
+    expect(stride.miscStats).toMatchObject({
+      healthMultiplier: 2,
+      toxinWeaponDamage: 0.4,
+      energyDrain: 5,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_oraxia")!;
+    expect(helminth.radius).toBe(6.67);
+    expect(helminth.duration).toBe(25);
+    expect(helminth.damage).toBe(250);
+  });
+
+  it("Cyte Seek 60m/75% WP; Evade 75e/10s/cap 30; Helminth Evade cap 25 (was Resupply)", () => {
+    expect(getVerifiedMiscScaling("cyte_09", "Seek", "weakPointDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("cyte_09", "Resupply", "weaponDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("cyte_09", "Evade", "healthRestore")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Evade", "healthRestore")).toEqual({
+      scale: "strength",
+    });
+    const cyte = allWarframes.find((w) => w.id === "cyte_09")!;
+    const seek = cyte.abilities.find((a) => a.name === "Seek")!;
+    expect(seek.range).toBe(60);
+    expect(seek.duration).toBe(35);
+    expect(seek.miscStats?.weakPointDamageBonus).toBe(0.75);
+    const resupply = cyte.abilities.find((a) => a.name === "Resupply")!;
+    expect(resupply.range).toBeUndefined();
+    expect(resupply.miscStats).toMatchObject({
+      weaponDamageBonus: 0.25,
+      sniperDamageBonus: 0.5,
+    });
+    const evade = cyte.abilities.find((a) => a.name === "Evade")!;
+    expect(evade.energyCost).toBe(75);
+    expect(evade.duration).toBe(10);
+    expect(evade.miscStats).toMatchObject({ durationCap: 30, healthRestore: 100 });
+    const neutralize = cyte.abilities.find((a) => a.name === "Neutralize")!;
+    expect(neutralize.energyCost).toBe(5);
+    expect(neutralize.miscStats?.damageMultiplier).toBe(1.25);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_cyte_09")!;
+    expect(helminth.name).toBe("Evade");
+    expect(helminth.energyCost).toBe(75);
+    expect(helminth.miscStats?.durationCap).toBe(25);
+  });
+
+  it("Ember Fireball 800/300; Inferno 2500/700 DPS/15s; Helminth Fire Blast 25m", () => {
+    expect(getVerifiedMiscScaling("ember", "Immolation", "initialDamageReduction")).toEqual({
+      scale: "strength",
+      cap: 0.5,
+    });
+    expect(getVerifiedMiscScaling("ember", "Fire Blast", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("helminth", "Fire Blast", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    const ember = allWarframes.find((w) => w.id === "ember")!;
+    const fireball = ember.abilities.find((a) => a.name === "Fireball")!;
+    expect(fireball.damage).toBe(800);
+    expect(fireball.radius).toBe(3);
+    expect(fireball.miscStats?.areaDamage).toBe(300);
+    const inferno = ember.abilities.find((a) => a.name === "Inferno")!;
+    expect(inferno.energyCost).toBe(0);
+    expect(inferno.damage).toBe(2500);
+    expect(inferno.damagePerSecond).toBe(700);
+    expect(inferno.duration).toBe(15);
+    expect(inferno.range).toBe(25);
+    expect(inferno.miscStats).toMatchObject({
+      ringRadius: 8,
+      energyPerEnemy: 10,
+      maxEnergyTargets: 10,
+    });
+    const blast = ember.abilities.find((a) => a.name === "Fire Blast")!;
+    expect(blast.damage).toBe(200);
+    expect(blast.range).toBe(25);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_ember")!;
+    expect(helminth.range).toBe(25);
+    expect(helminth.miscStats?.armorStrip).toBe(1);
+    expect(getVerifiedFieldScaling("ember_prime", "Immolation", "damageReduction")).toEqual({
+      scale: "strength",
+      cap: 0.9,
+    });
+  });
+
+  it("Citrine Fractured Helminth 250/25%/10%; Shell Affinity-fixed; Crystallize Impact/300% crit", () => {
+    expect(getVerifiedMiscScaling("citrine", "Fractured Blast", "healthOrbChance")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Fractured Blast", "healthOrbChance")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("citrine", "Preserving Shell", "drPerKill")).toEqual({
+      scale: "strength",
+    });
+    const citrine = allWarframes.find((w) => w.id === "citrine")!;
+    const blast = citrine.abilities.find((a) => a.name === "Fractured Blast")!;
+    expect(blast.damage).toBe(500);
+    expect(blast.range).toBe(14);
+    expect(blast.miscStats).toMatchObject({ healthOrbChance: 0.5, energyOrbChance: 0.2 });
+    const shell = citrine.abilities.find((a) => a.name === "Preserving Shell")!;
+    expect(shell.range).toBeUndefined();
+    expect(shell.damageReduction).toBe(0.4);
+    expect(shell.miscStats?.staggerRadius).toBe(8);
+    const gem = citrine.abilities.find((a) => a.name === "Prismatic Gem")!;
+    expect(gem.damage).toBe(1000);
+    expect(gem.range).toBe(15);
+    const crystal = citrine.abilities.find((a) => a.name === "Crystallize")!;
+    expect(crystal.damageType).toBe("Impact");
+    expect(crystal.miscStats?.absoluteCritChance).toBe(3);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_citrine")!;
+    expect(helminth.name).toBe("Fractured Blast");
+    expect(helminth.damage).toBe(250);
+    expect(helminth.miscStats).toMatchObject({ healthOrbChance: 0.25, energyOrbChance: 0.1 });
+  });
+
+  it("Vauban Tesla 150/6m/10 charges; Minelayer 25e; Photon 2500/7m/50e; Bastille 10%/s strip", () => {
+    expect(getVerifiedMiscScaling("vauban", "Tesla Nervos", "charges")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Tesla Nervos", "charges")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("vauban", "Minelayer", "weaponDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("vauban", "Bastille", "armorStripPerSecond")).toEqual({
+      scale: "strength",
+    });
+    const vauban = allWarframes.find((w) => w.id === "vauban")!;
+    const tesla = vauban.abilities.find((a) => a.name === "Tesla Nervos")!;
+    expect(tesla.damage).toBe(150);
+    expect(tesla.damagePerSecond).toBe(25);
+    expect(tesla.range).toBe(6);
+    expect(tesla.miscStats).toMatchObject({ charges: 10, maxDrones: 4 });
+    const mine = vauban.abilities.find((a) => a.name === "Minelayer")!;
+    expect(mine.energyCost).toBe(25);
+    expect(mine.damage).toBe(250);
+    expect(mine.range).toBe(20);
+    expect(mine.duration).toBe(25);
+    expect(mine.miscStats?.weaponDamageBonus).toBe(0.25);
+    const photon = vauban.abilities.find((a) => a.name === "Photon Strike")!;
+    expect(photon.energyCost).toBe(50);
+    expect(photon.damage).toBe(2500);
+    expect(photon.range).toBe(7);
+    expect(photon.damageType).toBe("Blast");
+    expect(photon.miscStats?.overguardDamageMultiplier).toBe(2);
+    const bastille = vauban.abilities.find((a) => a.name === "Bastille")!;
+    expect(bastille.range).toBe(10);
+    expect(bastille.duration).toBe(15);
+    expect(bastille.miscStats).toMatchObject({
+      armorStripPerSecond: 0.1,
+      armorCap: 1500,
+      vortexDamagePerSecond: 50,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_vauban")!;
+    expect(helminth.damage).toBe(150);
+    expect(helminth.range).toBe(6);
+    expect(helminth.miscStats?.charges).toBe(10);
+    expect(getVerifiedMiscScaling("vauban_prime", "Bastille", "vortexDamagePerSecond")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Chroma Ward element buffs; Vex 350%/275%; Effigy 8000 HP/10/s; Helminth Ward", () => {
+    expect(getVerifiedMiscScaling("chroma", "Elemental Ward", "heatHealthBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Elemental Ward", "coldArmorBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("chroma", "Vex Armor", "scornMax")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("chroma", "Vex Armor", "furyMax")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("chroma", "Effigy", "energyDrain")).toBeNull();
+    const chroma = allWarframes.find((w) => w.id === "chroma")!;
+    const scream = chroma.abilities.find((a) => a.name === "Spectral Scream")!;
+    expect(scream.damagePerSecond).toBe(400);
+    expect(scream.range).toBe(10);
+    expect(scream.miscStats?.energyDrain).toBe(3);
+    const ward = chroma.abilities.find((a) => a.name === "Elemental Ward")!;
+    expect(ward.duration).toBe(25);
+    expect(ward.miscStats).toMatchObject({
+      heatHealthBonus: 0.55,
+      heatDps: 100,
+      coldArmorBonus: 1.45,
+      electricReflectMult: 10,
+    });
+    const vex = chroma.abilities.find((a) => a.name === "Vex Armor")!;
+    expect(vex.range).toBe(18);
+    expect(vex.duration).toBe(25);
+    expect(vex.miscStats).toMatchObject({ scornMax: 3.5, furyMax: 2.75 });
+    const effigy = chroma.abilities.find((a) => a.name === "Effigy")!;
+    expect(effigy.health).toBe(8000);
+    expect(effigy.damagePerSecond).toBe(2000);
+    expect(effigy.miscStats).toMatchObject({
+      energyDrain: 10,
+      moveSpeedBonus: 0.2,
+      armorReduction: 0.5,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_chroma")!;
+    expect(helminth.name).toBe("Elemental Ward");
+    expect(helminth.duration).toBe(25);
+    expect(helminth.miscStats?.heatDps).toBe(100);
+    expect(getVerifiedMiscScaling("chroma_prime", "Vex Armor", "scornMax")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Yareli Sea Snares 250 DPS/12s; Merulina 7500; Aquablades 750/45s/75e; Helminth Aquablades", () => {
+    expect(getVerifiedMiscScaling("yareli", "Sea Snares", "damageVulnerability")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("yareli", "Merulina", "merulinaHealth")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("yareli", "Riptide", "burstDamage")).toEqual({
+      scale: "strength",
+    });
+    const yareli = allWarframes.find((w) => w.id === "yareli")!;
+    const snares = yareli.abilities.find((a) => a.name === "Sea Snares")!;
+    expect(snares.damagePerSecond).toBe(250);
+    expect(snares.duration).toBe(12);
+    expect(snares.miscStats?.damageVulnerability).toBe(1);
+    const merulina = yareli.abilities.find((a) => a.name === "Merulina")!;
+    expect(merulina.miscStats?.merulinaHealth).toBe(7500);
+    expect(merulina.miscStats?.damageRedirection).toBe(0.9);
+    const aqua = yareli.abilities.find((a) => a.name === "Aquablades")!;
+    expect(aqua.energyCost).toBe(75);
+    expect(aqua.damage).toBe(750);
+    expect(aqua.duration).toBe(45);
+    expect(aqua.miscStats?.bladeRadius).toBe(5);
+    const riptide = yareli.abilities.find((a) => a.name === "Riptide")!;
+    expect(riptide.range).toBe(40);
+    expect(riptide.miscStats?.burstDamage).toBe(2500);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_yareli")!;
+    expect(helminth.energyCost).toBe(75);
+    expect(helminth.damage).toBe(750);
+    expect(helminth.duration).toBe(45);
+    expect(getVerifiedMiscScaling("yareli_prime", "Merulina", "merulinaHealth")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Khora Whipclaw 150/10m; Ensnare 30m/10m spread; Strangledome 250/5m; Helminth Ensnare", () => {
+    expect(getVerifiedMiscScaling("khora", "Ensnare", "spreadRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Ensnare", "spreadRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("khora", "Venari", "snareDamage")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("khora", "Strangledome", "grabRadius")).toEqual({
+      scale: "range",
+    });
+    const khora = allWarframes.find((w) => w.id === "khora")!;
+    const whip = khora.abilities.find((a) => a.name === "Whipclaw")!;
+    expect(whip.damage).toBe(150);
+    expect(whip.range).toBe(10);
+    expect(whip.radius).toBe(5);
+    const ensnare = khora.abilities.find((a) => a.name === "Ensnare")!;
+    expect(ensnare.range).toBe(30);
+    expect(ensnare.duration).toBe(15);
+    expect(ensnare.miscStats?.spreadRadius).toBe(10);
+    const venari = khora.abilities.find((a) => a.name === "Venari")!;
+    expect(venari.miscStats).toMatchObject({
+      moveSpeedMultiplier: 1.15,
+      snareDamage: 350,
+      healthRegen: 50,
+    });
+    const dome = khora.abilities.find((a) => a.name === "Strangledome")!;
+    expect(dome.damage).toBe(250);
+    expect(dome.range).toBe(5);
+    expect(dome.miscStats?.grabRadius).toBe(10);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_khora")!;
+    expect(helminth.range).toBe(30);
+    expect(helminth.miscStats?.spreadRadius).toBe(10);
+    expect(getVerifiedMiscScaling("khora_prime", "Venari", "healthRegen")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Inaros Desiccation 150/8 DPS; Sandstorm 500 DPS; Scarab Shell 350 armor; Swarm 100e", () => {
+    expect(getVerifiedMiscScaling("inaros", "Sandstorm", "healthPerEnemy")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("inaros", "Scarab Shell", "armorBonus")).toEqual({
+      scale: "strength",
+    });
+    const inaros = allWarframes.find((w) => w.id === "inaros")!;
+    const desiccation = inaros.abilities.find((a) => a.name === "Desiccation")!;
+    expect(desiccation.damage).toBe(150);
+    expect(desiccation.damagePerSecond).toBe(8);
+    expect(desiccation.range).toBe(15);
+    expect(desiccation.duration).toBe(8);
+    expect(desiccation.miscStats?.lifesteal).toBe(0.25);
+    const sandstorm = inaros.abilities.find((a) => a.name === "Sandstorm")!;
+    expect(sandstorm.damagePerSecond).toBe(500);
+    expect(sandstorm.range).toBe(7.5);
+    expect(sandstorm.miscStats?.healthPerEnemy).toBe(50);
+    const shell = inaros.abilities.find((a) => a.name === "Scarab Shell")!;
+    expect(shell.energyCost).toBe(0);
+    expect(shell.miscStats?.armorBonus).toBe(350);
+    const swarm = inaros.abilities.find((a) => a.name === "Scarab Swarm")!;
+    expect(swarm.energyCost).toBe(100);
+    expect(swarm.duration).toBe(15);
+    expect(swarm.miscStats?.healthAsDamage).toBe(0.1);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_inaros")!;
+    expect(helminth.damage).toBe(150);
+    expect(helminth.miscStats?.damagePerSecond).toBe(8);
+    expect(getVerifiedMiscScaling("inaros_prime", "Scarab Shell", "armorBonus")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Saryn Spores 10/60m/16m spread; Molt 500/400/40s; Toxic Lash 30%/60%; Helminth Molt 40s", () => {
+    expect(getVerifiedMiscScaling("saryn", "Spores", "damageGrowth")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("saryn", "Spores", "spreadRadius")).toEqual({
+      scale: "range",
+    });
+    expect(getVerifiedMiscScaling("saryn", "Molt", "speedBuff")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("helminth", "Molt", "speedBuff")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("saryn", "Toxic Lash", "gunDamage")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("saryn", "Miasma", "sporesDamageMultiplier")).toBeNull();
+    const saryn = allWarframes.find((w) => w.id === "saryn")!;
+    const spores = saryn.abilities.find((a) => a.name === "Spores")!;
+    expect(spores.damage).toBe(10);
+    expect(spores.range).toBe(60);
+    expect(spores.miscStats).toMatchObject({ damageGrowth: 2, spreadRadius: 16 });
+    const molt = saryn.abilities.find((a) => a.name === "Molt")!;
+    expect(molt.health).toBe(500);
+    expect(molt.damage).toBe(400);
+    expect(molt.duration).toBe(40);
+    expect(molt.range).toBe(10);
+    expect(molt.miscStats?.speedBuff).toBe(0.5);
+    const lash = saryn.abilities.find((a) => a.name === "Toxic Lash")!;
+    expect(lash.duration).toBe(45);
+    expect(lash.range).toBeUndefined();
+    expect(lash.miscStats).toMatchObject({ gunDamage: 0.3, meleeDamage: 0.6 });
+    const miasma = saryn.abilities.find((a) => a.name === "Miasma")!;
+    expect(miasma.damagePerSecond).toBe(150);
+    expect(miasma.range).toBe(20);
+    expect(miasma.miscStats?.sporesDamageMultiplier).toBe(4);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_saryn")!;
+    expect(helminth.duration).toBe(40);
+    expect(helminth.range).toBe(10);
+    expect(helminth.damage).toBe(400);
+    expect(getVerifiedMiscScaling("saryn_prime", "Spores", "spreadRadius")).toEqual({
+      scale: "range",
+    });
+  });
+
+  it("Wukong Twin 2× HP; Cloud 8m/1%/m; Defy 7.5×/1500 cap; Iron Staff 300; Helminth Defy cap 750", () => {
+    expect(getVerifiedMiscScaling("wukong", "Celestial Twin", "healthMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wukong", "Cloud Walker", "healPerMeter")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wukong", "Defy", "damageMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("wukong", "Defy", "armorMultiplier")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Defy", "armorMultiplier")).toEqual({
+      scale: "strength",
+    });
+    const wukong = allWarframes.find((w) => w.id === "wukong")!;
+    const twin = wukong.abilities.find((a) => a.name === "Celestial Twin")!;
+    expect(twin.range).toBeUndefined();
+    expect(twin.miscStats).toMatchObject({
+      healthMultiplier: 2,
+      damageMultiplier: 0.5,
+      markDamageMultiplier: 3,
+    });
+    const cloud = wukong.abilities.find((a) => a.name === "Cloud Walker")!;
+    expect(cloud.range).toBe(8);
+    expect(cloud.duration).toBe(2);
+    expect(cloud.miscStats?.healPerMeter).toBe(0.01);
+    const defy = wukong.abilities.find((a) => a.name === "Defy")!;
+    expect(defy.damage).toBe(500);
+    expect(defy.range).toBe(12);
+    expect(defy.duration).toBe(2);
+    expect(defy.miscStats).toMatchObject({
+      damageMultiplier: 7.5,
+      armorMultiplier: 1.5,
+      armorDuration: 25,
+      armorCap: 1500,
+    });
+    const fury = wukong.abilities.find((a) => a.name === "Primal Fury")!;
+    expect(fury.damage).toBe(300);
+    expect(fury.miscStats?.energyDrain).toBe(5);
+    const staff = allWeapons.find((w) => w.id === "iron_staff")!;
+    expect(staff.damage).toBe(300);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_wukong")!;
+    expect(helminth.miscStats?.armorCap).toBe(750);
+    expect(helminth.range).toBe(12);
+    expect(getVerifiedMiscScaling("wukong_prime", "Defy", "armorMultiplier")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Xaku Xata 26%/35s; Grasp 50/15m/6; Lost Deny 4000; Vast Untime 1200/25% slow", () => {
+    expect(getVerifiedMiscScaling("xaku", "Xata's Whisper", "voidDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Xata's Whisper", "voidDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("xaku", "Grasp Of Lohk", "maxTargets")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("xaku", "The Lost", "gazeDefenseStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("xaku", "The Vast Untime", "slowPercent")).toEqual({
+      scale: "strength",
+      useSiblingSlowCap: true,
+    });
+    const xaku = allWarframes.find((w) => w.id === "xaku")!;
+    const xata = xaku.abilities.find((a) => a.name === "Xata's Whisper")!;
+    expect(xata.duration).toBe(35);
+    expect(xata.range).toBeUndefined();
+    expect(xata.miscStats?.voidDamageBonus).toBe(0.26);
+    const grasp = xaku.abilities.find((a) => a.name === "Grasp Of Lohk")!;
+    expect(grasp.damage).toBe(50);
+    expect(grasp.range).toBe(15);
+    expect(grasp.duration).toBe(12);
+    expect(grasp.miscStats).toMatchObject({ targetRange: 8, maxTargets: 6 });
+    const lost = xaku.abilities.find((a) => a.name === "The Lost")!;
+    expect(lost.damage).toBe(4000);
+    expect(lost.range).toBe(40);
+    expect(lost.miscStats?.gazeDefenseStrip).toBe(0.5);
+    expect(lost.miscStats?.accuseMaxTargets).toBe(8);
+    const vast = xaku.abilities.find((a) => a.name === "The Vast Untime")!;
+    expect(vast.damage).toBe(1200);
+    expect(vast.duration).toBe(25);
+    expect(vast.range).toBe(25);
+    expect(vast.miscStats).toMatchObject({
+      slowPercent: 0.25,
+      voidDamageVulnerability: 0.5,
+      dodgeChance: 0.75,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_xaku")!;
+    expect(helminth.duration).toBe(35);
+    expect(helminth.miscStats?.voidDamageBonus).toBe(0.26);
+    expect(getVerifiedMiscScaling("xaku_prime", "Grasp Of Lohk", "maxTargets")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Grendel Feast 500/25m; Nourish 75%/2×/25s; Pulverize strip; Regurgitate 2000; Helminth Nourish 45%/1.6×", () => {
+    expect(getVerifiedMiscScaling("grendel", "Nourish", "viralDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("grendel", "Nourish", "selfHeal")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("grendel", "Nourish", "energyMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("helminth", "Nourish", "viralDamageBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("grendel", "Pulverize", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("grendel", "Regurgitate", "armorStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    const grendel = allWarframes.find((w) => w.id === "grendel")!;
+    const feast = grendel.abilities.find((a) => a.name === "Feast")!;
+    expect(feast.damage).toBe(500);
+    expect(feast.range).toBe(25);
+    expect(feast.miscStats).toMatchObject({ maxEnemies: 5, vomitConeRange: 8 });
+    const nourish = grendel.abilities.find((a) => a.name === "Nourish")!;
+    expect(nourish.duration).toBe(25);
+    expect(nourish.range).toBe(25);
+    expect(nourish.miscStats).toMatchObject({
+      viralDamageBonus: 0.75,
+      energyMultiplier: 2,
+      selfHeal: 1000,
+      viralDamage: 250,
+      splashRadius: 12,
+      viralStacks: 10,
+    });
+    const pulverize = grendel.abilities.find((a) => a.name === "Pulverize")!;
+    expect(pulverize.damage).toBe(2000);
+    expect(pulverize.range).toBe(15);
+    expect(pulverize.miscStats).toMatchObject({
+      healPerSecond: 200,
+      armorStrip: 0.5,
+      toxinDamagePerSecond: 25,
+      energyDrain: 3,
+    });
+    const regurgitate = grendel.abilities.find((a) => a.name === "Regurgitate")!;
+    expect(regurgitate.damage).toBe(2000);
+    expect(regurgitate.range).toBe(6);
+    expect(regurgitate.miscStats).toMatchObject({
+      armorStrip: 0.75,
+      slowPercent: 0.8,
+      slowDuration: 6,
+    });
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_grendel")!;
+    expect(helminth.name).toBe("Nourish");
+    expect(helminth.duration).toBe(25);
+    expect(helminth.range).toBe(25);
+    expect(helminth.miscStats).toMatchObject({
+      viralDamageBonus: 0.45,
+      energyMultiplier: 1.6,
+      viralStacks: 1,
+    });
+    expect(helminth.miscStats?.selfHeal).toBeUndefined();
+    expect(getVerifiedMiscScaling("grendel_prime", "Nourish", "viralDamageBonus")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Hildryn Balefire 1500/3m; Pillage 8m/25%; Haven 500/200 DPS; Aegis Storm 200/500", () => {
+    expect(getVerifiedMiscScaling("hildryn", "Pillage", "shieldStrip")).toEqual({
+      scale: "strength",
+      cap: 1,
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Haven", "allyShieldBonus")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Aegis Storm", "deactivationDamage")).toEqual({
+      scale: "strength",
+    });
+    const hildryn = allWarframes.find((w) => w.id === "hildryn")!;
+    const balefire = hildryn.abilities.find((a) => a.name === "Balefire")!;
+    expect(balefire.damage).toBe(1500);
+    expect(balefire.range).toBe(3);
+    expect(balefire.miscStats).toMatchObject({ shieldCost: 50, minDamage: 500 });
+    const pillage = hildryn.abilities.find((a) => a.name === "Pillage")!;
+    expect(pillage.range).toBe(8);
+    expect(pillage.duration).toBe(2);
+    expect(pillage.miscStats).toMatchObject({ shieldStrip: 0.25, armorStrip: 0.25 });
+    const haven = hildryn.abilities.find((a) => a.name === "Haven")!;
+    expect(haven.damagePerSecond).toBe(200);
+    expect(haven.range).toBe(15);
+    expect(haven.miscStats?.allyShieldBonus).toBe(500);
+    const storm = hildryn.abilities.find((a) => a.name === "Aegis Storm")!;
+    expect(storm.damagePerSecond).toBe(200);
+    expect(storm.range).toBe(15);
+    expect(storm.miscStats?.deactivationDamage).toBe(500);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_hildryn")!;
+    expect(helminth.name).toBe("Pillage");
+    expect(helminth.range).toBe(8);
+    expect(helminth.miscStats?.shieldStrip).toBe(0.25);
+    expect(getVerifiedMiscScaling("hildryn_prime", "Haven", "allyShieldBonus")).toEqual({
+      scale: "strength",
+    });
+  });
+
+  it("Titania Spellbind Helminth; Tribute aura 120s; Lantern 350/2500; Razorwing 160/200 Diwata", () => {
+    const titania = allWarframes.find((w) => w.id === "titania")!;
+    const spellbind = titania.abilities.find((a) => a.name === "Spellbind")!;
+    expect(spellbind.range).toBe(50);
+    expect(spellbind.duration).toBe(16);
+    expect(spellbind.radius).toBe(5);
+    const tribute = titania.abilities.find((a) => a.name === "Tribute")!;
+    expect(tribute.damage).toBe(500);
+    expect(tribute.range).toBe(25);
+    expect(tribute.duration).toBe(12);
+    expect(tribute.miscStats).toMatchObject({ auraDuration: 120, auraRadius: 35 });
+    const lantern = titania.abilities.find((a) => a.name === "Lantern")!;
+    expect(lantern.damagePerSecond).toBe(350);
+    expect(lantern.damage).toBe(2500);
+    expect(lantern.duration).toBe(25);
+    expect(lantern.radius).toBe(20);
+    expect(lantern.miscStats?.explosionRadius).toBe(8);
+    const razorwing = titania.abilities.find((a) => a.name === "Razorwing")!;
+    expect(razorwing.damage).toBe(160);
+    expect(razorwing.miscStats).toMatchObject({
+      energyDrain: 5,
+      meleeDamage: 200,
+      droneDamage: 80,
+      evasion: 0.5,
+      razorflies: 6,
+    });
+    const diwata = allWeapons.find((w) => w.id === "diwata")!;
+    expect(diwata.damage).toBe(200);
+    const helminth = allHelminthAbilities.find((h) => h.id === "subsume_titania")!;
+    expect(helminth.name).toBe("Spellbind");
+    expect(helminth.duration).toBe(16);
+    expect(helminth.range).toBe(50);
+    expect(helminth.radius).toBe(5);
+    expect(helminth.energyCost).toBe(25);
+    const prime = allWarframes.find((w) => w.id === "titania_prime")!;
+    expect(prime.abilities.find((a) => a.name === "Spellbind")!.duration).toBe(16);
   });
 
   it("Intensify raises warframe strength used by ability displays", () => {
