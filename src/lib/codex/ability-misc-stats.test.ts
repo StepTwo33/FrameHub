@@ -93,6 +93,10 @@ import {
   computeTitaniaUpsurgePassive,
   computeTitaniaUpsurgeRemaining,
   computeHildrynShieldGatePassive,
+  computeNidusUndyingPassive,
+  computeSiriusOrionPassive,
+  computeSiriusOrionEfficiencyCastsRemaining,
+  computeWispAirborneInvisPassive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -918,6 +922,44 @@ describe("Hildryn shield gate passive", () => {
       energyOrbShieldRestore: 25,
       abilitiesUseShields: true,
     });
+  });
+});
+
+describe("Nidus Undying passive", () => {
+  it("consumes 15 Mutation stacks for 5s invuln and 50% heal", () => {
+    expect(computeNidusUndyingPassive(10)).toMatchObject({
+      undyingReady: false,
+      stacksAfterUndying: 10,
+    });
+    expect(computeNidusUndyingPassive(40)).toMatchObject({
+      undyingReady: true,
+      stacksRequired: 15,
+      invulnSec: 5,
+      healFraction: 0.5,
+      stacksAfterUndying: 25,
+      stackCap: 200,
+    });
+    expect(computeNidusUndyingPassive(250).stackCap).toBe(200);
+  });
+});
+
+describe("Sirius & Orion swap passive", () => {
+  it("grants +45% Efficiency for 2 casts after swapping", () => {
+    expect(computeSiriusOrionPassive()).toEqual({
+      efficiencyBonus: 0.45,
+      casts: 2,
+      energyStealThreshold: 50,
+    });
+    expect(computeSiriusOrionEfficiencyCastsRemaining(0)).toBe(2);
+    expect(computeSiriusOrionEfficiencyCastsRemaining(1)).toBe(1);
+    expect(computeSiriusOrionEfficiencyCastsRemaining(2)).toBe(0);
+  });
+});
+
+describe("Wisp airborne invisibility passive", () => {
+  it("is invisible only while airborne", () => {
+    expect(computeWispAirborneInvisPassive(true)).toEqual({ invisibleWhileAirborne: true });
+    expect(computeWispAirborneInvisPassive(false)).toEqual({ invisibleWhileAirborne: false });
   });
 });
 

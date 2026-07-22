@@ -264,6 +264,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Nyx + Harrow passives | 2026-07-22 | Nyx +40% gun CC/Confused (cap +200%); Harrow overshield ×2 (2400) + start max Energy |
 | Gyre + Citrine passives | 2026-07-22 | Gyre +10% ability CC/Electric (tiers/cap 300%); Citrine Geoluminesence 5→25 HP/s @ 50m |
 | Chroma + Titania + Hildryn passives | 2026-07-22 | Chroma extra jump + element cycle; Titania +25% parkour / Upsurge 4HP/s 20s 15m; Hildryn 3.5s gate |
+| Nidus + Sirius/Orion + Wisp passives | 2026-07-22 | Nidus Undying ≥15 stacks; Sirius/Orion +45% EFF ×2 casts; Wisp airborne invis |
 
 ## New / extended test files
 

@@ -85,6 +85,10 @@ import {
   computeTitaniaUpsurgePassive,
   computeTitaniaUpsurgeRemaining,
   computeHildrynShieldGatePassive,
+  computeNidusUndyingPassive,
+  computeSiriusOrionPassive,
+  computeSiriusOrionEfficiencyCastsRemaining,
+  computeWispAirborneInvisPassive,
   type MesaSidearmStyle,
   type NovaSpeedState,
   type ChromaElement,
@@ -1722,6 +1726,95 @@ function HildrynShieldGatePassivePanel() {
   );
 }
 
+function NidusUndyingPassivePanel() {
+  const [stacks, setStacks] = useState(30);
+  const undying = computeNidusUndyingPassive(stacks);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Mutation Stacks"
+        value={stacks}
+        min={0}
+        max={undying.stackCap}
+        onChange={setStacks}
+        tooltip="Nidus Undying: at ≥15 Mutation stacks on lethal damage, consume 15 stacks for 5s invuln and 50% Health."
+      />
+      <StatRow
+        label="Undying"
+        value={undying.undyingReady ? "Ready" : "Need 15"}
+        color={undying.undyingReady ? "text-green-400" : "text-muted-foreground"}
+        tooltip={`${undying.invulnSec}s invulnerability · restore ${(undying.healFraction * 100).toFixed(0)}% Health. Cap ${undying.stackCap} stacks.`}
+      />
+      <StatRow
+        label="After Proc"
+        value={`${undying.stacksAfterUndying} stacks`}
+        color="text-amber-400"
+        tooltip={
+          undying.undyingReady
+            ? `Consumes ${undying.stacksRequired} stacks (${stacks} → ${undying.stacksAfterUndying}).`
+            : "Fatal damage below 15 stacks consumes all stacks without Undying."
+        }
+      />
+    </div>
+  );
+}
+
+function SiriusOrionPassivePanel() {
+  const passive = computeSiriusOrionPassive();
+  const [castsSinceSwap, setCastsSinceSwap] = useState(0);
+  const remaining = computeSiriusOrionEfficiencyCastsRemaining(castsSinceSwap, passive);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Casts Since Swap"
+        value={castsSinceSwap}
+        min={0}
+        max={passive.casts}
+        onChange={setCastsSinceSwap}
+        tooltip="Sirius & Orion: swapping forms grants +45% Ability Efficiency for the next 2 casts."
+      />
+      <StatRow
+        label="Efficiency Buff"
+        value={remaining > 0 ? `+${(passive.efficiencyBonus * 100).toFixed(0)}% × ${remaining}` : "Expired"}
+        color={remaining > 0 ? "text-sky-400" : "text-muted-foreground"}
+        tooltip={`${passive.casts} casts after each form swap.`}
+      />
+      <StatRow
+        label="Energy Steal"
+        value={`<${passive.energyStealThreshold} Energy`}
+        color="text-amber-400"
+        tooltip="When either form is below 50 Energy, they steal energy from each other."
+      />
+    </div>
+  );
+}
+
+function WispAirborneInvisPassivePanel() {
+  const [airborne, setAirborne] = useState(1);
+  const invis = computeWispAirborneInvisPassive(airborne > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Airborne"
+        value={airborne}
+        min={0}
+        max={1}
+        onChange={setAirborne}
+        tooltip="Wisp: invisible to enemies while in the air."
+      />
+      <StatRow
+        label="Visibility"
+        value={invis.invisibleWhileAirborne ? "Invisible" : "Visible"}
+        color={invis.invisibleWhileAirborne ? "text-violet-300" : "text-muted-foreground"}
+        tooltip="Landing ends the dimensional cloak until airborne again."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1896,6 +1989,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "chroma" || warframe.id === "chroma_prime") && <ChromaPassivePanel />}
           {(warframe.id === "titania" || warframe.id === "titania_prime") && <TitaniaUpsurgePassivePanel />}
           {(warframe.id === "hildryn" || warframe.id === "hildryn_prime") && <HildrynShieldGatePassivePanel />}
+          {(warframe.id === "nidus" || warframe.id === "nidus_prime") && <NidusUndyingPassivePanel />}
+          {warframe.id === "sirius_orion" && <SiriusOrionPassivePanel />}
+          {(warframe.id === "wisp" || warframe.id === "wisp_prime") && <WispAirborneInvisPassivePanel />}
         </CollapsibleSection>
       )}
 

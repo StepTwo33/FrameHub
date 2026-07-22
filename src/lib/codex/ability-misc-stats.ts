@@ -3176,6 +3176,78 @@ export function computeHildrynShieldGatePassive(): HildrynShieldGatePassive {
   };
 }
 
+export interface NidusUndyingPassive {
+  /** Mutation stacks required to trigger Undying. */
+  stacksRequired: number;
+  /** Invulnerability duration on Undying (s). */
+  invulnSec: number;
+  /** Fraction of max Health restored. */
+  healFraction: number;
+  /** Mutation stack soft cap. */
+  stackCap: number;
+  /** Whether Undying would trigger at the current stack count. */
+  undyingReady: boolean;
+  /** Stacks remaining after a successful Undying proc. */
+  stacksAfterUndying: number;
+}
+
+/**
+ * wiki Nidus Undying: at ≥15 Mutation stacks on lethal damage, consume 15 stacks,
+ * gain 5s invulnerability, restore 50% Health. Cap 200 stacks.
+ */
+export function computeNidusUndyingPassive(mutationStacks: number): NidusUndyingPassive {
+  const stacksRequired = 15;
+  const invulnSec = 5;
+  const healFraction = 0.5;
+  const stackCap = 200;
+  const stacks = Math.min(Math.max(0, Math.floor(mutationStacks)), stackCap);
+  const undyingReady = stacks >= stacksRequired;
+  return {
+    stacksRequired,
+    invulnSec,
+    healFraction,
+    stackCap,
+    undyingReady,
+    stacksAfterUndying: undyingReady ? stacks - stacksRequired : stacks,
+  };
+}
+
+export interface SiriusOrionPassive {
+  /** Ability Efficiency granted after swapping forms. */
+  efficiencyBonus: number;
+  /** Number of casts that receive the Efficiency bonus. */
+  casts: number;
+  /** Energy threshold below which forms steal energy from each other. */
+  energyStealThreshold: number;
+}
+
+/** Remaining Efficiency-buffed casts after N casts since the last form swap. */
+export function computeSiriusOrionEfficiencyCastsRemaining(
+  castsSinceSwap: number,
+  passive: SiriusOrionPassive = computeSiriusOrionPassive(),
+): number {
+  return Math.max(0, passive.casts - Math.max(0, Math.floor(castsSinceSwap)));
+}
+
+/** wiki Sirius & Orion: swap grants +45% Ability Efficiency for next 2 casts; <50 Energy steals. */
+export function computeSiriusOrionPassive(): SiriusOrionPassive {
+  return {
+    efficiencyBonus: 0.45,
+    casts: 2,
+    energyStealThreshold: 50,
+  };
+}
+
+export interface WispAirborneInvisPassive {
+  /** Invisible to enemies while airborne. */
+  invisibleWhileAirborne: boolean;
+}
+
+/** wiki Wisp: invisible to enemies while in the air. */
+export function computeWispAirborneInvisPassive(airborne: boolean): WispAirborneInvisPassive {
+  return { invisibleWhileAirborne: airborne };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
