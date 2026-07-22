@@ -246,10 +246,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     shieldDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },
   // wiki: Aegis Storm — deactivation Impact × STR; Rad DPS via ability.damagePerSecond;
-  // shieldCost cast × EFF; shieldDrain / per-enemy × max((2−EFF)÷DUR, 0.25)
+  // shieldCost cast × EFF; dodgeShieldCost 50/dodge × EFF; drains × max((2−EFF)÷DUR, 0.25)
   "hildryn::Aegis Storm": {
     deactivationDamage: { scale: "strength" },
     shieldCost: { scale: "efficiency", formula: "cast_cost" },
+    dodgeShieldCost: { scale: "efficiency", formula: "cast_cost" },
     shieldDrain: { scale: "efficiency", formula: "channeled_drain" },
     shieldDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },

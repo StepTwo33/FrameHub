@@ -2861,6 +2861,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "efficiency",
       formula: "channeled_drain",
     });
+    expect(getVerifiedMiscScaling("hildryn", "Aegis Storm", "dodgeShieldCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("hildryn_prime", "Aegis Storm", "dodgeShieldCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("hildryn", "Balefire", "shieldCost")).toEqual({
       scale: "efficiency",
       formula: "cast_cost",
@@ -2885,7 +2893,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     const storm = hildryn.abilities.find((a) => a.name === "Aegis Storm")!;
     expect(storm.damagePerSecond).toBe(200);
     expect(storm.range).toBe(15);
-    expect(storm.miscStats?.deactivationDamage).toBe(500);
+    expect(storm.miscStats).toMatchObject({
+      deactivationDamage: 500,
+      dodgeShieldCost: 50,
+    });
     const helminth = allHelminthAbilities.find((h) => h.id === "subsume_hildryn")!;
     expect(helminth.name).toBe("Pillage");
     expect(helminth.range).toBe(8);

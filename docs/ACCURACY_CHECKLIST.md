@@ -192,7 +192,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Rhino kit | 2026-07-21 | Charge 650/12m/2m; Iron Skin 1200 OG/2.5× Misc + Initial OG=(base+mult×armor)×STR; Roar 50%/25m/30s; Stomp 800/97.5% slow; Helminth Roar 30% |
 | B5 Valkyr kit | 2026-07-21 | Rip Line 600/75m; Warcry 50% AS/50% armor/20s (Affinity); Paralysis 400/10m/30% slow; Hysteria 250/5/s; Helminth Warcry AS 30% |
 | B5 Grendel kit | 2026-07-21 | Feast 500 Toxin/25m/5; Nourish +75% Viral/2× energy/1000 heal/25s; Pulverize 500–2000/50% strip; Regurgitate 2000/6m/75% strip; Helminth Nourish 45%/1.6×/no heal; energy 1+((mult−1)×STR) |
-| B5 Hildryn kit | 2026-07-21 | Balefire 500–1500/3m/50 shields×EFF; Pillage 8m/25% strip/150 shields×EFF; Haven 500 ally shields/80% recharge×DUR/drains×EFF/DUR; Aegis Storm 200 DPS/500 Impact/drains×EFF/DUR |
+| B5 Hildryn kit | 2026-07-21 | Balefire 500–1500/3m/50 shields×EFF; Pillage 8m/25% strip/150 shields×EFF; Haven 500 ally shields/80% recharge×DUR/drains×EFF/DUR; Aegis Storm 200 DPS/500 Impact/drains×EFF/DUR/50 dodge×EFF |
 | B5 Titania kit | 2026-07-21 | Spellbind 50m/5m/16s; Tribute 500/12s +120s aura; Lantern 350 DPS/2500/25s; Razorwing 160/Diwata 200/5/s; Helminth→Spellbind (was wrongly Tribute) |
 | B5 Saryn kit | 2026-07-21 | Spores 10/60m/16m spread/+2 growth; Molt 500 HP/400 Toxin/40s/50% speed; Toxic Lash 30%/60%/45s; Miasma 150 Viral/s ×4 Spores; Helminth Molt 40s |
 | B5 Wukong kit | 2026-07-21 | Twin 2× HP/0.5×/3× mark; Cloud 8m/1%/m; Defy 7.5×/1.5× armor/1500 cap; Primal Fury/Iron Staff 300/5/s; Helminth Defy armorCap 750 |

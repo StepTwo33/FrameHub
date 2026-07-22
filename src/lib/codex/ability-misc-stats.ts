@@ -541,6 +541,7 @@ const LABELS: Record<string, string> = {
   collisionRadius: "Collision Radius",
   slowDuration: "Slow Duration",
   shieldCost: "Shield Cost",
+  dodgeShieldCost: "Dodge Shield Cost",
   minDamage: "Min Damage",
   allyShieldBonus: "Ally Shields",
   shieldRechargeRate: "Shield Recharge Rate",
@@ -1232,6 +1233,7 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "healPerSecond" ||
       key === "toxinDamagePerSecond" ||
       key === "shieldCost" ||
+      key === "dodgeShieldCost" ||
       key === "minDamage" ||
       key === "allyShieldBonus" ||
       key === "shieldDrainPerAlly" ||
@@ -1693,6 +1695,7 @@ function scaleVerifiedValue(
       key === "healPerSecond" ||
       key === "toxinDamagePerSecond" ||
       key === "shieldCost" ||
+      key === "dodgeShieldCost" ||
       key === "minDamage" ||
       key === "allyShieldBonus" ||
       key === "shieldDrainPerAlly" ||

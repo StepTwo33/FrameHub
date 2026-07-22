@@ -2946,6 +2946,7 @@ export const allWarframes: Warframe[] = [
           "shieldCost": 100,
           "shieldDrain": 25,
           "shieldDrainPerEnemy": 25,
+          "dodgeShieldCost": 50,
           "maxAltitude": 10
         }
       }
@@ -3018,6 +3019,7 @@ export const allWarframes: Warframe[] = [
           "shieldCost": 100,
           "shieldDrain": 25,
           "shieldDrainPerEnemy": 25,
+          "dodgeShieldCost": 50,
           "maxAltitude": 10
         }
       }

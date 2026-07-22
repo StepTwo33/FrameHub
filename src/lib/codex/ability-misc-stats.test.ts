@@ -477,12 +477,17 @@ describe("scaleAbilityMiscStats", () => {
     expect(haven.find((l) => l.label === "Shield Drain/Ally")!.scaled).toBe("2.7/s");
     expect(haven.find((l) => l.label === "Shield Drain/Enemy")!.scaled).toBe("13.5/s");
     const storm = scaleAbilityMiscStats(
-      { shieldCost: 100, shieldDrain: 25, shieldDrainPerEnemy: 25 },
+      { shieldCost: 100, shieldDrain: 25, shieldDrainPerEnemy: 25, dodgeShieldCost: 50 },
       { strength: 1, duration: 1, range: 1, efficiency: 1.3 },
       { warframeId: "hildryn", abilityName: "Aegis Storm" },
     );
     expect(storm.find((l) => l.label === "Shield Cost")!.scaled).toBe("70");
     expect(storm.find((l) => l.label === "Shield Drain")!.scaled).toBe("17.5/s");
+    expect(storm.find((l) => l.label === "Dodge Shield Cost")!).toMatchObject({
+      base: "50",
+      scaled: "35",
+      scaleAttr: "efficiency",
+    });
     const balefire = scaleAbilityMiscStats(
       { shieldCost: 50 },
       { strength: 1, duration: 1, range: 1, efficiency: 1.75 },
