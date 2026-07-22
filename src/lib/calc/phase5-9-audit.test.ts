@@ -950,6 +950,77 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
   });
+
+  it("Arcane Rise: stacks>0 → +150% primary damage at R5", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const rise = allArcanes.find((a) => a.id === "arcane_rise")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [rise],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
+  });
+
+  it("Arcane Momentum: stacks>0 → +150% sniper reload at R5 (Vectis only)", () => {
+    const vectis = allWeapons.find((w) => w.id === "vectis")!;
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const momentum = allArcanes.find((a) => a.id === "arcane_momentum")!;
+    const bareV = calculateWeaponBuild(vectis, [], new Map());
+    const fullV = calculateWeaponBuildWithArcanes(
+      vectis,
+      [],
+      new Map(),
+      [momentum],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullV.reloadTime).toBeCloseTo(bareV.reloadTime / 2.5, 4);
+    const bareB = calculateWeaponBuild(braton, [], new Map());
+    const fullB = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [momentum],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullB.reloadTime).toBeCloseTo(bareB.reloadTime, 4);
+  });
+
+  it("Fractalized Reset: stacks>0 → +240% reload at R5", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const reset = allArcanes.find((a) => a.id === "fractalized_reset")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [reset],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.reloadTime).toBeCloseTo(bare.reloadTime / 3.4, 4);
+  });
+
+  it("Longbow Sharpshot: stacks>0 → +300% next-shot damage at R5", () => {
+    const paris = allWeapons.find((w) => w.id === "paris")!;
+    const sharpshot = allArcanes.find((a) => a.id === "longbow_sharpshot")!;
+    const bare = calculateWeaponBuild(paris, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      paris,
+      [],
+      new Map(),
+      [sharpshot],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

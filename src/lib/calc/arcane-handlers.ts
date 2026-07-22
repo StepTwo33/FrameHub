@@ -75,6 +75,10 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_avenger",
   "arcane_awakening",
   "arcane_rage",
+  "arcane_rise",
+  "arcane_momentum",
+  "fractalized_reset",
+  "longbow_sharpshot",
   "arcane_fury",
   "arcane_precision",
   "arcane_blade_charger",
@@ -405,13 +409,52 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "arcane_awakening":
-    case "arcane_rage": {
+    case "arcane_rage":
+    case "arcane_rise": {
       // Awakening: +150% secondary dmg on reload. Rage: +180% primary dmg on headshot.
-      // Data stores as holsterDamage — apply as weapon damage (paper: stacks>0 = buff up).
+      // Rise: +150% primary dmg on reload. Data uses holsterDamage — paper: stacks>0 = buff up.
       const dmgLine = findEffect(def, "holsterDamage") ?? findEffect(def, "damage");
       const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
       if (dmg > 0) applyWeaponDamageMult(stats, dmg);
       trackBonus(stats, "holsterDamage", dmg);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_momentum": {
+      // wiki R5: +150% sniper reload for 12s on crit. Paper: stacks>0 = buff up; snipers only.
+      const isSniper =
+        ctx.baseWeapon?.triggerType === "Sniper" ||
+        /sniper/i.test(ctx.baseWeapon?.category ?? "");
+      const reloadLine = findEffect(def, "reloadSpeedBonus") ?? findEffect(def, "reloadSpeed");
+      const reload = reloadLine ? scaleArcaneEffectLine(reloadLine, rank, def.maxRank) : 0;
+      if (isSniper && reload > 0) stats.reloadTime /= 1 + reload / 100;
+      trackBonus(stats, "reloadSpeedBonus", isSniper ? reload : 0);
+      const chanceLine = findEffect(def, "reloadSpeedChance");
+      if (chanceLine) {
+        trackBonus(stats, "reloadSpeedChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "fractalized_reset": {
+      // wiki R5: +240% reload for 5s on ability cast. Paper: stacks>0 = buff up (skip proc uptime).
+      const reloadLine = findEffect(def, "reloadSpeed");
+      const reload = reloadLine ? scaleArcaneEffectLine(reloadLine, rank, def.maxRank) : 0;
+      if (reload > 0) stats.reloadTime /= 1 + reload / 100;
+      trackBonus(stats, "reloadSpeed", reload);
+      return true;
+    }
+
+    case "longbow_sharpshot": {
+      // wiki R5: +300% next-shot damage after HS, multiplicative to Serration. Paper: stacks>0 = buff up.
+      const dmgLine = findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "damage", dmg);
       return true;
     }
 

@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Avenger absolute CC + Fury/Awakening/Rage/Precision/Blade/Arachne + prior FR/stack fixes | **Improved** |
+| B6 | Arcane custom handlers | Rise/Momentum/Longbow/Fractalized + Avenger/Fury/Awakening/Rage/… | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -292,6 +292,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Crescendo/Assimilation/Vendetta/Surge/Pistoleer | 2026-07-22 | Crescendo +6 IC/finisher; Assimilation +150% heavy; Vendetta +180% MS/+75% reload; Surge ×8; Pistoleer +102% AE |
 | Acceleration/Tempo/Velocity/Strike/Charger/Careen | 2026-07-22 | Accel +90% FR (no shotgun); Tempo +90%; Velocity +120%; Strike +60% AS; Charger +300% dmg; Careen ×2.5 vs frozen |
 | Avenger/Fury/Awakening/Rage/Precision/Blade/Arachne | 2026-07-22 | Avenger absolute +45% CC; Fury +180% melee; Awakening +150% sec; Rage +180% pri; Precision +300% sec; Blade +300% melee; Arachne +150% latch |
+| Rise/Momentum/Longbow Sharpshot/Fractalized Reset | 2026-07-22 | Rise +150% pri; Momentum +150% sniper reload; Longbow ×4 next shot; Fractalized +240% reload |
 
 ## New / extended test files
 

@@ -247,9 +247,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_momentum": {
     arcaneId: "arcane_momentum",
+    customHandler: "arcane_momentum",
     effects: [
-      {"statKey": "reloadSpeedChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Momentum: reloadSpeedChance (conditional proc)"},
-      {"statKey": "reloadSpeedBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Momentum: reloadSpeedBonus (conditional proc)"},
+      {"statKey": "reloadSpeedChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Momentum: 60% chance on crit (panel)"},
+      {"statKey": "reloadSpeedBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Momentum — +150% sniper reload for 12s on crit (paper: stacks>0 = buff up; snipers only)"},
     ],
   },
   "arcane_nullifier": {
@@ -361,9 +362,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_rise": {
     arcaneId: "arcane_rise",
+    customHandler: "arcane_rise",
     effects: [
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rise: holsterDamage (on reload proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rise: healthRegenChance (on reload proc)"},
+      {"statKey": "holsterDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Rise — +150% primary damage for 24s on reload (paper: stacks>0 = buff up)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rise: proc chance (panel)"},
     ],
   },
   "arcane_sculptor": {
@@ -615,14 +617,16 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "fractalized_reset": {
     arcaneId: "fractalized_reset",
+    customHandler: "fractalized_reset",
     effects: [
-      {"statKey": "reloadSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Fractalized Reset: reloadSpeed (on ability cast proc)"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Fractalized Reset — +240% reload for 5s on ability cast (paper: stacks>0 = buff up)"},
     ],
   },
   "longbow_sharpshot": {
     arcaneId: "longbow_sharpshot",
+    customHandler: "longbow_sharpshot",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Longbow Sharpshot: damage (on headshot proc)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Longbow Sharpshot — +300% next-shot damage after HS, multiplicative to Serration (paper: stacks>0 = buff up)"},
     ],
   },
   "magus_accelerant": {
