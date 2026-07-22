@@ -16,10 +16,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_acceleration": {
     arcaneId: "arcane_acceleration",
+    customHandler: "arcane_acceleration",
     effects: [
-      {"statKey": "fireRate", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRate (on hit proc)"},
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: holsterDamage (on hit proc)"},
-      {"statKey": "fireRateOnCrit", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: fireRateOnCrit (on hit proc)"},
+      {"statKey": "fireRate", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Acceleration — +90% primary FR for 9s on crit (excl. shotguns; paper: stacks>0 = buff up)"},
+      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Acceleration: holsterDamage (legacy/display)"},
+      {"statKey": "fireRateOnCrit", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Acceleration — 30% proc chance on crit"},
     ],
   },
   "arcane_aegis": {
@@ -290,10 +291,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_primary_charger": {
     arcaneId: "arcane_primary_charger",
+    customHandler: "arcane_primary_charger",
     effects: [
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Primary Charger: holsterDamage (on melee kill proc)"},
-      {"statKey": "damage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Arcane Primary Charger: damage (on melee kill proc)"},
-      {"statKey": "armorBonusChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Primary Charger: armorBonusChance (on melee kill proc)"},
+      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Primary Charger: holsterDamage (legacy/display)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Primary Charger — +300% primary damage for 12s on melee kill (paper: stacks>0 = buff up)"},
+      {"statKey": "armorBonusChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Primary Charger — 30% proc chance"},
     ],
   },
   "arcane_primary_deadhead": {
@@ -397,9 +399,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_strike": {
     arcaneId: "arcane_strike",
+    customHandler: "arcane_strike",
     effects: [
-      {"statKey": "attackSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Strike: attackSpeed (on hit proc)"},
-      {"statKey": "attackSpeedChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Strike: attackSpeedChance (on hit proc)"},
+      {"statKey": "attackSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Strike — +60% melee attack speed for 18s on hit (paper: stacks>0 = buff up)"},
+      {"statKey": "attackSpeedChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Strike — 15% proc chance on hit"},
     ],
   },
   "arcane_tanker": {
@@ -410,9 +413,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_tempo": {
     arcaneId: "arcane_tempo",
+    customHandler: "arcane_tempo",
     effects: [
-      {"statKey": "fireRate", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Tempo: fireRate (conditional proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Tempo: healthRegenChance (conditional proc)"},
+      {"statKey": "fireRate", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Tempo — +90% shotgun FR for 12s on crit (paper: stacks>0 = buff up)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Tempo: healthRegenChance (legacy/display)"},
     ],
   },
   "arcane_trickery": {
@@ -444,8 +448,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_velocity": {
     arcaneId: "arcane_velocity",
+    customHandler: "arcane_velocity",
     effects: [
-      {"statKey": "fireRate", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Velocity: fireRate (conditional proc)"},
+      {"statKey": "fireRate", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Velocity — +120% secondary FR for 9s on crit (paper: stacks>0 = buff up)"},
     ],
   },
   "arcane_victory": {
@@ -756,8 +761,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_careen": {
     arcaneId: "melee_careen",
+    customHandler: "melee_careen",
     effects: [
-      {"statKey": "meleeDamageBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Careen: meleeDamageBonus (on movement proc)"},
+      {"statKey": "meleeDamageBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Careen — ×2.5 damage vs fully frozen at R5 (paper: stacks>0 = vs frozen)"},
     ],
   },
   "melee_crescendo": {

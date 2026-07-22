@@ -64,8 +64,14 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "melee_retaliation",
   "melee_crescendo",
   "melee_assimilation",
+  "melee_careen",
   "shotgun_vendetta",
   "arcane_pistoleer",
+  "arcane_primary_charger",
+  "arcane_acceleration",
+  "arcane_tempo",
+  "arcane_velocity",
+  "arcane_strike",
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
@@ -329,6 +335,68 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       if (shieldLine) {
         trackBonus(stats, "shieldRestorePercent", scaleArcaneEffectLine(shieldLine, rank, def.maxRank));
       }
+      return true;
+    }
+
+    case "melee_careen": {
+      // wiki: ×1.25…×2.50 damage vs fully frozen (10 Cold). Paper: stacks>0 = vs frozen.
+      const mult = 1.25 + (rank / Math.max(def.maxRank, 1)) * 1.25;
+      if (mult > 1) applyWeaponDamageMult(stats, (mult - 1) * 100);
+      trackBonus(stats, "meleeDamageBonus", (mult - 1) * 100);
+      return true;
+    }
+
+    case "arcane_primary_charger": {
+      // wiki R5: on melee kill (30%), +300% primary damage for 12s. Paper: stacks>0 = buff up.
+      const dmgLine = findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "damage", dmg);
+      const chanceLine = findEffect(def, "armorBonusChance");
+      if (chanceLine) {
+        trackBonus(stats, "armorBonusChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_acceleration": {
+      // wiki R5: +90% primary FR (excl. shotguns) for 9s on crit. Paper: stacks>0 = buff up.
+      const frLine = findEffect(def, "fireRate");
+      const fr = frLine ? scaleArcaneEffectLine(frLine, rank, def.maxRank) : 0;
+      const isShotgun = ctx.baseWeapon?.category === "shotgun";
+      if (fr > 0 && !isShotgun && !stats.fireRateLocked) {
+        stats.fireRate *= 1 + fr / 100;
+      }
+      trackBonus(stats, "fireRate", isShotgun ? 0 : fr);
+      const chanceLine = findEffect(def, "fireRateOnCrit");
+      if (chanceLine) {
+        trackBonus(stats, "fireRateOnCrit", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_strike": {
+      // wiki R5: +60% melee attack speed for 18s on hit. Paper: stacks>0 = buff up.
+      const asLine = findEffect(def, "attackSpeed");
+      const as = asLine ? scaleArcaneEffectLine(asLine, rank, def.maxRank) : 0;
+      if (as > 0) stats.fireRate *= 1 + as / 100;
+      trackBonus(stats, "attackSpeed", as);
+      const chanceLine = findEffect(def, "attackSpeedChance");
+      if (chanceLine) {
+        trackBonus(stats, "attackSpeedChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_tempo":
+    case "arcane_velocity": {
+      // Tempo: +90% shotgun FR on crit. Velocity: +120% secondary FR on crit. Paper: stacks>0 = buff up.
+      const frLine = findEffect(def, "fireRate");
+      const fr = frLine ? scaleArcaneEffectLine(frLine, rank, def.maxRank) : 0;
+      if (fr > 0 && !stats.fireRateLocked) {
+        stats.fireRate *= 1 + fr / 100;
+      }
+      trackBonus(stats, "fireRate", fr);
       return true;
     }
 

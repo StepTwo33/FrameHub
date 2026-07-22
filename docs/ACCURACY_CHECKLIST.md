@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Crescendo/Assimilation/Vendetta/Surge/Pistoleer + prior stack/passive fixes | **Improved** |
+| B6 | Arcane custom handlers | Acceleration/Tempo/Velocity/Strike/Charger/Careen + prior B6 stack/passive fixes | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -290,6 +290,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Cascadia Accuracy + Exposure + Compression | 2026-07-22 | Accuracy +300% CC only with stacks+applyHeadshots; Exposure Corrosive capped 240%; Compression → panel (per-meter radius) |
 | Enervate/Doughty/Retaliation/Plated/Outburst | 2026-07-22 | Enervate absolute +10% CC/hit; Doughty puncture-SC CM; Retaliation shield-steps; Plated 15√(5mag); Outburst CC+CD; pass raw sim stacks |
 | Crescendo/Assimilation/Vendetta/Surge/Pistoleer | 2026-07-22 | Crescendo +6 IC/finisher; Assimilation +150% heavy; Vendetta +180% MS/+75% reload; Surge ×8; Pistoleer +102% AE |
+| Acceleration/Tempo/Velocity/Strike/Charger/Careen | 2026-07-22 | Accel +90% FR (no shotgun); Tempo +90%; Velocity +120%; Strike +60% AS; Charger +300% dmg; Careen ×2.5 vs frozen |
 
 ## New / extended test files
 

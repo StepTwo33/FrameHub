@@ -743,6 +743,108 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.ammoEfficiency).toBeCloseTo(1.02, 4);
   });
+
+  it("Arcane Acceleration: stacks>0 → +90% FR on Braton; no FR on Hek (shotgun)", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const hek = allWeapons.find((w) => w.id === "hek")!;
+    const accel = allArcanes.find((a) => a.id === "arcane_acceleration")!;
+    const bareB = calculateWeaponBuild(braton, [], new Map());
+    const fullB = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [accel],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullB.fireRate).toBeCloseTo(bareB.fireRate * 1.9, 4);
+
+    const bareH = calculateWeaponBuild(hek, [], new Map());
+    const fullH = calculateWeaponBuildWithArcanes(
+      hek,
+      [],
+      new Map(),
+      [accel],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(fullH.fireRate).toBeCloseTo(bareH.fireRate, 4);
+  });
+
+  it("Arcane Tempo: stacks>0 → +90% shotgun FR at R5", () => {
+    const hek = allWeapons.find((w) => w.id === "hek")!;
+    const tempo = allArcanes.find((a) => a.id === "arcane_tempo")!;
+    const bare = calculateWeaponBuild(hek, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      hek,
+      [],
+      new Map(),
+      [tempo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.fireRate).toBeCloseTo(bare.fireRate * 1.9, 4);
+  });
+
+  it("Arcane Velocity: stacks>0 → +120% secondary FR at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const velocity = allArcanes.find((a) => a.id === "arcane_velocity")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [velocity],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.fireRate).toBeCloseTo(bare.fireRate * 2.2, 4);
+  });
+
+  it("Arcane Strike: stacks>0 → +60% melee attack speed at R5", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const strike = allArcanes.find((a) => a.id === "arcane_strike")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [strike],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.fireRate).toBeCloseTo(bare.fireRate * 1.6, 4);
+  });
+
+  it("Arcane Primary Charger: stacks>0 → +300% damage at R5", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const charger = allArcanes.find((a) => a.id === "arcane_primary_charger")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [charger],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4, 4);
+  });
+
+  it("Melee Careen: stacks>0 → ×2.5 damage vs frozen at R5", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const careen = allArcanes.find((a) => a.id === "melee_careen")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [careen],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {
