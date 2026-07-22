@@ -2442,6 +2442,22 @@ export function computeXakuPassiveEvasion(vastUntimeActive: boolean): XakuPassiv
   return { dodgeChance: v, aoeDamageReduction: v };
 }
 
+/**
+ * wiki Volt Static Discharge: +10 Electricity damage per grounded meter traveled,
+ * discharged on next weapon attack or ability hit. Cap 1000 bonus damage.
+ */
+export function computeVoltStaticDischargeDamage(metersTraveled: number): number {
+  return Math.min(1000, Math.max(0, metersTraveled) * 10);
+}
+
+/**
+ * wiki Trinity Lifegiver: allies in Affinity Range gain Health equal to 50% of
+ * Trinity's total Energy pool (scales with max energy mods/shards).
+ */
+export function computeTrinityLifegiverBonusHealth(maxEnergy: number): number {
+  return Math.max(0, maxEnergy) * 0.5;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

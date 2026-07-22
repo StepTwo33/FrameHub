@@ -244,6 +244,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Caliban + Protea passives | 2026-07-22 | Adaptive Armor +5%/hit cap 50% (panel DR/EHP); Protea 4th cast +100% STR at 3 power bars |
 | Styanax + Yareli passives | 2026-07-22 | Hoplite +1% CC / 40 shields (×2 Speargun); Critical Flow +200% secondary CC while moving |
 | Zephyr + Xaku passives | 2026-07-22 | Airborne +150% weapon CC; Xaku 25% dodge/AoE DR → 75% during Vast Untime |
+| Volt + Trinity passives | 2026-07-22 | Static Discharge 10/m Electric cap 1000; Lifegiver allies +50% of max Energy as Health |
 
 ## New / extended test files
 

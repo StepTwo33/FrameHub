@@ -27,6 +27,8 @@ import {
   computeYareliCriticalFlowCritChance,
   computeZephyrAirborneCritChance,
   computeXakuPassiveEvasion,
+  computeVoltStaticDischargeDamage,
+  computeTrinityLifegiverBonusHealth,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -436,6 +438,51 @@ function XakuEvasionPassive() {
   );
 }
 
+function VoltStaticDischargePassive() {
+  const [meters, setMeters] = useState(50);
+  const bonusDmg = computeVoltStaticDischargeDamage(meters);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Meters Traveled"
+        value={meters}
+        min={0}
+        max={100}
+        onChange={setMeters}
+        tooltip="Volt Static Discharge: +10 Electricity damage per grounded meter (cap 1000). Discharges on next hit."
+      />
+      <StatRow
+        label="Bonus Damage"
+        value={`+${bonusDmg.toFixed(0)}`}
+        color="text-yellow-400"
+        tooltip="Separate Electricity hit on next weapon attack or ability; not × Ability Strength."
+      />
+    </div>
+  );
+}
+
+function TrinityLifegiverPassive({ maxEnergy }: { maxEnergy: number }) {
+  const bonusHealth = computeTrinityLifegiverBonusHealth(maxEnergy);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Ally Bonus Health"
+        value={`+${bonusHealth.toFixed(0)}`}
+        color="text-green-400"
+        tooltip="Lifegiver: allies in Affinity Range gain Health equal to 50% of Trinity's max Energy (scales with Flow/shards)."
+      />
+      <StatRow
+        label="From Max Energy"
+        value={maxEnergy.toFixed(0)}
+        color="text-muted-foreground"
+        tooltip="Current modded max Energy pool used for the 50% conversion."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -561,6 +608,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "yareli" || warframe.id === "yareli_prime") && <YareliCriticalFlowPassive />}
           {(warframe.id === "zephyr" || warframe.id === "zephyr_prime") && <ZephyrAirbornePassive />}
           {(warframe.id === "xaku" || warframe.id === "xaku_prime") && <XakuEvasionPassive />}
+          {(warframe.id === "volt" || warframe.id === "volt_prime") && <VoltStaticDischargePassive />}
+          {(warframe.id === "trinity" || warframe.id === "trinity_prime") && (
+            <TrinityLifegiverPassive maxEnergy={stats.totalEnergy} />
+          )}
         </CollapsibleSection>
       )}
 

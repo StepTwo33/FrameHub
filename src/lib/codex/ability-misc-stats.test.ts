@@ -35,6 +35,8 @@ import {
   computeYareliCriticalFlowCritChance,
   computeZephyrAirborneCritChance,
   computeXakuPassiveEvasion,
+  computeVoltStaticDischargeDamage,
+  computeTrinityLifegiverBonusHealth,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -413,6 +415,23 @@ describe("Xaku dodge / AoE DR passive", () => {
       dodgeChance: 0.75,
       aoeDamageReduction: 0.75,
     });
+  });
+});
+
+describe("Volt Static Discharge passive", () => {
+  it("builds 10 Electricity per meter up to 1000", () => {
+    expect(computeVoltStaticDischargeDamage(0)).toBe(0);
+    expect(computeVoltStaticDischargeDamage(10)).toBe(100);
+    expect(computeVoltStaticDischargeDamage(100)).toBe(1000);
+    expect(computeVoltStaticDischargeDamage(150)).toBe(1000);
+  });
+});
+
+describe("Trinity Lifegiver passive", () => {
+  it("grants allies Health equal to 50% of max Energy", () => {
+    expect(computeTrinityLifegiverBonusHealth(175)).toBe(87.5);
+    expect(computeTrinityLifegiverBonusHealth(350)).toBe(175);
+    expect(computeTrinityLifegiverBonusHealth(0)).toBe(0);
   });
 });
 
