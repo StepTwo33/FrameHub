@@ -467,6 +467,8 @@ export interface CalculatedStats {
   instantReloadOnKillChance?: number;
   /** Chance to instantly reload on headshot / headshot-kill (Incarnon) — display only. */
   instantReloadOnHeadshotChance?: number;
+  /** Zoom change fraction from incarnon/rivens (negative = less zoom) — display only. */
+  zoom?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;
@@ -568,6 +570,8 @@ export interface CalculatedStats {
    * (e.g. Amalgam Serration +55% at max → 0.55).
    */
   sprintSpeedBonus?: number;
+  /** Parkour velocity fraction from incarnon / weapon movement perks — display only. */
+  parkourVelocityBonus?: number;
   /** Elementalist-style status effect damage bonus (fraction). */
   statusDamageBonus?: number;
   /** Acuity / headshot damage bonus (fraction on top of base head multi). */

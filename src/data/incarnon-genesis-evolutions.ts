@@ -190,7 +190,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Fatal Affliction", description: "Increase Damage by +50. +40% Direct Damage per Status Type affecting the target.", statChanges: {"flatBaseDamage":50,"fatalAfflictionPerStatus":0.4} },
     // Assumes Dread+Hate set for paper DPS (+30% MS; unique +100% MS-pellet damage still unmodeled)
     { tier: 2, slot: 1, name: "Stalker's Vendetta", description: "Increase Damage by +60. With Dread and Hate equipped: Multishot consumes ammo directly from Capacity and increases Damage by +100%. +30% Multishot.", statChanges: {"flatBaseDamage":60,"multishot":0.3} },
-    { tier: 3, slot: 0, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {"zoom":-0.3} },
     { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 2, name: "Rapid Reinforcement", description: "+100% Reload Speed.", statChanges: {"reloadSpeed":1} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Status Chance by +24%.", statChanges: {"statusChance":0.24} },
@@ -217,7 +217,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+10 × 5 flat, +10% FR × 5); set equipped assumed
     { tier: 2, slot: 1, name: "Stalker's Resentment", description: "Increase Base Damage by +50. With Hate and Despair Equipped: Hits increase Base Damage by +10 and Fire Rate by +10%, stacks up to 5x. Resets on missed shot.", statChanges: {"flatBaseDamage":100,"fireRate":0.5} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed", statChanges: {"projectileSpeed":0.3} },
-    { tier: 3, slot: 1, name: "Marksman's Focus", description: "-30% Zoom", statChanges: {} },
+    { tier: 3, slot: 1, name: "Marksman's Focus", description: "-30% Zoom", statChanges: {"zoom":-0.3} },
     { tier: 3, slot: 2, name: "Hitman's Hoard", description: "Increase Base Ammo Capacity to 144", statChanges: {"ammoMaxSet":144} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +10% Increase Base Status Chance by +10%", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
     { tier: 4, slot: 1, name: "Elemental Balance", description: "Increase Base Status Chance by +24%", statChanges: {"statusChance":0.24} },
@@ -336,7 +336,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 5x Combo and then Heavy Attack to activate Incarnon Form. Aerial Attacks while Aim Gliding launch Radiation Damage projectiles, and Finishers increase Damage Reduction. +3 Range +40% Attack Speed", statChanges: {"fireRate":0.4,"range":3} },
     { tier: 2, slot: 0, name: "Orokin Reach", description: "+0.5 Range", statChanges: {"range":0.5} },
     { tier: 2, slot: 1, name: "Bladed Harmony", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
-    { tier: 2, slot: 2, name: "Striking Swiftness", description: "+30% Sprint Speed", statChanges: {} },
+    { tier: 2, slot: 2, name: "Striking Swiftness", description: "+30% Sprint Speed", statChanges: {"sprintSpeed":0.3} },
     { tier: 3, slot: 0, name: "Hawk Momentum", description: "Gain 5 Combo for every 10m of continuous slide", statChanges: {} },
     // Assumes aerial attacks for paper display range
     { tier: 3, slot: 1, name: "Skyborne Hunter", description: "Increase range of aerial melee attacks by +0.5m.", statChanges: {"range":0.5} },
@@ -407,7 +407,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Swift Punishment", description: "Increase Base Damage by +X. With Sprint Speed 1.2 or Higher: +30% Direct Damage per Status Type affecting the target.", statChanges: {"flatBaseDamage":48,"fatalAfflictionPerStatus":0.3}, variantStatChanges: {"latron":{"flatBaseDamage":48,"fatalAfflictionPerStatus":0.3},"latron_wraith":{"flatBaseDamage":12,"fatalAfflictionPerStatus":0.3},"latron_prime":{"flatBaseDamage":6,"fatalAfflictionPerStatus":0.3}} },
     { tier: 3, slot: 0, name: "Marksman's Hand", description: "-60% Weapon Recoil.", statChanges: {"recoil":-0.6} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +15.", statChanges: {"flatMagazine":15} },
-    { tier: 3, slot: 2, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {"zoom":-0.3} },
     // wiki: −20% armor per Puncture stack (of original; 5 stacks = full strip)
     { tier: 4, slot: 0, name: "Flensing Spikes", description: "Remove 20% of enemy Armor per Puncture Status.", statChanges: {"punctureArmorStripPerStack":0.2} },
     { tier: 4, slot: 1, name: "Deadhead", description: "+100% Headshot Damage.", statChanges: {"headshotDamageBonus":1} },
@@ -515,7 +515,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Guardian's Might", description: "Increase Base Damage by +40. With Overshields: Increase Base Damage by +52.", statChanges: {"flatBaseDamage":92}, variantStatChanges: {"paris":{"flatBaseDamage":92},"mk1_paris":{"flatBaseDamage":102},"paris_prime":{"flatBaseDamage":72}} },
     // Assumes punch-through buff up for paper DPS
     { tier: 3, slot: 0, name: "Ardent Trigger", description: "On Punch Through Hit: +40% Fire Rate for 6s.", statChanges: {"fireRate":0.4} },
-    { tier: 3, slot: 1, name: "Markman's Focus", description: "-30% Zoom.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Markman's Focus", description: "-30% Zoom.", statChanges: {"zoom":-0.3} },
     { tier: 3, slot: 2, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
     // Assumes undamaged target for paper DPS
     { tier: 4, slot: 0, name: "Vicious Promise", description: "Increase Base Critical Chance by +40% on undamaged enemies. Increase Base Critical Damage Multiplier by +2x on undamaged enemies.", statChanges: {"criticalChance":0.4,"criticalMultiplier":2} },
@@ -545,13 +545,13 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 5x Combo and then Heavy Attack to activate Incarnon Form. +3 Range +40% Attack Speed", statChanges: {"fireRate":0.4,"range":3} },
     { tier: 2, slot: 0, name: "Seismic Slam", description: "+50% Slam Radius", statChanges: {} },
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
-    { tier: 2, slot: 2, name: "Drifting Grace", description: "+20% Sprint Speed +20% Slide", statChanges: {} },
+    { tier: 2, slot: 2, name: "Drifting Grace", description: "+20% Sprint Speed +20% Slide", statChanges: {"sprintSpeed":0.2,"slideSpeed":0.2} },
     { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count", statChanges: {} },
     // Assumes slide attacks for paper display range
     { tier: 3, slot: 1, name: "Reaching Lunge", description: "+1.5m Slide Attack Range", statChanges: {"range":1.5} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
-    { tier: 4, slot: 1, name: "Evolved Ascension", description: "+30% Parkour Velocity", statChanges: {} },
+    { tier: 4, slot: 1, name: "Evolved Ascension", description: "+30% Parkour Velocity", statChanges: {"parkourVelocity":0.3} },
     { tier: 4, slot: 2, name: "Vaulting Leap", description: "Increase Double Jump strength by +100%", statChanges: {} },
     // Assumes slide-kill buff up for paper DPS
     { tier: 5, slot: 0, name: "Transfigured Momentum", description: "On Slide Kill: +50% Heavy Attack Efficiency for 30s", statChanges: {"heavyAttackEfficiency":0.5} },
@@ -675,8 +675,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+0.1m × 20)
     { tier: 2, slot: 0, name: "Dreadful Reach", description: "On Weapon Status Effect: Gain +0.1 Range for 8 Seconds. Stacks 20x.", statChanges: {"range":2} },
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
-    // Assumes sliding for paper DPS
-    { tier: 2, slot: 2, name: "Raging Drift", description: "+80% Attack Speed while sliding. +20% Slide", statChanges: {"fireRate":0.8} },
+    // Assumes sliding for paper DPS (+80% AS); +20% Slide always applied
+    { tier: 2, slot: 2, name: "Raging Drift", description: "+80% Attack Speed while sliding. +20% Slide", statChanges: {"fireRate":0.8,"slideSpeed":0.2} },
     { tier: 3, slot: 0, name: "Nimble Scythe", description: "For each enemy hit by Slide Attack, gain +5 Combo Count", statChanges: {} },
     { tier: 3, slot: 1, name: "Echoes of Rage", description: "+1 Combo Count on Shard Damage", statChanges: {} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },

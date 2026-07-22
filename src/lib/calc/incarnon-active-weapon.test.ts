@@ -784,6 +784,43 @@ describe("evolution numeric fixes", () => {
     );
   });
 
+  it("zoom and movement Genesis appear on CalculatedStats", () => {
+    const despair = allWeapons.find((w) => w.id === "despair")!;
+    const focus = mergeIncarnonStatChanges(incarnonDataMap.get("despair")!, { 3: 0 }, "despair");
+    expect(focus?.zoom).toBe(-0.3);
+    expect(calculateWeaponBuild(despair, [], modsMap(), focus).zoom).toBe(-0.3);
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("dread")!, { 3: 1 }, "dread")?.zoom).toBe(
+      -0.3,
+    );
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("latron")!, { 3: 2 }, "latron")?.zoom).toBe(
+      -0.3,
+    );
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("paris")!, { 3: 1 }, "paris")?.zoom).toBe(
+      -0.3,
+    );
+
+    const innodem = allWeapons.find((w) => w.id === "innodem")!;
+    const swift = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 2: 2 }, "innodem");
+    expect(swift?.sprintSpeed).toBe(0.3);
+    expect(calculateWeaponBuild(innodem, [], modsMap(), swift).sprintSpeedBonus).toBe(0.3);
+
+    const praedos = allWeapons.find((w) => w.id === "praedos")!;
+    const grace = mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 2: 2 }, "praedos");
+    expect(grace).toMatchObject({ sprintSpeed: 0.2, slideSpeed: 0.2 });
+    expect(calculateWeaponBuild(praedos, [], modsMap(), grace)).toMatchObject({
+      sprintSpeedBonus: 0.2,
+      slideSpeedBonus: 0.2,
+    });
+    const ascension = mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 4: 1 }, "praedos");
+    expect(ascension?.parkourVelocity).toBe(0.3);
+    expect(calculateWeaponBuild(praedos, [], modsMap(), ascension).parkourVelocityBonus).toBe(0.3);
+
+    const thalys = allWeapons.find((w) => w.id === "thalys")!;
+    const drift = mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 2: 2 }, "thalys");
+    expect(drift).toMatchObject({ fireRate: 0.8, slideSpeed: 0.2 });
+    expect(calculateWeaponBuild(thalys, [], modsMap(), drift).slideSpeedBonus).toBe(0.2);
+  });
+
   it("melee followThrough panel: Crushing Verdict / Lone Blade", () => {
     const magistar = allWeapons.find((w) => w.id === "magistar")!;
     const verdict = mergeIncarnonStatChanges(incarnonDataMap.get("magistar")!, { 2: 0 }, "magistar");

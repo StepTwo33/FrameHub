@@ -482,6 +482,7 @@ export function calculateWeaponBuild(
     weepingWoundsBonus: 0,
     slideSpeedBonus: 0,
     sprintSpeedBonus: 0,
+    parkourVelocityBonus: 0,
   };
 
   // Collect elemental mods in order and other stat bonuses
@@ -1013,12 +1014,24 @@ export function calculateWeaponBuild(
         case 'projectileSpeed':
           stats.projectileSpeed = (stats.projectileSpeed ?? 0) + value;
           break;
-        case 'zoom': /* visual only */ break;
+        case 'zoom':
+          // Negative = reduced zoom (e.g. Marksman's Focus −30%). Display only.
+          stats.zoom = (stats.zoom ?? 0) + value;
+          break;
         case 'punchThrough':
           stats.punchThrough = (stats.punchThrough ?? 0) + value;
           break;
         case 'accuracy':
           stats.accuracy = (stats.accuracy ?? 0) + value;
+          break;
+        case 'sprintSpeed':
+          stats.sprintSpeedBonus = (stats.sprintSpeedBonus ?? 0) + value;
+          break;
+        case 'slideSpeed':
+          stats.slideSpeedBonus = (stats.slideSpeedBonus ?? 0) + value;
+          break;
+        case 'parkourVelocity':
+          stats.parkourVelocityBonus = (stats.parkourVelocityBonus ?? 0) + value;
           break;
         case 'ammoMax': /* riven % of ammo max — no base ammoMax on Weapon yet */ break;
         case 'flatAmmoMax':

@@ -332,6 +332,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             tooltip="Incarnon / riven recoil (display; negative = less recoil). Not modeled in DPS."
           />
         )}
+        {stats.zoom != null && stats.zoom !== 0 && (
+          <StatRow
+            label="Zoom"
+            value={`${stats.zoom > 0 ? "+" : ""}${(stats.zoom * 100).toFixed(0)}%`}
+            color={stats.zoom < 0 ? "text-green-400" : undefined}
+            tooltip="Incarnon / riven zoom (display; negative = less zoom). Not modeled in DPS."
+          />
+        )}
         {stats.holsterReloadPerSec != null && stats.holsterReloadPerSec !== 0 && (
           <StatRow
             label="Holster Reload"
@@ -370,6 +378,14 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             value={`${(stats.slideSpeedBonus ?? 0) > 0 ? "+" : ""}${((stats.slideSpeedBonus ?? 0) * 100).toFixed(0)}%`}
             color="text-cyan-400"
             tooltip="Warframe slide speed while this weapon is equipped."
+          />
+        )}
+        {(stats.parkourVelocityBonus ?? 0) !== 0 && (
+          <StatRow
+            label="Parkour Velocity"
+            value={`${(stats.parkourVelocityBonus ?? 0) > 0 ? "+" : ""}${((stats.parkourVelocityBonus ?? 0) * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Warframe parkour velocity while this weapon is equipped (display)."
           />
         )}
       </CollapsibleSection>
@@ -670,6 +686,10 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "followThrough") return `followThrough: +${(n * 100).toFixed(0)}%`;
                         if (s === "accuracy") return `acc: +${(n * 100).toFixed(0)}%`;
                         if (s === "recoil") return `recoil: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "zoom") return `zoom: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "sprintSpeed") return `sprint: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "slideSpeed") return `slide: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
+                        if (s === "parkourVelocity") return `parkour: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;
                         if (s === "holsterReloadPerSec") return `holster: ${(n * 100).toFixed(0)}%/s`;
                         if (s === "instantReloadOnKillChance") return `reload@kill: ${(n * 100).toFixed(0)}%`;
                         if (s === "instantReloadOnHeadshotChance") return `reload@HS: ${(n * 100).toFixed(0)}%`;
