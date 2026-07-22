@@ -132,7 +132,8 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
 
   // wiki: Virulence — length scales RNG; width Misc-fixed 4 m;
-  // energy refund/hit = 25% of cast cost → scales with EFF via cast_cost (base 10)
+  // energy refund/hit = 25% of cast cost → scales with EFF via cast_cost (base 10);
+  // panel: impact/field DPS = floor(base×STR×(1+Mutation stacks))
   "nidus::Virulence": {
     energyRefundPerHit: { scale: "efficiency", formula: "cast_cost" },
   },

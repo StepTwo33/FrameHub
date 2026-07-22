@@ -236,6 +236,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Covenant Retaliation CC | 2026-07-21 | CC=(5%+absorb÷100×1.5%)×STR; body cap 50% / HS ×4 cap 200%; wiki 3k→cap, 2k@130%→45.5%/182% |
 | Baruuk Restraint passive DR | 2026-07-21 | DR = eroded×50% (full erosion → 50%); passive text 50%; not × STR |
 | Virulence × Mutation stacks | 2026-07-21 | floor(base×STR×(1+stacks)); wiki 200×1.45×101=29290; Field DPS = half base × same |
+| Valkyr Rage passive | 2026-07-21 | Melee dmg bonus = Rage% (cap 300%); death prevention ≥150%; passive text filled |
 
 ## New / extended test files
 

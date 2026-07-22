@@ -21,6 +21,8 @@ import {
   computeCovenantCritChance,
   computeBaruukRestraintDr,
   computeVirulenceDamage,
+  computeValkyrRageMeleeBonus,
+  valkyrRageDeathPreventionActive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -263,6 +265,18 @@ describe("Virulence Mutation stacks", () => {
     expect(computeVirulenceDamage(200, 1.3, 100)).toBe(26260);
     expect(computeVirulenceDamage(200, 1.45, 100)).toBe(29290);
     expect(computeVirulenceDamage(100, 1.45, 100)).toBe(14645); // field DPS base
+  });
+});
+
+describe("Valkyr Rage passive", () => {
+  it("melee bonus tracks Rage % up to 300; death prevention at 150+", () => {
+    expect(computeValkyrRageMeleeBonus(0)).toBe(0);
+    expect(computeValkyrRageMeleeBonus(150)).toBe(1.5);
+    expect(computeValkyrRageMeleeBonus(300)).toBe(3);
+    expect(computeValkyrRageMeleeBonus(400)).toBe(3);
+    expect(valkyrRageDeathPreventionActive(149)).toBe(false);
+    expect(valkyrRageDeathPreventionActive(150)).toBe(true);
+    expect(valkyrRageDeathPreventionActive(300)).toBe(true);
   });
 });
 

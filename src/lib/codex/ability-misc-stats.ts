@@ -2306,6 +2306,18 @@ export function computeVirulenceDamage(
   return Math.floor(base * strength * (1 + Math.max(0, mutationStacks)));
 }
 
+/**
+ * wiki Valkyr Rage passive: melee damage bonus equals Rage meter % (cap 300%).
+ * Death prevention when Rage ≥ 150%.
+ */
+export function computeValkyrRageMeleeBonus(ragePercent: number): number {
+  return Math.min(300, Math.max(0, ragePercent)) / 100;
+}
+
+export function valkyrRageDeathPreventionActive(ragePercent: number): boolean {
+  return ragePercent >= 150;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

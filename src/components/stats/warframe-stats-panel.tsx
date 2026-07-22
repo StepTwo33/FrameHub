@@ -14,6 +14,8 @@ import {
   computeGaussPassiveShieldRecharge,
   computeGaussPassiveRechargeDelayReduction,
   computeBaruukRestraintDr,
+  computeValkyrRageMeleeBonus,
+  valkyrRageDeathPreventionActive,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -68,6 +70,37 @@ function BaruukRestraintPassive() {
         value={`${(dr * 100).toFixed(0)}%`}
         color="text-amber-400"
         tooltip="Max 50% at fully eroded meter (not affected by Ability Strength)."
+      />
+    </div>
+  );
+}
+
+function ValkyrRagePassive() {
+  const [ragePct, setRagePct] = useState(150);
+  const meleeBonus = computeValkyrRageMeleeBonus(ragePct);
+  const deathPrev = valkyrRageDeathPreventionActive(ragePct);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Rage %"
+        value={ragePct}
+        min={0}
+        max={300}
+        onChange={setRagePct}
+        tooltip="Valkyr Rage: melee damage bonus equals meter % (cap 300%). Death prevention at ≥150%."
+      />
+      <StatRow
+        label="Melee Damage"
+        value={`+${(meleeBonus * 100).toFixed(0)}%`}
+        color="text-red-400"
+        tooltip="Flat additive melee damage bonus from Rage (not × Ability Strength)."
+      />
+      <StatRow
+        label="Death Prevention"
+        value={deathPrev ? "Ready (≥150%)" : "Inactive"}
+        color={deathPrev ? "text-green-400" : "text-muted-foreground"}
+        tooltip="Fatal hit consumes Rage, grants 5s invuln and full heal (wiki)."
       />
     </div>
   );
@@ -173,6 +206,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           <p className="text-[11px] text-muted-foreground leading-relaxed py-1">{formatAbilityDescription(warframe.passive)}</p>
           {(warframe.id === "gauss" || warframe.id === "gauss_prime") && <GaussPassiveBattery />}
           {(warframe.id === "baruuk" || warframe.id === "baruuk_prime") && <BaruukRestraintPassive />}
+          {(warframe.id === "valkyr" || warframe.id === "valkyr_prime") && <ValkyrRagePassive />}
         </CollapsibleSection>
       )}
 
