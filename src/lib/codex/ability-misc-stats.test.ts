@@ -43,6 +43,8 @@ import {
   computeSarynPassiveStatusDurationMultiplier,
   computeKullervoMeleePassiveBonuses,
   computeVaubanIncapacitatedDamageBonus,
+  computeAshSlashPassiveBonuses,
+  computeHydroidCorrosiveArmorStrip,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -499,6 +501,28 @@ describe("Vauban incapacitated damage passive", () => {
   it("grants +25% multiplicative damage vs incapacitated", () => {
     expect(computeVaubanIncapacitatedDamageBonus(false)).toBe(0);
     expect(computeVaubanIncapacitatedDamageBonus(true)).toBeCloseTo(0.25, 5);
+  });
+});
+
+describe("Ash Slash status passive", () => {
+  it("grants +25% Slash status damage and +50% duration", () => {
+    expect(computeAshSlashPassiveBonuses()).toEqual({
+      statusDamageBonus: 0.25,
+      statusDurationBonus: 0.5,
+    });
+  });
+});
+
+describe("Hydroid Corrosive armor strip passive", () => {
+  it("raises first/full Corrosive strip to 50%/100% when marked", () => {
+    expect(computeHydroidCorrosiveArmorStrip(false)).toEqual({
+      firstStackStrip: 0.26,
+      fullStackStrip: 0.8,
+    });
+    expect(computeHydroidCorrosiveArmorStrip(true)).toEqual({
+      firstStackStrip: 0.5,
+      fullStackStrip: 1,
+    });
   });
 });
 

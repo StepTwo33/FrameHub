@@ -35,6 +35,8 @@ import {
   computeSarynPassiveStatusDurationMultiplier,
   computeKullervoMeleePassiveBonuses,
   computeVaubanIncapacitatedDamageBonus,
+  computeAshSlashPassiveBonuses,
+  computeHydroidCorrosiveArmorStrip,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -661,6 +663,65 @@ function VaubanIncapacitatedPassive() {
   );
 }
 
+function AshSlashPassive() {
+  const { statusDamageBonus, statusDurationBonus } = computeAshSlashPassiveBonuses();
+  const baseSlashSec = 6;
+  const scaledSlashSec = baseSlashSec * (1 + statusDurationBonus);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Slash Status Dmg"
+        value={`+${(statusDamageBonus * 100).toFixed(0)}%`}
+        color="text-red-400"
+        tooltip="Ash passive: Slash (Bleed) status damage +25%, additive with other Status Damage bonuses."
+      />
+      <StatRow
+        label="Slash Status Dur"
+        value={`+${(statusDurationBonus * 100).toFixed(0)}%`}
+        color="text-red-400"
+        tooltip="Slash status lasts 50% longer (6s → 9s before other duration mods)."
+      />
+      <StatRow
+        label="Example Bleed"
+        value={`${baseSlashSec}s → ${scaledSlashSec.toFixed(0)}s`}
+        color="text-muted-foreground"
+        tooltip="Default Slash DoT duration with Ash's duration bonus alone."
+      />
+    </div>
+  );
+}
+
+function HydroidCorrosivePassive() {
+  const [marked, setMarked] = useState(1);
+  const strip = computeHydroidCorrosiveArmorStrip(marked > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Marked by Hydroid"
+        value={marked}
+        min={0}
+        max={1}
+        onChange={setMarked}
+        tooltip="Hydroid: after he damages an enemy, Corrosive from any source gets boosted armor strip."
+      />
+      <StatRow
+        label="1st Stack Strip"
+        value={`${(strip.firstStackStrip * 100).toFixed(0)}%`}
+        color="text-lime-400"
+        tooltip="Normal Corrosive first stack is 26%; Hydroid-marked enemies take 50%."
+      />
+      <StatRow
+        label="Full Stack Strip"
+        value={`${(strip.fullStackStrip * 100).toFixed(0)}%`}
+        color="text-lime-400"
+        tooltip="Normal Corrosive caps at 80% armor strip; Hydroid-marked can reach 100%."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -800,6 +861,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "saryn" || warframe.id === "saryn_prime") && <SarynStatusDurationPassive />}
           {warframe.id === "kullervo" && <KullervoMeleePassive />}
           {(warframe.id === "vauban" || warframe.id === "vauban_prime") && <VaubanIncapacitatedPassive />}
+          {(warframe.id === "ash" || warframe.id === "ash_prime") && <AshSlashPassive />}
+          {(warframe.id === "hydroid" || warframe.id === "hydroid_prime") && <HydroidCorrosivePassive />}
         </CollapsibleSection>
       )}
 

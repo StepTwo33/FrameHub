@@ -2535,6 +2535,35 @@ export function computeVaubanIncapacitatedDamageBonus(incapacitated: boolean): n
   return incapacitated ? 0.25 : 0;
 }
 
+export interface AshSlashPassiveBonuses {
+  /** +25% Slash status (Bleed) damage. */
+  statusDamageBonus: number;
+  /** +50% Slash status duration. */
+  statusDurationBonus: number;
+}
+
+/** wiki Ash passive: Slash status +25% damage and +50% duration. */
+export function computeAshSlashPassiveBonuses(): AshSlashPassiveBonuses {
+  return { statusDamageBonus: 0.25, statusDurationBonus: 0.5 };
+}
+
+export interface HydroidCorrosiveArmorStrip {
+  /** Armor removed by the first Corrosive stack (26% normal / 50% marked). */
+  firstStackStrip: number;
+  /** Armor removed at full Corrosive stacks (80% normal / 100% marked). */
+  fullStackStrip: number;
+}
+
+/**
+ * wiki Hydroid passive: enemies he has damaged take 50% armor strip on the first
+ * Corrosive stack (vs 26%), allowing 100% strip at full stacks (vs 80%).
+ */
+export function computeHydroidCorrosiveArmorStrip(markedByHydroid: boolean): HydroidCorrosiveArmorStrip {
+  return markedByHydroid
+    ? { firstStackStrip: 0.5, fullStackStrip: 1 }
+    : { firstStackStrip: 0.26, fullStackStrip: 0.8 };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

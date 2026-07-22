@@ -248,6 +248,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mesa + Qorvex passives | 2026-07-22 | Mesa dual FR +15% / single reload +25% / +50 HP no melee; Qorvex Core Exposure +3 PT |
 | Excalibur + Saryn passives | 2026-07-22 | Swordsmanship +10% dmg/AS with swords; Saryn status duration ×1.25 (+25%) |
 | Kullervo + Vauban passives | 2026-07-22 | Kullervo +75% HAE / +100% Heavy Wind Up; Vauban +25% mult dmg vs incapacitated |
+| Ash + Hydroid passives | 2026-07-22 | Ash Slash status +25% dmg / +50% dur; Hydroid Corrosive 1st/full strip 50%/100% |
 
 ## New / extended test files
 
