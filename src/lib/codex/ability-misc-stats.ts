@@ -2738,6 +2738,30 @@ export function computeIvaraEnemyRadarRange(extraRadarM = 0): number {
   return 50 + Math.max(0, extraRadarM);
 }
 
+export interface NezhaSlidePassiveBonuses {
+  /** +60% slide speed. */
+  slideSpeedBonus: number;
+  /** +35% slide distance. */
+  slideDistanceBonus: number;
+}
+
+/** wiki Nezha: slides 60% faster and 35% farther (additive with Maglev etc.). */
+export function computeNezhaSlidePassiveBonuses(): NezhaSlidePassiveBonuses {
+  return { slideSpeedBonus: 0.6, slideDistanceBonus: 0.35 };
+}
+
+export interface MirageParkourPassiveBonuses {
+  /** +85% slide duration. */
+  slideDurationBonus: number;
+  /** +50% maneuver / parkour velocity. */
+  maneuverSpeedBonus: number;
+}
+
+/** wiki Mirage: sliding lasts 85% longer; acrobatic maneuvers 50% faster. */
+export function computeMirageParkourPassiveBonuses(): MirageParkourPassiveBonuses {
+  return { slideDurationBonus: 0.85, maneuverSpeedBonus: 0.5 };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

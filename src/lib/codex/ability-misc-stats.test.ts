@@ -58,6 +58,8 @@ import {
   computeNovaPassiveExpectedOrbs,
   computeIvaraEnemyRadarRange,
   DEFAULT_ENEMY_RADAR_M,
+  computeNezhaSlidePassiveBonuses,
+  computeMirageParkourPassiveBonuses,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -641,6 +643,24 @@ describe("Ivara enemy radar passive", () => {
     expect(DEFAULT_ENEMY_RADAR_M).toBe(30);
     expect(computeIvaraEnemyRadarRange()).toBe(50);
     expect(computeIvaraEnemyRadarRange(30)).toBe(80);
+  });
+});
+
+describe("Nezha slide passive", () => {
+  it("grants +60% slide speed and +35% slide distance", () => {
+    expect(computeNezhaSlidePassiveBonuses()).toEqual({
+      slideSpeedBonus: 0.6,
+      slideDistanceBonus: 0.35,
+    });
+  });
+});
+
+describe("Mirage parkour passive", () => {
+  it("grants +85% slide duration and +50% maneuver speed", () => {
+    expect(computeMirageParkourPassiveBonuses()).toEqual({
+      slideDurationBonus: 0.85,
+      maneuverSpeedBonus: 0.5,
+    });
   });
 });
 

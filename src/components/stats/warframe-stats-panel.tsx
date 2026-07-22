@@ -50,6 +50,8 @@ import {
   computeNovaPassiveExpectedOrbs,
   computeIvaraEnemyRadarRange,
   DEFAULT_ENEMY_RADAR_M,
+  computeNezhaSlidePassiveBonuses,
+  computeMirageParkourPassiveBonuses,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1035,6 +1037,48 @@ function IvaraRadarPassive() {
   );
 }
 
+function NezhaSlidePassive() {
+  const { slideSpeedBonus, slideDistanceBonus } = computeNezhaSlidePassiveBonuses();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Slide Speed"
+        value={`+${(slideSpeedBonus * 100).toFixed(0)}%`}
+        color="text-orange-400"
+        tooltip="Nezha passive: +60% slide speed (additive with Maglev / Cunning Drift). Can be disabled by Controlled Slide."
+      />
+      <StatRow
+        label="Slide Distance"
+        value={`+${(slideDistanceBonus * 100).toFixed(0)}%`}
+        color="text-orange-400"
+        tooltip="+35% slide distance (additive with other slide distance sources)."
+      />
+    </div>
+  );
+}
+
+function MirageParkourPassive() {
+  const { slideDurationBonus, maneuverSpeedBonus } = computeMirageParkourPassiveBonuses();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Slide Duration"
+        value={`+${(slideDurationBonus * 100).toFixed(0)}%`}
+        color="text-pink-400"
+        tooltip="Mirage passive: sliding lasts 85% longer."
+      />
+      <StatRow
+        label="Maneuver Speed"
+        value={`+${(maneuverSpeedBonus * 100).toFixed(0)}%`}
+        color="text-pink-400"
+        tooltip="+50% faster acrobatic maneuvers (parkour velocity)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1184,6 +1228,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "nekros" || warframe.id === "nekros_prime") && <NekrosDeathHealPassivePanel />}
           {(warframe.id === "nova" || warframe.id === "nova_prime") && <NovaOrbDropPassive />}
           {(warframe.id === "ivara" || warframe.id === "ivara_prime") && <IvaraRadarPassive />}
+          {(warframe.id === "nezha" || warframe.id === "nezha_prime") && <NezhaSlidePassive />}
+          {(warframe.id === "mirage" || warframe.id === "mirage_prime") && <MirageParkourPassive />}
         </CollapsibleSection>
       )}
 
