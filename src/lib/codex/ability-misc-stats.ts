@@ -3248,6 +3248,60 @@ export function computeWispAirborneInvisPassive(airborne: boolean): WispAirborne
   return { invisibleWhileAirborne: airborne };
 }
 
+export interface FollieInkblotPassive {
+  /** Move-speed slow while Inkblot is applied. */
+  slowFraction: number;
+  /** Inkblot duration (s). */
+  durationSec: number;
+  /** Chance for ink-coated kills to spawn an ink balloon. */
+  balloonChance: number;
+  /** Orbs dropped when a balloon pops (mixed Health/Energy). */
+  orbsPerBalloon: number;
+}
+
+/** Expected balloons (and orbs) from ink-coated kills. */
+export function computeFollieInkblotExpected(
+  inkKills: number,
+  passive: FollieInkblotPassive = computeFollieInkblotPassive(),
+): { expectedBalloons: number; expectedOrbs: number } {
+  const kills = Math.max(0, inkKills);
+  const expectedBalloons = kills * passive.balloonChance;
+  return {
+    expectedBalloons,
+    expectedOrbs: expectedBalloons * passive.orbsPerBalloon,
+  };
+}
+
+/** wiki Follie Inkblot: 50% slow for 10s; 20% chance on kill for balloon with 3 orbs. */
+export function computeFollieInkblotPassive(): FollieInkblotPassive {
+  return {
+    slowFraction: 0.5,
+    durationSec: 10,
+    balloonChance: 0.2,
+    orbsPerBalloon: 3,
+  };
+}
+
+export interface SevagothTombstonePassive {
+  /** Souls required to revive from Tombstone. */
+  soulsRequired: number;
+  /** Max range to harvest a soul (m). */
+  soulTrackRangeM: number;
+}
+
+/** Souls still needed after harvesting N souls. */
+export function computeSevagothTombstoneSoulsRemaining(
+  soulsHarvested: number,
+  passive: SevagothTombstonePassive = computeSevagothTombstonePassive(),
+): number {
+  return Math.max(0, passive.soulsRequired - Math.max(0, Math.floor(soulsHarvested)));
+}
+
+/** wiki Sevagoth: on fatal damage, Tombstone + Shadow; harvest 5 souls within 14m to revive. */
+export function computeSevagothTombstonePassive(): SevagothTombstonePassive {
+  return { soulsRequired: 5, soulTrackRangeM: 14 };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

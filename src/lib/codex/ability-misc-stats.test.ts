@@ -97,6 +97,10 @@ import {
   computeSiriusOrionPassive,
   computeSiriusOrionEfficiencyCastsRemaining,
   computeWispAirborneInvisPassive,
+  computeFollieInkblotPassive,
+  computeFollieInkblotExpected,
+  computeSevagothTombstonePassive,
+  computeSevagothTombstoneSoulsRemaining,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -960,6 +964,33 @@ describe("Wisp airborne invisibility passive", () => {
   it("is invisible only while airborne", () => {
     expect(computeWispAirborneInvisPassive(true)).toEqual({ invisibleWhileAirborne: true });
     expect(computeWispAirborneInvisPassive(false)).toEqual({ invisibleWhileAirborne: false });
+  });
+});
+
+describe("Follie Inkblot passive", () => {
+  it("applies 50% slow for 10s and 20% balloon chance for 3 orbs", () => {
+    expect(computeFollieInkblotPassive()).toEqual({
+      slowFraction: 0.5,
+      durationSec: 10,
+      balloonChance: 0.2,
+      orbsPerBalloon: 3,
+    });
+    expect(computeFollieInkblotExpected(10)).toEqual({
+      expectedBalloons: 2,
+      expectedOrbs: 6,
+    });
+  });
+});
+
+describe("Sevagoth Tombstone passive", () => {
+  it("requires 5 souls within 14m to revive", () => {
+    expect(computeSevagothTombstonePassive()).toEqual({
+      soulsRequired: 5,
+      soulTrackRangeM: 14,
+    });
+    expect(computeSevagothTombstoneSoulsRemaining(0)).toBe(5);
+    expect(computeSevagothTombstoneSoulsRemaining(3)).toBe(2);
+    expect(computeSevagothTombstoneSoulsRemaining(5)).toBe(0);
   });
 });
 

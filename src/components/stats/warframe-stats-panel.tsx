@@ -89,6 +89,10 @@ import {
   computeSiriusOrionPassive,
   computeSiriusOrionEfficiencyCastsRemaining,
   computeWispAirborneInvisPassive,
+  computeFollieInkblotPassive,
+  computeFollieInkblotExpected,
+  computeSevagothTombstonePassive,
+  computeSevagothTombstoneSoulsRemaining,
   type MesaSidearmStyle,
   type NovaSpeedState,
   type ChromaElement,
@@ -1815,6 +1819,68 @@ function WispAirborneInvisPassivePanel() {
   );
 }
 
+function FollieInkblotPassivePanel() {
+  const ink = computeFollieInkblotPassive();
+  const [kills, setKills] = useState(10);
+  const expected = computeFollieInkblotExpected(kills, ink);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Inkblot Slow"
+        value={`${(ink.slowFraction * 100).toFixed(0)}% · ${ink.durationSec}s`}
+        color="text-violet-300"
+        tooltip="Follie: abilities apply Inkblot (50% slow for 10s). Not dismissed by Nullifiers."
+      />
+      <SimSlider
+        label="Ink Kills"
+        value={kills}
+        min={0}
+        max={50}
+        onChange={setKills}
+        tooltip="While coated in ink, slain foes have a 20% chance to spawn an ink balloon that drops 3 mixed Health/Energy Orbs."
+      />
+      <StatRow
+        label="Expected Balloons"
+        value={expected.expectedBalloons.toFixed(1)}
+        color="text-amber-400"
+        tooltip={`${(ink.balloonChance * 100).toFixed(0)}% × ${kills} kills → ~${expected.expectedOrbs.toFixed(1)} orbs.`}
+      />
+    </div>
+  );
+}
+
+function SevagothTombstonePassivePanel() {
+  const tomb = computeSevagothTombstonePassive();
+  const [souls, setSouls] = useState(0);
+  const remaining = computeSevagothTombstoneSoulsRemaining(souls, tomb);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Souls Harvested"
+        value={souls}
+        min={0}
+        max={tomb.soulsRequired}
+        onChange={setSouls}
+        tooltip="Sevagoth Tombstone: on fatal damage, control Shadow and harvest 5 enemy souls to revive (allies can also interact)."
+      />
+      <StatRow
+        label="Souls Left"
+        value={remaining > 0 ? `${remaining}` : "Revived"}
+        color={remaining > 0 ? "text-violet-300" : "text-green-400"}
+        tooltip={`Track range ${tomb.soulTrackRangeM}m. Consume (passive) costs 0 Energy and instantly kills non-bosses.`}
+      />
+      <StatRow
+        label="Track Range"
+        value={`${tomb.soulTrackRangeM}m`}
+        color="text-muted-foreground"
+        tooltip="Targeted enemy must be within 14m to count toward the soul counter."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1992,6 +2058,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "nidus" || warframe.id === "nidus_prime") && <NidusUndyingPassivePanel />}
           {warframe.id === "sirius_orion" && <SiriusOrionPassivePanel />}
           {(warframe.id === "wisp" || warframe.id === "wisp_prime") && <WispAirborneInvisPassivePanel />}
+          {warframe.id === "follie" && <FollieInkblotPassivePanel />}
+          {(warframe.id === "sevagoth" || warframe.id === "sevagoth_prime") && (
+            <SevagothTombstonePassivePanel />
+          )}
         </CollapsibleSection>
       )}
 
