@@ -10,7 +10,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1.15,
     "description": "Launches seeking shuriken that deal Slash damage and pin enemies to walls.",
-    "passive": "<DT_SLASH_COLOR>Slash Status Effects inflicted on enemies do |DAMAGE|% increased damage and last |DURATION|% longer.",
+    "passive": "<DT_SLASH_COLOR>Slash Status Effects inflicted on enemies do 25% increased damage and last 50% longer.",
     "abilities": [
       {
         "name": "Shuriken",
@@ -71,7 +71,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1.2,
     "description": "Launches seeking shuriken that deal Slash damage and pin enemies to walls.",
-    "passive": "<DT_SLASH>Slash Status Effects inflicted on enemies do |DAMAGE|% increased damage and last |DURATION|% longer.",
+    "passive": "<DT_SLASH>Slash Status Effects inflicted on enemies do 25% increased damage and last 50% longer.",
     "abilities": [
       {
         "name": "Shuriken",
@@ -610,7 +610,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1.1,
     "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects.",
-    "passive": "Allies within Affinity range gain up to |PCT|% resistance to the types of damage they are currently taking.",
+    "passive": "Allies within Affinity range gain up to 50% resistance to the types of damage they are currently taking.",
     "abilities": [
       {
         "name": "Razor Gyre",
@@ -687,7 +687,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects.",
-    "passive": "Allies within Affinity range gain up to |PCT|% resistance to the types of damage they are currently taking.",
+    "passive": "Allies within Affinity range gain up to 50% resistance to the types of damage they are currently taking.",
     "abilities": [
       {
         "name": "Razor Gyre",
@@ -1058,7 +1058,7 @@ export const allWarframes: Warframe[] = [
     "energy": 180,
     "sprintSpeed": 1.1,
     "description": "Plant an antenna that projects a forward wave scan. Detected enemies take increased Weak Point Damage, and become visible through walls. Weapons gain Punch through.",
-    "passive": "Weak Point Kills increase Cyte-09's Weak Point Critical Chance by |INCREASE|% up to |CAP|% for the duration of the current mission.",
+    "passive": "Weak Point Kills increase Cyte-09's Weak Point Critical Chance by 1% up to 300% for the duration of the current mission.",
     "abilities": [
       {
         "name": "Seek",
@@ -1130,7 +1130,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Wyrd Scythes surround Dagath and seek out nearby enemies. Those struck are slowed and suffer <DT_VIRAL_COLOR>Viral Damage with a guaranteed Status Effect.",
-    "passive": "There is a |PERCENT|% chance that Energy and Health Orbs will be |ENERGY|% more effective on Dagath.",
+    "passive": "There is a 35% chance that Energy and Health Orbs will be 300% more effective on Dagath.",
     "abilities": [
       {
         "name": "Wyrd Scythes",
@@ -1207,7 +1207,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1.15,
     "description": "Open Noctua, Dante's Exalted Tome, and unleash a tale of woe upon his enemies.",
-    "passive": "Noctua scans targets, recording information for your Codex. Status Chance increases by |CHANCE|% on fully scanned targets.",
+    "passive": "Noctua scans targets, recording information for your Codex. Status Chance increases by 50% on fully scanned targets.",
     "abilities": [
       {
         "name": "Noctua",
@@ -1289,7 +1289,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Launch a fiery projectile dealing Heat damage. Can be combo-chained for increased damage. Immolation Heat adds bonus combo multiplier.",
-    "passive": "Receive |STRENGTH|% Ability Strength for every enemy within <AFFINITY_SHARE>Affinity Range affected by <DT_FIRE_COLOR>Heat.",
+    "passive": "Receive 5% Ability Strength for every enemy within <AFFINITY_SHARE>Affinity Range affected by <DT_FIRE_COLOR>Heat.",
     "abilities": [
       {
         "name": "Fireball",
@@ -1358,7 +1358,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Launch a fiery projectile dealing Heat damage. Can be combo-chained for increased damage. Immolation Heat adds bonus combo multiplier.",
-    "passive": "Receive |STRENGTH|% Ability Strength for every enemy within <AFFINITY_SHARE>Affinity Range affected by <DT_FIRE_COLOR>Heat.",
+    "passive": "Receive 5% Ability Strength for every enemy within <AFFINITY_SHARE>Affinity Range affected by <DT_FIRE_COLOR>Heat.",
     "abilities": [
       {
         "name": "Fireball",
@@ -1427,7 +1427,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Switch forms, temporarily gaining bonus Shields and Armor in Night-Form, or bonus Damage and Speed in Day-Form.",
-    "passive": "|PERCENT|% of Health Orbs are converted into Energy, and |PERCENT|% of Energy Orbs are converted into Health.",
+    "passive": "10% of Health Orbs are converted into Energy, and 10% of Energy Orbs are converted into Health.",
     "abilities": [
       {
         "name": "Metamorphosis",
@@ -1498,7 +1498,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1.15,
     "description": "Switch forms, temporarily gaining bonus Shields and Armor in Night-Form, or bonus Damage and Speed in Day-Form.",
-    "passive": "|PERCENT|% of Health Orbs are converted into Energy, and |PERCENT|% of Energy Orbs are converted into Health.",
+    "passive": "10% of Health Orbs are converted into Energy, and 10% of Energy Orbs are converted into Health.",
     "abilities": [
       {
         "name": "Metamorphosis",
@@ -1569,7 +1569,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1,
     "description": "Slash and dash through enemies alongside a radial specter. The powerful Exalted Blade's slashes inflict Slash Status.",
-    "passive": "Excalibur deals |DAMAGE|% increased damage and attacks |SPEED|% faster when wielding swords.",
+    "passive": "Excalibur deals 10% increased damage and attacks 10% faster when wielding swords.",
     "abilities": [
       {
         "name": "Slash Dash",
@@ -1625,7 +1625,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Slash and dash through enemies alongside a radial specter. The powerful Exalted Blade's slashes inflict Slash Status.",
-    "passive": "Excalibur Prime deals |DAMAGE|% increased damage and attacks |SPEED|% faster when wielding swords.",
+    "passive": "Excalibur Prime deals 10% increased damage and attacks 10% faster when wielding swords.",
     "abilities": [
       {
         "name": "Slash Dash",
@@ -1681,7 +1681,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Slash and dash through enemies alongside a radial specter. The powerful Exalted Blade\u2019s slashes inflict <DT_SLASH_COLOR>Slash Status.",
-    "passive": "Umbra exhibits sentience in combat without Transference control. Attacks |SPEED|% faster and deals |DAMAGE|% more damage while wielding swords.",
+    "passive": "Umbra exhibits sentience in combat without Transference control. Attacks 10% faster and deals 10% more damage while wielding swords.",
     "abilities": [
       {
         "name": "Slash Dash",
@@ -1815,7 +1815,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 0.94999999,
     "description": "Launch a freezing projectile that deals Cold damage and freezes solid on impact.",
-    "passive": "Cold Status Effects from Frost's Abilities last |DURATION|% longer. Frost gains |ARMOR| Armor for each enemy afflicted with <DT_FREEZE_COLOR>Cold within <AFFINITY_SHARE>Affinity Range.",
+    "passive": "Cold Status Effects from Frost's Abilities last 100% longer. Frost gains 50 Armor for each enemy afflicted with <DT_FREEZE_COLOR>Cold within <AFFINITY_SHARE>Affinity Range.",
     "abilities": [
       {
         "name": "Freeze",
@@ -1886,7 +1886,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 0.94999999,
     "description": "Launch a freezing projectile that deals Cold damage and freezes solid on impact.",
-    "passive": "Cold Status Effects from Frost's Abilities last |DURATION|% longer. Frost gains |ARMOR| Armor for each enemy afflicted with <DT_FREEZE_COLOR>Cold within <AFFINITY_SHARE>Affinity Range.",
+    "passive": "Cold Status Effects from Frost's Abilities last 100% longer. Frost gains 50 Armor for each enemy afflicted with <DT_FREEZE_COLOR>Cold within <AFFINITY_SHARE>Affinity Range.",
     "abilities": [
       {
         "name": "Freeze",
@@ -1957,7 +1957,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Lash out with stream of shattered glass, or hold for an arcing strike. Stats are boosted by the equipped mods on Shattered Lash.",
-    "passive": "A chance to create a radial blind lasting |DURATION|s when Gara casts Abilities.",
+    "passive": "A 15% chance to create a radial blind lasting 10s when Gara casts Abilities.",
     "abilities": [
       {
         "name": "Shattered Lash",
@@ -2036,7 +2036,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Lash out with stream of shattered glass, or hold for an arcing strike. Stats are boosted by the equipped mods on Shattered Lash.",
-    "passive": "A chance to create a radial blind lasting |DURATION|s when Gara casts Abilities.",
+    "passive": "A 15% chance to create a radial blind lasting 10s when Gara casts Abilities.",
     "abilities": [
       {
         "name": "Shattered Lash",
@@ -2115,7 +2115,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1,
     "description": "Rip the life force from an enemy and use it as a shield that captures damage, this kills significantly weakened enemies instantly. Charge to channel the captured damage into an explosive projectile.",
-    "passive": "Garuda's damage temporarily increases with each enemy she kills, to a maximum of |DAMAGE|%.  Slashes with her talons if no melee weapon is equipped.",
+    "passive": "Garuda's damage temporarily increases with each enemy she kills, to a maximum of 100%.  Slashes with her talons if no melee weapon is equipped.",
     "abilities": [
       {
         "name": "Dread Mirror",
@@ -2186,7 +2186,7 @@ export const allWarframes: Warframe[] = [
     "energy": 220,
     "sprintSpeed": 1,
     "description": "Rip the life force from an enemy and use it as a shield that captures damage, this kills significantly weakened enemies instantly. Charge to channel the captured damage into an explosive projectile.",
-    "passive": "Garuda's damage temporarily increases with each enemy she kills, to a maximum of |DAMAGE|%.  Slashes with her talons if no melee weapon is equipped.",
+    "passive": "Garuda's damage temporarily increases with each enemy she kills, to a maximum of 100%.  Slashes with her talons if no melee weapon is equipped.",
     "abilities": [
       {
         "name": "Dread Mirror",
@@ -2415,7 +2415,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 0.94999999,
     "description": "Swallow enemies whole and store them in Grendel's gut. Hold to vomit out stored enemies, covering them in toxic bile.",
-    "passive": "Each enemy consumed grants |ARMOUR| bonus armor.",
+    "passive": "Each enemy consumed grants 250 bonus armor.",
     "abilities": [
       {
         "name": "Feast",
@@ -2493,7 +2493,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 0.94999999,
     "description": "Swallow enemies whole and store them in Grendel's gut. Hold to vomit out stored enemies, covering them in toxic bile.",
-    "passive": "Each enemy consumed grants |ARMOUR| bonus armor.",
+    "passive": "Each enemy consumed grants 250 bonus armor.",
     "abilities": [
       {
         "name": "Feast",
@@ -3036,7 +3036,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1.05,
     "description": "Summon a tempest to rain down upon a target area.",
-    "passive": "Enemies damaged by Hydroid are more vulnerable to Corrosive Status, with initial Status reducing Armor by |PCT|%.",
+    "passive": "Enemies damaged by Hydroid are more vulnerable to Corrosive Status, with initial Status reducing Armor by 50%.",
     "abilities": [
       {
         "name": "Tempest Barrage",
@@ -3108,7 +3108,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.05,
     "description": "Summon a tempest to rain down upon a target area.",
-    "passive": "Enemies damaged by Hydroid are more vulnerable to Corrosive Status, with initial Status reducing Armor by |PCT|%.",
+    "passive": "Enemies damaged by Hydroid are more vulnerable to Corrosive Status, with initial Status reducing Armor by 50%.",
     "abilities": [
       {
         "name": "Tempest Barrage",
@@ -3322,7 +3322,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.15,
     "description": "Cycle through and shoot one of four tactical arrows. Cloak creates a stationary bubble that cloaks Ivara and allies. Dashwire creates a traversable zipline. Noise emits a high-pitched sound to attract enemies. Sleep puts enemies to sleep.",
-    "passive": "Senses nearby enemies within |RADIUS|m.",
+    "passive": "Senses nearby enemies within 50m.",
     "abilities": [
       {
         "name": "Quiver",
@@ -3395,7 +3395,7 @@ export const allWarframes: Warframe[] = [
     "energy": 250,
     "sprintSpeed": 1.2,
     "description": "Cycle through and shoot one of four tactical arrows. Cloak creates a stationary bubble that cloaks Ivara and allies. Dashwire creates a traversable zipline. Noise emits a high-pitched sound to attract enemies. Sleep puts enemies to sleep.",
-    "passive": "Senses nearby enemies within |RADIUS|m.",
+    "passive": "Senses nearby enemies within 50m.",
     "abilities": [
       {
         "name": "Quiver",
@@ -3468,7 +3468,7 @@ export const allWarframes: Warframe[] = [
     "energy": 150,
     "sprintSpeed": 1,
     "description": "Create a well of light that heals allies and hurts enemies. Those who enter the well will be highlighted by Judgments.",
-    "passive": "Jade's profound understanding of the relationship between life and death grants her two Aura Mod Slots. Some of her Abilities apply Judgments, increasing enemy damage vulnerability by |CHANCE|% for |DURATION|s.",
+    "passive": "Jade's profound understanding of the relationship between life and death grants her two Aura Mod Slots. Some of her Abilities apply Judgments, increasing enemy damage vulnerability by 50% for 10s.",
     "abilities": [
       {
         "name": "Light's Judgment",
@@ -3549,7 +3549,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1.05,
     "description": "Send enemies reeling with a deafening whipcrack. Stats are boosted by the equipped mods on Whipclaw.",
-    "passive": "The ferocious kavat, Venari, fights by Khora's side and provides her with a |SPEED|% speed boost while active. If killed, Venari will reappear after |RESPAWN|s.",
+    "passive": "The ferocious kavat, Venari, fights by Khora's side and provides her with a 15% speed boost while active. If killed, Venari will reappear after 45s.",
     "abilities": [
       {
         "name": "Whipclaw",
@@ -3618,7 +3618,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.05,
     "description": "Send enemies reeling with a deafening whipcrack. Stats are boosted by the equipped mods on Whipclaw.",
-    "passive": "The ferocious kavat, Venari, fights by Khora's side and provides her with a |SPEED|% speed boost while active. If killed, Venari will reappear after |RESPAWN|s.",
+    "passive": "The ferocious kavat, Venari, fights by Khora's side and provides her with a 15% speed boost while active. If killed, Venari will reappear after 45s.",
     "abilities": [
       {
         "name": "Whipclaw",
@@ -3687,7 +3687,7 @@ export const allWarframes: Warframe[] = [
     "energy": 122,
     "sprintSpeed": 1,
     "description": "Weave the threads of destiny. Enemies who touch the threads suffer a random Elemental Status Effect. A roll of triple sixes creates threads that inflict one of every Elemental Status at once.",
-    "passive": "Every |DURATION| seconds, one of Koumei's weapons will inflict random Status Effects for |DURATION| seconds.",
+    "passive": "Every 60 seconds, one of Koumei's weapons will inflict random Status Effects for 60 seconds.",
         "abilities": [
       {
         "name": "Kumihimo",
@@ -3756,7 +3756,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "(TAP) Kullervo charges a Heavy Attack, then teleports to his target and strikes. His rage-filled focus temporarily increases his Melee Critical Chance. (HOLD) Teleport to any marked target.",
-    "passive": "Kullervo boasts +|EFFICIENCY|% Heavy Attack Efficiency and +|WINDUP|% Heavy Attack Wind Up Speed on all melee weapons.",
+    "passive": "Kullervo boasts +75% Heavy Attack Efficiency and +100% Heavy Attack Wind Up Speed on all melee weapons.",
     "abilities": [
       {
         "name": "Wrathful Advance",
@@ -3826,7 +3826,7 @@ export const allWarframes: Warframe[] = [
     "energy": 0,
     "sprintSpeed": 1.15,
     "description": "Lash out with a toxic serpentine strike, consuming the target to heal Lavos. Hold to imbue all abilities with Toxin.",
-    "passive": "Energy and Universal Orbs give Lavos status immunity for |DURATION|s. Hold any ability to imbue the next cast with additional Elemental Damage and Status.",
+    "passive": "Energy and Universal Orbs give Lavos status immunity for 10s. Hold any ability to imbue the next cast with additional Elemental Damage and Status.",
     "abilities": [
       {
         "name": "Ophidian Bite",
@@ -3903,7 +3903,7 @@ export const allWarframes: Warframe[] = [
     "energy": 0,
     "sprintSpeed": 1.15,
     "description": "Lash out with a toxic serpentine strike, consuming the target to heal Lavos. Hold to imbue all abilities with Toxin.",
-    "passive": "Energy and Universal Orbs give Lavos status immunity for |DURATION|s. Hold any ability to imbue the next cast with additional Elemental Damage and Status.",
+    "passive": "Energy and Universal Orbs give Lavos status immunity for 10s. Hold any ability to imbue the next cast with additional Elemental Damage and Status.",
     "abilities": [
       {
         "name": "Ophidian Bite",
@@ -3980,7 +3980,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Casts a wave of Rift energy that damages hostiles while pushing enemies and allies out of Limbo's current plane of existence.",
-    "passive": "Dodge to enter and exit the Rift. Entering leaves behind a small Rift portal lasting |DURATION|s. Energy slowly recharges in the Rift, and each enemy killed in there also gives |ENERGY| Energy.",
+    "passive": "Dodge to enter and exit the Rift. Entering leaves behind a small Rift portal lasting 5s. Energy slowly recharges in the Rift, and each enemy killed in there also gives 10 Energy.",
     "abilities": [
       {
         "name": "Banish",
@@ -4048,7 +4048,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.15,
     "description": "Casts a wave of Rift energy that damages hostiles while pushing enemies and allies out of Limbo's current plane of existence.",
-    "passive": "Dodge to enter and exit the Rift. Entering leaves behind a small Rift portal lasting |DURATION|s. Energy slowly recharges in the Rift, and each enemy killed in there also gives |ENERGY| Energy.",
+    "passive": "Dodge to enter and exit the Rift. Entering leaves behind a small Rift portal lasting 5s. Energy slowly recharges in the Rift, and each enemy killed in there also gives 10 Energy.",
     "abilities": [
       {
         "name": "Banish",
@@ -4116,7 +4116,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.25,
     "description": "Loki deploys a holographic copy of himself that draws enemy fire and absorbs a portion of nearby enemy health and shields.",
-    "passive": "Able to hang from walls |MULT|x longer than normal.",
+    "passive": "Able to hang from walls 10x longer than normal.",
     "abilities": [
       {
         "name": "Decoy",
@@ -4169,7 +4169,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.25,
     "description": "Loki deploys a holographic copy of himself that draws enemy fire and absorbs a portion of nearby enemy health and shields.",
-    "passive": "Able to hang from walls |MULT|x longer than normal.",
+    "passive": "Able to hang from walls 10x longer than normal.",
     "abilities": [
       {
         "name": "Decoy",
@@ -4362,7 +4362,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1.1,
     "description": "When activated, this power stores damage caused by guns. When triggered again, that damage is channelled through the next gunshot.",
-    "passive": "Shoot dual-wielded sidearms |SPEED|% faster and reload single-handed sidearms |RELOAD|% more rapidly. Gain |HEALTH| Bonus Health when not using Melee Weapons.",
+    "passive": "Shoot dual-wielded sidearms 15% faster and reload single-handed sidearms 25% more rapidly. Gain 50 Bonus Health when not using Melee Weapons.",
     "abilities": [
       {
         "name": "Ballistic Battery",
@@ -4426,7 +4426,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1.1,
     "description": "When activated, this power stores damage caused by guns. When triggered again, that damage is channelled through the next gunshot.",
-    "passive": "Shoot dual-wielded sidearms |SPEED|% faster and reload single-handed sidearms |RELOAD|% more rapidly. Gain |HEALTH| Bonus Health when not using Melee Weapons.",
+    "passive": "Shoot dual-wielded sidearms 15% faster and reload single-handed sidearms 25% more rapidly. Gain 50 Bonus Health when not using Melee Weapons.",
     "abilities": [
       {
         "name": "Ballistic Battery",
@@ -4490,7 +4490,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.2,
     "description": "Mirage creates an entourage of doppelgangers to confuse and distract the enemy.",
-    "passive": "Sliding lasts |DURATION|% longer and acrobatic maneuvers are |SPEED|% faster.",
+    "passive": "Sliding lasts 85% longer and acrobatic maneuvers are 50% faster.",
     "abilities": [
       {
         "name": "Hall Of Mirrors",
@@ -4564,7 +4564,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.2,
     "description": "Mirage creates an entourage of doppelgangers to confuse and distract the enemy.",
-    "passive": "Sliding lasts |DURATION|% longer and acrobatic maneuvers are |SPEED|% faster.",
+    "passive": "Sliding lasts 85% longer and acrobatic maneuvers are 50% faster.",
     "abilities": [
       {
         "name": "Hall Of Mirrors",
@@ -4638,7 +4638,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1.1,
     "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's shadows if killed.",
-    "passive": "Restore |HEALTH| Health with every enemy death within |RADIUS|m.",
+    "passive": "Restore 5 Health with every enemy death within 10m.",
     "abilities": [
       {
         "name": "Soul Punch",
@@ -4701,7 +4701,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1.1,
     "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's shadows if killed.",
-    "passive": "Restore |HEALTH| Health with every enemy death within |RADIUS|m.",
+    "passive": "Restore 5 Health with every enemy death within 10m.",
     "abilities": [
       {
         "name": "Soul Punch",
@@ -4764,7 +4764,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Blaze a trail of flames, scorching enemies and cleansing allies. Teleporting blasts the landing area with a ring of fire.",
-    "passive": "Slide |SPEED|% faster and go |RANGE|% farther.",
+    "passive": "Slide 60% faster and go 35% farther.",
     "abilities": [
       {
         "name": "Fire Walker",
@@ -4841,7 +4841,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.2,
     "description": "Blaze a trail of flames, scorching enemies and cleansing allies. Teleporting blasts the landing area with a ring of fire.",
-    "passive": "Slide |SPEED|% faster and go |RANGE|% farther.",
+    "passive": "Slide 60% faster and go 35% farther.",
     "abilities": [
       {
         "name": "Fire Walker",
@@ -5147,7 +5147,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.2,
     "description": "Creates antimatter particles that orbit Nova and attack nearby targets. Each active particle reduces damage to Nova's Health and Shields.",
-    "passive": "Enemies killed while slowed down have |CHANCE|% to drop health orbs. Enemies killed while sped up have |CHANCE|% to drop energy orbs.",
+    "passive": "Enemies killed while slowed down have 15% to drop health orbs. Enemies killed while sped up have 15% to drop energy orbs.",
     "abilities": [
       {
         "name": "Null Star",
@@ -5219,7 +5219,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.2,
     "description": "Creates antimatter particles that orbit Nova and attack nearby targets. Each active particle reduces damage to Nova's Health and Shields.",
-    "passive": "Enemies killed while slowed down have |CHANCE|% to drop health orbs. Enemies killed while sped up have |CHANCE|% to drop energy orbs.",
+    "passive": "Enemies killed while slowed down have 15% to drop health orbs. Enemies killed while sped up have 15% to drop energy orbs.",
     "abilities": [
       {
         "name": "Null Star",
@@ -5451,7 +5451,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Focuses deadly energy within a target, dealing massive damage and removing all of its defenses, including Overguard. Enemies near the target also take a portion of the damage.",
-    "passive": "Oberon grants Righteous Negation to himself and his allies in Affinity Range when he collects Health Orbs, protecting players against the next instance of damage. Stacks up to |STACKS| times.",
+    "passive": "Oberon grants Righteous Negation to himself and his allies in Affinity Range when he collects Health Orbs, protecting players against the next instance of damage. Stacks up to 3 times.",
     "abilities": [
       {
         "name": "Smite",
@@ -5530,7 +5530,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1,
     "description": "Focuses deadly energy within a target, dealing massive damage and removing all of its defenses, including Overguard. Enemies near the target also take a portion of the damage.",
-    "passive": "Oberon grants Righteous Negation to himself and his allies in Affinity Range when he collects Health Orbs, protecting players against the next instance of damage. Stacks up to |STACKS| times.",
+    "passive": "Oberon grants Righteous Negation to himself and his allies in Affinity Range when he collects Health Orbs, protecting players against the next instance of damage. Stacks up to 3 times.",
     "abilities": [
       {
         "name": "Smite",
@@ -5609,7 +5609,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.05,
     "description": "Rhythmically beats damage into nearby enemies and draws their fire. Damage inflicted on the Mallet increases its lethality.",
-    "passive": "Replenish |ENERGY| energy over |DURATION|s for Octavia and allies within |RANGE|m when abilities are activated.",
+    "passive": "Replenish 1 energy per second over 30s for Octavia and allies within 15m when abilities are activated.",
     "abilities": [
       {
         "name": "Mallet",
@@ -5675,7 +5675,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.05,
     "description": "Rhythmically beats damage into nearby enemies and draws their fire. Damage inflicted on the Mallet increases its lethality.",
-    "passive": "Replenish |ENERGY| energy over |DURATION|s for Octavia and allies within |RANGE|m when abilities are activated.",
+    "passive": "Replenish 1 energy per second over 30s for Octavia and allies within 15m when abilities are activated.",
     "abilities": [
       {
         "name": "Mallet",
@@ -5741,7 +5741,7 @@ export const allWarframes: Warframe[] = [
     "energy": 150,
     "sprintSpeed": 1,
     "description": "Leap onto an enemy and pierce them with Oraxia\u2019s spider legs, dealing <DT_POISON_COLOR>Toxin Damage. Enemies defeated by this attack have a chance to drop Health or Energy Orbs.",
-    "passive": "Wall Latching grants Predator's Lurk, rendering Oraxia invisible for |DURATION|s.",
+    "passive": "Wall Latching grants Predator's Lurk, rendering Oraxia invisible for 8s.",
         "abilities": [
       {
         "name": "Mercy's Kiss",
@@ -5823,7 +5823,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.2,
     "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overchar...",
-    "passive": "Every |CASTS|th Power Cast is granted +|STRENGTH|% Ability Strength.",
+    "passive": "Every 4th Power Cast is granted +100% Ability Strength.",
     "abilities": [
       {
         "name": "Grenade Fan",
@@ -5899,7 +5899,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1.2,
     "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overchar...",
-    "passive": "Every |CASTS|th Power Cast is granted +|STRENGTH|% Ability Strength.",
+    "passive": "Every 4th Power Cast is granted +100% Ability Strength.",
     "abilities": [
       {
         "name": "Grenade Fan",
@@ -5975,7 +5975,7 @@ export const allWarframes: Warframe[] = [
     "energy": 150,
     "sprintSpeed": 0.89999998,
     "description": "Summon a Chyrinka Pillar that slows enemies. It pulses <DT_RADIATION_COLOR>Radiation Damage with a guaranteed Status Effect.",
-    "passive": "Weapons wielded by Qorvex have an additional +|PUNCH_THROUGH| Punch Through.",
+    "passive": "Weapons wielded by Qorvex have an additional +3 Punch Through.",
     "abilities": [
       {
         "name": "Chyrinka Pillar",
@@ -6057,7 +6057,7 @@ export const allWarframes: Warframe[] = [
     "energy": 140,
     "sprintSpeed": 1,
     "description": "Convert a target into a zealous thrall. Thralls turn on their allies and enthrall through damage. On death, they disintegrate into a damaging pillar of energy.",
-    "passive": "Shield depletion smashes enemies within |RADIUS|m with a |DAMAGE| Damage knockdown shockwave.",
+    "passive": "Shield depletion smashes enemies within 7.5m with a 100 Damage knockdown shockwave.",
     "abilities": [
       {
         "name": "Enthrall",
@@ -6128,7 +6128,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Convert a target into a zealous thrall. Thralls turn on their allies and enthrall through damage. On death, they disintegrate into a damaging pillar of energy.",
-    "passive": "Shield depletion smashes enemies within |RADIUS|m with a |DAMAGE| Damage knockdown shockwave.",
+    "passive": "Shield depletion smashes enemies within 7.5m with a 100 Damage knockdown shockwave.",
     "abilities": [
       {
         "name": "Enthrall",
@@ -6199,7 +6199,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 0.94999999,
     "description": "Rhino charges towards a target, clobbering any in his path and goring his victim.",
-    "passive": "Emit a shockwave dealing |DAMAGE| damage after landing from a great height.",
+    "passive": "Emit a shockwave dealing 100 damage after landing from a great height.",
     "abilities": [
       {
         "name": "Rhino Charge",
@@ -6259,7 +6259,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1,
     "description": "Rhino charges towards a target, clobbering any in his path and goring his victim.",
-    "passive": "Emit a shockwave dealing |DAMAGE| damage after landing from a great height.",
+    "passive": "Emit a shockwave dealing 100 damage after landing from a great height.",
     "abilities": [
       {
         "name": "Rhino Charge",
@@ -6319,7 +6319,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 0.94999999,
     "description": "Inflict a target with a pox of Corrosive spores. Spread spores to nearby enemies by destroying them or killing their host. The longer the Spore spreads, its damage increases.",
-    "passive": "Status Effects inflicted upon enemies last |DURATION|% longer.",
+    "passive": "Status Effects inflicted upon enemies last 25% longer.",
     "abilities": [
       {
         "name": "Spores",
@@ -6397,7 +6397,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1,
     "description": "Inflict a target with a pox of Corrosive spores. Spread spores to nearby enemies by destroying them or killing their host. The longer the Spore spreads, its damage increases.",
-    "passive": "Status Effects inflicted upon enemies last |DURATION|% longer.",
+    "passive": "Status Effects inflicted upon enemies last 25% longer.",
     "abilities": [
       {
         "name": "Spores",
@@ -6856,7 +6856,7 @@ export const allWarframes: Warframe[] = [
     "energy": 165,
     "sprintSpeed": 1,
     "description": "Blast targeted enemies with pillars of <DT_FIRE_COLOR>Heat Damage.   Backbeat Timing: Ignite even more pillars. Increases the Duration and <DT_FIRE_COLOR>Heat Damage of Ripper\"...",
-    "passive": "Play abilities in sync with the Backbeat metronome to invigorate ability effects while increasing Ability Efficiency by |COST|%.",
+    "passive": "Play abilities in sync with the Backbeat metronome to invigorate ability effects while increasing Ability Efficiency by 50%.",
     "abilities": [
       {
         "name": "Pyrotechnics",
@@ -7074,7 +7074,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Create a well of life on an enemy who will absorb Status Effect damage intended for nearby allies. Allies gain additional Health when they attack the target. If allies die, enemies in the well die in their stead.",
-    "passive": "Allies in Affinity Range gain |BUFF|% of Trinity's Max Energy as Health.",
+    "passive": "Allies in Affinity Range gain 50% of Trinity's Max Energy as Health.",
     "abilities": [
       {
         "name": "Well Of Life",
@@ -7143,7 +7143,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.1,
     "description": "Create a well of life on an enemy who will absorb Status Effect damage intended for nearby allies. Allies gain additional Health when they attack the target. If allies die, enemies in the well die in their stead.",
-    "passive": "Allies in Affinity Range gain |BUFF|% of Trinity's Max Energy as Health.",
+    "passive": "Allies in Affinity Range gain 50% of Trinity's Max Energy as Health.",
     "abilities": [
       {
         "name": "Well Of Life",
@@ -7434,7 +7434,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Deploy a roller drone that attaches itself to enemies and delivers bursts of arcing electricity to anything in the immediate area.",
-    "passive": "Deal |DAMAGE|% Extra Damage to incapacitated enemies.",
+    "passive": "Deal 25% Extra Damage to incapacitated enemies.",
     "abilities": [
       {
         "name": "Tesla Nervos",
@@ -7518,7 +7518,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1,
     "description": "Deploy a roller drone that attaches itself to enemies and delivers bursts of arcing electricity to anything in the immediate area.",
-    "passive": "Deal |DAMAGE|% Extra Damage to incapacitated enemies.",
+    "passive": "Deal 25% Extra Damage to incapacitated enemies.",
     "abilities": [
       {
         "name": "Tesla Nervos",
@@ -7666,7 +7666,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1,
     "description": "Launch a voltaic projectile that stuns and damages its target. A chain of electricity extends from the target to shock nearby enemies.",
-    "passive": "Grounded movement generates an electrical charge building up |DAMAGE| Damage per meter that is unleashed with the next attack.",
+    "passive": "Grounded movement generates an electrical charge building up 10 Damage per meter that is unleashed with the next attack.",
     "abilities": [
       {
         "name": "Shock",
@@ -7730,7 +7730,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1,
     "description": "Launch a voltaic projectile that stuns and damages its target. A chain of electricity extends from the target to shock nearby enemies.",
-    "passive": "Grounded movement generates an electrical charge building up |DAMAGE| Damage per meter that is unleashed with the next attack.",
+    "passive": "Grounded movement generates an electrical charge building up 10 Damage per meter that is unleashed with the next attack.",
     "abilities": [
       {
         "name": "Shock",
@@ -8230,7 +8230,7 @@ export const allWarframes: Warframe[] = [
     "energy": 160,
     "sprintSpeed": 1.02,
     "description": "Wield Void Damage for all attacks from equipped weapons when activated.",
-    "passive": "|CHANCE|% Damage Reduction on AOE attacks and chance to avoid incoming weapon damage.",
+    "passive": "25% Damage Reduction on AOE attacks and 25% chance to avoid incoming weapon damage.",
     "abilities": [
       {
         "name": "Xata's Whisper",
@@ -8307,7 +8307,7 @@ export const allWarframes: Warframe[] = [
     "energy": 181,
     "sprintSpeed": 1.0700001,
     "description": "Wield Void Damage for all attacks from equipped weapons when activated.",
-    "passive": "|CHANCE|% Damage Reduction on AOE attacks and chance to avoid incoming weapon damage.",
+    "passive": "25% Damage Reduction on AOE attacks and 25% chance to avoid incoming weapon damage.",
     "abilities": [
       {
         "name": "Xata's Whisper",
@@ -8384,7 +8384,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1,
     "description": "Form five water globules that seek out enemies and expand on contact, simultaneously damaging and immobilizing their victims. Enemies hit by the globules take increased damage from all sources.",
-    "passive": "Yareli gains +|CHANCE|% Critical Chance for Secondary weapons when she has been moving for at least |TIME|s.",
+    "passive": "Yareli gains +200% Critical Chance for Secondary weapons when she has been moving for at least 1.5s.",
     "abilities": [
       {
         "name": "Sea Snares",
@@ -8460,7 +8460,7 @@ export const allWarframes: Warframe[] = [
     "energy": 215,
     "sprintSpeed": 1.1,
     "description": "Form five water globules that seek out enemies and expand on contact, simultaneously damaging and immobilizing their victims. Enemies hit by the globules take increased damage from all sources.",
-    "passive": "Yareli gains +|CHANCE|% Critical Chance for Secondary weapons when she has been moving for at least |TIME|s.",
+    "passive": "Yareli gains +200% Critical Chance for Secondary weapons when she has been moving for at least 1.5s.",
     "abilities": [
       {
         "name": "Sea Snares",
@@ -8536,7 +8536,7 @@ export const allWarframes: Warframe[] = [
     "energy": 100,
     "sprintSpeed": 1.1,
     "description": "Hold while airborne to hover Zephyr with reduced movement. From the air, tap to dash forward, or aim down to dive bomb enemies below.",
-    "passive": "Zephyr moves faster and falls slower while airborne. Also gain |CRIT|% Critical Hit chance with weapons while airborne.",
+    "passive": "Zephyr moves faster and falls slower while airborne. Also gain 150% Critical Hit chance with weapons while airborne.",
     "abilities": [
       {
         "name": "Tail Wind",
@@ -8608,7 +8608,7 @@ export const allWarframes: Warframe[] = [
     "energy": 175,
     "sprintSpeed": 1.15,
     "description": "Hold while airborne to hover Zephyr with reduced movement. From the air, tap to dash forward, or aim down to dive bomb enemies below.",
-    "passive": "Zephyr moves faster and falls slower while airborne. Also gain |CRIT|% Critical Hit chance with weapons while airborne.",
+    "passive": "Zephyr moves faster and falls slower while airborne. Also gain 150% Critical Hit chance with weapons while airborne.",
     "abilities": [
       {
         "name": "Tail Wind",

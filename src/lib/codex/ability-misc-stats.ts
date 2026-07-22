@@ -2318,6 +2318,22 @@ export function valkyrRageDeathPreventionActive(ragePercent: number): boolean {
   return ragePercent >= 150;
 }
 
+/**
+ * wiki Ember passive: +5% Ability Strength per enemy with an active Heat
+ * status within Affinity Range (not × STR).
+ */
+export function computeEmberPassiveAbilityStrength(heatEnemies: number): number {
+  return Math.max(0, Math.floor(heatEnemies)) * 0.05;
+}
+
+/**
+ * wiki Garuda Death's Gate: +5% weapon/melee damage per kill, cap 100%.
+ * Bonus is multiplicative to other damage multipliers (panel display only).
+ */
+export function computeGarudaPassiveDamageBonus(kills: number): number {
+  return Math.min(1, Math.max(0, Math.floor(kills)) * 0.05);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

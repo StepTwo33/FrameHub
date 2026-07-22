@@ -23,6 +23,8 @@ import {
   computeVirulenceDamage,
   computeValkyrRageMeleeBonus,
   valkyrRageDeathPreventionActive,
+  computeEmberPassiveAbilityStrength,
+  computeGarudaPassiveDamageBonus,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -277,6 +279,24 @@ describe("Valkyr Rage passive", () => {
     expect(valkyrRageDeathPreventionActive(149)).toBe(false);
     expect(valkyrRageDeathPreventionActive(150)).toBe(true);
     expect(valkyrRageDeathPreventionActive(300)).toBe(true);
+  });
+});
+
+describe("Ember Heat-enemy passive STR", () => {
+  it("grants +5% Ability Strength per Heat-status enemy in Affinity Range", () => {
+    expect(computeEmberPassiveAbilityStrength(0)).toBe(0);
+    expect(computeEmberPassiveAbilityStrength(1)).toBeCloseTo(0.05, 5);
+    expect(computeEmberPassiveAbilityStrength(10)).toBeCloseTo(0.5, 5);
+    expect(computeEmberPassiveAbilityStrength(3.9)).toBeCloseTo(0.15, 5);
+  });
+});
+
+describe("Garuda Death's Gate passive", () => {
+  it("grants +5% damage per kill up to 100%", () => {
+    expect(computeGarudaPassiveDamageBonus(0)).toBe(0);
+    expect(computeGarudaPassiveDamageBonus(1)).toBeCloseTo(0.05, 5);
+    expect(computeGarudaPassiveDamageBonus(20)).toBeCloseTo(1, 5);
+    expect(computeGarudaPassiveDamageBonus(25)).toBeCloseTo(1, 5);
   });
 });
 

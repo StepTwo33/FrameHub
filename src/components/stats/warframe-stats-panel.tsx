@@ -16,6 +16,8 @@ import {
   computeBaruukRestraintDr,
   computeValkyrRageMeleeBonus,
   valkyrRageDeathPreventionActive,
+  computeEmberPassiveAbilityStrength,
+  computeGarudaPassiveDamageBonus,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -101,6 +103,54 @@ function ValkyrRagePassive() {
         value={deathPrev ? "Ready (≥150%)" : "Inactive"}
         color={deathPrev ? "text-green-400" : "text-muted-foreground"}
         tooltip="Fatal hit consumes Rage, grants 5s invuln and full heal (wiki)."
+      />
+    </div>
+  );
+}
+
+function EmberHeatPassive() {
+  const [heatEnemies, setHeatEnemies] = useState(5);
+  const bonusStr = computeEmberPassiveAbilityStrength(heatEnemies);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Heat Enemies"
+        value={heatEnemies}
+        min={0}
+        max={40}
+        onChange={setHeatEnemies}
+        tooltip="Ember passive: +5% Ability Strength per enemy with active Heat status in Affinity Range."
+      />
+      <StatRow
+        label="Passive Strength"
+        value={`+${(bonusStr * 100).toFixed(0)}%`}
+        color="text-orange-400"
+        tooltip="Additive Ability Strength from Heat-status enemies (not multiplied by Ability Strength)."
+      />
+    </div>
+  );
+}
+
+function GarudaDeathsGatePassive() {
+  const [kills, setKills] = useState(10);
+  const dmgBonus = computeGarudaPassiveDamageBonus(kills);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Kill Stacks"
+        value={kills}
+        min={0}
+        max={20}
+        onChange={setKills}
+        tooltip="Garuda Death's Gate: +5% weapon/melee damage per kill (cap 100% / 20 kills)."
+      />
+      <StatRow
+        label="Damage Bonus"
+        value={`+${(dmgBonus * 100).toFixed(0)}%`}
+        color="text-red-400"
+        tooltip="Multiplicative universal weapon bonus (panel-only; not wired into weapon DPS)."
       />
     </div>
   );
@@ -207,6 +257,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "gauss" || warframe.id === "gauss_prime") && <GaussPassiveBattery />}
           {(warframe.id === "baruuk" || warframe.id === "baruuk_prime") && <BaruukRestraintPassive />}
           {(warframe.id === "valkyr" || warframe.id === "valkyr_prime") && <ValkyrRagePassive />}
+          {(warframe.id === "ember" || warframe.id === "ember_prime") && <EmberHeatPassive />}
+          {(warframe.id === "garuda" || warframe.id === "garuda_prime") && <GarudaDeathsGatePassive />}
         </CollapsibleSection>
       )}
 
