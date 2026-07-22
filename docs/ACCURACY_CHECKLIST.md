@@ -43,14 +43,14 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 
 | ID | Area | Notes | Status |
 |----|------|-------|--------|
-| B1 | Stance DPS | PvE Neutral hit avgs wiki-locked across stance table; Conclave→1.0; fake catalog stances remain defaulted | **Improved** — still not full combo strings |
+| B1 | Stance DPS | PvE Neutral hit avgs wiki-locked (81/81 mapped); Conclave/Contempt→1.0 | **Locked** — Neutral hit-avg scalar only; full combo strings → C6 |
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
-| B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** (CD/dur/range by pieces) + **Empowered +150% vs marked** DPS toggle; status-spread DoT damage still unmodeled | Goldens in `set-bonus-audit.test.ts`; spread DoT remains C |
+| B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
+| B6 | Arcane custom handlers | Kinship + Hot Shot + Merciless + **Conjunction Voltage** stack→DPS | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + **instant-reload + ammo-restore → sustained** (1 proc/mag); holster reload documented swap-only; remain: form mechanics / Chain Shatter |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
 ---
 
@@ -63,6 +63,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | C3 | Weapon passives text | Not wired into DPS |
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
+| C6 | Stance full combo strings | Forward/Block/Heavy/Slide strings, AS-scaled cycle DPS, combo picker — B1 ships Neutral hit-avg scalars only |
+| C7 | Mecha set status-spread DoT | Mark-kill status spread damage not modeled; mark timing + Empowered vs marked are B4 |
 
 ---
 
@@ -280,6 +282,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis leftover utility panel | 2026-07-22 | Gathering Momentum 12×; Vault/Ternary; ammo-combo; Poison Parasite heal; Vulnerability Serum SC×1.35; Permanent Perforation |
 | Ammo restore → sustained DPS | 2026-07-22 | Hunter/Gunsmoke/Galvanic E[extra ammo] extends mag (1 opportunity/mag); holster reload stays swap-only |
 | Genesis combo/shard panel | 2026-07-22 | Hawk/Shockwave/Nimble/Echoes/Protracted combo; stun/KD radii; Void Splinters/Explosive Growth; Renewed Horror ×2 linger |
+| B1 Neutral-only lock | 2026-07-22 | Stance DPS locked to wiki Neutral hit-avg scalars (81/81); full combo strings → C6; Atlantis ×0.7 shown in sim |
+| Conjunction Voltage → DPS | 2026-07-22 | R5 @ 40 Electricity stacks: +120% multishot / +60% reload (weapon_dps; was arcane_panel) |
 
 ## New / extended test files
 

@@ -489,8 +489,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "conjunction_voltage": {
     arcaneId: "conjunction_voltage",
     effects: [
-      {"statKey": "reloadSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Conjunction Voltage: reloadSpeed (stacking — applies at sim stack count)"},
-      {"statKey": "multishot", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Conjunction Voltage: multishot (stacking — applies at sim stack count)"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Conjunction Voltage — +1.5% Reload Speed / stack at R5 (cap 40 → +60%; applies at sim stack count)"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Conjunction Voltage — +3% Multishot / stack at R5 (cap 40 → +120%; applies at sim stack count)"},
     ],
   },
   "emergence_dissipate": {

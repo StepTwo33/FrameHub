@@ -247,6 +247,38 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.criticalChance).toBeCloseTo(braton.criticalChance * (1 + 3.0), 4);
   });
+
+  it("Conjunction Voltage: 0 stacks = no buff; 40 stacks R5 → +120% MS / +60% reload", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const cv = allArcanes.find((a) => a.id === "conjunction_voltage")!;
+    const def = getArcaneEffectDef("conjunction_voltage")!;
+    expect(def.trigger).toBe("stacks");
+    expect(def.stackCap).toBe(40);
+
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [cv],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.multishot).toBeCloseTo(lex.multishot, 5);
+    expect(zero.reloadTime).toBeCloseTo(lex.reloadTime, 5);
+
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [cv],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 40 },
+    );
+    // wiki R5: +3% MS × 40 = +120%; +1.5% reload × 40 = +60%
+    expect(full.multishot).toBeCloseTo(lex.multishot * 2.2, 4);
+    expect(full.reloadTime).toBeCloseTo(lex.reloadTime / 1.6, 4);
+    expect(full.burstDps).toBeGreaterThan(zero.burstDps);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

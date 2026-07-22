@@ -242,8 +242,8 @@ export function WeaponSimControls({
                   }
                   className="h-3.5 w-3.5 rounded border-border accent-primary"
                 />
-                Stance avg mult
-                {(stats.stanceDamageMultiplier ?? 1) > 1 && (
+                Neutral hit avg
+                {(stats.stanceDamageMultiplier ?? 1) !== 1 && (
                   <span className="text-cyan-400 font-mono">
                     ×{(stats.stanceDamageMultiplier ?? 1).toFixed(2)}
                   </span>
