@@ -707,6 +707,27 @@ export function AbilityStatsBlock({
       />,
     );
   }
+  // wiki Warding Halo: (haloHealth + armorMult × totalArmor) × STR before invuln absorb
+  if (display.abilityName === "Warding Halo" && stats != null && ability.miscStats) {
+    const haloBase = Number(ability.miscStats.haloHealth);
+    const haloMult = Number(ability.miscStats.armorMultiplier);
+    if (Number.isFinite(haloBase) && haloBase > 0 && Number.isFinite(haloMult) && haloMult > 0) {
+      const unscaled = computeArmorScaledPool(haloBase, haloMult, stats.totalArmor, 1);
+      const scaled = computeArmorScaledPool(haloBase, haloMult, stats.totalArmor, str);
+      rows.push(
+        <AbilityStatRow
+          key="wardingHaloHealth"
+          compact={compact}
+          label="Initial Health"
+          baseValue={unscaled.toFixed(0)}
+          modifiedValue={scaled.toFixed(0)}
+          isModified={str !== 1}
+          isPositive={str > 1}
+          scaleHint="strength"
+        />,
+      );
+    }
+  }
   if (ability.miscStats?.channeled === true) {
     rows.push(
       <div key="channeled" className="px-1.5 py-0.5 text-[10px] font-medium text-violet-400">

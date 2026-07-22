@@ -1325,6 +1325,8 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "maxEnergyTargets" ||
       key === "energyRestore" ||
       key === "pickupHeal" ||
+      key === "haloHealth" ||
+      key === "shroudHealth" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||
@@ -1782,6 +1784,8 @@ function scaleVerifiedValue(
       key === "maxEnergyTargets" ||
       key === "energyRestore" ||
       key === "pickupHeal" ||
+      key === "haloHealth" ||
+      key === "shroudHealth" ||
       key === "healthShieldPerSecond" ||
       key === "fungalSpores" ||
       key === "maxMushrooms" ||

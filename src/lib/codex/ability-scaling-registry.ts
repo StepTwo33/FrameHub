@@ -1110,12 +1110,9 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     damageVulnerability: { scale: "strength" },
   },
 
-  // wiki: Warding Halo — Slash DPS via damage; halo HP + armor/absorb mult × STR; invuln Misc-fixed
-  "nezha::Warding Halo": {
-    haloHealth: { scale: "strength" },
-    armorMultiplier: { scale: "strength" },
-    absorptionMultiplier: { scale: "strength" },
-  },
+  // wiki: Warding Halo — Slash DPS via damage; haloHealth / armor / absorb mults Misc-fixed;
+  // Initial Health = (base + armorMult × totalArmor) × STR (+ absorbed×absorbMult×STR via cast invuln)
+  // wiki: invuln Misc-fixed
 
   // wiki: Divine Spears — Puncture via damage; slam Impact × STR
   "nezha::Divine Spears": {

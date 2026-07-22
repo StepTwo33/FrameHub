@@ -161,7 +161,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Baruuk kit | 2026-07-21 | Elude 25+2.5/s 180°; Lull 50/20s/25m; Hands 250 Blast/8 daggers×STR; Storm 250 +25% DR (cap 40%) |
 | B5 Harrow kit | 2026-07-21 | Condemn 150 shields/enemy; Penance +35% FR/+70% reload×STR; Thurible 15% convert; Covenant 5%+1.5%/100 CC |
 | B5 Garuda kit | 2026-07-21 | Mirror 2× capture/20s/30m; Altar 25%/s heal; Bloodletting 40% energy×EFF; Talons 300/75% SC |
-| B5 Nezha kit | 2026-07-21 | Walker 200 Heat/s +1250 blast; Chakram 250/+100% vuln; Halo 1000 HP/125 Slash; Spears 600/19m/12s |
+| B5 Nezha kit | 2026-07-21 | Walker 200 Heat/s +1250 blast; Chakram 250/+100% vuln; Halo 1000 HP/2.5× armor+absorb Misc + Initial=(base+mult×armor)×STR; Spears 600/19m/12s |
 | B5 Styanax Helminth | 2026-07-21 | Helminth→Tharros Strike (was wrongly Rally Point); native Tharros 1000 Impact / 50% strip / 100 heal |
 | B5 Voruna kit | 2026-07-21 | Shroud flat melee CD×STR buff; Helminth→Lycath's Hunt 50% orbs (was wrongly Shroud); Ulfrun kill CD numeric |
 | B5 Nekros kit | 2026-07-21 | Soul Punch mark/threshold; Desecrate 25m/60% orb/10e/corpse×EFF; Shadows +150% dmg/+100% HP/SP +3% decay÷DUR; Helminth Terrify 75 |

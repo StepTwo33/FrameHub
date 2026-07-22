@@ -29,6 +29,29 @@ describe("scaleAbilityMiscStats", () => {
     });
   });
 
+  it("keeps Warding Halo halo/armor/absorb mults Misc-fixed", () => {
+    const lines = scaleAbilityMiscStats(
+      { haloHealth: 1000, armorMultiplier: 2.5, absorptionMultiplier: 2.5 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "nezha", abilityName: "Warding Halo" },
+    );
+    expect(lines.find((l) => l.label === "Halo Health")!).toMatchObject({
+      base: "1000",
+      scaled: "1000",
+      modified: false,
+    });
+    expect(lines.find((l) => l.label === "Armor Mult.")!).toMatchObject({
+      base: "2.5x",
+      scaled: "2.5x",
+      modified: false,
+    });
+    expect(lines.find((l) => l.label === "Absorption Mult.")!).toMatchObject({
+      base: "2.5x",
+      scaled: "2.5x",
+      modified: false,
+    });
+  });
+
   it("scales Celestial Twin health as a multiplier, not seconds/percent", () => {
     const lines = scaleAbilityMiscStats(
       { healthMultiplier: 2, damageMultiplier: 0.5, markDamageMultiplier: 3 },

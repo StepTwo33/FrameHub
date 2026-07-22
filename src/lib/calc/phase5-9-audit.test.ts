@@ -934,13 +934,12 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("nezha", "Blazing Chakram", "boostedDamage")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("nezha", "Warding Halo", "haloHealth")).toEqual({
-      scale: "strength",
-    });
-    expect(getVerifiedMiscScaling("nezha", "Warding Halo", "armorMultiplier")).toEqual({
-      scale: "strength",
-    });
+    // haloHealth / armor / absorb mults Misc-fixed; Initial Health via computeArmorScaledPool
+    expect(getVerifiedMiscScaling("nezha", "Warding Halo", "haloHealth")).toBeNull();
+    expect(getVerifiedMiscScaling("nezha", "Warding Halo", "armorMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("nezha", "Warding Halo", "absorptionMultiplier")).toBeNull();
     expect(getVerifiedMiscScaling("nezha", "Warding Halo", "invulnerabilityDuration")).toBeNull();
+    expect(getVerifiedMiscScaling("nezha_prime", "Warding Halo", "armorMultiplier")).toBeNull();
     expect(getVerifiedMiscScaling("nezha", "Divine Spears", "slamDamage")).toEqual({
       scale: "strength",
     });
