@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Intention/Agility/Consequence/Double Back/Grace/Duplicate/Fortification + prior | **Improved** |
+| B6 | Arcane custom handlers | Hard batch: Animosity/Afflictions/Compression/Contagion/Firewall/Overload + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -59,7 +59,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | ID | Area | Notes |
 |----|------|-------|
 | C1 | Most `mod_panel` lines | Precepts / utility |
-| C2 | Most `arcane_panel` lines | Display / non-auto DPS; **Primary Compression** stays panel until per-meter radial loss is modeled |
+| C2 | Most `arcane_panel` lines | Display / non-auto DPS; Magus Overload stays panel (enemy max HP) |
 | C3 | Weapon passives text | Not wired into DPS |
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
@@ -301,6 +301,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Power Ramp/Ice Storm/Vigor/Overcharge/Haras/Osbok | 2026-07-22 | Ramp ×4→+36% STR; Ice ×20→+40% STR/DUR; Vigor +45%; Overcharge stacks>0; Haras AE; Osbok +3 flat CD |
 | Blessing/Augmented/Concentration/Sculptor/armor procs | 2026-07-22 | Blessing +1200 HP; Augmented +60% STR; Conc +60% DUR; Sculptor lock 175% EFF; Ultimatum/Tanker/Guardian/Reaper flat armor |
 | Intention/Agility/Consequence/Double Back/Grace/Duplicate/Fortification | 2026-07-22 | Intention ×4→+1000 HP; parkour +60%; Double Back ×3 DR; Grace 6% HP/s; Duplicate ×2; Fortification ×30 armor |
+| Animosity/Afflictions/Compression/Contagion/Firewall/Overload | 2026-07-22 | Animosity heavy-only +42% CC×10; Afflictions ×2 DoT; Compression 0.8×radius aiming; Contagion 1× burst panel; Firewall Operator DR; Overload 80% enemy HP panel |
 
 ## New / extended test files
 

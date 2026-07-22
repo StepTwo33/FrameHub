@@ -25,6 +25,7 @@ import {
 import { calculateCompanionBuild } from "@/lib/calc/companion-calculator";
 import { calculateRailjackBuild } from "@/lib/calc/railjack-calculator";
 import { effectiveArcaneStacks } from "@/lib/calc/arcane-calculator";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
 import {
   getVerifiedFieldScaling,
   getVerifiedMiscScaling,
@@ -154,7 +155,7 @@ describe("Phase 5 — stance damage multipliers", () => {
 
 describe("Phase 6 — arcane passives on paper DPS", () => {
   it("passive weapon arcanes are active at arcaneStacks=0", () => {
-    const def = getArcaneEffectDef("cascadia_overcharge")!;
+    const def = getArcaneEffectDef("melee_doughty")!;
     expect(def.trigger).toBe("passive");
     expect(effectiveArcaneStacks(def, 0, true)).toBe(1);
   });
@@ -556,11 +557,12 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(five.totalDamage).toBeCloseTo(four.totalDamage, 4);
   });
 
-  it("Primary Compression stays panel-only (needs radial meters lost, not flat +100%)", () => {
+  it("Primary Compression: Acceltra aiming → ×(1+0.8×4m) damage + AE; Braton no radial", () => {
     const braton = allWeapons.find((w) => w.id === "braton")!;
+    const acceltra = allWeapons.find((w) => w.id === "acceltra")!;
     const compression = allArcanes.find((a) => a.id === "primary_compression")!;
-    const bare = calculateWeaponBuild(braton, [], new Map());
-    const withArc = calculateWeaponBuildWithArcanes(
+    const bareBraton = calculateWeaponBuild(braton, [], new Map());
+    const bratonArc = calculateWeaponBuildWithArcanes(
       braton,
       [],
       new Map(),
@@ -568,8 +570,30 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
-    expect(withArc.totalDamage).toBeCloseTo(bare.totalDamage, 4);
-    expect(withArc.ammoEfficiency ?? 0).toBeCloseTo(bare.ammoEfficiency ?? 0, 4);
+    expect(bratonArc.totalDamage).toBeCloseTo(bareBraton.totalDamage, 4);
+
+    const bare = calculateWeaponBuild(acceltra, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      acceltra,
+      [],
+      new Map(),
+      [compression],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    const aiming = calculateWeaponBuildWithArcanes(
+      acceltra,
+      [],
+      new Map(),
+      [compression],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    // wiki: metersLost = 4 × 0.8 = 3.2 → +320% dmg, +17.6% AE
+    expect(aiming.totalDamage).toBeCloseTo(bare.totalDamage * 4.2, 4);
+    expect(aiming.ammoEfficiency ?? 0).toBeCloseTo((bare.ammoEfficiency ?? 0) + 0.176, 4);
+    expect(aiming.arcaneBonuses?.compressionMetersLost).toBeCloseTo(3.2, 4);
   });
 
   it("Secondary Enervate: 7 hit stacks → +70% absolute CC on Lex", () => {
@@ -1789,6 +1813,120 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2, 4);
+  });
+
+  it("Melee Animosity: 10 stacks → heavy CC only (+420%); light CC/DPS unchanged", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const animosity = allArcanes.find((a) => a.id === "arcane_melee_animosity")!;
+    const def = getArcaneEffectDef("arcane_melee_animosity")!;
+    expect(def.trigger).toBe("stacks");
+    expect(def.stackCap).toBe(10);
+
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [animosity],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.criticalChance).toBeCloseTo(bare.criticalChance, 5);
+    expect(zero.heavyAttackDamage).toBeCloseTo(bare.heavyAttackDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [animosity],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 10 },
+    );
+    expect(full.criticalChance).toBeCloseTo(bare.criticalChance, 5);
+    expect(full.burstDps).toBeCloseTo(bare.burstDps, 2);
+    expect(full.arcaneBonuses?.criticalChance).toBeCloseTo(420, 4);
+    // heavy uses CC+4.2 absolute
+    const oldAvg = avgCritMultiplier(bare.criticalChance, bare.criticalMultiplier);
+    const newAvg = avgCritMultiplier(bare.criticalChance + 4.2, bare.criticalMultiplier);
+    expect(full.heavyAttackDamage).toBeCloseTo(bare.heavyAttackDamage * (newAvg / oldAvg), 4);
+  });
+
+  it("Melee Afflictions: stacks>0 → ×2 DoT ticks on status procs", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const afflictions = allArcanes.find((a) => a.id === "melee_afflictions")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const slashBare = bare.statusProcs.find((p) => p.type === "slash");
+    expect(slashBare && slashBare.damagePerTick > 0).toBe(true);
+
+    const zero = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [afflictions],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    const slashZero = zero.statusProcs.find((p) => p.type === "slash")!;
+    expect(slashZero.damagePerTick).toBeCloseTo(slashBare!.damagePerTick, 5);
+
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [afflictions],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    const slashFull = full.statusProcs.find((p) => p.type === "slash")!;
+    expect(slashFull.damagePerTick).toBeCloseTo(slashBare!.damagePerTick * 2, 5);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    expect(full.arcaneBonuses?.statusStackBonus).toBeCloseTo(6, 4);
+  });
+
+  it("Exodia Contagion: paper 1× point-blank burst on panel (sword stanceMult 1)", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const contagion = allArcanes.find((a) => a.id === "exodia_contagion")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [contagion],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    // sword None → stanceMult 1; hit = dmg × (2+5) × avgCrit
+    const expected =
+      bare.totalDamage * 7 * avgCritMultiplier(bare.criticalChance, bare.criticalMultiplier);
+    expect(full.arcaneBonuses?.contagionProjectileDamage).toBeCloseTo(expected, 2);
+    expect(full.arcaneBonuses?.contagionStanceMult).toBe(1);
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+  });
+
+  it("Magus Firewall: Operator DR panel only — no Warframe damageReduction", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const firewall = allArcanes.find((a) => a.id === "magus_firewall")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [firewall],
+    );
+    expect(full.arcaneBonuses?.damageReduction ?? 0).toBe(0);
+    expect(full.arcaneBonuses?.operatorDamageReduction).toBeCloseTo(75, 4);
+    expect(full.damageReduction).toBeCloseTo(bare.damageReduction, 4);
+  });
+
+  it("Magus Overload: panel stores 80% enemy max HP (not weapon damage)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const overload = allArcanes.find((a) => a.id === "magus_overload")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [overload],
+    );
+    expect(full.arcaneBonuses?.overloadEnemyMaxHealthPercent).toBeCloseTo(80, 4);
+    expect(full.arcaneBonuses?.damage ?? 0).toBe(0);
   });
 
   it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {

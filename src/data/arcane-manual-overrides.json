@@ -323,17 +323,13 @@
   },
   "arcane_melee_animosity": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "stacks",
+    "stackCap": 10,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 42,
         "baseValue": 7
-      },
-      {
-        "stat": "meleeHeavyCrit",
-        "maxValue": 420,
-        "baseValue": 70
       }
     ]
   },
@@ -1174,7 +1170,8 @@
         "stat": "statusStackBonus",
         "maxValue": 6,
         "flat": true,
-        "stacking": false
+        "stacking": false,
+        "baseValue": 1
       }
     ]
   },

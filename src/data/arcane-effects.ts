@@ -1711,24 +1711,20 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "maxValue": 6,
         "flat": true,
         "stacking": false,
-        "constantAtAllRanks": true
+        "baseValue": 1
       }
     ]
   },
   "arcane_melee_animosity": {
     "name": "Melee Animosity",
-    "trigger": "passive",
+    "trigger": "stacks",
     "maxRank": 5,
+    "stackCap": 10,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 42.0,
         "baseValue": 7.0
-      },
-      {
-        "stat": "meleeHeavyCrit",
-        "maxValue": 420.0,
-        "baseValue": 70.0
       }
     ]
   },

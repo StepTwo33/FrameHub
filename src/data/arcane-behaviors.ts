@@ -247,9 +247,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_melee_animosity": {
     arcaneId: "arcane_melee_animosity",
+    customHandler: "arcane_melee_animosity",
     effects: [
-      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Melee Animosity: criticalChance (always active while equipped)"},
-      {"statKey": "meleeHeavyCrit", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Melee Animosity: meleeHeavyCrit (always active while equipped)"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Animosity — +42% absolute CC/stack (cap 10 → +420%) on heavy only; light DPS unchanged; paper uses sim stacks"},
     ],
   },
   "arcane_momentum": {
@@ -582,8 +582,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "exodia_contagion",
     customHandler: "exodia_contagion",
     effects: [
-      {"statKey": "contagionProjectileDamage", "target": "arcane_panel", "mode": "custom", "source": "Exodia Contagion: custom handler"},
-      {"statKey": "contagionExplosionRadius", "target": "arcane_panel", "mode": "custom", "source": "Exodia Contagion: custom handler"},
+      {"statKey": "contagionProjectileDamage", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — paper 1× point-blank hit = zawDmg×(2+5×stanceMult)×avgCrit (burst panel; not sustained DPS)"},
+      {"statKey": "contagionExplosionRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Exodia Contagion — 8m explosion (fixed)"},
     ],
   },
   "exodia_epidemic": {
@@ -702,9 +702,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_firewall": {
     arcaneId: "magus_firewall",
+    customHandler: "magus_firewall",
     effects: [
-      {"statKey": "damageReduction", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Magus Firewall: damageReduction (conditional proc)"},
-      {"statKey": "voidModeDamageReduction", "target": "warframe_totals", "mode": "flat", "source": "Magus Firewall: voidModeDamageReduction (conditional proc)"},
+      {"statKey": "damageReduction", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Firewall — 12.5% Operator DR/particle ×6 = 75% (Operator only; does not affect Warframes)"},
+      {"statKey": "voidModeDamageReduction", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Firewall — particle duration 10–60s by rank (Operator Void Mode)"},
     ],
   },
   "magus_glitch": {
@@ -742,8 +743,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_overload": {
     arcaneId: "magus_overload",
+    customHandler: "magus_overload",
     effects: [
-      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Overload: damage (on void sling proc)"},
+      {"statKey": "damage", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Overload — discharge = 80% of robotic enemy max HP as Electricity in 25m (not weapon damage %)"},
     ],
   },
   "magus_repair": {
@@ -775,8 +777,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_afflictions": {
     arcaneId: "melee_afflictions",
+    customHandler: "melee_afflictions",
     effects: [
-      {"statKey": "statusStackBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Afflictions: statusStackBonus (conditional proc)"},
+      {"statKey": "statusStackBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Afflictions — +1…+6 stacks to each damaging status on KD (paper: stacks>0 → ×2 DoT ticks, assume 6 existing)"},
     ],
   },
   "melee_assimilation": {
@@ -927,10 +930,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "primary_compression": {
     arcaneId: "primary_compression",
+    customHandler: "primary_compression",
     effects: [
-      // Per meter of explosion radius lost while aiming — needs weapon radial radius; not flat +100%/+5.5%.
-      {"statKey": "ammoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Primary Compression — +5.5% AE / meter radius lost while aiming (needs radial radius; panel until modeled)"},
-      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Primary Compression — +100% damage / meter radius lost while aiming (needs radial radius; panel until modeled)"},
+      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Compression — +5.5% AE / meter radius lost while aiming (metersLost = radius×0.8; paper: stacks>0 = aiming)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Compression — +100% damage / meter lost as final mult (Acceltra 4m → ×4.2)"},
     ],
   },
   "primary_crux": {

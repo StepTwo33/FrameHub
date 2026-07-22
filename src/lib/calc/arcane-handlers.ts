@@ -1,5 +1,7 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
+import { avgCritMultiplier } from "@/lib/calc/crit-utils";
+import { getWeaponRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 export interface WarframeArcaneContext {
@@ -104,6 +106,9 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "virtuos_shadow",
   "melee_influence",
   "melee_duplicate",
+  "arcane_melee_animosity",
+  "melee_afflictions",
+  "primary_compression",
   "magus_aggress",
   "secondary_irradiate",
   "exodia_brave",
@@ -117,6 +122,39 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "exodia_triumph",
   "exodia_valor",
 ]);
+
+/** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
+const PRIMARY_COMPRESSION_NO_OP_IDS = new Set([
+  "ignis",
+  "ignis_wraith",
+  "glaxion",
+  "glaxion_vandal",
+  "komorex",
+  "stahlta",
+  "lizzie",
+  "mutalist_cernos",
+  "enkaus",
+]);
+
+/** Contagion explosion stance mult — wiki "None" (no stance) column by class. */
+function contagionStanceExplosionMult(stanceType?: string): number {
+  switch (stanceType) {
+    case "heavy_blade":
+      return 3;
+    case "scythe":
+    case "heavy_scythe":
+    case "hammer":
+      return 2;
+    default:
+      return 1;
+  }
+}
+
+/** Largest usable AoE radius for Primary Compression (exclude Incarnon-only radials). */
+function compressionUsableRadius(weapon: Weapon): number {
+  const radials = getWeaponRadialAttacks(weapon).filter((a) => !/incarnon form/i.test(a.name ?? ""));
+  return radials.reduce((max, a) => Math.max(max, a.radius ?? 0), 0);
+}
 
 /** Arcane IDs handled by applyCustomArcaneToWarframe (for coverage detection without full stats). */
 export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
@@ -158,6 +196,8 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_consequence",
   "arcane_double_back",
   "arcane_grace",
+  "magus_firewall",
+  "magus_overload",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -715,6 +755,68 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "arcane_melee_animosity": {
+      // wiki R5: +42% absolute CC per stack (cap 10 → +420%) on the next heavy only.
+      // Light-attack CC / DPS unchanged. Paper: sim stacks = built stacks.
+      const ccLine = findEffect(def, "criticalChance");
+      const perStackPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      const bonusCc = (perStackPct / 100) * stacks;
+      const cm = stats.criticalMultiplier;
+      const oldAvg = avgCritMultiplier(stats.criticalChance, cm);
+      const newAvg = avgCritMultiplier(stats.criticalChance + bonusCc, cm);
+      if (oldAvg > 0 && (stats.heavyAttackDamage ?? 0) > 0) {
+        stats.heavyAttackDamage *= newAvg / oldAvg;
+      }
+      trackBonus(stats, "criticalChance", perStackPct * stacks);
+      trackBonus(stats, "animosityStacks", stacks);
+      return true;
+    }
+
+    case "melee_afflictions": {
+      // wiki R5: +6 stacks to each existing damaging status on KD/ragdoll/lift.
+      // Paper: stacks>0 = triggered; assume 6 existing → ×2 DoT tick damage.
+      for (const proc of stats.statusProcs ?? []) {
+        if ((proc.damagePerTick ?? 0) <= 0) continue;
+        proc.damagePerTick *= 2;
+        proc.totalDamage *= 2;
+      }
+      stats.statusDamageBonus = (stats.statusDamageBonus ?? 0) + 1;
+      const stacksLine = findEffect(def, "statusStackBonus");
+      const added = stacksLine ? scaleArcaneEffectLine(stacksLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "statusStackBonus", added);
+      return true;
+    }
+
+    case "primary_compression": {
+      // wiki R5: while aiming, radius ×0.2; +100% dmg and +5.5% AE per meter lost.
+      // metersLost = moddedRadius × 0.8. Paper: stacks>0 = aiming; base radial radius (no Firestorm yet).
+      const weaponId = ctx.baseWeapon?.id ?? "";
+      if (PRIMARY_COMPRESSION_NO_OP_IDS.has(weaponId)) {
+        trackBonus(stats, "damage", 0);
+        trackBonus(stats, "ammoEfficiency", 0);
+        return true;
+      }
+      const radius = ctx.baseWeapon ? compressionUsableRadius(ctx.baseWeapon) : 0;
+      if (radius <= 0) {
+        trackBonus(stats, "damage", 0);
+        trackBonus(stats, "ammoEfficiency", 0);
+        return true;
+      }
+      const metersLost = radius * 0.8;
+      const dmgLine = findEffect(def, "damage");
+      const aeLine = findEffect(def, "ammoEfficiency");
+      const dmgPerM = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      const aePerM = aeLine ? scaleArcaneEffectLine(aeLine, rank, def.maxRank) : 0;
+      const dmgPct = dmgPerM * metersLost;
+      const aePct = aePerM * metersLost;
+      if (dmgPct > 0) applyWeaponDamageMult(stats, dmgPct);
+      if (aePct > 0) stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + aePct / 100;
+      trackBonus(stats, "damage", dmgPct);
+      trackBonus(stats, "ammoEfficiency", aePct);
+      trackBonus(stats, "compressionMetersLost", metersLost);
+      return true;
+    }
+
     case "zid_an_haras": {
       // wiki: +18% amp AE always; +48% WF AE for 30s after Tauron Strike (paper: stacks>0).
       const ampAeLine = findEffect(def, "ampAmmoEfficiency");
@@ -903,9 +1005,25 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "exodia_contagion": {
+      // wiki R3: aim-glide aerial melee launches projectile.
+      // Paper 1× point-blank: direct 2× + explosion 5××stanceMult (ignore 30m bonus / stick DoT).
+      // Burst add-on only — does not fold into sustained DPS.
+      const stanceMult = contagionStanceExplosionMult(ctx.baseWeapon?.stanceType);
+      const zawDmg = stats.totalDamage;
+      const hit =
+        zawDmg * (2 + 5 * stanceMult) * avgCritMultiplier(stats.criticalChance, stats.criticalMultiplier);
+      trackBonus(stats, "contagionProjectileDamage", hit);
+      const radLine = findEffect(def, "contagionExplosionRadius");
+      if (radLine) {
+        trackBonus(stats, "contagionExplosionRadius", scaleArcaneEffectLine(radLine, rank, def.maxRank));
+      }
+      trackBonus(stats, "contagionStanceMult", stanceMult);
+      return true;
+    }
+
     case "exodia_hunt":
     case "exodia_might":
-    case "exodia_contagion":
     case "exodia_epidemic":
     case "exodia_triumph":
     case "exodia_valor":
@@ -1100,6 +1218,27 @@ export function applyCustomArcaneToWarframe(
       if (chanceLine) {
         trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
       }
+      return true;
+    }
+
+    case "magus_firewall": {
+      // wiki R5: Operator Void Mode — 6×12.5% = 75% Operator DR. Does not affect Warframes.
+      const drLine = findEffect(def, "damageReduction");
+      const perParticle = drLine ? scaleArcaneEffectLine(drLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "operatorDamageReduction", perParticle * 6);
+      const durLine = findEffect(def, "voidModeDamageReduction");
+      if (durLine) {
+        trackBonus(stats, "voidModeParticleDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "magus_overload": {
+      // wiki R5: Void Sling robotic → Electricity = 80% enemy max HP in 25m (not weapon %).
+      const dmgLine = findEffect(def, "damage");
+      const pct = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "overloadEnemyMaxHealthPercent", pct);
+      trackBonus(stats, "overloadRadius", 25);
       return true;
     }
 
