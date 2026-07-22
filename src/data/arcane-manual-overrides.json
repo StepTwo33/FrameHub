@@ -261,7 +261,8 @@
       {
         "stat": "armorBonusChance",
         "maxValue": 15,
-        "baseValue": 15
+        "baseValue": 15,
+        "constantAtAllRanks": true
       },
       {
         "stat": "flatArmorBonus",
@@ -684,9 +685,16 @@
     "trigger": "onFinisher",
     "effects": [
       {
-        "stat": "armor",
+        "stat": "flatArmorBonus",
         "maxValue": 1200,
+        "flat": true,
         "baseValue": 200
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 45,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

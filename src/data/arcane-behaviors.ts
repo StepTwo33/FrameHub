@@ -91,7 +91,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_blessing": {
     arcaneId: "arcane_blessing",
     effects: [
-      {"statKey": "healthFlat", "target": "warframe_totals", "mode": "flat", "source": "Arcane Blessing: healthFlat (stacking — applies at sim stack count)"},
+      {"statKey": "healthFlat", "target": "warframe_totals", "mode": "flat", "source": "wiki: Arcane Blessing — +24 Max Health / pickup (cap 50 → +1200; paper assumes max stacks)"},
     ],
   },
   "arcane_bodyguard": {
@@ -114,9 +114,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_concentration": {
     arcaneId: "arcane_concentration",
+    customHandler: "arcane_concentration",
     effects: [
-      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Concentration: abilityDuration (on ability cast proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Concentration: buffDuration (on ability cast proc)"},
+      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Concentration — +60% DUR for 3s after cast (paper: equipped = buff up for next ability)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Arcane Concentration — 3s buff (panel)"},
     ],
   },
   "arcane_consequence": {
@@ -193,9 +194,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_guardian": {
     arcaneId: "arcane_guardian",
+    customHandler: "arcane_guardian",
     effects: [
-      {"statKey": "armorBonusChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Guardian: armorBonusChance (when damaged proc)"},
-      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "flat", "source": "Arcane Guardian: flatArmorBonus (when damaged proc)"},
+      {"statKey": "armorBonusChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Arcane Guardian — 15% chance on damaged (panel)"},
+      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Guardian — +900 flat Armor (paper: equipped = buff up)"},
     ],
   },
   "arcane_healing": {
@@ -348,10 +350,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_reaper": {
     arcaneId: "arcane_reaper",
+    customHandler: "arcane_reaper",
     effects: [
-      {"statKey": "healthRegenPerSec", "target": "warframe_totals", "mode": "flat", "source": "Arcane Reaper: healthRegenPerSec (on melee kill proc)"},
-      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "flat", "source": "Arcane Reaper: flatArmorBonus (on melee kill proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Reaper: buffDuration (on melee kill proc)"},
+      {"statKey": "healthRegenPerSec", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Reaper — +24 HP/s on melee kill (paper: equipped = buff up)"},
+      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Reaper — +660 flat Armor on melee kill (paper: equipped = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Arcane Reaper — buff duration (panel)"},
     ],
   },
   "arcane_resistance": {
@@ -370,8 +373,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_sculptor": {
     arcaneId: "arcane_sculptor",
+    customHandler: "arcane_sculptor",
     effects: [
-      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Sculptor: abilityEfficiency (conditional proc)"},
+      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Sculptor — lock Ability Efficiency at 175% when creating an object (paper: equipped = locked)"},
     ],
   },
   "arcane_secondary_deadhead": {
@@ -416,8 +420,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_tanker": {
     arcaneId: "arcane_tanker",
+    customHandler: "arcane_tanker",
     effects: [
-      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "flat", "source": "Arcane Tanker: flatArmorBonus (conditional proc)"},
+      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Tanker — +1200 flat Armor for 60s on Archgun equip (paper: equipped = buff up)"},
     ],
   },
   "arcane_tempo": {
@@ -445,8 +450,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_ultimatum": {
     arcaneId: "arcane_ultimatum",
+    customHandler: "arcane_ultimatum",
     effects: [
-      {"statKey": "armor", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Ultimatum: armor (on finisher proc)"},
+      {"statKey": "flatArmorBonus", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Ultimatum — +1200 flat Armor for 45s on finisher kill (paper: equipped = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Arcane Ultimatum — 45s buff (panel)"},
     ],
   },
   "arcane_universal_fallout": {
@@ -846,7 +853,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "molt_augmented": {
     arcaneId: "molt_augmented",
     effects: [
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Molt Augmented: abilityStrength (stacking — applies at sim stack count)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Molt Augmented — +0.24% STR/kill (cap 250 → +60%; paper assumes max stacks)"},
     ],
   },
   "molt_efficiency": {

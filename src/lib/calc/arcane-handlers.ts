@@ -147,6 +147,12 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "primary_obstruct",
   "pax_bolt",
   "molt_vigor",
+  "arcane_concentration",
+  "arcane_sculptor",
+  "arcane_tanker",
+  "arcane_ultimatum",
+  "arcane_guardian",
+  "arcane_reaper",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -987,6 +993,60 @@ export function applyCustomArcaneToWarframe(
       const str = strLine ? scaleArcaneEffectLine(strLine, rank, def.maxRank) : 0;
       if (str > 0) stats.abilityStrength += str / 100;
       trackBonus(stats, "abilityStrength", str);
+      return true;
+    }
+
+    case "arcane_concentration": {
+      // wiki R5: +60% DUR for 3s after cast. Paper: equipped = buff up for next ability.
+      const durLine = findEffect(def, "abilityDuration");
+      const dur = durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 0;
+      if (dur > 0) stats.abilityDuration += dur / 100;
+      trackBonus(stats, "abilityDuration", dur);
+      const buffLine = findEffect(def, "buffDuration");
+      if (buffLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(buffLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_sculptor": {
+      // wiki R5: lock Ability Efficiency at 175% when creating an object. Paper: equipped = locked.
+      const effLine = findEffect(def, "abilityEfficiency");
+      const eff = effLine ? scaleArcaneEffectLine(effLine, rank, def.maxRank) : 0;
+      if (eff > 0) stats.abilityEfficiency = eff / 100;
+      trackBonus(stats, "abilityEfficiency", eff);
+      return true;
+    }
+
+    case "arcane_tanker":
+    case "arcane_ultimatum":
+    case "arcane_guardian": {
+      // Flat armor buffs (Tanker archgun / Ultimatum finisher / Guardian on-hit). Paper: equipped = up.
+      const armorLine = findEffect(def, "flatArmorBonus");
+      const armor = armorLine ? scaleArcaneEffectLine(armorLine, rank, def.maxRank) : 0;
+      if (armor > 0) stats.flatArmorBonus += armor;
+      trackBonus(stats, "flatArmorBonus", armor);
+      for (const line of def.effects ?? []) {
+        if (line.stat === "flatArmorBonus") continue;
+        trackBonus(stats, line.stat, scaleArcaneEffectLine(line, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_reaper": {
+      // wiki R5: +24 HP/s + +660 Armor on melee kill. Paper: equipped = buff up.
+      const regenLine = findEffect(def, "healthRegenPerSec");
+      const regen = regenLine ? scaleArcaneEffectLine(regenLine, rank, def.maxRank) : 0;
+      if (regen > 0) stats.healthRegenPerSec += regen;
+      trackBonus(stats, "healthRegenPerSec", regen);
+      const armorLine = findEffect(def, "flatArmorBonus");
+      const armor = armorLine ? scaleArcaneEffectLine(armorLine, rank, def.maxRank) : 0;
+      if (armor > 0) stats.flatArmorBonus += armor;
+      trackBonus(stats, "flatArmorBonus", armor);
+      const buffLine = findEffect(def, "buffDuration");
+      if (buffLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(buffLine, rank, def.maxRank));
+      }
       return true;
     }
 

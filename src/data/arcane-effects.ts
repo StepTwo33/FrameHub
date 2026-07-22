@@ -283,10 +283,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "abilityDuration",
-        "maxValue": 60.0,
+        "maxValue": 60,
         "flat": false,
-        "stacking": false,
-        "baseValue": 10.0
+        "stacking": false
       },
       {
         "stat": "buffDuration",
@@ -461,14 +460,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "armorBonusChance",
-        "maxValue": 15.0,
-        "baseValue": 2.5
+        "maxValue": 15,
+        "baseValue": 15,
+        "constantAtAllRanks": true
       },
       {
         "stat": "flatArmorBonus",
-        "maxValue": 900.0,
+        "maxValue": 900,
         "flat": true,
-        "baseValue": 150.0
+        "baseValue": 150
       }
     ]
   },
@@ -768,17 +768,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "healthRegenPerSec",
-        "maxValue": 24.0,
+        "maxValue": 24,
         "flat": true,
-        "stacking": false,
-        "baseValue": 4.0
+        "stacking": false
       },
       {
         "stat": "flatArmorBonus",
-        "maxValue": 660.0,
+        "maxValue": 660,
         "flat": true,
-        "stacking": false,
-        "baseValue": 110.0
+        "stacking": false
       },
       {
         "stat": "buffDuration",
@@ -836,8 +834,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "abilityEfficiency",
-        "maxValue": 175.0,
-        "baseValue": 29.166667
+        "maxValue": 175,
+        "baseValue": 125
       }
     ]
   },
@@ -865,9 +863,9 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "flatArmorBonus",
-        "maxValue": 1200.0,
+        "maxValue": 1200,
         "flat": true,
-        "baseValue": 200.0
+        "baseValue": 200
       }
     ]
   },
@@ -931,9 +929,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
-        "stat": "armor",
-        "maxValue": 1200.0,
-        "baseValue": 200.0
+        "stat": "flatArmorBonus",
+        "maxValue": 1200,
+        "flat": true,
+        "baseValue": 200
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 45,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

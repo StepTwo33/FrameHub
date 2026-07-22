@@ -1592,6 +1592,106 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier + 3, 4);
   });
+
+  it("Arcane Blessing: paper max stacks → +1200 flat Health", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const blessing = allArcanes.find((a) => a.id === "arcane_blessing")!;
+    const def = getArcaneEffectDef("arcane_blessing")!;
+    expect(def.stackCap).toBe(50);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [blessing],
+    );
+    expect(full.totalHealth).toBeCloseTo(bare.totalHealth + 1200, 4);
+  });
+
+  it("Molt Augmented: paper max stacks → +60% Ability Strength", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const aug = allArcanes.find((a) => a.id === "molt_augmented")!;
+    const def = getArcaneEffectDef("molt_augmented")!;
+    expect(def.stackCap).toBe(250);
+    const bareStr = calculateWarframeBuild(excal, [], new Map()).abilityStrength;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [aug],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bareStr + 0.6, 4);
+  });
+
+  it("Arcane Concentration: equipped → +60% Ability Duration", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const conc = allArcanes.find((a) => a.id === "arcane_concentration")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [conc],
+    );
+    expect(full.abilityDuration).toBeCloseTo(bare.abilityDuration + 0.6, 4);
+  });
+
+  it("Arcane Sculptor: equipped → lock Ability Efficiency at 175%", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const sculptor = allArcanes.find((a) => a.id === "arcane_sculptor")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [sculptor],
+    );
+    expect(full.abilityEfficiency).toBeCloseTo(1.75, 4);
+  });
+
+  it("Arcane Ultimatum: equipped → +1200 flat Armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const ult = allArcanes.find((a) => a.id === "arcane_ultimatum")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [ult],
+    );
+    expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 1200, 4);
+  });
+
+  it("Arcane Tanker: equipped → +1200 flat Armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const tanker = allArcanes.find((a) => a.id === "arcane_tanker")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [tanker],
+    );
+    expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 1200, 4);
+  });
+
+  it("Arcane Guardian: equipped → +900 flat Armor", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const guardian = allArcanes.find((a) => a.id === "arcane_guardian")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [guardian],
+    );
+    expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 900, 4);
+  });
+
+  it("Arcane Reaper: equipped → +660 Armor / +24 HP/s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const reaper = allArcanes.find((a) => a.id === "arcane_reaper")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [reaper],
+    );
+    expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 660, 4);
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + 24, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {
