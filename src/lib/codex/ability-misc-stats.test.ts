@@ -12,6 +12,7 @@ import {
   computeRedlineBuffAtBattery,
   computeGaussPassiveShieldRecharge,
   computeGaussPassiveRechargeDelayReduction,
+  computeThermalSunderRedlineArmorStrip,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -170,6 +171,14 @@ describe("Gauss battery formulas", () => {
     expect(computeGaussPassiveRechargeDelayReduction(0.8)).toBeCloseTo(0.64, 5);
     expect(computeGaussPassiveShieldRecharge(1)).toBeCloseTo(1.2, 5);
     expect(computeGaussPassiveRechargeDelayReduction(1)).toBeCloseTo(0.8, 5);
+  });
+
+  // wiki: 0% strip at ≤80% battery → 100% at full (Redline Blast combo)
+  it("Thermal Sunder Redline armor strip ramps 80→100% battery", () => {
+    expect(computeThermalSunderRedlineArmorStrip(0)).toBe(0);
+    expect(computeThermalSunderRedlineArmorStrip(0.8)).toBe(0);
+    expect(computeThermalSunderRedlineArmorStrip(0.9)).toBeCloseTo(0.5, 5);
+    expect(computeThermalSunderRedlineArmorStrip(1)).toBe(1);
   });
 });
 

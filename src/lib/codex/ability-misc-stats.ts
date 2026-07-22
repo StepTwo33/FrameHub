@@ -2155,6 +2155,18 @@ export function computeGaussPassiveRechargeDelayReduction(
   return clampHeatFraction(batteryFraction) * 0.8;
 }
 
+/**
+ * wiki Thermal Sunder + Redline: Blast armor strip scales from 0% at 80% battery
+ * to 100% at full battery (Redline active; not × STR).
+ */
+export function computeThermalSunderRedlineArmorStrip(
+  batteryFraction: number,
+): number {
+  const b = clampHeatFraction(batteryFraction);
+  if (b <= 0.8) return 0;
+  return Math.min(1, (b - 0.8) / 0.2);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

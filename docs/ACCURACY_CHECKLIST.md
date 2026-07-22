@@ -229,6 +229,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis PT + projectileSpeed | 2026-07-21 | CalculatedStats punchThrough/projectileSpeed; Swift Deliverance/Frictionless; Fortress Salvo/Hunter's Mantra/Tenno/Inciting PT; Speeding Bullet (assume uptime) |
 | Genesis followThrough panel | 2026-07-21 | Magistar Crushing Verdict +40% (channel); Nami Solo Lone Blade +60% (melee equipped) |
 | Gauss passive battery shields | 2026-07-21 | Shield recharge +delay reduction × battery (wiki 80%→96%/64%; full 120%/80%); not × STR |
+| Thermal Sunder Redline strip | 2026-07-21 | Blast armor strip 0% at ≤80% battery → 100% at full (Redline synergy; not × STR) |
 
 ## New / extended test files
 

@@ -18,6 +18,7 @@ import {
   computeFireballHeatDamage,
   computeKineticPlatingDrAtBattery,
   computeRedlineBuffAtBattery,
+  computeThermalSunderRedlineArmorStrip,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -380,7 +381,7 @@ export function AbilityStatsBlock({
   const usesBattery =
     hasKineticPlatingBattery || hasThermalSunderBattery || hasRedlineBattery;
   const [batteryPct, setBatteryPct] = useState(
-    hasKineticPlatingBattery || hasRedlineBattery ? 80 : 0,
+    hasKineticPlatingBattery || hasRedlineBattery || hasThermalSunderBattery ? 80 : 0,
   );
   const batteryT = Math.min(1, Math.max(0, batteryPct / 100));
 
@@ -1055,6 +1056,19 @@ export function AbilityStatsBlock({
         isPositive={batteryT > 0}
       />,
     );
+    const redlineStrip = computeThermalSunderRedlineArmorStrip(batteryT);
+    rows.push(
+      <AbilityStatRow
+        key="thermalSunderRedlineStrip"
+        compact={compact}
+        label="Blast Strip (Redline)"
+        baseValue={(redlineStrip * 100).toFixed(0)}
+        modifiedValue={(redlineStrip * 100).toFixed(0)}
+        unit="%"
+        isModified={batteryT > 0.8}
+        isPositive={redlineStrip > 0}
+      />,
+    );
   }
   if (hasRedlineBattery) {
     const buffDefs: { key: string; label: string; max: number }[] = [
@@ -1157,7 +1171,7 @@ export function AbilityStatsBlock({
               ? "Kinetic Plating DR = MinDR + (MaxDR − MinDR) × battery (wiki; default slider 80%)."
               : hasRedlineBattery
                 ? "Redline speed buffs lerp min→max (min=max/5) with battery, then × Ability Duration."
-                : "Thermal Sunder Cold/Heat damage and status duration lerp with battery (damage then × STR)."
+                : "Thermal Sunder: Cold/Heat dmg + status × battery; Blast strip (w/ Redline) 0% at 80% → 100% at full."
           }
         />
       )}
