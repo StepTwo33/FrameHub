@@ -688,10 +688,13 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("lavos", "Vial Rush", "chargeSpeed")).toBeNull();
   });
 
-  it("Transmutation Probe CDR stays Misc-fixed (EFF scale unmodeled); probe lifetime fixed", () => {
-    expect(getVerifiedMiscScaling("lavos", "Transmutation Probe", "cooldownReduction")).toBeNull();
+  it("Transmutation Probe CDR × EFF; probe lifetime / speed Misc-fixed", () => {
+    expect(getVerifiedMiscScaling("lavos", "Transmutation Probe", "cooldownReduction")).toEqual({
+      scale: "efficiency",
+    });
     expect(getVerifiedMiscScaling("lavos", "Transmutation Probe", "probeDuration")).toBeNull();
     expect(getVerifiedMiscScaling("lavos", "Transmutation Probe", "probeSpeed")).toBeNull();
+    expect(getVerifiedMiscScaling("lavos", "Transmutation Probe", "haltDelay")).toBeNull();
   });
 
   it("Catalyze probe speed × RNG; gel mist / +100% per status Misc-fixed", () => {

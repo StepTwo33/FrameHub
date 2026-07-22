@@ -10,7 +10,7 @@
  * Keys use `warframeFamily::Ability Name` where warframeFamily strips `_prime`.
  */
 
-export type AbilityScaleAttribute = "strength" | "duration" | "range";
+export type AbilityScaleAttribute = "strength" | "duration" | "range" | "efficiency";
 
 export interface VerifiedStatScaling {
   scale: AbilityScaleAttribute;
@@ -830,7 +830,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     vialCharges: { scale: "range" },
   },
 
-  // wiki: Transmutation Probe — CDR listed under Efficiency (panel EFF scale not wired); probe lifetime Misc-fixed
+  // wiki: Transmutation Probe — CDR per enemy × EFF; probe lifetime / speed / halt Misc-fixed
+  "lavos::Transmutation Probe": {
+    cooldownReduction: { scale: "efficiency" },
+  },
+
   // wiki: Catalyze — probe speed × RNG; gel mist / probe count / +100% per status Misc-fixed
   "lavos::Catalyze": {
     probeSpeed: { scale: "range" },

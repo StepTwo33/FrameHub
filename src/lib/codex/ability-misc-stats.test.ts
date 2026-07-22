@@ -258,6 +258,22 @@ describe("scaleAbilityMiscStats", () => {
     expect(lines.find((l) => l.label === "Fury Max")!.scaled).toBe("550%");
   });
 
+  // wiki Transmutation Probe: 1.5s CDR × Ability Efficiency (Streamline 130% → 1.95s)
+  it("scales Transmutation Probe cooldownReduction with Efficiency", () => {
+    const lines = scaleAbilityMiscStats(
+      { cooldownReduction: 1.5, probeDuration: 3, probeSpeed: 15, haltDelay: 0.5 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1.3 },
+      { warframeId: "lavos", abilityName: "Transmutation Probe" },
+    );
+    const cdr = lines.find((l) => l.label === "Cooldown Reduction")!;
+    expect(cdr.base).toBe("1.5s");
+    expect(cdr.scaled).toBe("2.0s");
+    expect(cdr.modified).toBe(true);
+    expect(cdr.scaleAttr).toBe("efficiency");
+    expect(lines.find((l) => l.label === "Probe Duration")!.modified).toBe(false);
+    expect(lines.find((l) => l.label === "Probe Speed")!.modified).toBe(false);
+  });
+
   // wiki Contagion Cloud R3: 300 Toxin/s × STR, 5m × RNG, 12s × DUR; melee mult 2× fixed
   it("scales Contagion Cloud miscStats with STR/RNG/DUR (melee mult fixed)", () => {
     const lines = scaleAbilityMiscStats(

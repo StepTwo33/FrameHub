@@ -41,6 +41,7 @@ const SCALE_BADGE: Record<AbilityScaleHint, { label: string; className: string }
   strength: { label: "STR", className: "bg-rose-500/15 text-rose-400 ring-rose-500/25" },
   duration: { label: "DUR", className: "bg-emerald-500/15 text-emerald-400 ring-emerald-500/25" },
   range: { label: "RNG", className: "bg-sky-500/15 text-sky-400 ring-sky-500/25" },
+  efficiency: { label: "EFF", className: "bg-amber-500/15 text-amber-300 ring-amber-500/25" },
 };
 
 export function getSlotStyle(slot: number) {
@@ -310,9 +311,14 @@ export function AbilityStatsBlock({
   const str = stats?.abilityStrength ?? 1;
   const dur = stats?.abilityDuration ?? 1;
   const rng = stats?.abilityRange ?? 1;
+  const eff = stats?.abilityEfficiency ?? 1;
 
   const scaledMisc = ability.miscStats
-    ? scaleAbilityMiscStats(ability.miscStats, { strength: str, duration: dur, range: rng }, display)
+    ? scaleAbilityMiscStats(
+        ability.miscStats,
+        { strength: str, duration: dur, range: rng, efficiency: eff },
+        display,
+      )
     : [];
 
   const scaledDr =

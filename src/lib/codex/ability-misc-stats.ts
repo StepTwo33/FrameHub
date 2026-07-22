@@ -10,6 +10,8 @@ export interface AbilityScaleContext {
   strength: number;
   duration: number;
   range: number;
+  /** Ability Efficiency multiplier (1 = 100%). Defaults to 1 when omitted. */
+  efficiency?: number;
 }
 
 export interface AbilityDisplayContext {
@@ -1048,6 +1050,7 @@ function fmtPct(fraction: number): string {
 function scaleMultiplier(ctx: AbilityScaleContext, attr: AbilityScaleAttribute): number {
   if (attr === "strength") return ctx.strength;
   if (attr === "duration") return ctx.duration;
+  if (attr === "efficiency") return ctx.efficiency ?? 1;
   return ctx.range;
 }
 

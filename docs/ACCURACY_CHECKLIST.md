@@ -47,7 +47,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur/Hunter **panel %** locked (40%/piece, 25%/piece); Mecha mark/spread summary only; shield-cast / companion timing / Mecha burst still unmodeled in DPS | Panel goldens in `set-bonus-audit.test.ts`; DPS remains C |
-| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion kill-AoE; Probe EFF→CDR + Bloodletting EFF→energy + Shadows/Navigator/Prowl/EV pulse inverse-DUR + Pacify DR + Sol Gate drain×EFF/DUR + Absorb convert formula unmodeled |
+| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion kill-AoE + Probe CDR×EFF; Bloodletting EFF→energy + Shadows/Navigator/Prowl/EV pulse inverse-DUR + Pacify DR + Sol Gate drain×EFF/DUR + Absorb convert formula unmodeled |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud sim-gated DPS (enemies×STR; not in TTK); utility Genesis remain |
@@ -103,6 +103,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis conditional uptime | 2026-07-21 | Haven/Paladin/Guardian/Daring/Deathtrap/Red Right/Dawn/half-HP/Hoplite/Swooping/Impaler/Zylok stacks |
 | Contagion Cloud panel | 2026-07-21 | R3 300/s×STR, 5m×RNG, 12s×DUR on Toxic Lash miscStats; mod stats absolutes |
 | Contagion Cloud DPS | 2026-07-21 | Sim-gated enemies (0–8) × ability toxin DPS × STR (×2 melee) when Contagion Cloud augment + Toxic Lash active; separate panel row; not in TTK |
+| Lavos Probe CDR×EFF | 2026-07-21 | Transmutation Probe cooldownReduction × Ability Efficiency (1.5s×EFF); EFF scale attr + badge wired for misc panel |
 | Genesis leftovers paper | 2026-07-21 | Boar Reified 24; Steadfast ×3 CM; Felarx MM +60% FR; Kinetic CM set 4; Lethal +90% reload; OA +1200%; Sawblades +70% FR; Gambit +150% CC |
 | Genesis P0 + Shroud + stance | 2026-07-21 | Bo +50% HAE; Templar +70% HAE; Ballistica FR/CC stacks; Ruvox Impetus/Brutal; Phenmor Spiteful/Lingering; Praedos TM; Shroud CD/SC×STR; Coiling Viper 1.85 |
 | Ammo efficiency sustained | 2026-07-21 | AE extends mag cycle; Daring/Trusty/Enough/Feather/Agile/Reaper paper; arcane AE no longer no-op |
@@ -141,7 +142,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Protea kit | 2026-07-21 | Fan 500 Slash/5m/13s + satellites; Artillery 50/500 Heat; Dispensary 75/25s (Helminth 12.5s); Anchor 100/8s/15m |
 | B5 Dante kit | 2026-07-21 | Noctua 5+2/shot 250/2750; Light/Dark 25 energy; Final 50/45s/30m; Helminth→Dark Verse (was wrong Noctua) |
 | B5 Qorvex kit | 2026-07-21 | Pillar 1000/8m/35s; Wall 50/3500 Impact+200 Rad tick; Guard 75/5–10 stacks×STR; Blast 100/10k DPS; Helminth→Pillar |
-| B5 Lavos kit | 2026-07-21 | Bite 1000/10m/8s CD +15% heal×STR; Vial 250/s 30m/8s/5s CD; Probe 250/s 6m/10s CD; Catalyze 2000/25m/30s CD |
+| B5 Lavos kit | 2026-07-21 | Bite 1000/10m/8s CD +15% heal×STR; Vial 250/s 30m/8s/5s CD; Probe 250/s 6m/10s CD +1.5s CDR×EFF; Catalyze 2000/25m/30s CD |
 | B5 Kullervo kit | 2026-07-21 | WA +200% flat final melee CC×STR (Helminth +100%/12.5m); Recompense 500/8m; Curse 50% redirect; Ukko 2500/s/10m/15s |
 | B5 Sevagoth kit | 2026-07-21 | Reap 250 Rad/8m +50% vuln; Sow 50/250 True DPS; Gloom 50+0.75/s slow/lifesteal×STR; Shadow Death Well 75%/1%/s |
 | B5 Dagath kit | 2026-07-21 | Wyrd 500/1000 Viral +35% slow; Doom 500/15m; Grave +50% CD×STR; Cavalry 30k/strip; Helminth→Wyrd (was Doom) |
