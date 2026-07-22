@@ -37,6 +37,8 @@ import {
   computeXakuPassiveEvasion,
   computeVoltStaticDischargeDamage,
   computeTrinityLifegiverBonusHealth,
+  computeMesaPassiveBonuses,
+  computeQorvexPassivePunchThrough,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -432,6 +434,32 @@ describe("Trinity Lifegiver passive", () => {
     expect(computeTrinityLifegiverBonusHealth(175)).toBe(87.5);
     expect(computeTrinityLifegiverBonusHealth(350)).toBe(175);
     expect(computeTrinityLifegiverBonusHealth(0)).toBe(0);
+  });
+});
+
+describe("Mesa sidearm / health passive", () => {
+  it("applies dual FR, single reload, and no-melee health", () => {
+    expect(computeMesaPassiveBonuses({ sidearmStyle: "dual", meleeEquipped: true })).toEqual({
+      fireRateBonus: 0.15,
+      reloadSpeedBonus: 0,
+      bonusHealth: 0,
+    });
+    expect(computeMesaPassiveBonuses({ sidearmStyle: "single", meleeEquipped: false })).toEqual({
+      fireRateBonus: 0,
+      reloadSpeedBonus: 0.25,
+      bonusHealth: 50,
+    });
+    expect(computeMesaPassiveBonuses({ sidearmStyle: "none", meleeEquipped: false })).toEqual({
+      fireRateBonus: 0,
+      reloadSpeedBonus: 0,
+      bonusHealth: 50,
+    });
+  });
+});
+
+describe("Qorvex Core Exposure passive", () => {
+  it("grants +3 Punch Through", () => {
+    expect(computeQorvexPassivePunchThrough()).toBe(3);
   });
 });
 

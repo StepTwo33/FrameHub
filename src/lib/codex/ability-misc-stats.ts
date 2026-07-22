@@ -2458,6 +2458,36 @@ export function computeTrinityLifegiverBonusHealth(maxEnergy: number): number {
   return Math.max(0, maxEnergy) * 0.5;
 }
 
+export type MesaSidearmStyle = "none" | "single" | "dual";
+
+export interface MesaPassiveBonuses {
+  /** +15% fire rate with dual-wielded sidearms. */
+  fireRateBonus: number;
+  /** +25% reload speed for one-handed sidearms. */
+  reloadSpeedBonus: number;
+  /** +50 Health when no melee is equipped. */
+  bonusHealth: number;
+}
+
+/**
+ * wiki Mesa passive: dual FR +15%, single-hand reload +25%, +50 HP without melee.
+ */
+export function computeMesaPassiveBonuses(opts: {
+  sidearmStyle: MesaSidearmStyle;
+  meleeEquipped: boolean;
+}): MesaPassiveBonuses {
+  return {
+    fireRateBonus: opts.sidearmStyle === "dual" ? 0.15 : 0,
+    reloadSpeedBonus: opts.sidearmStyle === "single" ? 0.25 : 0,
+    bonusHealth: opts.meleeEquipped ? 0 : 50,
+  };
+}
+
+/** wiki Qorvex Core Exposure: +3 Punch Through on all weapons. */
+export function computeQorvexPassivePunchThrough(): number {
+  return 3;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

@@ -245,6 +245,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Styanax + Yareli passives | 2026-07-22 | Hoplite +1% CC / 40 shields (×2 Speargun); Critical Flow +200% secondary CC while moving |
 | Zephyr + Xaku passives | 2026-07-22 | Airborne +150% weapon CC; Xaku 25% dodge/AoE DR → 75% during Vast Untime |
 | Volt + Trinity passives | 2026-07-22 | Static Discharge 10/m Electric cap 1000; Lifegiver allies +50% of max Energy as Health |
+| Mesa + Qorvex passives | 2026-07-22 | Mesa dual FR +15% / single reload +25% / +50 HP no melee; Qorvex Core Exposure +3 PT |
 
 ## New / extended test files
 

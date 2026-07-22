@@ -29,6 +29,9 @@ import {
   computeXakuPassiveEvasion,
   computeVoltStaticDischargeDamage,
   computeTrinityLifegiverBonusHealth,
+  computeMesaPassiveBonuses,
+  computeQorvexPassivePunchThrough,
+  type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -483,6 +486,72 @@ function TrinityLifegiverPassive({ maxEnergy }: { maxEnergy: number }) {
   );
 }
 
+const MESA_SIDEARM_STYLES: MesaSidearmStyle[] = ["none", "single", "dual"];
+
+function MesaPassiveBonusesPanel({ moddedHealth }: { moddedHealth: number }) {
+  const [sidearmIdx, setSidearmIdx] = useState(2); // dual
+  const [meleeEquipped, setMeleeEquipped] = useState(0);
+  const style = MESA_SIDEARM_STYLES[Math.min(2, Math.max(0, sidearmIdx))] ?? "dual";
+  const bonuses = computeMesaPassiveBonuses({
+    sidearmStyle: style,
+    meleeEquipped: meleeEquipped > 0,
+  });
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Sidearm (0 none / 1 single / 2 dual)"
+        value={sidearmIdx}
+        min={0}
+        max={2}
+        onChange={setSidearmIdx}
+        tooltip="Mesa: dual-wield +15% fire rate; one-handed +25% reload. Archmelee still allowed for the health bonus."
+      />
+      <SimSlider
+        label="Melee Equipped"
+        value={meleeEquipped}
+        min={0}
+        max={1}
+        onChange={setMeleeEquipped}
+        tooltip="+50 Health when no melee weapon is equipped in the loadout."
+      />
+      <StatRow
+        label="Fire Rate"
+        value={bonuses.fireRateBonus > 0 ? `+${(bonuses.fireRateBonus * 100).toFixed(0)}%` : "—"}
+        color={bonuses.fireRateBonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Dual-wielded sidearms only."
+      />
+      <StatRow
+        label="Reload Speed"
+        value={bonuses.reloadSpeedBonus > 0 ? `+${(bonuses.reloadSpeedBonus * 100).toFixed(0)}%` : "—"}
+        color={bonuses.reloadSpeedBonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="One-handed sidearms only."
+      />
+      <StatRow
+        label="Health w/ Passive"
+        value={(moddedHealth + bonuses.bonusHealth).toFixed(0)}
+        color="text-green-400"
+        tooltip={bonuses.bonusHealth > 0 ? "+50 flat Health (no melee)." : "Melee equipped — no Health bonus."}
+      />
+    </div>
+  );
+}
+
+function QorvexCoreExposurePassive() {
+  const pt = computeQorvexPassivePunchThrough();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Punch Through"
+        value={`+${pt}`}
+        color="text-amber-400"
+        tooltip="Core Exposure: +3 Punch Through on primary, secondary, and melee (panel-only; not wired into weapon DPS)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -612,6 +681,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "trinity" || warframe.id === "trinity_prime") && (
             <TrinityLifegiverPassive maxEnergy={stats.totalEnergy} />
           )}
+          {(warframe.id === "mesa" || warframe.id === "mesa_prime") && (
+            <MesaPassiveBonusesPanel moddedHealth={stats.totalHealth} />
+          )}
+          {warframe.id === "qorvex" && <QorvexCoreExposurePassive />}
         </CollapsibleSection>
       )}
 
