@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion kill-AoE; Probe EFF→CDR + Bloodletting EFF→energy + Shadows/Navigator/Prowl/EV pulse inverse-DUR + Pacify DR + Sol Gate drain×EFF/DUR + Absorb convert formula unmodeled |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion kill-AoE DPS still out; utility Genesis remain |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud sim-gated DPS (enemies×STR; not in TTK); utility Genesis remain |
 
 ---
 
@@ -101,7 +101,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis bleed/HS/status | 2026-07-21 | Flashing Bleed; Caput/Deadhead; Carnage; Alchemy dur; Fevered MS; Reaver; Neurotoxin |
 | Genesis max-stack paper | 2026-07-21 | Kill Joy/Stormburst/Infused/Crimson/Paragon/Riddled/Blazing/Synergist/Skullbuster/Gun&Blade; sprint FA/FR |
 | Genesis conditional uptime | 2026-07-21 | Haven/Paladin/Guardian/Daring/Deathtrap/Red Right/Dawn/half-HP/Hoplite/Swooping/Impaler/Zylok stacks |
-| Contagion Cloud panel | 2026-07-21 | R3 300/s×STR, 5m×RNG, 12s×DUR on Toxic Lash miscStats; mod stats absolutes; kill-AoE DPS still out |
+| Contagion Cloud panel | 2026-07-21 | R3 300/s×STR, 5m×RNG, 12s×DUR on Toxic Lash miscStats; mod stats absolutes |
+| Contagion Cloud DPS | 2026-07-21 | Sim-gated enemies (0–8) × ability toxin DPS × STR (×2 melee) when Contagion Cloud augment + Toxic Lash active; separate panel row; not in TTK |
 | Genesis leftovers paper | 2026-07-21 | Boar Reified 24; Steadfast ×3 CM; Felarx MM +60% FR; Kinetic CM set 4; Lethal +90% reload; OA +1200%; Sawblades +70% FR; Gambit +150% CC |
 | Genesis P0 + Shroud + stance | 2026-07-21 | Bo +50% HAE; Templar +70% HAE; Ballistica FR/CC stacks; Ruvox Impetus/Brutal; Phenmor Spiteful/Lingering; Praedos TM; Shroud CD/SC×STR; Coiling Viper 1.85 |
 | Ammo efficiency sustained | 2026-07-21 | AE extends mag cycle; Daring/Trusty/Enough/Feather/Agile/Reaper paper; arcane AE no longer no-op |

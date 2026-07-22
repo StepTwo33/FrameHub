@@ -126,20 +126,32 @@ export function WeaponSimControls({
               />
             )}
             {(simParams.activeWeaponAbilityBuffs ?? []).includes("Toxic Lash") && (
-              <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={!!simParams.toxicLashSporesOnTarget}
-                  onChange={(e) =>
-                    onSimParamsChange({
-                      ...simParams,
-                      toxicLashSporesOnTarget: e.target.checked,
-                    })
+              <>
+                <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!!simParams.toxicLashSporesOnTarget}
+                    onChange={(e) =>
+                      onSimParamsChange({
+                        ...simParams,
+                        toxicLashSporesOnTarget: e.target.checked,
+                      })
+                    }
+                    className="h-3.5 w-3.5 rounded border-border accent-primary"
+                  />
+                  Spores on target (2× Extra Hit)
+                </label>
+                <SimSlider
+                  label="Contagion Cloud enemies"
+                  value={simParams.contagionCloudEnemies ?? 0}
+                  min={0}
+                  max={8}
+                  onChange={(v) =>
+                    onSimParamsChange({ ...simParams, contagionCloudEnemies: v })
                   }
-                  className="h-3.5 w-3.5 rounded border-border accent-primary"
+                  tooltip="Enemies assumed in Contagion Cloud (Toxic Lash augment). 0 = off. Ability toxin DPS × Strength (×2 melee) × enemies — needs Contagion Cloud equipped."
                 />
-                Spores on target (2× Extra Hit)
-              </label>
+              </>
             )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction

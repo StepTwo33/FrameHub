@@ -293,6 +293,11 @@ export interface WeaponExternalBuff {
   extraHitDamageFraction?: number;
   /** Toxic Lash: Extra Hit always procs Toxin (feeds DoT + faction triple-dip). */
   extraHitGuaranteedToxin?: boolean;
+  /**
+   * Flat ability toxin cloud DPS (Contagion Cloud). Not weapon-modded; added to
+   * burst/sustained after direct DPS when sim enemies > 0.
+   */
+  abilityCloudDps?: number;
   nominal?: string;
 }
 
@@ -352,6 +357,12 @@ export interface SimulationParams {
    * (wiki), but still only one Toxin status stack.
    */
   toxicLashSporesOnTarget?: boolean;
+  /**
+   * Contagion Cloud (Toxic Lash augment): number of enemies assumed standing in
+   * active clouds. 0 = off (default). Contribution is ability toxin DPS × STR
+   * (×2 melee) × enemies — not folded into single-target TTK.
+   */
+  contagionCloudEnemies?: number;
   /** Tenacious Bond: +1.2× crit damage when companion crit > 50%. Default on in loadout calcs. */
   applyTenaciousBondCrit?: boolean;
   /** Reinforced Bond: +60% fire rate when companion shields exceed threshold. Default on in loadout calcs. */
@@ -502,6 +513,11 @@ export interface CalculatedStats {
   radialBurstDps?: number;
   /** Radial burst DPS adjusted for reload/magazine cycle. */
   radialSustainedDps?: number;
+  /**
+   * Contagion Cloud ability toxin DPS contribution (sim-gated enemies × STR).
+   * Included in burstDps/sustainedDps totals when > 0; excluded from TTK.
+   */
+  contagionCloudDps?: number;
   /** Accumulated arcane stat values for display / future modeling. */
   arcaneBonuses?: Record<string, number>;
   /** Unverified or panel-only mod stat values keyed as `modId::statKey`. */

@@ -357,6 +357,22 @@ function applyRadialAttacks(
   }
 }
 
+/** Contagion Cloud (and similar) flat ability cloud DPS from external buffs. */
+function applyAbilityCloudDps(
+  stats: CalculatedStats,
+  externalBuffs?: WeaponExternalBuff[],
+): void {
+  if (!externalBuffs?.length) return;
+  let cloud = 0;
+  for (const buff of externalBuffs) {
+    if (buff.abilityCloudDps && buff.abilityCloudDps > 0) cloud += buff.abilityCloudDps;
+  }
+  if (cloud <= 0) return;
+  stats.contagionCloudDps = cloud;
+  stats.burstDps += cloud;
+  stats.sustainedDps += cloud;
+}
+
 function applyWeaponExternalBuffs(
   acc: WeaponModAccumulators,
   buffs?: WeaponExternalBuff[],
@@ -1145,6 +1161,7 @@ export function calculateWeaponBuild(
   stats.setBonusSummary = buildWeaponSetBonusSummary(baseWeapon, equippedMods, linkage, sim);
 
   applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
+  applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
 
   return stats;
 }
@@ -1518,6 +1535,7 @@ export function calculateWeaponBuildWithArcanes(
   stats.burstDps = calculateBurstDps(stats);
   stats.sustainedDps = calculateSustainedDps(stats, baseWeapon);
   applyRadialAttacks(baseWeapon, stats, calcOptions?.incarnonFormActive === true);
+  applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
   return stats;
 }
 

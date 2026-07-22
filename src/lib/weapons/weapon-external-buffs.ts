@@ -338,13 +338,52 @@ function resolveNourishBuff(
   };
 }
 
+const CONTAGION_CLOUD_MOD_ID = "augment_saryn_contagion_cloud";
+
+function hasContagionCloudAugment(ctx: WeaponBuffContext): boolean {
+  return (ctx.warframeModSlots ?? []).some((s) => s.modId === CONTAGION_CLOUD_MOD_ID);
+}
+
+/**
+ * Wiki Contagion Cloud: on-kill toxin cloud = ability misc DPS × STR
+ * (× melee mult); sim gates enemy count. Not weapon-modded.
+ */
+function resolveContagionCloudBuff(
+  weapon: Weapon,
+  warframeId: string,
+  ability: Ability,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  const enemies = Math.max(0, Math.floor(simParams.contagionCloudEnemies ?? 0));
+  if (enemies <= 0 || !hasContagionCloudAugment(ctx)) return null;
+  const misc = ability.miscStats ?? {};
+  const baseDps = typeof misc.contagionCloudDps === "number" ? misc.contagionCloudDps : 300;
+  const meleeMult =
+    typeof misc.contagionCloudMeleeMult === "number" ? misc.contagionCloudMeleeMult : 2;
+  const rule = getVerifiedMiscScaling(warframeId, ability.name, "contagionCloudDps");
+  const scaled = baseDps * (rule?.scale === "strength" ? strength : 1);
+  const dps = scaled * (isMeleeWeapon(weapon) ? meleeMult : 1) * enemies;
+  if (dps <= 0) return null;
+  return {
+    id: "ability:Contagion Cloud",
+    label: "Contagion Cloud",
+    category: "ability",
+    abilityCloudDps: dps,
+    nominal: `${baseDps}/s cloud × Strength × ${enemies} enem${enemies === 1 ? "y" : "ies"}`,
+  };
+}
+
 /** Wiki Toxic Lash: Extra Hit % of weapon damage; melee is doubled; scales STR (cap 100%). */
 function resolveToxicLashBuff(
   weapon: Weapon,
   warframeId: string,
   ability: Ability,
   strength: number,
-): WeaponExternalBuff | null {
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff[] {
   const gun = ability.miscStats?.gunDamage;
   const melee = ability.miscStats?.meleeDamage;
   const base = isMeleeWeapon(weapon)
@@ -358,15 +397,20 @@ function resolveToxicLashBuff(
   const rule = getVerifiedMiscScaling(warframeId, ability.name, key);
   // Wiki: percentages scale with Strength and soft-cap at 100%.
   const frac = Math.min(base * strength, rule?.cap ?? 1);
-  if (frac <= 0) return null;
-  return {
-    id: `ability:${ability.name}`,
-    label: ability.name,
-    category: "ability",
-    extraHitDamageFraction: frac,
-    extraHitGuaranteedToxin: true,
-    nominal: `+${(base * 100).toFixed(0)}% Toxin Extra Hit (× Strength)`,
-  };
+  const out: WeaponExternalBuff[] = [];
+  if (frac > 0) {
+    out.push({
+      id: `ability:${ability.name}`,
+      label: ability.name,
+      category: "ability",
+      extraHitDamageFraction: frac,
+      extraHitGuaranteedToxin: true,
+      nominal: `+${(base * 100).toFixed(0)}% Toxin Extra Hit (× Strength)`,
+    });
+  }
+  const cloud = resolveContagionCloudBuff(weapon, warframeId, ability, strength, ctx, simParams);
+  if (cloud) out.push(cloud);
+  return out;
 }
 
 /** Wiki Xata's Whisper: Extra Hit Void %; scales STR. */
@@ -443,8 +487,6 @@ function resolveNamedAbilityWeaponBuff(
       return resolveElectricShieldBuff(weapon, ability);
     case "Nourish":
       return resolveNourishBuff(warframeId, ability, strength);
-    case "Toxic Lash":
-      return resolveToxicLashBuff(weapon, warframeId, ability, strength);
     case "Xata's Whisper":
       return resolveXataBuff(ability, strength);
     case "Vex Armor":
@@ -622,6 +664,13 @@ function resolveAbilityBuffs(
 
   for (const ability of ctx.warframeAbilities) {
     if (!active.includes(ability.name)) continue;
+
+    if (ability.name === "Toxic Lash") {
+      buffs.push(
+        ...resolveToxicLashBuff(weapon, ctx.warframeId!, ability, strength, ctx, simParams),
+      );
+      continue;
+    }
 
     const named = resolveNamedAbilityWeaponBuff(weapon, ctx, ability, strength, simParams);
     if (named) {

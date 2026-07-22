@@ -236,6 +236,57 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(withLash.burstDps / bare.burstDps).toBeCloseTo(1 + 0.3 * 1.3, 4);
   });
 
+  it("Contagion Cloud adds sim-gated ability toxin DPS (gun/melee) when augment equipped", () => {
+    const lash: Ability = {
+      name: "Toxic Lash",
+      energyCost: 50,
+      description: "toxin",
+      miscStats: {
+        gunDamage: 0.3,
+        meleeDamage: 0.6,
+        contagionCloudDps: 300,
+        contagionCloudMeleeMult: 2,
+      },
+    };
+    const sim: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Toxic Lash"],
+      contagionCloudEnemies: 2,
+    };
+    const ctx = {
+      warframeId: "saryn",
+      warframeStats: wfStats,
+      warframeAbilities: [lash],
+      warframeModSlots: [{ modId: "augment_saryn_contagion_cloud", slotIndex: 0, rank: 3 }],
+    };
+    const gunBuffs = resolveWeaponExternalBuffs(testRifle, ctx, sim);
+    const cloudGun = gunBuffs.find((b) => b.id === "ability:Contagion Cloud");
+    // 300 × 1.3 STR × 2 enemies = 780
+    expect(cloudGun?.abilityCloudDps).toBeCloseTo(300 * 1.3 * 2, 5);
+
+    const meleeBuffs = resolveWeaponExternalBuffs(testMelee, ctx, sim);
+    const cloudMelee = meleeBuffs.find((b) => b.id === "ability:Contagion Cloud");
+    // 300 × 1.3 × 2 melee × 2 enemies = 1560
+    expect(cloudMelee?.abilityCloudDps).toBeCloseTo(300 * 1.3 * 2 * 2, 5);
+
+    const withCloud = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim, {
+      externalBuffs: gunBuffs,
+    });
+    expect(withCloud.contagionCloudDps).toBeCloseTo(780, 5);
+    const bare = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim, {
+      externalBuffs: gunBuffs.filter((b) => b.id !== "ability:Contagion Cloud"),
+    });
+    expect(withCloud.burstDps - bare.burstDps).toBeCloseTo(780, 4);
+
+    // No augment → no cloud contribution even with enemies > 0
+    const noAug = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...ctx, warframeModSlots: [] },
+      sim,
+    );
+    expect(noAug.find((b) => b.id === "ability:Contagion Cloud")).toBeUndefined();
+  });
+
   it("Toxic Lash Extra Hit double-dips elemental mods (wiki)", () => {
     const lash: Ability = {
       name: "Toxic Lash",

@@ -419,11 +419,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         {(() => {
           const radialBurst = stats.radialBurstDps ?? 0;
           const radialSustained = stats.radialSustainedDps ?? 0;
-          const directBurst = Math.max(0, stats.burstDps - radialBurst);
-          const directSustained = Math.max(0, stats.sustainedDps - radialSustained);
+          const contagionCloud = stats.contagionCloudDps ?? 0;
+          const directBurst = Math.max(0, stats.burstDps - radialBurst - contagionCloud);
+          const directSustained = Math.max(0, stats.sustainedDps - radialSustained - contagionCloud);
           const showOverflow = [directBurst, directSustained, stats.burstDps, stats.sustainedDps].some(
             exceedsWarframeInt32,
           );
+          const showTotals = radialBurst > 0 || contagionCloud > 0;
           return (
             <>
               <StatRow
@@ -431,7 +433,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 value={directBurst.toFixed(0)}
                 highlighted
                 changed={flash.has("directBurstDps") || flash.has("burstDps")}
-                tooltip="Projectile / hit DPS only (no radial). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
+                tooltip="Projectile / hit DPS only (no radial / Contagion Cloud). dmg × multishot × fire rate × avg crit × (faction × headshot × stance when enabled)."
               />
               <StatRow
                 label="Direct Sustained DPS"
@@ -456,18 +458,31 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                     changed={flash.has("radialSustainedDps")}
                     tooltip="Radial DPS adjusted for magazine and reload cycle."
                   />
+                </>
+              )}
+              {contagionCloud > 0 && (
+                <StatRow
+                  label="Contagion Cloud DPS"
+                  value={contagionCloud.toFixed(0)}
+                  color="text-lime-300"
+                  changed={flash.has("contagionCloudDps")}
+                  tooltip="Toxic Lash Contagion Cloud (augment): ability toxin DPS × Strength (×2 melee) × sim enemies. Not in TTK."
+                />
+              )}
+              {showTotals && (
+                <>
                   <div className="border-t border-border/50 my-1" />
                   <StatRow
                     label="Total Burst DPS"
                     value={stats.burstDps.toFixed(0)}
                     changed={flash.has("burstDps")}
-                    tooltip="Direct + radial burst DPS combined."
+                    tooltip="Direct + radial + Contagion Cloud burst DPS combined."
                   />
                   <StatRow
                     label="Total Sustained DPS"
                     value={stats.sustainedDps.toFixed(0)}
                     changed={flash.has("sustainedDps")}
-                    tooltip="Direct + radial sustained DPS combined."
+                    tooltip="Direct + radial + Contagion Cloud sustained DPS combined."
                   />
                 </>
               )}
