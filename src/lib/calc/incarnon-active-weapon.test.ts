@@ -571,9 +571,12 @@ describe("evolution numeric fixes", () => {
     expect(changes?.multishot).toBeCloseTo(0.3, 5);
   });
 
-  it("Paris Vicious Promise stays description-only (undamaged conditional)", () => {
+  it("Paris Vicious Promise papers undamaged +40% CC / +2× CM", () => {
     const data = incarnonDataMap.get("paris")!;
-    expect(mergeIncarnonStatChanges(data, { 4: 0 }, "paris")).toBeUndefined();
+    expect(mergeIncarnonStatChanges(data, { 4: 0 }, "paris")).toMatchObject({
+      criticalChance: 0.4,
+      criticalMultiplier: 2,
+    });
   });
 
   it("Paris Striking Succession assumes max stacks (+60)", () => {
@@ -734,6 +737,51 @@ describe("evolution numeric fixes", () => {
     const grip = mergeIncarnonStatChanges(incarnonDataMap.get("boar")!, { 3: 2 }, "boar");
     expect(grip?.accuracy).toBe(0.5);
     expect(calculateWeaponBuild(boar, [], modsMap(), grip).accuracy).toBe(0.5);
+
+    const felarx = allWeapons.find((w) => w.id === "felarx")!;
+    const baffle = mergeIncarnonStatChanges(incarnonDataMap.get("felarx")!, { 2: 1 }, "felarx");
+    expect(baffle?.recoil).toBe(-0.5);
+    expect(calculateWeaponBuild(felarx, [], modsMap(), baffle).recoil).toBe(-0.5);
+
+    // Max-stack paper: Slayer's Nerve 10× / Lex Talionis 4×
+    const cestra = allWeapons.find((w) => w.id === "cestra")!;
+    const nerve = mergeIncarnonStatChanges(incarnonDataMap.get("cestra")!, { 3: 1 }, "cestra");
+    expect(nerve).toMatchObject({ accuracy: 0.6, recoil: -0.6 });
+    expect(calculateWeaponBuild(cestra, [], modsMap(), nerve)).toMatchObject({
+      accuracy: 0.6,
+      recoil: -0.6,
+    });
+
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const talionis = mergeIncarnonStatChanges(incarnonDataMap.get("lex")!, { 3: 0 }, "lex");
+    expect(talionis).toMatchObject({ accuracy: 0.8, recoil: -0.8 });
+    expect(calculateWeaponBuild(lex, [], modsMap(), talionis)).toMatchObject({
+      accuracy: 0.8,
+      recoil: -0.8,
+    });
+  });
+
+  it("kill punch-through and Vicious Promise undamaged paper", () => {
+    const dual = allWeapons.find((w) => w.id === "dual_toxocyst")!;
+    const ripper = mergeIncarnonStatChanges(incarnonDataMap.get("dual_toxocyst")!, { 4: 2 }, "dual_toxocyst");
+    expect(ripper?.punchThrough).toBe(3);
+    expect(calculateWeaponBuild(dual, [], modsMap(), ripper).punchThrough).toBe(3);
+
+    const onos = allWeapons.find((w) => w.id === "onos")!;
+    const lance = mergeIncarnonStatChanges(incarnonDataMap.get("onos")!, { 4: 0 }, "onos");
+    expect(lance?.punchThrough).toBe(2.5);
+    expect(calculateWeaponBuild(onos, [], modsMap(), lance).punchThrough).toBe(2.5);
+
+    const paris = allWeapons.find((w) => w.id === "paris")!;
+    const promise = mergeIncarnonStatChanges(incarnonDataMap.get("paris")!, { 4: 0 }, "paris");
+    expect(promise).toMatchObject({ criticalChance: 0.4, criticalMultiplier: 2 });
+    const bare = calculateWeaponBuild(paris, [], modsMap());
+    const withPromise = calculateWeaponBuild(paris, [], modsMap(), promise);
+    expect(withPromise.criticalChance).toBeCloseTo(bare.criticalChance + 0.4, 5);
+    expect(withPromise.criticalMultiplier).toBeCloseTo(
+      quantizeBaseCritMultiplier(paris.criticalMultiplier + 2),
+      5,
+    );
   });
 
   it("melee followThrough panel: Crushing Verdict / Lone Blade", () => {

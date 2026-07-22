@@ -165,7 +165,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes Armor ≥450 for paper DPS
     { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +10. With Armor Over 450: +80% Multishot.", statChanges: {"flatBaseDamage":10,"multishot":0.8} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {"reloadSpeed":0.5} },
-    { tier: 3, slot: 1, name: "Slayer's Nerve", description: "On Hit: +6% Accuracy and -6% Weapon Recoil for 6s. Stacks up to 10x.", statChanges: {} },
+    // Max stacks assumed for paper panel (+6% Acc / −6% Recoil × 10)
+    { tier: 3, slot: 1, name: "Slayer's Nerve", description: "On Hit: +6% Accuracy and -6% Weapon Recoil for 6s. Stacks up to 10x.", statChanges: {"accuracy":0.6,"recoil":-0.6} },
     { tier: 3, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +18%.", statChanges: {"criticalChance":0.18} },
     { tier: 4, slot: 1, name: "Deathtrap Trigger", description: "Increase Base Critical Damage Multiplier by +2x.", statChanges: {"criticalMultiplier":2} },
@@ -244,13 +245,14 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 2, name: "Marksman's Hand", description: "-50% Weapon Recoil.", statChanges: {"recoil":-0.5} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +20%.", statChanges: {"criticalChance":0.2} },
     { tier: 4, slot: 1, name: "Neurotoxin", description: "On Headshot: +70% Toxin for 3s.", statChanges: {"neurotoxinToxinOnHeadshot":0.7} },
-    { tier: 4, slot: 2, name: "Ripper Rounds", description: "On Kill: +3 Punch Through for 7s.", statChanges: {} },
+    // Assumes kill punch-through buff up for paper panel
+    { tier: 4, slot: 2, name: "Ripper Rounds", description: "On Kill: +3 Punch Through for 7s.", statChanges: {"punchThrough":3} },
   ],
   "felarx": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint Hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge.", statChanges: {} },
     // Assumes aiming for paper panel accuracy
     { tier: 2, slot: 0, name: "Attuned Accuracy", description: "+40% Accuracy when Aiming.", statChanges: {"accuracy":0.4} },
-    { tier: 2, slot: 1, name: "Kinetic Baffle", description: "-50% Weapon Recoil", statChanges: {} },
+    { tier: 2, slot: 1, name: "Kinetic Baffle", description: "-50% Weapon Recoil", statChanges: {"recoil":-0.5} },
     { tier: 2, slot: 2, name: "Frictionless Flight", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {"holsterReloadPerSec":0.5} },
     // Paper: one full base mag (6 shells) reload → +60% FR (not infinite 99-stack)
@@ -417,7 +419,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Hoplite Virtue", description: "Increase Base Damage by +80. On Shield Break: Increase Base Damage by +80 for 8 seconds.", statChanges: {"flatBaseDamage":160}, variantStatChanges: {"lex":{"flatBaseDamage":160},"lex_prime":{"flatBaseDamage":100}} },
     // Assumes channeled ability active for paper DPS (+60% AE)
     { tier: 2, slot: 1, name: "Trusty Sidearm", description: "Increase Base Damage by +80. With Channeled Ability active: +60% Ammo Efficiency.", statChanges: {"flatBaseDamage":80,"ammoEfficiency":0.6}, variantStatChanges: {"lex":{"flatBaseDamage":80,"ammoEfficiency":0.6},"lex_prime":{"flatBaseDamage":20,"ammoEfficiency":0.6}} },
-    { tier: 3, slot: 0, name: "Lex Talionis", description: "On Headshot: -20% Weapon Recoil and +20% Accuracy for 4s. Stacks up to 4x.", statChanges: {} },
+    // Max stacks assumed for paper panel (+20% Acc / −20% Recoil × 4)
+    { tier: 3, slot: 0, name: "Lex Talionis", description: "On Headshot: -20% Weapon Recoil and +20% Accuracy for 4s. Stacks up to 4x.", statChanges: {"accuracy":0.8,"recoil":-0.8} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +10.", statChanges: {"flatMagazine":10} },
     { tier: 3, slot: 2, name: "Ready Retaliation", description: "On Reload From Empty: +100% Reload Speed.", statChanges: {"reloadSpeed":1} },
     // Assumes equip buff active for paper DPS
@@ -493,7 +496,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Extended Volley", description: "+10 Base Magazine Capacity", statChanges: {"flatMagazine":10} },
     { tier: 3, slot: 1, name: "Rapid Reinforcement", description: "+30% Reload Speed", statChanges: {"reloadSpeed":0.3} },
     { tier: 3, slot: 2, name: "Hunter's Rearmament", description: "On Kill: 10% chance to replenish 10 Ammo", statChanges: {} },
-    { tier: 4, slot: 0, name: "Lethal Lance", description: "On Kill: +2.5 Punch Through for 20s", statChanges: {} },
+    // Assumes kill punch-through buff up for paper panel
+    { tier: 4, slot: 0, name: "Lethal Lance", description: "On Kill: +2.5 Punch Through for 20s", statChanges: {"punchThrough":2.5} },
     { tier: 4, slot: 1, name: "Incarnon Efficiency", description: "Headshots Build +50% more Incarnon Transmutation charge.", statChanges: {} },
     { tier: 4, slot: 2, name: "Elemental Excess", description: "+20% Status Chance -10% Critical Chance", statChanges: {"statusChance":0.2,"criticalChance":-0.1} },
     // Max stacks assumed for paper DPS (+30% × 4)
@@ -513,7 +517,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 0, name: "Ardent Trigger", description: "On Punch Through Hit: +40% Fire Rate for 6s.", statChanges: {"fireRate":0.4} },
     { tier: 3, slot: 1, name: "Markman's Focus", description: "-30% Zoom.", statChanges: {} },
     { tier: 3, slot: 2, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
-    { tier: 4, slot: 0, name: "Vicious Promise", description: "Increase Base Critical Chance by +40% on undamaged enemies. Increase Base Critical Damage Multiplier by +2x on undamaged enemies.", statChanges: {} },
+    // Assumes undamaged target for paper DPS
+    { tier: 4, slot: 0, name: "Vicious Promise", description: "Increase Base Critical Chance by +40% on undamaged enemies. Increase Base Critical Damage Multiplier by +2x on undamaged enemies.", statChanges: {"criticalChance":0.4,"criticalMultiplier":2} },
     { tier: 4, slot: 1, name: "Elemental Balance", description: "Increase Base Status Chance by +60%.", statChanges: {"statusChance":0.6} },
     // Max stacks assumed for paper DPS (4× +15)
     { tier: 4, slot: 2, name: "Striking Succession", description: "On Hit: Increase Base Damage by +15 for 3s. Stacks up to 4x.", statChanges: {"flatBaseDamage":60} },
