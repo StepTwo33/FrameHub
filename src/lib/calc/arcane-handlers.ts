@@ -1,6 +1,5 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
 import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
-import { estimateEnervateCritStacks, getArcaneProcUptime } from "@/lib/calc/arcane-proc-model";
 import { CalculatedStats, WarframeCalculatedStats, Weapon } from "@/lib/types";
 
 export interface WarframeArcaneContext {
@@ -61,6 +60,8 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "secondary_outburst",
   "cascadia_flare",
   "cascadia_accuracy",
+  "melee_doughty",
+  "melee_retaliation",
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
@@ -234,28 +235,68 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "melee_doughty": {
+      // wiki: round1(PunctureStatusChance% × 0.1 × CM_bonus), cap +50x flat CM
+      // R5 CM_bonus = 1.0x per 10% puncture status chance
+      const cmPerTen = 0.5 + (rank / Math.max(def.maxRank, 1)) * 0.5;
+      const totalDmg = Math.max(stats.totalDamage, 1e-6);
+      const punctureFrac = Math.max(0, stats.puncture) / totalDmg;
+      const punctureStatusPct = Math.max(0, stats.statusChance) * punctureFrac * 100;
+      const raw = punctureStatusPct * 0.1 * cmPerTen;
+      const bonus = Math.min(50, Math.round(raw * 10) / 10);
+      if (bonus > 0) stats.criticalMultiplier += bonus;
+      trackBonus(stats, "critPerPunctureTen", bonus);
+      return true;
+    }
+
+    case "melee_retaliation": {
+      // wiki R5: +30% melee dmg per 200 shields (half for overshields). Paper: simStacks = floor(shields/200).
+      const perStepLine = findEffect(def, "meleeDamagePerShield");
+      const capLine = findEffect(def, "meleeDamagePerShieldCap");
+      const perStep = perStepLine ? scaleArcaneEffectLine(perStepLine, rank, def.maxRank) : 0;
+      const cap = capLine ? scaleArcaneEffectLine(capLine, rank, def.maxRank) : 420;
+      const steps = Math.max(ctx.simStacks ?? stacks, 0);
+      const totalPct = Math.min(cap, perStep * steps);
+      if (totalPct > 0) applyWeaponDamageMult(stats, totalPct);
+      trackBonus(stats, "meleeDamagePerShield", totalPct);
+      trackBonus(stats, "meleeDamagePerShieldCap", cap);
+      return true;
+    }
+
     case "secondary_enervate": {
-      const { def, rank, stacks, baseWeapon, simStacks = stacks } = ctx;
-      const perHit = scaledLine(def, findEffect(def, "criticalChance"), rank, stacks);
+      // wiki: +10% absolute CC per hit stack (all ranks); resets after N big crits.
+      // Paper: simStacks = Enervate hit stacks.
+      const { def, rank, baseWeapon, simStacks = 0 } = ctx;
+      const ccLine = findEffect(def, "criticalChance");
+      const perHitPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
       const threshold = findEffect(def, "bigCritThreshold")?.maxValue ?? 6;
-      const baseCrit = baseWeapon?.criticalChance ?? stats.criticalChance;
-      const hitStacks = estimateEnervateCritStacks(stats.criticalChance, perHit, threshold, simStacks);
-      const bonus = baseCrit * (perHit / 100) * hitStacks;
-      stats.criticalChance += bonus;
-      trackBonus(stats, "criticalChance", perHit * hitStacks);
+      const hitStacks = Math.max(0, simStacks);
+      if (hitStacks > 0 && perHitPct > 0) {
+        stats.criticalChance += (perHitPct / 100) * hitStacks;
+      }
+      trackBonus(stats, "criticalChance", perHitPct * hitStacks);
       trackBonus(stats, "bigCritThreshold", threshold);
       trackBonus(stats, "enervateStacks", hitStacks);
+      void baseWeapon;
       return true;
     }
 
     case "secondary_outburst": {
-      const { def, rank, stacks, baseWeapon } = ctx;
-      const baseCritMult = baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
-      const multBonus = scaledLine(def, findEffect(def, "criticalMultiplier"), rank, stacks);
-      const uptime = getArcaneProcUptime(def, rank, ctx.simStacks ?? stacks, stats.fireRate);
-      const applied = baseCritMult * (multBonus / 100) * stacks * uptime;
-      stats.criticalMultiplier += applied;
-      trackBonus(stats, "criticalMultiplier", multBonus * stacks);
+      // wiki: on swap, +X% CC and CD per combo multiplier consumed (R5 +20%/combo).
+      // Paper: simStacks = combo multiplier consumed; buff assumed up.
+      const { def, rank, baseWeapon, simStacks = 0 } = ctx;
+      const combo = Math.max(simStacks, 0);
+      const perComboLine = findEffect(def, "criticalMultiplier");
+      const perCombo = perComboLine ? scaleArcaneEffectLine(perComboLine, rank, def.maxRank) : 0;
+      const totalPct = perCombo * combo;
+      if (totalPct > 0) {
+        const baseCrit = baseWeapon?.criticalChance ?? stats.criticalChance;
+        const baseCm = baseWeapon?.criticalMultiplier ?? stats.criticalMultiplier;
+        stats.criticalChance += baseCrit * (totalPct / 100);
+        stats.criticalMultiplier += baseCm * (totalPct / 100);
+      }
+      trackBonus(stats, "criticalMultiplier", totalPct);
+      trackBonus(stats, "criticalChance", totalPct);
       return true;
     }
 
@@ -274,7 +315,16 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "primary_plated_round": {
-      trackBonus(stats, "reloadDamageRamp", scaledLine(def, findEffect(def, "reloadDamageRamp"), rank, stacks));
+      // wiki: on empty reload, damage bonus = 15 × √(5 × max magazine); duration by rank.
+      // Paper: stacks>0 = buff active after reload.
+      const mag = ctx.baseWeapon?.magazine ?? 0;
+      const dmgPct = mag > 0 ? 15 * Math.sqrt(5 * mag) : 0;
+      if (dmgPct > 0) applyWeaponDamageMult(stats, dmgPct);
+      trackBonus(stats, "reloadDamageRamp", dmgPct);
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
       return true;
     }
 

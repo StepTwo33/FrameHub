@@ -766,8 +766,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_doughty": {
     arcaneId: "melee_doughty",
+    customHandler: "melee_doughty",
     effects: [
-      {"statKey": "critPerPunctureTen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Doughty: critPerPunctureTen (always active while equipped)"},
+      {"statKey": "critPerPunctureTen", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Doughty — flat CM = round1(Puncture SC% × 0.1 × rank CM); R5 1.0x/10% puncture SC; cap +50x"},
     ],
   },
   "melee_duplicate": {
@@ -799,9 +800,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_retaliation": {
     arcaneId: "melee_retaliation",
+    customHandler: "melee_retaliation",
     effects: [
-      {"statKey": "meleeDamagePerShield", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Retaliation: meleeDamagePerShield (always active while equipped)"},
-      {"statKey": "meleeDamagePerShieldCap", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Retaliation: meleeDamagePerShieldCap (always active while equipped)"},
+      {"statKey": "meleeDamagePerShield", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Retaliation — +30% dmg / 200 shields at R5 (sim stacks = floor(shields/200); half for overshields not split)"},
+      {"statKey": "meleeDamagePerShieldCap", "target": "arcane_panel", "mode": "custom", "source": "wiki: Melee Retaliation — damage cap 420% at R5"},
     ],
   },
   "melee_vortex": {
@@ -934,8 +936,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "primary_plated_round",
     customHandler: "primary_plated_round",
     effects: [
-      {"statKey": "reloadDamageRamp", "target": "arcane_panel", "mode": "custom", "source": "Primary Plated Round: custom handler"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "Primary Plated Round: custom handler"},
+      {"statKey": "reloadDamageRamp", "target": "weapon_dps", "mode": "custom", "source": "wiki: Primary Plated Round — damage = 15×√(5×mag) after empty reload (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Primary Plated Round — buff duration by rank (R5 10s)"},
     ],
   },
   "residual_boils": {
@@ -988,8 +990,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "secondary_enervate",
     customHandler: "secondary_enervate",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "custom", "source": "Secondary Enervate: custom handler"},
-      {"statKey": "bigCritThreshold", "target": "arcane_panel", "mode": "custom", "source": "Secondary Enervate: custom handler"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Enervate — +10% absolute CC / hit stack (sim stacks = hits; resets after N big crits)"},
+      {"statKey": "bigCritThreshold", "target": "arcane_panel", "mode": "custom", "source": "wiki: Secondary Enervate — big-crit reset threshold (R5 = 6)"},
     ],
   },
   "secondary_fortifier": {
@@ -1016,7 +1018,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "secondary_outburst",
     customHandler: "secondary_outburst",
     effects: [
-      {"statKey": "criticalMultiplier", "target": "arcane_panel", "mode": "custom", "source": "Secondary Outburst: custom handler"},
+      {"statKey": "criticalMultiplier", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Outburst — +20% CC and CD / combo at R5 (sim stacks = combo consumed)"},
     ],
   },
   "secondary_shiver": {

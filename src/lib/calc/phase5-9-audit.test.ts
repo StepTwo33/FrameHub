@@ -568,6 +568,105 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(withArc.totalDamage).toBeCloseTo(bare.totalDamage, 4);
     expect(withArc.ammoEfficiency ?? 0).toBeCloseTo(bare.ammoEfficiency ?? 0, 4);
   });
+
+  it("Secondary Enervate: 7 hit stacks → +70% absolute CC on Lex", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const enervate = allArcanes.find((a) => a.id === "secondary_enervate")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [enervate],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 7 },
+    );
+    // wiki: absolute +10% CC per hit stack (not % of base)
+    expect(full.criticalChance).toBeCloseTo(bare.criticalChance + 0.7, 4);
+    expect(full.arcaneBonuses?.enervateStacks).toBe(7);
+  });
+
+  it("Melee Doughty R5: flat CM from puncture status chance (Skana)", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const doughty = allArcanes.find((a) => a.id === "melee_doughty")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const withArc = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [doughty],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    // puncture SC% = statusChance × (puncture/total) × 100; bonus = round1(psc% × 0.1 × 1.0)
+    const punctureFrac = bare.puncture / bare.totalDamage;
+    const pscPct = bare.statusChance * punctureFrac * 100;
+    const expectedBonus = Math.min(50, Math.round(pscPct * 0.1 * 10) / 10);
+    expect(withArc.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier + expectedBonus, 4);
+  });
+
+  it("Melee Retaliation: 14 shield-steps R5 → +420% damage (cap)", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const retaliation = allArcanes.find((a) => a.id === "melee_retaliation")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [retaliation],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [retaliation],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 14 },
+    );
+    // wiki R5: +30% × 14 = +420% (cap)
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 5.2, 4);
+  });
+
+  it("Primary Plated Round: Braton mag 45 → 15×√(5×45) damage when buff up", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const plated = allArcanes.find((a) => a.id === "primary_plated_round")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const expectedPct = 15 * Math.sqrt(5 * braton.magazine);
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [plated],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * (1 + expectedPct / 100), 4);
+    expect(full.arcaneBonuses?.reloadDamageRamp).toBeCloseTo(expectedPct, 4);
+  });
+
+  it("Secondary Outburst: 12× combo R5 → +240% CC and CD", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const outburst = allArcanes.find((a) => a.id === "secondary_outburst")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [outburst],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 12 },
+    );
+    // wiki R5: +20% × 12 = +240% to CC and CD
+    expect(full.criticalChance).toBeCloseTo(lex.criticalChance * 3.4, 4);
+    expect(full.criticalMultiplier).toBeCloseTo(
+      bare.criticalMultiplier + lex.criticalMultiplier * 2.4,
+      4,
+    );
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

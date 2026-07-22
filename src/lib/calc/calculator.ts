@@ -1694,13 +1694,10 @@ export function calculateWeaponBuildWithArcanes(
   const preArcaneHeavy = stats.heavyAttackDamage;
   const preArcaneCombo = stats.comboCount;
   for (const arcane of arcanes) {
-    applyArcaneToWeapon(
-      stats,
-      arcane,
-      effectiveWeaponArcaneStacks(arcane, sim.arcaneStacks),
-      baseWeapon,
-      { applyHeadshots: sim.applyHeadshots },
-    );
+    // Pass raw sim.arcaneStacks — applyArcaneEffectsToWeapon computes effective stacks per arcane.
+    applyArcaneToWeapon(stats, arcane, sim.arcaneStacks, baseWeapon, {
+      applyHeadshots: sim.applyHeadshots,
+    });
   }
   if (isMelee && stats.meleeComboModContext && stats.comboCount !== preArcaneCombo) {
     const arcaneHeavyFactor = preArcaneHeavy > 0 ? stats.heavyAttackDamage / preArcaneHeavy : 1;
