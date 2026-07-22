@@ -134,13 +134,14 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "burston_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain an Auto Fire mode and deal Radial Heat Damage.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Forceful Finality", description: "Increase Base Damage by +42. +5 Base Multishot on final magazine burst.", statChanges: {"flatBaseDamage":42} },
+    // lastShotBaseMultishot: +5 base MS on final burst before % MS mods; paper EV over mag (form excluded in calc)
+    { tier: 2, slot: 0, name: "Forceful Finality", description: "Increase Base Damage by +42. +5 Base Multishot on final magazine burst.", statChanges: {"flatBaseDamage":42,"lastShotBaseMultishot":5} },
     // Assumes Armor ≥450 for paper panel PT
     { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +42. With Armor Over 450: +2 Punch Through.", statChanges: {"flatBaseDamage":42,"punchThrough":2} },
     { tier: 3, slot: 0, name: "Extended Volley", description: "Increase Base Magazine Capacity by +21.", statChanges: {"flatMagazine":21} },
     { tier: 3, slot: 1, name: "Kinetic Battle", description: "-50% Weapon Recoil.", statChanges: {"recoil":-0.5} },
-    // Assumes Full Burst Hit buff active for paper DPS
-    { tier: 4, slot: 0, name: "Reaver's Rapture", description: "On Full Burst Hit: +20% Damage, resets on Reload.", statChanges: {"damage":0.2} },
+    // Max stacks assumed for paper DPS (5× → +100%); additive with Serration
+    { tier: 4, slot: 0, name: "Reaver's Rapture", description: "On Full Burst Hit: +20% Damage, resets on Reload.", statChanges: {"additiveBaseDamage":1} },
     { tier: 4, slot: 1, name: "Absolute Valor", description: "Increase Base Critical Chance by +22%.", statChanges: {"criticalChance":0.22} },
     { tier: 4, slot: 2, name: "Fatal Affliction", description: "+40% Direct Damage per Status Type affecting the target.", statChanges: {"fatalAfflictionPerStatus":0.4} },
   ],
@@ -445,7 +446,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire homing and bouncing Heat Damage explosives.", statChanges: {} },
     // Assumes channeled ability active for paper DPS
     { tier: 2, slot: 0, name: "Swift Sawblades", description: "Increase Base Damage by +77. With Channeled Ability active: +70% Fire Rate.", statChanges: {"flatBaseDamage":77,"fireRate":0.7} },
-    { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +57. Multishot consumes ammo directly from Capacity and increases Damage by +20.", statChanges: {"flatBaseDamage":57} },
+    // flatMsPelletDamage: +20 flat on capacity-MS pellets only (not Serration-scaled)
+    { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +57. Multishot consumes ammo directly from Capacity and increases Damage by +20.", statChanges: {"flatBaseDamage":57,"flatMsPelletDamage":20} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 2, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to 160", statChanges: {"ammoMaxSet":160} },
@@ -670,8 +672,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 2, name: "Marksman's Hand", description: "-60% Weapon Recoil.", statChanges: {"recoil":-0.6} },
     // Wiki: Prime form papers +23% SC (8% base + 15% form), not the expected double of 8%
     { tier: 4, slot: 0, name: "Elemental Dominance", description: "Increase Base Status Chance by +15%. Effect doubles in Incarnon Form.", statChanges: {"statusChance":0.15}, variantStatChanges: {"sybaris":{"statusChance":0.15},"dex_sybaris":{"statusChance":0.15},"sybaris_prime":{"statusChance":0.08}}, formStatChanges: {"statusChance":0.15}, variantFormStatChanges: {"sybaris":{"statusChance":0.15},"dex_sybaris":{"statusChance":0.15},"sybaris_prime":{"statusChance":0.15}} },
-    // Assumes Full Burst Hit buff active for paper DPS
-    { tier: 4, slot: 1, name: "Reaver's Rapture", description: "On Full Burst Hit: +20% Damage, resets on Reload", statChanges: {"damage":0.2} },
+    // Max stacks assumed for paper DPS (4× → +80%); additive with Serration
+    { tier: 4, slot: 1, name: "Reaver's Rapture", description: "On Full Burst Hit: +20% Damage, resets on Reload", statChanges: {"additiveBaseDamage":0.8} },
     { tier: 4, slot: 2, name: "Survivor's Edge", description: "Increase Critical Chance by +5%. Increase Status Chance by +10%.", statChanges: {"criticalChance":0.05,"statusChance":0.1} },
   ],
   "thalys": [
@@ -694,7 +696,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "torid_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct shots charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire a long-range Toxin beam.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Final Fusillade", description: "Increase Base Damage by +51. +3 Multishot on last shot in magazine.", statChanges: {"flatBaseDamage":51} },
+    // lastShotBaseMultishot: +3 MS on last mag shot; paper EV = 3/mag before % MS mods
+    { tier: 2, slot: 0, name: "Final Fusillade", description: "Increase Base Damage by +51. +3 Multishot on last shot in magazine.", statChanges: {"flatBaseDamage":51,"lastShotBaseMultishot":3} },
     // +60% damage from capacity-MS clause assumed up for paper DPS
     { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +31. Multishot consumes ammo directly from Capacity and increases Damage by +60%.", statChanges: {"flatBaseDamage":31,"damage":0.6} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },

@@ -673,6 +673,8 @@ export function calculateWeaponBuild(
   if (fatalAfflictionPerStatus > 0 && sim.statusTypesOnTarget > 0) {
     damageBonus += fatalAfflictionPerStatus * sim.statusTypesOnTarget;
   }
+  // Reaver's Rapture etc.: stack-capped +Damage additive with Serration (not late ×damage).
+  damageBonus += incarnonStatChanges?.additiveBaseDamage ?? 0;
 
   // King's Gambit / Prolific-style: relative CC% (paper uptime)
   critChanceBonus += incarnonStatChanges?.critChanceBonus ?? 0;
@@ -800,7 +802,19 @@ export function calculateWeaponBuild(
     stats.multishotLocked = true;
   }
   // Multishot is a % of base pellets: total = base × (1 + multishot mods).
-  stats.multishot = baseWeapon.multishot * (1 + multishotBonus);
+  // Forceful Finality / Final Fusillade: last-shot/burst base MS is added before % mods
+  // (wiki), papered as mag EV. Does not apply in Incarnon form (Burston Forceful Finality).
+  let lastShotBaseMsEv = 0;
+  const lastShotBaseMs = incarnonStatChanges?.lastShotBaseMultishot ?? 0;
+  if (
+    lastShotBaseMs > 0 &&
+    baseWeapon.magazine > 0 &&
+    calcOptions?.incarnonFormActive !== true
+  ) {
+    const burst = baseWeapon.burstCount ?? 1;
+    lastShotBaseMsEv = lastShotBaseMs * (burst / baseWeapon.magazine);
+  }
+  stats.multishot = (baseWeapon.multishot + lastShotBaseMsEv) * (1 + multishotBonus);
   stats.statusChance *= (1 + statusBonus);
   stats.magazine = Math.round(stats.magazine * (1 + magBonus));
 
@@ -940,6 +954,10 @@ export function calculateWeaponBuild(
         case 'critMultFlat':
         case 'critMultMultiply':
         case 'criticalMultiplierSet':
+        // Early Serration-additive / last-shot MS / capacity-MS flat (handled outside switch).
+        case 'additiveBaseDamage':
+        case 'lastShotBaseMultishot':
+        case 'flatMsPelletDamage':
           break;
         case 'headshotDamageBonus':
           stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + value;
@@ -1176,6 +1194,18 @@ export function calculateWeaponBuild(
   };
   if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
   if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
+
+  // Miter Plentiful Mayhem: flat +N only on capacity-MS pellets (not Serration-scaled;
+  // phys/elem/crit still apply). Paper EV into per-pellet average: (MS−1)/MS × flat × scale
+  // where scale strips Serration/flatBase via damageMultTotal.
+  if (incarnonStatChanges) {
+    const flatMsPellet = incarnonStatChanges.flatMsPelletDamage ?? 0;
+    if (flatMsPellet > 0 && stats.multishot > 1 && baseWeapon.damage > 0 && damageMultTotal > 0) {
+      const frac = (stats.multishot - 1) / stats.multishot;
+      const scale = stats.totalDamage / damageMultTotal / baseWeapon.damage;
+      stats.totalDamage += flatMsPellet * frac * scale;
+    }
+  }
 
   // Conditional Incarnon cross-stats (Wiseman / High Ground / Decisive / Prelude):
   // "Increase Base X by Y% of current Z" uses post-mod CC/SC, then scales the base add

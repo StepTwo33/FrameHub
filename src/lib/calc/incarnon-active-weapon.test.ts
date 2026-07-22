@@ -66,6 +66,15 @@ describe("Torid Incarnon Form", () => {
     expect(changes?.damage).toBeCloseTo(0.6, 5);
   });
 
+  it("Final Fusillade papers last-shot base MS EV (3/mag)", () => {
+    const changes = mergeIncarnonStatChanges(data, { 2: 0 }, "torid");
+    expect(changes?.flatBaseDamage).toBe(51);
+    expect(changes?.lastShotBaseMultishot).toBe(3);
+    const stats = calculateWeaponBuild(torid, [], modsMap(), changes);
+    // Mag 5 → EV +3/5 base MS before % mods
+    expect(stats.multishot).toBeCloseTo(1 + 3 / 5, 5);
+  });
+
   it("flatBaseDamage scales against form base (51) when form active", () => {
     const formWeapon = resolveIncarnonActiveWeapon(torid, data, { 1: 0 });
     const formStats = calculateWeaponBuild(formWeapon, [], modsMap(), { flatBaseDamage: 51 });
@@ -1018,6 +1027,46 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
   });
 
+  it("Forceful Finality / Miter Plentiful / Reaver Rapture paper correctly", () => {
+    const burstonData = incarnonDataMap.get("burston")!;
+    const forceful = mergeIncarnonStatChanges(burstonData, { 2: 0 }, "burston");
+    expect(forceful?.flatBaseDamage).toBe(42);
+    expect(forceful?.lastShotBaseMultishot).toBe(5);
+    const burston = allWeapons.find((w) => w.id === "burston")!;
+    // Mag 45 / burst 3 → EV +5×3/45 base MS before % mods
+    const forcefulStats = calculateWeaponBuild(burston, [], modsMap(), forceful);
+    expect(forcefulStats.multishot).toBeCloseTo(1 + (5 * 3) / 45, 5);
+    // Form excludes last-shot MS EV
+    const formStats = calculateWeaponBuild(burston, [], modsMap(), forceful, undefined, {
+      incarnonFormActive: true,
+    });
+    expect(formStats.multishot).toBeCloseTo(1, 5);
+
+    const miterData = incarnonDataMap.get("miter")!;
+    const plentiful = mergeIncarnonStatChanges(miterData, { 2: 1 }, "miter");
+    expect(plentiful?.flatBaseDamage).toBe(57);
+    expect(plentiful?.flatMsPelletDamage).toBe(20);
+    const miter = allWeapons.find((w) => w.id === "miter")!;
+    const bareMiter = calculateWeaponBuild(miter, [], modsMap(), { flatBaseDamage: 57 });
+    // No multishot → capacity-MS flat contributes 0
+    const noMs = calculateWeaponBuild(miter, [], modsMap(), plentiful);
+    expect(noMs.totalDamage).toBeCloseTo(bareMiter.totalDamage, 5);
+    // With +100% MS (MS=2): EV add = 20 × 1/2 = 10 (unmodded scale)
+    const withMs = calculateWeaponBuild(miter, [], modsMap(), {
+      ...plentiful!,
+      multishot: 1,
+    });
+    expect(withMs.multishot).toBeCloseTo(2, 5);
+    expect(withMs.totalDamage).toBeCloseTo(bareMiter.totalDamage + 10, 5);
+
+    expect(mergeIncarnonStatChanges(burstonData, { 4: 0 }, "burston")?.additiveBaseDamage).toBe(1);
+    const sybarisData = incarnonDataMap.get("sybaris")!;
+    expect(mergeIncarnonStatChanges(sybarisData, { 4: 1 }, "sybaris")?.additiveBaseDamage).toBe(0.8);
+    const rapture = calculateWeaponBuild(burston, [], modsMap(), { additiveBaseDamage: 1 });
+    const bareBurston = calculateWeaponBuild(burston, [], modsMap());
+    expect(rapture.totalDamage).toBeCloseTo(bareBurston.totalDamage * 2, 5);
+  });
+
   it("Latron Riddled Target / Critical Parallel", () => {
     const data = incarnonDataMap.get("latron")!;
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "latron")?.flatBaseDamage).toBe(48);
@@ -1489,9 +1538,9 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(okina, { 4: 1 }, "okina_prime")?.statusDuration).toBe(0.25);
 
     const burston = incarnonDataMap.get("burston")!;
-    expect(mergeIncarnonStatChanges(burston, { 4: 0 }, "burston")?.damage).toBe(0.2);
+    expect(mergeIncarnonStatChanges(burston, { 4: 0 }, "burston")?.additiveBaseDamage).toBe(1);
     const sybaris = incarnonDataMap.get("sybaris")!;
-    expect(mergeIncarnonStatChanges(sybaris, { 4: 1 }, "sybaris")?.damage).toBe(0.2);
+    expect(mergeIncarnonStatChanges(sybaris, { 4: 1 }, "sybaris")?.additiveBaseDamage).toBe(0.8);
 
     const braton = allWeapons.find((w) => w.id === "braton")!;
     const bleed = calculateWeaponBuild(braton, [], modsMap(), { slashOnImpactProcChance: 0.4 });
@@ -1503,9 +1552,10 @@ describe("evolution numeric fixes", () => {
     const alchemy = calculateWeaponBuild(braton, [], modsMap(), { statusDuration: 0.25 });
     expect(alchemy.statusDurationBonus).toBeCloseTo(0.25, 5);
 
-    const reaver = calculateWeaponBuild(braton, [], modsMap(), { damage: 0.2 });
+    const reaver = calculateWeaponBuild(braton, [], modsMap(), { additiveBaseDamage: 1 });
     const bare = calculateWeaponBuild(braton, [], modsMap());
-    expect(reaver.totalDamage).toBeCloseTo(bare.totalDamage * 1.2, 5);
+    // Serration-additive: bare × (1 + 1.0), same as +100% damageBonus
+    expect(reaver.totalDamage).toBeCloseTo(bare.totalDamage * 2, 5);
 
     const neuroOff = calculateWeaponBuild(
       braton,

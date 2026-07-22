@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
-| B8 | Incarnon + radials | … + Munitions Grit / Vendetta capacity-MS paper damage | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
+| B8 | Incarnon + radials | … + Miter Plentiful flat MS pellets; Forceful/Fusillade last-shot MS EV; Reaver Serration-additive caps | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
 ---
 
@@ -318,6 +318,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Bellicose + Tempo/Velocity gates + Persistence | 2026-07-22 | Bellicose round(HP/250×%) cap 72%; Tempo shotgun-only / Velocity pistol-only FR; Persistence 500 DPS + armor≥700; Secondary Merciless/Deadhead goldens; drop Acceleration holsterDamage |
 | Exodia Brave/Force/Contagion Zaw gates | 2026-07-22 | Brave 15 Energy/s / 4s @ 3 stacks; Force/Contagion Zaw-only (was applying on Skana); Secondary Dexterity golden |
 | Galv Steel/Elementalist stacks + Munitions Grit | 2026-07-22 | Steel CD / Elementalist SC × kill stacks (cap 4); Melee Elementalist wind-up; Munitions Grit Y% + Vendetta +100% capacity-MS paper |
+| Miter Plentiful + last-shot MS + Reaver Rapture | 2026-07-22 | flatMsPelletDamage +20 EV; Forceful/Fusillade lastShotBaseMultishot mag EV; Rapture 5×/+100% & 4×/+80% Serration-additive |
 
 ## New / extended test files
 
