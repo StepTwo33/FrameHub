@@ -80,8 +80,14 @@ import {
   computeHarrowPassive,
   computeGyreAbilityCritChance,
   computeCitrineGeoluminesence,
+  computeChromaDragonFlightPassive,
+  computeChromaElementCycle,
+  computeTitaniaUpsurgePassive,
+  computeTitaniaUpsurgeRemaining,
+  computeHildrynShieldGatePassive,
   type MesaSidearmStyle,
   type NovaSpeedState,
+  type ChromaElement,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -1624,6 +1630,98 @@ function CitrineGeoluminesencePassivePanel() {
   );
 }
 
+const CHROMA_ELEMENTS: ChromaElement[] = ["heat", "electricity", "toxin", "cold"];
+
+function ChromaPassivePanel() {
+  const flight = computeChromaDragonFlightPassive();
+  const [elemIdx, setElemIdx] = useState(0);
+  const element = CHROMA_ELEMENTS[Math.min(3, Math.max(0, elemIdx))] ?? "heat";
+  const cycle = computeChromaElementCycle(element);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Dragon's Flight"
+        value={flight.extraAirJump ? "Extra Jump" : "—"}
+        color="text-amber-400"
+        tooltip="Chroma: additional midair jump and bullet jump (wings match energy color)."
+      />
+      <SimSlider
+        label="Element (0 Heat / 1 Elec / 2 Toxin / 3 Cold)"
+        value={elemIdx}
+        min={0}
+        max={3}
+        onChange={setElemIdx}
+        tooltip="Emission color or Spectral Scream tap-cycle sets Heat / Electricity / Toxin / Cold for all abilities."
+      />
+      <StatRow
+        label="Active Element"
+        value={cycle.label}
+        color="text-violet-300"
+        tooltip="Secondary emission / energy colors do not change the element."
+      />
+    </div>
+  );
+}
+
+function TitaniaUpsurgePassivePanel() {
+  const upsurge = computeTitaniaUpsurgePassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeTitaniaUpsurgeRemaining(elapsedSec, upsurge);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Parkour Dist."
+        value={`+${(upsurge.parkourDistanceBonus * 100).toFixed(0)}%`}
+        color="text-pink-300"
+        tooltip="Titania: +25% Bullet Jump and Rolling distance."
+      />
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={upsurge.durationSec}
+        onChange={setElapsedSec}
+        tooltip="Upsurge: casting an ability heals Titania and allies within 15m for 4 HP/s over 20s (refreshes)."
+      />
+      <StatRow
+        label="Upsurge Heal"
+        value={remaining > 0 ? `${upsurge.healPerSec}/s · ${remaining.toFixed(0)}s` : "Inactive"}
+        color={remaining > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip={`${upsurge.healRadiusM}m radius · ${upsurge.durationSec}s duration.`}
+      />
+    </div>
+  );
+}
+
+function HildrynShieldGatePassivePanel() {
+  const gate = computeHildrynShieldGatePassive();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Full Shield Gate"
+        value={`${gate.fullGateSec}s`}
+        color="text-sky-400"
+        tooltip="Hildryn: 3.5s invulnerability when Shields break from a full charge (longer than the default gate)."
+      />
+      <StatRow
+        label="Energy Orb → Shield"
+        value={`+${gate.energyOrbShieldRestore}`}
+        color="text-amber-400"
+        tooltip="Energy Orbs restore 25 Shields and reset recharge delay; cannot create Overshields."
+      />
+      <StatRow
+        label="Ability Cost"
+        value={gate.abilitiesUseShields ? "Shields" : "Energy"}
+        color="text-muted-foreground"
+        tooltip="Abilities drain Shields/Overshields. Efficiency mods reduce shield costs."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1795,6 +1893,9 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "harrow" || warframe.id === "harrow_prime") && <HarrowPassivePanel />}
           {(warframe.id === "gyre" || warframe.id === "gyre_prime") && <GyreAbilityCritPassivePanel />}
           {warframe.id === "citrine" && <CitrineGeoluminesencePassivePanel />}
+          {(warframe.id === "chroma" || warframe.id === "chroma_prime") && <ChromaPassivePanel />}
+          {(warframe.id === "titania" || warframe.id === "titania_prime") && <TitaniaUpsurgePassivePanel />}
+          {(warframe.id === "hildryn" || warframe.id === "hildryn_prime") && <HildrynShieldGatePassivePanel />}
         </CollapsibleSection>
       )}
 

@@ -263,6 +263,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Banshee + Atlas passives | 2026-07-22 | Banshee all weapons silent; Atlas knockdown immune while grounded |
 | Nyx + Harrow passives | 2026-07-22 | Nyx +40% gun CC/Confused (cap +200%); Harrow overshield ×2 (2400) + start max Energy |
 | Gyre + Citrine passives | 2026-07-22 | Gyre +10% ability CC/Electric (tiers/cap 300%); Citrine Geoluminesence 5→25 HP/s @ 50m |
+| Chroma + Titania + Hildryn passives | 2026-07-22 | Chroma extra jump + element cycle; Titania +25% parkour / Upsurge 4HP/s 20s 15m; Hildryn 3.5s gate |
 
 ## New / extended test files
 

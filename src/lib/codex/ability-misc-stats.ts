@@ -3101,6 +3101,81 @@ export function computeCitrineGeoluminesence(orbsCollected: number): CitrineGeol
   };
 }
 
+export interface ChromaDragonFlightPassive {
+  /** Extra midair jump / bullet jump from Dragon's Flight. */
+  extraAirJump: boolean;
+}
+
+/** wiki Chroma: extra midair jump and bullet jump (Dragon's Flight). */
+export function computeChromaDragonFlightPassive(): ChromaDragonFlightPassive {
+  return { extraAirJump: true };
+}
+
+export type ChromaElement = "heat" | "electricity" | "toxin" | "cold";
+
+export interface ChromaElementCyclePassive {
+  element: ChromaElement;
+  label: string;
+}
+
+/** wiki Chroma: emission color / Spectral Scream cycle selects Heat / Electricity / Toxin / Cold. */
+export function computeChromaElementCycle(element: ChromaElement): ChromaElementCyclePassive {
+  const labels: Record<ChromaElement, string> = {
+    heat: "Heat",
+    electricity: "Electricity",
+    toxin: "Toxin",
+    cold: "Cold",
+  };
+  return { element, label: labels[element] };
+}
+
+export interface TitaniaUpsurgePassive {
+  /** Bullet Jump / Roll distance bonus. */
+  parkourDistanceBonus: number;
+  /** Upsurge heal radius (m). */
+  healRadiusM: number;
+  /** Health regenerated per second. */
+  healPerSec: number;
+  /** Upsurge duration (s); refreshed on cast. */
+  durationSec: number;
+}
+
+/** Remaining Upsurge heal time from elapsed seconds since last cast. */
+export function computeTitaniaUpsurgeRemaining(
+  elapsedSec: number,
+  passive: TitaniaUpsurgePassive = computeTitaniaUpsurgePassive(),
+): number {
+  return Math.max(0, passive.durationSec - Math.max(0, elapsedSec));
+}
+
+/** wiki Titania: +25% Bullet Jump/Roll distance; casts grant Upsurge 4 HP/s for 20s in 15m. */
+export function computeTitaniaUpsurgePassive(): TitaniaUpsurgePassive {
+  return {
+    parkourDistanceBonus: 0.25,
+    healRadiusM: 15,
+    healPerSec: 4,
+    durationSec: 20,
+  };
+}
+
+export interface HildrynShieldGatePassive {
+  /** Full-shield Shield Gate invulnerability duration (s). */
+  fullGateSec: number;
+  /** Energy Orbs restore this many Shield points (cannot create Overshields). */
+  energyOrbShieldRestore: number;
+  /** Abilities spend Shields / Overshields instead of Energy. */
+  abilitiesUseShields: boolean;
+}
+
+/** wiki Hildryn: 3.5s full Shield Gate; Energy Orbs → 25 Shields; abilities drain Shields. */
+export function computeHildrynShieldGatePassive(): HildrynShieldGatePassive {
+  return {
+    fullGateSec: 3.5,
+    energyOrbShieldRestore: 25,
+    abilitiesUseShields: true,
+  };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

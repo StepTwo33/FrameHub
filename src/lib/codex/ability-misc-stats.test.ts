@@ -88,6 +88,11 @@ import {
   computeHarrowPassive,
   computeGyreAbilityCritChance,
   computeCitrineGeoluminesence,
+  computeChromaDragonFlightPassive,
+  computeChromaElementCycle,
+  computeTitaniaUpsurgePassive,
+  computeTitaniaUpsurgeRemaining,
+  computeHildrynShieldGatePassive,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -880,6 +885,39 @@ describe("Citrine Geoluminesence passive", () => {
     expect(computeCitrineGeoluminesence(50).healPerSec).toBeCloseTo(10, 5);
     expect(computeCitrineGeoluminesence(200).healPerSec).toBe(25);
     expect(computeCitrineGeoluminesence(300).healPerSec).toBe(25);
+  });
+});
+
+describe("Chroma Dragon's Flight / element cycle", () => {
+  it("grants an extra air jump and cycles basic elements", () => {
+    expect(computeChromaDragonFlightPassive()).toEqual({ extraAirJump: true });
+    expect(computeChromaElementCycle("heat").label).toBe("Heat");
+    expect(computeChromaElementCycle("cold").element).toBe("cold");
+  });
+});
+
+describe("Titania Upsurge passive", () => {
+  it("grants parkour bonus and 4 HP/s Upsurge for 20s in 15m", () => {
+    const p = computeTitaniaUpsurgePassive();
+    expect(p).toMatchObject({
+      parkourDistanceBonus: 0.25,
+      healRadiusM: 15,
+      healPerSec: 4,
+      durationSec: 20,
+    });
+    expect(computeTitaniaUpsurgeRemaining(0)).toBe(20);
+    expect(computeTitaniaUpsurgeRemaining(8)).toBe(12);
+    expect(computeTitaniaUpsurgeRemaining(20)).toBe(0);
+  });
+});
+
+describe("Hildryn shield gate passive", () => {
+  it("uses 3.5s full gate and converts Energy Orbs to Shields", () => {
+    expect(computeHildrynShieldGatePassive()).toEqual({
+      fullGateSec: 3.5,
+      energyOrbShieldRestore: 25,
+      abilitiesUseShields: true,
+    });
   });
 });
 
