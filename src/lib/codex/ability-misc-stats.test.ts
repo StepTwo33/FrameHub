@@ -1,7 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { scaleAbilityMiscStats } from "@/lib/codex/ability-misc-stats";
+import {
+  computeArmorScaledPool,
+  scaleAbilityMiscStats,
+} from "@/lib/codex/ability-misc-stats";
+
+describe("computeArmorScaledPool", () => {
+  // wiki Iron Skin: (1200 + (2.5 × 240 × 2)) × 1.3 = 3120
+  it("matches wiki Iron Skin Overguard before absorb", () => {
+    expect(computeArmorScaledPool(1200, 2.5, 480, 1.3)).toBe(3120);
+  });
+  // wiki Snow Globe: {3500 + 5 × [300 × (1 + 1)]} × 1.3 = 8450
+  it("matches wiki Snow Globe health before absorb", () => {
+    expect(computeArmorScaledPool(3500, 5, 600, 1.3)).toBe(8450);
+  });
+});
 
 describe("scaleAbilityMiscStats", () => {
+  it("keeps Iron Skin armorMultiplier Misc-fixed (outer STR on pool)", () => {
+    const lines = scaleAbilityMiscStats(
+      { armorMultiplier: 2.5, invulnerabilityDuration: 3 },
+      { strength: 1.3, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "rhino", abilityName: "Iron Skin" },
+    );
+    expect(lines.find((l) => l.label === "Armor Mult.")!).toMatchObject({
+      base: "2.5x",
+      scaled: "2.5x",
+      modified: false,
+    });
+  });
+
   it("scales Celestial Twin health as a multiplier, not seconds/percent", () => {
     const lines = scaleAbilityMiscStats(
       { healthMultiplier: 2, damageMultiplier: 0.5, markDamageMultiplier: 3 },

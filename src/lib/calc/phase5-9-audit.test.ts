@@ -1543,10 +1543,9 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     });
   });
 
-  it("Rhino Charge 12m/2m; Iron Skin 1200/2.5×; Stomp 97.5% slow; Helminth Roar 30%", () => {
-    expect(getVerifiedMiscScaling("rhino", "Iron Skin", "armorMultiplier")).toEqual({
-      scale: "strength",
-    });
+  it("Rhino Charge 12m/2m; Iron Skin 1200/2.5× Misc; Stomp 97.5% slow; Helminth Roar 30%", () => {
+    // armorMultiplier is Misc-fixed; outer STR applies via computeArmorScaledPool
+    expect(getVerifiedMiscScaling("rhino", "Iron Skin", "armorMultiplier")).toBeNull();
     expect(getVerifiedFieldScaling("rhino", "Roar", "damageBuff")).toEqual({
       scale: "strength",
     });
@@ -1574,9 +1573,7 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     const helminth = allHelminthAbilities.find((h) => h.id === "subsume_rhino")!;
     expect(helminth.damageBuff).toBe(0.3);
     expect(helminth.range).toBe(25);
-    expect(getVerifiedMiscScaling("rhino_prime", "Iron Skin", "armorMultiplier")).toEqual({
-      scale: "strength",
-    });
+    expect(getVerifiedMiscScaling("rhino_prime", "Iron Skin", "armorMultiplier")).toBeNull();
   });
 
   it("Mirage Hall clones×STR; Eclipse 25s/drCap 90%; Prism 12s/20 lasers; Helminth Eclipse 25s", () => {

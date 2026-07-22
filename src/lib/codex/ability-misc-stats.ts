@@ -1912,6 +1912,19 @@ export function scaledAbilityEnergyCost(baseCost: number, efficiency: number): n
   return Math.max(baseCost * 0.25, baseCost * (2 - clampedEff));
 }
 
+/**
+ * Wiki Iron Skin / Snow Globe (pre-absorb) pool:
+ * (base + armorMultiplier × totalArmor) × Ability Strength.
+ */
+export function computeArmorScaledPool(
+  base: number,
+  armorMultiplier: number,
+  totalArmor: number,
+  strength: number,
+): number {
+  return (base + armorMultiplier * Math.max(0, totalArmor)) * strength;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

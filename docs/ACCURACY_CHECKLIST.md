@@ -169,7 +169,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Limbo kit | 2026-07-21 | Banish 250 Impact/35m/25s; Stasis 15s; Surge 25m/18s banish; Cataclysm 500 Blast/16→5m |
 | B5 Loki kit | 2026-07-21 | Decoy 25s/15% absorb; Invis 12s (was 30); Switch 75m/+50% speed; Disarm 500 Impact/20m |
 | B5 Mag kit | 2026-07-21 | Pull 300/25m; Magnetize 300 Blast/2×/15s; Polarize 400/8m; Crush 1500/18m |
-| B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m; Avalanche 1500/15m/60% strip |
+| B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m/5× Misc + Initial HP=(base+mult×armor)×STR; Avalanche 1500/15m/60% strip |
 | B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln |
 | B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day buffs; Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
 | B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5× +growth÷DUR +drain/growth×EFF/DUR; Prowl +40% HS/stealTime÷DUR +melee/dmg energy×EFF; Artemis 240×7 |
@@ -189,7 +189,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Mesa kit | 2026-07-21 | Battery 70%/140/5k; Gallery 25%/16m/30s; Shatter 80% DR (cap 95%); Peacemaker 50/+150%/15/s/50m |
 | B5 Mirage kit | 2026-07-21 | Hall 4 clones/25s; Sleight 200/40m/18s; Eclipse 75% DR/200% dmg/25s (cap 90%); Prism 250/12s/20 lasers; Helminth Eclipse 25s |
 | B5 Nidus kit | 2026-07-21 | Virulence 200 Puncture/16m; Larva 12m (Helminth 8m); Link 1 stack/40m; Ravenous 150/20 HPS/8m |
-| B5 Rhino kit | 2026-07-21 | Charge 650/12m/2m; Iron Skin 1200 OG/2.5×/3s invuln; Roar 50%/25m/30s; Stomp 800/97.5% slow; Helminth Roar 30% |
+| B5 Rhino kit | 2026-07-21 | Charge 650/12m/2m; Iron Skin 1200 OG/2.5× Misc + Initial OG=(base+mult×armor)×STR; Roar 50%/25m/30s; Stomp 800/97.5% slow; Helminth Roar 30% |
 | B5 Valkyr kit | 2026-07-21 | Rip Line 600/75m; Warcry 50% AS/50% armor/20s (Affinity); Paralysis 400/10m/30% slow; Hysteria 250/5/s; Helminth Warcry AS 30% |
 | B5 Grendel kit | 2026-07-21 | Feast 500 Toxin/25m/5; Nourish +75% Viral/2× energy/1000 heal/25s; Pulverize 500–2000/50% strip; Regurgitate 2000/6m/75% strip; Helminth Nourish 45%/1.6×/no heal; energy 1+((mult−1)×STR) |
 | B5 Hildryn kit | 2026-07-21 | Balefire 500–1500/3m/50 shields×EFF; Pillage 8m/25% strip/150 shields×EFF; Haven 500 ally shields/80% recharge×DUR/drains×EFF/DUR; Aegis Storm 200 DPS/500 Impact/drains×EFF/DUR |

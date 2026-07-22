@@ -8,6 +8,7 @@ import {
   scaledAbilityDamageReduction,
   scaledAbilityDamageBuff,
   abilityPercentFraction,
+  computeArmorScaledPool,
   type AbilityDisplayContext,
 } from "@/lib/codex/ability-misc-stats";
 import { Zap, Sparkles } from "lucide-react";
@@ -521,32 +522,104 @@ export function AbilityStatsBlock({
     );
   }
   if (ability.health != null && ability.health > 0) {
+    const isSnowGlobe = display.abilityName === "Snow Globe";
+    // Snow Globe: base HP is a formula input; outer STR applies on the armor-scaled pool.
     rows.push(
       <AbilityStatRow
         key="health"
         compact={compact}
-        label="Health"
+        label={isSnowGlobe ? "Base Health" : "Health"}
         baseValue={ability.health.toFixed(0)}
-        modifiedValue={(ability.health * str).toFixed(0)}
-        isModified={str !== 1}
+        modifiedValue={
+          isSnowGlobe ? ability.health.toFixed(0) : (ability.health * str).toFixed(0)
+        }
+        isModified={!isSnowGlobe && str !== 1}
         isPositive={str > 1}
-        scaleHint="strength"
+        scaleHint={isSnowGlobe ? undefined : "strength"}
       />,
     );
+    const globeMult = Number(ability.miscStats?.armorMultiplier);
+    if (
+      isSnowGlobe &&
+      stats != null &&
+      Number.isFinite(globeMult) &&
+      globeMult > 0
+    ) {
+      const unscaled = computeArmorScaledPool(
+        ability.health,
+        globeMult,
+        stats.totalArmor,
+        1,
+      );
+      const scaled = computeArmorScaledPool(
+        ability.health,
+        globeMult,
+        stats.totalArmor,
+        str,
+      );
+      rows.push(
+        <AbilityStatRow
+          key="snowGlobeHealth"
+          compact={compact}
+          label="Initial Health"
+          baseValue={unscaled.toFixed(0)}
+          modifiedValue={scaled.toFixed(0)}
+          isModified={str !== 1}
+          isPositive={str > 1}
+          scaleHint="strength"
+        />,
+      );
+    }
   }
   if (ability.armor != null && ability.armor > 0) {
+    const isIronSkin = display.abilityName === "Iron Skin";
+    // Iron Skin: base Overguard is a formula input; outer STR applies on the armor-scaled pool.
     rows.push(
       <AbilityStatRow
         key="armor"
         compact={compact}
-        label="Armor"
+        label={isIronSkin ? "Base Overguard" : "Armor"}
         baseValue={ability.armor.toFixed(0)}
-        modifiedValue={(ability.armor * str).toFixed(0)}
-        isModified={str !== 1}
+        modifiedValue={
+          isIronSkin ? ability.armor.toFixed(0) : (ability.armor * str).toFixed(0)
+        }
+        isModified={!isIronSkin && str !== 1}
         isPositive={str > 1}
-        scaleHint="strength"
+        scaleHint={isIronSkin ? undefined : "strength"}
       />,
     );
+    const skinMult = Number(ability.miscStats?.armorMultiplier);
+    if (
+      isIronSkin &&
+      stats != null &&
+      Number.isFinite(skinMult) &&
+      skinMult > 0
+    ) {
+      const unscaled = computeArmorScaledPool(
+        ability.armor,
+        skinMult,
+        stats.totalArmor,
+        1,
+      );
+      const scaled = computeArmorScaledPool(
+        ability.armor,
+        skinMult,
+        stats.totalArmor,
+        str,
+      );
+      rows.push(
+        <AbilityStatRow
+          key="ironSkinOverguard"
+          compact={compact}
+          label="Initial Overguard"
+          baseValue={unscaled.toFixed(0)}
+          modifiedValue={scaled.toFixed(0)}
+          isModified={str !== 1}
+          isPositive={str > 1}
+          scaleHint="strength"
+        />,
+      );
+    }
   }
   if (ability.shield != null && ability.shield > 0) {
     rows.push(

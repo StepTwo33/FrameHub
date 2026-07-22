@@ -161,10 +161,8 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     weaponDamageConvert: { scale: "strength" },
   },
 
-  // wiki: Iron Skin — armor multiplier in overguard formula scales STR; invuln Misc-fixed
-  "rhino::Iron Skin": {
-    armorMultiplier: { scale: "strength" },
-  },
+  // wiki: Iron Skin — armorMultiplier Misc-fixed (2.5×); outer STR on
+  // (base OG + mult × totalArmor); invuln Misc-fixed; absorbed via cast invuln (not panel)
   // wiki: Rhino Charge — charge range/impact radius via ability; dash speed Misc-fixed
   // wiki: Rhino Stomp — Blast via ability.damage; slow Misc-fixed (97.5%)
 
