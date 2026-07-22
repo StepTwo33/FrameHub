@@ -188,7 +188,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Nyx kit | 2026-07-21 | Mind Control 60m/60s; Bolts 80% strip/6/11s; Chaos 25m/25s/10 Rad; Absorb 1500/15m→50m/5s +0.025% convert×STR; Helminth MC 60s |
 | B5 Mesa kit | 2026-07-21 | Battery 70%/140/5k; Gallery 25%/16m/30s; Shatter 80% DR (cap 95%); Peacemaker 50/+150%/15/s/50m |
 | B5 Mirage kit | 2026-07-21 | Hall 4 clones/25s; Sleight 200/40m/18s; Eclipse 75% DR/200% dmg/25s (cap 90%); Prism 250/12s/20 lasers; Helminth Eclipse 25s |
-| B5 Nidus kit | 2026-07-21 | Virulence 200 Puncture/16m; Larva 12m (Helminth 8m); Link 1 stack/40m; Ravenous 150/20 HPS/8m |
+| B5 Nidus kit | 2026-07-21 | Virulence 200 Puncture/16m × Mutation stacks panel; Larva 12m (Helminth 8m); Link 1 stack/40m; Ravenous 150/20 HPS/8m |
 | B5 Rhino kit | 2026-07-21 | Charge 650/12m/2m; Iron Skin 1200 OG/2.5× Misc + Initial OG=(base+mult×armor)×STR; Roar 50%/25m/30s; Stomp 800/97.5% slow; Helminth Roar 30% |
 | B5 Valkyr kit | 2026-07-21 | Rip Line 600/75m; Warcry 50% AS/50% armor/20s (Affinity); Paralysis 400/10m/30% slow; Hysteria 250/5/s; Helminth Warcry AS 30% |
 | B5 Grendel kit | 2026-07-21 | Feast 500 Toxin/25m/5; Nourish +75% Viral/2× energy/1000 heal/25s; Pulverize 500–2000/50% strip; Regurgitate 2000/6m/75% strip; Helminth Nourish 45%/1.6×/no heal; energy 1+((mult−1)×STR) |
@@ -235,6 +235,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Metamorphosis linear decay | 2026-07-21 | Peak×STR decays linearly to 0 over duration×DUR; wiki mid-duration half peak (250→162.5 @130% STR) |
 | Covenant Retaliation CC | 2026-07-21 | CC=(5%+absorb÷100×1.5%)×STR; body cap 50% / HS ×4 cap 200%; wiki 3k→cap, 2k@130%→45.5%/182% |
 | Baruuk Restraint passive DR | 2026-07-21 | DR = eroded×50% (full erosion → 50%); passive text 50%; not × STR |
+| Virulence × Mutation stacks | 2026-07-21 | floor(base×STR×(1+stacks)); wiki 200×1.45×101=29290; Field DPS = half base × same |
 
 ## New / extended test files
 

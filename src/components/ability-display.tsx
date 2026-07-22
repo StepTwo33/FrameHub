@@ -23,6 +23,7 @@ import {
   computeThuribleEnergyPerKill,
   computeMetamorphosisBonusAtTime,
   computeCovenantCritChance,
+  computeVirulenceDamage,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -360,6 +361,9 @@ export function AbilityStatsBlock({
     display.abilityName === "Covenant" &&
     typeof ability.miscStats?.baseCriticalChance === "number";
   const [covenantAbsorbK, setCovenantAbsorbK] = useState(0);
+  const hasVirulenceMutation =
+    display.abilityName === "Virulence" && typeof ability.damage === "number";
+  const [mutationStacks, setMutationStacks] = useState(0);
   const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
   const hasHeatEnergyLerp =
     display.abilityName === "Fire Blast" &&
@@ -484,6 +488,36 @@ export function AbilityStatsBlock({
         modifiedValue={scaledAoe.toFixed(0)}
         isModified={str !== 1 || heatT > 0}
         isPositive={str > 1 || heatT > 0}
+        scaleHint="strength"
+      />,
+    );
+  } else if (hasVirulenceMutation && ability.damage != null) {
+    const baseHit = computeVirulenceDamage(ability.damage, 1, mutationStacks);
+    const scaledHit = computeVirulenceDamage(ability.damage, str, mutationStacks);
+    const fieldBase = ability.damage / 2; // wiki lingering Viral DPS = half impact base
+    const baseField = computeVirulenceDamage(fieldBase, 1, mutationStacks);
+    const scaledField = computeVirulenceDamage(fieldBase, str, mutationStacks);
+    rows.push(
+      <AbilityStatRow
+        key="damage"
+        compact={compact}
+        label={mutationStacks > 0 ? "Damage (at Mutation)" : "Damage"}
+        baseValue={baseHit.toFixed(0)}
+        modifiedValue={scaledHit.toFixed(0)}
+        isModified={str !== 1 || mutationStacks > 0}
+        isPositive={str > 1 || mutationStacks > 0}
+        scaleHint="strength"
+      />,
+    );
+    rows.push(
+      <AbilityStatRow
+        key="virulence-field"
+        compact={compact}
+        label={mutationStacks > 0 ? "Field DPS (at Mutation)" : "Field DPS"}
+        baseValue={baseField.toFixed(0)}
+        modifiedValue={scaledField.toFixed(0)}
+        isModified={str !== 1 || mutationStacks > 0}
+        isPositive={str > 1 || mutationStacks > 0}
         scaleHint="strength"
       />,
     );
@@ -1424,6 +1458,16 @@ export function AbilityStatsBlock({
           max={20}
           onChange={setCovenantAbsorbK}
           tooltip="Covenant Retaliation: CC = (5% + absorb÷100 × 1.5%) × STR; body cap 50%, HS ×4 cap 200%."
+        />
+      )}
+      {hasVirulenceMutation && (
+        <SimSlider
+          label="Mutation Stacks"
+          value={mutationStacks}
+          min={0}
+          max={300}
+          onChange={setMutationStacks}
+          tooltip="Virulence: damage = floor(base × STR × (1 + stacks)); field DPS uses half base (wiki)."
         />
       )}
       {rows}

@@ -2294,6 +2294,18 @@ export function computeBaruukRestraintDr(erodedFraction: number): number {
   return clampHeatFraction(erodedFraction) * 0.5;
 }
 
+/**
+ * wiki Virulence: Amplified Damage = Base × STR × (1 + Mutation stacks).
+ * Decimals floored (wiki).
+ */
+export function computeVirulenceDamage(
+  base: number,
+  strength: number,
+  mutationStacks: number,
+): number {
+  return Math.floor(base * strength * (1 + Math.max(0, mutationStacks)));
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

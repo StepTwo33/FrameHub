@@ -20,6 +20,7 @@ import {
   computeMetamorphosisBonusAtTime,
   computeCovenantCritChance,
   computeBaruukRestraintDr,
+  computeVirulenceDamage,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -251,6 +252,17 @@ describe("Baruuk Restraint passive DR", () => {
     expect(computeBaruukRestraintDr(0)).toBe(0);
     expect(computeBaruukRestraintDr(0.5)).toBeCloseTo(0.25, 5);
     expect(computeBaruukRestraintDr(1)).toBeCloseTo(0.5, 5);
+  });
+});
+
+describe("Virulence Mutation stacks", () => {
+  // wiki: 200 × (1+0.15+0.3) × (1+100) = 29,290
+  it("matches wiki amplified damage with stacks", () => {
+    expect(computeVirulenceDamage(200, 1, 0)).toBe(200);
+    expect(computeVirulenceDamage(200, 1, 100)).toBe(20200);
+    expect(computeVirulenceDamage(200, 1.3, 100)).toBe(26260);
+    expect(computeVirulenceDamage(200, 1.45, 100)).toBe(29290);
+    expect(computeVirulenceDamage(100, 1.45, 100)).toBe(14645); // field DPS base
   });
 });
 
