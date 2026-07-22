@@ -2683,6 +2683,87 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.tauronChargeRate).toBeCloseTo(9, 4);
   });
 
+  it("Molt Efficiency: shields-up paper → +36% Ability Duration", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const efficiency = allArcanes.find((a) => a.id === "molt_efficiency")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [efficiency],
+    );
+    expect(full.abilityDuration).toBeCloseTo(bare.abilityDuration + 0.36, 4);
+    expect(full.arcaneBonuses?.abilityDuration).toBeCloseTo(36, 4);
+    expect(full.arcaneBonuses?.abilityDurationPerSecond).toBeCloseTo(6, 4);
+  });
+
+  it("Arcane Barrier: 6% full-shield restore / 6s CD (not 100%)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const barrier = allArcanes.find((a) => a.id === "arcane_barrier")!;
+    const chanceLine = getArcaneEffectDef("arcane_barrier")!.effects.find(
+      (e) => e.stat === "shieldRestoreChance",
+    )!;
+    expect(chanceLine.maxValue).toBe(6);
+    expect(chanceLine.baseValue).toBe(1);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [barrier],
+    );
+    expect(full.arcaneBonuses?.shieldRestoreChance).toBeCloseTo(6, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(6, 4);
+  });
+
+  it("Arcane Trickery: 15% chance / 30s invis", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const trickery = allArcanes.find((a) => a.id === "arcane_trickery")!;
+    const chanceLine = getArcaneEffectDef("arcane_trickery")!.effects.find(
+      (e) => e.stat === "invisibilityChance",
+    )!;
+    expect(chanceLine.constantAtAllRanks).toBe(true);
+    const durLine = getArcaneEffectDef("arcane_trickery")!.effects.find(
+      (e) => e.stat === "invisibilityDuration",
+    )!;
+    expect(durLine.baseValue).toBe(5);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [trickery],
+    );
+    expect(full.arcaneBonuses?.invisibilityChance).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.invisibilityDuration).toBeCloseTo(30, 4);
+  });
+
+  it("Arcane Pulse: 60% / 500 HP / 25m / 15s CD", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const pulse = allArcanes.find((a) => a.id === "arcane_pulse")!;
+    const healLine = getArcaneEffectDef("arcane_pulse")!.effects.find((e) => e.stat === "healthFromOrbs")!;
+    expect(healLine.valuesByRank?.[0]).toBe(50);
+    expect(healLine.valuesByRank?.[2]).toBe(200);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [pulse],
+    );
+    expect(full.arcaneBonuses?.healthRegenChance).toBeCloseTo(60, 4);
+    expect(full.arcaneBonuses?.healthFromOrbs).toBeCloseTo(500, 4);
+    expect(full.arcaneBonuses?.allyHealRadius).toBeCloseTo(25, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(15, 4);
+  });
+
+  it("Arcane Bodyguard: 900 companion heal / 6 kills / 30s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const bodyguard = allArcanes.find((a) => a.id === "arcane_bodyguard")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [bodyguard],
+    );
+    expect(full.arcaneBonuses?.companionHeal).toBeCloseTo(900, 4);
+    expect(full.arcaneBonuses?.companionHealKillThreshold).toBe(6);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(30, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;

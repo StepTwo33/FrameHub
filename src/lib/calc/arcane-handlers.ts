@@ -239,6 +239,11 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_grace",
   "arcane_victory",
   "arcane_aegis",
+  "arcane_barrier",
+  "arcane_bodyguard",
+  "arcane_pulse",
+  "arcane_trickery",
+  "molt_efficiency",
   "emergence_dissipate",
   "emergence_savior",
   "emergence_renewed",
@@ -1827,6 +1832,59 @@ export function applyCustomArcaneToWarframe(
       const chargeLine = findEffect(def, "tauronChargeRate");
       trackBonus(stats, "invisibilityDuration", invisLine ? scaleArcaneEffectLine(invisLine, rank, def.maxRank) : 30);
       trackBonus(stats, "tauronChargeRate", chargeLine ? scaleArcaneEffectLine(chargeLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "molt_efficiency": {
+      // wiki R5: while shields active, +6% DUR/s up to +36%. Paper: equipped = shields up at cap.
+      const capLine = findEffect(def, "abilityDuration");
+      const rateLine = findEffect(def, "abilityDurationPerSecond");
+      const cap = capLine ? scaleArcaneEffectLine(capLine, rank, def.maxRank) : 0;
+      if (cap > 0) stats.abilityDuration += cap / 100;
+      trackBonus(stats, "abilityDuration", cap);
+      trackBonus(stats, "abilityDurationPerSecond", rateLine ? scaleArcaneEffectLine(rateLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "arcane_barrier": {
+      // wiki R5: On Shield Damage — 1–6% chance to fully restore shields; 1–6s cooldown.
+      const chanceLine = findEffect(def, "shieldRestoreChance");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "shieldRestoreChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "arcane_trickery": {
+      // wiki: Finisher Kill — 15% chance (constant) for 5–30s invisibility.
+      const chanceLine = findEffect(def, "invisibilityChance");
+      const durLine = findEffect(def, "invisibilityDuration");
+      trackBonus(stats, "invisibilityChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "invisibilityDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "arcane_pulse": {
+      // wiki R5: Health Orb — 60% chance restore 50–500 HP to allies in 25m; 15s CD.
+      const healLine = findEffect(def, "healthFromOrbs");
+      const chanceLine = findEffect(def, "healthRegenChance");
+      const radLine = findEffect(def, "allyHealRadius");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "healthFromOrbs", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "healthRegenChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "allyHealRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 25);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 15);
+      return true;
+    }
+
+    case "arcane_bodyguard": {
+      // wiki R5: 6 melee kills in 30s → heal companion 150–900. Paper: stacks>0 = threshold met.
+      const healLine = findEffect(def, "companionHeal");
+      const killLine = findEffect(def, "companionHealKillThreshold");
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "companionHeal", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "companionHealKillThreshold", killLine ? scaleArcaneEffectLine(killLine, rank, def.maxRank) : 6);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 30);
       return true;
     }
 

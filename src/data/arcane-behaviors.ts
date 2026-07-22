@@ -62,8 +62,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_barrier": {
     arcaneId: "arcane_barrier",
+    customHandler: "arcane_barrier",
     effects: [
-      {"statKey": "shieldRestoreChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Barrier: shieldRestoreChance (when damaged proc)"},
+      {"statKey": "shieldRestoreChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Barrier — 1–6% chance to fully restore shields on shield damage"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Barrier — 1–6s cooldown by rank"},
     ],
   },
   "arcane_battery": {
@@ -99,8 +101,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_bodyguard": {
     arcaneId: "arcane_bodyguard",
+    customHandler: "arcane_bodyguard",
     effects: [
-      {"statKey": "companionHeal", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Bodyguard: companionHeal (conditional proc)"},
+      {"statKey": "companionHeal", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bodyguard — heal companion 150–900 after 6 melee kills in 30s"},
+      {"statKey": "companionHealKillThreshold", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bodyguard — 6 melee kills (constant)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Bodyguard — 30s window (constant)"},
     ],
   },
   "arcane_camisado": {
@@ -342,10 +347,12 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_pulse": {
     arcaneId: "arcane_pulse",
+    customHandler: "arcane_pulse",
     effects: [
-      {"statKey": "healthFromOrbs", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pulse: healthFromOrbs (on pickup proc)"},
-      {"statKey": "healthOrbPulse", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pulse: healthOrbPulse (on pickup proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Pulse: healthRegenChance (on pickup proc)"},
+      {"statKey": "healthFromOrbs", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pulse — restore 50/100/200/300/400/500 Health to allies"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pulse — 60% chance on Health Orb (constant)"},
+      {"statKey": "allyHealRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pulse — 25m radius (constant)"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Pulse — 15s cooldown (constant)"},
     ],
   },
   "arcane_rage": {
@@ -444,9 +451,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_trickery": {
     arcaneId: "arcane_trickery",
+    customHandler: "arcane_trickery",
     effects: [
-      {"statKey": "invisibilityChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Trickery: invisibilityChance (on finisher proc)"},
-      {"statKey": "invisibilityDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Trickery: invisibilityDuration (on finisher proc)"},
+      {"statKey": "invisibilityChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Trickery — 15% chance on Finisher Kill (constant)"},
+      {"statKey": "invisibilityDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Trickery — 5–30s invisibility"},
     ],
   },
   "arcane_truculence": {
@@ -891,8 +899,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "molt_efficiency": {
     arcaneId: "molt_efficiency",
+    customHandler: "molt_efficiency",
     effects: [
-      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Molt Efficiency — +36% DUR while shields active (paper assumes shields up at cap)"},
+      {"statKey": "abilityDurationPerSecond", "target": "arcane_panel", "mode": "custom", "source": "wiki: Molt Efficiency — +1–6% DUR/s while shields active"},
+      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "custom", "source": "wiki: Molt Efficiency — cap +6–36% DUR (paper: shields up at cap)"},
     ],
   },
   "molt_reconstruct": {

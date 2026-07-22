@@ -157,9 +157,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "shieldRestoreChance",
-        "maxValue": 100.0,
+        "maxValue": 6.0,
+        "baseValue": 1.0
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 6,
         "flat": true,
-        "baseValue": 16.666667
+        "baseValue": 1
       }
     ]
   },
@@ -251,8 +256,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "companionHeal",
         "maxValue": 900.0,
         "flat": true,
-        "stacking": false,
         "baseValue": 150.0
+      },
+      {
+        "stat": "companionHealKillThreshold",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -751,17 +767,24 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "healthFromOrbs",
         "maxValue": 500.0,
         "flat": true,
-        "baseValue": 83.333333
-      },
-      {
-        "stat": "healthOrbPulse",
-        "maxValue": 500,
-        "constantAtAllRanks": true
+        "valuesByRank": [50, 100, 200, 300, 400, 500]
       },
       {
         "stat": "healthRegenChance",
         "maxValue": 60.0,
-        "baseValue": 10.0
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "allyHealRadius",
+        "maxValue": 25,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -921,13 +944,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "invisibilityChance",
         "maxValue": 15.0,
-        "baseValue": 2.5
+        "constantAtAllRanks": true
       },
       {
         "stat": "invisibilityDuration",
         "maxValue": 30,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 5
       }
     ]
   },
@@ -1981,10 +2004,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
+        "stat": "abilityDurationPerSecond",
+        "maxValue": 6.0,
+        "baseValue": 1.0
+      },
+      {
         "stat": "abilityDuration",
         "maxValue": 36.0,
-        "flat": false,
-        "stacking": false,
         "baseValue": 6.0
       }
     ]

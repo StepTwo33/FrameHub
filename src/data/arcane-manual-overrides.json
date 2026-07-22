@@ -101,9 +101,14 @@
     "effects": [
       {
         "stat": "shieldRestoreChance",
-        "maxValue": 100,
+        "maxValue": 6,
+        "baseValue": 1
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 6,
         "flat": true,
-        "baseValue": 100
+        "baseValue": 1
       }
     ]
   },
@@ -490,17 +495,24 @@
         "stat": "healthFromOrbs",
         "maxValue": 500,
         "flat": true,
-        "baseValue": 50
-      },
-      {
-        "stat": "healthOrbPulse",
-        "maxValue": 500,
-        "baseValue": 50
+        "valuesByRank": [50, 100, 200, 300, 400, 500]
       },
       {
         "stat": "healthRegenChance",
         "maxValue": 60,
-        "baseValue": 60
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "allyHealRadius",
+        "maxValue": 25,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -675,7 +687,7 @@
       {
         "stat": "invisibilityChance",
         "maxValue": 15,
-        "baseValue": 15
+        "constantAtAllRanks": true
       },
       {
         "stat": "invisibilityDuration",
@@ -1412,10 +1424,14 @@
     "trigger": "passive",
     "effects": [
       {
+        "stat": "abilityDurationPerSecond",
+        "maxValue": 6,
+        "baseValue": 1
+      },
+      {
         "stat": "abilityDuration",
         "maxValue": 36,
-        "flat": false,
-        "stacking": false
+        "baseValue": 6
       }
     ]
   },
@@ -2302,7 +2318,19 @@
         "stat": "companionHeal",
         "maxValue": 900,
         "flat": true,
-        "stacking": false
+        "baseValue": 150
+      },
+      {
+        "stat": "companionHealKillThreshold",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
