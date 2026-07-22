@@ -97,6 +97,11 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "magus_melt",
   "arcane_crepuscular",
   "virtuos_ghost",
+  "virtuos_fury",
+  "virtuos_strike",
+  "virtuos_tempo",
+  "virtuos_shadow",
+  "melee_influence",
   "magus_aggress",
   "secondary_irradiate",
   "exodia_brave",
@@ -137,6 +142,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "melee_vortex",
   "primary_debilitate",
   "primary_obstruct",
+  "pax_bolt",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -607,6 +613,72 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "virtuos_fury": {
+      // wiki R3: +30% amp damage for 4s on status (20% chance). Paper: stacks>0 = buff up.
+      const dmgLine = findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "damage", dmg);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "virtuos_strike": {
+      // wiki R3: +80% multiplicative CD for 4s on crit (20% chance). Paper: stacks>0 = buff up.
+      const cmLine = findEffect(def, "ampCritDamage");
+      const cmPct = cmLine ? scaleArcaneEffectLine(cmLine, rank, def.maxRank) : 0;
+      if (cmPct > 0) stats.criticalMultiplier *= 1 + cmPct / 100;
+      trackBonus(stats, "ampCritDamage", cmPct);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "virtuos_tempo": {
+      // wiki R3: +60% FR for 8s on kill (60% chance). Paper: stacks>0 = buff up.
+      const frLine = findEffect(def, "ampFireRate");
+      const frPct = frLine ? scaleArcaneEffectLine(frLine, rank, def.maxRank) : 0;
+      if (frPct > 0 && !stats.fireRateLocked) stats.fireRate *= 1 + frPct / 100;
+      trackBonus(stats, "ampFireRate", frPct);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "virtuos_shadow": {
+      // wiki R3: +60% multiplicative CC for 12s on HS (40% chance). Paper: stacks>0 = buff up.
+      const ccLine = findEffect(def, "critChanceOnDamaged");
+      const ccPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      if (ccPct > 0) stats.criticalChance *= 1 + ccPct / 100;
+      trackBonus(stats, "critChanceOnDamaged", ccPct);
+      const chanceLine = findEffect(def, "healthRegenChance");
+      if (chanceLine) {
+        trackBonus(stats, "healthRegenChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "melee_influence": {
+      // wiki R5: on Electricity status (20%), elemental melee statuses spread + deal matching
+      // elemental damage to nearby. Paper: stacks>0 = buff up; 1 nearby hit = sum(elements).
+      const splash = (stats.elements ?? []).reduce((sum, e) => sum + (e.value ?? 0), 0);
+      if (splash > 0) {
+        stats.totalDamage += splash;
+        trackBonus(stats, "influenceSplash", splash);
+      }
+      for (const line of def.effects ?? []) {
+        trackBonus(stats, line.stat, scaleArcaneEffectLine(line, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "arcane_precision": {
       // wiki R5: +300% secondary damage for 18s on headshot (not HS-only multiplier).
       const dmgLine = findEffect(def, "headshotDamage") ?? findEffect(def, "damage");
@@ -846,6 +918,19 @@ export function applyCustomArcaneToWarframe(
       if (cmLine) {
         trackBonus(stats, "criticalMultiplier", scaleArcaneEffectLine(cmLine, rank, def.maxRank));
       }
+      return true;
+    }
+
+    case "pax_bolt": {
+      // wiki R3: +30% STR / +30% EFF on next cast after kitgun HS kill. Paper: equipped = buff up.
+      const strLine = findEffect(def, "abilityStrength");
+      const str = strLine ? scaleArcaneEffectLine(strLine, rank, def.maxRank) : 0;
+      if (str > 0) stats.abilityStrength += str / 100;
+      trackBonus(stats, "abilityStrength", str);
+      const effLine = findEffect(def, "abilityEfficiency");
+      const eff = effLine ? scaleArcaneEffectLine(effLine, rank, def.maxRank) : 0;
+      if (eff > 0) stats.abilityEfficiency += eff / 100;
+      trackBonus(stats, "abilityEfficiency", eff);
       return true;
     }
 

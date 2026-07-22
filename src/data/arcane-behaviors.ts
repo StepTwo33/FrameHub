@@ -103,7 +103,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_camisado": {
     arcaneId: "arcane_camisado",
     effects: [
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Camisado: abilityStrength (conditional proc)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Camisado — +6% STR/summon attack stack (cap 10 → +60%; paper assumes max stacks)"},
     ],
   },
   "arcane_circumvent": {
@@ -819,8 +819,12 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "melee_influence": {
     arcaneId: "melee_influence",
+    customHandler: "melee_influence",
     effects: [
-      {"statKey": "elementalProcChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Melee Influence: elementalProcChance (always active while equipped)"},
+      {"statKey": "elementalProcChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Melee Influence — 20% on Electricity status to start buff (panel)"},
+      {"statKey": "procAuraRadius", "target": "arcane_panel", "mode": "flat", "source": "wiki: Melee Influence — spread range 10–20m (panel)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Melee Influence — buff 3–18s (panel)"},
+      {"statKey": "elementalSplash", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Influence — spread deals procced elemental damage to nearby; paper: stacks>0 = buff up + 1 nearby at sum(elements)"},
     ],
   },
   "melee_retaliation": {
@@ -866,9 +870,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "pax_bolt": {
     arcaneId: "pax_bolt",
+    customHandler: "pax_bolt",
     effects: [
-      {"statKey": "abilityEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: abilityEfficiency (always active while equipped)"},
-      {"statKey": "abilityStrength", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Pax Bolt: abilityStrength (always active while equipped)"},
+      {"statKey": "abilityEfficiency", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +30% EFF on next cast after kitgun HS kill (paper: equipped = buff up)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Pax Bolt — +30% STR on next cast after kitgun HS kill (paper: equipped = buff up)"},
     ],
   },
   "pax_charge": {
@@ -1098,9 +1103,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_fury": {
     arcaneId: "virtuos_fury",
+    customHandler: "virtuos_fury",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Fury: healthRegenChance (always active while equipped)"},
-      {"statKey": "damage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Virtuos Fury: damage (always active while equipped)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Virtuos Fury — 20% chance on status (panel)"},
+      {"statKey": "damage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Fury — +30% amp damage for 4s on status (paper: stacks>0 = buff up)"},
     ],
   },
   "virtuos_ghost": {
@@ -1120,9 +1126,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_shadow": {
     arcaneId: "virtuos_shadow",
+    customHandler: "virtuos_shadow",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Shadow: healthRegenChance (always active while equipped)"},
-      {"statKey": "critChanceOnDamaged", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Virtuos Shadow: critChanceOnDamaged (always active while equipped)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Virtuos Shadow — 40% chance on headshot (panel)"},
+      {"statKey": "critChanceOnDamaged", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Shadow — +60% multiplicative amp CC for 12s on HS (paper: stacks>0 = buff up)"},
     ],
   },
   "virtuos_spike": {
@@ -1133,9 +1140,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_strike": {
     arcaneId: "virtuos_strike",
+    customHandler: "virtuos_strike",
     effects: [
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Strike: healthRegenChance (always active while equipped)"},
-      {"statKey": "ampCritDamage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Virtuos Strike: ampCritDamage (always active while equipped)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Virtuos Strike — 20% chance on crit (panel)"},
+      {"statKey": "ampCritDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Strike — +80% multiplicative amp CD for 4s on crit (paper: stacks>0 = buff up)"},
     ],
   },
   "virtuos_surge": {
@@ -1146,9 +1154,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "virtuos_tempo": {
     arcaneId: "virtuos_tempo",
+    customHandler: "virtuos_tempo",
     effects: [
-      {"statKey": "ampFireRate", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Virtuos Tempo: ampFireRate (always active while equipped)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Virtuos Tempo: healthRegenChance (always active while equipped)"},
+      {"statKey": "ampFireRate", "target": "weapon_dps", "mode": "custom", "source": "wiki: Virtuos Tempo — +60% amp fire rate for 8s on kill (paper: stacks>0 = buff up)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Virtuos Tempo — 60% chance on kill (panel)"},
     ],
   },
   "virtuos_trojan": {

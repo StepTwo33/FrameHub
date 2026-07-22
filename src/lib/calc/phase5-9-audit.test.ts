@@ -1378,6 +1378,128 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.8, 4);
   });
+
+  it("Virtuos Fury: stacks>0 → +30% amp damage at R3", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const fury = allArcanes.find((a) => a.id === "virtuos_fury")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [fury],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [fury],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 1.3, 4);
+  });
+
+  it("Virtuos Strike: stacks>0 → ×1.8 multiplicative CD at R3", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const strike = allArcanes.find((a) => a.id === "virtuos_strike")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [strike],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier * 1.8, 4);
+  });
+
+  it("Virtuos Tempo: stacks>0 → +60% amp fire rate at R3", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const tempo = allArcanes.find((a) => a.id === "virtuos_tempo")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [tempo],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.fireRate).toBeCloseTo(bare.fireRate * 1.6, 4);
+  });
+
+  it("Virtuos Shadow: stacks>0 → ×1.6 multiplicative CC at R3", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const shadow = allArcanes.find((a) => a.id === "virtuos_shadow")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [shadow],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalChance).toBeCloseTo(bare.criticalChance * 1.6, 4);
+  });
+
+  it("Arcane Camisado: paper max stacks → +60% Ability Strength", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const camisado = allArcanes.find((a) => a.id === "arcane_camisado")!;
+    const def = getArcaneEffectDef("arcane_camisado")!;
+    expect(def.stackCap).toBe(10);
+    const bareStr = calculateWarframeBuild(excal, [], new Map()).abilityStrength;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [camisado],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bareStr + 0.6, 4);
+  });
+
+  it("Pax Bolt: equipped → +30% STR / +30% EFF (next-cast paper)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const bolt = allArcanes.find((a) => a.id === "pax_bolt")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [bolt],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bare.abilityStrength + 0.3, 4);
+    expect(full.abilityEfficiency).toBeCloseTo(bare.abilityEfficiency + 0.3, 4);
+  });
+
+  it("Melee Influence: stacks>0 → +sum(elements) splash (1 nearby)", () => {
+    const ninkondi = allWeapons.find((w) => w.id === "nunchaku")!;
+    const influence = allArcanes.find((a) => a.id === "melee_influence")!;
+    const bare = calculateWeaponBuild(ninkondi, [], new Map());
+    const elemSum = (bare.elements ?? []).reduce((s, e) => s + (e.value ?? 0), 0);
+    expect(elemSum).toBeGreaterThan(0);
+    const zero = calculateWeaponBuildWithArcanes(
+      ninkondi,
+      [],
+      new Map(),
+      [influence],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    const full = calculateWeaponBuildWithArcanes(
+      ninkondi,
+      [],
+      new Map(),
+      [influence],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage + elemSum, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

@@ -103,13 +103,14 @@
   },
   "arcane_camisado": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "stacks",
+    "stackCap": 10,
     "effects": [
       {
         "stat": "abilityStrength",
-        "maxValue": 60,
+        "maxValue": 6,
         "stacking": true,
-        "baseValue": 10
+        "baseValue": 1
       }
     ]
   },
@@ -1261,12 +1262,25 @@
   },
   "melee_influence": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "elementalProcChance",
         "maxValue": 20,
-        "baseValue": 20
+        "baseValue": 20,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "procAuraRadius",
+        "maxValue": 20,
+        "baseValue": 10,
+        "flat": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 18,
+        "baseValue": 3,
+        "flat": true
       }
     ]
   },
@@ -1342,7 +1356,7 @@
   },
   "pax_bolt": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "abilityEfficiency",
@@ -1855,12 +1869,13 @@
   },
   "virtuos_fury": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "healthRegenChance",
         "maxValue": 20,
-        "baseValue": 20
+        "baseValue": 20,
+        "constantAtAllRanks": true
       },
       {
         "stat": "damage",
@@ -1906,12 +1921,13 @@
   },
   "virtuos_shadow": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "healthRegenChance",
         "maxValue": 40,
-        "baseValue": 40
+        "baseValue": 40,
+        "constantAtAllRanks": true
       },
       {
         "stat": "critChanceOnDamaged",
@@ -1933,12 +1949,13 @@
   },
   "virtuos_strike": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "healthRegenChance",
         "maxValue": 20,
-        "baseValue": 20
+        "baseValue": 20,
+        "constantAtAllRanks": true
       },
       {
         "stat": "ampCritDamage",
@@ -1960,7 +1977,7 @@
   },
   "virtuos_tempo": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "ampFireRate",
@@ -1970,7 +1987,8 @@
       {
         "stat": "healthRegenChance",
         "maxValue": 60,
-        "baseValue": 60
+        "baseValue": 60,
+        "constantAtAllRanks": true
       }
     ]
   },
