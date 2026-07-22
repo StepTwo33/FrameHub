@@ -7,6 +7,9 @@ import {
   computeInfernoRingDps,
   computeImmolationDrAtHeat,
   computeFireBlastArmorStripAtHeat,
+  computeFireballHeatDamage,
+  computeKineticPlatingDrAtBattery,
+  lerpBatteryValue,
 } from "@/lib/codex/ability-misc-stats";
 
 describe("computeArmorScaledPool", () => {
@@ -120,6 +123,30 @@ describe("Ember Immolation heat formulas", () => {
     expect(computeFireBlastArmorStripAtHeat(1, 1.3)).toBe(1); // STR above 100% no extra
     expect(computeFireBlastArmorStripAtHeat(0, 1.3)).toBe(0.5);
     expect(computeFireBlastArmorStripAtHeat(0.5, 0.7)).toBeCloseTo(0.75 * 0.7, 5);
+  });
+
+  it("Fireball first-cast is ×3 at max heat then × STR", () => {
+    expect(computeFireballHeatDamage(800, 0, 1)).toBe(800);
+    expect(computeFireballHeatDamage(800, 1, 1)).toBe(2400);
+    expect(computeFireballHeatDamage(300, 1, 1)).toBe(900);
+    expect(computeFireballHeatDamage(800, 1, 1.3)).toBe(3120);
+  });
+});
+
+describe("Gauss battery formulas", () => {
+  // wiki Kinetic Plating: 20% + (100%−20%)×80% = 84% at 100% STR
+  it("matches wiki Kinetic Plating DR at 80% battery", () => {
+    expect(computeKineticPlatingDrAtBattery(0.8, 1)).toBeCloseTo(0.84, 5);
+    expect(computeKineticPlatingDrAtBattery(0, 1)).toBeCloseTo(0.2, 5);
+    expect(computeKineticPlatingDrAtBattery(1, 1)).toBeCloseTo(1, 5);
+    expect(computeKineticPlatingDrAtBattery(0, 1.3)).toBeCloseTo(0.26, 5); // 20%×1.3 < 50% cap
+    expect(computeKineticPlatingDrAtBattery(1, 1.3)).toBeCloseTo(1, 5); // full cap 100%
+  });
+
+  it("lerps Thermal Sunder radius with battery", () => {
+    expect(lerpBatteryValue(6, 12, 0)).toBe(6);
+    expect(lerpBatteryValue(6, 12, 1)).toBe(12);
+    expect(lerpBatteryValue(6, 12, 0.5)).toBe(9);
   });
 });
 

@@ -2081,6 +2081,46 @@ export function computeFireBlastArmorStripAtHeat(
   return Math.min(heatCap * strength, heatCap);
 }
 
+/**
+ * wiki Fireball first-cast / min combo at Immolation heat:
+ * 800→2400 / 300→900 (= ×3 at max heat). Formula: base × (1 + 2×heat) × STR.
+ * (Combo-chain heat mult is separate and not modeled here.)
+ */
+export function computeFireballHeatDamage(
+  base: number,
+  heatFraction: number,
+  strength: number,
+): number {
+  return base * (1 + 2 * clampHeatFraction(heatFraction)) * strength;
+}
+
+/**
+ * wiki Kinetic Plating:
+ * DR = MinDR + (MaxDR − MinDR) × battery
+ * MinDR = Min(emptyCap, minBase×STR); MaxDR = Min(fullCap, maxBase×STR)
+ */
+export function computeKineticPlatingDrAtBattery(
+  batteryFraction: number,
+  strength: number,
+  opts?: {
+    minDr?: number;
+    maxDr?: number;
+    emptyCap?: number;
+    fullCap?: number;
+  },
+): number {
+  const b = clampHeatFraction(batteryFraction);
+  const minDr = Math.min(opts?.emptyCap ?? 0.5, (opts?.minDr ?? 0.2) * strength);
+  const maxDr = Math.min(opts?.fullCap ?? 1, (opts?.maxDr ?? 1) * strength);
+  return minDr + (maxDr - minDr) * b;
+}
+
+/** Linear battery/heat lerp for radii (Thermal Sunder min→max). */
+export function lerpBatteryValue(min: number, max: number, batteryFraction: number): number {
+  const b = clampHeatFraction(batteryFraction);
+  return min + (max - min) * b;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

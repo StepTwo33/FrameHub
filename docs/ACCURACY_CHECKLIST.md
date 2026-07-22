@@ -224,6 +224,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Armor-pool invuln absorb | 2026-07-21 | Sim-gated Invuln Absorb (k): Iron Skin/Globe/Tectonics/Maiden +absorb; Halo absorb×2.5 inside STR |
 | Storm Shroud + FB heat | 2026-07-21 | Shroud Initial=(base+absorb×mult)×STR; absorbMult×STR; Fire Blast Immolation Heat% lerps 75→25 × EFF |
 | Ember heat lerps | 2026-07-21 | Inferno ring DPS×(1+heat)×STR; Immolation DR wiki blend (75%@130%→80%); Fire Blast strip 50–100%×STR cap |
+| Fireball heat + Gauss battery | 2026-07-21 | Fireball ×(1+3×heat)×STR; Kinetic Plating DR at battery (wiki 80%→84%); Thermal Sunder radius min→max×RNG |
 
 ## New / extended test files
 

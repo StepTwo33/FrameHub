@@ -15,6 +15,9 @@ import {
   computeInfernoRingDps,
   computeImmolationDrAtHeat,
   computeFireBlastArmorStripAtHeat,
+  computeFireballHeatDamage,
+  computeKineticPlatingDrAtBattery,
+  lerpBatteryValue,
   type AbilityDisplayContext,
 } from "@/lib/codex/ability-misc-stats";
 import { SimSlider } from "@/components/stats/stat-primitives";
@@ -344,10 +347,32 @@ export function AbilityStatsBlock({
   const hasFireBlastStripHeat =
     display.abilityName === "Fire Blast" &&
     typeof ability.miscStats?.armorStrip === "number";
+  const fireballArea = Number(ability.miscStats?.areaDamage);
+  const hasFireballHeat =
+    display.abilityName === "Fireball" &&
+    typeof ability.damage === "number" &&
+    Number.isFinite(fireballArea) &&
+    fireballArea > 0;
   const usesImmolationHeat =
-    hasHeatEnergyLerp || hasInfernoRingHeat || hasImmolationDrHeat || hasFireBlastStripHeat;
+    hasHeatEnergyLerp ||
+    hasInfernoRingHeat ||
+    hasImmolationDrHeat ||
+    hasFireBlastStripHeat ||
+    hasFireballHeat;
   const [immolationHeatPct, setImmolationHeatPct] = useState(0);
   const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
+  const hasKineticPlatingBattery = display.abilityName === "Kinetic Plating";
+  const minSunderR = Number(ability.miscStats?.minRadius);
+  const maxSunderR = Number(ability.miscStats?.maxRadius);
+  const hasThermalSunderBattery =
+    display.abilityName === "Thermal Sunder" &&
+    Number.isFinite(minSunderR) &&
+    Number.isFinite(maxSunderR) &&
+    maxSunderR > minSunderR;
+  const usesBattery =
+    hasKineticPlatingBattery || hasThermalSunderBattery;
+  const [batteryPct, setBatteryPct] = useState(hasKineticPlatingBattery ? 80 : 0);
+  const batteryT = Math.min(1, Math.max(0, batteryPct / 100));
 
   const scaledMisc = ability.miscStats
     ? scaleAbilityMiscStats(
@@ -399,7 +424,36 @@ export function AbilityStatsBlock({
 
   const rows: React.ReactNode[] = [];
 
-  if (ability.damage != null && ability.damage > 0) {
+  if (hasFireballHeat && ability.damage != null) {
+    const baseHit = computeFireballHeatDamage(ability.damage, heatT, 1);
+    const scaledHit = computeFireballHeatDamage(ability.damage, heatT, str);
+    const baseAoe = computeFireballHeatDamage(fireballArea, heatT, 1);
+    const scaledAoe = computeFireballHeatDamage(fireballArea, heatT, str);
+    rows.push(
+      <AbilityStatRow
+        key="damage"
+        compact={compact}
+        label={heatT > 0 ? "Damage (at Heat)" : "Damage"}
+        baseValue={baseHit.toFixed(0)}
+        modifiedValue={scaledHit.toFixed(0)}
+        isModified={str !== 1 || heatT > 0}
+        isPositive={str > 1 || heatT > 0}
+        scaleHint="strength"
+      />,
+    );
+    rows.push(
+      <AbilityStatRow
+        key="fireball-aoe"
+        compact={compact}
+        label={heatT > 0 ? "AoE dmg (at Heat)" : "AoE dmg"}
+        baseValue={baseAoe.toFixed(0)}
+        modifiedValue={scaledAoe.toFixed(0)}
+        isModified={str !== 1 || heatT > 0}
+        isPositive={str > 1 || heatT > 0}
+        scaleHint="strength"
+      />,
+    );
+  } else if (ability.damage != null && ability.damage > 0) {
     rows.push(
       <AbilityStatRow
         key="damage"
@@ -733,6 +787,31 @@ export function AbilityStatsBlock({
           />,
         );
       }
+    } else if (hasKineticPlatingBattery) {
+      const minDr = Number(ability.miscStats?.minDamageReduction ?? 0.2);
+      const emptyCap = Number(ability.miscStats?.emptyBatteryDrCap ?? 0.5);
+      const fullCap = Number(ability.miscStats?.drCap ?? 1);
+      const opts = {
+        minDr,
+        maxDr: abilityPercentFraction(ability.damageReduction!),
+        emptyCap,
+        fullCap,
+      };
+      const baseDr = computeKineticPlatingDrAtBattery(batteryT, 1, opts);
+      const scaledBatteryDr = computeKineticPlatingDrAtBattery(batteryT, str, opts);
+      rows.push(
+        <AbilityStatRow
+          key="dr"
+          compact={compact}
+          label="Dmg Reduction (at Battery)"
+          baseValue={(baseDr * 100).toFixed(0)}
+          modifiedValue={(scaledBatteryDr * 100).toFixed(0)}
+          unit="%"
+          isModified={str !== 1 || batteryT !== 0}
+          isPositive={str >= 1 || batteryT > 0}
+          scaleHint="strength"
+        />,
+      );
     } else {
       rows.push(
         <AbilityStatRow
@@ -793,8 +872,13 @@ export function AbilityStatsBlock({
     );
   }
   for (const line of scaledMisc) {
-    // Heat-aware Armor Strip row replaces the max-heat misc strip on Fire Blast.
+    // Heat/battery-aware rows replace these misc lines.
     if (hasFireBlastStripHeat && line.label === "Armor Strip") continue;
+    if (hasFireballHeat && line.label === "Area Damage") continue;
+    if (hasKineticPlatingBattery && line.label === "Min Damage Reduction") continue;
+    if (hasThermalSunderBattery && (line.label === "Min Radius" || line.label === "Max Radius")) {
+      continue;
+    }
     rows.push(
       <AbilityStatRow
         key={line.label}
@@ -901,6 +985,22 @@ export function AbilityStatsBlock({
       />,
     );
   }
+  if (hasThermalSunderBattery) {
+    const baseR = lerpBatteryValue(minSunderR, maxSunderR, batteryT);
+    const scaledR = lerpBatteryValue(minSunderR * rng, maxSunderR * rng, batteryT);
+    rows.push(
+      <AbilityStatRow
+        key="thermalSunderRadius"
+        compact={compact}
+        label="Radius (at Battery)"
+        baseValue={`${baseR.toFixed(1)}m`}
+        modifiedValue={`${scaledR.toFixed(1)}m`}
+        isModified={rng !== 1 || batteryT > 0}
+        isPositive={rng >= 1}
+        scaleHint="range"
+      />,
+    );
+  }
   if (ability.miscStats?.channeled === true) {
     rows.push(
       <div key="channeled" className="px-1.5 py-0.5 text-[10px] font-medium text-violet-400">
@@ -938,11 +1038,27 @@ export function AbilityStatsBlock({
           max={100}
           onChange={setImmolationHeatPct}
           tooltip={
-            hasInfernoRingHeat
-              ? "Inferno Ring DPS = minRing × (1 + heat) × STR (double at max heat)."
-              : hasImmolationDrHeat
-                ? "Immolation DR lerps from initial DR cap to max-heat DR cap with heat (wiki formula)."
-                : "Fire Blast: energy lerps 75→25 × EFF; armor strip lerps 50%→100% × STR (capped at heat value)."
+            hasFireballHeat
+              ? "Fireball damage × (1 + 2×heat) × STR (×3 at max heat; first-cast / min combo)."
+              : hasInfernoRingHeat
+                ? "Inferno Ring DPS = minRing × (1 + heat) × STR (double at max heat)."
+                : hasImmolationDrHeat
+                  ? "Immolation DR lerps from initial DR cap to max-heat DR cap with heat (wiki formula)."
+                  : "Fire Blast: energy lerps 75→25 × EFF; armor strip lerps 50%→100% × STR (capped at heat value)."
+          }
+        />
+      )}
+      {usesBattery && (
+        <SimSlider
+          label="Battery %"
+          value={batteryPct}
+          min={0}
+          max={100}
+          onChange={setBatteryPct}
+          tooltip={
+            hasKineticPlatingBattery
+              ? "Kinetic Plating DR = MinDR + (MaxDR − MinDR) × battery (wiki; default slider 80%)."
+              : "Thermal Sunder radius lerps min→max with battery, then × Ability Range."
           }
         />
       )}
