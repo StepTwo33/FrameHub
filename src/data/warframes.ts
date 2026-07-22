@@ -408,7 +408,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1.2,
     "description": "Dodge all incoming projectiles, but only while not attacking. Use again to deactivate this ability.",
-    "passive": "Each projectile dodged, each enemy lulled or disarmed, erodes Baruuk's restraint and fuels the storm within. As Baruuk's restraint is diminished he becomes up to |PERCENT|% more resistant to damage.",
+    "passive": "Each projectile dodged, each enemy lulled or disarmed, erodes Baruuk's restraint and fuels the storm within. As Baruuk's restraint is diminished he becomes up to 50% more resistant to damage.",
     "abilities": [
       {
         "name": "Elude",
@@ -476,7 +476,7 @@ export const allWarframes: Warframe[] = [
     "energy": 200,
     "sprintSpeed": 1.2,
     "description": "Dodge all incoming projectiles, but only while not attacking. Use again to deactivate this ability.",
-    "passive": "Each projectile dodged, each enemy lulled or disarmed, erodes Baruuk's restraint and fuels the storm within. As Baruuk's restraint is diminished he becomes up to |PERCENT|% more resistant to damage.",
+    "passive": "Each projectile dodged, each enemy lulled or disarmed, erodes Baruuk's restraint and fuels the storm within. As Baruuk's restraint is diminished he becomes up to 50% more resistant to damage.",
     "abilities": [
       {
         "name": "Elude",

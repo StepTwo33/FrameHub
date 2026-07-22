@@ -19,6 +19,7 @@ import {
   computeThuribleEnergyPerKill,
   computeMetamorphosisBonusAtTime,
   computeCovenantCritChance,
+  computeBaruukRestraintDr,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -242,6 +243,14 @@ describe("Covenant Retaliation crit chance", () => {
     const baseStr = computeCovenantCritChance(0, 1.3);
     expect(baseStr.body).toBeCloseTo(0.065, 5);
     expect(baseStr.headshot).toBeCloseTo(0.26, 5);
+  });
+});
+
+describe("Baruuk Restraint passive DR", () => {
+  it("scales linearly to 50% at full erosion", () => {
+    expect(computeBaruukRestraintDr(0)).toBe(0);
+    expect(computeBaruukRestraintDr(0.5)).toBeCloseTo(0.25, 5);
+    expect(computeBaruukRestraintDr(1)).toBeCloseTo(0.5, 5);
   });
 });
 

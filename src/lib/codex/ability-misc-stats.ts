@@ -2286,6 +2286,14 @@ export function computeCovenantCritChance(
   };
 }
 
+/**
+ * wiki Baruuk Restraint passive: up to 50% DR when meter is fully eroded.
+ * DR = erodedFraction × 0.5 (not × STR).
+ */
+export function computeBaruukRestraintDr(erodedFraction: number): number {
+  return clampHeatFraction(erodedFraction) * 0.5;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

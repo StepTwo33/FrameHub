@@ -13,6 +13,7 @@ import {
 import {
   computeGaussPassiveShieldRecharge,
   computeGaussPassiveRechargeDelayReduction,
+  computeBaruukRestraintDr,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -43,6 +44,30 @@ function GaussPassiveBattery() {
         value={`−${(delay * 100).toFixed(0)}%`}
         color="text-sky-400"
         tooltip="Max −80% delay at full battery (not affected by Ability Strength)."
+      />
+    </div>
+  );
+}
+
+function BaruukRestraintPassive() {
+  const [erodedPct, setErodedPct] = useState(100);
+  const dr = computeBaruukRestraintDr(erodedPct / 100);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Restraint Eroded %"
+        value={erodedPct}
+        min={0}
+        max={100}
+        onChange={setErodedPct}
+        tooltip="Baruuk passive: DR scales linearly with eroded Restraint (wiki: full erosion → 50% DR)."
+      />
+      <StatRow
+        label="Restraint DR"
+        value={`${(dr * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Max 50% at fully eroded meter (not affected by Ability Strength)."
       />
     </div>
   );
@@ -147,6 +172,7 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
         <CollapsibleSection title="PASSIVE" defaultOpen>
           <p className="text-[11px] text-muted-foreground leading-relaxed py-1">{formatAbilityDescription(warframe.passive)}</p>
           {(warframe.id === "gauss" || warframe.id === "gauss_prime") && <GaussPassiveBattery />}
+          {(warframe.id === "baruuk" || warframe.id === "baruuk_prime") && <BaruukRestraintPassive />}
         </CollapsibleSection>
       )}
 

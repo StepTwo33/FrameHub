@@ -234,6 +234,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Thurible energy per kill | 2026-07-21 | EPK = 1+[channel×0.15÷(2−EFF)]×STR; HS ×4; wiki 25/130%/130% → ≈7.96 / ≈31.86 |
 | Metamorphosis linear decay | 2026-07-21 | Peak×STR decays linearly to 0 over duration×DUR; wiki mid-duration half peak (250→162.5 @130% STR) |
 | Covenant Retaliation CC | 2026-07-21 | CC=(5%+absorb÷100×1.5%)×STR; body cap 50% / HS ×4 cap 200%; wiki 3k→cap, 2k@130%→45.5%/182% |
+| Baruuk Restraint passive DR | 2026-07-21 | DR = eroded×50% (full erosion → 50%); passive text 50%; not × STR |
 
 ## New / extended test files
 
