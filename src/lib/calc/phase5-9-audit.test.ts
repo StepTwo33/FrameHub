@@ -845,6 +845,111 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
   });
+
+  it("Arcane Avenger: stacks>0 → absolute +45% CC (not % of base)", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const avenger = allArcanes.find((a) => a.id === "arcane_avenger")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [avenger],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalChance).toBeCloseTo(bare.criticalChance + 0.45, 4);
+  });
+
+  it("Arcane Awakening: stacks>0 → +150% secondary damage at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const awakening = allArcanes.find((a) => a.id === "arcane_awakening")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [awakening],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
+  });
+
+  it("Arcane Rage: stacks>0 → +180% primary damage at R5", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const rage = allArcanes.find((a) => a.id === "arcane_rage")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [rage],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.8, 4);
+  });
+
+  it("Arcane Precision: stacks>0 → +300% secondary damage at R5", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const precision = allArcanes.find((a) => a.id === "arcane_precision")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [precision],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4, 4);
+  });
+
+  it("Arcane Fury: stacks>0 → +180% melee damage at R5", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const fury = allArcanes.find((a) => a.id === "arcane_fury")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [fury],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.8, 4);
+  });
+
+  it("Arcane Blade Charger: stacks>0 → +300% melee damage at R5", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const blade = allArcanes.find((a) => a.id === "arcane_blade_charger")!;
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [blade],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4, 4);
+  });
+
+  it("Arcane Arachne: stacks>0 → +150% damage while wall-latched at R5", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const arachne = allArcanes.find((a) => a.id === "arcane_arachne")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [arachne],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 2.5, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

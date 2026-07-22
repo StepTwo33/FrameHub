@@ -38,20 +38,23 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_arachne": {
     arcaneId: "arcane_arachne",
+    customHandler: "arcane_arachne",
     effects: [
-      {"statKey": "wallLatchDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Arachne: wallLatchDamage (conditional proc)"},
+      {"statKey": "wallLatchDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Arachne — +150% damage while wall-latched (paper: stacks>0 = latched)"},
     ],
   },
   "arcane_avenger": {
     arcaneId: "arcane_avenger",
+    customHandler: "arcane_avenger",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Avenger: criticalChance (when damaged proc)"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Avenger — absolute +45% CC for 12s on damaged (paper: stacks>0 = buff up)"},
     ],
   },
   "arcane_awakening": {
     arcaneId: "arcane_awakening",
+    customHandler: "arcane_awakening",
     effects: [
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Awakening: holsterDamage (on reload proc)"},
+      {"statKey": "holsterDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Awakening — +150% secondary damage for 24s on reload (paper: stacks>0 = buff up)"},
     ],
   },
   "arcane_barrier": {
@@ -78,10 +81,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_blade_charger": {
     arcaneId: "arcane_blade_charger",
+    customHandler: "arcane_blade_charger",
     effects: [
-      {"statKey": "meleeDamageChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Blade Charger: meleeDamageChance (on kill proc)"},
-      {"statKey": "meleeDamageBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Blade Charger: meleeDamageBonus (on kill proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Blade Charger: buffDuration (on kill proc)"},
+      {"statKey": "meleeDamageChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Blade Charger — 30% chance on primary kill"},
+      {"statKey": "meleeDamageBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Blade Charger — +300% melee damage for 12s (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Blade Charger — 12s buff duration"},
     ],
   },
   "arcane_blessing": {
@@ -174,9 +178,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_fury": {
     arcaneId: "arcane_fury",
+    customHandler: "arcane_fury",
     effects: [
-      {"statKey": "meleeDamageBonus", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Fury: meleeDamageBonus (conditional proc)"},
-      {"statKey": "meleeDamageChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Fury: meleeDamageChance (conditional proc)"},
+      {"statKey": "meleeDamageBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Fury — +180% melee damage for 18s on crit (paper: stacks>0 = buff up)"},
+      {"statKey": "meleeDamageChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Fury — 60% chance on crit"},
     ],
   },
   "arcane_grace": {
@@ -285,8 +290,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_precision": {
     arcaneId: "arcane_precision",
+    customHandler: "arcane_precision",
     effects: [
-      {"statKey": "headshotDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Precision: headshotDamage (on headshot proc)"},
+      {"statKey": "headshotDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Precision — +300% secondary damage for 18s on headshot (paper: stacks>0 = buff up)"},
     ],
   },
   "arcane_primary_charger": {
@@ -333,9 +339,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_rage": {
     arcaneId: "arcane_rage",
+    customHandler: "arcane_rage",
     effects: [
-      {"statKey": "holsterDamage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rage: holsterDamage (on headshot proc)"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rage: healthRegenChance (on headshot proc)"},
+      {"statKey": "holsterDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Arcane Rage — +180% primary damage for 24s on headshot (paper: stacks>0 = buff up)"},
+      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Rage: healthRegenChance (legacy/display)"},
     ],
   },
   "arcane_reaper": {

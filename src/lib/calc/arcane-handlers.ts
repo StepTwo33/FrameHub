@@ -72,6 +72,13 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_tempo",
   "arcane_velocity",
   "arcane_strike",
+  "arcane_avenger",
+  "arcane_awakening",
+  "arcane_rage",
+  "arcane_fury",
+  "arcane_precision",
+  "arcane_blade_charger",
+  "arcane_arachne",
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
@@ -385,6 +392,58 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       if (chanceLine) {
         trackBonus(stats, "attackSpeedChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
       }
+      return true;
+    }
+
+    case "arcane_avenger": {
+      // wiki: absolute +45% CC (percentage points) for 12s on damaged. Paper: stacks>0 = buff up.
+      const ccLine = findEffect(def, "criticalChance");
+      const ccPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      if (ccPct > 0) stats.criticalChance += ccPct / 100;
+      trackBonus(stats, "criticalChance", ccPct);
+      return true;
+    }
+
+    case "arcane_awakening":
+    case "arcane_rage": {
+      // Awakening: +150% secondary dmg on reload. Rage: +180% primary dmg on headshot.
+      // Data stores as holsterDamage — apply as weapon damage (paper: stacks>0 = buff up).
+      const dmgLine = findEffect(def, "holsterDamage") ?? findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "holsterDamage", dmg);
+      return true;
+    }
+
+    case "arcane_precision": {
+      // wiki R5: +300% secondary damage for 18s on headshot (not HS-only multiplier).
+      const dmgLine = findEffect(def, "headshotDamage") ?? findEffect(def, "damage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "headshotDamage", dmg);
+      return true;
+    }
+
+    case "arcane_fury":
+    case "arcane_blade_charger": {
+      // Fury: +180% melee dmg on crit. Blade Charger: +300% melee dmg on primary kill.
+      const dmgLine = findEffect(def, "meleeDamageBonus");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "meleeDamageBonus", dmg);
+      const chanceLine = findEffect(def, "meleeDamageChance");
+      if (chanceLine) {
+        trackBonus(stats, "meleeDamageChance", scaleArcaneEffectLine(chanceLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "arcane_arachne": {
+      // wiki: +150% damage while wall-latched. Paper: stacks>0 = wall-latching.
+      const dmgLine = findEffect(def, "wallLatchDamage");
+      const dmg = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      if (dmg > 0) applyWeaponDamageMult(stats, dmg);
+      trackBonus(stats, "wallLatchDamage", dmg);
       return true;
     }
 
