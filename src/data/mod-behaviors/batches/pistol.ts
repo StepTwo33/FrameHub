@@ -18,12 +18,14 @@ export const MOD_BEHAVIORS_PISTOL: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Anemic Agility: damage \u2014 +15% Fire Rate, -2.5% Damage per rank"),
     line("fireRate", "weapon_dps", "multiplicative_percent", "Anemic Agility: fireRate \u2014 +15% Fire Rate, -2.5% Damage per rank"),
   ]),
+  // Wiki: Augur Seeker — Secondary Status Duration (+15%/rank → +90% R5)
+  augur_seeker: mod("augur_seeker", [
+    line("statusDuration", "weapon_dps", "multiplicative_percent", "Augur Seeker: statusDuration — +15% Status Duration per rank"),
+  ]),
   augur_breach: mod("augur_breach", [
     line("damage", "weapon_dps", "multiplicative_percent", "Augur Pact: damage \u2014 +15% Damage per rank"),
   ]),
-  bowling_buzzkill: mod("bowling_buzzkill", [
-    line("punchThrough", "mod_panel", "multiplicative_percent", "Bowling Buzzkill: punchThrough \u2014 +0.1m Punch Through per rank (arsenal display only)"),
-  ]),
+
   creeping_bullseye: mod("creeping_bullseye", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Creeping Bullseye: criticalChance \u2014 +8% Crit Chance, -6% Fire Rate per rank"),
     line("fireRate", "weapon_dps", "multiplicative_percent", "Creeping Bullseye: fireRate \u2014 +8% Crit Chance, -6% Fire Rate per rank"),
@@ -46,9 +48,7 @@ export const MOD_BEHAVIORS_PISTOL: Record<string, VerifiedModBehavior> = {
     line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Hydraulic Crosshairs \u2014 On Headshot: +135% Critical Chance when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Hydraulic Crosshairs: duration \u2014 On Headshot:\\\\n+135% Critical Chance when Aiming for 9s"),
   ]),
-  lethal_torment: mod("lethal_torment", [
-    line("multishot", "weapon_dps", "multiplicative_percent", "Lethal Torment: multishot \u2014 +10% Multishot per rank"),
-  ]),
+
   lethal_torrent: mod("lethal_torrent", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Lethal Torrent: fireRate \u2014 +10% Fire Rate, +10% Multishot per rank"),
     line("multishot", "weapon_dps", "multiplicative_percent", "Lethal Torrent: multishot \u2014 +10% Fire Rate, +10% Multishot per rank"),
@@ -60,9 +60,7 @@ export const MOD_BEHAVIORS_PISTOL: Record<string, VerifiedModBehavior> = {
   pistol_ammo_mutation: mod("pistol_ammo_mutation", [
     line("ammoConversion", "mod_panel", "multiplicative_percent", "Pistol Ammo Mutation: ammoConversion \u2014 Converts Primary ammo pickups to 50% of Ammo Pick Up."),
   ]),
-  pistol_aptitude: mod("pistol_aptitude", [
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Pistol Aptitude: statusChance \u2014 +15% Status Chance per rank"),
-  ]),
+
   primed_convulsion: mod("primed_convulsion", [
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Primed Convulsion: electricity \u2014 +15% Electricity per rank (Primed)"),
   ]),

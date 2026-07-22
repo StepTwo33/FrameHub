@@ -526,7 +526,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
     forms: [
       { name: "Onos", damage: 220.0, fireRate: 1.4, criticalChance: 0.26, criticalMultiplier: 2.4, statusChance: 0.22, triggerType: "Auto", magazine: 20, reloadTime: 2.0, puncture: 220 },
       {
-        // Wiki Held beam: Radiation 30, FR 2, 14%/1.6x/18%, mag 350 (charge Heat blast is separate alt)
+        // Wiki Held beam default; full-charge Heat 2200 via resolveIncarnonActiveWeapon onosIncarnonMode
         name: "Onos Incarnon",
         damage: 30,
         fireRate: 2,
@@ -574,27 +574,17 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
     ],
   },
-  // Thalys (native)
+  // Thalys (native melee) — form is buff-driven (+3 Range / +40% AS via wiki evolutions); forms[] unused for arsenal swap
   {
     weaponId: "thalys",
     weaponName: "Thalys",
     challenge: "Kill 100 enemies",
     category: "native",
     forms: [
-      { name: "Thalys", damage: 55.0, fireRate: 6.0, criticalChance: 0.22, criticalMultiplier: 2.0, statusChance: 0.18, triggerType: "Burst", magazine: 45, reloadTime: 1.8 },
-      { name: "Thalys Incarnon", damage: 110.0, fireRate: 6.0, criticalChance: 0.32, criticalMultiplier: 2.5, statusChance: 0.3, triggerType: "Auto", magazine: 45, reloadTime: 1.8, specialMechanics: { evolutionMode: "Rapid-fire with ricocheting shots", modeSwitch: "Kills build evolution" } },
+      { name: "Thalys", damage: 300, fireRate: 0.917, criticalChance: 0.3, criticalMultiplier: 2.2, statusChance: 0.24, triggerType: "Melee" },
+      { name: "Thalys Incarnon", damage: 300, fireRate: 0.917, criticalChance: 0.3, criticalMultiplier: 2.2, statusChance: 0.24, triggerType: "Melee", specialMechanics: { evolutionMode: "Void shards; +3 Range +40% AS", modeSwitch: "6x Combo + Heavy Attack" } },
     ],
-    evolutions: [
-      { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation. Alt-fire to transform.", statChanges: {} },
-      { tier: 2, slot: 0, name: "Ready Retaliation", description: "+100% Damage when wielding Melee weapon.", statChanges: {} },
-      { tier: 2, slot: 1, name: "Lone Gun", description: "+60% Damage when no Primary equipped.", statChanges: {} },
-      { tier: 3, slot: 0, name: "Elemental Excess", description: "+200% Elemental Damage.", statChanges: {} },
-      { tier: 3, slot: 1, name: "Swift Transformation", description: "+50% Incarnon Buildup.", statChanges: {} },
-      { tier: 4, slot: 0, name: "Long Shot", description: "+100% Damage Falloff Range.", statChanges: {} },
-      { tier: 4, slot: 1, name: "Status Surge", description: "+50% Status Chance.", statChanges: { statusChance: 0.5 } },
-      { tier: 5, slot: 0, name: "Devouring Attrition", description: "50% chance to deal +2000% Damage on non-critical hits.", statChanges: { devouringAttrition: 20 } },
-      { tier: 5, slot: 1, name: "Elemental Flow", description: "Convert 100% of Physical Damage to Elemental.", statChanges: {} },
-    ],
+    evolutions: [],
   },
   // Boar Incarnon (genesis_primary)
   {
@@ -606,7 +596,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
     forms: [
       { name: "Boar", damage: 360.0, fireRate: 5.0, criticalChance: 0.15, criticalMultiplier: 2.0, statusChance: 0.3, triggerType: "Auto", magazine: 20, reloadTime: 2.7 },
       {
-        // Wiki: Heat 20 Held beam, FR 7.5, 18%/1.8x/20%, mag 150
+        // Wiki: Heat 20 Held beam, FR 7.5, 18%/1.8x/20%, mag 150, MS 1 (drops shotgun pellets)
         name: "Boar Incarnon",
         damage: 20,
         fireRate: 7.5,
@@ -616,6 +606,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
         triggerType: "Held",
         magazine: 150,
         reloadTime: 2.7,
+        multishot: 1,
         heat: 20,
         specialMechanics: { evolutionMode: "Held Heat beam", modeSwitch: "Weakpoint hits charge; Alt-fire transmutes" },
       },
@@ -2002,6 +1993,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
       { name: "Ballistica", damage: 100.0, fireRate: 3.33, criticalChance: 0.025, criticalMultiplier: 1.5, statusChance: 0.1, triggerType: "Burst", magazine: 16, reloadTime: 2.0 },
       {
         // Wiki: Slash 640 Charge, FR 3.33, 20%/2x/20%, mag 18
+        // Wiki: single X-projectile (MS 1), Slash 640, Charge FR 3.33, 20%/2x/20%, mag 18
         name: "Ballistica Incarnon",
         damage: 640,
         fireRate: 3.33,
@@ -2011,6 +2003,7 @@ export const incarnonWeaponData: IncarnonWeaponData[] = [
         triggerType: "Charge",
         magazine: 18,
         reloadTime: 2.0,
+        multishot: 1,
         slash: 640,
         specialMechanics: { evolutionMode: "Cross-shaped Slash projectiles", modeSwitch: "Weakpoint hits charge; Alt-fire transmutes" },
       },

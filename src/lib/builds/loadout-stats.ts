@@ -27,6 +27,7 @@ import { buildWeaponContributionContext, computeDpsContributions, type DpsContri
 import { rivenStatChangesFromModSlots } from "@/lib/warframe-arsenal/riven-resolve";
 import {
   mergeWeaponCalcOptions,
+  resolveAbilitiesWithHelminth,
   resolveWeaponExternalBuffs,
   type WeaponBuffContext,
 } from "@/lib/weapons/weapon-external-buffs";
@@ -178,7 +179,9 @@ function calcWeaponSlotStats(
   if (!w) return null;
   const base = weaponWithPassive(w);
   const incarnonData = incarnonDataMap.get(build.weaponId);
-  const calcWeapon = resolveIncarnonActiveWeapon(base, incarnonData, build.incarnonEvolutions);
+  const calcWeapon = resolveIncarnonActiveWeapon(base, incarnonData, build.incarnonEvolutions, {
+    onosIncarnonMode: simParams.onosIncarnonMode,
+  });
   const formActive = isIncarnonFormActive(build.incarnonEvolutions, incarnonData);
   const progenitorOpts =
     build.progenitorElement &&
@@ -373,7 +376,11 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
       buffContext = {
         warframeId: loadout.warframeBuild.warframeId,
         warframeStats: result.warframe!.stats,
-        warframeAbilities: wf.abilities,
+        warframeAbilities: resolveAbilitiesWithHelminth(
+          wf.abilities,
+          loadout.warframeBuild.helminthAbilityId,
+          loadout.warframeBuild.helminthSlot,
+        ),
         warframeModSlots: setLinkage.warframeMods,
         allMods: modsMap,
       };

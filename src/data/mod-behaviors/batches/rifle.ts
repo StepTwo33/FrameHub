@@ -102,9 +102,6 @@ export const MOD_BEHAVIORS_RIFLE: Record<string, VerifiedModBehavior> = {
   vigilante_offense: mod("vigilante_offense", [
     line("punchThrough", "mod_panel", "multiplicative_percent", "Vigilante Offense: punchThrough \u2014 +1.5 Punch Through (arsenal display only)"),
   ]),
-  vigilante_offensive: mod("vigilante_offensive", [
-    line("multishot", "weapon_dps", "multiplicative_percent", "Vigilante Offensive: multishot \u2014 +10% Multishot per rank"),
-  ]),
   vigilante_supplies: mod("vigilante_supplies", [
     line("ammoConversion", "mod_panel", "multiplicative_percent", "Vigilante Supplies: ammoConversion \u2014 Converts Secondary ammo pickups to 30% of Ammo Pick Up."),
     line("ammoPickup", "mod_panel", "multiplicative_percent", "Vigilante Supplies: ammoPickup \u2014 Converts Secondary ammo pickups to 30% of Ammo Pick Up."),

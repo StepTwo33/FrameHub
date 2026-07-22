@@ -14,9 +14,7 @@ function mod(modId: string, stats: VerifiedItemStatLine[], descriptionOnly?: str
 }
 
 export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
-  aerial_assault: mod("aerial_assault", [
-    line("aerialDamage", "mod_panel", "multiplicative_percent", "Aerial Assault: aerialDamage \u2014 +25% Aerial Damage per rank"),
-  ]),
+
   air_martial: mod("air_martial", [
     line("channelingDamage", "mod_panel", "multiplicative_percent", "Air Martial: channelingDamage \u2014 With Melee equipped, lock onto targets within +5m while Airborne, -100% Channeli\u2026"),
   ]),
@@ -154,9 +152,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Galvanized Steel: criticalMultiplier \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Steel: duration \u2014 +110% Critical Chance (x2 for Heavy Attacks)\\\\nOn Melee Kill:\\\\n+30% Critical Da\u2026"),
   ]),
-  gladiator_ailment: mod("gladiator_ailment", [
-    line("statusDuration", "weapon_dps", "multiplicative_percent", "Gladiator Ailment: statusDuration \u2014 +15% Status Duration per rank (Set, extends DoT ticks)"),
-  ]),
+
   gladiator_might: mod("gladiator_might", [
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Gladiator Might: criticalMultiplier \u2014 +7.5% Critical Damage per rank (Set)"),
   ]),
@@ -223,9 +219,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   masters_edge: mod("masters_edge", [
     line("damage", "mod_panel", "multiplicative_percent", "Master's Edge: damage \u2014 Enables Tennokai. Increases Tennokai damage by 60%."),
   ]),
-  melee_aptitude: mod("melee_aptitude", [
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Melee Aptitude: statusChance \u2014 +15% Status Chance per rank"),
-  ]),
+
   melee_elementalist: mod("melee_elementalist", [
     line("damage", "weapon_dps", "multiplicative_percent", "Melee Elementalist: damage \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
     line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Melee Elementalist: heavyAttackEfficiency \u2014 +90% Status Damage, +60% Heavy Attack Wind Up Speed"),
@@ -264,7 +258,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Power Throw: punchThrough \u2014 +2 Punch Through (arsenal display only)"),
   ]),
   pressure_point_r3: mod("pressure_point_r3", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Pressure Point: damage \u2014 +200% Melee Damage, +120% COMBO COUNT CHANCE"),
+    line("damage", "weapon_dps", "multiplicative_percent", "wiki: Pressure Point — +120% Melee Damage at R5"),
   ]),
   primed_fever_strike: mod("primed_fever_strike", [
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Primed Fever Strike: toxin \u2014 +15% Toxin per rank (Primed)"),
@@ -375,9 +369,6 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   spring_loaded_blade: mod("spring_loaded_blade", [
     line("duration", "mod_panel", "multiplicative_percent", "Spring-Loaded Blade: duration \u2014 On Status Effect: +1 Range for 24s. Stacks up to 2 times."),
     line("range", "mod_panel", "multiplicative_percent", "Spring-Loaded Blade: range \u2014 On Status Effect: +1 Range for 24s. Stacks up to 2 times. (arsenal display only)"),
-  ]),
-  stance_bonus_crimson: mod("stance_bonus_crimson", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Crimson Orbit: damage \u2014 Stance bonus: +10% Damage per rank"),
   ]),
   stand_ground: mod("stand_ground", [
     line("damageReduction", "mod_panel", "multiplicative_percent", "Stand Ground: damageReduction \u2014 Blocking reduces damage taken from enemy abilities by 60%."),

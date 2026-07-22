@@ -484,14 +484,14 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "arcane_hot_shot": {
     "name": "Arcane Hot Shot",
-    "trigger": "passive",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 6.0,
         "flat": false,
-        "stacking": false,
+        "stacking": true,
         "baseValue": 1.0
       },
       {
@@ -500,7 +500,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "flat": true,
         "constantAtAllRanks": true
       }
-    ]
+    ],
+    "stackCap": 50
   },
   "arcane_ice": {
     "name": "Arcane Ice",
@@ -2535,15 +2536,17 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "secondary_kinship": {
     "name": "Secondary Kinship",
-    "trigger": "passive",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 20.0,
-        "baseValue": 3.333333
+        "baseValue": 3.333333,
+        "stacking": true
       }
-    ]
+    ],
+    "stackCap": 24
   },
   "arcane_secondary_merciless": {
     "name": "Secondary Merciless",

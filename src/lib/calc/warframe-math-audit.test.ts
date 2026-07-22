@@ -545,3 +545,84 @@ describe("warframe Tenno armor EHP still uses AR/(AR+300)", () => {
     expect(enemyArmorDamageReduction(300)).not.toBeCloseTo(dr, 1);
   });
 });
+
+/**
+ * Bare-weapon paper DPS goldens (Phase 1 accuracy audit).
+ * Locks wiki pipeline: CM quantize → avg crit → burst/sustained — no Galv/Incarnon.
+ */
+describe("bare weapon paper DPS goldens (Phase 1)", () => {
+  function bare(id: string) {
+    const weapon = allWeapons.find((w) => w.id === id);
+    expect(weapon).toBeDefined();
+    return { weapon: weapon!, stats: calculateWeaponBuild(weapon!, [], modsMap()) };
+  }
+
+  it("Braton: quantized IPS, CM, avg crit, burst and sustained DPS", () => {
+    const { weapon, stats } = bare("braton");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const avgCrit = avgCritMultiplier(weapon.criticalChance, cmq);
+
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq, 10);
+    expect(stats.criticalChance).toBeCloseTo(0.12, 10);
+    expect(stats.moddedBaseDamage).toBeCloseTo(24, 10);
+    // Wiki IPS quantize can raise displayed total above catalog base
+    expect(stats.impact).toBeCloseTo(8.25, 10);
+    expect(stats.puncture).toBeCloseTo(8.25, 10);
+    expect(stats.slash).toBeCloseTo(8.25, 10);
+    expect(stats.totalDamage).toBeCloseTo(24.75, 10);
+    expect(stats.fireRate).toBeCloseTo(8.75, 10);
+    expect(stats.multishot).toBeCloseTo(1, 10);
+
+    const expectedBurst = stats.totalDamage * stats.multishot * stats.fireRate * avgCrit;
+    expect(stats.burstDps).toBeCloseTo(expectedBurst, 8);
+
+    const magTime = stats.magazine / stats.fireRate;
+    const expectedSustained = expectedBurst * (magTime / (magTime + stats.reloadTime));
+    expect(stats.sustainedDps).toBeCloseTo(expectedSustained, 8);
+  });
+
+  it("Lex: secondary semi-auto paper DPS cycle", () => {
+    const { weapon, stats } = bare("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const avgCrit = avgCritMultiplier(weapon.criticalChance, cmq);
+
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq, 10);
+    expect(stats.moddedBaseDamage).toBeCloseTo(130, 10);
+    expect(stats.totalDamage).toBeCloseTo(
+      stats.impact + stats.puncture + stats.slash,
+      8,
+    );
+    expect(stats.fireRate).toBeCloseTo(1.08, 10);
+
+    const expectedBurst = stats.totalDamage * stats.fireRate * avgCrit;
+    expect(stats.burstDps).toBeCloseTo(expectedBurst, 8);
+    const magTime = stats.magazine / stats.fireRate;
+    expect(stats.sustainedDps).toBeCloseTo(
+      expectedBurst * (magTime / (magTime + stats.reloadTime)),
+      8,
+    );
+  });
+
+  it("Skana: melee burst equals sustained (no reload cycle)", () => {
+    const { weapon, stats } = bare("skana");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const avgCrit = avgCritMultiplier(weapon.criticalChance, cmq);
+
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq, 10);
+    expect(stats.moddedBaseDamage).toBeCloseTo(120, 10);
+    expect(stats.magazine).toBe(0);
+    expect(stats.burstDps).toBeCloseTo(
+      stats.totalDamage * stats.fireRate * avgCrit,
+      8,
+    );
+    expect(stats.sustainedDps).toBeCloseTo(stats.burstDps, 10);
+  });
+
+  it("Amprex: pure electricity innate is on the weapon row and in elements", () => {
+    const { weapon, stats } = bare("amprex");
+    expect(weapon.electricity).toBeGreaterThan(0);
+    expect(stats.elements.map((e) => e.type)).toEqual(["electricity"]);
+    expect(stats.elements[0]!.value).toBeCloseTo(weapon.electricity!, 5);
+    expect(stats.impact + stats.puncture + stats.slash).toBe(0);
+  });
+});

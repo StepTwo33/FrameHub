@@ -32,20 +32,6 @@ const RAW_MODS: Mod[] = [
     "rarity": "common"
   },
   {
-    "id": "vigilante_offensive",
-    "name": "Vigilante Offensive",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "rifle",
-    "subCategory": "",
-    "stats": {
-      "multishot": 10
-    },
-    "description": "+10% Multishot per rank",
-    "rarity": "common"
-  },
-  {
     "id": "argon_scope",
     "name": "Argon Scope",
     "polarity": "madurai",
@@ -377,20 +363,7 @@ const RAW_MODS: Mod[] = [
     "description": "+165% Damage, -55% Accuracy at max rank",
     "rarity": "rare"
   },
-  {
-    "id": "lethal_torment",
-    "name": "Lethal Torment",
-    "polarity": "madurai",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "pistol",
-    "subCategory": "",
-    "stats": {
-      "multishot": 10
-    },
-    "description": "+10% Multishot per rank",
-    "rarity": "uncommon"
-  },
+
   {
     "id": "primed_pistol_gambit",
     "name": "Primed Pistol Gambit",
@@ -450,20 +423,7 @@ const RAW_MODS: Mod[] = [
     "description": "+110% Critical Damage at max rank (Primed)",
     "rarity": "legendary"
   },
-  {
-    "id": "pistol_aptitude",
-    "name": "Pistol Aptitude",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "pistol",
-    "subCategory": "",
-    "stats": {
-      "statusChance": 15
-    },
-    "description": "+15% Status Chance per rank",
-    "rarity": "common"
-  },
+
   {
     "id": "embedded_catalyzer",
     "name": "Embedded Catalyzer",
@@ -553,20 +513,7 @@ const RAW_MODS: Mod[] = [
     "description": "+15% Fire Rate, -2.5% Damage per rank",
     "rarity": "rare"
   },
-  {
-    "id": "bowling_buzzkill",
-    "name": "Bowling Buzzkill",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "pistol",
-    "subCategory": "",
-    "stats": {
-      "punchThrough": 0.1
-    },
-    "description": "+0.1m Punch Through per rank",
-    "rarity": "uncommon"
-  },
+
   {
     "id": "pistol_ammo_mutation",
     "name": "Pistol Ammo Mutation",
@@ -654,20 +601,7 @@ const RAW_MODS: Mod[] = [
     "description": "+110% Critical Damage at max rank (Primed)",
     "rarity": "legendary"
   },
-  {
-    "id": "shotgun_aptitude",
-    "name": "Shotgun Aptitude",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "shotgun",
-    "subCategory": "",
-    "stats": {
-      "statusChance": 15
-    },
-    "description": "+15% Status Chance per rank",
-    "rarity": "common"
-  },
+
   {
     "id": "primed_charged_shell",
     "name": "Primed Charged Shell",
@@ -814,20 +748,7 @@ const RAW_MODS: Mod[] = [
     "description": "+220% Critical Chance (x2 for Heavy Attacks)\\nx1.33 Damage to Sentients",
     "rarity": "legendary"
   },
-  {
-    "id": "melee_aptitude",
-    "name": "Melee Aptitude",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
-    "stats": {
-      "statusChance": 15
-    },
-    "description": "+15% Status Chance per rank",
-    "rarity": "common"
-  },
+
   {
     "id": "condition_overload",
     "name": "Condition Overload",
@@ -1033,48 +954,8 @@ const RAW_MODS: Mod[] = [
     "description": "Restores 11 Health per Status Type affecting the target",
     "rarity": "rare"
   },
-  {
-    "id": "gladiator_ailment",
-    "name": "Gladiator Ailment",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
-    "stats": {
-      "statusDuration": 15
-    },
-    "description": "+15% Status Duration per rank (Set)",
-    "rarity": "common"
-  },
-  {
-    "id": "aerial_assault",
-    "name": "Aerial Assault",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "melee",
-    "subCategory": "",
-    "stats": {
-      "aerialDamage": 25
-    },
-    "description": "+25% Aerial Damage per rank",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "stance_bonus_crimson",
-    "name": "Crimson Orbit",
-    "polarity": "madurai",
-    "drain": 2,
-    "maxRank": 3,
-    "category": "melee",
-    "subCategory": "weapon",
-    "stats": {
-      "damage": 10
-    },
-    "description": "Stance bonus: +10% Damage per rank",
-    "rarity": "common"
-  },
+
+
   {
     "id": "covert_lethality",
     "name": "Covert Lethality",
@@ -2719,34 +2600,8 @@ const RAW_MODS: Mod[] = [
     "description": "+90% Cold Damage",
     "rarity": "uncommon"
   },
-  {
-    "id": "claw_toxin",
-    "name": "Venom Claws",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "companion_weapon",
-    "subCategory": "beast_weapon",
-    "stats": {
-      "toxin": 90
-    },
-    "description": "+90% Toxin Damage",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "claw_electricity",
-    "name": "Shock Claws",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "companion_weapon",
-    "subCategory": "beast_weapon",
-    "stats": {
-      "electricity": 90
-    },
-    "description": "+90% Electricity Damage",
-    "rarity": "uncommon"
-  },
+
+
   {
     "id": "claw_fury",
     "name": "Fury (Claws)",
@@ -2776,20 +2631,7 @@ const RAW_MODS: Mod[] = [
     "description": "+60% Magnetic\\n+40% Status Duration",
     "rarity": "rare"
   },
-  {
-    "id": "claw_viral",
-    "name": "Viral Claws",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "companion_weapon",
-    "subCategory": "beast_weapon",
-    "stats": {
-      "viral": 90
-    },
-    "description": "+90% Viral Damage",
-    "rarity": "rare"
-  },
+
   {
     "id": "bloodthirst",
     "name": "Bloodthirst",
@@ -2850,20 +2692,7 @@ const RAW_MODS: Mod[] = [
     "description": "+15% Damage and +20% Critical Damage per rank",
     "rarity": "uncommon"
   },
-  {
-    "id": "hunters_syndrome",
-    "name": "Hunter's Syndrome",
-    "polarity": "madurai",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "companion_weapon",
-    "subCategory": "beast_weapon",
-    "stats": {
-      "damagePerStatus": 30
-    },
-    "description": "+30% Damage per Status type affecting the target",
-    "rarity": "rare"
-  },
+
   {
     "id": "augment_excalibur_radiant_finish",
     "name": "Radiant Finish",
@@ -3114,29 +2943,15 @@ const RAW_MODS: Mod[] = [
     "category": "augment",
     "subCategory": "",
     "stats": {
-      "cloudDuration": 6,
-      "range": 1.25,
-      "duration": 3.0
+      "toxinDamagePerSecond": 300,
+      "range": 5,
+      "duration": 12
     },
     "description": "Toxic Lash Augment: Create 5m toxic clouds, dealing 300 Toxin Damage/s for 12s with every kill. Damage is twice as strong for Melee kills.",
     "rarity": "rare",
     "warframeId": "saryn"
   },
-  {
-    "id": "augment_saryn_miasmic_siphon",
-    "name": "Miasmic Siphon",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "energyOnKill": 5
-    },
-    "description": "Miasma kills grant +5 energy per rank",
-    "rarity": "rare",
-    "warframeId": "saryn"
-  },
+
   {
     "id": "augment_saryn_venom_dose",
     "name": "Venom Dose",
@@ -3311,21 +3126,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "trinity"
   },
-  {
-    "id": "augment_trinity_blessing_share",
-    "name": "Blessing Share",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "damageReduction": 25
-    },
-    "description": "Blessing damage reduction +25% per rank",
-    "rarity": "rare",
-    "warframeId": "trinity"
-  },
+
   {
     "id": "augment_trinity_pool_of_life",
     "name": "Pool of Life",
@@ -3803,21 +3604,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "loki"
   },
-  {
-    "id": "augment_loki_safe_switch",
-    "name": "Safe Switch",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "damageReduction": 75
-    },
-    "description": "+75% Damage Reduction after teleport per rank",
-    "rarity": "rare",
-    "warframeId": "loki"
-  },
+
   {
     "id": "augment_loki_irradiating_disarm",
     "name": "Irradiating Disarm",
@@ -4066,21 +3853,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "nekros"
   },
-  {
-    "id": "augment_hydroid_tempest_rush",
-    "name": "Tempest Rush",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "castSpeed": 25
-    },
-    "description": "+25% Cast Speed during Barrage per rank",
-    "rarity": "rare",
-    "warframeId": "hydroid"
-  },
+
   {
     "id": "augment_hydroid_tidal_impunity",
     "name": "Tidal Impunity",
@@ -4545,21 +4318,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "nezha"
   },
-  {
-    "id": "augment_nezha_warding_halo",
-    "name": "Warding Halo Augment",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "recast": 100
-    },
-    "description": "Can recast while active per rank",
-    "rarity": "rare",
-    "warframeId": "nezha"
-  },
+
   {
     "id": "augment_inaros_elemental_sandstorm",
     "name": "Elemental Sandstorm",
@@ -4714,36 +4473,8 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "hildryn"
   },
-  {
-    "id": "augment_revenant_thrall_toll",
-    "name": "Thrall Toll",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "energyOnKill": 2
-    },
-    "description": "+2 Energy per thrall death per rank",
-    "rarity": "rare",
-    "warframeId": "revenant"
-  },
-  {
-    "id": "augment_revenant_mesmer_skin_aug",
-    "name": "Mesmer Skin Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "chargesToAlly": 1
-    },
-    "description": "Can transfer +1 charge to ally per rank",
-    "rarity": "rare",
-    "warframeId": "revenant"
-  },
+
+
   {
     "id": "augment_garuda_blood_forge",
     "name": "Blood Forge",
@@ -4759,21 +4490,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "garuda"
   },
-  {
-    "id": "augment_garuda_blood_siphon",
-    "name": "Blood Siphon",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "healthFromAllies": 25
-    },
-    "description": "Allies give +25% Health per rank",
-    "rarity": "rare",
-    "warframeId": "garuda"
-  },
+
   {
     "id": "augment_garuda_dread_ward",
     "name": "Dread Ward",
@@ -4887,21 +4604,7 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "grendel"
   },
-  {
-    "id": "augment_sevagoth_gloom_aug",
-    "name": "Gloom Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "rangePerShadow": 2
-    },
-    "description": "+2m Range per Shadow per rank",
-    "rarity": "rare",
-    "warframeId": "sevagoth"
-  },
+
   {
     "id": "augment_yareli_merulina_guardian",
     "name": "Merulina Guardian",
@@ -4935,66 +4638,10 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "yareli"
   },
-  {
-    "id": "augment_caliban_lethal_progeny_aug",
-    "name": "Lethal Progeny Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "sentientDuration": 5
-    },
-    "description": "+5s Sentient duration per rank",
-    "rarity": "rare",
-    "warframeId": "caliban"
-  },
-  {
-    "id": "augment_kullervo_wrathful_clarity",
-    "name": "Wrathful Clarity",
-    "polarity": "madurai",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "markDuration": 3
-    },
-    "description": "+3s Mark duration per rank",
-    "rarity": "rare",
-    "warframeId": "kullervo"
-  },
-  {
-    "id": "augment_qorvex_chyrinka_pillar_aug",
-    "name": "Chyrinka Pillar Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "pillarDuration": 3
-    },
-    "description": "+3s Pillar duration per rank",
-    "rarity": "rare",
-    "warframeId": "qorvex"
-  },
-  {
-    "id": "augment_jade_prismatic_shield_aug",
-    "name": "Prismatic Shield Augment",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "reflectionDamage": 25
-    },
-    "description": "+25% Reflection damage per rank",
-    "rarity": "rare",
-    "warframeId": "jade"
-  },
+
+
+
+
   {
     "id": "augment_wisp_critical_surge",
     "name": "Critical Surge",
@@ -5012,36 +4659,8 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare",
     "warframeId": "wisp"
   },
-  {
-    "id": "augment_protea_dispensary_aug",
-    "name": "Dispensary Augment",
-    "polarity": "naramon",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "extraPickup": 25
-    },
-    "description": "+25% chance for extra pickup per rank",
-    "rarity": "rare",
-    "warframeId": "protea"
-  },
-  {
-    "id": "augment_dagath_grave_keeper",
-    "name": "Grave Keeper",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 3,
-    "category": "augment",
-    "subCategory": "",
-    "stats": {
-      "damageReductionPerKill": 2
-    },
-    "description": "+2% DR per kill per rank",
-    "rarity": "rare",
-    "warframeId": "dagath"
-  },
+
+
   {
     "id": "augment_universal_health_conversion",
     "name": "Health Conversion",
@@ -5109,13 +4728,12 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 2,
     "maxRank": 5,
-    "category": "warframe",
+    "category": "pistol",
     "subCategory": "",
     "stats": {
-      "enemyRadar": 9,
       "statusDuration": 15.0
     },
-    "description": "+9m Enemy Radar per rank",
+    "description": "+15% Status Duration per rank (Secondary)",
     "rarity": "rare"
   },
   {
@@ -5307,20 +4925,7 @@ const RAW_MODS: Mod[] = [
     "description": "+15% Shield Recharge when Kubrow attacks per rank",
     "rarity": "rare"
   },
-  {
-    "id": "vigorous_preparation",
-    "name": "Vigorous Preparation",
-    "polarity": "vazarin",
-    "drain": 6,
-    "maxRank": 5,
-    "category": "warframe",
-    "subCategory": "",
-    "stats": {
-      "startingHealth": 15
-    },
-    "description": "+15% Starting Health per rank",
-    "rarity": "uncommon"
-  },
+
   {
     "id": "melee_prowess_sentinel",
     "name": "Assault Mode",
@@ -5350,34 +4955,8 @@ const RAW_MODS: Mod[] = [
     "description": "Dethcube drops an Energy Orb after assisting in 10 kills.",
     "rarity": "rare"
   },
-  {
-    "id": "ocular_sentry",
-    "name": "Ocular Sentry",
-    "polarity": "penjaga",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "markDuration": 3
-    },
-    "description": "Marks enemies for +3s per rank",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "target_acquisition",
-    "name": "Target Acquisition",
-    "polarity": "penjaga",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "weakpointChance": 10
-    },
-    "description": "+10% chance to mark weakpoints per rank",
-    "rarity": "uncommon"
-  },
+
+
   {
     "id": "link_armor",
     "name": "Link Armor",
@@ -5406,34 +4985,8 @@ const RAW_MODS: Mod[] = [
     "description": "+10% Link Shields per rank",
     "rarity": "uncommon"
   },
-  {
-    "id": "meditation",
-    "name": "Meditation",
-    "polarity": "penjaga",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "healthRegen": 3
-    },
-    "description": "+3 HP/s Health Regen per rank",
-    "rarity": "common"
-  },
-  {
-    "id": "tease",
-    "name": "Tease",
-    "polarity": "penjaga",
-    "drain": 4,
-    "maxRank": 5,
-    "category": "companion",
-    "subCategory": "",
-    "stats": {
-      "drawAggro": 15
-    },
-    "description": "Draws +15% enemy aggression per rank",
-    "rarity": "uncommon"
-  },
+
+
   {
     "id": "scan_organic",
     "name": "Scan Organic Lifeforms",
@@ -5720,20 +5273,6 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "stance_rumbling_vault",
-    "name": "Rumbling Vault",
-    "polarity": "madurai",
-    "drain": 2,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 10
-    },
-    "description": "Heavy blade stance: Ground slams",
-    "rarity": "common"
-  },
-  {
     "id": "stance_shimmering_blight",
     "name": "Shimmering Blight",
     "polarity": "zenurik",
@@ -5804,20 +5343,6 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "stance_frictional_strike",
-    "name": "Frictional Strike",
-    "polarity": "madurai",
-    "drain": 2,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 10
-    },
-    "description": "Fist stance: Basic combos",
-    "rarity": "common"
-  },
-  {
     "id": "stance_seismic_palm",
     "name": "Seismic Palm",
     "polarity": "vazarin",
@@ -5846,20 +5371,6 @@ const RAW_MODS: Mod[] = [
     "rarity": "rare"
   },
   {
-    "id": "stance_buzzing_sting",
-    "name": "Buzzing Sting",
-    "polarity": "vazarin",
-    "drain": 2,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 10
-    },
-    "description": "Claw stance: Piercing strikes",
-    "rarity": "uncommon"
-  },
-  {
     "id": "stance_decisive_judgement",
     "name": "Decisive Judgement",
     "polarity": "madurai",
@@ -5871,20 +5382,6 @@ const RAW_MODS: Mod[] = [
       "damageBonus": 15
     },
     "description": "Fierce, double-handed strikes.",
-    "rarity": "rare"
-  },
-  {
-    "id": "stance_transcending_recut",
-    "name": "Transcending Retribution",
-    "polarity": "madurai",
-    "drain": 4,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 20
-    },
-    "description": "Katana stance: Heavy strikes",
     "rarity": "rare"
   },
   {
@@ -5900,20 +5397,6 @@ const RAW_MODS: Mod[] = [
     },
     "description": "Rapier stance: Cunning strikes",
     "rarity": "rare"
-  },
-  {
-    "id": "stance_fencing_stance",
-    "name": "Fencing Stance",
-    "polarity": "madurai",
-    "drain": 2,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 10
-    },
-    "description": "Rapier stance: Basic thrusts",
-    "rarity": "common"
   },
   {
     "id": "stance_high_noon",
@@ -6125,20 +5608,6 @@ const RAW_MODS: Mod[] = [
       "damageBonus": 15
     },
     "description": "Lightning fast hit chains and hard-hitting combos.",
-    "rarity": "uncommon"
-  },
-  {
-    "id": "stance_war_fan",
-    "name": "Sarafans Weave",
-    "polarity": "naramon",
-    "drain": 4,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {
-      "damageBonus": 15
-    },
-    "description": "Warfan stance: Elegant strikes",
     "rarity": "uncommon"
   },
   {
@@ -11538,7 +11007,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "damage": 20.0
     },
-    "description": "+200% Melee Damage, +120% COMBO COUNT CHANCE",
+    "description": "+20% Melee Damage per rank (max +120% at rank 5)",
     "rarity": "common"
   },
   {
@@ -12138,14 +11607,16 @@ const RAW_MODS: Mod[] = [
     "name": "Biting Frost",
     "polarity": "zenurik",
     "drain": 6,
-    "maxRank": 9,
+    "maxRank": 3,
     "category": "Augment",
     "subCategory": "",
     "stats": {
-      "criticalChance": 50.0
+      "criticalChance": 50,
+      "criticalMultiplier": 50
     },
-    "description": "Frost gains +|200|% Critical Chance and +|200|% Critical Damage against frozen enemies.",
-    "rarity": "rare"
+    "description": "Passive Augment: +200% Critical Chance and +200% Critical Damage against enemies frozen by 10 Cold status effects.",
+    "rarity": "rare",
+    "warframeId": "frost"
   },
   {
     "id": "blinding_reave",
@@ -12951,13 +12422,15 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
+      "spawnChance": 1.25,
       "duration": 0.75
     },
-    "description": "Light's Judgment Augment: Enemies damaged by the well have a 5% chance per hit to spawn a Jade Light above them, damaging them for 3s.",
-    "rarity": "rare"
+    "description": "Light's Judgment Augment: Enemies damaged by the well have a 5% chance per hit to spawn a Jade Light above them, damaging them for 3s. Spawn chance scales with Ability Strength; beam duration scales with Ability Duration.",
+    "rarity": "rare",
+    "warframeId": "jade"
   },
   {
     "id": "jet_stream",
@@ -17908,18 +17381,7 @@ const RAW_MODS: Mod[] = [
     "description": "Reduces damage by 75% while hacking",
     "rarity": "uncommon"
   },
-  {
-    "id": "fizzbang_flourish",
-    "name": "Fizzbang Flourish",
-    "polarity": "vazarin",
-    "drain": 4,
-    "maxRank": 3,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "Fireworks trigger when completing a trick over 200 points.",
-    "rarity": "common"
-  },
+
   {
     "id": "flak_shot",
     "name": "Flak Shot",
@@ -18647,18 +18109,7 @@ const RAW_MODS: Mod[] = [
     "description": "Grinding builds up a charge that is released when landing the trick, dealing 400 <DT_ELECTRICITY_COLOR>Electricity Damage to enemies within 4m.",
     "rarity": "uncommon"
   },
-  {
-    "id": "kitgun_riven_mod",
-    "name": "Kitgun Riven Mod",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 0,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "You will need to prove yourself before I reveal the beauty within this work.",
-    "rarity": "rare"
-  },
+
   {
     "id": "laser_sight",
     "name": "Laser Sight",
@@ -18767,7 +18218,7 @@ const RAW_MODS: Mod[] = [
   },
   {
     "id": "lock_and_load",
-    "name": "Lock And Load",
+    "name": "Lock and Load",
     "polarity": "naramon",
     "drain": 6,
     "maxRank": 3,
@@ -20505,7 +19956,7 @@ const RAW_MODS: Mod[] = [
   },
   {
     "id": "rain_of_arrows",
-    "name": "Rain Of Arrows",
+    "name": "Rain of Arrows",
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 3,
@@ -20746,18 +20197,7 @@ const RAW_MODS: Mod[] = [
     "description": "",
     "rarity": "common"
   },
-  {
-    "id": "sampleantiqueupgrade",
-    "name": "Sampleantiqueupgrade",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 5,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "+30,000 HEAL RATE",
-    "rarity": "common"
-  },
+
   {
     "id": "scarlet_hurricane",
     "name": "Scarlet Hurricane",
@@ -21530,18 +20970,7 @@ const RAW_MODS: Mod[] = [
     "description": "Powerful arcs with frenzied combo.",
     "rarity": "rare"
   },
-  {
-    "id": "transmute_core",
-    "name": "Transmute Core",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 0,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "Ensures transmuted mod is of Madurai polarity and eliminates credit cost.",
-    "rarity": "rare"
-  },
+
   {
     "id": "trojan_tracker",
     "name": "Trojan Tracker",
@@ -21606,18 +21035,7 @@ const RAW_MODS: Mod[] = [
     "description": "100% chance to summon an Unairu Wisp per enemy hit by Caustic Strike. The Wisp will seek out the nearest ally within Affinity Range, increasing Operator damage by 100% for 20s.",
     "rarity": "rare"
   },
-  {
-    "id": "unfused_artifact",
-    "name": "Unfused Artifact",
-    "polarity": "universal",
-    "drain": 0,
-    "maxRank": 0,
-    "category": "general",
-    "subCategory": "",
-    "stats": {},
-    "description": "",
-    "rarity": "common"
-  },
+
   {
     "id": "untraceable",
     "name": "Untraceable",

@@ -201,8 +201,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_hot_shot": {
     arcaneId: "arcane_hot_shot",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Hot Shot: criticalChance (always active while equipped)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Hot Shot: buffDuration (always active while equipped)"},
+      // wiki: +6% CC per Heat status from abilities, max 50 stacks (sim.arcaneStacks)
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Arcane Hot Shot — +6% weapon CC per Heat-from-ability stack (cap 50)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Arcane Hot Shot — 10s buff duration"},
     ],
   },
   "arcane_ice": {
@@ -481,7 +482,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "cascadia_overcharge": {
     arcaneId: "cascadia_overcharge",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Cascadia Overcharge: criticalChance (always active while equipped)"},
+      // wiki: +300% CC at R5 while Overshields active — paper DPS assumes overshields up
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Cascadia Overcharge — +300% CC while Overshields active (paper assumes active)"},
     ],
   },
   "conjunction_voltage": {
@@ -1004,7 +1006,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "secondary_kinship": {
     arcaneId: "secondary_kinship",
     effects: [
-      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Secondary Kinship: criticalChance (always active while equipped)"},
+      // wiki: +20.04% CC per unique ally Warframe buff (sim.arcaneStacks = buff count)
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Secondary Kinship — +20% CC per ally buff stack (cap 24)"},
     ],
   },
   "secondary_outburst": {

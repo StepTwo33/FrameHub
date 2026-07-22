@@ -272,13 +272,27 @@ export interface WeaponExternalBuff {
    */
   damageMultBonus?: number;
   critChanceBonus?: number;
+  /**
+   * Flat add to final critical chance after relative mods
+   * (wiki: Wrathful Advance — e.g. +2.0 = +200% final CC).
+   */
+  critChanceFlatBonus?: number;
   critMultBonus?: number;
   /** Flat add to final crit multiplier after percent bonuses (+1.2 = +1.2×). */
   critMultFlatBonus?: number;
   statusBonus?: number;
   fireRateBonus?: number;
+  /** Additive reload-speed bonus (+0.7 = +70%; reduces reload time). */
+  reloadBonus?: number;
   multishotBonus?: number;
   elemental?: WeaponExternalBuffElemental[];
+  /**
+   * Extra hit as a fraction of modded total damage (Toxic Lash / Xata's Whisper).
+   * Paper DPS multiplies by (1 + fraction × elementalDip); does not dilute weapon elements.
+   */
+  extraHitDamageFraction?: number;
+  /** Toxic Lash: Extra Hit always procs Toxin (feeds DoT + faction triple-dip). */
+  extraHitGuaranteedToxin?: boolean;
   nominal?: string;
 }
 
@@ -325,6 +339,19 @@ export interface SimulationParams {
   applyTekSetVsMarkedDamage?: boolean;
   /** Warframe ability names treated as active weapon damage buffs (e.g. "Roar", "Eclipse"). */
   activeWeaponAbilityBuffs?: string[];
+  /**
+   * Vex Armor Fury progress 0–1 (default 1 = max stacks). Multiplies the +275% Fury bonus.
+   */
+  vexArmorFuryFraction?: number;
+  /**
+   * Onos Incarnon Form attack: held Radiation beam (default) or full-charge Heat blast.
+   */
+  onosIncarnonMode?: "held" | "charge";
+  /**
+   * Toxic Lash + Spores synergy: Spore-afflicted target takes TWO Extra Hits
+   * (wiki), but still only one Toxin status stack.
+   */
+  toxicLashSporesOnTarget?: boolean;
   /** Tenacious Bond: +1.2× crit damage when companion crit > 50%. Default on in loadout calcs. */
   applyTenaciousBondCrit?: boolean;
   /** Reinforced Bond: +60% fire rate when companion shields exceed threshold. Default on in loadout calcs. */
@@ -386,6 +413,11 @@ export interface CalculatedStats {
   statusChancePerShot: number;
   magazine: number;
   reloadTime: number;
+  /**
+   * Chance not to consume ammo (0–1). Extends mag cycle in sustained DPS;
+   * ≥0.99 treated as no reload.
+   */
+  ammoEfficiency?: number;
   multishot: number;
   /** Melee reach / falloff meters added by incarnon (and similar) — display only. */
   range?: number;
@@ -456,6 +488,8 @@ export interface CalculatedStats {
   vigilanteCritBonus?: number; // Vigilante set: chance to enhance crit tier (0.05 per mod)
   /** Incarnon Devouring/Devastating Attrition: avg bonus damage multiplier on non-crit hits (0.5 × +2000% = 10). */
   devouringAttritionBonus?: number;
+  /** Latron Flensing Spikes: fraction of original armor removed per Puncture status stack. */
+  punctureArmorStripPerStack?: number;
   /** Synth 4-set: +0.15 reload speed bonus applied to secondaries when complete. */
   synthSetReloadBonusApplied?: number;
   /** Tek 4-set: damage multiplier vs marked when sim + set complete (primary only). */
@@ -495,6 +529,25 @@ export interface CalculatedStats {
   factionBonuses?: Record<string, number>;
   /** Average stance damage mult applied to melee light DPS (1 = no stance). */
   stanceDamageMultiplier?: number;
+  /**
+   * Sum of Extra Hit fractions from abilities (Toxic Lash / Xata).
+   * Burst/sustained DPS multiply by (1 + this × factionHit) for Extra Hit's second faction dip.
+   */
+  extraHitDamageFraction?: number;
+  /** Toxic Lash Extra Hit: guaranteed Toxin proc / DoT path. */
+  extraHitGuaranteedToxin?: boolean;
+  /**
+   * How many Extra Hit damage instances per weapon hit (1, or 2 with Spores synergy).
+   * Does not multiply the guaranteed Toxin DoT stack count.
+   */
+  extraHitInstances?: number;
+  /**
+   * Sum of toxin mod bonuses as fraction of base (even when combined into Viral/etc.).
+   * Used for Toxic Lash Toxin tick type mult.
+   */
+  toxinModBonusFraction?: number;
+  /** Flat initial combo from Incarnon Adept Reflexes etc. */
+  incarnonInitialCombo?: number;
   /** Crit/status before Blood Rush / Weeping; used when combo count changes after arcanes. */
   preComboCriticalChance?: number;
   preComboStatusChance?: number;

@@ -187,7 +187,6 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("cooldown", "mod_panel", "multiplicative_percent", "Fire Suppression: cooldown \u2014 Extinguish 1 fire\\\\nCooldown: <LOWER_IS_BETTER>200s"),
   ]),
   firewall: mod("firewall", [], "wiki: Firewall \u2014 Reduces damage by 75% while hacking"),
-  fizzbang_flourish: mod("fizzbang_flourish", [], "wiki: Fizzbang Flourish \u2014 Fireworks trigger when completing a trick over 200 points."),
   flak_shot: mod("flak_shot", [
     line("damage", "weapon_dps", "multiplicative_percent", "Flak Shot: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
   ]),
@@ -283,12 +282,12 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Kill Switch: reloadSpeed \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
   ]),
   killers_rush: mod("killers_rush", [], "wiki: Killer's Rush \u2014 catalog entry (stats in ability logic)"),
-  kitgun_riven_mod: mod("kitgun_riven_mod", [], "wiki: Kitgun Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
+
+  lashing_coil: mod("lashing_coil", [], "wiki: Lashing Coil \u2014 Fighting form devised for Conclave."),
   laser_sight: mod("laser_sight", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Laser Sight: criticalChance \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "Laser Sight: duration \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 9s"),
   ]),
-  lashing_coil: mod("lashing_coil", [], "wiki: Lashing Coil \u2014 Fighting form devised for Conclave."),
   last_herald: mod("last_herald", [], "wiki: Last Herald \u2014 Fighting form devised for Conclave."),
   lingering_torment: mod("lingering_torment", [
     line("statusDuration", "weapon_dps", "multiplicative_percent", "Lingering Torment: statusDuration \u2014 +90% Status Duration (extends DoT ticks)"),
@@ -301,7 +300,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Loaded Capacity: reloadSpeed \u2014 +30% Magazine Capacity, -15% Reload Speed"),
   ]),
   lock_and_load: mod("lock_and_load", [
-    line("holsterRate", "mod_panel", "multiplicative_percent", "Lock And Load: holsterRate \u2014 +20% Magazine Reloaded/s when Holstered (arsenal display only)"),
+    line("holsterRate", "mod_panel", "multiplicative_percent", "Lock and Load: holsterRate \u2014 +20% Magazine Reloaded/s when Holstered (arsenal display only)"),
   ]),
   lohk: mod("lohk", [], "wiki: Lohk \u2014 From brooding gulfs are we beheld  By that which bears no name"),
   loose_chamber: mod("loose_chamber", [
@@ -469,7 +468,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Runtime: sprintSpeed \u2014 +75% Sprint Speed for 15s after Hacking"),
   ]),
   sacrificesetmod: mod("sacrificesetmod", [], "wiki: Sacrificesetmod \u2014 catalog entry (stats in ability logic)"),
-  sampleantiqueupgrade: mod("sampleantiqueupgrade", [], "wiki: Sampleantiqueupgrade \u2014 +30,000 HEAL RATE"),
+
   scarlet_hurricane: mod("scarlet_hurricane", [], "wiki: Scarlet Hurricane \u2014 Fighting form devised for Conclave."),
   scattering_inferno_r3: mod("scattering_inferno_r3", [
     line("heat", "weapon_dps", "elemental_from_base_damage", "Scattering Inferno: heat \u2014 +60% <DT_FIRE_COLOR>Heat, +60% Status Chance"),
@@ -574,16 +573,9 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Toxic Barrage: toxin \u2014 +60% <DT_POISON_COLOR>Toxin, +60% Status Chance"),
   ]),
   tranquil_cleave: mod("tranquil_cleave", [], "wiki: Tranquil Cleave \u2014 Powerful arcs with frenzied combo."),
-  transmute_core: mod("transmute_core", [], "wiki: Transmute Core \u2014 Ensures transmuted mod is of Madurai polarity and eliminates credit cost."),
   trojan_tracker: mod("trojan_tracker", [], "wiki: Trojan Tracker \u2014 Eliminating sneaky viruses since 1989"),
   turbo_protect: mod("turbo_protect", [], "wiki: Turbo Protect \u2014 Gain 10% Disinfection and 25% chance to drop an Antivirus mod"),
-  turret_velocity: mod("turret_velocity", [
-    line("range", "mod_panel", "multiplicative_percent", "Turret Velocity: range \u2014 +25.3% Turret Range, +55% Turret Projectile Speed (arsenal display only)"),
-    line("turretProjectileSpeed", "mod_panel", "multiplicative_percent", "Turret Velocity: turretProjectileSpeed \u2014 +25.3% Turret Range, +55% Turret Projectile Speed"),
-    line("turretRange", "mod_panel", "multiplicative_percent", "Turret Velocity: turretRange \u2014 +25.3% Turret Range, +55% Turret Projectile Speed"),
-  ]),
   umbrasetmod: mod("umbrasetmod", [], "wiki: Umbrasetmod \u2014 catalog entry (stats in ability logic)"),
-  unfused_artifact: mod("unfused_artifact", [], "wiki: Unfused Artifact \u2014 catalog entry (stats in ability logic)"),
   untraceable: mod("untraceable", [
     line("duration", "mod_panel", "multiplicative_percent", "Untraceable: duration \u2014 Invisible for 15s after Hacking"),
   ]),

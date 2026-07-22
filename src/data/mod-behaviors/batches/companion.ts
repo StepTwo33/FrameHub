@@ -326,9 +326,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("healthRestore", "mod_panel", "multiplicative_percent", "Medi-Ray: healthRestore \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s."),
     line("range", "mod_panel", "multiplicative_percent", "Medi-Ray: range \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s. (arsenal display only)"),
   ]),
-  meditation: mod("meditation", [
-    line("healthRegen", "mod_panel", "multiplicative_percent", "Meditation: healthRegen \u2014 +3 HP/s Health Regen per rank"),
-  ]),
+
   melee_prowess_sentinel: mod("melee_prowess_sentinel", [
     line("attackRange", "mod_panel", "multiplicative_percent", "Assault Mode: attackRange \u2014 Sentinel will attack the first visible enemy within 30m."),
     line("range", "mod_panel", "multiplicative_percent", "Assault Mode: range \u2014 Sentinel will attack the first visible enemy within 30m. (arsenal display only)"),
@@ -363,9 +361,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   null_audit: mod("null_audit", [
     line("duration", "mod_panel", "multiplicative_percent", "Null Audit: duration \u2014 The Hound utilizes the same Aura and Abilities as an Eximus enemy for 60s, while\u2026"),
   ]),
-  ocular_sentry: mod("ocular_sentry", [
-    line("markDuration", "mod_panel", "multiplicative_percent", "Ocular Sentry: markDuration \u2014 Marks enemies for +3s per rank"),
-  ]),
+
   odomedic: mod("odomedic", [
     line("duration", "mod_panel", "multiplicative_percent", "Odomedic: duration \u2014 Every 3m traversed by Wall Running regenerates +40 Health over 4s. This effect c\u2026"),
     line("healthRestoreMove", "mod_panel", "multiplicative_percent", "Odomedic: healthRestoreMove \u2014 Every 3m traversed by Wall Running regenerates +40 Health over 4s. This effect c\u2026"),
@@ -563,16 +559,12 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   tandem_bond: mod("tandem_bond", [
     line("duration", "mod_panel", "multiplicative_percent", "Tandem Bond: duration \u2014 Companion melee hits increase your Combo by 6. Heavy Attacks increase Companion \u2026"),
   ]),
-  target_acquisition: mod("target_acquisition", [
-    line("weakpointChance", "mod_panel", "multiplicative_percent", "Target Acquisition: weakpointChance \u2014 +10% chance to mark weakpoints per rank"),
-  ]),
+
   targeting_receptor: mod("targeting_receptor", [
     line("range", "mod_panel", "multiplicative_percent", "Targeting Receptor: range \u2014 Causes the Helios Sentinel to attack targets within 10m with 3 glaives. (arsenal display only)"),
     line("targetRange", "mod_panel", "multiplicative_percent", "Targeting Receptor: targetRange \u2014 Causes the Helios Sentinel to attack targets within 10m with 3 glaives."),
   ]),
-  tease: mod("tease", [
-    line("drawAggro", "mod_panel", "multiplicative_percent", "Tease: drawAggro \u2014 Draws +15% enemy aggression per rank"),
-  ]),
+
   tek_assault_r3: mod("tek_assault_r3", [
     line("damage", "mod_panel", "multiplicative_percent", "Tek Assault: damage \u2014 Kavat has 60% chance to ignore Lethal Damage and be immune for 4s."),
     line("duration", "mod_panel", "multiplicative_percent", "Tek Assault: duration \u2014 Kavat has 60% chance to ignore Lethal Damage and be immune for 4s."),

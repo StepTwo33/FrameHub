@@ -42,6 +42,8 @@ import {
   combatDamageMultiplier,
   factionBonusFromStats,
   factionDotMultiplier,
+  factionHitMultiplier,
+  factionTripleDotMultiplier,
   resolveStanceDamageMultiplier,
 } from '@/lib/calc/combat-multipliers';
 
@@ -258,6 +260,35 @@ function calculateStatusProcs(
     });
   }
 
+  // Toxic Lash: guaranteed Toxin proc; tick = 0.5 × Extra Hit × toxin mods × Elementalist × faction³
+  const tlFrac = stats.extraHitDamageFraction ?? 0;
+  if (stats.extraHitGuaranteedToxin && tlFrac > 0 && stats.totalDamage > 0) {
+    const effCC = stats.criticalChance + (stats.vigilanteCritBonus ?? 0);
+    let avgCrit = avgCritMultiplier(effCC, stats.criticalMultiplier);
+    avgCrit += Math.max(0, 1 - effCC) * (stats.devouringAttritionBonus ?? 0);
+    const statusDmg = 1 + (stats.statusDamageBonus ?? 0);
+    const factionBonus = factionBonusFromStats(stats.factionBonuses, sim?.targetFaction);
+    const factionTriple = factionTripleDotMultiplier(factionBonus);
+    const head =
+      sim?.applyHeadshots
+        ? 2 * (1 + (stats.headshotDamageBonus ?? 0))
+        : 1;
+    const toxinMult = 1 + (stats.toxinModBonusFraction ?? 0);
+    const extraHit = stats.totalDamage * tlFrac;
+    const dpt = 0.5 * extraHit * avgCrit * toxinMult * statusDmg * factionTriple * head;
+    const duration = STATUS_INFO.toxin.duration * durMult;
+    const ticks = Math.floor(duration) + 1;
+    procs.push({
+      type: "toxin",
+      chance: 1,
+      damagePerTick: dpt,
+      duration,
+      ticks,
+      totalDamage: dpt * ticks,
+      description: "Guaranteed Toxin from Toxic Lash Extra Hit",
+    });
+  }
+
   return procs;
 }
 
@@ -291,8 +322,8 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 // Gladiator (+10% crit/(CM−1) per piece + +15%/(CM−1) at 6 total w/ sim.wf pieces), Vigilante (5%/mod, primary only;
 //   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe; folded into avg crit for DPS).
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
-// Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % when complete.
-// Not modeled in DPS: Augur shield sustain from casts, Hunter proc timing, Mecha explosion burst.
+// Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % (per piece).
+// Not modeled in DPS: Augur shield sustain from casts, Hunter companion combat, Mecha mark/status-spread.
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
 // Sacrificial full set bonus: +75% when both mods equipped
@@ -332,8 +363,10 @@ function applyWeaponExternalBuffs(
   elementalMods?: { type: string; value: number }[],
   baseWeaponDamage?: number,
   critMultFlat?: { critEventBonus: number },
+  critChanceFlat?: { chance: number },
   /** Product of (1 + damageMultBonus) for Roar/Eclipse-style mults. */
   multDamage?: { product: number },
+  extraHit?: { fraction: number; guaranteedToxin: boolean },
 ): void {
   if (!buffs?.length) return;
   for (const buff of buffs) {
@@ -342,11 +375,17 @@ function applyWeaponExternalBuffs(
       multDamage.product *= 1 + buff.damageMultBonus;
     }
     if (buff.critChanceBonus) acc.critChanceBonus += buff.critChanceBonus;
+    if (buff.critChanceFlatBonus && critChanceFlat) critChanceFlat.chance += buff.critChanceFlatBonus;
     if (buff.critMultBonus) acc.critMultBonus += buff.critMultBonus;
     if (buff.critMultFlatBonus && critMultFlat) critMultFlat.critEventBonus += buff.critMultFlatBonus;
     if (buff.statusBonus) acc.statusBonus += buff.statusBonus;
     if (buff.fireRateBonus) acc.fireRateBonus += buff.fireRateBonus;
+    if (buff.reloadBonus) acc.reloadBonus += buff.reloadBonus;
     if (buff.multishotBonus) acc.multishotBonus += buff.multishotBonus;
+    if (buff.extraHitDamageFraction && extraHit) {
+      extraHit.fraction += buff.extraHitDamageFraction;
+      if (buff.extraHitGuaranteedToxin) extraHit.guaranteedToxin = true;
+    }
     if (buff.elemental?.length && elementalMods && baseWeaponDamage) {
       for (const e of buff.elemental) {
         elementalMods.push({ type: e.type, value: baseWeaponDamage * e.bonusFraction });
@@ -378,7 +417,10 @@ export function calculateWeaponBuild(
   const incBaseCM = incarnonStatChanges?.criticalMultiplier ?? 0;
   const incBaseSC = incarnonStatChanges?.statusChance ?? 0;
   const evolvedBaseCC = baseWeapon.criticalChance + incBaseCC;
-  const evolvedBaseCM = baseWeapon.criticalMultiplier + incBaseCM;
+  // Kinetic Killer-style: set base CM absolutely (replaces weapon base + Incarnon CM adds).
+  const cmSet = incarnonStatChanges?.criticalMultiplierSet;
+  const evolvedBaseCM =
+    cmSet != null ? cmSet : baseWeapon.criticalMultiplier + incBaseCM;
   const evolvedBaseSC = baseWeapon.statusChance + incBaseSC;
 
   const stats: CalculatedStats = {
@@ -395,6 +437,7 @@ export function calculateWeaponBuild(
     statusChancePerShot: evolvedBaseSC,
     magazine: baseWeapon.magazine,
     reloadTime: baseWeapon.reloadTime,
+    ammoEfficiency: 0,
     multishot: baseWeapon.multishot,
     burstDps: 0,
     sustainedDps: 0,
@@ -525,15 +568,46 @@ export function calculateWeaponBuild(
   }
 
   const critMultFlatBonus = { critEventBonus: 0 };
+  const critChanceFlatBonus = { chance: 0 };
   const externalDamageMult = { product: 1 };
+  const externalExtraHit = { fraction: 0, guaranteedToxin: false };
   applyWeaponExternalBuffs(
     weaponModAcc,
     calcOptions?.externalBuffs,
     elementalMods,
     baseWeapon.damage,
     critMultFlatBonus,
+    critChanceFlatBonus,
     externalDamageMult,
+    externalExtraHit,
   );
+  // Toxin mod % (pre-combine) for Toxic Lash tick type mult.
+  let toxinModBonus = 0;
+  if (baseWeapon.damage > 0) {
+    for (const e of elementalMods) {
+      if (e.type === "toxin") toxinModBonus += e.value / baseWeapon.damage;
+    }
+  }
+  stats.toxinModBonusFraction = toxinModBonus;
+  if (externalExtraHit.fraction > 0) {
+    // Wiki Extra Hit (Toxic Lash / Xata): elemental mods (and elemental ability buffs)
+    // scale the Extra Hit again, even when those mods combine into other elements.
+    // Innate weapon elements are pushed later — only mod/buff rows are in elementalMods now.
+    let elementalDip = 0;
+    if (baseWeapon.damage > 0) {
+      for (const e of elementalMods) {
+        elementalDip += e.value / baseWeapon.damage;
+      }
+    }
+    stats.extraHitDamageFraction = externalExtraHit.fraction * (1 + elementalDip);
+    if (externalExtraHit.guaranteedToxin) {
+      stats.extraHitGuaranteedToxin = true;
+      // Wiki Spores synergy: two Extra Hit damage instances, one Toxin status.
+      stats.extraHitInstances = sim.toxicLashSporesOnTarget ? 2 : 1;
+    } else {
+      stats.extraHitInstances = 1;
+    }
+  }
 
   damageBonus = weaponModAcc.damageBonus;
   critChanceBonus = weaponModAcc.critChanceBonus;
@@ -566,6 +640,17 @@ export function calculateWeaponBuild(
     damageBonus += conditionOverloadPerStatus * sim.statusTypesOnTarget;
   }
   stats.conditionOverloadBonus = conditionOverloadPerStatus;
+
+  // Fatal Affliction (Incarnon): +40% Direct Damage per status type (CO-like, sim-gated)
+  const fatalAfflictionPerStatus = incarnonStatChanges?.fatalAfflictionPerStatus ?? 0;
+  if (fatalAfflictionPerStatus > 0 && sim.statusTypesOnTarget > 0) {
+    damageBonus += fatalAfflictionPerStatus * sim.statusTypesOnTarget;
+  }
+
+  // King's Gambit / Prolific-style: relative CC% (paper uptime)
+  critChanceBonus += incarnonStatChanges?.critChanceBonus ?? 0;
+  // Spiteful Defilement-style: flat CM after mods (paper <3 statuses)
+  critMultFlatBonus.critEventBonus += incarnonStatChanges?.critMultFlat ?? 0;
 
   // Apply Galvanized Condition (Aptitude/Savvy/Shot): damage per status on target per kill stack
   const galvConditionStacks = Math.min(sim.killStacks, weaponModAcc.galvDamagePerStatusStackCap);
@@ -640,6 +725,10 @@ export function calculateWeaponBuild(
   // Apply other bonuses
   // Wiki: add Incarnon base CM, then quantize, then apply % crit-damage mods.
   stats.criticalChance *= (1 + critChanceBonus);
+  // wiki: Wrathful Advance — flat final CC after relative mods
+  if (critChanceFlatBonus.chance !== 0) {
+    stats.criticalChance += critChanceFlatBonus.chance;
+  }
   stats.criticalMultiplier =
     quantizeBaseCritMultiplier(evolvedBaseCM) * (1 + critMultBonus);
   if (critMultFlatBonus.critEventBonus > 0) {
@@ -794,6 +883,42 @@ export function calculateWeaponBuild(
         case 'devouringAttrition':
           stats.devouringAttritionBonus = (stats.devouringAttritionBonus ?? 0) + value * 0.5;
           break;
+        // Handled after modded CC/SC (see conditional Incarnon block below).
+        case 'fatalAfflictionPerStatus':
+        case 'statusFromCritFraction':
+        case 'statusFromCritCap':
+        case 'critFromStatusFraction':
+        case 'critFromStatusCap':
+        case 'preludeMightBaseCm':
+        case 'preludeMightMaxCc':
+        case 'critChanceBonus':
+        case 'critMultFlat':
+        case 'critMultMultiply':
+        case 'criticalMultiplierSet':
+          break;
+        case 'headshotDamageBonus':
+          stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + value;
+          break;
+        case 'slashOnImpactProcChance':
+          stats.slashOnImpactProcChance = (stats.slashOnImpactProcChance ?? 0) + value;
+          break;
+        case 'statusDuration':
+          stats.statusDurationBonus = (stats.statusDurationBonus ?? 0) + value;
+          break;
+        case 'statusDamageBonus':
+          stats.statusDamageBonus = (stats.statusDamageBonus ?? 0) + value;
+          break;
+        // Neurotoxin: +toxin% while headshot sim is on (uptime assumed).
+        case 'neurotoxinToxinOnHeadshot':
+          if (sim.applyHeadshots && baseWeapon.damage > 0) {
+            elementalMods.push({
+              type: 'toxin',
+              value: baseWeapon.damage * damageMultTotal * value,
+            });
+            stats.rawElements = elementalMods.map((e) => ({ ...e }));
+            stats.elements = resolveElementalCombos(elementalMods);
+          }
+          break;
         // Incarnon "Increase Base Damage by +N": flat add to the weapon's base
         // damage before mods. All modded damage scales proportionally with base,
         // so this is exactly a (base + N) / base multiplier.
@@ -818,7 +943,27 @@ export function calculateWeaponBuild(
           break;
         case 'magazine': stats.magazine = Math.round(stats.magazine * (1 + value)); break;
         case 'flatMagazine': stats.magazine = Math.round(stats.magazine + value); break;
+        case 'initialCombo':
+          stats.incarnonInitialCombo = (stats.incarnonInitialCombo ?? 0) + value;
+          break;
         case 'reloadSpeed': stats.reloadTime /= (1 + value); break;
+        case 'ammoEfficiency':
+          stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + value;
+          break;
+        case 'punctureArmorStripPerStack':
+          stats.punctureArmorStripPerStack = value;
+          break;
+        case 'heavyAttackWindUp':
+          // Wiki "+N% Heavy Attack Wind Up Speed" shortens windup time.
+          if (value > -1) stats.heavyAttackWindUp /= 1 + value;
+          break;
+        case 'heavyAttackEfficiencySet':
+          // Wiki Overhand: set base heavy efficiency (absolute), not additive.
+          stats.heavyAttackEfficiency = value;
+          break;
+        case 'heavyAttackEfficiency':
+          stats.heavyAttackEfficiency = (stats.heavyAttackEfficiency ?? 0) + value;
+          break;
         case 'heat': case 'cold': case 'toxin': case 'electricity':
           elementalMods.push({ type: stat, value: baseWeapon.damage * damageMultTotal * value });
           // Re-resolve elements with new additions
@@ -859,6 +1004,46 @@ export function calculateWeaponBuild(
   };
   if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
   if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
+
+  // Conditional Incarnon cross-stats (Wiseman / High Ground / Decisive / Prelude):
+  // "Increase Base X by Y% of current Z" uses post-mod CC/SC, then scales the base add
+  // by the same % mods already applied to that stat.
+  if (incarnonStatChanges) {
+    const scFromCritFrac = incarnonStatChanges.statusFromCritFraction ?? 0;
+    const scFromCritCap = incarnonStatChanges.statusFromCritCap ?? 0.4;
+    const ccFromScFrac = incarnonStatChanges.critFromStatusFraction ?? 0;
+    const ccFromScCap = incarnonStatChanges.critFromStatusCap ?? 0.35;
+    const preludeCm = incarnonStatChanges.preludeMightBaseCm ?? 0;
+    const preludeMaxCc = incarnonStatChanges.preludeMightMaxCc;
+    const ccSnap = stats.criticalChance;
+    const scSnap = stats.statusChance;
+
+    if (scFromCritFrac > 0) {
+      const baseAdd = Math.min(scFromCritCap, scFromCritFrac * ccSnap);
+      stats.statusChance += baseAdd * (1 + statusBonus);
+    }
+    if (ccFromScFrac > 0) {
+      const baseAdd = Math.min(ccFromScCap, ccFromScFrac * scSnap);
+      stats.criticalChance += baseAdd * (1 + critChanceBonus);
+    }
+    if (
+      preludeCm > 0 &&
+      preludeMaxCc != null &&
+      stats.criticalChance < preludeMaxCc
+    ) {
+      stats.criticalMultiplier =
+        quantizeBaseCritMultiplier(evolvedBaseCM + preludeCm) * (1 + critMultBonus);
+      if (critMultFlatBonus.critEventBonus > 0) {
+        stats.criticalMultiplier += critMultFlatBonus.critEventBonus;
+      }
+    }
+
+    // Steadfast Grit: ×N Critical Damage after mods (shield/Overguard-break paper uptime)
+    const cmMultiply = incarnonStatChanges.critMultMultiply ?? 1;
+    if (cmMultiply !== 1) {
+      stats.criticalMultiplier *= cmMultiply;
+    }
+  }
 
   // Tek 4-set: +60% damage vs marked enemies (primary-style weapons; optional sim)
   const tekPieces = linkage
@@ -909,6 +1094,7 @@ export function calculateWeaponBuild(
       baseWeapon.id,
       equippedMods,
       allMods,
+      stats.incarnonInitialCombo ?? 0,
     );
     applyMeleeComboToStats(
       stats,
@@ -1080,8 +1266,9 @@ export function calculateWarframeBuild(
   stats.setBonusSummary = buildWarframeSetBonusSummary(equippedMods, linkage);
   const aug = stats.setBonusSummary.find((s) => s.setId === "augur");
   const hun = stats.setBonusSummary.find((s) => s.setId === "hunter");
-  stats.augurEnergyToShieldsPercent = aug?.active ? 40 : 0;
-  stats.hunterCompanionVsStatusDamagePercent = hun?.active ? 150 : 0;
+  // wiki Augur Set: +40% energy→shields per piece; Hunter Set: +25% companion dmg per piece
+  stats.augurEnergyToShieldsPercent = (aug?.pieces ?? 0) * 40;
+  stats.hunterCompanionVsStatusDamagePercent = (hun?.pieces ?? 0) * 25;
 
   if (equippedMods.some((s) => s.modId === "adaptation")) {
     stats.adaptationNoteMaxTypedDRPercent = 90;
@@ -1366,7 +1553,12 @@ function calculateBurstDps(stats: CalculatedStats): number {
       ? 1 + (stats.firstShotDamageBonus ?? 0) / stats.magazine
       : 1;
   const totalDamage = stats.totalDamage * stats.multishot * combatMult * firstShotMult;
-  return totalDamage * dpsFireRate(stats) * avgCrit;
+  // Wiki Extra Hit: faction applies again on the Extra Hit instance (second dip).
+  const factionHit = factionHitMultiplier(factionBonus);
+  const frac = stats.extraHitDamageFraction ?? 0;
+  const instances = Math.max(1, stats.extraHitInstances ?? 1);
+  const extraHitMult = 1 + frac * factionHit * instances;
+  return totalDamage * dpsFireRate(stats) * avgCrit * extraHitMult;
 }
 
 function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): number {
@@ -1378,7 +1570,11 @@ function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): num
   if (baseWeapon?.chargeMode === "bow" || baseWeapon?.triggerType === "Bow") {
     return burstDps;
   }
-  const magTime = stats.magazine / efr;
+  // Ammo Efficiency: expected ammo per shot = 1 − AE → longer mag before reload.
+  const ae = Math.min(Math.max(stats.ammoEfficiency ?? 0, 0), 1);
+  if (ae >= 0.99) return burstDps;
+  const ammoPerShot = 1 - ae;
+  const magTime = stats.magazine / (ammoPerShot * efr);
   const cycleTime = magTime + stats.reloadTime;
   if (cycleTime <= 0) return burstDps;
   return burstDps * (magTime / cycleTime);

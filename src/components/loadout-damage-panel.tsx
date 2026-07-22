@@ -13,7 +13,10 @@ import type { Loadout } from "@/lib/types";
 import type { LoadoutStatsResult, LoadoutWeaponSlotStats } from "@/lib/builds/loadout-stats";
 import { useWeapons } from "@/lib/weapons/use-data";
 import { allWarframes } from "@/data/warframes";
-import { weaponDamageBuffAbilities } from "@/lib/weapons/weapon-external-buffs";
+import {
+  resolveAbilitiesWithHelminth,
+  weaponDamageBuffAbilities,
+} from "@/lib/weapons/weapon-external-buffs";
 import { formatMarginalPct, type DpsContribution } from "@/lib/calc/dps-contributions";
 import { ChevronDown, ChevronRight, Crosshair, Dog, Shield, Swords, Sparkles, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -152,15 +155,21 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
 
   const abilityBuffOptions = useMemo(() => {
     try {
-      const wfId = loadout.warframeBuild?.warframeId;
-      if (!wfId) return [];
-      const wf = allWarframes.find((w) => w.id === wfId);
-      return weaponDamageBuffAbilities(wf?.abilities);
+      const wb = loadout.warframeBuild;
+      if (!wb?.warframeId) return [];
+      const wf = allWarframes.find((w) => w.id === wb.warframeId);
+      return weaponDamageBuffAbilities(
+        resolveAbilitiesWithHelminth(wf?.abilities, wb.helminthAbilityId, wb.helminthSlot),
+      );
     } catch (err) {
       console.warn("Loadout ability buff options failed", err);
       return [];
     }
-  }, [loadout.warframeBuild?.warframeId]);
+  }, [
+    loadout.warframeBuild?.warframeId,
+    loadout.warframeBuild?.helminthAbilityId,
+    loadout.warframeBuild?.helminthSlot,
+  ]);
 
   const enemy = useMemo(
     () => ENEMY_TYPES.find((e) => e.id === enemyId) ?? ENEMY_TYPES[0],

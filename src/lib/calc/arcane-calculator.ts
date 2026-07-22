@@ -25,6 +25,10 @@ export function effectiveArcaneStacks(
   const isStacking = def.trigger === "stacks";
 
   if (isWeapon) {
+    // Passive weapon arcanes (e.g. Cascadia Overcharge, Secondary Kinship) apply while
+    // equipped — they do not need sim kill/stack ramps. Proc/uptime scaling still
+    // happens in scaleArcaneEffectForBuild for onHit/conditional triggers.
+    if (def.trigger === "passive") return 1;
     if (simStacks <= 0) return 0;
     if (!isStacking) return 1;
     const cap = def.stackCap ?? def.maxRank + 1;
@@ -146,6 +150,7 @@ function applyWeaponStatToBuild(
       stats.comboCount += line.flat ? rawValue : 0;
       break;
     case "ammoEfficiency":
+      stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + scaled;
       break;
     default:
       break;

@@ -322,37 +322,56 @@ export const allWarframes: Warframe[] = [
         "name": "Elude",
         "energyCost": 25,
         "description": "Dodge all incoming projectiles, but only while not attacking. Use again to deactivate this ability.",
-        "range": 10,
-        "duration": 15,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "miscStats": {
+          "evasionAngle": 180,
+          "energyDrain": 2.5,
+          "channeled": true,
+          "restraintErosion": 0.012
+        }
       },
       {
         "name": "Lull",
         "energyCost": 50,
-        "description": "A calming wave slows enemies until they fall into a slumber. Enemies woken by damage will be confused and disoriented. Short-term amnesia means all waking enemies forget anything that happened before the nap.",
-        "range": 20,
-        "duration": 10,
-        "radius": 20,
-        "castTime": 0.8
+        "description": "A calming wave slows enemies until they fall into a slumber. Enemies woken by damage will be confused and disoriented. Short-term amnesia means all waking enemies forget anything that happened before the lull.",
+        "range": 25,
+        "duration": 20,
+        "castTime": 0.8,
+        "miscStats": {
+          "waveDuration": 5,
+          "restraintErosion": 0.008,
+          "finisherDamageVulnerability": 1
+        }
       },
       {
         "name": "Desolate Hands",
         "energyCost": 75,
         "description": "Summon a bevy of orbiting daggers to seek out enemy guns, destroying them with a small explosion. Combine with Elude to double the range.",
-        "damage": 150,
-        "range": 15,
-        "duration": 20,
+        "damage": 250,
+        "range": 6,
+        "radius": 3,
         "castTime": 0.5,
-        "damageType": "Slash"
+        "damageType": "Blast",
+        "miscStats": {
+          "daggerCharges": 8,
+          "damageReductionPerDagger": 0.1,
+          "drCap": 0.9,
+          "restraintErosion": 0.016
+        }
       },
       {
         "name": "Serene Storm",
         "energyCost": 0,
         "description": "With his Restraint eroded, Baruuk commands the Desert Wind to deliver powerful radial strikes with his fists and feet. Each moment commanding the storm restores his Restraint.",
-        "damage": 200,
-        "range": 8,
+        "damage": 250,
+        "damageReduction": 0.25,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "drCap": 0.4,
+          "restraintRestoreOnCast": 0.04,
+          "restraintRestorePerSecond": 0.008
+        }
       }
     ]
   },
@@ -371,37 +390,56 @@ export const allWarframes: Warframe[] = [
         "name": "Elude",
         "energyCost": 25,
         "description": "Dodge all incoming projectiles, but only while not attacking. Use again to deactivate this ability.",
-        "range": 10,
-        "duration": 15,
-        "castTime": 0.4
+        "castTime": 0.4,
+        "miscStats": {
+          "evasionAngle": 180,
+          "energyDrain": 2.5,
+          "channeled": true,
+          "restraintErosion": 0.012
+        }
       },
       {
         "name": "Lull",
         "energyCost": 50,
-        "description": "A calming wave slows enemies until they fall into a slumber. Enemies woken by damage will be confused and disoriented. Short-term amnesia means all waking enemies forget anything that happened before the nap.",
-        "range": 20,
-        "duration": 10,
-        "radius": 20,
-        "castTime": 0.8
+        "description": "A calming wave slows enemies until they fall into a slumber. Enemies woken by damage will be confused and disoriented. Short-term amnesia means all waking enemies forget anything that happened before the lull.",
+        "range": 25,
+        "duration": 20,
+        "castTime": 0.8,
+        "miscStats": {
+          "waveDuration": 5,
+          "restraintErosion": 0.008,
+          "finisherDamageVulnerability": 1
+        }
       },
       {
         "name": "Desolate Hands",
         "energyCost": 75,
         "description": "Summon a bevy of orbiting daggers to seek out enemy guns, destroying them with a small explosion. Combine with Elude to double the range.",
-        "damage": 150,
-        "range": 15,
-        "duration": 20,
+        "damage": 250,
+        "range": 6,
+        "radius": 3,
         "castTime": 0.5,
-        "damageType": "Slash"
+        "damageType": "Blast",
+        "miscStats": {
+          "daggerCharges": 8,
+          "damageReductionPerDagger": 0.1,
+          "drCap": 0.9,
+          "restraintErosion": 0.016
+        }
       },
       {
         "name": "Serene Storm",
         "energyCost": 0,
         "description": "With his Restraint eroded, Baruuk commands the Desert Wind to deliver powerful radial strikes with his fists and feet. Each moment commanding the storm restores his Restraint.",
-        "damage": 200,
-        "range": 8,
+        "damage": 250,
+        "damageReduction": 0.25,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "drCap": 0.4,
+          "restraintRestoreOnCast": 0.04,
+          "restraintRestorePerSecond": 0.008
+        }
       }
     ]
   },
@@ -470,41 +508,66 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Razor Gyre",
         "energyCost": 25,
-        "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects.",
-        "damage": 300,
-        "range": 15,
-        "duration": 5,
+        "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects. For each enemy hit, recover a portion of the energy cost, as well as health and shields.",
+        "damage": 500,
+        "range": 10,
         "castTime": 0.5,
-        "damageType": "Tau"
+        "damageType": "Tau",
+        "miscStats": {
+          "wrathDamagePerSecond": 1000,
+          "healthPerHit": 30,
+          "energyRestorePercent": 0.25,
+          "dashDuration": 1.25,
+          "damageInterval": 0.1
+        }
       },
       {
         "name": "Sentient Wrath",
         "energyCost": 50,
-        "description": "Smash the ground sending out a radial wave of destruction. Those not killed by the initial blast are helplessly raised into the air, where they take amplified damage for a short duration.",
-        "damage": 400,
-        "range": 20,
-        "duration": 6,
-        "radius": 20,
+        "description": "Smash the ground sending out a radial wave of destruction. Those not killed by the initial blast are helplessly raised into the air, where they take amplified damage for a short time.",
+        "damage": 2000,
+        "range": 22,
+        "duration": 10,
         "castTime": 0.6,
-        "damageType": "Blast"
+        "damageType": "Tau",
+        "miscStats": {
+          "damageVulnerability": 0.35
+        }
       },
       {
         "name": "Lethal Progeny",
-        "energyCost": 75,
-        "description": "Cycle through Sentient unit types, then summon them to Caliban's side. Conculysts focus on raw melee damage. Ortholysts specialize in ranged attacks and inflict <DT_SENTIENT_COLOR>Tau Status.",
-        "range": 10,
-        "duration": 30,
-        "castTime": 0.8
+        "energyCost": 50,
+        "description": "Cycle through Sentient unit types, then summon them to Caliban's side. Conculysts focus on raw melee damage. Ortholysts specialize in ranged attacks and inflict <DT_SENTIENT_COLOR>Tau Status. Summulysts summon Choralysts and provide shield protection.",
+        "range": 25,
+        "duration": 45,
+        "castTime": 0.8,
+        "miscStats": {
+          "shieldRestorePerSecond": 25,
+          "damageMultiplier": 2.5,
+          "healthMultiplier": 2,
+          "maxConculysts": 3,
+          "maxOrtholysts": 3,
+          "maxSummulysts": 1
+        }
       },
       {
         "name": "Fusion Strike",
         "energyCost": 100,
         "description": "Converge three streams of raw energy upon a single point, causing a massive explosion. The streams strip armor and shields, and each enemy struck detonates on stream convergence.",
-        "damage": 1500,
-        "range": 40,
-        "radius": 12,
+        "damage": 15000,
+        "range": 30,
+        "radius": 10,
+        "duration": 15,
         "castTime": 1,
-        "damageType": "Blast"
+        "damageType": "Tau",
+        "miscStats": {
+          "detonationDamage": 5000,
+          "explosionDamage": 750,
+          "armorStrip": 0.5,
+          "shieldStrip": 0.5,
+          "streamCount": 3,
+          "enemyExplosionRadius": 2
+        }
       }
     ]
   },
@@ -522,41 +585,66 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Razor Gyre",
         "energyCost": 25,
-        "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects.",
-        "damage": 300,
-        "range": 15,
-        "duration": 5,
+        "description": "Dash forward in a spinning vortex of death. Struck enemies are inflicted with <DT_SENTIENT_COLOR>Tau Status Effect, making them more vulnerable to all other status effects. For each enemy hit, recover a portion of the energy cost, as well as health and shields.",
+        "damage": 500,
+        "range": 10,
         "castTime": 0.5,
-        "damageType": "Tau"
+        "damageType": "Tau",
+        "miscStats": {
+          "wrathDamagePerSecond": 1000,
+          "healthPerHit": 30,
+          "energyRestorePercent": 0.25,
+          "dashDuration": 1.25,
+          "damageInterval": 0.1
+        }
       },
       {
         "name": "Sentient Wrath",
         "energyCost": 50,
-        "description": "Smash the ground sending out a radial wave of destruction. Those not killed by the initial blast are helplessly raised into the air, where they take amplified damage for a short duration.",
-        "damage": 400,
-        "range": 20,
-        "duration": 6,
-        "radius": 20,
+        "description": "Smash the ground sending out a radial wave of destruction. Those not killed by the initial blast are helplessly raised into the air, where they take amplified damage for a short time.",
+        "damage": 2000,
+        "range": 22,
+        "duration": 10,
         "castTime": 0.6,
-        "damageType": "Blast"
+        "damageType": "Tau",
+        "miscStats": {
+          "damageVulnerability": 0.35
+        }
       },
       {
         "name": "Lethal Progeny",
-        "energyCost": 75,
-        "description": "Cycle through Sentient unit types, then summon them to Caliban's side. Conculysts focus on raw melee damage. Ortholysts specialize in ranged attacks and inflict <DT_SENTIENT_COLOR>Tau Status.",
-        "range": 10,
-        "duration": 30,
-        "castTime": 0.8
+        "energyCost": 50,
+        "description": "Cycle through Sentient unit types, then summon them to Caliban's side. Conculysts focus on raw melee damage. Ortholysts specialize in ranged attacks and inflict <DT_SENTIENT_COLOR>Tau Status. Summulysts summon Choralysts and provide shield protection.",
+        "range": 25,
+        "duration": 45,
+        "castTime": 0.8,
+        "miscStats": {
+          "shieldRestorePerSecond": 25,
+          "damageMultiplier": 2.5,
+          "healthMultiplier": 2,
+          "maxConculysts": 3,
+          "maxOrtholysts": 3,
+          "maxSummulysts": 1
+        }
       },
       {
         "name": "Fusion Strike",
         "energyCost": 100,
         "description": "Converge three streams of raw energy upon a single point, causing a massive explosion. The streams strip armor and shields, and each enemy struck detonates on stream convergence.",
-        "damage": 1500,
-        "range": 40,
-        "radius": 12,
+        "damage": 15000,
+        "range": 30,
+        "radius": 10,
+        "duration": 15,
         "castTime": 1,
-        "damageType": "Blast"
+        "damageType": "Tau",
+        "miscStats": {
+          "detonationDamage": 5000,
+          "explosionDamage": 750,
+          "armorStrip": 0.5,
+          "shieldStrip": 0.5,
+          "streamCount": 3,
+          "enemyExplosionRadius": 2
+        }
       }
     ]
   },
@@ -604,7 +692,16 @@ export const allWarframes: Warframe[] = [
           "Cold: +145% base Armor; reflects damage as Cold (300% reflected multiplier, 25% status)."
         ],
         "miscStats": {
-          "Aura radius": "12 m (scales with Range)"
+          "auraRadius": 12,
+          "heatHealthBonus": 0.55,
+          "heatDps": 100,
+          "electricShieldBonus": 0.3,
+          "electricReflectMult": 10,
+          "toxinReloadBonus": 0.35,
+          "toxinHolsterDamage": 0.35,
+          "toxinProcChance": 0.5,
+          "coldArmorBonus": 1.45,
+          "coldReflectMult": 3
         }
       },
       {
@@ -621,7 +718,9 @@ export const allWarframes: Warframe[] = [
           "Buffs apply to allies in aura range; percentages scale with Ability Strength."
         ],
         "miscStats": {
-          "Aura radius": "18 m (scales with Range)"
+          "auraRadius": 18,
+          "scornMax": 3.5,
+          "furyMax": 2.75
         }
       },
       {
@@ -642,10 +741,10 @@ export const allWarframes: Warframe[] = [
           "Kills by the sentry have a chance for bonus credits; pickups within 10 m gain +25–100% credits."
         ],
         "miscStats": {
-          "Sentry armor": "200",
-          "Energy drain": "10/s",
-          "Stun radius": "30 m",
-          "Credit pickup radius": "10 m"
+          "sentryArmor": 200,
+          "energyDrain": 10,
+          "stunRadius": 30,
+          "creditPickupRadius": 10
         }
       }
     ]
@@ -694,7 +793,16 @@ export const allWarframes: Warframe[] = [
           "Cold: +145% base Armor; reflects damage as Cold (300% reflected multiplier, 25% status)."
         ],
         "miscStats": {
-          "Aura radius": "12 m (scales with Range)"
+          "auraRadius": 12,
+          "heatHealthBonus": 0.55,
+          "heatDps": 100,
+          "electricShieldBonus": 0.3,
+          "electricReflectMult": 10,
+          "toxinReloadBonus": 0.35,
+          "toxinHolsterDamage": 0.35,
+          "toxinProcChance": 0.5,
+          "coldArmorBonus": 1.45,
+          "coldReflectMult": 3
         }
       },
       {
@@ -711,7 +819,9 @@ export const allWarframes: Warframe[] = [
           "Buffs apply to allies in aura range; percentages scale with Ability Strength."
         ],
         "miscStats": {
-          "Aura radius": "18 m (scales with Range)"
+          "auraRadius": 18,
+          "scornMax": 3.5,
+          "furyMax": 2.75
         }
       },
       {
@@ -732,10 +842,10 @@ export const allWarframes: Warframe[] = [
           "Kills by the sentry have a chance for bonus credits; pickups within 10 m gain +25–100% credits."
         ],
         "miscStats": {
-          "Sentry armor": "200",
-          "Energy drain": "10/s",
-          "Stun radius": "30 m",
-          "Credit pickup radius": "10 m"
+          "sentryArmor": 200,
+          "energyDrain": 10,
+          "stunRadius": 30,
+          "creditPickupRadius": 10
         }
       }
     ]
@@ -874,40 +984,66 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Wyrd Scythes",
         "energyCost": 25,
-        "description": "Wyrd Scythes surround Dagath and seek out nearby enemies. Those struck are slowed and suffer <DT_VIRAL_COLOR>Viral Damage with a guaranteed Status Effect.",
-        "damage": 250,
+        "description": "Wyrd Scythes surround Dagath and seek out nearby enemies. Those struck are slowed and suffer <DT_VIRAL_COLOR>Viral Damage with a guaranteed Status Effect. The scythes also spread Doom and extend its duration.",
+        "damage": 500,
         "range": 15,
-        "duration": 20,
+        "duration": 5,
         "statusChance": 1,
         "castTime": 0.5,
-        "damageType": "Viral"
+        "damageType": "Viral",
+        "miscStats": {
+          "slowPercent": 0.35,
+          "slowCap": 0.95,
+          "throwDamage": 1000,
+          "sickleCount": 7,
+          "minSpinRadius": 1,
+          "maxSpinRadius": 5
+        }
       },
       {
         "name": "Doom",
         "energyCost": 50,
         "description": "Condemn nearby enemies to their doom. A portion of the damage Dagath deals is revisited upon them by a Wyrd Scythe. They also suffer <DT_VIRAL_COLOR>Viral Damage.",
-        "range": 20,
+        "damage": 500,
+        "range": 15,
         "duration": 15,
-        "radius": 20,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "damageType": "Viral",
+        "miscStats": {
+          "phantomWrathStored": 0.35,
+          "coneAngle": 40
+        }
       },
       {
         "name": "Grave Spirit",
         "energyCost": 75,
         "description": "Supercharge Dagath's weapons with extra Critical Damage. The effects are doubled on Doomed enemies. Escape fatal blows by briefly assuming a spectral form.",
-        "duration": 20,
-        "castTime": 0.5
+        "duration": 10,
+        "castTime": 0.5,
+        "miscStats": {
+          "critDamageBonus": 0.5,
+          "doomCritDamageBonus": 1,
+          "knockdownRadius": 10,
+          "cooldown": 25
+        }
       },
       {
         "name": "Rakhali's Cavalry",
         "energyCost": 100,
         "description": "Phantom Kaithes charge forth, inflicting <DT_VIRAL_COLOR>Viral Damage upon all in their path. Their attack strips the defenses of Doomed enemies.",
-        "damage": 500,
-        "range": 40,
-        "radius": 5,
+        "damage": 30000,
+        "duration": 3,
         "statusChance": 1,
         "castTime": 0.8,
-        "damageType": "Viral"
+        "damageType": "Viral",
+        "miscStats": {
+          "defenseReduction": 0.35,
+          "kaitheCount": 5,
+          "summonRadius": 5,
+          "invulnerabilityDuration": 1.5,
+          "chargeVelocity": 15,
+          "damageInterval": 0.15
+        }
       }
     ]
   },
@@ -924,43 +1060,72 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Noctua",
-        "energyCost": 25,
+        "energyCost": 5,
         "description": "Open Noctua, Dante's Exalted Tome, and unleash a tale of woe upon his enemies.",
         "damage": 250,
-        "range": 30,
         "castTime": 0.5,
-        "damageType": "Void"
+        "damageType": "Slash",
+        "miscStats": {
+          "energyPerShot": 2,
+          "altFireDamage": 2750,
+          "pageFragments": 4,
+          "seekAngle": 60,
+          "seekDistance": 20
+        }
       },
       {
         "name": "Light Verse",
-        "energyCost": 50,
-        "description": "Dante's vitalizing composition grants him and his allies Overguard and increases their Health.",
+        "energyCost": 25,
+        "description": "Dante's vitalizing composition grants him and his allies Overguard and restores their Health.",
         "range": 20,
-        "duration": 30,
         "radius": 20,
-        "castTime": 0.6
+        "castTime": 0.6,
+        "miscStats": {
+          "overguardGain": 350,
+          "overguardCap": 15000,
+          "healthHealPercent": 0.2,
+          "invulnerabilityDuration": 1
+        }
       },
       {
         "name": "Dark Verse",
-        "energyCost": 50,
+        "energyCost": 25,
         "description": "Dante's composition draws blood from nearby enemies, inflicting <DT_SLASH_COLOR>Slash Damage upon them.",
-        "damage": 400,
+        "damage": 1250,
         "range": 20,
-        "radius": 15,
         "statusChance": 1,
         "castTime": 0.5,
-        "damageType": "Slash"
+        "damageType": "Slash",
+        "miscStats": {
+          "coneAngle": 50,
+          "slashStatuses": 2
+        }
       },
       {
         "name": "Final Verse",
-        "energyCost": 100,
-        "description": "Dante must compose two other Verses before his Final Verse. TRIUMPH: Two Light Verses cast in succession invigorate allies. TRAGEDY: Two Dark Verses cast in succession devastate enemies.",
-        "damage": 800,
-        "range": 25,
-        "duration": 20,
-        "radius": 15,
+        "energyCost": 50,
+        "description": "Dante must compose two other Verses before his Final Verse. TRIUMPH: Two Light Verses cast in succession invigorate allies. TRAGEDY: Two Dark Verses cast in succession devastate enemies. WORDWARDEN: Light then Dark supports allies with Noctua copies. PAGEFLIGHT: Dark then Light summons Paragrimms.",
+        "damage": 6500,
+        "duration": 45,
+        "radius": 30,
         "castTime": 1,
-        "damageType": "Void"
+        "damageType": "Slash",
+        "miscStats": {
+          "overguardGain": 3000,
+          "overguardCap": 15000,
+          "overguardRegenPerSecond": 100,
+          "overguardRegenTimer": 2,
+          "statusDetonationMultiplier": 3,
+          "damageCopied": 0.5,
+          "noctuaCopyLimit": 1,
+          "pageflightDamage": 300,
+          "statusChanceVulnerability": 0.5,
+          "statusDamageIncrease": 0.5,
+          "statusVulnerabilityDuration": 30,
+          "paragrimmLimit": 3,
+          "paragrimmAttackRange": 30,
+          "invulnerabilityDuration": 1
+        }
       }
     ]
   },
@@ -986,21 +1151,26 @@ export const allWarframes: Warframe[] = [
       },
       {
         "name": "Immolation",
-        "energyCost": 0,
-        "description": "Ignite Ember with protective flames. Passively grants armor and increases Fireball damage. Drains energy when Heat meter is full.",
-        "armor": 250,
-        "damageReduction": 0.5
+        "energyCost": 50,
+        "description": "Protect Ember with flame armor that burns stronger over time, consuming energy once its meter is at full strength. Cast again to extinguish the flame.",
+        "damageReduction": 0.85,
+        "miscStats": {
+          "initialDamageReduction": 0.4,
+          "drCap": 0.9
+        }
       },
       {
         "name": "Fire Blast",
-        "energyCost": 50,
-        "description": "Create a ring of fire that knocks back enemies and strips up to 100% of their armor over time.",
-        "damage": 400,
-        "range": 15,
-        "radius": 5,
+        "energyCost": 75,
+        "description": "Slam the ground to create a wave of incinerating plasma that knocks back enemies and strips their armor.",
+        "damage": 200,
+        "range": 25,
         "statusChance": 1,
-        "castTime": 0.8,
-        "damageType": "Heat"
+        "castTime": 0.7,
+        "damageType": "Heat",
+        "miscStats": {
+          "armorStrip": 1
+        }
       },
       {
         "name": "Inferno",
@@ -1037,21 +1207,26 @@ export const allWarframes: Warframe[] = [
       },
       {
         "name": "Immolation",
-        "energyCost": 0,
-        "description": "Ignite Ember with protective flames. Passively grants armor and increases Fireball damage. Drains energy when Heat meter is full.",
-        "armor": 250,
-        "damageReduction": 0.5
+        "energyCost": 50,
+        "description": "Protect Ember with flame armor that burns stronger over time, consuming energy once its meter is at full strength. Cast again to extinguish the flame.",
+        "damageReduction": 0.85,
+        "miscStats": {
+          "initialDamageReduction": 0.4,
+          "drCap": 0.9
+        }
       },
       {
         "name": "Fire Blast",
-        "energyCost": 50,
-        "description": "Create a ring of fire that knocks back enemies and strips up to 100% of their armor over time.",
-        "damage": 400,
-        "range": 15,
-        "radius": 5,
+        "energyCost": 75,
+        "description": "Slam the ground to create a wave of incinerating plasma that knocks back enemies and strips their armor.",
+        "damage": 200,
+        "range": 25,
         "statusChance": 1,
-        "castTime": 0.8,
-        "damageType": "Heat"
+        "castTime": 0.7,
+        "damageType": "Heat",
+        "miscStats": {
+          "armorStrip": 1
+        }
       },
       {
         "name": "Inferno",
@@ -1601,38 +1776,59 @@ export const allWarframes: Warframe[] = [
         "name": "Dread Mirror",
         "energyCost": 25,
         "description": "Rip the life force from an enemy and use it as a shield that captures damage, this kills significantly weakened enemies instantly. Charge to channel the captured damage into an explosive projectile.",
-        "damage": 300,
-        "range": 15,
+        "range": 30,
+        "radius": 10,
+        "duration": 20,
         "castTime": 0.5,
-        "damageType": "Puncture"
+        "miscStats": {
+          "damageCaptureMultiplier": 2,
+          "instantKillThreshold": 0.4,
+          "staggerRadius": 8,
+          "mirrorContactDamage": 100
+        }
       },
       {
         "name": "Blood Altar",
         "energyCost": 50,
         "description": "Impale an enemy on an altar of talons and siphon health for Garuda and her allies.",
-        "damage": 200,
         "range": 30,
         "duration": 20,
-        "radius": 5,
+        "radius": 8,
         "castTime": 0.8,
-        "damageType": "Puncture"
+        "miscStats": {
+          "healthPerSecond": 0.25,
+          "damagePerSecond": 0.01,
+          "maxAltars": 3,
+          "staggerRadius": 8
+        }
       },
       {
         "name": "Bloodletting",
         "energyCost": 0,
         "description": "Garuda sacrifices her health to generate energy and clear Status Effects.",
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": {
+          "energyGainPercent": 0.4,
+          "healthDeducted": 0.5,
+          "minimumHealth": 2
+        }
       },
       {
         "name": "Seeking Talons",
         "energyCost": 100,
         "description": "Charge to expand the targeting area, release to send Garuda's talons careening toward each target in area. Surviving enemies are prone to <DT_SLASH_COLOR>Slash Status.",
-        "damage": 500,
-        "range": 20,
-        "radius": 15,
-        "statusChance": 1,
+        "damage": 300,
+        "duration": 10,
         "castTime": 0.6,
-        "damageType": "Slash"
+        "damageType": "Slash",
+        "miscStats": {
+          "slashStatusChance": 0.75,
+          "maxRange": 60,
+          "minChargeAngle": 25,
+          "maxChargeAngle": 95,
+          "initialProjectiles": 12,
+          "knockbackRadius": 2
+        }
       }
     ]
   },
@@ -1651,38 +1847,59 @@ export const allWarframes: Warframe[] = [
         "name": "Dread Mirror",
         "energyCost": 25,
         "description": "Rip the life force from an enemy and use it as a shield that captures damage, this kills significantly weakened enemies instantly. Charge to channel the captured damage into an explosive projectile.",
-        "damage": 300,
-        "range": 15,
+        "range": 30,
+        "radius": 10,
+        "duration": 20,
         "castTime": 0.5,
-        "damageType": "Puncture"
+        "miscStats": {
+          "damageCaptureMultiplier": 2,
+          "instantKillThreshold": 0.4,
+          "staggerRadius": 8,
+          "mirrorContactDamage": 100
+        }
       },
       {
         "name": "Blood Altar",
         "energyCost": 50,
         "description": "Impale an enemy on an altar of talons and siphon health for Garuda and her allies.",
-        "damage": 200,
         "range": 30,
         "duration": 20,
-        "radius": 5,
+        "radius": 8,
         "castTime": 0.8,
-        "damageType": "Puncture"
+        "miscStats": {
+          "healthPerSecond": 0.25,
+          "damagePerSecond": 0.01,
+          "maxAltars": 3,
+          "staggerRadius": 8
+        }
       },
       {
         "name": "Bloodletting",
         "energyCost": 0,
         "description": "Garuda sacrifices her health to generate energy and clear Status Effects.",
-        "castTime": 0.5
+        "castTime": 0.5,
+        "miscStats": {
+          "energyGainPercent": 0.4,
+          "healthDeducted": 0.5,
+          "minimumHealth": 2
+        }
       },
       {
         "name": "Seeking Talons",
         "energyCost": 100,
         "description": "Charge to expand the targeting area, release to send Garuda's talons careening toward each target in area. Surviving enemies are prone to <DT_SLASH_COLOR>Slash Status.",
-        "damage": 500,
-        "range": 20,
-        "radius": 15,
-        "statusChance": 1,
+        "damage": 300,
+        "duration": 10,
         "castTime": 0.6,
-        "damageType": "Slash"
+        "damageType": "Slash",
+        "miscStats": {
+          "slashStatusChance": 0.75,
+          "maxRange": 60,
+          "minChargeAngle": 25,
+          "maxChargeAngle": 95,
+          "initialProjectiles": 12,
+          "knockbackRadius": 2
+        }
       }
     ]
   },
@@ -1699,45 +1916,69 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Mach Rush",
-        "energyCost": 25,
+        "energyCost": 15,
         "description": "Burst into a hyper-sprint bowling over enemies and charging the battery. Crashing into solid objects generates a powerful shockwave. Hold to rush continuously.",
-        "damage": 200,
-        "range": 20,
-        "radius": 5,
+        "damage": 800,
+        "range": 4,
+        "radius": 10,
         "castTime": 0.3,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "energyDrain": 12.5,
+          "dashDistance": 12,
+          "batteryChargeOnCast": 0.1
+        }
       },
       {
         "name": "Kinetic Plating",
         "energyCost": 50,
-        "description": "Generate armor plating that converts a portion of absorbed Kinetic Damage (Physical, Heat, Cold, and Blast) into Energy. Also protects Gauss from being staggered or knocked down.",
-        "range": 15,
-        "duration": 25,
-        "radius": 15,
-        "castTime": 0.5
+        "description": "Generate armor plating that converts a portion of absorbed Kinetic Damage (Physical, Heat, Cold, and Blast) into Energy. Also protects Gauss from being staggered or knocked down. Damage Resistance is relative to the battery level.",
+        "duration": 30,
+        "damageReduction": 1,
+        "castTime": 0.5,
+        "miscStats": {
+          "minDamageReduction": 0.2,
+          "drCap": 1,
+          "emptyBatteryDrCap": 0.5,
+          "energyRestorePerHit": 0.05,
+          "batteryDrainPerSecond": 0.01
+        }
       },
       {
         "name": "Thermal Sunder",
         "energyCost": 50,
         "description": "Siphon kinetic energy from the area, charging the battery and inflicting Cold Status on nearby enemies. Hold reverses the process, draining the battery and inflicting Heat Status.",
-        "damage": 300,
-        "range": 15,
-        "duration": 8,
-        "radius": 10,
+        "damage": 750,
+        "aoeDamage": 1500,
+        "duration": 15,
         "statusChance": 1,
         "castTime": 0.5,
-        "damageType": "Cold"
+        "damageType": "Cold",
+        "miscStats": {
+          "minRadius": 6,
+          "maxRadius": 12,
+          "batteryCharge": 0.1,
+          "batteryDrain": 0.1,
+          "areasPerElement": 4,
+          "statusDurationMin": 4,
+          "statusDurationMax": 8
+        }
       },
       {
         "name": "Redline",
         "energyCost": 100,
-        "description": "Push Gauss\" battery beyond the redline, supercharging his Abilities and setting Fire Rate, Attack Speed, Reload Speed, and Casting Speed into overdrive. When past the redline, bolts of energy will periodically strike from Gauss.",
-        "damage": 500,
-        "range": 20,
+        "description": "Push Gauss' battery beyond the redline, supercharging his Abilities and setting Fire Rate, Attack Speed, Reload Speed, and Casting Speed into overdrive. When past the redline, bolts of arcing electricity dance periodically from Gauss, exploding en masse when the ability is deactivated.",
+        "damage": 400,
         "duration": 30,
-        "radius": 15,
         "castTime": 0.8,
-        "damageType": "Electricity"
+        "damageType": "Impact",
+        "miscStats": {
+          "fireRateBuff": 0.75,
+          "attackSpeedBuff": 0.4,
+          "reloadBuff": 0.5,
+          "castSpeedBuff": 0.5,
+          "batteryDrainPerSecond": 0.02
+        }
       }
     ]
   },
@@ -1754,45 +1995,69 @@ export const allWarframes: Warframe[] = [
     "abilities": [
       {
         "name": "Mach Rush",
-        "energyCost": 25,
+        "energyCost": 15,
         "description": "Burst into a hyper-sprint bowling over enemies and charging the battery. Crashing into solid objects generates a powerful shockwave. Hold to rush continuously.",
-        "damage": 200,
-        "range": 20,
-        "radius": 5,
+        "damage": 800,
+        "range": 4,
+        "radius": 10,
         "castTime": 0.3,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "energyDrain": 12.5,
+          "dashDistance": 12,
+          "batteryChargeOnCast": 0.1
+        }
       },
       {
         "name": "Kinetic Plating",
         "energyCost": 50,
-        "description": "Generate armor plating that converts a portion of absorbed Kinetic Damage (Physical, Heat, Cold, and Blast) into Energy. Also protects Gauss from being staggered or knocked down.",
-        "range": 15,
-        "duration": 25,
-        "radius": 15,
-        "castTime": 0.5
+        "description": "Generate armor plating that converts a portion of absorbed Kinetic Damage (Physical, Heat, Cold, and Blast) into Energy. Also protects Gauss from being staggered or knocked down. Damage Resistance is relative to the battery level.",
+        "duration": 30,
+        "damageReduction": 1,
+        "castTime": 0.5,
+        "miscStats": {
+          "minDamageReduction": 0.2,
+          "drCap": 1,
+          "emptyBatteryDrCap": 0.5,
+          "energyRestorePerHit": 0.05,
+          "batteryDrainPerSecond": 0.01
+        }
       },
       {
         "name": "Thermal Sunder",
         "energyCost": 50,
         "description": "Siphon kinetic energy from the area, charging the battery and inflicting Cold Status on nearby enemies. Hold reverses the process, draining the battery and inflicting Heat Status.",
-        "damage": 300,
-        "range": 15,
-        "duration": 8,
-        "radius": 10,
+        "damage": 750,
+        "aoeDamage": 1500,
+        "duration": 15,
         "statusChance": 1,
         "castTime": 0.5,
-        "damageType": "Cold"
+        "damageType": "Cold",
+        "miscStats": {
+          "minRadius": 6,
+          "maxRadius": 12,
+          "batteryCharge": 0.1,
+          "batteryDrain": 0.1,
+          "areasPerElement": 4,
+          "statusDurationMin": 4,
+          "statusDurationMax": 8
+        }
       },
       {
         "name": "Redline",
         "energyCost": 100,
-        "description": "Push Gauss\" battery beyond the redline, supercharging his Abilities and setting Fire Rate, Attack Speed, Reload Speed, and Casting Speed into overdrive. When past the redline, bolts of energy will periodically strike from Gauss.",
-        "damage": 500,
-        "range": 20,
+        "description": "Push Gauss' battery beyond the redline, supercharging his Abilities and setting Fire Rate, Attack Speed, Reload Speed, and Casting Speed into overdrive. When past the redline, bolts of arcing electricity dance periodically from Gauss, exploding en masse when the ability is deactivated.",
+        "damage": 400,
         "duration": 30,
-        "radius": 15,
         "castTime": 0.8,
-        "damageType": "Electricity"
+        "damageType": "Impact",
+        "miscStats": {
+          "fireRateBuff": 0.75,
+          "attackSpeedBuff": 0.4,
+          "reloadBuff": 0.5,
+          "castSpeedBuff": 0.5,
+          "batteryDrainPerSecond": 0.02
+        }
       }
     ]
   },
@@ -1909,41 +2174,64 @@ export const allWarframes: Warframe[] = [
         "name": "Arcsphere",
         "energyCost": 25,
         "description": "Launch a Gyratory Sphere that will deal high damage on impact and periodically deal electrical shocks to nearby enemies. Hit multiple enemies at once with the initial launch to enhance damage.",
-        "damage": 400,
-        "range": 30,
-        "duration": 20,
-        "radius": 6,
+        "damage": 2000,
+        "duration": 10,
+        "radius": 4,
         "castTime": 0.5,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "fieldDamagePerSecond": 250,
+          "fieldRadius": 7,
+          "maxSpheres": 3,
+          "multiHitDamageMultiplier": 2
+        }
       },
       {
         "name": "Coil Horizon",
         "energyCost": 50,
         "description": "Throw forward a Gyratory Sphere that will implode after a few seconds or can be manually triggered.",
-        "damage": 600,
-        "range": 40,
-        "duration": 3,
+        "damage": 1250,
         "radius": 12,
         "castTime": 0.6,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "contactDamagePerSecond": 1500,
+          "sphereLifetime": 2,
+          "implosionLifetime": 2
+        }
       },
       {
         "name": "Cathode Grace",
-        "energyCost": 50,
+        "energyCost": 75,
         "description": "Gain a brief burst of increased Critical Chance and Energy Regen, with each kill extending duration of Cathode Grace. Casting is on a cooldown.",
-        "duration": 15,
-        "castTime": 0.5
+        "duration": 8,
+        "castTime": 0.5,
+        "miscStats": {
+          "criticalChanceBonus": 0.5,
+          "abilityCritChance": 0.5,
+          "energyRegen": 1.5,
+          "durationExtension": 3,
+          "durationCap": 60,
+          "castingCooldown": 60
+        }
       },
       {
         "name": "Rotorswell",
         "energyCost": 100,
-        "description": "Gyre's mechanisms spin at incredible speeds, generating an Electric Field that shocks nearby enemies. When Gyre gets a critical hit, a large electrical discharge will chain from the target to nearby enemies.",
-        "damage": 300,
-        "range": 15,
-        "duration": 25,
-        "radius": 15,
+        "description": "Gyre's mechanisms spin at incredible speeds, generating an Electric Field that shocks nearby enemies. When Gyre gets a critical hit, a large electrical discharge will chain from the enemy that was hit to nearby enemies.",
+        "damage": 250,
+        "duration": 22,
+        "radius": 4,
         "castTime": 0.8,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "dischargeDamage": 500,
+          "dischargeRange": 10,
+          "moveSpeedMultiplier": 1.5,
+          "dischargeTargets": 5,
+          "simultaneousDischarges": 2,
+          "dischargeCooldown": 1
+        }
       }
     ]
   },
@@ -1962,41 +2250,64 @@ export const allWarframes: Warframe[] = [
         "name": "Arcsphere",
         "energyCost": 25,
         "description": "Launch a Gyratory Sphere that will deal high damage on impact and periodically deal electrical shocks to nearby enemies. Hit multiple enemies at once with the initial launch to enhance damage.",
-        "damage": 400,
-        "range": 30,
-        "duration": 20,
-        "radius": 6,
+        "damage": 2000,
+        "duration": 10,
+        "radius": 4,
         "castTime": 0.5,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "fieldDamagePerSecond": 250,
+          "fieldRadius": 7,
+          "maxSpheres": 3,
+          "multiHitDamageMultiplier": 2
+        }
       },
       {
         "name": "Coil Horizon",
         "energyCost": 50,
         "description": "Throw forward a Gyratory Sphere that will implode after a few seconds or can be manually triggered.",
-        "damage": 600,
-        "range": 40,
-        "duration": 3,
+        "damage": 1250,
         "radius": 12,
         "castTime": 0.6,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "contactDamagePerSecond": 1500,
+          "sphereLifetime": 2,
+          "implosionLifetime": 2
+        }
       },
       {
         "name": "Cathode Grace",
-        "energyCost": 50,
+        "energyCost": 75,
         "description": "Gain a brief burst of increased Critical Chance and Energy Regen, with each kill extending duration of Cathode Grace. Casting is on a cooldown.",
-        "duration": 15,
-        "castTime": 0.5
+        "duration": 8,
+        "castTime": 0.5,
+        "miscStats": {
+          "criticalChanceBonus": 0.5,
+          "abilityCritChance": 0.5,
+          "energyRegen": 1.5,
+          "durationExtension": 3,
+          "durationCap": 60,
+          "castingCooldown": 60
+        }
       },
       {
         "name": "Rotorswell",
         "energyCost": 100,
-        "description": "Gyre's mechanisms spin at incredible speeds, generating an Electric Field that shocks nearby enemies. When Gyre gets a critical hit, a large electrical discharge will chain from the target to nearby enemies.",
-        "damage": 300,
-        "range": 15,
-        "duration": 25,
-        "radius": 15,
+        "description": "Gyre's mechanisms spin at incredible speeds, generating an Electric Field that shocks nearby enemies. When Gyre gets a critical hit, a large electrical discharge will chain from the enemy that was hit to nearby enemies.",
+        "damage": 250,
+        "duration": 22,
+        "radius": 4,
         "castTime": 0.8,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "dischargeDamage": 500,
+          "dischargeRange": 10,
+          "moveSpeedMultiplier": 1.5,
+          "dischargeTargets": 5,
+          "simultaneousDischarges": 2,
+          "dischargeCooldown": 1
+        }
       }
     ]
   },
@@ -2015,39 +2326,55 @@ export const allWarframes: Warframe[] = [
         "name": "Condemn",
         "energyCost": 25,
         "description": "Cast a wave of energy that chains them where they stand. Each enemy held reinforces Harrow's shields.",
-        "damage": 200,
         "range": 20,
-        "duration": 8,
-        "radius": 15,
+        "duration": 6,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "miscStats": {
+          "shieldsPerEnemy": 150,
+          "waveWidth": 2.5
+        }
       },
       {
         "name": "Penance",
         "energyCost": 50,
         "description": "Sacrifice Shields to boost Reload Speed, and Fire Rate while converting damage inflicted on enemies into health for Harrow and nearby allies.",
-        "range": 15,
-        "duration": 20,
-        "radius": 15,
-        "castTime": 0.5
+        "duration": 4,
+        "castTime": 0.5,
+        "miscStats": {
+          "initialHealPercent": 0.5,
+          "lifeStealPercent": 0.05,
+          "fireRateBuff": 0.35,
+          "reloadBuff": 0.7,
+          "durationPer100Shields": 1.54,
+          "maxDuration": 120
+        }
       },
       {
         "name": "Thurible",
         "energyCost": 25,
-        "description": "Channel Harrow's energy into the Thurible to generate a buff. Once finished, kill enemies to bestow nearby allies with bursts of energy. The more energy channeled the greater the reward.",
+        "description": "Channel Harrow's energy into the Thurible to generate a buff. Once finished, kill enemies to bestow nearby allies with bursts of energy. The more energy channeled the greater the reward. Headshots produce extra energy.",
         "range": 20,
-        "duration": 30,
-        "radius": 20,
-        "castTime": 1
+        "duration": 35,
+        "castTime": 1,
+        "miscStats": {
+          "energyConvert": 0.15,
+          "headshotMultiplier": 4
+        }
       },
       {
         "name": "Covenant",
         "energyCost": 100,
         "description": "Protect nearby allies with an energy force that absorbs all damage and converts it to a Critical Chance bonus for all those under the Covenant. Headshots are amplified even further.",
-        "range": 15,
-        "duration": 8,
-        "radius": 15,
-        "castTime": 0.8
+        "duration": 6,
+        "castTime": 0.8,
+        "miscStats": {
+          "baseCriticalChance": 0.05,
+          "critChancePer100Damage": 0.015,
+          "critChanceDuration": 12,
+          "headshotMultiplier": 4,
+          "bodyshotCritChanceCap": 0.5,
+          "headshotCritChanceCap": 2
+        }
       }
     ]
   },
@@ -2066,39 +2393,55 @@ export const allWarframes: Warframe[] = [
         "name": "Condemn",
         "energyCost": 25,
         "description": "Cast a wave of energy that chains them where they stand. Each enemy held reinforces Harrow's shields.",
-        "damage": 200,
         "range": 20,
-        "duration": 8,
-        "radius": 15,
+        "duration": 6,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "miscStats": {
+          "shieldsPerEnemy": 150,
+          "waveWidth": 2.5
+        }
       },
       {
         "name": "Penance",
         "energyCost": 50,
         "description": "Sacrifice Shields to boost Reload Speed, and Fire Rate while converting damage inflicted on enemies into health for Harrow and nearby allies.",
-        "range": 15,
-        "duration": 20,
-        "radius": 15,
-        "castTime": 0.5
+        "duration": 4,
+        "castTime": 0.5,
+        "miscStats": {
+          "initialHealPercent": 0.5,
+          "lifeStealPercent": 0.05,
+          "fireRateBuff": 0.35,
+          "reloadBuff": 0.7,
+          "durationPer100Shields": 1.54,
+          "maxDuration": 120
+        }
       },
       {
         "name": "Thurible",
         "energyCost": 25,
-        "description": "Channel Harrow's energy into the Thurible to generate a buff. Once finished, kill enemies to bestow nearby allies with bursts of energy. The more energy channeled the greater the reward.",
+        "description": "Channel Harrow's energy into the Thurible to generate a buff. Once finished, kill enemies to bestow nearby allies with bursts of energy. The more energy channeled the greater the reward. Headshots produce extra energy.",
         "range": 20,
-        "duration": 30,
-        "radius": 20,
-        "castTime": 1
+        "duration": 35,
+        "castTime": 1,
+        "miscStats": {
+          "energyConvert": 0.15,
+          "headshotMultiplier": 4
+        }
       },
       {
         "name": "Covenant",
         "energyCost": 100,
         "description": "Protect nearby allies with an energy force that absorbs all damage and converts it to a Critical Chance bonus for all those under the Covenant. Headshots are amplified even further.",
-        "range": 15,
-        "duration": 8,
-        "radius": 15,
-        "castTime": 0.8
+        "duration": 6,
+        "castTime": 0.8,
+        "miscStats": {
+          "baseCriticalChance": 0.05,
+          "critChancePer100Damage": 0.015,
+          "critChanceDuration": 12,
+          "headshotMultiplier": 4,
+          "bodyshotCritChanceCap": 0.5,
+          "headshotCritChanceCap": 2
+        }
       }
     ]
   },
@@ -2161,7 +2504,9 @@ export const allWarframes: Warframe[] = [
         "description": "Pillage a percentage of Shields and Armor of nearby enemies to replenish Hildryn's own Shields and Overshields. Also removes Status Effects from Hildryn and her allies.",
         "range": 15,
         "radius": 15,
-        "castTime": 0.8
+        "duration": 2,
+        "castTime": 0.8,
+        "miscStats": { "shieldStrip": 0.25, "armorStrip": 0.25, "statusCleanse": true }
       },
       {
         "name": "Haven",
@@ -2212,7 +2557,9 @@ export const allWarframes: Warframe[] = [
         "description": "Pillage a percentage of Shields and Armor of nearby enemies to replenish Hildryn's own Shields and Overshields. Also removes Status Effects from Hildryn and her allies.",
         "range": 15,
         "radius": 15,
-        "castTime": 0.8
+        "duration": 2,
+        "castTime": 0.8,
+        "miscStats": { "shieldStrip": 0.25, "armorStrip": 0.25, "statusCleanse": true }
       },
       {
         "name": "Haven",
@@ -2516,41 +2863,68 @@ export const allWarframes: Warframe[] = [
         "name": "Light's Judgment",
         "energyCost": 25,
         "description": "Create a well of light that heals allies and hurts enemies. Those who enter the well will be highlighted by Judgments.",
-        "damage": 300,
-        "range": 25,
-        "duration": 20,
-        "radius": 12,
+        "damage": 500,
+        "duration": 10,
+        "radius": 6,
         "castTime": 0.6,
-        "damageType": "Radiation"
+        "damageType": "Heat",
+        "miscStats": {
+          "healthRegen": 0.08,
+          "wellsLimit": 5,
+          "judgmentVulnerability": 0.5,
+          "tickInterval": 0.5
+        }
       },
       {
         "name": "Symphony Of Mercy",
         "energyCost": 50,
-        "description": "Cycle through three songs that strengthen allies. Power of The Seven increases Ability Strength. Deathbringer increases Weapon Damage. Spirit of Resilience increases Shield Efficiency.",
-        "range": 30,
+        "description": "Cycle through three songs that strengthen allies. Power of The Seven increases Ability Strength. Deathbringer increases Weapon Damage. Spirit of Resilience increases Shield Efficiency. Extend the duration of each song by killing enemies surrounded by Judgments.",
         "duration": 30,
-        "radius": 30,
-        "castTime": 0.5
+        "castTime": 0.5,
+        "damageBuff": 1,
+        "miscStats": {
+          "strengthBonus": 0.25,
+          "shieldRegen": 0.1,
+          "shieldRechargeDelayReduction": 0.1,
+          "affinityRange": 50
+        }
       },
       {
         "name": "Ophanim Eyes",
-        "energyCost": 75,
+        "energyCost": 50,
         "description": "Jade summons an accusatory gaze that slows nearby enemies and dissolves their Shields and Armor. When the gaze falls upon allies, they can be revived from a distance.",
-        "range": 40,
-        "duration": 25,
-        "radius": 15,
-        "castTime": 0.8
+        "damage": 50,
+        "range": 20,
+        "duration": 30,
+        "castTime": 0.8,
+        "damageType": "Heat",
+        "miscStats": {
+          "armorStripPerSecond": 0.1,
+          "shieldStripPerSecond": 0.1,
+          "slowPerSecond": 0.15,
+          "slowCap": 0.9,
+          "coneAngle": 70,
+          "tickInterval": 0.5
+        }
       },
       {
         "name": "Glory On High",
-        "energyCost": 100,
+        "energyCost": 25,
         "description": "Soar with destructive power. Use alternate-fire to detonate Judgments, causing an explosion of Jade Light. Enemies inside the Light's Judgment radius empower the explosion.",
-        "damage": 800,
-        "range": 50,
-        "duration": 30,
-        "radius": 20,
+        "damage": 150,
+        "aoeDamage": 1500,
+        "range": 2,
+        "damageReduction": 0.35,
         "castTime": 1,
-        "damageType": "Radiation"
+        "damageType": "Heat",
+        "miscStats": {
+          "drCap": 0.5,
+          "energyDrain": 5,
+          "altFireExplosion": 4,
+          "altFireEnergy": 25,
+          "judgmentChance": 0.1,
+          "speedBuff": 1
+        }
       }
     ]
   },
@@ -2718,40 +3092,59 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Wrathful Advance",
         "energyCost": 25,
-        "description": "(TAP) Kullervo charges a Heavy Attack, then teleports to his target and strikes. His rage-filled focus temporarily increases his Melee Critical Chance. (HOLD) Teleport to any marked target.",
-        "damage": 500,
-        "range": 40,
+        "description": "(TAP) Kullervo charges a Heavy Attack, then teleports to his target and strikes. His rage-filled focus temporarily increases his Melee Critical Chance. (HOLD) Teleport to any marked location.",
+        "duration": 10,
+        "range": 25,
+        "cooldown": 1,
         "castTime": 0.5,
-        "damageType": "Slash"
+        "miscStats": {
+          "criticalChanceBonus": 2
+        }
       },
       {
         "name": "Recompense",
         "energyCost": 50,
-        "description": "Kullervo surrounds himself with daggers. Each dagger that strikes an enemy restores his health, but each dagger that misses an enemy strikes Kullervo, dealing a bit of damage. When below 35% health, dagger hits deal extra damage and provide extra healing.",
-        "range": 15,
-        "duration": 20,
-        "radius": 10,
-        "castTime": 0.6
+        "description": "Kullervo surrounds himself with daggers. Each dagger that strikes an enemy restores his health, but each dagger that misses an enemy strikes Kullervo, dealing a bit of damage. When Kullervo has max Health, he receives Overguard from struck enemies.",
+        "damage": 500,
+        "radius": 8,
+        "castTime": 0.6,
+        "damageType": "Slash",
+        "miscStats": {
+          "healthPerHit": 350,
+          "missDrain": 35,
+          "overguardCap": 10000,
+          "daggerCount": 10,
+          "daggerAirtime": 5,
+          "invulnerabilityDuration": 1,
+          "maxDaggersPerEnemy": 3
+        }
       },
       {
         "name": "Collective Curse",
         "energyCost": 75,
         "description": "Kullervo sends forth a curse that binds enemies. When a cursed enemy takes damage from him, every other cursed enemy also suffers a portion of that damage.",
-        "range": 30,
         "duration": 25,
-        "radius": 15,
-        "castTime": 0.5
+        "range": 25,
+        "castTime": 0.5,
+        "miscStats": {
+          "damageRedirection": 0.5,
+          "coneAngle": 65,
+          "damageRedirectionCap": 1
+        }
       },
       {
         "name": "Storm Of Ukko",
         "energyCost": 100,
         "description": "The Void answers Kullervo's invocation with a storm of daggers that rain down upon his enemies.",
-        "damage": 600,
-        "range": 40,
-        "duration": 10,
-        "radius": 15,
+        "damage": 2500,
+        "duration": 15,
+        "radius": 10,
         "castTime": 0.8,
-        "damageType": "Void"
+        "damageType": "Slash",
+        "miscStats": {
+          "maxStorms": 1,
+          "ticksPerSecond": 2
+        }
       }
     ]
   },
@@ -2770,40 +3163,65 @@ export const allWarframes: Warframe[] = [
         "name": "Ophidian Bite",
         "energyCost": 0,
         "description": "Lash out with a toxic serpentine strike, consuming the target to heal Lavos. Hold to imbue all abilities with Toxin.",
-        "damage": 400,
-        "range": 15,
+        "damage": 1000,
+        "range": 10,
+        "cooldown": 8,
         "castTime": 0.5,
-        "damageType": "Toxin"
+        "damageType": "Toxin",
+        "miscStats": {
+          "healthConversion": 0.15,
+          "coneAngle": 100
+        }
       },
       {
         "name": "Vial Rush",
         "energyCost": 0,
         "description": "Dash forward, crashing through enemies and leaving an icy trail of broken vials. Hold to imbue the next ability cast with Cold.",
-        "damage": 300,
-        "range": 25,
+        "damage": 250,
+        "duration": 8,
+        "range": 30,
+        "radius": 9,
+        "cooldown": 5,
         "castTime": 0.4,
-        "damageType": "Cold"
+        "damageType": "Cold",
+        "miscStats": {
+          "vialCharges": 24,
+          "residueRadius": 2,
+          "chargeSpeed": 30
+        }
       },
       {
         "name": "Transmutation Probe",
         "energyCost": 0,
-        "description": "Launch a probe that converts Health and Energy Orbs into Universal Orbs that provide both, and ammo pickups into Universal Ammo Pickups. The probe shocks enemies in close proximity.",
-        "damage": 200,
-        "range": 30,
-        "duration": 20,
-        "radius": 8,
+        "description": "Launch a probe that converts Health and Energy Orbs into Universal Orbs that provide both, and ammo pickups into Universal Ammo Pickups. The probe shocks enemies in close proximity. Each electrocuted foe reduces other ability cooldowns by 1.5s.",
+        "damage": 250,
+        "radius": 6,
+        "cooldown": 10,
         "castTime": 0.6,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "probeSpeed": 15,
+          "probeDuration": 3,
+          "cooldownReduction": 1.5,
+          "haltDelay": 0.5
+        }
       },
       {
         "name": "Catalyze",
         "energyCost": 0,
         "description": "Catalyst Probes erupt from Lavos and douse combatants in a fiery gel. Damage is doubled for each element afflicting an enemy. Hold to imbue the next ability cast with Heat.",
-        "damage": 800,
-        "range": 40,
-        "radius": 15,
+        "damage": 2000,
+        "range": 25,
+        "cooldown": 30,
         "castTime": 0.8,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "probeCount": 9,
+          "probeSpeed": 8.33,
+          "travelTime": 3,
+          "gelMistReach": 5,
+          "damagePerStatus": 1
+        }
       }
     ]
   },
@@ -2822,40 +3240,65 @@ export const allWarframes: Warframe[] = [
         "name": "Ophidian Bite",
         "energyCost": 0,
         "description": "Lash out with a toxic serpentine strike, consuming the target to heal Lavos. Hold to imbue all abilities with Toxin.",
-        "damage": 400,
-        "range": 15,
+        "damage": 1000,
+        "range": 10,
+        "cooldown": 8,
         "castTime": 0.5,
-        "damageType": "Toxin"
+        "damageType": "Toxin",
+        "miscStats": {
+          "healthConversion": 0.15,
+          "coneAngle": 100
+        }
       },
       {
         "name": "Vial Rush",
         "energyCost": 0,
         "description": "Dash forward, crashing through enemies and leaving an icy trail of broken vials. Hold to imbue the next ability cast with Cold.",
-        "damage": 300,
-        "range": 25,
+        "damage": 250,
+        "duration": 8,
+        "range": 30,
+        "radius": 9,
+        "cooldown": 5,
         "castTime": 0.4,
-        "damageType": "Cold"
+        "damageType": "Cold",
+        "miscStats": {
+          "vialCharges": 24,
+          "residueRadius": 2,
+          "chargeSpeed": 30
+        }
       },
       {
         "name": "Transmutation Probe",
         "energyCost": 0,
-        "description": "Launch a probe that converts Health and Energy Orbs into Universal Orbs that provide both, and ammo pickups into Universal Ammo Pickups. The probe shocks enemies in close proximity.",
-        "damage": 200,
-        "range": 30,
-        "duration": 20,
-        "radius": 8,
+        "description": "Launch a probe that converts Health and Energy Orbs into Universal Orbs that provide both, and ammo pickups into Universal Ammo Pickups. The probe shocks enemies in close proximity. Each electrocuted foe reduces other ability cooldowns by 1.5s.",
+        "damage": 250,
+        "radius": 6,
+        "cooldown": 10,
         "castTime": 0.6,
-        "damageType": "Electricity"
+        "damageType": "Electricity",
+        "miscStats": {
+          "probeSpeed": 15,
+          "probeDuration": 3,
+          "cooldownReduction": 1.5,
+          "haltDelay": 0.5
+        }
       },
       {
         "name": "Catalyze",
         "energyCost": 0,
         "description": "Catalyst Probes erupt from Lavos and douse combatants in a fiery gel. Damage is doubled for each element afflicting an enemy. Hold to imbue the next ability cast with Heat.",
-        "damage": 800,
-        "range": 40,
-        "radius": 15,
+        "damage": 2000,
+        "range": 25,
+        "cooldown": 30,
         "castTime": 0.8,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "probeCount": 9,
+          "probeSpeed": 8.33,
+          "travelTime": 3,
+          "gelMistReach": 5,
+          "damagePerStatus": 1
+        }
       }
     ]
   },
@@ -3379,36 +3822,52 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Soul Punch",
         "energyCost": 25,
-        "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's shadows if killed.",
+        "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's Shadows of the Dead if killed while marked.",
         "damage": 500,
         "range": 50,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "instantKillThreshold": 0.25,
+          "projectileDamage": 50,
+          "explosionDamage": 100,
+          "markDuration": 3
+        }
       },
       {
         "name": "Terrify",
         "energyCost": 75,
         "description": "Cast fear into the hearts of nearby enemies, causing them to run away in terror and stripping their armor.",
-        "range": 25,
-        "duration": 15,
-        "radius": 20,
-        "castTime": 0.6
+        "range": 15,
+        "duration": 25,
+        "castTime": 0.6,
+        "miscStats": { "armorStrip": 0.6, "affectedEnemies": 20 }
       },
       {
         "name": "Desecrate",
         "energyCost": 10,
-        "description": "Forces fallen enemies around you to drop additional loot.",
-        "range": 15,
-        "radius": 15,
-        "castTime": 0.4
+        "description": "Forces fallen enemies around you to drop additional loot. Costs 10 energy per corpse.",
+        "range": 25,
+        "castTime": 0.4,
+        "miscStats": {
+          "energyPerCorpse": 10,
+          "healthOrbChance": 0.6,
+          "dropTableChance": 0.54
+        }
       },
       {
         "name": "Shadows Of The Dead",
         "energyCost": 100,
         "description": "Summon shadow versions of vanquished enemies to fight alongside you for a short period.",
-        "range": 25,
-        "duration": 25,
-        "castTime": 1
+        "castTime": 1,
+        "miscStats": {
+          "damageBonus": 1.5,
+          "shieldBonus": 1,
+          "healthBonus": 1,
+          "healthDecayPerSecond": 0.03,
+          "shadowCopies": 7,
+          "spawnRadius": 10
+        }
       }
     ]
   },
@@ -3426,36 +3885,52 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Soul Punch",
         "energyCost": 25,
-        "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's shadows if killed.",
+        "description": "A blow so powerful, it turns the enemy's very soul into a deadly projectile, damaging all in its path. Enemies that survive the blow are Marked for Harvest and become one of Nekros's Shadows of the Dead if killed while marked.",
         "damage": 500,
         "range": 50,
         "castTime": 0.5,
-        "damageType": "Impact"
+        "damageType": "Impact",
+        "miscStats": {
+          "instantKillThreshold": 0.25,
+          "projectileDamage": 50,
+          "explosionDamage": 100,
+          "markDuration": 3
+        }
       },
       {
         "name": "Terrify",
         "energyCost": 75,
         "description": "Cast fear into the hearts of nearby enemies, causing them to run away in terror and stripping their armor.",
-        "range": 25,
-        "duration": 15,
-        "radius": 20,
-        "castTime": 0.6
+        "range": 15,
+        "duration": 25,
+        "castTime": 0.6,
+        "miscStats": { "armorStrip": 0.6, "affectedEnemies": 20 }
       },
       {
         "name": "Desecrate",
         "energyCost": 10,
-        "description": "Forces fallen enemies around you to drop additional loot.",
-        "range": 15,
-        "radius": 15,
-        "castTime": 0.4
+        "description": "Forces fallen enemies around you to drop additional loot. Costs 10 energy per corpse.",
+        "range": 25,
+        "castTime": 0.4,
+        "miscStats": {
+          "energyPerCorpse": 10,
+          "healthOrbChance": 0.6,
+          "dropTableChance": 0.54
+        }
       },
       {
         "name": "Shadows Of The Dead",
         "energyCost": 100,
         "description": "Summon shadow versions of vanquished enemies to fight alongside you for a short period.",
-        "range": 25,
-        "duration": 25,
-        "castTime": 1
+        "castTime": 1,
+        "miscStats": {
+          "damageBonus": 1.5,
+          "shieldBonus": 1,
+          "healthBonus": 1,
+          "healthDecayPerSecond": 0.03,
+          "shadowCopies": 7,
+          "spawnRadius": 10
+        }
       }
     ]
   },
@@ -3474,41 +3949,65 @@ export const allWarframes: Warframe[] = [
         "name": "Fire Walker",
         "energyCost": 25,
         "description": "Blaze a trail of flames, scorching enemies and cleansing allies. Teleporting blasts the landing area with a ring of fire.",
-        "damage": 250,
-        "range": 20,
-        "duration": 25,
+        "damage": 200,
+        "duration": 30,
+        "radius": 6,
         "castTime": 0.4,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "explosionDamage": 1250,
+          "flameDuration": 10,
+          "speedBuff": 0.25,
+          "statusChance": 0.75,
+          "damageInterval": 0.5
+        }
       },
       {
         "name": "Blazing Chakram",
         "energyCost": 25,
         "description": "Hurl a flaming ring that sets enemies ablaze making them vulnerable to any damage. Flaming enemies drop Restorative Orbs on death. Charge to amplify the power of the ring, and reactivate to teleport to the ring.",
-        "damage": 350,
-        "range": 50,
+        "damage": 250,
+        "duration": 15,
         "castTime": 0.5,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "boostedDamage": 1000,
+          "damageVulnerability": 1,
+          "healthOrbChance": 1,
+          "energyOrbChance": 0.35,
+          "unchargedThrowDistance": 30,
+          "chargedThrowDistance": 70
+        }
       },
       {
         "name": "Warding Halo",
         "energyCost": 75,
         "description": "Create a protective ring of fire, that also stuns and damages enemies who get too close.",
-        "damage": 500,
-        "range": 5,
-        "radius": 3,
+        "damage": 125,
+        "range": 2,
         "castTime": 0.6,
-        "damageType": "Heat"
+        "damageType": "Slash",
+        "miscStats": {
+          "haloHealth": 1000,
+          "armorMultiplier": 2.5,
+          "absorptionMultiplier": 2.5,
+          "invulnerabilityDuration": 3,
+          "damageRedirection": 0.9,
+          "breakInvulnerabilityDuration": 2
+        }
       },
       {
         "name": "Divine Spears",
         "energyCost": 100,
         "description": "Impale nearby enemies on spears that erupt from the below. Activate again to slam surviving enemies back into the ground.",
-        "damage": 400,
-        "range": 25,
-        "duration": 10,
-        "radius": 25,
+        "damage": 600,
+        "range": 19,
+        "duration": 12,
         "castTime": 0.8,
-        "damageType": "Puncture"
+        "damageType": "Puncture",
+        "miscStats": {
+          "slamDamage": 600
+        }
       }
     ]
   },
@@ -3527,41 +4026,65 @@ export const allWarframes: Warframe[] = [
         "name": "Fire Walker",
         "energyCost": 25,
         "description": "Blaze a trail of flames, scorching enemies and cleansing allies. Teleporting blasts the landing area with a ring of fire.",
-        "damage": 250,
-        "range": 20,
-        "duration": 25,
+        "damage": 200,
+        "duration": 30,
+        "radius": 6,
         "castTime": 0.4,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "explosionDamage": 1250,
+          "flameDuration": 10,
+          "speedBuff": 0.25,
+          "statusChance": 0.75,
+          "damageInterval": 0.5
+        }
       },
       {
         "name": "Blazing Chakram",
         "energyCost": 25,
         "description": "Hurl a flaming ring that sets enemies ablaze making them vulnerable to any damage. Flaming enemies drop Restorative Orbs on death. Charge to amplify the power of the ring, and reactivate to teleport to the ring.",
-        "damage": 350,
-        "range": 50,
+        "damage": 250,
+        "duration": 15,
         "castTime": 0.5,
-        "damageType": "Heat"
+        "damageType": "Heat",
+        "miscStats": {
+          "boostedDamage": 1000,
+          "damageVulnerability": 1,
+          "healthOrbChance": 1,
+          "energyOrbChance": 0.35,
+          "unchargedThrowDistance": 30,
+          "chargedThrowDistance": 70
+        }
       },
       {
         "name": "Warding Halo",
         "energyCost": 75,
         "description": "Create a protective ring of fire, that also stuns and damages enemies who get too close.",
-        "damage": 500,
-        "range": 5,
-        "radius": 3,
+        "damage": 125,
+        "range": 2,
         "castTime": 0.6,
-        "damageType": "Heat"
+        "damageType": "Slash",
+        "miscStats": {
+          "haloHealth": 1000,
+          "armorMultiplier": 2.5,
+          "absorptionMultiplier": 2.5,
+          "invulnerabilityDuration": 3,
+          "damageRedirection": 0.9,
+          "breakInvulnerabilityDuration": 2
+        }
       },
       {
         "name": "Divine Spears",
         "energyCost": 100,
         "description": "Impale nearby enemies on spears that erupt from the below. Activate again to slam surviving enemies back into the ground.",
-        "damage": 400,
-        "range": 25,
-        "duration": 10,
-        "radius": 25,
+        "damage": 600,
+        "range": 19,
+        "duration": 12,
         "castTime": 0.8,
-        "damageType": "Puncture"
+        "damageType": "Puncture",
+        "miscStats": {
+          "slamDamage": 600
+        }
       }
     ]
   },
@@ -3595,7 +4118,7 @@ export const allWarframes: Warframe[] = [
         "duration": 7,
         "radius": 12,
         "castTime": 0.6,
-        "miscStats": { "mutationStackChance": "50% (100% at 200% Str)" }
+        "miscStats": { "mutationStackChance": 0.5 }
       },
       {
         "name": "Parasitic Link",
@@ -3606,7 +4129,7 @@ export const allWarframes: Warframe[] = [
         "castTime": 0.4,
         "damageBuff": 0.25,
         "damageReduction": 0.5,
-        "miscStats": { "strengthBonus": "25%", "enemyLinkRange": 20 }
+        "miscStats": { "strengthBonus": 0.25, "enemyLinkRange": 20 }
       },
       {
         "name": "Ravenous",
@@ -3651,7 +4174,7 @@ export const allWarframes: Warframe[] = [
         "duration": 7,
         "radius": 12,
         "castTime": 0.6,
-        "miscStats": { "mutationStackChance": "50% (100% at 200% Str)" }
+        "miscStats": { "mutationStackChance": 0.5 }
       },
       {
         "name": "Parasitic Link",
@@ -3662,7 +4185,7 @@ export const allWarframes: Warframe[] = [
         "castTime": 0.4,
         "damageBuff": 0.25,
         "damageReduction": 0.5,
-        "miscStats": { "strengthBonus": "25%", "enemyLinkRange": 20 }
+        "miscStats": { "strengthBonus": 0.25, "enemyLinkRange": 20 }
       },
       {
         "name": "Ravenous",
@@ -3865,7 +4388,7 @@ export const allWarframes: Warframe[] = [
         "miscStats": {
           "Bolts": "3–6",
           "Bolts on kill": "2",
-          "Defense strip": "20–80%",
+          "defenseStrip": 0.8,
           "Armor steal": "25 per hit (cap 1,000)",
           "Shield steal": "75 per hit",
           "Overguard steal": "500 per hit (cap 7,500)"
@@ -3936,7 +4459,7 @@ export const allWarframes: Warframe[] = [
         "miscStats": {
           "Bolts": "3–6",
           "Bolts on kill": "2",
-          "Defense strip": "20–80%",
+          "defenseStrip": 0.8,
           "Armor steal": "25 per hit (cap 1,000)",
           "Shield steal": "75 per hit",
           "Overguard steal": "500 per hit (cap 7,500)"
@@ -4231,22 +4754,65 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Grenade Fan",
         "energyCost": 25,
-        "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overchar..."
+        "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overcharging shield generators, protecting her, her allies and companions. When Shields break, a Satellite is destroyed to double minimum Shield Gate invincibility time.",
+        "damage": 500,
+        "duration": 13,
+        "radius": 5,
+        "castTime": 0.5,
+        "damageType": "Slash",
+        "miscStats": {
+          "shieldRestore": 500,
+          "shieldsPerSecond": 50,
+          "shrapnelGrenades": 3,
+          "shieldGrenades": 4,
+          "statusChance": 0.33,
+          "staggerChance": 1,
+          "shieldGateExtension": 2
+        }
       },
       {
         "name": "Blaze Artillery",
-        "energyCost": 25,
-        "description": "Deploys an artillery unit to blast plasma charges at enemies it faces. Each enemy hit increases the power of subsequent plasma attacks."
+        "energyCost": 50,
+        "description": "Deploys an artillery unit to blast plasma charges at enemies it faces. Each enemy hit increases the power of subsequent plasma attacks.",
+        "damage": 500,
+        "duration": 3,
+        "range": 30,
+        "castTime": 0.5,
+        "damageType": "Heat",
+        "miscStats": {
+          "shotsPerSecond": 3,
+          "firingArc": 130,
+          "maxTurrets": 3,
+          "splashRadius": 2,
+          "damageBonusPerHit": 1
+        }
       },
       {
         "name": "Dispensary",
-        "energyCost": 25,
-        "description": "Deploys a device that generates 3 pickups after a short delay: empowered health orb, universal ammo pack and energy orb."
+        "energyCost": 75,
+        "description": "Deploys a device that generates 3 pickups after a short delay: empowered health orb, universal ammo pack and energy orb.",
+        "duration": 25,
+        "castTime": 0.5,
+        "miscStats": {
+          "extraPickupChance": 0.25,
+          "spawnInterval": 2,
+          "empoweredHealthRestore": 100,
+          "maxCaches": 1
+        }
       },
       {
         "name": "Temporal Anchor",
-        "energyCost": 25,
-        "description": "Drops a Temporal Anchor which, after a short duration, Protea rewinds to trigger a temporal implosion. Implosion damage increases based on damage dealt between anchor drop and r..."
+        "energyCost": 100,
+        "description": "Drops a Temporal Anchor which, after a short duration, Protea rewinds to trigger a temporal implosion. Implosion damage increases based on damage dealt between anchor drop and rewind. Everything lost or expended in that time is returned. Dying while Anchor is active rewinds Protea to the anchor, saving her.",
+        "duration": 8,
+        "radius": 15,
+        "castTime": 0.8,
+        "miscStats": {
+          "damageConversion": 0.25,
+          "invulnerabilityDuration": 3,
+          "rewindCountdown": 1.5,
+          "lethalHealthRestore": 0.05
+        }
       }
     ]
   },
@@ -4264,22 +4830,65 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Grenade Fan",
         "energyCost": 25,
-        "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overchar..."
+        "description": "Throw out grenades in an arc.  (TAP) SHRAPNEL VORTEX Creates a slashing, staggering swirl of shrapnel.  (HOLD) SHIELD SATELLITES Protea reconfigures Grenades to work as overcharging shield generators, protecting her, her allies and companions. When Shields break, a Satellite is destroyed to double minimum Shield Gate invincibility time.",
+        "damage": 500,
+        "duration": 13,
+        "radius": 5,
+        "castTime": 0.5,
+        "damageType": "Slash",
+        "miscStats": {
+          "shieldRestore": 500,
+          "shieldsPerSecond": 50,
+          "shrapnelGrenades": 3,
+          "shieldGrenades": 4,
+          "statusChance": 0.33,
+          "staggerChance": 1,
+          "shieldGateExtension": 2
+        }
       },
       {
         "name": "Blaze Artillery",
-        "energyCost": 25,
-        "description": "Deploys an artillery unit to blast plasma charges at enemies it faces. Each enemy hit increases the power of subsequent plasma attacks."
+        "energyCost": 50,
+        "description": "Deploys an artillery unit to blast plasma charges at enemies it faces. Each enemy hit increases the power of subsequent plasma attacks.",
+        "damage": 500,
+        "duration": 3,
+        "range": 30,
+        "castTime": 0.5,
+        "damageType": "Heat",
+        "miscStats": {
+          "shotsPerSecond": 3,
+          "firingArc": 130,
+          "maxTurrets": 3,
+          "splashRadius": 2,
+          "damageBonusPerHit": 1
+        }
       },
       {
         "name": "Dispensary",
-        "energyCost": 25,
-        "description": "Deploys a device that generates 3 pickups after a short delay: empowered health orb, universal ammo pack and energy orb."
+        "energyCost": 75,
+        "description": "Deploys a device that generates 3 pickups after a short delay: empowered health orb, universal ammo pack and energy orb.",
+        "duration": 25,
+        "castTime": 0.5,
+        "miscStats": {
+          "extraPickupChance": 0.25,
+          "spawnInterval": 2,
+          "empoweredHealthRestore": 100,
+          "maxCaches": 1
+        }
       },
       {
         "name": "Temporal Anchor",
-        "energyCost": 25,
-        "description": "Drops a Temporal Anchor which, after a short duration, Protea rewinds to trigger a temporal implosion. Implosion damage increases based on damage dealt between anchor drop and r..."
+        "energyCost": 100,
+        "description": "Drops a Temporal Anchor which, after a short duration, Protea rewinds to trigger a temporal implosion. Implosion damage increases based on damage dealt between anchor drop and rewind. Everything lost or expended in that time is returned. Dying while Anchor is active rewinds Protea to the anchor, saving her.",
+        "duration": 8,
+        "radius": 15,
+        "castTime": 0.8,
+        "miscStats": {
+          "damageConversion": 0.25,
+          "invulnerabilityDuration": 3,
+          "rewindCountdown": 1.5,
+          "lethalHealthRestore": 0.05
+        }
       }
     ]
   },
@@ -4297,22 +4906,71 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Chyrinka Pillar",
         "energyCost": 25,
-        "description": "Summon a Chyrinka Pillar that slows enemies. It pulses <DT_RADIATION_COLOR>Radiation Damage with a guaranteed Status Effect."
+        "description": "Summon a Chyrinka Pillar that slows enemies. It pulses <DT_RADIATION_COLOR>Radiation Damage with a guaranteed Status Effect.",
+        "damage": 1000,
+        "duration": 35,
+        "radius": 8,
+        "castTime": 0.5,
+        "damageType": "Radiation",
+        "miscStats": {
+          "empoweredDuration": 5,
+          "pillarHeight": 3,
+          "maxPillars": 2,
+          "pulseInterval": 1.5,
+          "slowPercent": 0.35,
+          "empoweredPulseInterval": 0.75
+        }
       },
       {
         "name": "Containment Wall",
-        "energyCost": 25,
-        "description": "Contain the threat. Qorvex summons walls that slam together, damaging all enemies caught between them and inflicting <DT_RADIATION_COLOR>Radiation Status."
+        "energyCost": 50,
+        "description": "Contain the threat. Qorvex summons walls that slam together, damaging all enemies caught between them and inflicting <DT_RADIATION_COLOR>Radiation Status.",
+        "damage": 3500,
+        "range": 20,
+        "castTime": 1,
+        "damageType": "Impact",
+        "miscStats": {
+          "radiationDamagePerTick": 200,
+          "damageVulnerability": 0.25,
+          "wallsGap": 10,
+          "placementDistance": 2,
+          "assemblyTime": 1,
+          "damageInterval": 0.125,
+          "radiationTicks": 7
+        }
       },
       {
         "name": "Disometric Guard",
-        "energyCost": 25,
-        "description": "Guard yourself and nearby allies against Status Effects. Each time Qorvex kills or assists in killing an enemy affected by <DT_RADIATION_COLOR>Radiation Status, the number of St..."
+        "energyCost": 75,
+        "description": "Guard yourself and nearby allies against Status Effects. Each time Qorvex kills or assists in killing an enemy affected by <DT_RADIATION_COLOR>Radiation Status, the number of Status Effects Disometric Guard can prevent increases.",
+        "damage": 500,
+        "castTime": 0.5,
+        "damageType": "Radiation",
+        "miscStats": {
+          "initialStatusStacks": 5,
+          "maxStatusStacks": 10,
+          "damageRadius": 6,
+          "affinityRange": 50,
+          "stackChancePerStatus": 0.1,
+          "stackChanceCap": 1
+        }
       },
       {
         "name": "Crucible Blast",
-        "energyCost": 25,
-        "description": "Release a beam from Qorvex's Crucible Core. Each enemy struck suffers <DT_RADIATION_COLOR>Radiation Damage with a guaranteed Status Effect. Enemies affected by <DT_RADIATION_CO..."
+        "energyCost": 100,
+        "description": "Release a beam from Qorvex's Crucible Core. Each enemy struck suffers <DT_RADIATION_COLOR>Radiation Damage with a guaranteed Status Effect. Enemies affected by <DT_RADIATION_COLOR>Radiation Status explode in a chain reaction.",
+        "damage": 10000,
+        "range": 40,
+        "radius": 8,
+        "castTime": 0.75,
+        "damageType": "Radiation",
+        "miscStats": {
+          "explosionDamage": 500,
+          "explosionDamagePerStatus": 250,
+          "beamRadius": 2,
+          "beamTicksPerSecond": 10,
+          "beamDuration": 2
+        }
       }
     ]
   },
@@ -4556,7 +5214,14 @@ export const allWarframes: Warframe[] = [
         "range": 10,
         "duration": 45,
         "castTime": 0.4,
-        "miscStats": { "gunDamage": 0.3, "meleeDamage": 0.6 }
+        "miscStats": {
+          "gunDamage": 0.3,
+          "meleeDamage": 0.6,
+          "contagionCloudDps": 300,
+          "contagionCloudRange": 5,
+          "contagionCloudDuration": 12,
+          "contagionCloudMeleeMult": 2
+        }
       },
       {
         "name": "Miasma",
@@ -4567,7 +5232,8 @@ export const allWarframes: Warframe[] = [
         "duration": 6,
         "radius": 20,
         "castTime": 0.8,
-        "damageType": "Viral"
+        "damageType": "Viral",
+        "miscStats": { "sporesDamageMultiplier": 4 }
       }
     ]
   },
@@ -4609,7 +5275,14 @@ export const allWarframes: Warframe[] = [
         "range": 10,
         "duration": 45,
         "castTime": 0.4,
-        "miscStats": { "gunDamage": 0.3, "meleeDamage": 0.6 }
+        "miscStats": {
+          "gunDamage": 0.3,
+          "meleeDamage": 0.6,
+          "contagionCloudDps": 300,
+          "contagionCloudRange": 5,
+          "contagionCloudDuration": 12,
+          "contagionCloudMeleeMult": 2
+        }
       },
       {
         "name": "Miasma",
@@ -4620,7 +5293,8 @@ export const allWarframes: Warframe[] = [
         "duration": 6,
         "radius": 20,
         "castTime": 0.8,
-        "damageType": "Viral"
+        "damageType": "Viral",
+        "miscStats": { "sporesDamageMultiplier": 4 }
       }
     ]
   },
@@ -4638,22 +5312,63 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Reap",
         "energyCost": 25,
-        "description": "Sevagoth's Shadow flies outward ravaging enemies in his path. Survivors are damaged by Death\u2019s Harvest over time. The souls of the dead fill the Death Well."
+        "description": "Sevagoth's Shadow flies outward ravaging enemies in his path. Survivors are damaged by Death's Harvest over time. The souls of the dead fill the Death Well.",
+        "damage": 250,
+        "duration": 6,
+        "radius": 8,
+        "castTime": 0.5,
+        "damageType": "Radiation",
+        "miscStats": {
+          "damageVulnerability": 0.5,
+          "debuffDuration": 10,
+          "deathWellGain": 0.05,
+          "radialDamagePercent": 0.25,
+          "radialDamageRange": 4
+        }
       },
       {
         "name": "Sow",
-        "energyCost": 25,
-        "description": "Plant a death seed in nearby targets to drain their lifeforce. Reap what has been sown to detonate afflicted enemies, dealing a percentage of their health as radial damage. The ..."
+        "energyCost": 50,
+        "description": "Plant a death seed in nearby targets to drain their lifeforce. Reap what has been sown to detonate afflicted enemies, dealing a percentage of their health as radial damage. The souls of the dead fill the Death Well.",
+        "damage": 250,
+        "duration": 10,
+        "range": 16,
+        "castTime": 0.5,
+        "miscStats": {
+          "deathWellGain": 0.05,
+          "radialDamagePercent": 0.25,
+          "radialDamageRange": 4
+        }
       },
       {
         "name": "Gloom",
-        "energyCost": 25,
-        "description": "Summon a radial pulse wave that ensnares and slows enemies, siphoning their lifeforce for the Death Well. Allies within the wave steal health with each attack."
+        "energyCost": 50,
+        "description": "Summon a radial pulse wave that ensnares and slows enemies, siphoning their lifeforce for the Death Well. Allies within the wave steal health with each attack.",
+        "castTime": 0.5,
+        "miscStats": {
+          "slowPercent": 0.35,
+          "lifeStealPercent": 0.05,
+          "slowCap": 0.95,
+          "minRadius": 4,
+          "maxRadius": 16,
+          "rangeGrowthPerSecond": 2,
+          "energyDrainPerEnemy": 0.75,
+          "energyDrainEnemyCap": 10,
+          "deathWellGainPerSecond": 0.001,
+          "channeled": true
+        }
       },
       {
         "name": "Exalted Shadow",
-        "energyCost": 25,
-        "description": "When the Death Well fills, Sevagoth's Shadow form is ready to be released. Tear the enemy asunder with a collection of melee-focused abilities."
+        "energyCost": 0,
+        "description": "When the Death Well fills to above 75%, Sevagoth's Shadow form is ready to be released. Tear the enemy asunder with a collection of melee-focused abilities.",
+        "damage": 250,
+        "castTime": 0.8,
+        "miscStats": {
+          "deathWellThreshold": 0.75,
+          "deathWellDrain": 0.01,
+          "invulnerabilityDuration": 5
+        }
       }
     ]
   },
@@ -4671,22 +5386,63 @@ export const allWarframes: Warframe[] = [
       {
         "name": "Reap",
         "energyCost": 25,
-        "description": "Sevagoth's Shadow flies outward ravaging enemies in his path. Survivors are damaged by Death\u2019s Harvest over time. The souls of the dead fill the Death Well."
+        "description": "Sevagoth's Shadow flies outward ravaging enemies in his path. Survivors are damaged by Death's Harvest over time. The souls of the dead fill the Death Well.",
+        "damage": 250,
+        "duration": 6,
+        "radius": 8,
+        "castTime": 0.5,
+        "damageType": "Radiation",
+        "miscStats": {
+          "damageVulnerability": 0.5,
+          "debuffDuration": 10,
+          "deathWellGain": 0.05,
+          "radialDamagePercent": 0.25,
+          "radialDamageRange": 4
+        }
       },
       {
         "name": "Sow",
-        "energyCost": 25,
-        "description": "Plant a death seed in nearby targets to drain their lifeforce. Reap what has been sown to detonate afflicted enemies, dealing a percentage of their health as radial damage. The ..."
+        "energyCost": 50,
+        "description": "Plant a death seed in nearby targets to drain their lifeforce. Reap what has been sown to detonate afflicted enemies, dealing a percentage of their health as radial damage. The souls of the dead fill the Death Well.",
+        "damage": 250,
+        "duration": 10,
+        "range": 16,
+        "castTime": 0.5,
+        "miscStats": {
+          "deathWellGain": 0.05,
+          "radialDamagePercent": 0.25,
+          "radialDamageRange": 4
+        }
       },
       {
         "name": "Gloom",
-        "energyCost": 25,
-        "description": "Summon a radial pulse wave that ensnares and slows enemies, siphoning their lifeforce for the Death Well. Allies within the wave steal health with each attack."
+        "energyCost": 50,
+        "description": "Summon a radial pulse wave that ensnares and slows enemies, siphoning their lifeforce for the Death Well. Allies within the wave steal health with each attack.",
+        "castTime": 0.5,
+        "miscStats": {
+          "slowPercent": 0.35,
+          "lifeStealPercent": 0.05,
+          "slowCap": 0.95,
+          "minRadius": 4,
+          "maxRadius": 16,
+          "rangeGrowthPerSecond": 2,
+          "energyDrainPerEnemy": 0.75,
+          "energyDrainEnemyCap": 10,
+          "deathWellGainPerSecond": 0.001,
+          "channeled": true
+        }
       },
       {
         "name": "Exalted Shadow",
-        "energyCost": 25,
-        "description": "When the Death Well fills, Sevagoth's Shadow form is ready to be released. Tear the enemy asunder with a collection of melee-focused abilities."
+        "energyCost": 0,
+        "description": "When the Death Well fills to above 75%, Sevagoth's Shadow form is ready to be released. Tear the enemy asunder with a collection of melee-focused abilities.",
+        "damage": 250,
+        "castTime": 0.8,
+        "miscStats": {
+          "deathWellThreshold": 0.75,
+          "deathWellDrain": 0.01,
+          "invulnerabilityDuration": 5
+        }
       }
     ]
   },
@@ -4716,9 +5472,18 @@ export const allWarframes: Warframe[] = [
         "name": "Tharros Strike",
         "energyCost": 25,
         "description": "Summon Tharros, the shield of Styanax. Swing Tharros to repel enemies and reduce their shields and armor. Styanax regenerates health for every enemy struck.",
+        "damage": 1000,
         "range": 9,
         "castTime": 0.75,
-        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%", "healthPerHit": "250" }
+        "damageType": "Impact",
+        "miscStats": {
+          "shieldStrip": 0.5,
+          "armorStrip": 0.5,
+          "healthPerHit": 100,
+          "shieldCount": 9,
+          "horizontalSpread": 135,
+          "verticalSpread": 160
+        }
       },
       {
         "name": "Rally Point",
@@ -4766,9 +5531,18 @@ export const allWarframes: Warframe[] = [
         "name": "Tharros Strike",
         "energyCost": 25,
         "description": "Summon Tharros, the shield of Styanax. Swing Tharros to repel enemies and reduce their shields and armor. Styanax regenerates health for every enemy struck.",
+        "damage": 1000,
         "range": 9,
         "castTime": 0.75,
-        "miscStats": { "shieldStrip": "100%", "armorStrip": "50%", "healthPerHit": "250" }
+        "damageType": "Impact",
+        "miscStats": {
+          "shieldStrip": 0.5,
+          "armorStrip": 0.5,
+          "healthPerHit": 100,
+          "shieldCount": 9,
+          "horizontalSpread": 135,
+          "verticalSpread": 160
+        }
       },
       {
         "name": "Rally Point",
@@ -4820,7 +5594,7 @@ export const allWarframes: Warframe[] = [
         "statusChance": 1,
         "castTime": 0.6,
         "damageType": "Slash",
-        "miscStats": { "shieldStrip": "35%", "armorStrip": "35%", "arc": "67.5°" }
+        "miscStats": { "shieldStrip": 0.35, "armorStrip": 0.35, "arc": "67.5°" }
       },
       {
         "name": "Jade Stars",
@@ -5516,7 +6290,7 @@ export const allWarframes: Warframe[] = [
           "durationExtension": 5,
           "criticalChanceBonus": 1,
           "statusChance": 1,
-          "critDamageBonus": "+2.0x",
+          "critDamageBonus": 2,
           "parkourVelocity": 0.5
         }
       },
@@ -5561,7 +6335,8 @@ export const allWarframes: Warframe[] = [
           "speedBuff": 0.5,
           "killDamageBonus": 2,
           "critChancePerKill": 0.05,
-          "critDamagePerKill": "+0.1x"
+          "critDamagePerKill": 0.1,
+          "statusDamageBonus": 1
         }
       }
     ]
@@ -5588,7 +6363,7 @@ export const allWarframes: Warframe[] = [
           "durationExtension": 5,
           "criticalChanceBonus": 1,
           "statusChance": 1,
-          "critDamageBonus": "+2.0x",
+          "critDamageBonus": 2,
           "parkourVelocity": 0.5
         }
       },
@@ -5633,7 +6408,8 @@ export const allWarframes: Warframe[] = [
           "speedBuff": 0.5,
           "killDamageBonus": 2,
           "critChancePerKill": 0.05,
-          "critDamagePerKill": "+0.1x"
+          "critDamagePerKill": 0.1,
+          "statusDamageBonus": 1
         }
       }
     ]
@@ -5674,9 +6450,9 @@ export const allWarframes: Warframe[] = [
         "range": 18,
         "duration": 16,
         "radius": 18,
-        "damageBuff": 2,
         "castTime": 0.6,
-        "damageType": "Radiation"
+        "damageType": "Radiation",
+        "miscStats": { "sparkDamageMultiplier": 2 }
       },
       {
         "name": "Sol Gate",
@@ -5726,9 +6502,9 @@ export const allWarframes: Warframe[] = [
         "range": 18,
         "duration": 16,
         "radius": 18,
-        "damageBuff": 2,
         "castTime": 0.6,
-        "damageType": "Radiation"
+        "damageType": "Radiation",
+        "miscStats": { "sparkDamageMultiplier": 2 }
       },
       {
         "name": "Sol Gate",

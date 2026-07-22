@@ -105,8 +105,10 @@ export default function WeaponBuilderPage() {
     let w = selectedWeapon;
     if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) w = applyGravimagMode(selectedWeapon);
     const data = incarnonDataMap.get(w.id);
-    return resolveIncarnonActiveWeapon(w, data, selectedEvolutions);
-  }, [selectedWeapon, gravimagMode, selectedEvolutions]);
+    return resolveIncarnonActiveWeapon(w, data, selectedEvolutions, {
+      onosIncarnonMode: simParams.onosIncarnonMode,
+    });
+  }, [selectedWeapon, gravimagMode, selectedEvolutions, simParams.onosIncarnonMode]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
     const data = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;

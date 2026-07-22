@@ -247,24 +247,36 @@ export function buildWarframeSetBonusSummary(
       label: "Augur",
       pieces: augur,
       required: 6,
-      active: augur >= 6,
-      description: "6-piece: 40% of Energy spent becomes Shields",
+      // wiki: +40% energy→shields per equipped piece (max 240% at 6)
+      active: augur >= 1,
+      description:
+        augur >= 1
+          ? `${augur * 40}% of Energy spent becomes Shields (${augur} piece${augur === 1 ? "" : "s"})`
+          : "Each piece: +40% of Energy spent becomes Shields (max 240% at 6)",
     },
     {
       setId: "hunter",
       label: "Hunter",
       pieces: hunter,
       required: 6,
-      active: hunter >= 6,
-      description: "6-piece: Companion deals +150% damage to status-affected enemies",
+      // wiki: +25% companion dmg vs status targets per piece (max +150% at 6)
+      active: hunter >= 1,
+      description:
+        hunter >= 1
+          ? `Companion +${hunter * 25}% damage vs status-affected enemies (${hunter} piece${hunter === 1 ? "" : "s"})`
+          : "Each piece: Companion +25% damage vs status-affected enemies (max +150% at 6)",
     },
     {
       setId: "mecha",
       label: "Mecha",
       pieces: mecha,
       required: 4,
-      active: mecha >= 4,
-      description: "4-piece: Marked enemies explode for +150% damage",
+      active: mecha >= 1,
+      // wiki: mark + status spread on kill — not a flat explosion DPS buff
+      description:
+        mecha >= 1
+          ? `Companion marks a target (cooldown/duration/range scale with ${mecha} piece${mecha === 1 ? "" : "s"}); kill spreads statuses`
+          : "Each piece: shorter mark cooldown, longer mark, wider status spread on mark-kill (requires Kubrow/Predasite)",
     },
     {
       setId: "synth",

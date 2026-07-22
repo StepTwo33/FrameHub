@@ -115,9 +115,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_baruuk_reactive_storm: mod("augment_baruuk_reactive_storm", [
     line("statusChance", "mod_panel", "multiplicative_percent", "Reactive Storm: statusChance \u2014 Serene Storm Augment: Desert Wind is granted +250% Status Chance and changes its\u2026"),
   ]),
-  augment_caliban_lethal_progeny_aug: mod("augment_caliban_lethal_progeny_aug", [
-    line("sentientDuration", "mod_panel", "multiplicative_percent", "Lethal Progeny Augment: sentientDuration \u2014 +5s Sentient duration per rank"),
-  ]),
+
   augment_chroma_afterburn: mod("augment_chroma_afterburn", [
     line("damagePerSecondActive", "mod_panel", "multiplicative_percent", "Afterburn: damagePerSecondActive \u2014 Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental proj\u2026"),
     line("explosionDamage", "mod_panel", "multiplicative_percent", "Afterburn: explosionDamage \u2014 Spectral Scream Augment: Upon deactivation, Chroma will launch an elemental proj\u2026"),
@@ -133,9 +131,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Vexing Retaliation: range \u2014 Vex Armor Augment: Taking 150 Damage will trigger a 9m burst. Shield damage will\u2026"),
     line("retaliationChance", "mod_panel", "multiplicative_percent", "Vexing Retaliation: retaliationChance \u2014 Vex Armor Augment: Taking 150 Damage will trigger a 9m burst. Shield damage will\u2026"),
   ]),
-  augment_dagath_grave_keeper: mod("augment_dagath_grave_keeper", [
-    line("damageReductionPerKill", "mod_panel", "multiplicative_percent", "Grave Keeper: damageReductionPerKill \u2014 +2% DR per kill per rank"),
-  ]),
+
   augment_ember_exothermic: mod("augment_ember_exothermic", [
     line("energy", "mod_panel", "multiplicative_percent", "Exothermic: energy \u2014 Inferno Augment: Enemies killed while under the effect of Inferno have a 15% cha\u2026"),
     line("energyOrbChance", "mod_panel", "multiplicative_percent", "Exothermic: energyOrbChance \u2014 Inferno Augment: Enemies killed while under the effect of Inferno have a 15% cha\u2026"),
@@ -216,9 +212,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_garuda_blood_forge: mod("augment_garuda_blood_forge", [
     line("reloadSpeed", "mod_panel", "multiplicative_percent", "Blood Forge: reloadSpeed \u2014 Bloodletting Augment: Garuda's equipped weapon is reloaded up to 100%."),
   ]),
-  augment_garuda_blood_siphon: mod("augment_garuda_blood_siphon", [
-    line("healthFromAllies", "mod_panel", "multiplicative_percent", "Blood Siphon: healthFromAllies \u2014 Allies give +25% Health per rank"),
-  ]),
+
   augment_garuda_dread_ward: mod("augment_garuda_dread_ward", [
     line("duration", "mod_panel", "multiplicative_percent", "Dread Ward: duration \u2014 Dread Mirror Augment: Become unkillable for 8s when Dread Mirror kills a target \u2026"),
     line("invulnerability", "mod_panel", "multiplicative_percent", "Dread Ward: invulnerability \u2014 Dread Mirror Augment: Become unkillable for 8s when Dread Mirror kills a target \u2026"),
@@ -256,9 +250,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_hydroid_pilfering_swarm: mod("augment_hydroid_pilfering_swarm", [
     line("lootChance", "mod_panel", "multiplicative_percent", "Pilfering Swarm: lootChance \u2014 Tentacle Swarm Augment: Enemies held by tentacles have a 100% chance at addition\u2026"),
   ]),
-  augment_hydroid_tempest_rush: mod("augment_hydroid_tempest_rush", [
-    line("castSpeed", "mod_panel", "multiplicative_percent", "Tempest Rush: castSpeed \u2014 +25% Cast Speed during Barrage per rank"),
-  ]),
+
   augment_hydroid_tidal_impunity: mod("augment_hydroid_tidal_impunity", [
     line("duration", "mod_panel", "multiplicative_percent", "Tidal Impunity: duration \u2014 Tidal Surge Augment: Clears Status Effects and grants 12s of Status Immunity for\u2026"),
     line("statusCure", "mod_panel", "multiplicative_percent", "Tidal Impunity: statusCure \u2014 Tidal Surge Augment: Clears Status Effects and grants 12s of Status Immunity for\u2026"),
@@ -289,9 +281,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_ivar_piercing_navigator: mod("augment_ivar_piercing_navigator", [
     line("punchThroughPerHit", "mod_panel", "multiplicative_percent", "Piercing Navigator: punchThroughPerHit \u2014 Navigator Augment: Each hit increases the projectile's Critical Chance by 50% up\u2026"),
   ]),
-  augment_jade_prismatic_shield_aug: mod("augment_jade_prismatic_shield_aug", [
-    line("reflectionDamage", "mod_panel", "multiplicative_percent", "Prismatic Shield Augment: reflectionDamage \u2014 +25% Reflection damage per rank"),
-  ]),
+
   augment_khora_accumulating_whipclaw: mod("augment_khora_accumulating_whipclaw", [
     line("comboOnHit", "mod_panel", "multiplicative_percent", "Accumulating Whipclaw: comboOnHit \u2014 Whipclaw Augment: Hitting 3 enemies will grant a 35% stacking Damage Bonus to su\u2026"),
     line("damage", "mod_panel", "multiplicative_percent", "Accumulating Whipclaw: damage \u2014 Whipclaw Augment: Hitting 3 enemies will grant a 35% stacking Damage Bonus to su\u2026"),
@@ -304,9 +294,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("deathPrevention", "mod_panel", "multiplicative_percent", "Venari Bodyguard: deathPrevention \u2014 Venari Augment: Venari dies in Khora's place. Recovery timer increased to 150s. \u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Venari Bodyguard: duration \u2014 Venari Augment: Venari dies in Khora's place. Recovery timer increased to 150s. \u2026"),
   ]),
-  augment_kullervo_wrathful_clarity: mod("augment_kullervo_wrathful_clarity", [
-    line("markDuration", "mod_panel", "multiplicative_percent", "Wrathful Clarity: markDuration \u2014 +3s Mark duration per rank"),
-  ]),
+
   augment_limbo_cataclysmic_continuum: mod("augment_limbo_cataclysmic_continuum", [
     line("duration", "mod_panel", "multiplicative_percent", "Cataclysmic Continuum: duration \u2014 Cataclysm Augment: Duration increased by 1s for each enemy killed."),
     line("durationPerKill", "mod_panel", "multiplicative_percent", "Cataclysmic Continuum: durationPerKill \u2014 Cataclysm Augment: Duration increased by 1s for each enemy killed."),
@@ -326,9 +314,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Irradiating Disarm: duration \u2014 Radial Disarm Augment: Enemies will be affected by Radiation Status for 9s"),
     line("radiationChance", "mod_panel", "multiplicative_percent", "Irradiating Disarm: radiationChance \u2014 Radial Disarm Augment: Enemies will be affected by Radiation Status for 9s"),
   ]),
-  augment_loki_safe_switch: mod("augment_loki_safe_switch", [
-    line("damageReduction", "mod_panel", "multiplicative_percent", "Safe Switch: damageReduction \u2014 +75% Damage Reduction after teleport per rank"),
-  ]),
+
   augment_loki_savior_decoy: mod("augment_loki_savior_decoy", [
     line("deathPrevention", "mod_panel", "multiplicative_percent", "Savior Decoy: deathPrevention \u2014 Decoy Augment: If Loki takes fatal damage, Decoy absorbs the damage and swaps lo\u2026"),
   ]),
@@ -400,9 +386,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_nezha_safeguard: mod("augment_nezha_safeguard", [
     line("allyWard", "mod_panel", "multiplicative_percent", "Safeguard: allyWard \u2014 Warding Halo Augment: Can now be cast on allies with 50% effectiveness."),
   ]),
-  augment_nezha_warding_halo: mod("augment_nezha_warding_halo", [
-    line("recast", "mod_panel", "multiplicative_percent", "Warding Halo Augment: recast \u2014 Can recast while active per rank"),
-  ]),
+
   augment_nova_antimatter_absorb: mod("augment_nova_antimatter_absorb", [
     line("absorbRadius", "mod_panel", "multiplicative_percent", "Antimatter Absorb: absorbRadius \u2014 Antimatter Drop Augment: Absorbs enemy bullets within 5m, increasing the power o\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Antimatter Absorb: range \u2014 Antimatter Drop Augment: Absorbs enemy bullets within 5m, increasing the power o\u2026"),
@@ -441,18 +425,10 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("maxMallets", "mod_panel", "multiplicative_percent", "Partitioned Mallet: maxMallets \u2014 Mallet Augment: Create an additional Mallet with 20% reduced range."),
     line("range", "mod_panel", "multiplicative_percent", "Partitioned Mallet: range \u2014 Mallet Augment: Create an additional Mallet with 20% reduced range."),
   ]),
-  augment_protea_dispensary_aug: mod("augment_protea_dispensary_aug", [
-    line("extraPickup", "mod_panel", "multiplicative_percent", "Dispensary Augment: extraPickup \u2014 +25% chance for extra pickup per rank"),
-  ]),
-  augment_qorvex_chyrinka_pillar_aug: mod("augment_qorvex_chyrinka_pillar_aug", [
-    line("pillarDuration", "mod_panel", "multiplicative_percent", "Chyrinka Pillar Augment: pillarDuration \u2014 +3s Pillar duration per rank"),
-  ]),
-  augment_revenant_mesmer_skin_aug: mod("augment_revenant_mesmer_skin_aug", [
-    line("chargesToAlly", "mod_panel", "multiplicative_percent", "Mesmer Skin Augment: chargesToAlly \u2014 Can transfer +1 charge to ally per rank"),
-  ]),
-  augment_revenant_thrall_toll: mod("augment_revenant_thrall_toll", [
-    line("energyOnKill", "mod_panel", "multiplicative_percent", "Thrall Toll: energyOnKill \u2014 +2 Energy per thrall death per rank"),
-  ]),
+
+
+
+
   augment_rhino_iron_shrapnel: mod("augment_rhino_iron_shrapnel", [
     line("damage", "mod_panel", "multiplicative_percent", "Iron Shrapnel: damage \u2014 Iron Skin Augment: Recasting Iron Skin will cause it to detonate, dealing 100% o\u2026"),
     line("recastExplosion", "mod_panel", "multiplicative_percent", "Iron Shrapnel: recastExplosion \u2014 Iron Skin Augment: Recasting Iron Skin will cause it to detonate, dealing 100% o\u2026"),
@@ -468,14 +444,13 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_rhino_reinforcing_stomp: mod("augment_rhino_reinforcing_stomp", [
     line("armorPerEnemy", "mod_panel", "multiplicative_percent", "Reinforcing Stomp: armorPerEnemy \u2014 Rhino Stomp Augment: Iron Skin Health is replenished by 4% for each enemy affect\u2026"),
   ]),
+  // wiki R3 absolutes; Ability Strength/Range/Duration scale cloud via Toxic Lash miscStats panel
   augment_saryn_contagion_cloud: mod("augment_saryn_contagion_cloud", [
-    line("cloudDuration", "mod_panel", "multiplicative_percent", "Contagion Cloud: cloudDuration \u2014 Toxic Lash Augment: Create 5m toxic clouds, dealing 300 Toxin Damage/s for 12s w\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Contagion Cloud: duration \u2014 Toxic Lash Augment: Create 5m toxic clouds, dealing 300 Toxin Damage/s for 12s w\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Contagion Cloud: range \u2014 Toxic Lash Augment: Create 5m toxic clouds, dealing 300 Toxin Damage/s for 12s w\u2026"),
+    line("toxinDamagePerSecond", "mod_panel", "flat", "Contagion Cloud: 300 Toxin Damage/s (R3; × Ability Strength on ability panel)"),
+    line("duration", "mod_panel", "flat", "Contagion Cloud: 12s cloud duration (R3; × Ability Duration on ability panel)"),
+    line("range", "mod_panel", "flat", "Contagion Cloud: 5m radius (R3; × Ability Range on ability panel)"),
   ]),
-  augment_saryn_miasmic_siphon: mod("augment_saryn_miasmic_siphon", [
-    line("energyOnKill", "mod_panel", "multiplicative_percent", "Miasmic Siphon: energyOnKill \u2014 Miasma kills grant +5 energy per rank"),
-  ]),
+
   augment_saryn_regenerative_molt: mod("augment_saryn_regenerative_molt", [
     line("duration", "mod_panel", "multiplicative_percent", "Regenerative Molt: duration \u2014 Molt Augment: After casting Molt, Saryn regenerates 50 Health/s for 10s."),
     line("healthRegen", "mod_panel", "multiplicative_percent", "Regenerative Molt: healthRegen \u2014 Molt Augment: After casting Molt, Saryn regenerates 50 Health/s for 10s."),
@@ -490,9 +465,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Venom Dose: duration \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Venom Dose: range \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
   ]),
-  augment_sevagoth_gloom_aug: mod("augment_sevagoth_gloom_aug", [
-    line("rangePerShadow", "mod_panel", "multiplicative_percent", "Gloom Augment: rangePerShadow \u2014 +2m Range per Shadow per rank"),
-  ]),
+
   augment_titania_beguiling_lantern: mod("augment_titania_beguiling_lantern", [
     line("attractionRange", "mod_panel", "multiplicative_percent", "Beguiling Lantern: attractionRange \u2014 Lantern Augment: Attracted enemies take 100% more Weapon Damage."),
     line("damage", "mod_panel", "multiplicative_percent", "Beguiling Lantern: damage \u2014 Lantern Augment: Attracted enemies take 100% more Weapon Damage."),
@@ -511,9 +484,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   augment_trinity_abating_link: mod("augment_trinity_abating_link", [
     line("armorReduction", "mod_panel", "multiplicative_percent", "Abating Link: armorReduction \u2014 Link Augment: Reduces Armor Rating by 60% on enemies targeted by Link."),
   ]),
-  augment_trinity_blessing_share: mod("augment_trinity_blessing_share", [
-    line("damageReduction", "mod_panel", "multiplicative_percent", "Blessing Share: damageReduction \u2014 Blessing damage reduction +25% per rank"),
-  ]),
+
   augment_trinity_pool_of_life: mod("augment_trinity_pool_of_life", [
     line("energy", "mod_panel", "multiplicative_percent", "Pool of Life: energy \u2014 Well of Life Augment: On death, marked enemies will drop 4 Health Orbs with a 10\u2026"),
     line("healthOrbChance", "mod_panel", "multiplicative_percent", "Pool of Life: healthOrbChance \u2014 Well of Life Augment: On death, marked enemies will drop 4 Health Orbs with a 10\u2026"),
@@ -855,6 +826,10 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   purifying_flames: mod("purifying_flames", [
     line("duration", "mod_panel", "multiplicative_percent", "Purifying Flames: duration \u2014 Fire Blast Augment: Allies hit by the expanding ring of fire are cured of Status\u2026"),
+  ]),
+  biting_frost: mod("biting_frost", [
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Biting Frost — +200% CC vs enemies frozen by 10 Cold stacks (conditional; not paper DPS)"),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Biting Frost — +200% CD vs enemies frozen by 10 Cold stacks (conditional; not paper DPS)"),
   ]),
   "push_&_pull": mod("push_&_pull", [
     line("range", "mod_panel", "multiplicative_percent", "Push & Pull: range \u2014 Metamorphosis Augment: Switching to Day-form staggers enemies within 6m and knoc\u2026"),

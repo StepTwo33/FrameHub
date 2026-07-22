@@ -95,6 +95,52 @@ export function WeaponSimControls({
             />
           )}
           <div className="pt-1 space-y-1.5">
+            {weapon?.id === "onos" && (
+              <label className="block text-[10px] text-muted-foreground" title="Wiki: Held Radiation beam vs full-charge Heat blast">
+                Onos Incarnon attack
+                <select
+                  value={simParams.onosIncarnonMode ?? "held"}
+                  onChange={(e) =>
+                    onSimParamsChange({
+                      ...simParams,
+                      onosIncarnonMode: e.target.value === "charge" ? "charge" : "held",
+                    })
+                  }
+                  className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                >
+                  <option value="held">Held Radiation beam</option>
+                  <option value="charge">Full-charge Heat blast</option>
+                </select>
+              </label>
+            )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Vex Armor") && (
+              <SimSlider
+                label="Vex Fury fill"
+                value={Math.round((simParams.vexArmorFuryFraction ?? 1) * 100)}
+                min={0}
+                max={100}
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, vexArmorFuryFraction: v / 100 })
+                }
+                tooltip="Vex Armor Fury stack progress (0–100%). Max Fury is +275% weapon damage × Ability Strength."
+              />
+            )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Toxic Lash") && (
+              <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={!!simParams.toxicLashSporesOnTarget}
+                  onChange={(e) =>
+                    onSimParamsChange({
+                      ...simParams,
+                      toxicLashSporesOnTarget: e.target.checked,
+                    })
+                  }
+                  className="h-3.5 w-3.5 rounded border-border accent-primary"
+                />
+                Spores on target (2× Extra Hit)
+              </label>
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

@@ -1,4 +1,8 @@
-import { getVerifiedFieldScaling } from "@/lib/codex/ability-scaling-registry";
+import { allHelminthAbilities } from "@/data/helminth";
+import {
+  getVerifiedFieldScaling,
+  getVerifiedMiscScaling,
+} from "@/lib/codex/ability-scaling-registry";
 import { getModStatDisplayLines } from "@/lib/display/mod-display";
 import {
   applyVerifiedModStatToWeapon,
@@ -16,6 +20,17 @@ import type {
   WeaponExternalBuff,
   WeaponExternalBuffElemental,
 } from "@/lib/types";
+
+/** Wiki-verified base weapon-buff fractions (rank max). Helminth overrides when host ≠ source. */
+const NOURISH_VIRAL_NATIVE = 0.75;
+const NOURISH_VIRAL_HELMINTH = 0.45;
+const XATA_VOID_NATIVE = 0.26;
+/** Wiki Vex Armor rank-3 max Fury (assumes full stacks in sim). */
+const VEX_ARMOR_MAX_FURY = 2.75;
+
+function warframeFamilyId(warframeId: string | undefined): string {
+  return (warframeId ?? "").replace(/_prime$/, "");
+}
 
 export interface WeaponBuffContext {
   warframeId?: string;
@@ -262,17 +277,340 @@ function scaledAbilityDamageBuff(
   abilityName: string,
   baseBuff: number,
   abilityStrength: number,
-): number {
+): number | null {
+  // Only verified weapon damage buffs (Roar/Eclipse/…) apply to loadout DPS.
+  // Host frame → Helminth subsume key → Rhino (Roar) fallback.
   const rule =
     getVerifiedFieldScaling(warframeId, abilityName, "damageBuff") ??
+    getVerifiedFieldScaling("helminth", abilityName, "damageBuff") ??
     getVerifiedFieldScaling("rhino", abilityName, "damageBuff");
-  const mult = !rule || rule.scale === "strength" ? abilityStrength : 1;
+  if (!rule) return null;
+  const mult = rule.scale === "strength" ? abilityStrength : 1;
   let value = baseBuff * mult;
-  if (rule?.cap != null) value = Math.min(value, rule.cap);
+  if (rule.cap != null) value = Math.min(value, rule.cap);
   return value;
 }
 
+/** Wiki Electric Shield: +50% Electricity (additive elemental) and +100% CD (multiplicative). Fixed — no STR. */
+function resolveElectricShieldBuff(
+  weapon: Weapon,
+  ability: Ability,
+): WeaponExternalBuff | null {
+  if (isMeleeWeapon(weapon)) return null;
+  const ele = ability.miscStats?.electricDamageBonus;
+  const crit = ability.miscStats?.critDamageBonus;
+  const eleFrac = typeof ele === "number" ? ele : 0;
+  const critFrac = typeof crit === "number" ? crit : 0;
+  if (eleFrac <= 0 && critFrac <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    ...(eleFrac > 0
+      ? { elemental: [{ type: "electricity", bonusFraction: eleFrac }] }
+      : {}),
+    ...(critFrac > 0 ? { critMultBonus: critFrac } : {}),
+    nominal: `+${(eleFrac * 100).toFixed(0)}% Electricity, +${(critFrac * 100).toFixed(0)}% critical damage`,
+  };
+}
+
+/** Wiki Nourish: +Viral as an elemental mod; Helminth base is reduced. */
+function resolveNourishBuff(
+  warframeId: string,
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats?.viralDamageBonus;
+  const base =
+    typeof misc === "number"
+      ? misc
+      : warframeFamilyId(warframeId) === "grendel"
+        ? NOURISH_VIRAL_NATIVE
+        : NOURISH_VIRAL_HELMINTH;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    elemental: [{ type: "viral", bonusFraction: bonus }],
+    nominal: `+${(base * 100).toFixed(0)}% Viral (× Strength)`,
+  };
+}
+
+/** Wiki Toxic Lash: Extra Hit % of weapon damage; melee is doubled; scales STR (cap 100%). */
+function resolveToxicLashBuff(
+  weapon: Weapon,
+  warframeId: string,
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const gun = ability.miscStats?.gunDamage;
+  const melee = ability.miscStats?.meleeDamage;
+  const base = isMeleeWeapon(weapon)
+    ? typeof melee === "number"
+      ? melee
+      : 0.6
+    : typeof gun === "number"
+      ? gun
+      : 0.3;
+  const key = isMeleeWeapon(weapon) ? "meleeDamage" : "gunDamage";
+  const rule = getVerifiedMiscScaling(warframeId, ability.name, key);
+  // Wiki: percentages scale with Strength and soft-cap at 100%.
+  const frac = Math.min(base * strength, rule?.cap ?? 1);
+  if (frac <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    extraHitDamageFraction: frac,
+    extraHitGuaranteedToxin: true,
+    nominal: `+${(base * 100).toFixed(0)}% Toxin Extra Hit (× Strength)`,
+  };
+}
+
+/** Wiki Xata's Whisper: Extra Hit Void %; scales STR. */
+function resolveXataBuff(
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats?.voidDamageBonus;
+  const base =
+    typeof misc === "number"
+      ? misc
+      : typeof ability.damageBuff === "number" && ability.damageBuff > 0
+        ? ability.damageBuff
+        : XATA_VOID_NATIVE;
+  const frac = base * strength;
+  if (frac <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    extraHitDamageFraction: frac,
+    nominal: `+${(base * 100).toFixed(0)}% Void Extra Hit (× Strength)`,
+  };
+}
+
+/** Wiki Vex Armor: max Fury is additive Serration-style; sim can scale stack fill. */
+function resolveVexArmorBuff(
+  strength: number,
+  furyFraction: number,
+): WeaponExternalBuff | null {
+  const fill = Math.min(1, Math.max(0, furyFraction));
+  const bonus = VEX_ARMOR_MAX_FURY * strength * fill;
+  if (bonus <= 0) return null;
+  const pct = Math.round(fill * 100);
+  return {
+    id: "ability:Vex Armor",
+    label: "Vex Armor",
+    category: "ability",
+    damageBonus: bonus,
+    nominal:
+      fill >= 1
+        ? `+${(VEX_ARMOR_MAX_FURY * 100).toFixed(0)}% weapon damage at max Fury (× Strength)`
+        : `+${(VEX_ARMOR_MAX_FURY * 100).toFixed(0)}% max Fury × ${pct}% stacks (× Strength)`,
+  };
+}
+
+/** Wiki Shooting Gallery: additive with Serration-style mods (not Roar mult). */
+function resolveShootingGalleryBuff(
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const base = typeof ability.damageBuff === "number" ? ability.damageBuff : 0.25;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    damageBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% weapon damage (additive, × Strength)`,
+  };
+}
+
+function resolveNamedAbilityWeaponBuff(
+  weapon: Weapon,
+  ctx: WeaponBuffContext,
+  ability: Ability,
+  strength: number,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  const warframeId = ctx.warframeId!;
+  switch (ability.name) {
+    case "Electric Shield":
+      return resolveElectricShieldBuff(weapon, ability);
+    case "Nourish":
+      return resolveNourishBuff(warframeId, ability, strength);
+    case "Toxic Lash":
+      return resolveToxicLashBuff(weapon, warframeId, ability, strength);
+    case "Xata's Whisper":
+      return resolveXataBuff(ability, strength);
+    case "Vex Armor":
+      return resolveVexArmorBuff(strength, simParams.vexArmorFuryFraction ?? 1);
+    case "Shooting Gallery":
+      return resolveShootingGalleryBuff(ability, strength);
+    // wiki: Symphony of Mercy — Deathbringer song is additive with Serration (like SG)
+    case "Symphony Of Mercy":
+      return resolveShootingGalleryBuff(ability, strength);
+    // wiki: Redline — full-battery fire/attack speed × Duration
+    case "Redline":
+      return resolveRedlineBuff(weapon, ability, ctx.warframeStats!.abilityDuration);
+    // wiki: Cathode Grace — weapon CC additive with Point Strike-style mods × STR
+    case "Cathode Grace":
+      return resolveCathodeGraceBuff(ability, strength);
+    // wiki: Wrathful Advance — flat final melee CC after mods × STR
+    case "Wrathful Advance":
+      return resolveWrathfulAdvanceBuff(weapon, ability, strength);
+    // wiki: Grave Spirit — weapon CD additive with Organ Shatter-style mods × STR
+    case "Grave Spirit":
+      return resolveGraveSpiritBuff(ability, strength);
+    // wiki: Penance — fire rate + reload × STR (FR also applies to melee)
+    case "Penance":
+      return resolvePenanceBuff(ability, strength);
+    // wiki: Shroud of Dynar — flat melee CD × STR; flat CC/SC Misc-fixed (post-invis window)
+    case "Shroud Of Dynar":
+      return resolveShroudOfDynarBuff(weapon, ability, strength);
+    default:
+      return null;
+  }
+}
+
+/** Wiki Shroud of Dynar: +2.0× flat melee CD × Strength; +100% flat CC/SC are Misc-fixed. */
+function resolveShroudOfDynarBuff(
+  weapon: Weapon,
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  if (!isMeleeWeapon(weapon)) return null;
+  const misc = ability.miscStats ?? {};
+  const cdBase = typeof misc.critDamageBonus === "number" ? misc.critDamageBonus : 2;
+  const ccBase = typeof misc.criticalChanceBonus === "number" ? misc.criticalChanceBonus : 1;
+  const scBase = typeof misc.statusChance === "number" ? misc.statusChance : 1;
+  const cd = cdBase * strength;
+  if (cd <= 0 && ccBase <= 0 && scBase <= 0) return null;
+  return {
+    id: "ability:Shroud Of Dynar",
+    label: "Shroud Of Dynar",
+    category: "ability",
+    ...(cd > 0 ? { critMultFlatBonus: cd } : {}),
+    ...(ccBase > 0 ? { critChanceFlatBonus: ccBase } : {}),
+    ...(scBase > 0 ? { statusBonus: scBase } : {}),
+    nominal: `+${cdBase.toFixed(1)}× flat melee CD (× Strength), +${(ccBase * 100).toFixed(0)}% flat CC/SC`,
+  };
+}
+
+/** Wiki Penance: +35% fire rate / +70% reload × Strength. Fire rate also speeds melee. */
+function resolvePenanceBuff(
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats ?? {};
+  const frBase = typeof misc.fireRateBuff === "number" ? misc.fireRateBuff : 0.35;
+  const reloadBase = typeof misc.reloadBuff === "number" ? misc.reloadBuff : 0.7;
+  const fr = frBase * strength;
+  const reload = reloadBase * strength;
+  if (fr <= 0 && reload <= 0) return null;
+  return {
+    id: "ability:Penance",
+    label: "Penance",
+    category: "ability",
+    ...(fr > 0 ? { fireRateBonus: fr } : {}),
+    ...(reload > 0 ? { reloadBonus: reload } : {}),
+    nominal: `+${(frBase * 100).toFixed(0)}% fire rate / +${(reloadBase * 100).toFixed(0)}% reload (× Strength)`,
+  };
+}
+
+/** Wiki Grave Spirit: +50% weapon CD (additive with Organ Shatter) × Strength; Doom foes use doubled base. */
+function resolveGraveSpiritBuff(
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats?.critDamageBonus;
+  const base = typeof misc === "number" ? misc : 0.5;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Grave Spirit",
+    label: "Grave Spirit",
+    category: "ability",
+    critMultBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% crit damage (additive, × Strength)`,
+  };
+}
+
+/** Wiki Wrathful Advance: +200% final melee CC (flat after mods) × Strength; helminth base +100%. */
+function resolveWrathfulAdvanceBuff(
+  weapon: Weapon,
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  if (!isMeleeWeapon(weapon)) return null;
+  const misc = ability.miscStats?.criticalChanceBonus;
+  const base = typeof misc === "number" ? misc : 2;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Wrathful Advance",
+    label: "Wrathful Advance",
+    category: "ability",
+    critChanceFlatBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% final melee crit chance (flat, × Strength)`,
+  };
+}
+
+/** Wiki Cathode Grace: +50% weapon CC (additive with Point Strike) × Strength. */
+function resolveCathodeGraceBuff(
+  ability: Ability,
+  strength: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats?.criticalChanceBonus;
+  const base = typeof misc === "number" ? misc : 0.5;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Cathode Grace",
+    label: "Cathode Grace",
+    category: "ability",
+    critChanceBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% crit chance (additive, × Strength)`,
+  };
+}
+
+/** Wiki Redline: max-battery Fire Rate / Attack Speed × Ability Duration. */
+function resolveRedlineBuff(
+  weapon: Weapon,
+  ability: Ability,
+  abilityDuration: number,
+): WeaponExternalBuff | null {
+  const misc = ability.miscStats ?? {};
+  if (isMeleeWeapon(weapon)) {
+    const base = typeof misc.attackSpeedBuff === "number" ? misc.attackSpeedBuff : 0;
+    if (base <= 0) return null;
+    const bonus = base * abilityDuration;
+    return {
+      id: "ability:Redline",
+      label: "Redline",
+      category: "ability",
+      fireRateBonus: bonus,
+      nominal: `+${(base * 100).toFixed(0)}% attack speed (full battery)`,
+    };
+  }
+  const base = typeof misc.fireRateBuff === "number" ? misc.fireRateBuff : 0;
+  if (base <= 0) return null;
+  const bonus = base * abilityDuration;
+  return {
+    id: "ability:Redline",
+    label: "Redline",
+    category: "ability",
+    fireRateBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% fire rate (full battery)`,
+  };
+}
+
 function resolveAbilityBuffs(
+  weapon: Weapon,
   ctx: WeaponBuffContext,
   simParams: SimulationParams,
 ): WeaponExternalBuff[] {
@@ -283,11 +621,18 @@ function resolveAbilityBuffs(
   const buffs: WeaponExternalBuff[] = [];
 
   for (const ability of ctx.warframeAbilities) {
-    if (ability.damageBuff == null || ability.damageBuff <= 0) continue;
     if (!active.includes(ability.name)) continue;
 
+    const named = resolveNamedAbilityWeaponBuff(weapon, ctx, ability, strength, simParams);
+    if (named) {
+      buffs.push(named);
+      continue;
+    }
+
+    if (ability.damageBuff == null || ability.damageBuff <= 0) continue;
+
     const bonus = scaledAbilityDamageBuff(ctx.warframeId, ability.name, ability.damageBuff, strength);
-    if (bonus <= 0) continue;
+    if (bonus == null || bonus <= 0) continue;
 
     // Roar / Eclipse / etc. multiply after Serration (wiki Calculating Bonuses).
     buffs.push({
@@ -348,17 +693,75 @@ export function resolveWeaponExternalBuffs(
 ): WeaponExternalBuff[] {
   if (!ctx) return [];
   return [
-    ...resolveAbilityBuffs(ctx, simParams),
+    ...resolveAbilityBuffs(weapon, ctx, simParams),
     ...resolveShardBuffs(weapon, ctx),
     ...resolveWarframeCrossModBuffs(weapon, ctx),
     ...resolveCompanionBondBuffs(weapon, ctx, simParams),
   ];
 }
 
-/** Abilities on a warframe that grant a top-level weapon damage buff. */
+const NAMED_WEAPON_BUFF_ABILITIES = new Set([
+  "Electric Shield",
+  "Nourish",
+  "Toxic Lash",
+  "Xata's Whisper",
+  "Vex Armor",
+  "Shooting Gallery",
+  "Symphony Of Mercy",
+  "Redline",
+  "Cathode Grace",
+  "Wrathful Advance",
+  "Grave Spirit",
+  "Penance",
+  "Shroud Of Dynar",
+]);
+
+/** Helminth Empower is +Ability Strength, not a weapon damage buff. */
+const NON_WEAPON_DAMAGE_BUFF_ABILITIES = new Set(["Empower"]);
+
+/** Replace one ability slot with a Helminth inject for loadout buff resolution. */
+export function resolveAbilitiesWithHelminth(
+  abilities: Ability[] | undefined,
+  helminthAbilityId?: string | null,
+  helminthSlot?: number | null,
+): Ability[] {
+  if (!abilities?.length) return [];
+  const rows = abilities.map((a) => ({ ...a }));
+  if (
+    helminthAbilityId == null ||
+    helminthSlot == null ||
+    helminthSlot < 0 ||
+    helminthSlot >= rows.length
+  ) {
+    return rows;
+  }
+  const h = allHelminthAbilities.find((x) => x.id === helminthAbilityId);
+  if (!h) return rows;
+  rows[helminthSlot] = {
+    name: h.name,
+    energyCost: h.energyCost,
+    description: h.description,
+    damage: h.damage,
+    damageBuff: h.damageBuff,
+    damageReduction: h.damageReduction,
+    duration: h.duration,
+    range: h.range,
+    radius: h.radius,
+    castTime: h.castTime,
+    miscStats: h.miscStats,
+  };
+  return rows;
+}
+
+/** Abilities that can be toggled as loadout weapon buffs. */
 export function weaponDamageBuffAbilities(abilities: Ability[] | undefined): Ability[] {
   if (!abilities) return [];
-  return abilities.filter((a) => a.damageBuff != null && a.damageBuff > 0);
+  return abilities.filter((a) => {
+    if (NON_WEAPON_DAMAGE_BUFF_ABILITIES.has(a.name)) return false;
+    if (NAMED_WEAPON_BUFF_ABILITIES.has(a.name)) return true;
+    // Roar / Eclipse / etc. use verified top-level damageBuff.
+    return a.damageBuff != null && a.damageBuff > 0 && a.name !== "Xata's Whisper";
+  });
 }
 
 export function mergeWeaponCalcOptions(

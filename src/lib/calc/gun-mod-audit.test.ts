@@ -1,0 +1,188 @@
+/**
+ * Phase 2a — high-use primary / secondary / shotgun mod apply goldens.
+ * Each case is wiki-checked for that mod ID (max rank).
+ */
+import { describe, expect, it } from "vitest";
+import { allMods } from "@/data/mods";
+import { allWeapons } from "@/data/weapons";
+import { calculateWeaponBuild, quantizeDamageValue } from "@/lib/calc/calculator";
+import { quantizeBaseCritMultiplier } from "@/lib/calc/crit-utils";
+import { DEFAULT_SIM_PARAMS } from "@/lib/types";
+
+const modsMap = () => new Map(allMods.map((m) => [m.id, m]));
+
+function requireMod(id: string) {
+  const mod = allMods.find((m) => m.id === id);
+  expect(mod, `missing mod ${id}`).toBeDefined();
+  return mod!;
+}
+
+function requireWeapon(id: string) {
+  const weapon = allWeapons.find((w) => w.id === id);
+  expect(weapon, `missing weapon ${id}`).toBeDefined();
+  return weapon!;
+}
+
+function withMod(weaponId: string, modId: string, sim = DEFAULT_SIM_PARAMS) {
+  const weapon = requireWeapon(weaponId);
+  const mod = requireMod(modId);
+  return calculateWeaponBuild(
+    weapon,
+    [{ modId, rank: mod.maxRank, slotIndex: 0 }],
+    modsMap(),
+    undefined,
+    sim,
+  );
+}
+
+describe("primary rifle mods (wiki max rank)", () => {
+  it("Serration R10: +165% damage → Braton modded base 24×2.65", () => {
+    const stats = withMod("braton", "serration_r3");
+    expect(stats.moddedBaseDamage).toBeCloseTo(24 * 2.65, 8);
+  });
+
+  it("Split Chamber R5: +90% multishot", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "split_chamber_r3");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 1.9, 8);
+  });
+
+  it("Point Strike R5: +150% crit chance (additive on base)", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "point_strike_r3");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 2.5, 8);
+  });
+
+  it("Vital Sense R5: +120% crit damage after CM quantize", () => {
+    const weapon = requireWeapon("braton");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("braton", "vital_sense_r3");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 2.2, 8);
+  });
+
+  it("Hellfire R5: +90% heat from base, then damage quantize", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "hellfire_r3");
+    const rawHeat = weapon.damage * 0.9;
+    const scale = stats.moddedBaseDamage / 32;
+    const expected = quantizeDamageValue(rawHeat, scale);
+    const heat = stats.elements.find((e) => e.type === "heat");
+    expect(heat?.value).toBeCloseTo(expected, 8);
+  });
+
+  it("Stormbringer / Cryo Rounds / Infected Clip: ±90% elementals from base", () => {
+    for (const [modId, type] of [
+      ["stormbringer_r3", "electricity"],
+      ["cryo_rounds_r3", "cold"],
+      ["infected_clip_r3", "toxin"],
+    ] as const) {
+      const weapon = requireWeapon("braton");
+      const stats = withMod("braton", modId);
+      const scale = stats.moddedBaseDamage / 32;
+      const expected = quantizeDamageValue(weapon.damage * 0.9, scale);
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(expected, 8);
+    }
+  });
+
+  it("Primed Bane of Grineer: ×1.55 paper DPS when targetFaction=grineer", () => {
+    const bare = calculateWeaponBuild(requireWeapon("braton"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "grineer",
+    });
+    const modded = withMod("braton", "primed_bane_of_grineer", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "grineer",
+    });
+    expect(modded.factionBonuses?.grineer).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+});
+
+describe("secondary pistol mods (wiki max rank)", () => {
+  it("Hornet Strike R10: +220% damage", () => {
+    const stats = withMod("lex", "hornet_strike_r3");
+    expect(stats.moddedBaseDamage).toBeCloseTo(130 * 3.2, 8);
+  });
+
+  it("Barrel Diffusion R5: +120% multishot", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "barrel_diffusion_r3");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 2.2, 8);
+  });
+
+  it("Pistol Gambit R5: +120% crit chance", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "pistol_gambit_r3");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 2.2, 8);
+  });
+
+  it("Target Cracker R5: +60% crit damage after CM quantize", () => {
+    const weapon = requireWeapon("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("lex", "target_cracker_r3");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.6, 8);
+  });
+
+  it("Primed Target Cracker R10: +110% crit damage", () => {
+    const weapon = requireWeapon("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("lex", "primed_target_cracker");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 2.1, 8);
+  });
+
+  it("Primed Pistol Gambit R10: +187% crit chance", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "primed_pistol_gambit");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * (1 + 1.87), 8);
+  });
+
+  it("Primed Heated Charge R10: +165% heat from base", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "primed_heated_charge");
+    const scale = stats.moddedBaseDamage / 32;
+    const expected = quantizeDamageValue(weapon.damage * 1.65, scale);
+    expect(stats.elements.find((e) => e.type === "heat")?.value).toBeCloseTo(expected, 8);
+  });
+});
+
+describe("shotgun mods (wiki max rank)", () => {
+  it("Point Blank R5: +90% damage", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "point_blank_r3");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+  });
+
+  it("Primed Point Blank R10: +165% damage", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "primed_point_blank");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2.65, 8);
+  });
+
+  it("Hell's Chamber R5: +120% multishot", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "hells_chamber");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 2.2, 8);
+  });
+
+  it("Blaze R3: +60% damage and +60% heat from modded base", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "blaze");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.6, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    // Wiki: elemental % applies to modded base (includes Blaze's own +damage)
+    const expectedHeat = quantizeDamageValue(stats.moddedBaseDamage * 0.6, scale);
+    expect(stats.elements.find((e) => e.type === "heat")?.value).toBeCloseTo(expectedHeat, 8);
+  });
+
+  it("Shotgun Spazz R5: +90% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "shotgun_spazz");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.9, 8);
+  });
+
+  it("Vicious Spread R5: +90% damage (spread panel-only)", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "vicious_spread");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+  });
+});

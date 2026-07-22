@@ -176,7 +176,14 @@ function modNominalLine(mod: Mod, rank: number): string {
 
 function externalBuffContributionCategory(buff: import("@/lib/types").WeaponExternalBuff): DpsContributionCategory {
   if (buff.elemental?.length) return "elemental";
-  if (buff.critChanceBonus || buff.critMultBonus || buff.critMultFlatBonus) return "crit";
+  if (
+    buff.critChanceBonus ||
+    buff.critChanceFlatBonus ||
+    buff.critMultBonus ||
+    buff.critMultFlatBonus
+  ) {
+    return "crit";
+  }
   if (buff.fireRateBonus) return "rate";
   if (buff.multishotBonus) return "multishot";
   if (buff.damageBonus || buff.damageMultBonus || buff.statusBonus) return "damage";

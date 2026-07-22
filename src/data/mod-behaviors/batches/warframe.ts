@@ -111,10 +111,6 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   augur_secrets: mod("augur_secrets", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Augur Secrets: abilityStrength \u2014 +6% Ability Strength per rank"),
   ]),
-  augur_seeker: mod("augur_seeker", [
-    line("enemyRadar", "mod_panel", "multiplicative_percent", "Augur Seeker: enemyRadar \u2014 +9m Enemy Radar per rank"),
-    line("statusDuration", "mod_panel", "multiplicative_percent", "Augur Seeker: statusDuration \u2014 +9m Enemy Radar per rank"),
-  ]),
   aura_corrosive_projection: mod("aura_corrosive_projection", [
     line("armor", "warframe_totals", "multiplicative_percent", "Corrosive Projection: armor \u2014 -6% Enemy Armor per rank"),
     line("armorReduction", "mod_panel", "multiplicative_percent", "Corrosive Projection: armorReduction \u2014 -6% Enemy Armor per rank"),
@@ -339,7 +335,8 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Intruder: duration \u2014 +2s to Hacking"),
   ]),
   jades_judgment: mod("jades_judgment", [
-    line("duration", "mod_panel", "multiplicative_percent", "Jade's Judgment: duration \u2014 Light's Judgment Augment: Enemies damaged by the well have a 5% chance per hit t\u2026"),
+    line("spawnChance", "mod_panel", "multiplicative_percent", "Jade's Judgment: spawnChance \u2014 Light's Judgment Augment: +1.25% Jade Light spawn chance per rank (× Strength)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Jade's Judgment: duration \u2014 Light's Judgment Augment: +0.75s Jade Light beam duration per rank (× Duration)"),
   ]),
   jugulus_carapace: mod("jugulus_carapace", [
     line("armor", "warframe_totals", "multiplicative_percent", "Jugulus Carapace: armor \u2014 +55% Armor, +20% Health"),
@@ -644,9 +641,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Vigor: health \u2014 +50% Shield Capacity, +50% Health"),
     line("shield", "warframe_totals", "multiplicative_percent", "Vigor: shield \u2014 +50% Shield Capacity, +50% Health"),
   ]),
-  vigorous_preparation: mod("vigorous_preparation", [
-    line("startingHealth", "mod_panel", "multiplicative_percent", "Vigorous Preparation: startingHealth \u2014 +15% Starting Health per rank"),
-  ]),
+
   vigorous_swap: mod("vigorous_swap", [
     line("damage", "mod_panel", "multiplicative_percent", "Vigorous Swap: damage \u2014 On Equip:\\\\n+165% Damage for 3s"),
     line("duration", "mod_panel", "multiplicative_percent", "Vigorous Swap: duration \u2014 On Equip:\\\\n+165% Damage for 3s"),

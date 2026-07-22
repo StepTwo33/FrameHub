@@ -1740,12 +1740,14 @@
   },
   "secondary_kinship": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "stacks",
+    "stackCap": 24,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 20,
-        "baseValue": 3
+        "baseValue": 3.333333,
+        "stacking": true
       }
     ]
   },
@@ -2209,13 +2211,15 @@
   },
   "arcane_hot_shot": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "stacks",
+    "stackCap": 50,
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 6,
         "flat": false,
-        "stacking": false
+        "stacking": true,
+        "baseValue": 1
       },
       {
         "stat": "buffDuration",
