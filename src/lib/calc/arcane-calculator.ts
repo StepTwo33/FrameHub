@@ -237,6 +237,7 @@ export function applyArcaneEffectsToWeapon(
   rank: number,
   simStacks: number,
   baseWeapon?: Weapon,
+  opts?: { applyHeadshots?: boolean },
 ): void {
   const def = getArcaneEffectDef(arcaneId);
   if (!def || def.effects.length === 0) return;
@@ -244,7 +245,15 @@ export function applyArcaneEffectsToWeapon(
   const stacks = effectiveArcaneStacks(def, simStacks, true);
   if (stacks <= 0) return;
 
-  const handlerCtx = { def, arcaneId, rank, stacks, baseWeapon, simStacks };
+  const handlerCtx = {
+    def,
+    arcaneId,
+    rank,
+    stacks,
+    baseWeapon,
+    simStacks,
+    applyHeadshots: opts?.applyHeadshots,
+  };
   if (applyCustomArcaneToWeapon(stats, handlerCtx)) return;
 
   const fireRate = stats.fireRate;
@@ -311,10 +320,11 @@ export function applyArcaneToWeaponFromMod(
   arcane: Mod,
   stacks: number = 1,
   baseWeapon?: Weapon,
+  opts?: { applyHeadshots?: boolean },
 ): void {
   const rank = arcane.maxRank;
   if (getArcaneEffectDef(arcane.id)) {
-    applyArcaneEffectsToWeapon(stats, arcane.id, rank, stacks, baseWeapon);
+    applyArcaneEffectsToWeapon(stats, arcane.id, rank, stacks, baseWeapon, opts);
     return;
   }
   // Fallback for arcanes missing from generated data

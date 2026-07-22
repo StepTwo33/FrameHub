@@ -493,6 +493,81 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage * 4.6, 4);
     expect(full.arcaneBonuses?.comboDuration).toBeCloseTo(7.5, 4);
   });
+
+  it("Cascadia Accuracy: +300% CC only with roll stacks + applyHeadshots (weakpoint)", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const acc = allArcanes.find((a) => a.id === "cascadia_accuracy")!;
+    const def = getArcaneEffectDef("cascadia_accuracy")!;
+    expect(def.trigger).toBe("onMovement");
+
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const body = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [acc],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1, applyHeadshots: false },
+    );
+    expect(body.criticalChance).toBeCloseTo(bare.criticalChance, 5);
+
+    const head = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [acc],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1, applyHeadshots: true },
+    );
+    // wiki R5: +300% Weakpoint CC after roll
+    expect(head.criticalChance).toBeCloseTo(lex.criticalChance * 4, 4);
+    expect(head.burstDps).toBeGreaterThan(body.burstDps);
+  });
+
+  it("Melee Exposure: 4 ability casts R5 → +240% Corrosive (cap); 5th cast does not exceed", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const exposure = allArcanes.find((a) => a.id === "melee_exposure")!;
+
+    const bare = calculateWeaponBuild(skana, [], new Map());
+    const four = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [exposure],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 4 },
+    );
+    // wiki R5: +60% Corrosive × 4 = +240% of base damage
+    const corrosive = four.elements.find((e) => e.type === "corrosive")?.value ?? 0;
+    expect(corrosive).toBeCloseTo(skana.damage * 2.4, 4);
+    expect(four.totalDamage).toBeCloseTo(bare.totalDamage + skana.damage * 2.4, 4);
+
+    const five = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [exposure],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 5 },
+    );
+    expect(five.totalDamage).toBeCloseTo(four.totalDamage, 4);
+  });
+
+  it("Primary Compression stays panel-only (needs radial meters lost, not flat +100%)", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const compression = allArcanes.find((a) => a.id === "primary_compression")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const withArc = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [compression],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(withArc.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+    expect(withArc.ammoEfficiency ?? 0).toBeCloseTo(bare.ammoEfficiency ?? 0, 4);
+  });
 });
 
 describe("Phase 7 — Incarnon / radial smoke", () => {

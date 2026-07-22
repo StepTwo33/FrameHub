@@ -17,6 +17,8 @@ export interface ArcaneHandlerContext {
   simStacks?: number;
   baseWeapon?: Weapon;
   warframeCtx?: WarframeArcaneContext;
+  /** From sim — gates weakpoint-only bonuses (e.g. Cascadia Accuracy). */
+  applyHeadshots?: boolean;
 }
 
 function trackBonus(stats: { arcaneBonuses?: Record<string, number> }, stat: string, value: number): void {
@@ -58,6 +60,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "secondary_enervate",
   "secondary_outburst",
   "cascadia_flare",
+  "cascadia_accuracy",
   "secondary_surge",
   "zid_an_uskos",
   "primary_plated_round",
@@ -186,11 +189,48 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "melee_exposure": {
-      const bonus = scaledLine(def, findEffect(def, "meleeDamageBonus"), rank, stacks);
-      if (bonus > 0) applyWeaponDamageMult(stats, bonus);
-      trackBonus(stats, "meleeDamageBonus", bonus);
-      const corrosive = scaledLine(def, findEffect(def, "corrosiveDamage"), rank, stacks);
-      if (corrosive > 0) trackBonus(stats, "corrosiveDamage", corrosive);
+      // wiki: +X% Corrosive Damage per ability cast (R5 +60%), shared duration, cap 240%.
+      // simStacks = ability-cast stacks (UI caps at 12); total % = min(240, perCast × casts).
+      const perCastLine = findEffect(def, "corrosiveDamage");
+      const capLine = findEffect(def, "meleeDamageBonus");
+      const perCast = perCastLine ? scaleArcaneEffectLine(perCastLine, rank, def.maxRank) : 0;
+      const cap = capLine?.maxValue ?? 240;
+      const totalPct = Math.min(cap, perCast * Math.max(stacks, 0));
+      if (totalPct > 0 && ctx.baseWeapon) {
+        const base = ctx.baseWeapon.damage;
+        const baseIps =
+          (ctx.baseWeapon.impact ?? 0) +
+          (ctx.baseWeapon.puncture ?? 0) +
+          (ctx.baseWeapon.slash ?? 0);
+        const phys = stats.impact + stats.puncture + stats.slash;
+        const dmgMult = baseIps > 0 ? phys / baseIps : 1;
+        const amount = base * (totalPct / 100) * dmgMult;
+        const existing = stats.elements.find((e) => e.type === "corrosive");
+        if (existing) existing.value += amount;
+        else stats.elements.push({ type: "corrosive", value: amount });
+        if (stats.rawElements) {
+          const raw = stats.rawElements.find((e) => e.type === "corrosive");
+          if (raw) raw.value += amount;
+          else stats.rawElements.push({ type: "corrosive", value: amount });
+        }
+        stats.totalDamage += amount;
+      }
+      trackBonus(stats, "corrosiveDamage", totalPct);
+      trackBonus(stats, "meleeDamageBonus", totalPct);
+      return true;
+    }
+
+    case "cascadia_accuracy": {
+      // wiki: +300% Weakpoint CC for 4s after roll (R5). Paper: stacks>0 = roll buff up;
+      // only applies when applyHeadshots (weakpoint) is on.
+      const ccLine = findEffect(def, "criticalChance");
+      const cc = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "criticalChance", cc);
+      trackBonus(stats, "buffDuration", findEffect(def, "buffDuration")?.maxValue ?? 4);
+      if (ctx.applyHeadshots && cc > 0) {
+        const baseCrit = ctx.baseWeapon?.criticalChance ?? stats.criticalChance;
+        stats.criticalChance += baseCrit * (cc / 100);
+      }
       return true;
     }
 

@@ -461,9 +461,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "cascadia_accuracy": {
     arcaneId: "cascadia_accuracy",
+    customHandler: "cascadia_accuracy",
     effects: [
-      {"statKey": "criticalChance", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Cascadia Accuracy: criticalChance (on movement proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Cascadia Accuracy: buffDuration (on movement proc)"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Cascadia Accuracy — +300% Weakpoint CC for 4s after roll (R5; paper: stacks>0 + applyHeadshots)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Cascadia Accuracy — 4s buff duration"},
     ],
   },
   "cascadia_empowered": {
@@ -779,8 +780,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "melee_exposure",
     customHandler: "melee_exposure",
     effects: [
-      {"statKey": "meleeDamageBonus", "target": "arcane_panel", "mode": "custom", "source": "Melee Exposure: custom handler"},
-      {"statKey": "corrosiveDamage", "target": "arcane_panel", "mode": "custom", "source": "Melee Exposure: custom handler"},
+      {"statKey": "meleeDamageBonus", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Exposure — Corrosive Damage stacks to 240% cap (R5 +60%/ability cast; sim stacks = casts)"},
+      {"statKey": "corrosiveDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Melee Exposure — +60% Corrosive Damage / ability cast at R5"},
     ],
   },
   "melee_fortification": {
@@ -880,8 +881,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "primary_compression": {
     arcaneId: "primary_compression",
     effects: [
-      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Compression: ammoEfficiency (conditional proc)"},
-      {"statKey": "damage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Primary Compression: damage (conditional proc)"},
+      // Per meter of explosion radius lost while aiming — needs weapon radial radius; not flat +100%/+5.5%.
+      {"statKey": "ammoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Primary Compression — +5.5% AE / meter radius lost while aiming (needs radial radius; panel until modeled)"},
+      {"statKey": "damage", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Primary Compression — +100% damage / meter radius lost while aiming (needs radial radius; panel until modeled)"},
     ],
   },
   "primary_crux": {

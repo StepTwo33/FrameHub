@@ -1530,8 +1530,14 @@ function effectiveWeaponArcaneStacks(arcane: Mod, simStacks: number): number {
 }
 
 // Apply arcane stats to weapon — reads from ARCANE_EFFECTS (generated wiki data).
-export function applyArcaneToWeapon(stats: CalculatedStats, arcane: Mod, stacks: number = 1, baseWeapon?: Weapon): void {
-  applyArcaneToWeaponFromMod(stats, arcane, stacks, baseWeapon);
+export function applyArcaneToWeapon(
+  stats: CalculatedStats,
+  arcane: Mod,
+  stacks: number = 1,
+  baseWeapon?: Weapon,
+  opts?: { applyHeadshots?: boolean },
+): void {
+  applyArcaneToWeaponFromMod(stats, arcane, stacks, baseWeapon, opts);
 }
 
 // Apply arcane stats to warframe — reads from ARCANE_EFFECTS (generated wiki data).
@@ -1688,7 +1694,13 @@ export function calculateWeaponBuildWithArcanes(
   const preArcaneHeavy = stats.heavyAttackDamage;
   const preArcaneCombo = stats.comboCount;
   for (const arcane of arcanes) {
-    applyArcaneToWeapon(stats, arcane, effectiveWeaponArcaneStacks(arcane, sim.arcaneStacks), baseWeapon);
+    applyArcaneToWeapon(
+      stats,
+      arcane,
+      effectiveWeaponArcaneStacks(arcane, sim.arcaneStacks),
+      baseWeapon,
+      { applyHeadshots: sim.applyHeadshots },
+    );
   }
   if (isMelee && stats.meleeComboModContext && stats.comboCount !== preArcaneCombo) {
     const arcaneHeavyFactor = preArcaneHeavy > 0 ? stats.heavyAttackDamage / preArcaneHeavy : 1;
