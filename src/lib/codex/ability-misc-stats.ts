@@ -2515,6 +2515,26 @@ export function computeSarynPassiveStatusDurationMultiplier(): number {
   return 1.25;
 }
 
+export interface KullervoMeleePassiveBonuses {
+  /** +75% Heavy Attack Efficiency on all melee. */
+  heavyAttackEfficiency: number;
+  /** +100% Heavy Attack Wind Up Speed on all melee. */
+  heavyAttackWindUpSpeed: number;
+}
+
+/** wiki Kullervo passive: +75% HAE and +100% Heavy Attack Wind Up Speed. */
+export function computeKullervoMeleePassiveBonuses(): KullervoMeleePassiveBonuses {
+  return { heavyAttackEfficiency: 0.75, heavyAttackWindUpSpeed: 1 };
+}
+
+/**
+ * wiki Vauban passive: ×1.25 damage vs incapacitated enemies (weapons + abilities).
+ * Returns the multiplicative damage bonus fraction (0.25 → +25%).
+ */
+export function computeVaubanIncapacitatedDamageBonus(incapacitated: boolean): number {
+  return incapacitated ? 0.25 : 0;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

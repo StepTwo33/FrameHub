@@ -247,6 +247,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Volt + Trinity passives | 2026-07-22 | Static Discharge 10/m Electric cap 1000; Lifegiver allies +50% of max Energy as Health |
 | Mesa + Qorvex passives | 2026-07-22 | Mesa dual FR +15% / single reload +25% / +50 HP no melee; Qorvex Core Exposure +3 PT |
 | Excalibur + Saryn passives | 2026-07-22 | Swordsmanship +10% dmg/AS with swords; Saryn status duration ×1.25 (+25%) |
+| Kullervo + Vauban passives | 2026-07-22 | Kullervo +75% HAE / +100% Heavy Wind Up; Vauban +25% mult dmg vs incapacitated |
 
 ## New / extended test files
 

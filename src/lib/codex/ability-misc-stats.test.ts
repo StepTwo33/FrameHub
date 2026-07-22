@@ -41,6 +41,8 @@ import {
   computeQorvexPassivePunchThrough,
   computeExcaliburSwordsmanshipBonuses,
   computeSarynPassiveStatusDurationMultiplier,
+  computeKullervoMeleePassiveBonuses,
+  computeVaubanIncapacitatedDamageBonus,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -481,6 +483,22 @@ describe("Excalibur Swordsmanship passive", () => {
 describe("Saryn status duration passive", () => {
   it("multiplies status duration by 1.25", () => {
     expect(computeSarynPassiveStatusDurationMultiplier()).toBe(1.25);
+  });
+});
+
+describe("Kullervo melee passive", () => {
+  it("grants +75% HAE and +100% Heavy Wind Up", () => {
+    expect(computeKullervoMeleePassiveBonuses()).toEqual({
+      heavyAttackEfficiency: 0.75,
+      heavyAttackWindUpSpeed: 1,
+    });
+  });
+});
+
+describe("Vauban incapacitated damage passive", () => {
+  it("grants +25% multiplicative damage vs incapacitated", () => {
+    expect(computeVaubanIncapacitatedDamageBonus(false)).toBe(0);
+    expect(computeVaubanIncapacitatedDamageBonus(true)).toBeCloseTo(0.25, 5);
   });
 });
 

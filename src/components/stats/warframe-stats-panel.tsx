@@ -33,6 +33,8 @@ import {
   computeQorvexPassivePunchThrough,
   computeExcaliburSwordsmanshipBonuses,
   computeSarynPassiveStatusDurationMultiplier,
+  computeKullervoMeleePassiveBonuses,
+  computeVaubanIncapacitatedDamageBonus,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -607,6 +609,58 @@ function SarynStatusDurationPassive() {
   );
 }
 
+function KullervoMeleePassive() {
+  const { heavyAttackEfficiency, heavyAttackWindUpSpeed } = computeKullervoMeleePassiveBonuses();
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Heavy Efficiency"
+        value={`+${(heavyAttackEfficiency * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Kullervo passive on all melee. HAE hard-caps at 90% with other sources."
+      />
+      <StatRow
+        label="Heavy Wind Up"
+        value={`+${(heavyAttackWindUpSpeed * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="+100% Heavy Attack Wind Up Speed on all melee weapons (panel-only)."
+      />
+    </div>
+  );
+}
+
+function VaubanIncapacitatedPassive() {
+  const [incapacitated, setIncapacitated] = useState(1);
+  const bonus = computeVaubanIncapacitatedDamageBonus(incapacitated > 0);
+  const exampleHit = 100 * (1 + bonus);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Target Incapacitated"
+        value={incapacitated}
+        min={0}
+        max={1}
+        onChange={setIncapacitated}
+        tooltip="Vauban: +25% multiplicative damage vs incapacitated enemies (stun, freeze at 10 stacks, Bastille, etc.)."
+      />
+      <StatRow
+        label="Damage Bonus"
+        value={bonus > 0 ? `+${(bonus * 100).toFixed(0)}%` : "Inactive"}
+        color={bonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Multiplicative to total damage (and again on status DoTs applied while incapacitated)."
+      />
+      <StatRow
+        label="Example 100 Hit"
+        value={bonus > 0 ? `${exampleHit.toFixed(0)}` : "100"}
+        color="text-muted-foreground"
+        tooltip="100 × (1 + 0.25) when the passive applies."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -744,6 +798,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
             warframe.id === "excalibur_prime" ||
             warframe.id === "excalibur_umbra") && <ExcaliburSwordsmanshipPassive />}
           {(warframe.id === "saryn" || warframe.id === "saryn_prime") && <SarynStatusDurationPassive />}
+          {warframe.id === "kullervo" && <KullervoMeleePassive />}
+          {(warframe.id === "vauban" || warframe.id === "vauban_prime") && <VaubanIncapacitatedPassive />}
         </CollapsibleSection>
       )}
 
