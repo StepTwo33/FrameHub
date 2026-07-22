@@ -9,7 +9,9 @@ import {
   computeFireBlastArmorStripAtHeat,
   computeFireballHeatDamage,
   computeKineticPlatingDrAtBattery,
+  computeRedlineBuffAtBattery,
   lerpBatteryValue,
+  lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
 
 describe("computeArmorScaledPool", () => {
@@ -143,10 +145,19 @@ describe("Gauss battery formulas", () => {
     expect(computeKineticPlatingDrAtBattery(1, 1.3)).toBeCloseTo(1, 5); // full cap 100%
   });
 
-  it("lerps Thermal Sunder radius with battery", () => {
-    expect(lerpBatteryValue(6, 12, 0)).toBe(6);
-    expect(lerpBatteryValue(6, 12, 1)).toBe(12);
-    expect(lerpBatteryValue(6, 12, 0.5)).toBe(9);
+  it("lerps Thermal Sunder damage/status with battery (min = max/5)", () => {
+    expect(lerpBatteryMaxStat(750, 0)).toBe(150);
+    expect(lerpBatteryMaxStat(750, 1)).toBe(750);
+    expect(lerpBatteryMaxStat(1500, 0.8)).toBeCloseTo(1260, 5);
+    expect(lerpBatteryValue(4, 8, 0.8)).toBeCloseTo(7.2, 5);
+  });
+
+  // wiki: 75% FR at full battery × 127.5% DUR → 95.625%
+  it("Redline buffs lerp with battery then × Duration", () => {
+    expect(computeRedlineBuffAtBattery(0.75, 0, 1)).toBeCloseTo(0.15, 5);
+    expect(computeRedlineBuffAtBattery(0.75, 1, 1)).toBeCloseTo(0.75, 5);
+    expect(computeRedlineBuffAtBattery(0.75, 1, 1.275)).toBeCloseTo(0.95625, 5);
+    expect(computeRedlineBuffAtBattery(0.4, 0.8, 1)).toBeCloseTo(0.336, 5);
   });
 });
 

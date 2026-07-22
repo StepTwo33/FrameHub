@@ -2115,10 +2115,30 @@ export function computeKineticPlatingDrAtBattery(
   return minDr + (maxDr - minDr) * b;
 }
 
-/** Linear battery/heat lerp for radii (Thermal Sunder min→max). */
+/** Linear battery/heat lerp between two endpoints. */
 export function lerpBatteryValue(min: number, max: number, batteryFraction: number): number {
   const b = clampHeatFraction(batteryFraction);
   return min + (max - min) * b;
+}
+
+/**
+ * Wiki battery-scaled max stats where the empty-battery floor is max/5
+ * (Redline speed buffs; Thermal Sunder Cold/Heat damage).
+ */
+export function lerpBatteryMaxStat(max: number, batteryFraction: number): number {
+  return lerpBatteryValue(max / 5, max, batteryFraction);
+}
+
+/**
+ * wiki Redline: Fire Rate / Attack Speed / Reload / Cast Speed buffs
+ * lerp min→max with battery, then × Ability Duration (not Strength).
+ */
+export function computeRedlineBuffAtBattery(
+  maxBuff: number,
+  batteryFraction: number,
+  duration: number,
+): number {
+  return lerpBatteryMaxStat(maxBuff, batteryFraction) * duration;
 }
 
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */

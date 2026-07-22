@@ -17,7 +17,9 @@ import {
   computeFireBlastArmorStripAtHeat,
   computeFireballHeatDamage,
   computeKineticPlatingDrAtBattery,
+  computeRedlineBuffAtBattery,
   lerpBatteryValue,
+  lerpBatteryMaxStat,
   type AbilityDisplayContext,
 } from "@/lib/codex/ability-misc-stats";
 import { SimSlider } from "@/components/stats/stat-primitives";
@@ -362,16 +364,24 @@ export function AbilityStatsBlock({
   const [immolationHeatPct, setImmolationHeatPct] = useState(0);
   const heatT = Math.min(1, Math.max(0, immolationHeatPct / 100));
   const hasKineticPlatingBattery = display.abilityName === "Kinetic Plating";
-  const minSunderR = Number(ability.miscStats?.minRadius);
-  const maxSunderR = Number(ability.miscStats?.maxRadius);
+  const sunderStatusMin = Number(ability.miscStats?.statusDurationMin);
+  const sunderStatusMax = Number(ability.miscStats?.statusDurationMax);
+  const sunderHeatMax = Number(ability.aoeDamage ?? ability.miscStats?.heatDamage);
   const hasThermalSunderBattery =
     display.abilityName === "Thermal Sunder" &&
-    Number.isFinite(minSunderR) &&
-    Number.isFinite(maxSunderR) &&
-    maxSunderR > minSunderR;
+    !display.helminth &&
+    typeof ability.damage === "number" &&
+    Number.isFinite(sunderHeatMax) &&
+    sunderHeatMax > 0 &&
+    Number.isFinite(sunderStatusMin) &&
+    Number.isFinite(sunderStatusMax) &&
+    sunderStatusMax > sunderStatusMin;
+  const hasRedlineBattery = display.abilityName === "Redline";
   const usesBattery =
-    hasKineticPlatingBattery || hasThermalSunderBattery;
-  const [batteryPct, setBatteryPct] = useState(hasKineticPlatingBattery ? 80 : 0);
+    hasKineticPlatingBattery || hasThermalSunderBattery || hasRedlineBattery;
+  const [batteryPct, setBatteryPct] = useState(
+    hasKineticPlatingBattery || hasRedlineBattery ? 80 : 0,
+  );
   const batteryT = Math.min(1, Math.max(0, batteryPct / 100));
 
   const scaledMisc = ability.miscStats
@@ -453,6 +463,35 @@ export function AbilityStatsBlock({
         scaleHint="strength"
       />,
     );
+  } else if (hasThermalSunderBattery && ability.damage != null) {
+    const baseCold = lerpBatteryMaxStat(ability.damage, batteryT);
+    const scaledCold = baseCold * str;
+    const baseHeat = lerpBatteryMaxStat(sunderHeatMax, batteryT);
+    const scaledHeat = baseHeat * str;
+    rows.push(
+      <AbilityStatRow
+        key="damage"
+        compact={compact}
+        label="Cold Damage (at Battery)"
+        baseValue={baseCold.toFixed(0)}
+        modifiedValue={scaledCold.toFixed(0)}
+        isModified={str !== 1 || batteryT > 0}
+        isPositive={str > 1 || batteryT > 0}
+        scaleHint="strength"
+      />,
+    );
+    rows.push(
+      <AbilityStatRow
+        key="sunder-heat"
+        compact={compact}
+        label="Heat Damage (at Battery)"
+        baseValue={baseHeat.toFixed(0)}
+        modifiedValue={scaledHeat.toFixed(0)}
+        isModified={str !== 1 || batteryT > 0}
+        isPositive={str > 1 || batteryT > 0}
+        scaleHint="strength"
+      />,
+    );
   } else if (ability.damage != null && ability.damage > 0) {
     rows.push(
       <AbilityStatRow
@@ -510,7 +549,11 @@ export function AbilityStatsBlock({
       />,
     );
   }
-  if (ability.aoeDamage != null && ability.aoeDamage > 0) {
+  if (
+    !hasThermalSunderBattery &&
+    ability.aoeDamage != null &&
+    ability.aoeDamage > 0
+  ) {
     rows.push(
       <AbilityStatRow
         key="aoe"
@@ -876,7 +919,21 @@ export function AbilityStatsBlock({
     if (hasFireBlastStripHeat && line.label === "Armor Strip") continue;
     if (hasFireballHeat && line.label === "Area Damage") continue;
     if (hasKineticPlatingBattery && line.label === "Min Damage Reduction") continue;
-    if (hasThermalSunderBattery && (line.label === "Min Radius" || line.label === "Max Radius")) {
+    if (
+      hasThermalSunderBattery &&
+      (line.label === "Status Duration Min" ||
+        line.label === "Status Duration Max" ||
+        line.label === "Heat Damage")
+    ) {
+      continue;
+    }
+    if (
+      hasRedlineBattery &&
+      (line.label === "Fire Rate Buff" ||
+        line.label === "Attack Speed Buff" ||
+        line.label === "Reload Buff" ||
+        line.label === "Cast Speed Buff")
+    ) {
       continue;
     }
     rows.push(
@@ -986,20 +1043,60 @@ export function AbilityStatsBlock({
     );
   }
   if (hasThermalSunderBattery) {
-    const baseR = lerpBatteryValue(minSunderR, maxSunderR, batteryT);
-    const scaledR = lerpBatteryValue(minSunderR * rng, maxSunderR * rng, batteryT);
+    const baseStatus = lerpBatteryValue(sunderStatusMin, sunderStatusMax, batteryT);
     rows.push(
       <AbilityStatRow
-        key="thermalSunderRadius"
+        key="thermalSunderStatus"
         compact={compact}
-        label="Radius (at Battery)"
-        baseValue={`${baseR.toFixed(1)}m`}
-        modifiedValue={`${scaledR.toFixed(1)}m`}
-        isModified={rng !== 1 || batteryT > 0}
-        isPositive={rng >= 1}
-        scaleHint="range"
+        label="Status Duration (at Battery)"
+        baseValue={`${baseStatus.toFixed(1)}s`}
+        modifiedValue={`${baseStatus.toFixed(1)}s`}
+        isModified={batteryT > 0}
+        isPositive={batteryT > 0}
       />,
     );
+  }
+  if (hasRedlineBattery) {
+    const buffDefs: { key: string; label: string; max: number }[] = [
+      {
+        key: "fireRateBuff",
+        label: "Fire Rate (at Battery)",
+        max: Number(ability.miscStats?.fireRateBuff ?? 0.75),
+      },
+      {
+        key: "attackSpeedBuff",
+        label: "Attack Speed (at Battery)",
+        max: Number(ability.miscStats?.attackSpeedBuff ?? 0.4),
+      },
+      {
+        key: "reloadBuff",
+        label: "Reload Speed (at Battery)",
+        max: Number(ability.miscStats?.reloadBuff ?? 0.5),
+      },
+      {
+        key: "castSpeedBuff",
+        label: "Cast Speed (at Battery)",
+        max: Number(ability.miscStats?.castSpeedBuff ?? 0.5),
+      },
+    ];
+    for (const buff of buffDefs) {
+      if (!Number.isFinite(buff.max) || buff.max <= 0) continue;
+      const base = computeRedlineBuffAtBattery(buff.max, batteryT, 1);
+      const scaled = computeRedlineBuffAtBattery(buff.max, batteryT, dur);
+      rows.push(
+        <AbilityStatRow
+          key={buff.key}
+          compact={compact}
+          label={buff.label}
+          baseValue={(base * 100).toFixed(0)}
+          modifiedValue={(scaled * 100).toFixed(0)}
+          unit="%"
+          isModified={dur !== 1 || batteryT > 0}
+          isPositive={dur >= 1 || batteryT > 0}
+          scaleHint="duration"
+        />,
+      );
+    }
   }
   if (ability.miscStats?.channeled === true) {
     rows.push(
@@ -1058,7 +1155,9 @@ export function AbilityStatsBlock({
           tooltip={
             hasKineticPlatingBattery
               ? "Kinetic Plating DR = MinDR + (MaxDR − MinDR) × battery (wiki; default slider 80%)."
-              : "Thermal Sunder radius lerps min→max with battery, then × Ability Range."
+              : hasRedlineBattery
+                ? "Redline speed buffs lerp min→max (min=max/5) with battery, then × Ability Duration."
+                : "Thermal Sunder Cold/Heat damage and status duration lerp with battery (damage then × STR)."
           }
         />
       )}
