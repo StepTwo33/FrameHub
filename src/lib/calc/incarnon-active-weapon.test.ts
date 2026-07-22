@@ -784,6 +784,49 @@ describe("evolution numeric fixes", () => {
     );
   });
 
+  it("ruvox / praedos / ichor leftover utility panel + SC vulnerability", () => {
+    const ruvox = allWeapons.find((w) => w.id === "ruvox")!;
+    const gather = mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 2: 2 }, "ruvox");
+    expect(gather?.movementSpeed).toBe(0.6);
+    expect(calculateWeaponBuild(ruvox, [], modsMap(), gather).movementSpeedBonus).toBe(0.6);
+
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 4: 1 }, "ruvox")?.extraJumps).toBe(
+      1,
+    );
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 4: 2 }, "ruvox")
+        ?.finisherComboCountChance,
+    ).toBe(0.3);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 5: 2 }, "ruvox")
+        ?.punctureStatusOnImpale,
+    ).toBe(5);
+
+    const serum = mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 5: 1 }, "ruvox");
+    expect(serum?.statusChanceVulnerability).toBe(0.35);
+    const bare = calculateWeaponBuild(ruvox, [], modsMap());
+    const withSerum = calculateWeaponBuild(ruvox, [], modsMap(), serum);
+    expect(withSerum.statusChance).toBeCloseTo(bare.statusChance * 1.35, 5);
+
+    const praedos = allWeapons.find((w) => w.id === "praedos")!;
+    const leap = mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 4: 2 }, "praedos");
+    expect(leap?.jumpStrength).toBe(1);
+    expect(calculateWeaponBuild(praedos, [], modsMap(), leap).jumpStrength).toBe(1);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 5: 2 }, "praedos")
+        ?.comboOnAmmoPickup,
+    ).toBe(5);
+
+    const ichor = allWeapons.find((w) => w.id === "dual_ichor")!;
+    const parasite = mergeIncarnonStatChanges(
+      incarnonDataMap.get("dual_ichor")!,
+      { 4: 1 },
+      "dual_ichor",
+    );
+    expect(parasite?.healRegenPerSec).toBe(33);
+    expect(calculateWeaponBuild(ichor, [], modsMap(), parasite).healRegenPerSec).toBe(33);
+  });
+
   it("melee utility / ammo restore / charge / silent Genesis panel", () => {
     const innodem = allWeapons.find((w) => w.id === "innodem")!;
     const twister = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 3: 2 }, "innodem");
@@ -1270,6 +1313,29 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(lex, { 2: 1 }, "lex")?.ammoEfficiency).toBe(0.6);
     const bronco = incarnonDataMap.get("bronco")!;
     expect(mergeIncarnonStatChanges(bronco, { 4: 0 }, "bronco")?.ammoEfficiency).toBe(0.8);
+  });
+
+  it("instant reload chance folds into sustained DPS (one proc per mag)", () => {
+    const lato = allWeapons.find((w) => w.id === "lato")!;
+    const base = calculateWeaponBuild(lato, [], modsMap());
+    const penance = mergeIncarnonStatChanges(incarnonDataMap.get("lato")!, { 3: 2 }, "lato");
+    expect(penance?.instantReloadOnKillChance).toBe(0.5);
+    const withKill = calculateWeaponBuild(lato, [], modsMap(), penance);
+    expect(withKill.burstDps).toBeCloseTo(base.burstDps, 5);
+    expect(withKill.sustainedDps).toBeGreaterThan(base.sustainedDps);
+    // Mag uptime: magTime / (magTime + reload×0.5) vs magTime / (magTime + reload)
+    const efr = base.fireRate;
+    const magTime = base.magazine / efr;
+    const expected =
+      base.burstDps * (magTime / (magTime + base.reloadTime * 0.5));
+    expect(withKill.sustainedDps).toBeCloseTo(expected, 4);
+
+    const phenmor = allWeapons.find((w) => w.id === "phenmor")!;
+    const fortune = mergeIncarnonStatChanges(incarnonDataMap.get("phenmor")!, { 3: 2 }, "phenmor");
+    expect(fortune?.instantReloadOnHeadshotChance).toBe(0.2);
+    const withHs = calculateWeaponBuild(phenmor, [], modsMap(), fortune);
+    const barePhen = calculateWeaponBuild(phenmor, [], modsMap());
+    expect(withHs.sustainedDps).toBeGreaterThan(barePhen.sustainedDps);
   });
 
   it("Genesis leftovers paper: Reified / Steadfast / MM / Kinetic / Lethal / OA / Sawblades / Gambit", () => {

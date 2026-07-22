@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + aim-feel/zoom/mobility + holster/reload + kill-PT + Vicious Promise + **finisher/slam/move/ammo-restore/charge/silent/combo-pause panel**; remain: fold holster/reload/ammo procs into sustained DPS |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + aim-feel/mobility/utility panel + **instant-reload → sustained DPS** (1 proc/mag); remain: holster reload + ammo-restore procs in sustained |
 
 ---
 
@@ -276,6 +276,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis kill-PT + stacked aim-feel | 2026-07-22 | Kinetic Baffle; Slayer's Nerve 10×; Lex Talionis 4×; Ripper Rounds / Lethal Lance PT; Vicious Promise undamaged paper |
 | Genesis zoom + mobility panel | 2026-07-22 | Marksman's Focus −30% zoom; Striking Swiftness / Drifting Grace / Evolved Ascension / Raging Drift slide |
 | Genesis melee/ammo utility panel | 2026-07-22 | Finisher/slam/move; Standoff combo pause; Gunsmoke/Hunter/Galvanic ammo restore; HS charge; Silent Running; Rapid Conclusion 16× |
+| Instant reload → sustained DPS | 2026-07-22 | Kill/HS instant-reload chance shortens E[reload] (one opportunity per mag); Exact Penance / Executioner's Fortune goldens |
+| Genesis leftover utility panel | 2026-07-22 | Gathering Momentum 12×; Vault/Ternary; ammo-combo; Poison Parasite heal; Vulnerability Serum SC×1.35; Permanent Perforation |
 
 ## New / extended test files
 

@@ -487,6 +487,20 @@ export interface CalculatedStats {
   incarnonHeadshotChargeBonus?: number;
   /** Weapon is silent (enemies won't hear gunfire) — display only. */
   silentWeapon?: boolean;
+  /** Melee combo granted when collecting ammo — display only. */
+  comboOnAmmoPickup?: number;
+  /** Extra mid-air jumps (Ternary Vault) — display only. */
+  extraJumps?: number;
+  /** Double-jump / jump strength bonus fraction — display only. */
+  jumpStrength?: number;
+  /** Heal regen per second from perk trigger — display only. */
+  healRegenPerSec?: number;
+  /** Status-chance vulnerability on marked/impaled targets (fraction) — display / paper SC. */
+  statusChanceVulnerability?: number;
+  /** Puncture status stacks applied while impaled — display only. */
+  punctureStatusOnImpale?: number;
+  /** Combo count chance bonus on finishers (fraction) — display only. */
+  finisherComboCountChance?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

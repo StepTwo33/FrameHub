@@ -353,7 +353,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             label="Instant Reload (Kill)"
             value={`${(stats.instantReloadOnKillChance * 100).toFixed(0)}%`}
             color="text-amber-400"
-            tooltip="Chance to instantly reload on kill (display; not folded into sustained DPS)."
+            tooltip="Chance to instantly reload on kill. Sustained DPS assumes one qualifying opportunity per magazine dump."
           />
         )}
         {stats.instantReloadOnHeadshotChance != null && stats.instantReloadOnHeadshotChance > 0 && (
@@ -361,7 +361,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             label="Instant Reload (HS)"
             value={`${(stats.instantReloadOnHeadshotChance * 100).toFixed(0)}%`}
             color="text-amber-400"
-            tooltip="Chance to instantly reload on headshot / headshot-kill (display; not folded into sustained DPS)."
+            tooltip="Chance to instantly reload on headshot / headshot-kill. Sustained DPS assumes one qualifying opportunity per magazine dump."
           />
         )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
@@ -430,6 +430,62 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             value="Yes"
             color="text-sky-400"
             tooltip="Melee combo timer pauses while this weapon is holstered (Standoff / Abiding Hold)."
+          />
+        )}
+        {stats.comboOnAmmoPickup != null && stats.comboOnAmmoPickup > 0 && (
+          <StatRow
+            label="Combo on Ammo Pickup"
+            value={`+${stats.comboOnAmmoPickup}`}
+            color="text-orange-400"
+            tooltip="Melee combo counter gained when collecting ammo (display)."
+          />
+        )}
+        {stats.extraJumps != null && stats.extraJumps > 0 && (
+          <StatRow
+            label="Extra Jumps"
+            value={`+${stats.extraJumps}`}
+            color="text-cyan-400"
+            tooltip="Additional mid-air jumps (display)."
+          />
+        )}
+        {stats.jumpStrength != null && stats.jumpStrength !== 0 && (
+          <StatRow
+            label="Jump Strength"
+            value={`${stats.jumpStrength > 0 ? "+" : ""}${(stats.jumpStrength * 100).toFixed(0)}%`}
+            color="text-cyan-400"
+            tooltip="Double-jump / jump strength bonus (display)."
+          />
+        )}
+        {stats.healRegenPerSec != null && stats.healRegenPerSec > 0 && (
+          <StatRow
+            label="Heal Regen"
+            value={`${stats.healRegenPerSec}/s`}
+            color="text-emerald-400"
+            tooltip="Heal regeneration from perk trigger (display; duration not modeled)."
+          />
+        )}
+        {stats.statusChanceVulnerability != null && stats.statusChanceVulnerability > 0 && (
+          <StatRow
+            label="Status Vuln"
+            value={`+${(stats.statusChanceVulnerability * 100).toFixed(0)}%`}
+            color="text-purple-400"
+            tooltip="Target status-chance vulnerability (assumes uptime; multiplies modded SC for paper DPS)."
+          />
+        )}
+        {stats.punctureStatusOnImpale != null && stats.punctureStatusOnImpale > 0 && (
+          <StatRow
+            label="Impale Puncture"
+            value={`${stats.punctureStatusOnImpale}`}
+            color="text-yellow-400"
+            tooltip="Puncture status stacks while impaled (display)."
+          />
+        )}
+        {stats.finisherComboCountChance != null && stats.finisherComboCountChance > 0 && (
+          <StatRow
+            label="Finisher Combo Chance"
+            value={`+${(stats.finisherComboCountChance * 100).toFixed(0)}%`}
+            color="text-orange-400"
+            tooltip="Combo count chance on finishers (display)."
           />
         )}
       </CollapsibleSection>
@@ -759,6 +815,13 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "ammoRestoreMagFraction") return `ammo: ${(n * 100).toFixed(0)}% mag`;
                         if (s === "incarnonHeadshotChargeBonus") return `charge@HS: +${(n * 100).toFixed(0)}%`;
                         if (s === "silentWeapon") return "silent";
+                        if (s === "comboOnAmmoPickup") return `combo@ammo: +${n}`;
+                        if (s === "extraJumps") return `jumps: +${n}`;
+                        if (s === "jumpStrength") return `jump: +${(n * 100).toFixed(0)}%`;
+                        if (s === "healRegenPerSec") return `heal: ${n}/s`;
+                        if (s === "statusChanceVulnerability") return `SC vuln: +${(n * 100).toFixed(0)}%`;
+                        if (s === "punctureStatusOnImpale") return `impale PT status: ${n}`;
+                        if (s === "finisherComboCountChance") return `finisher combo: +${(n * 100).toFixed(0)}%`;
                         if (s === "holsterReloadPerSec") return `holster: ${(n * 100).toFixed(0)}%/s`;
                         if (s === "instantReloadOnKillChance") return `reload@kill: ${(n * 100).toFixed(0)}%`;
                         if (s === "instantReloadOnHeadshotChance") return `reload@HS: ${(n * 100).toFixed(0)}%`;

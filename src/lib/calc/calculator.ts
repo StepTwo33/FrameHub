@@ -1032,6 +1032,27 @@ export function calculateWeaponBuild(
         case 'silentWeapon':
           stats.silentWeapon = value > 0;
           break;
+        case 'comboOnAmmoPickup':
+          stats.comboOnAmmoPickup = (stats.comboOnAmmoPickup ?? 0) + value;
+          break;
+        case 'extraJumps':
+          stats.extraJumps = (stats.extraJumps ?? 0) + value;
+          break;
+        case 'jumpStrength':
+          stats.jumpStrength = (stats.jumpStrength ?? 0) + value;
+          break;
+        case 'healRegenPerSec':
+          stats.healRegenPerSec = (stats.healRegenPerSec ?? 0) + value;
+          break;
+        case 'statusChanceVulnerability':
+          stats.statusChanceVulnerability = (stats.statusChanceVulnerability ?? 0) + value;
+          break;
+        case 'punctureStatusOnImpale':
+          stats.punctureStatusOnImpale = (stats.punctureStatusOnImpale ?? 0) + value;
+          break;
+        case 'finisherComboCountChance':
+          stats.finisherComboCountChance = (stats.finisherComboCountChance ?? 0) + value;
+          break;
         case 'comboDuration': stats.comboDuration += value; break;
         case 'followThrough':
           stats.followThrough = (stats.followThrough ?? 0) + value;
@@ -1133,6 +1154,13 @@ export function calculateWeaponBuild(
     const cmMultiply = incarnonStatChanges.critMultMultiply ?? 1;
     if (cmMultiply !== 1) {
       stats.criticalMultiplier *= cmMultiply;
+    }
+
+    // Vulnerability Serum (etc.): assume marked/impaled uptime → SC × (1 + vuln)
+    const scVuln = stats.statusChanceVulnerability ?? 0;
+    if (scVuln > 0) {
+      stats.statusChance *= 1 + scVuln;
+      stats.statusChancePerShot = stats.statusChance;
     }
   }
 
@@ -1711,7 +1739,15 @@ function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): num
   if (ae >= 0.99) return burstDps;
   const ammoPerShot = 1 - ae;
   const magTime = stats.magazine / (ammoPerShot * efr);
-  const cycleTime = magTime + stats.reloadTime;
+  // Instant reload on kill / headshot(-kill): paper assumes one qualifying
+  // opportunity per magazine dump → E[reload] = reload × (1 − p).
+  // Holster reload and ammo-restore procs stay panel-only (swap / hit-gated).
+  const instantReloadChance = Math.min(
+    1,
+    (stats.instantReloadOnKillChance ?? 0) + (stats.instantReloadOnHeadshotChance ?? 0),
+  );
+  const effectiveReload = stats.reloadTime * (1 - instantReloadChance);
+  const cycleTime = magTime + effectiveReload;
   if (cycleTime <= 0) return burstDps;
   return burstDps * (magTime / cycleTime);
 }

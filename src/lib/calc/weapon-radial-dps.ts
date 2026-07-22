@@ -158,7 +158,13 @@ export function scaleRadialAttacksWithDps(
   const efr = shotsPerSecond(stats);
   if (!isMelee && stats.magazine > 0 && efr > 0) {
     const magTime = stats.magazine / efr;
-    const cycleTime = magTime + stats.reloadTime;
+    // Match direct sustained: one instant-reload opportunity per mag dump.
+    const instantReloadChance = Math.min(
+      1,
+      (stats.instantReloadOnKillChance ?? 0) + (stats.instantReloadOnHeadshotChance ?? 0),
+    );
+    const effectiveReload = stats.reloadTime * (1 - instantReloadChance);
+    const cycleTime = magTime + effectiveReload;
     if (cycleTime > 0) {
       radialSustainedDps = radialBurstDps * (magTime / cycleTime);
     }

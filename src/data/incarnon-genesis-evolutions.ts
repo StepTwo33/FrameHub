@@ -232,8 +232,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 1, name: "Resolute Force", description: "+7s Combo Duration.", statChanges: {"comboDuration":7} },
     { tier: 3, slot: 2, name: "Swift Break", description: "+100% Heavy Attack Windup Speed", statChanges: {"heavyAttackWindUp":1} },
     { tier: 4, slot: 0, name: "Absolute Valor", description: "Increase Base Status Chance by +34%.", statChanges: {"statusChance":0.34} },
-    { tier: 4, slot: 1, name: "Poison Parasite", description: "On killing an enemy with 3+ Toxin Stacks: +33 Heal Regen/s for 9s.", statChanges: {} },
-    { tier: 4, slot: 2, name: "Universal Readiness", description: "Collecting ammo grants 5 Melee Combo counter.", statChanges: {} },
+    { tier: 4, slot: 1, name: "Poison Parasite", description: "On killing an enemy with 3+ Toxin Stacks: +33 Heal Regen/s for 9s.", statChanges: {"healRegenPerSec":33} },
+    { tier: 4, slot: 2, name: "Universal Readiness", description: "Collecting ammo grants 5 Melee Combo counter.", statChanges: {"comboOnAmmoPickup":5} },
   ],
   "dual_toxocyst_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain an Auto Fire mode and Ricochet.", statChanges: {} },
@@ -348,7 +348,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes finisher buff up for paper DPS
     { tier: 5, slot: 0, name: "Blood Anointed", description: "On Finisher: +40% Heavy Attack Efficiency for 40s", statChanges: {"heavyAttackEfficiency":0.4} },
     { tier: 5, slot: 1, name: "Stunning Brutality", description: "On Finisher: Stun aware enemies in a 10m Radius", statChanges: {} },
-    { tier: 5, slot: 2, name: "Armed Inspiration", description: "Collecting ammo grants 5 Melee Combo counter", statChanges: {} },
+    { tier: 5, slot: 2, name: "Armed Inspiration", description: "Collecting ammo grants 5 Melee Combo counter", statChanges: {"comboOnAmmoPickup":5} },
   ],
   "kunai_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Projectiles seek Headshots and have increased Multishot.", statChanges: {} },
@@ -555,28 +555,30 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
     { tier: 4, slot: 1, name: "Evolved Ascension", description: "+30% Parkour Velocity", statChanges: {"parkourVelocity":0.3} },
-    { tier: 4, slot: 2, name: "Vaulting Leap", description: "Increase Double Jump strength by +100%", statChanges: {} },
+    { tier: 4, slot: 2, name: "Vaulting Leap", description: "Increase Double Jump strength by +100%", statChanges: {"jumpStrength":1} },
     // Assumes slide-kill buff up for paper DPS
     { tier: 5, slot: 0, name: "Transfigured Momentum", description: "On Slide Kill: +50% Heavy Attack Efficiency for 30s", statChanges: {"heavyAttackEfficiency":0.5} },
     { tier: 5, slot: 1, name: "Kinetic Harmony", description: "+100% Heavy Attack Wind Up Speed", statChanges: {"heavyAttackWindUp":1} },
-    { tier: 5, slot: 2, name: "Universal Readiness", description: "Collecting ammo grants 5 Melee Combo counter", statChanges: {} },
+    { tier: 5, slot: 2, name: "Universal Readiness", description: "Collecting ammo grants 5 Melee Combo counter", statChanges: {"comboOnAmmoPickup":5} },
   ],
   "ruvox": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Heavy Slam attacks impale nearby enemies on Void Spikes. +3 Range -35% Max Melee Attack Speed +100% of Impact Damage converted to Puncture Damage", statChanges: {"range":3,"fireRate":-0.35} },
     { tier: 2, slot: 0, name: "Orokin Reach", description: "+1 Range", statChanges: {"range":1} },
     // Max stacks assumed for paper DPS (+15% × 3)
     { tier: 2, slot: 1, name: "Lethal Impetus", description: "On Kill: +15% Attack Speed for 15s. Stacks up to 3x.", statChanges: {"fireRate":0.45} },
-    { tier: 2, slot: 2, name: "Gathering Momentum", description: "Gain +5% Movement Speed per Melee Combo Multiplier", statChanges: {} },
+    // Assumes 12× combo multiplier for paper panel (+5% × 12)
+    { tier: 2, slot: 2, name: "Gathering Momentum", description: "Gain +5% Movement Speed per Melee Combo Multiplier", statChanges: {"movementSpeed":0.6} },
     { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count.", statChanges: {} },
     { tier: 3, slot: 1, name: "Seismic Slam", description: "+60% Slam Radius", statChanges: {"slamRadius":0.6} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
-    { tier: 4, slot: 1, name: "Ternary Vault", description: "Gain +1 mid-air jumps", statChanges: {} },
-    { tier: 4, slot: 2, name: "Inspiring Execution", description: "+30% Combo Count Chance on Finishers for 20s", statChanges: {} },
+    { tier: 4, slot: 1, name: "Ternary Vault", description: "Gain +1 mid-air jumps", statChanges: {"extraJumps":1} },
+    { tier: 4, slot: 2, name: "Inspiring Execution", description: "+30% Combo Count Chance on Finishers for 20s", statChanges: {"finisherComboCountChance":0.3} },
     // Assumes 5+ impale buff up for paper DPS
     { tier: 5, slot: 0, name: "Brutal Efficiency", description: "Gain +40% Heavy Attack Efficiency for 20s when impaling 5 or more enemies.", statChanges: {"heavyAttackEfficiency":0.4} },
-    { tier: 5, slot: 1, name: "Vulnerability Serum", description: "Impaled enemies are +35% more vulnerable to Status Chance", statChanges: {} },
-    { tier: 5, slot: 2, name: "Permanent Perforation", description: "Enemies suffer 5 Puncture Status while impaled", statChanges: {} },
+    // Assumes impaled target for paper SC
+    { tier: 5, slot: 1, name: "Vulnerability Serum", description: "Impaled enemies are +35% more vulnerable to Status Chance", statChanges: {"statusChanceVulnerability":0.35} },
+    { tier: 5, slot: 2, name: "Permanent Perforation", description: "Enemies suffer 5 Puncture Status while impaled", statChanges: {"punctureStatusOnImpale":5} },
   ],
   "sibear_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Reach 6x Combo and then Heavy Attack to activate Incarnon Form. Create a Cold Blast Radius with Heavy Slams. +100% Melee Damage +50% Heavy Attack Wind Up Speed +10% Sprint Speed +10% to Parkour Velocity", statChanges: {"damage":1} },
@@ -684,7 +686,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 3, slot: 1, name: "Echoes of Rage", description: "+1 Combo Count on Shard Damage", statChanges: {} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
-    { tier: 4, slot: 1, name: "Vaulting Leap", description: "+100% Jump and Double Jump Height", statChanges: {} },
+    { tier: 4, slot: 1, name: "Vaulting Leap", description: "+100% Jump and Double Jump Height", statChanges: {"jumpStrength":1} },
     { tier: 4, slot: 2, name: "Devastating Mercy", description: "Ground Finishers knock enemies down in 6m radius", statChanges: {} },
     { tier: 5, slot: 0, name: "Explosive Growth", description: "Shards grow when a new shard is created, up to 3 times. Fully grown shards erupt dealing x2 damage.", statChanges: {} },
     { tier: 5, slot: 1, name: "Chain Shatter", description: "Heavy attacks detonate shards. Nearby shards also detonate.", statChanges: {} },
