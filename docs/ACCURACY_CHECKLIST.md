@@ -258,6 +258,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Khora + Oberon passives | 2026-07-22 | Venari +15% move speed / 45s respawn; Righteous Negation cap 3 (0.25s / 0.5s final invuln) |
 | Jade + Temple passives | 2026-07-22 | Judgments +50% vuln / 10s + 2 Aura slots; Backbeat +50% Ability Efficiency on beat |
 | Oraxia + Rhino passives | 2026-07-22 | Predator's Lurk 8s wall-latch invis; Rhino hard-landing 100 Impact / 6m (90% edge falloff) |
+| Gara + Limbo passives | 2026-07-22 | Gara blind 15%+20%/miss / 10s / 12m; Limbo Rift +10 Energy/kill + 2 Energy/s |
 
 ## New / extended test files
 

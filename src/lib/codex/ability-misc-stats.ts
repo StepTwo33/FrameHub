@@ -2908,6 +2908,64 @@ export function computeRhinoHardLandingDamageAtDistance(
   return pulse.damage * (1 - pulse.maxFalloff * t);
 }
 
+export interface GaraPassiveBlind {
+  baseChance: number;
+  /** Chance added after each cast that fails to proc (until success). */
+  chanceIncreasePerMiss: number;
+  durationSec: number;
+  radiusM: number;
+}
+
+/** wiki Gara: 15% chance on cast for 10s radial blind in 12m; +20% chance per miss until proc. */
+export function computeGaraPassiveBlind(): GaraPassiveBlind {
+  return {
+    baseChance: 0.15,
+    chanceIncreasePerMiss: 0.2,
+    durationSec: 10,
+    radiusM: 12,
+  };
+}
+
+/**
+ * Current blind proc chance after `missedCasts` consecutive failures (resets on success).
+ * Caps at 100%.
+ */
+export function computeGaraPassiveBlindChance(missedCasts: number): number {
+  const { baseChance, chanceIncreasePerMiss } = computeGaraPassiveBlind();
+  const misses = Math.max(0, Math.floor(missedCasts));
+  return Math.min(1, baseChance + misses * chanceIncreasePerMiss);
+}
+
+export interface LimboRiftPassive {
+  portalDurationSec: number;
+  energyPerKill: number;
+  energyPerSecondInRift: number;
+  /** Banish duration for allies/enemies that touch the portal (not × DUR). */
+  portalBanishDurationSec: number;
+}
+
+/** wiki Limbo Rift Walk: 5s portal, +10 Energy per Rift kill, +2 Energy/s while in Rift. */
+export function computeLimboRiftPassive(): LimboRiftPassive {
+  return {
+    portalDurationSec: 5,
+    energyPerKill: 10,
+    energyPerSecondInRift: 2,
+    portalBanishDurationSec: 15,
+  };
+}
+
+/** Energy from Rift kills + passive regen over time spent in the Rift. */
+export function computeLimboRiftEnergyGained(
+  riftKills: number,
+  secondsInRift: number,
+  passive: LimboRiftPassive = computeLimboRiftPassive(),
+): number {
+  return (
+    Math.max(0, Math.floor(riftKills)) * passive.energyPerKill +
+    Math.max(0, secondsInRift) * passive.energyPerSecondInRift
+  );
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

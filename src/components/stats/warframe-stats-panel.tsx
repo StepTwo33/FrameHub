@@ -67,6 +67,10 @@ import {
   computeOraxiaPredatorsLurkRemaining,
   computeRhinoHardLandingPulse,
   computeRhinoHardLandingDamageAtDistance,
+  computeGaraPassiveBlind,
+  computeGaraPassiveBlindChance,
+  computeLimboRiftPassive,
+  computeLimboRiftEnergyGained,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1338,6 +1342,77 @@ function RhinoHardLandingPassivePanel() {
   );
 }
 
+function GaraPassiveBlindPanel() {
+  const blind = computeGaraPassiveBlind();
+  const [missedCasts, setMissedCasts] = useState(0);
+  const chance = computeGaraPassiveBlindChance(missedCasts);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Missed Casts"
+        value={missedCasts}
+        min={0}
+        max={5}
+        onChange={setMissedCasts}
+        tooltip="Gara: each ability cast has a chance to radial blind. Chance rises +20% after each miss until it procs, then resets."
+      />
+      <StatRow
+        label="Blind Chance"
+        value={`${(chance * 100).toFixed(0)}%`}
+        color="text-cyan-400"
+        tooltip={`Base ${(blind.baseChance * 100).toFixed(0)}% + ${(blind.chanceIncreasePerMiss * 100).toFixed(0)}% × misses (cap 100%).`}
+      />
+      <StatRow
+        label="Blind"
+        value={`${blind.durationSec}s / ${blind.radiusM}m`}
+        color="text-muted-foreground"
+        tooltip="Exposes enemies to Melee Finishers. Requires LoS."
+      />
+    </div>
+  );
+}
+
+function LimboRiftPassivePanel() {
+  const rift = computeLimboRiftPassive();
+  const [riftKills, setRiftKills] = useState(5);
+  const [secondsInRift, setSecondsInRift] = useState(10);
+  const energy = computeLimboRiftEnergyGained(riftKills, secondsInRift, rift);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Rift Kills"
+        value={riftKills}
+        min={0}
+        max={40}
+        onChange={setRiftKills}
+        tooltip={`Limbo: +${rift.energyPerKill} Energy per enemy killed in the Rift (regardless of Limbo's plane).`}
+      />
+      <SimSlider
+        label="Seconds in Rift"
+        value={secondsInRift}
+        min={0}
+        max={60}
+        onChange={setSecondsInRift}
+        tooltip={`+${rift.energyPerSecondInRift} Energy/s while in the Rift (paused by most channeled abilities).`}
+      />
+      <StatRow
+        label="Energy Gained"
+        value={`+${energy.toFixed(0)}`}
+        color="text-sky-400"
+        tooltip={`Kills × ${rift.energyPerKill} + time × ${rift.energyPerSecondInRift}/s.`}
+      />
+      <StatRow
+        label="Rift Portal"
+        value={`${rift.portalDurationSec}s → ${rift.portalBanishDurationSec}s Banish`}
+        color="text-muted-foreground"
+        tooltip="Dodge leaves a 5s portal; touching it Banishes for 15s (not × Ability Duration)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1499,6 +1574,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           )}
           {warframe.id === "oraxia" && <OraxiaPredatorsLurkPassivePanel />}
           {(warframe.id === "rhino" || warframe.id === "rhino_prime") && <RhinoHardLandingPassivePanel />}
+          {(warframe.id === "gara" || warframe.id === "gara_prime") && <GaraPassiveBlindPanel />}
+          {(warframe.id === "limbo" || warframe.id === "limbo_prime") && <LimboRiftPassivePanel />}
         </CollapsibleSection>
       )}
 

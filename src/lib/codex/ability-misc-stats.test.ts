@@ -75,6 +75,10 @@ import {
   computeOraxiaPredatorsLurkRemaining,
   computeRhinoHardLandingPulse,
   computeRhinoHardLandingDamageAtDistance,
+  computeGaraPassiveBlind,
+  computeGaraPassiveBlindChance,
+  computeLimboRiftPassive,
+  computeLimboRiftEnergyGained,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -758,6 +762,33 @@ describe("Rhino hard-landing pulse", () => {
     expect(computeRhinoHardLandingDamageAtDistance(0)).toBe(100);
     expect(computeRhinoHardLandingDamageAtDistance(1)).toBeCloseTo(10, 5);
     expect(computeRhinoHardLandingDamageAtDistance(0.5)).toBeCloseTo(55, 5);
+  });
+});
+
+describe("Gara radial blind passive", () => {
+  it("starts at 15% and gains +20% per missed cast up to 100%", () => {
+    expect(computeGaraPassiveBlind()).toEqual({
+      baseChance: 0.15,
+      chanceIncreasePerMiss: 0.2,
+      durationSec: 10,
+      radiusM: 12,
+    });
+    expect(computeGaraPassiveBlindChance(0)).toBeCloseTo(0.15, 5);
+    expect(computeGaraPassiveBlindChance(1)).toBeCloseTo(0.35, 5);
+    expect(computeGaraPassiveBlindChance(5)).toBe(1);
+  });
+});
+
+describe("Limbo Rift energy passive", () => {
+  it("grants 10 Energy/kill and 2 Energy/s in the Rift", () => {
+    expect(computeLimboRiftPassive()).toEqual({
+      portalDurationSec: 5,
+      energyPerKill: 10,
+      energyPerSecondInRift: 2,
+      portalBanishDurationSec: 15,
+    });
+    expect(computeLimboRiftEnergyGained(3, 10)).toBe(50); // 30 + 20
+    expect(computeLimboRiftEnergyGained(0, 5)).toBe(10);
   });
 });
 
