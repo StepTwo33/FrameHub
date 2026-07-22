@@ -46,7 +46,12 @@ import {
   computeOctaviaInspirationEnergyRemaining,
   computeNekrosDeathHealPassive,
   computeNekrosDeathHealTotal,
+  computeNovaPassiveOrbChances,
+  computeNovaPassiveExpectedOrbs,
+  computeIvaraEnemyRadarRange,
+  DEFAULT_ENEMY_RADAR_M,
   type MesaSidearmStyle,
+  type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -945,6 +950,91 @@ function NekrosDeathHealPassivePanel() {
   );
 }
 
+const NOVA_SPEED_STATES: NovaSpeedState[] = ["none", "slowed", "sped"];
+
+function NovaOrbDropPassive() {
+  const [speedIdx, setSpeedIdx] = useState(1); // slowed
+  const [kills, setKills] = useState(20);
+  const speedState = NOVA_SPEED_STATES[Math.min(2, Math.max(0, speedIdx))] ?? "slowed";
+  const chances = computeNovaPassiveOrbChances(speedState);
+  const expected = computeNovaPassiveExpectedOrbs(kills, speedState);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Speed (0 none / 1 slow / 2 sped)"
+        value={speedIdx}
+        min={0}
+        max={2}
+        onChange={setSpeedIdx}
+        tooltip="Nova: kills while slowed drop Health Orbs (15%); while sped up drop Energy Orbs (15%). Any slow/speed source."
+      />
+      <SimSlider
+        label="Kills"
+        value={kills}
+        min={0}
+        max={100}
+        onChange={setKills}
+        tooltip="Expected orb count = kills × drop chance."
+      />
+      <StatRow
+        label="Health Orb Chance"
+        value={chances.healthOrbChance > 0 ? `${(chances.healthOrbChance * 100).toFixed(0)}%` : "—"}
+        color={chances.healthOrbChance > 0 ? "text-green-400" : "text-muted-foreground"}
+        tooltip="Only while the enemy is slowed at death."
+      />
+      <StatRow
+        label="Energy Orb Chance"
+        value={chances.energyOrbChance > 0 ? `${(chances.energyOrbChance * 100).toFixed(0)}%` : "—"}
+        color={chances.energyOrbChance > 0 ? "text-sky-400" : "text-muted-foreground"}
+        tooltip="Only while the enemy is sped up at death."
+      />
+      <StatRow
+        label="Expected Orbs"
+        value={
+          expected.expectedHealthOrbs > 0
+            ? `${expected.expectedHealthOrbs.toFixed(1)} Health`
+            : expected.expectedEnergyOrbs > 0
+              ? `${expected.expectedEnergyOrbs.toFixed(1)} Energy`
+              : "0"
+        }
+        color="text-amber-400"
+        tooltip="Average orbs from the selected kill count and speed state."
+      />
+    </div>
+  );
+}
+
+function IvaraRadarPassive() {
+  const [extraRadar, setExtraRadar] = useState(0);
+  const range = computeIvaraEnemyRadarRange(extraRadar);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Extra Radar (m)"
+        value={extraRadar}
+        min={0}
+        max={160}
+        onChange={setExtraRadar}
+        tooltip="Ivara innate radar is 50m (vs normal 30m). Add Enemy Radar / Animal Instinct / squad auras here."
+      />
+      <StatRow
+        label="Enemy Radar"
+        value={`${range}m`}
+        color="text-emerald-400"
+        tooltip={`Ivara base 50m + extras. Default Warframes sense ${DEFAULT_ENEMY_RADAR_M}m.`}
+      />
+      <StatRow
+        label="vs Default"
+        value={`+${range - DEFAULT_ENEMY_RADAR_M}m`}
+        color="text-muted-foreground"
+        tooltip="Difference versus the standard 30m enemy radar."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1092,6 +1182,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "revenant" || warframe.id === "revenant_prime") && <RevenantShieldPulsePassive />}
           {(warframe.id === "octavia" || warframe.id === "octavia_prime") && <OctaviaInspirationPassivePanel />}
           {(warframe.id === "nekros" || warframe.id === "nekros_prime") && <NekrosDeathHealPassivePanel />}
+          {(warframe.id === "nova" || warframe.id === "nova_prime") && <NovaOrbDropPassive />}
+          {(warframe.id === "ivara" || warframe.id === "ivara_prime") && <IvaraRadarPassive />}
         </CollapsibleSection>
       )}
 

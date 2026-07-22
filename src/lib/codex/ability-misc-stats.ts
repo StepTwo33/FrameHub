@@ -2700,6 +2700,44 @@ export function computeNekrosDeathHealTotal(deaths: number): number {
   return Math.max(0, Math.floor(deaths)) * healthPerDeath;
 }
 
+export type NovaSpeedState = "none" | "slowed" | "sped";
+
+export interface NovaPassiveOrbChances {
+  healthOrbChance: number;
+  energyOrbChance: number;
+}
+
+/**
+ * wiki Nova passive: 15% Health Orb on kill while slowed; 15% Energy Orb while sped up.
+ * Slow/speed can come from any source (incl. Molecular Prime).
+ */
+export function computeNovaPassiveOrbChances(speedState: NovaSpeedState): NovaPassiveOrbChances {
+  return {
+    healthOrbChance: speedState === "slowed" ? 0.15 : 0,
+    energyOrbChance: speedState === "sped" ? 0.15 : 0,
+  };
+}
+
+export function computeNovaPassiveExpectedOrbs(
+  kills: number,
+  speedState: NovaSpeedState,
+): { expectedHealthOrbs: number; expectedEnergyOrbs: number } {
+  const n = Math.max(0, Math.floor(kills));
+  const chances = computeNovaPassiveOrbChances(speedState);
+  return {
+    expectedHealthOrbs: n * chances.healthOrbChance,
+    expectedEnergyOrbs: n * chances.energyOrbChance,
+  };
+}
+
+/** Default Warframe enemy radar (for comparison with Ivara). */
+export const DEFAULT_ENEMY_RADAR_M = 30;
+
+/** wiki Ivara: innate enemy radar 50m (vs normal 30m). Stacks with Enemy Radar mods/auras. */
+export function computeIvaraEnemyRadarRange(extraRadarM = 0): number {
+  return 50 + Math.max(0, extraRadarM);
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

@@ -54,6 +54,10 @@ import {
   computeOctaviaInspirationEnergyRemaining,
   computeNekrosDeathHealPassive,
   computeNekrosDeathHealTotal,
+  computeNovaPassiveOrbChances,
+  computeNovaPassiveExpectedOrbs,
+  computeIvaraEnemyRadarRange,
+  DEFAULT_ENEMY_RADAR_M,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -604,6 +608,39 @@ describe("Nekros death heal passive", () => {
     expect(computeNekrosDeathHealTotal(0)).toBe(0);
     expect(computeNekrosDeathHealTotal(3)).toBe(15);
     expect(computeNekrosDeathHealTotal(10)).toBe(50);
+  });
+});
+
+describe("Nova Molecular Prime orb passive", () => {
+  it("grants 15% Health orb while slowed and 15% Energy orb while sped", () => {
+    expect(computeNovaPassiveOrbChances("none")).toEqual({
+      healthOrbChance: 0,
+      energyOrbChance: 0,
+    });
+    expect(computeNovaPassiveOrbChances("slowed")).toEqual({
+      healthOrbChance: 0.15,
+      energyOrbChance: 0,
+    });
+    expect(computeNovaPassiveOrbChances("sped")).toEqual({
+      healthOrbChance: 0,
+      energyOrbChance: 0.15,
+    });
+    expect(computeNovaPassiveExpectedOrbs(20, "slowed")).toEqual({
+      expectedHealthOrbs: 3,
+      expectedEnergyOrbs: 0,
+    });
+    expect(computeNovaPassiveExpectedOrbs(20, "sped")).toEqual({
+      expectedHealthOrbs: 0,
+      expectedEnergyOrbs: 3,
+    });
+  });
+});
+
+describe("Ivara enemy radar passive", () => {
+  it("is 50m base and stacks with extra radar", () => {
+    expect(DEFAULT_ENEMY_RADAR_M).toBe(30);
+    expect(computeIvaraEnemyRadarRange()).toBe(50);
+    expect(computeIvaraEnemyRadarRange(30)).toBe(80);
   });
 });
 

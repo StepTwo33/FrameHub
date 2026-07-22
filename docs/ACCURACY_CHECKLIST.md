@@ -252,6 +252,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Dante + Dagath passives | 2026-07-22 | Chronicler's Mark SC ×1.5 on scanned; Abundant Abyss 35% ×4 orb yield (E[×]=2.05) |
 | Equinox + Revenant passives | 2026-07-22 | Equinox 10% orb cross-convert; Revenant shield-break 100 Impact / 7.5m (75% edge falloff) |
 | Octavia + Nekros passives | 2026-07-22 | Inspiration 1 energy/s × 30s @ 15m; Nekros +5 Health per death within 10m |
+| Nova + Ivara passives | 2026-07-22 | Nova 15% Health/Energy orb on slow/sped kills; Ivara 50m radar (+ extras) |
 
 ## New / extended test files
 
