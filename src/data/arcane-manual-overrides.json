@@ -206,6 +206,12 @@
         "stat": "knockdownChance",
         "maxValue": 100,
         "baseValue": 17
+      },
+      {
+        "stat": "radialAttackRadius",
+        "maxValue": 30,
+        "flat": true,
+        "baseValue": 5
       }
     ]
   },
@@ -217,12 +223,19 @@
         "stat": "escapistStackCap",
         "maxValue": 9,
         "flat": true,
-        "baseValue": 9
+        "constantAtAllRanks": true
       },
       {
         "stat": "invulnerabilityDuration",
         "maxValue": 12,
-        "flat": true
+        "flat": true,
+        "baseValue": 2
+      },
+      {
+        "stat": "escapistStacksConsumed",
+        "maxValue": 3,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -602,6 +615,12 @@
         "stat": "freeAbilityCastChance",
         "maxValue": 20,
         "baseValue": 5
+      },
+      {
+        "stat": "freeAbilityCastCount",
+        "maxValue": 3,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -674,12 +693,19 @@
         "stat": "overguardThreshold",
         "maxValue": 3000,
         "flat": true,
-        "baseValue": 3000
+        "constantAtAllRanks": true
       },
       {
         "stat": "radialAttackRadius",
         "maxValue": 30,
-        "flat": true
+        "flat": true,
+        "baseValue": 5
+      },
+      {
+        "stat": "viralStatusStacks",
+        "maxValue": 10,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1019,6 +1045,12 @@
         "stat": "kdDriveSpeed",
         "maxValue": 150,
         "baseValue": 25
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1371,7 +1403,7 @@
         "stat": "pullRadius",
         "maxValue": 18,
         "flat": true,
-        "baseValue": 18
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1395,7 +1427,7 @@
         "stat": "healPerEnergySpent",
         "maxValue": 6,
         "flat": true,
-        "stacking": false
+        "baseValue": 1
       }
     ]
   },
@@ -1883,6 +1915,18 @@
         "stat": "vulnerability",
         "maxValue": 200,
         "baseValue": 25
+      },
+      {
+        "stat": "contagionGlobeRange",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2144,11 +2188,12 @@
         "stat": "invisibilityDuration",
         "maxValue": 30,
         "flat": true,
-        "baseValue": 30
+        "constantAtAllRanks": true
       },
       {
         "stat": "tauronChargeRate",
-        "maxValue": 9
+        "maxValue": 9,
+        "baseValue": 1.5
       }
     ]
   },

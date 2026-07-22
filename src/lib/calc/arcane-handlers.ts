@@ -179,6 +179,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "exodia_valor",
   "primary_debilitate",
   "primary_obstruct",
+  "melee_vortex",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -226,24 +227,6 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_escapist",
   "arcane_steadfast",
   "arcane_truculence",
-  "emergence_dissipate",
-  "emergence_savior",
-  "magus_glitch",
-  "magus_repair",
-  "magus_nourish",
-  "magus_replenish",
-  "magus_revert",
-  "magus_cadence",
-  "magus_cloud",
-  "magus_lockdown",
-  "molt_reconstruct",
-  "theorem_contagion",
-  "theorem_infection",
-  "zid_an_asheir",
-  "zid_an_sek_eel",
-  "melee_vortex",
-  "pax_bolt",
-  "molt_vigor",
   "arcane_concentration",
   "arcane_sculptor",
   "arcane_tanker",
@@ -256,12 +239,31 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_grace",
   "arcane_victory",
   "arcane_aegis",
+  "emergence_dissipate",
+  "emergence_savior",
+  "emergence_renewed",
+  "magus_glitch",
+  "magus_repair",
+  "magus_nourish",
+  "magus_replenish",
+  "magus_revert",
+  "magus_cadence",
+  "magus_cloud",
+  "magus_lockdown",
+  "magus_anomaly",
+  "magus_drive",
   "magus_firewall",
   "magus_overload",
   "magus_elevate",
   "magus_husk",
   "magus_vigor",
-  "emergence_renewed",
+  "molt_reconstruct",
+  "molt_vigor",
+  "theorem_contagion",
+  "theorem_infection",
+  "zid_an_asheir",
+  "zid_an_sek_eel",
+  "pax_bolt",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1326,6 +1328,21 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "melee_vortex": {
+      // wiki R5: kill Magnetic-status enemy → 20–45% chance to pull within 18m.
+      // Paper: stacks>0 = Magnetic kill. Melee-only CC panel.
+      const isMelee =
+        /melee|zaw/i.test(ctx.baseWeapon?.category ?? "") ||
+        ctx.baseWeapon?.triggerType === "Melee";
+      const chanceLine = findEffect(def, "pullChance");
+      const radLine = findEffect(def, "pullRadius");
+      const chance = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      const radius = radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "pullChance", isMelee ? chance : 0);
+      trackBonus(stats, "pullRadius", isMelee ? radius : 0);
+      return true;
+    }
+
     default:
       return false;
   }
@@ -1730,16 +1747,88 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
-    case "arcane_eruption":
-    case "arcane_escapist":
-    case "arcane_steadfast":
-    case "arcane_truculence":
-    case "molt_reconstruct":
-    case "theorem_contagion":
-    case "zid_an_sek_eel":
-    case "melee_vortex":
-      trackAllEffects(stats, def, rank, stacks);
+    case "arcane_eruption": {
+      // wiki R5: Energy Orb pickup → 17–100% chance knockdown in 5–30m.
+      const chanceLine = findEffect(def, "knockdownChance");
+      const radLine = findEffect(def, "radialAttackRadius");
+      trackBonus(stats, "knockdownChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "radialAttackRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0);
       return true;
+    }
+
+    case "arcane_escapist": {
+      // wiki R5: Mercy → stacks (cap 9); fatal → consume 3 for 2–12s invuln.
+      const capLine = findEffect(def, "escapistStackCap");
+      const invLine = findEffect(def, "invulnerabilityDuration");
+      const consumeLine = findEffect(def, "escapistStacksConsumed");
+      trackBonus(stats, "escapistStackCap", capLine ? scaleArcaneEffectLine(capLine, rank, def.maxRank) : 9);
+      trackBonus(stats, "invulnerabilityDuration", invLine ? scaleArcaneEffectLine(invLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "escapistStacksConsumed", consumeLine ? scaleArcaneEffectLine(consumeLine, rank, def.maxRank) : 3);
+      return true;
+    }
+
+    case "arcane_steadfast": {
+      // wiki R5: Ability cast → 5–20% chance next 3 abilities cost 0 Energy.
+      const chanceLine = findEffect(def, "freeAbilityCastChance");
+      const countLine = findEffect(def, "freeAbilityCastCount");
+      trackBonus(stats, "freeAbilityCastChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "freeAbilityCastCount", countLine ? scaleArcaneEffectLine(countLine, rank, def.maxRank) : 3);
+      return true;
+    }
+
+    case "arcane_truculence": {
+      // wiki R5: every 3000 Overguard gained → 10 Viral stacks in 5–30m.
+      const threshLine = findEffect(def, "overguardThreshold");
+      const radLine = findEffect(def, "radialAttackRadius");
+      const viralLine = findEffect(def, "viralStatusStacks");
+      trackBonus(stats, "overguardThreshold", threshLine ? scaleArcaneEffectLine(threshLine, rank, def.maxRank) : 3000);
+      trackBonus(stats, "radialAttackRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "viralStatusStacks", viralLine ? scaleArcaneEffectLine(viralLine, rank, def.maxRank) : 10);
+      return true;
+    }
+
+    case "molt_reconstruct": {
+      // wiki R5: heal self+allies Affinity Range by 1–6 HP per Energy spent on initial cast.
+      const healLine = findEffect(def, "healPerEnergySpent");
+      trackBonus(stats, "healPerEnergySpent", healLine ? scaleArcaneEffectLine(healLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "magus_anomaly": {
+      // wiki R5: Transference In → pull enemies within 5–30m toward Warframe.
+      const radLine = findEffect(def, "voidPullRadius");
+      trackBonus(stats, "voidPullRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 0);
+      return true;
+    }
+
+    case "magus_drive": {
+      // wiki R5: Transference In → +25–150% K-Drive speed for 30s.
+      const spdLine = findEffect(def, "kdDriveSpeed");
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "kdDriveSpeed", spdLine ? scaleArcaneEffectLine(spdLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 30);
+      return true;
+    }
+
+    case "theorem_contagion": {
+      // wiki R5: Residual zone globe → +25–200% vulnerability for 6s within 15m.
+      const vulnLine = findEffect(def, "vulnerability");
+      const rangeLine = findEffect(def, "contagionGlobeRange");
+      const durLine = findEffect(def, "buffDuration");
+      trackBonus(stats, "vulnerability", vulnLine ? scaleArcaneEffectLine(vulnLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "contagionGlobeRange", rangeLine ? scaleArcaneEffectLine(rangeLine, rank, def.maxRank) : 15);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 6);
+      return true;
+    }
+
+    case "zid_an_sek_eel": {
+      // wiki R5: Tauron Strike → 30s invisibility; +1.5–9% Tauron charge rate.
+      const invisLine = findEffect(def, "invisibilityDuration");
+      const chargeLine = findEffect(def, "tauronChargeRate");
+      trackBonus(stats, "invisibilityDuration", invisLine ? scaleArcaneEffectLine(invisLine, rank, def.maxRank) : 30);
+      trackBonus(stats, "tauronChargeRate", chargeLine ? scaleArcaneEffectLine(chargeLine, rank, def.maxRank) : 0);
+      return true;
+    }
 
     default:
       return false;

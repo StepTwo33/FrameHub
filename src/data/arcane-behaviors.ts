@@ -164,15 +164,17 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_eruption",
     customHandler: "arcane_eruption",
     effects: [
-      {"statKey": "knockdownChance", "target": "arcane_panel", "mode": "custom", "source": "Arcane Eruption: custom handler"},
+      {"statKey": "knockdownChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Eruption — 17–100% knockdown on Energy Orb pickup"},
+      {"statKey": "radialAttackRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Eruption — 5–30m radius"},
     ],
   },
   "arcane_escapist": {
     arcaneId: "arcane_escapist",
     customHandler: "arcane_escapist",
     effects: [
-      {"statKey": "escapistStackCap", "target": "arcane_panel", "mode": "custom", "source": "Arcane Escapist: custom handler"},
-      {"statKey": "invulnerabilityDuration", "target": "arcane_panel", "mode": "custom", "source": "Arcane Escapist: custom handler"},
+      {"statKey": "escapistStackCap", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Escapist — stack cap 9 (constant)"},
+      {"statKey": "invulnerabilityDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Escapist — 2–12s invuln after consuming 3 stacks on fatal"},
+      {"statKey": "escapistStacksConsumed", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Escapist — consume 3 stacks (constant)"},
     ],
   },
   "arcane_expertise": {
@@ -413,7 +415,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_steadfast",
     customHandler: "arcane_steadfast",
     effects: [
-      {"statKey": "freeAbilityCastChance", "target": "arcane_panel", "mode": "custom", "source": "Arcane Steadfast: custom handler"},
+      {"statKey": "freeAbilityCastChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Steadfast — 5–20% chance on cast for free abilities"},
+      {"statKey": "freeAbilityCastCount", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Steadfast — next 3 abilities free (constant)"},
     ],
   },
   "arcane_strike": {
@@ -450,8 +453,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_truculence",
     customHandler: "arcane_truculence",
     effects: [
-      {"statKey": "overguardThreshold", "target": "arcane_panel", "mode": "custom", "source": "Arcane Truculence: custom handler"},
-      {"statKey": "radialAttackRadius", "target": "arcane_panel", "mode": "custom", "source": "Arcane Truculence: custom handler"},
+      {"statKey": "overguardThreshold", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Truculence — every 3000 Overguard gained (constant)"},
+      {"statKey": "radialAttackRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Truculence — 5–30m Viral wave radius"},
+      {"statKey": "viralStatusStacks", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Truculence — 10 Viral stacks (constant)"},
     ],
   },
   "arcane_ultimatum": {
@@ -668,8 +672,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_anomaly": {
     arcaneId: "magus_anomaly",
+    customHandler: "magus_anomaly",
     effects: [
-      {"statKey": "voidPullRadius", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Anomaly: voidPullRadius (conditional proc)"},
+      {"statKey": "voidPullRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Anomaly — Transference In pull 5–30m"},
     ],
   },
   "magus_cadence": {
@@ -697,8 +702,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "magus_drive": {
     arcaneId: "magus_drive",
+    customHandler: "magus_drive",
     effects: [
-      {"statKey": "kdDriveSpeed", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Magus Drive: kdDriveSpeed (conditional proc)"},
+      {"statKey": "kdDriveSpeed", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Drive — +25–150% K-Drive speed for 30s on Transference In"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Magus Drive — 30s duration (constant)"},
     ],
   },
   "magus_elevate": {
@@ -872,8 +879,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "melee_vortex",
     customHandler: "melee_vortex",
     effects: [
-      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "Melee Vortex: custom handler"},
-      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "Melee Vortex: custom handler"},
+      {"statKey": "pullChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Melee Vortex — 20–45% pull on Magnetic-status kill (paper: stacks>0)"},
+      {"statKey": "pullRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Melee Vortex — 18m radius (constant)"},
     ],
   },
   "molt_augmented": {
@@ -892,7 +899,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "molt_reconstruct",
     customHandler: "molt_reconstruct",
     effects: [
-      {"statKey": "healPerEnergySpent", "target": "arcane_panel", "mode": "custom", "source": "Molt Reconstruct: custom handler"},
+      {"statKey": "healPerEnergySpent", "target": "arcane_panel", "mode": "custom", "source": "wiki: Molt Reconstruct — heal 1–6 HP per Energy spent on initial cast (Affinity Range)"},
     ],
   },
   "molt_vigor": {
@@ -1118,7 +1125,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "theorem_contagion",
     customHandler: "theorem_contagion",
     effects: [
-      {"statKey": "vulnerability", "target": "arcane_panel", "mode": "custom", "source": "Theorem Contagion: custom handler"},
+      {"statKey": "vulnerability", "target": "arcane_panel", "mode": "custom", "source": "wiki: Theorem Contagion — +25–200% vulnerability for 6s within 15m"},
+      {"statKey": "contagionGlobeRange", "target": "arcane_panel", "mode": "custom", "source": "wiki: Theorem Contagion — 15m globe strike range (constant)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Theorem Contagion — 6s vulnerability duration (constant)"},
     ],
   },
   "theorem_demulcent": {
@@ -1240,8 +1249,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "zid_an_sek_eel",
     customHandler: "zid_an_sek_eel",
     effects: [
-      {"statKey": "invisibilityDuration", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Sek-Eel: custom handler"},
-      {"statKey": "tauronChargeRate", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Sek-Eel: custom handler"},
+      {"statKey": "invisibilityDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Zid-An Sek-Eel — 30s invisibility after Tauron Strike (constant)"},
+      {"statKey": "tauronChargeRate", "target": "arcane_panel", "mode": "custom", "source": "wiki: Zid-An Sek-Eel — +1.5–9% Tauron Strike Charge Rate"},
     ],
   },
   "zid_an_uskos": {

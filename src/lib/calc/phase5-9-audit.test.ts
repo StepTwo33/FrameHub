@@ -2538,6 +2538,151 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.cooldown).toBeCloseTo(30, 4);
   });
 
+  it("Arcane Eruption: 100% knockdown / 30m on Energy Orb", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const eruption = allArcanes.find((a) => a.id === "arcane_eruption")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [eruption],
+    );
+    expect(full.arcaneBonuses?.knockdownChance).toBeCloseTo(100, 4);
+    expect(full.arcaneBonuses?.radialAttackRadius).toBeCloseTo(30, 4);
+  });
+
+  it("Arcane Escapist: cap 9 / 12s invuln / consume 3", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const escapist = allArcanes.find((a) => a.id === "arcane_escapist")!;
+    const invLine = getArcaneEffectDef("arcane_escapist")!.effects.find(
+      (e) => e.stat === "invulnerabilityDuration",
+    )!;
+    expect(invLine.baseValue).toBe(2);
+    expect(invLine.constantAtAllRanks).toBeFalsy();
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [escapist],
+    );
+    expect(full.arcaneBonuses?.escapistStackCap).toBe(9);
+    expect(full.arcaneBonuses?.invulnerabilityDuration).toBeCloseTo(12, 4);
+    expect(full.arcaneBonuses?.escapistStacksConsumed).toBe(3);
+  });
+
+  it("Arcane Steadfast: 20% / 3 free casts", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const steadfast = allArcanes.find((a) => a.id === "arcane_steadfast")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [steadfast],
+    );
+    expect(full.arcaneBonuses?.freeAbilityCastChance).toBeCloseTo(20, 4);
+    expect(full.arcaneBonuses?.freeAbilityCastCount).toBe(3);
+  });
+
+  it("Arcane Truculence: 3000 OG / 30m / 10 Viral", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const truculence = allArcanes.find((a) => a.id === "arcane_truculence")!;
+    const radLine = getArcaneEffectDef("arcane_truculence")!.effects.find(
+      (e) => e.stat === "radialAttackRadius",
+    )!;
+    expect(radLine.baseValue).toBe(5);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [truculence],
+    );
+    expect(full.arcaneBonuses?.overguardThreshold).toBe(3000);
+    expect(full.arcaneBonuses?.radialAttackRadius).toBeCloseTo(30, 4);
+    expect(full.arcaneBonuses?.viralStatusStacks).toBe(10);
+  });
+
+  it("Molt Reconstruct: 6 HP per Energy spent", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const reconstruct = allArcanes.find((a) => a.id === "molt_reconstruct")!;
+    const healLine = getArcaneEffectDef("molt_reconstruct")!.effects.find(
+      (e) => e.stat === "healPerEnergySpent",
+    )!;
+    expect(healLine.baseValue).toBe(1);
+    expect(healLine.constantAtAllRanks).toBeFalsy();
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [reconstruct],
+    );
+    expect(full.arcaneBonuses?.healPerEnergySpent).toBeCloseTo(6, 4);
+  });
+
+  it("Magus Anomaly/Drive: pull 30m / K-Drive +150% 30s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const anomaly = allArcanes.find((a) => a.id === "magus_anomaly")!;
+    const drive = allArcanes.find((a) => a.id === "magus_drive")!;
+    const withAnomaly = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [anomaly],
+    );
+    expect(withAnomaly.arcaneBonuses?.voidPullRadius).toBeCloseTo(30, 4);
+    const withDrive = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [drive],
+    );
+    expect(withDrive.arcaneBonuses?.kdDriveSpeed).toBeCloseTo(150, 4);
+    expect(withDrive.arcaneBonuses?.buffDuration).toBeCloseTo(30, 4);
+  });
+
+  it("Melee Vortex: stacks>0 → 45% / 18m pull on melee", () => {
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const vortex = allArcanes.find((a) => a.id === "melee_vortex")!;
+    const chanceLine = getArcaneEffectDef("melee_vortex")!.effects.find((e) => e.stat === "pullChance")!;
+    expect(chanceLine.baseValue).toBe(20);
+    const zero = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [vortex],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.pullChance ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      skana,
+      [],
+      new Map(),
+      [vortex],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.pullChance).toBeCloseTo(45, 4);
+    expect(full.arcaneBonuses?.pullRadius).toBeCloseTo(18, 4);
+  });
+
+  it("Theorem Contagion: +200% vulnerability / 15m / 6s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const contagion = allArcanes.find((a) => a.id === "theorem_contagion")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [contagion],
+    );
+    expect(full.arcaneBonuses?.vulnerability).toBeCloseTo(200, 4);
+    expect(full.arcaneBonuses?.contagionGlobeRange).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(6, 4);
+  });
+
+  it("Zid-An Sek-Eel: 30s invis / +9% Tauron charge", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const sekEel = allArcanes.find((a) => a.id === "zid_an_sek_eel")!;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [sekEel],
+    );
+    expect(full.arcaneBonuses?.invisibilityDuration).toBeCloseTo(30, 4);
+    expect(full.arcaneBonuses?.tauronChargeRate).toBeCloseTo(9, 4);
+  });
+
   it("Magus Destruct: 1 sling stack → Puncture ×1.65", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const destruct = allArcanes.find((a) => a.id === "magus_destruct")!;

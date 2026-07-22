@@ -388,7 +388,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "knockdownChance",
         "maxValue": 100.0,
-        "baseValue": 16.666667
+        "baseValue": 17.0
+      },
+      {
+        "stat": "radialAttackRadius",
+        "maxValue": 30,
+        "flat": true,
+        "baseValue": 5
       }
     ]
   },
@@ -406,6 +412,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "invulnerabilityDuration",
         "maxValue": 12,
+        "flat": true,
+        "baseValue": 2
+      },
+      {
+        "stat": "escapistStacksConsumed",
+        "maxValue": 3,
         "flat": true,
         "constantAtAllRanks": true
       }
@@ -832,7 +844,13 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "freeAbilityCastChance",
         "maxValue": 20.0,
-        "baseValue": 3.333333
+        "baseValue": 5.0
+      },
+      {
+        "stat": "freeAbilityCastCount",
+        "maxValue": 3,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -927,6 +945,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "radialAttackRadius",
         "maxValue": 30,
+        "flat": true,
+        "baseValue": 5
+      },
+      {
+        "stat": "viralStatusStacks",
+        "maxValue": 10,
         "flat": true,
         "constantAtAllRanks": true
       }
@@ -1473,7 +1497,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "voidPullRadius",
         "maxValue": 30,
         "flat": true,
-        "constantAtAllRanks": true
+        "baseValue": 5
       }
     ]
   },
@@ -1534,6 +1558,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "kdDriveSpeed",
         "maxValue": 150.0,
         "baseValue": 25.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 30,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1921,7 +1951,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "pullChance",
         "maxValue": 45.0,
-        "baseValue": 7.5
+        "baseValue": 20.0
       },
       {
         "stat": "pullRadius",
@@ -1968,8 +1998,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stat": "healPerEnergySpent",
         "maxValue": 6,
         "flat": true,
-        "stacking": false,
-        "constantAtAllRanks": true
+        "baseValue": 1
       }
     ]
   },
@@ -2692,7 +2721,19 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "vulnerability",
         "maxValue": 200.0,
-        "baseValue": 33.333333
+        "baseValue": 25.0
+      },
+      {
+        "stat": "contagionGlobeRange",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 6,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
