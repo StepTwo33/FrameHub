@@ -159,24 +159,26 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(effectiveArcaneStacks(def, 0, true)).toBe(1);
   });
 
-  it("Cascadia Overcharge R5: +300% crit chance on Lex (overshields assumed)", () => {
+  it("Cascadia Overcharge R5: stacks>0 → +300% CC; stacks=0 → no buff", () => {
     const lex = allWeapons.find((w) => w.id === "lex")!;
     const arcane = allArcanes.find((a) => a.id === "cascadia_overcharge")!;
-    const bare = calculateWeaponBuildWithArcanes(
-      lex,
-      [],
-      new Map(),
-      [],
-      undefined,
-      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
-    );
-    const withArc = calculateWeaponBuildWithArcanes(
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
       lex,
       [],
       new Map(),
       [arcane],
       undefined,
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.criticalChance).toBeCloseTo(bare.criticalChance, 5);
+    const withArc = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [arcane],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
     expect(withArc.criticalChance).toBeCloseTo(lex.criticalChance * 4, 5);
     expect(withArc.burstDps).toBeGreaterThan(bare.burstDps);
@@ -1499,6 +1501,96 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage + elemSum, 4);
+  });
+
+  it("Arcane Power Ramp: paper max stacks → +36% Ability Strength", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const ramp = allArcanes.find((a) => a.id === "arcane_power_ramp")!;
+    const def = getArcaneEffectDef("arcane_power_ramp")!;
+    expect(def.stackCap).toBe(4);
+    const bareStr = calculateWarframeBuild(excal, [], new Map()).abilityStrength;
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [ramp],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bareStr + 0.36, 4);
+  });
+
+  it("Arcane Ice Storm: paper max stacks → +40% STR / +40% DUR", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const ice = allArcanes.find((a) => a.id === "arcane_ice_storm")!;
+    const def = getArcaneEffectDef("arcane_ice_storm")!;
+    expect(def.stackCap).toBe(20);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [ice],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bare.abilityStrength + 0.4, 4);
+    expect(full.abilityDuration).toBeCloseTo(bare.abilityDuration + 0.4, 4);
+  });
+
+  it("Molt Vigor: equipped → +45% Ability Strength (next-cast paper)", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const vigor = allArcanes.find((a) => a.id === "molt_vigor")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [vigor],
+    );
+    expect(full.abilityStrength).toBeCloseTo(bare.abilityStrength + 0.45, 4);
+  });
+
+  it("Zid-An Haras: amp AE always; WF AE only when stacks>0", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const haras = allArcanes.find((a) => a.id === "zid_an_haras")!;
+    const ampZero = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [haras],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(ampZero.ammoEfficiency ?? 0).toBeCloseTo(0.18, 4);
+    const lexZero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [haras],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    // Amp AE line still applies on non-amps in paper (shared ammoEfficiency pool).
+    expect(lexZero.ammoEfficiency ?? 0).toBeCloseTo(0.18, 4);
+    const lexFull = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [haras],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(lexFull.ammoEfficiency ?? 0).toBeCloseTo(0.18 + 0.48, 4);
+  });
+
+  it("Zid-An Osbok: stacks>0 → +3.0 flat amp CD at R5", () => {
+    const amp = allWeapons.find((w) => w.id === "amp_raplak")!;
+    const osbok = allArcanes.find((a) => a.id === "zid_an_osbok")!;
+    const bare = calculateWeaponBuild(amp, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      amp,
+      [],
+      new Map(),
+      [osbok],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier + 3, 4);
   });
 });
 

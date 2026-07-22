@@ -2060,13 +2060,14 @@
         "stat": "overguardStrip",
         "maxValue": 30,
         "flat": false,
-        "stacking": false
+        "stacking": false,
+        "baseValue": 5
       },
       {
         "stat": "ampCritDamage",
-        "maxValue": 300,
-        "flat": false,
-        "stacking": false
+        "maxValue": 3,
+        "baseValue": 0.5,
+        "flat": true
       },
       {
         "stat": "buffDuration",
@@ -2132,6 +2133,7 @@
   "arcane_power_ramp": {
     "replace": true,
     "trigger": "stacks",
+    "stackCap": 4,
     "effects": [
       {
         "stat": "abilityStrength",
@@ -2262,13 +2264,16 @@
       {
         "stat": "abilityDuration",
         "maxValue": 2,
-        "baseValue": 2
+        "baseValue": 2,
+        "stacking": true,
+        "constantAtAllRanks": true
       },
       {
         "stat": "abilityStrength",
         "maxValue": 2,
         "stacking": true,
-        "baseValue": 2
+        "baseValue": 2,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2375,13 +2380,14 @@
   },
   "cascadia_overcharge": {
     "replace": true,
-    "trigger": "passive",
+    "trigger": "conditional",
     "effects": [
       {
         "stat": "criticalChance",
         "maxValue": 300,
         "flat": false,
-        "stacking": false
+        "stacking": false,
+        "baseValue": 50
       }
     ]
   },

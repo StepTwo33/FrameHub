@@ -62,6 +62,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "secondary_outburst",
   "cascadia_flare",
   "cascadia_accuracy",
+  "cascadia_overcharge",
   "melee_doughty",
   "melee_retaliation",
   "melee_crescendo",
@@ -106,6 +107,8 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "secondary_irradiate",
   "exodia_brave",
   "exodia_force",
+  "zid_an_haras",
+  "zid_an_osbok",
   "exodia_hunt",
   "exodia_might",
   "exodia_contagion",
@@ -143,6 +146,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "primary_debilitate",
   "primary_obstruct",
   "pax_bolt",
+  "molt_vigor",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -181,7 +185,8 @@ function trackAllEffects(
 /** Per-arcane weapon handlers — Zaw/Exodia, primary, secondary, melee. */
 export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHandlerContext): boolean {
   const { arcaneId, def, rank, stacks } = ctx;
-  if (stacks <= 0) return true;
+  // Zid-An Haras amp AE is always on; other customs no-op at 0 stacks.
+  if (stacks <= 0 && arcaneId !== "zid_an_haras") return true;
 
   switch (arcaneId) {
     case "arcane_primary_merciless":
@@ -343,6 +348,16 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     case "cascadia_flare":
       applyStackingDamageHandler(stats, ctx, { bonusKey: "cascadiaFlareStacks" });
       return true;
+
+    case "cascadia_overcharge": {
+      // wiki R5: +300% CC while Overshields active. Paper: stacks>0 = overshields up.
+      const ccLine = findEffect(def, "criticalChance");
+      const ccPct = ccLine ? scaleArcaneEffectLine(ccLine, rank, def.maxRank) : 0;
+      const baseCc = ctx.baseWeapon?.criticalChance ?? stats.criticalChance;
+      if (ccPct > 0) stats.criticalChance += baseCc * (ccPct / 100);
+      trackBonus(stats, "criticalChance", ccPct);
+      return true;
+    }
 
     case "melee_crescendo": {
       // wiki: +1…+6 initial combo per finisher (R5 +6); accumulates for the mission.
@@ -679,6 +694,38 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "zid_an_haras": {
+      // wiki: +18% amp AE always; +48% WF AE for 30s after Tauron Strike (paper: stacks>0).
+      const ampAeLine = findEffect(def, "ampAmmoEfficiency");
+      const ampAe = ampAeLine ? scaleArcaneEffectLine(ampAeLine, rank, def.maxRank) : 0;
+      if (ampAe > 0) stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + ampAe / 100;
+      trackBonus(stats, "ampAmmoEfficiency", ampAe);
+      if (stacks > 0) {
+        const aeLine = findEffect(def, "ammoEfficiency");
+        const ae = aeLine ? scaleArcaneEffectLine(aeLine, rank, def.maxRank) : 0;
+        if (ae > 0) stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + ae / 100;
+        trackBonus(stats, "ammoEfficiency", ae);
+      }
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "zid_an_osbok": {
+      // wiki R5: +3.0 flat amp CD for 15s after Void Sling strips Overguard. Paper: stacks>0.
+      const cmLine = findEffect(def, "ampCritDamage");
+      const cmFlat = cmLine ? scaleArcaneEffectLine(cmLine, rank, def.maxRank) : 0;
+      if (cmFlat > 0) stats.criticalMultiplier += cmFlat;
+      trackBonus(stats, "ampCritDamage", cmFlat);
+      for (const line of def.effects ?? []) {
+        if (line.stat === "ampCritDamage") continue;
+        trackBonus(stats, line.stat, scaleArcaneEffectLine(line, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "arcane_precision": {
       // wiki R5: +300% secondary damage for 18s on headshot (not HS-only multiplier).
       const dmgLine = findEffect(def, "headshotDamage") ?? findEffect(def, "damage");
@@ -931,6 +978,15 @@ export function applyCustomArcaneToWarframe(
       const eff = effLine ? scaleArcaneEffectLine(effLine, rank, def.maxRank) : 0;
       if (eff > 0) stats.abilityEfficiency += eff / 100;
       trackBonus(stats, "abilityEfficiency", eff);
+      return true;
+    }
+
+    case "molt_vigor": {
+      // wiki R5: +45% STR on next WF ability after Operator ability. Paper: equipped = buff up.
+      const strLine = findEffect(def, "abilityStrength");
+      const str = strLine ? scaleArcaneEffectLine(strLine, rank, def.maxRank) : 0;
+      if (str > 0) stats.abilityStrength += str / 100;
+      trackBonus(stats, "abilityStrength", str);
       return true;
     }
 

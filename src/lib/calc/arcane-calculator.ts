@@ -243,7 +243,8 @@ export function applyArcaneEffectsToWeapon(
   if (!def || def.effects.length === 0) return;
 
   const stacks = effectiveArcaneStacks(def, simStacks, true);
-  if (stacks <= 0) return;
+  // Zid-An Haras amp AE is always-on even at 0 sim stacks.
+  if (stacks <= 0 && arcaneId !== "zid_an_haras") return;
 
   const handlerCtx = {
     def,

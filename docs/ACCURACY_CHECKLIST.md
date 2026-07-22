@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Virtuos Fury/Strike/Tempo/Shadow + Camisado/Pax Bolt/Influence + prior | **Improved** |
+| B6 | Arcane custom handlers | Power Ramp/Ice Storm/Vigor/Overcharge/Haras/Osbok + Virtuos batch | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -298,6 +298,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Crepuscular/Melt/Logistics/Ghost + Bellicose | 2026-07-22 | Crepuscular +3 final CM/+30% STR; Melt +30% Heat×7; Logistics +72% AE; Ghost +60% SC; Bellicose → totals |
 | Expertise/Battery/Impetus/Aggress/Force/Irradiate | 2026-07-22 | Expertise shields←STR; Battery energy←armor cap 1k; Impetus ×14 stacks; Aggress HB/hammer CD; Force/Irradiate 1-nearby splash |
 | Virtuos Fury/Strike/Tempo/Shadow + Camisado/Pax/Influence | 2026-07-22 | Virtuos stacks>0 buffs; Strike/Shadow multiplicative; Camisado ×10; Pax +30% STR/EFF; Influence sum(elements) splash |
+| Power Ramp/Ice Storm/Vigor/Overcharge/Haras/Osbok | 2026-07-22 | Ramp ×4→+36% STR; Ice ×20→+40% STR/DUR; Vigor +45%; Overcharge stacks>0; Haras AE; Osbok +3 flat CD |
 
 ## New / extended test files
 

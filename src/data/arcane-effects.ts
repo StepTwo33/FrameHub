@@ -527,13 +527,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "abilityDuration",
         "maxValue": 2.0,
-        "baseValue": 0.333333
+        "baseValue": 2.0,
+        "stacking": true,
+        "constantAtAllRanks": true
       },
       {
         "stat": "abilityStrength",
         "maxValue": 2.0,
         "stacking": true,
-        "baseValue": 0.333333
+        "baseValue": 2.0,
+        "constantAtAllRanks": true
       }
     ],
     "stackCap": 20
@@ -677,11 +680,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "abilityStrength",
-        "maxValue": 9.0,
+        "maxValue": 9,
         "stacking": true,
-        "baseValue": 1.5
+        "baseValue": 2
       }
-    ]
+    ],
+    "stackCap": 4
   },
   "arcane_precision": {
     "name": "Arcane Precision",
@@ -1031,15 +1035,15 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "cascadia_overcharge": {
     "name": "Cascadia Overcharge",
-    "trigger": "passive",
+    "trigger": "conditional",
     "maxRank": 5,
     "effects": [
       {
         "stat": "criticalChance",
-        "maxValue": 300.0,
+        "maxValue": 300,
         "flat": false,
         "stacking": false,
-        "baseValue": 50.0
+        "baseValue": 50
       }
     ]
   },
@@ -1935,8 +1939,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "abilityStrength",
-        "maxValue": 45.0,
-        "baseValue": 7.5
+        "maxValue": 45,
+        "baseValue": 15
       }
     ]
   },
@@ -2898,17 +2902,16 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "effects": [
       {
         "stat": "overguardStrip",
-        "maxValue": 30.0,
+        "maxValue": 30,
         "flat": false,
         "stacking": false,
-        "baseValue": 5.0
+        "baseValue": 5
       },
       {
         "stat": "ampCritDamage",
-        "maxValue": 300.0,
-        "flat": false,
-        "stacking": false,
-        "baseValue": 50.0
+        "maxValue": 3,
+        "baseValue": 0.5,
+        "flat": true
       },
       {
         "stat": "buffDuration",

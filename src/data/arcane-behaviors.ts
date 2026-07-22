@@ -221,8 +221,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_ice_storm": {
     arcaneId: "arcane_ice_storm",
     effects: [
-      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Ice Storm: abilityDuration (stacking — applies at sim stack count)"},
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Ice Storm: abilityStrength (stacking — applies at sim stack count)"},
+      {"statKey": "abilityDuration", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Ice Storm — +2% DUR/freeze stack (cap 20 → +40%; paper assumes max stacks)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Ice Storm — +2% STR/freeze stack (cap 20 → +40%; paper assumes max stacks)"},
     ],
   },
   "arcane_impetus": {
@@ -286,7 +286,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "arcane_power_ramp": {
     arcaneId: "arcane_power_ramp",
     effects: [
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Power Ramp: abilityStrength (stacking — applies at sim stack count)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "wiki: Arcane Power Ramp — +9% STR/cast stack (cap 4 → +36%; paper assumes max stacks)"},
     ],
   },
   "arcane_precision": {
@@ -498,9 +498,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "cascadia_overcharge": {
     arcaneId: "cascadia_overcharge",
+    customHandler: "cascadia_overcharge",
     effects: [
-      // wiki: +300% CC at R5 while Overshields active — paper DPS assumes overshields up
-      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Cascadia Overcharge — +300% CC while Overshields active (paper assumes active)"},
+      {"statKey": "criticalChance", "target": "weapon_dps", "mode": "custom", "source": "wiki: Cascadia Overcharge — +300% CC while Overshields active (paper: stacks>0 = overshields up)"},
     ],
   },
   "conjunction_voltage": {
@@ -864,8 +864,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "molt_vigor": {
     arcaneId: "molt_vigor",
+    customHandler: "molt_vigor",
     effects: [
-      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Molt Vigor: abilityStrength (conditional proc)"},
+      {"statKey": "abilityStrength", "target": "warframe_totals", "mode": "custom", "source": "wiki: Molt Vigor — +45% STR on next WF ability after Operator ability (paper: equipped = buff up)"},
     ],
   },
   "pax_bolt": {
@@ -1177,18 +1178,20 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "zid_an_haras": {
     arcaneId: "zid_an_haras",
+    customHandler: "zid_an_haras",
     effects: [
-      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Zid-An Haras: ammoEfficiency (conditional proc)"},
-      {"statKey": "ampAmmoEfficiency", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Zid-An Haras: ampAmmoEfficiency (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Zid-An Haras: buffDuration (conditional proc)"},
+      {"statKey": "ammoEfficiency", "target": "weapon_dps", "mode": "custom", "source": "wiki: Zid-An Haras — +48% WF ammo efficiency for 30s after Tauron Strike (paper: stacks>0 = buff up)"},
+      {"statKey": "ampAmmoEfficiency", "target": "weapon_dps", "mode": "custom", "source": "wiki: Zid-An Haras — +18% amp ammo efficiency (always active)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Zid-An Haras — 30s WF AE buff (panel)"},
     ],
   },
   "zid_an_osbok": {
     arcaneId: "zid_an_osbok",
+    customHandler: "zid_an_osbok",
     effects: [
-      {"statKey": "overguardStrip", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Zid-An Osbok: overguardStrip (conditional proc)"},
-      {"statKey": "ampCritDamage", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "Zid-An Osbok: ampCritDamage (conditional proc)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Zid-An Osbok: buffDuration (conditional proc)"},
+      {"statKey": "overguardStrip", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Zid-An Osbok — Void Sling strips 30% Overguard (panel)"},
+      {"statKey": "ampCritDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Zid-An Osbok — +3.0 flat amp CD for 15s after OG strip (paper: stacks>0 = buff up)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Zid-An Osbok — 15s buff (panel)"},
     ],
   },
   "zid_an_sek_eel": {
