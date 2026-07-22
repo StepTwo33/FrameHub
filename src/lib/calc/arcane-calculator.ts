@@ -11,6 +11,7 @@ import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcan
 import {
   estimateEnervateCritStacks,
   isArcaneMetadataStat,
+  arcaneEffectStackMultiplier,
   isArcaneProcChanceStat,
   scaleArcaneEffectForBuild,
 } from "@/lib/calc/arcane-proc-model";
@@ -65,9 +66,7 @@ function resolveEffectValue(
     return scaleArcaneEffectForBuild(def, line, rank, stacks, simStacks, fireRate);
   }
   const rankScaled = scaleArcaneEffectLine(line, rank, def.maxRank);
-  const stackMult =
-    def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
-  return rankScaled * stackMult;
+  return rankScaled * arcaneEffectStackMultiplier(def, line, stacks);
 }
 
 function applyWeaponDamage(stats: CalculatedStats, scaled: number): void {

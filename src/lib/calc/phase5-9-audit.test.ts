@@ -239,7 +239,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(three.criticalChance).toBeCloseTo(lex.criticalChance * (1 + 0.6), 4);
   });
 
-  it("Arcane Hot Shot: 50 Heat stacks → +300% weapon CC at R5", () => {
+  it("Arcane Hot Shot: 50 Heat stacks → +300% weapon CC at R5; duration stays 10s", () => {
     const braton = allWeapons.find((w) => w.id === "braton")!;
     const hot = allArcanes.find((a) => a.id === "arcane_hot_shot")!;
     const def = getArcaneEffectDef("arcane_hot_shot")!;
@@ -254,6 +254,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 50 },
     );
     expect(full.criticalChance).toBeCloseTo(braton.criticalChance * (1 + 3.0), 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(10, 4);
   });
 
   it("Conjunction Voltage: 0 stacks = no buff; 40 stacks R5 → +120% MS / +60% reload / 12s", () => {
@@ -2042,7 +2043,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.companionDamageRamp).toBeCloseTo(360, 4);
   });
 
-  it("Primary Exhilarate: 3 Impact stacks R5 → +3.6 Energy/s tracked", () => {
+  it("Primary Exhilarate: 3 Impact stacks R5 → +3.6 Energy/s; duration stays 10s", () => {
     const braton = allWeapons.find((w) => w.id === "braton")!;
     const exh = allArcanes.find((a) => a.id === "primary_exhilarate")!;
     const zero = calculateWeaponBuildWithArcanes(
@@ -2063,6 +2064,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
     );
     expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(3.6, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(10, 4);
   });
 
   it("Virtuos Forge R3: converts 96% amp damage to Heat (total unchanged)", () => {
@@ -3037,7 +3039,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.totalDamage).toBeCloseTo(bare.totalDamage + bare.puncture * 0.65, 4);
   });
 
-  it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {
+  it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor; duration stays 10s", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const fort = allArcanes.find((a) => a.id === "melee_fortification")!;
     const def = getArcaneEffectDef("melee_fortification")!;
@@ -3049,6 +3051,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       [fort],
     );
     expect(full.totalArmor).toBeCloseTo(bare.totalArmor + 6300, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(10, 4);
   });
 });
 

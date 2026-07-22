@@ -1,4 +1,5 @@
 import { ArcaneEffectDef, ArcaneEffectLine } from "@/data/arcane-effects";
+import { arcaneEffectStackMultiplier } from "@/lib/calc/arcane-proc-model";
 import { getPersistenceDamageCap, scaleArcaneEffectLine } from "@/lib/calc/arcane-utils";
 import { avgCritMultiplier } from "@/lib/calc/crit-utils";
 import { getWeaponRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
@@ -32,8 +33,7 @@ function trackBonus(stats: { arcaneBonuses?: Record<string, number> }, stat: str
 function scaledLine(def: ArcaneEffectDef, line: ArcaneEffectLine | undefined, rank: number, stacks: number): number {
   if (!line) return 0;
   const rankScaled = scaleArcaneEffectLine(line, rank, def.maxRank);
-  const stackMult = def.trigger === "stacks" || line.stacking ? Math.max(stacks, 1) : 1;
-  return rankScaled * stackMult;
+  return rankScaled * arcaneEffectStackMultiplier(def, line, stacks);
 }
 
 function findEffect(def: ArcaneEffectDef, stat: string): ArcaneEffectLine | undefined {
