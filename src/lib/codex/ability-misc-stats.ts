@@ -2399,6 +2399,26 @@ export function computeProteaPassiveStrengthBonus(powerBars: number): number {
   return Math.min(3, Math.max(0, Math.floor(powerBars))) >= 3 ? 1 : 0;
 }
 
+/**
+ * wiki Styanax Hoplite: +1% weapon Critical Chance per 40 current shields
+ * (includes Overshields). Doubled when a Speargun primary is equipped.
+ */
+export function computeStyanaxHopliteCritChance(
+  currentShields: number,
+  opts?: { speargun?: boolean },
+): number {
+  const base = Math.max(0, Math.floor(currentShields / 40)) * 0.01;
+  return opts?.speargun ? base * 2 : base;
+}
+
+/**
+ * wiki Yareli Critical Flow: +200% Secondary Critical Chance after moving ≥1.5s
+ * (additive to pistol CC mods; lost after 1s without movement).
+ */
+export function computeYareliCriticalFlowCritChance(moving: boolean): number {
+  return moving ? 2 : 0;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

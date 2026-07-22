@@ -23,6 +23,8 @@ import {
   computeGrendelPassiveArmor,
   computeCalibanAdaptiveArmorDr,
   computeProteaPassiveStrengthBonus,
+  computeStyanaxHopliteCritChance,
+  computeYareliCriticalFlowCritChance,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
@@ -322,6 +324,62 @@ function ProteaPowerRecorderPassive({ abilityStrength }: { abilityStrength: numb
   );
 }
 
+function StyanaxHoplitePassive({ moddedShield }: { moddedShield: number }) {
+  const maxShields = Math.max(2000, Math.ceil(moddedShield + 1200));
+  const [currentShields, setCurrentShields] = useState(Math.round(moddedShield));
+  const cc = computeStyanaxHopliteCritChance(currentShields);
+  const speargunCc = computeStyanaxHopliteCritChance(currentShields, { speargun: true });
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Current Shields"
+        value={currentShields}
+        min={0}
+        max={maxShields}
+        onChange={setCurrentShields}
+        tooltip="Styanax Hoplite: +1% weapon Critical Chance per 40 shields (includes Overshields)."
+      />
+      <StatRow
+        label="Hoplite CC"
+        value={`+${(cc * 100).toFixed(0)}%`}
+        color="text-sky-400"
+        tooltip="Additive weapon crit chance (primary/secondary/melee)."
+      />
+      <StatRow
+        label="w/ Speargun"
+        value={`+${(speargunCc * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Doubled while a Speargun primary is equipped (Afentis, Scytax, etc.)."
+      />
+    </div>
+  );
+}
+
+function YareliCriticalFlowPassive() {
+  const [moving, setMoving] = useState(1);
+  const cc = computeYareliCriticalFlowCritChance(moving > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Moving"
+        value={moving}
+        min={0}
+        max={1}
+        onChange={setMoving}
+        tooltip="Yareli Critical Flow: after 1.5s of movement, +200% Secondary Critical Chance until idle 1s."
+      />
+      <StatRow
+        label="Secondary CC"
+        value={cc > 0 ? `+${(cc * 100).toFixed(0)}%` : "Inactive"}
+        color={cc > 0 ? "text-sky-400" : "text-muted-foreground"}
+        tooltip="Additive to secondary weapon base crit chance mods (panel-only)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -441,6 +499,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "protea" || warframe.id === "protea_prime") && (
             <ProteaPowerRecorderPassive abilityStrength={stats.abilityStrength} />
           )}
+          {(warframe.id === "styanax" || warframe.id === "styanax_prime") && (
+            <StyanaxHoplitePassive moddedShield={stats.totalShield} />
+          )}
+          {(warframe.id === "yareli" || warframe.id === "yareli_prime") && <YareliCriticalFlowPassive />}
         </CollapsibleSection>
       )}
 

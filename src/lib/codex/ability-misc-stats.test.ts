@@ -31,6 +31,8 @@ import {
   computeGrendelPassiveArmor,
   computeCalibanAdaptiveArmorDr,
   computeProteaPassiveStrengthBonus,
+  computeStyanaxHopliteCritChance,
+  computeYareliCriticalFlowCritChance,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -371,6 +373,24 @@ describe("Protea 4th-cast Strength passive", () => {
     expect(computeProteaPassiveStrengthBonus(2)).toBe(0);
     expect(computeProteaPassiveStrengthBonus(3)).toBe(1);
     expect(computeProteaPassiveStrengthBonus(4)).toBe(1);
+  });
+});
+
+describe("Styanax Hoplite passive", () => {
+  it("grants +1% CC per 40 shields; doubles with Speargun", () => {
+    expect(computeStyanaxHopliteCritChance(0)).toBe(0);
+    expect(computeStyanaxHopliteCritChance(39)).toBe(0);
+    expect(computeStyanaxHopliteCritChance(40)).toBeCloseTo(0.01, 5);
+    expect(computeStyanaxHopliteCritChance(825)).toBeCloseTo(0.2, 5); // floor(825/40)=20
+    expect(computeStyanaxHopliteCritChance(825, { speargun: true })).toBeCloseTo(0.4, 5);
+    expect(computeStyanaxHopliteCritChance(1200, { speargun: true })).toBeCloseTo(0.6, 5);
+  });
+});
+
+describe("Yareli Critical Flow passive", () => {
+  it("grants +200% secondary CC while moving", () => {
+    expect(computeYareliCriticalFlowCritChance(false)).toBe(0);
+    expect(computeYareliCriticalFlowCritChance(true)).toBe(2);
   });
 });
 

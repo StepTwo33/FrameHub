@@ -242,6 +242,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Frost Fortifying Freeze | 2026-07-22 | +50 Armor × Cold enemies in Affinity Range (panel; after mods, not × STR) |
 | Cyte-09 + Grendel passives | 2026-07-22 | Practiced Aim +1% WP CC/kill cap 300%; Grendel +250 Armor/gut enemy cap 5 (+1250) |
 | Caliban + Protea passives | 2026-07-22 | Adaptive Armor +5%/hit cap 50% (panel DR/EHP); Protea 4th cast +100% STR at 3 power bars |
+| Styanax + Yareli passives | 2026-07-22 | Hoplite +1% CC / 40 shields (×2 Speargun); Critical Flow +200% secondary CC while moving |
 
 ## New / extended test files
 
