@@ -2164,7 +2164,8 @@ export function computeThermalSunderRedlineArmorStrip(
 ): number {
   const b = clampHeatFraction(batteryFraction);
   if (b <= 0.8) return 0;
-  return Math.min(1, (b - 0.8) / 0.2);
+  if (b >= 1) return 1;
+  return (b - 0.8) / 0.2;
 }
 
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
