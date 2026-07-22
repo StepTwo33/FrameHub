@@ -1073,7 +1073,8 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     reloadBuff: { scale: "strength" },
   },
 
-  // wiki: Thurible — energy convert × STR; headshot mult Misc-fixed
+  // wiki: Thurible — energyConvert shown × STR; EPK panel uses
+  // 1+[channel×convert÷(2−EFF)]×STR (HS × headshotMultiplier Misc-fixed)
   "harrow::Thurible": {
     energyConvert: { scale: "strength" },
   },

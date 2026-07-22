@@ -2220,6 +2220,25 @@ export function computeThermalSunderRedlineArmorStrip(
   return (b - 0.8) / 0.2;
 }
 
+/**
+ * wiki Thurible energy per bodyshot kill:
+ * 1 + [EnergyChanneled × convert ÷ (2 − EFF)] × STR
+ * (EFF denom floored at 0.25 ≡ 175% Efficiency cap.)
+ */
+export function computeThuribleEnergyPerKill(
+  energyChanneled: number,
+  strength: number,
+  efficiency: number,
+  opts?: { energyConvert?: number; headshotMultiplier?: number },
+): { body: number; headshot: number } {
+  const convert = opts?.energyConvert ?? 0.15;
+  const hsMult = opts?.headshotMultiplier ?? 4;
+  const denom = Math.max(2 - efficiency, 0.25);
+  const body =
+    1 + (Math.max(0, energyChanneled) * convert) / denom * strength;
+  return { body, headshot: body * hsMult };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

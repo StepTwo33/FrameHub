@@ -20,6 +20,7 @@ import {
   computeRedlineBuffAtBattery,
   computeThermalSunderRedlineArmorStrip,
   computeMassVitrifyEnemyAbsorb,
+  computeThuribleEnergyPerKill,
   lerpBatteryValue,
   lerpBatteryMaxStat,
   type AbilityDisplayContext,
@@ -341,6 +342,15 @@ export function AbilityStatsBlock({
   const hasMassVitrifyAbsorb = display.abilityName === "Mass Vitrify";
   const [vitrifyEnemies, setVitrifyEnemies] = useState(0);
   const [vitrifyEnemyEhpK, setVitrifyEnemyEhpK] = useState(0);
+  const thuribleConvert = Number(ability.miscStats?.energyConvert);
+  const thuribleHsMult = Number(ability.miscStats?.headshotMultiplier);
+  const hasThuribleEpk =
+    display.abilityName === "Thurible" &&
+    Number.isFinite(thuribleConvert) &&
+    thuribleConvert > 0;
+  const [thuribleChannel, setThuribleChannel] = useState(
+    typeof ability.energyCost === "number" ? ability.energyCost : 25,
+  );
   const maxHeatEnergyCost = Number(ability.miscStats?.maxHeatEnergyCost);
   const hasHeatEnergyLerp =
     display.abilityName === "Fire Blast" &&
@@ -1132,6 +1142,41 @@ export function AbilityStatsBlock({
       );
     }
   }
+  if (hasThuribleEpk) {
+    const baseEpk = computeThuribleEnergyPerKill(thuribleChannel, 1, 1, {
+      energyConvert: thuribleConvert,
+      headshotMultiplier: Number.isFinite(thuribleHsMult) ? thuribleHsMult : 4,
+    });
+    const scaledEpk = computeThuribleEnergyPerKill(thuribleChannel, str, eff, {
+      energyConvert: thuribleConvert,
+      headshotMultiplier: Number.isFinite(thuribleHsMult) ? thuribleHsMult : 4,
+    });
+    const fmtE = (n: number) => (Math.abs(n - Math.round(n)) < 0.05 ? String(Math.round(n)) : n.toFixed(1));
+    rows.push(
+      <AbilityStatRow
+        key="thuribleEpk"
+        compact={compact}
+        label="Energy / Kill"
+        baseValue={fmtE(baseEpk.body)}
+        modifiedValue={fmtE(scaledEpk.body)}
+        isModified={str !== 1 || eff !== 1 || thuribleChannel !== (ability.energyCost ?? 25)}
+        isPositive={scaledEpk.body >= baseEpk.body}
+        scaleHint="strength"
+      />,
+    );
+    rows.push(
+      <AbilityStatRow
+        key="thuribleEpkHs"
+        compact={compact}
+        label="Energy / Headshot Kill"
+        baseValue={fmtE(baseEpk.headshot)}
+        modifiedValue={fmtE(scaledEpk.headshot)}
+        isModified={str !== 1 || eff !== 1 || thuribleChannel !== (ability.energyCost ?? 25)}
+        isPositive={scaledEpk.headshot >= baseEpk.headshot}
+        scaleHint="strength"
+      />,
+    );
+  }
   if (ability.miscStats?.channeled === true) {
     rows.push(
       <div key="channeled" className="px-1.5 py-0.5 text-[10px] font-medium text-violet-400">
@@ -1213,6 +1258,16 @@ export function AbilityStatsBlock({
                 ? "Redline speed buffs lerp min→max (min=max/5) with battery, then × Ability Duration."
                 : "Thermal Sunder: Cold/Heat dmg + status × battery; Blast strip (w/ Redline) 0% at 80% → 100% at full."
           }
+        />
+      )}
+      {hasThuribleEpk && (
+        <SimSlider
+          label="Energy Channeled"
+          value={thuribleChannel}
+          min={0}
+          max={500}
+          onChange={setThuribleChannel}
+          tooltip="Thurible: Energy/Kill = 1 + [channel × 15% ÷ (2−EFF)] × STR; headshots ×4 (wiki)."
         />
       )}
       {rows}

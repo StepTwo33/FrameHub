@@ -16,6 +16,7 @@ import {
   computeGaussPassiveShieldRecharge,
   computeGaussPassiveRechargeDelayReduction,
   computeThermalSunderRedlineArmorStrip,
+  computeThuribleEnergyPerKill,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -192,6 +193,20 @@ describe("Gauss battery formulas", () => {
     expect(computeThermalSunderRedlineArmorStrip(0.8)).toBe(0);
     expect(computeThermalSunderRedlineArmorStrip(0.9)).toBeCloseTo(0.5, 5);
     expect(computeThermalSunderRedlineArmorStrip(1)).toBe(1);
+  });
+});
+
+describe("Thurible energy per kill", () => {
+  // wiki: 25 channeled, 130% EFF, 130% STR → ≈7.964 body / ≈31.857 headshot
+  it("matches wiki Thurible EPK at 25 energy / 130% EFF / 130% STR", () => {
+    const epk = computeThuribleEnergyPerKill(25, 1.3, 1.3);
+    expect(epk.body).toBeCloseTo(7.964285714, 5);
+    expect(epk.headshot).toBeCloseTo(31.857142857, 5);
+  });
+
+  it("gives 1 energy at zero channel", () => {
+    expect(computeThuribleEnergyPerKill(0, 1, 1).body).toBe(1);
+    expect(computeThuribleEnergyPerKill(0, 1.3, 1.3).headshot).toBe(4);
   });
 });
 
