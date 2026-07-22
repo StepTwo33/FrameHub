@@ -47,7 +47,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur/Hunter **panel %** locked (40%/piece, 25%/piece); Mecha mark/spread summary only; shield-cast / companion timing / Mecha burst still unmodeled in DPS | Panel goldens in `set-bonus-audit.test.ts`; DPS remains C |
-| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion kill-AoE + Probe CDR×EFF + Bloodletting energy×EFF; Shadows/Navigator/Prowl/EV pulse inverse-DUR + Pacify DR + Sol Gate drain×EFF/DUR + Absorb convert formula unmodeled |
+| B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion + EFF formulas + Absorb √buff + Nourish energy + channeled drains + Hildryn shield costs |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud sim-gated DPS (enemies×STR; not in TTK); utility Genesis remain |
@@ -105,6 +105,16 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Contagion Cloud DPS | 2026-07-21 | Sim-gated enemies (0–8) × ability toxin DPS × STR (×2 melee) when Contagion Cloud augment + Toxic Lash active; separate panel row; not in TTK |
 | Lavos Probe CDR×EFF | 2026-07-21 | Transmutation Probe cooldownReduction × Ability Efficiency (1.5s×EFF); EFF scale attr + badge wired for misc panel |
 | Garuda Bloodletting×EFF | 2026-07-21 | energyGainPercent × Ability Efficiency (40%×EFF); health deduct / min HP Misc-fixed |
+| Inverse-DUR misc | 2026-07-21 | EV pulseInterval÷DUR (floor 0.5s); Shadows healthDecay÷DUR; Navigator growth÷DUR; Prowl stealTime÷DUR; stealTime display as seconds |
+| Equinox Pacify DR | 2026-07-21 | pacifyDamageReduction = 1−(0.5÷STR); wiki Intensify 130% → ~61.5% (panel 62%) |
+| Sol Gate channeled drain | 2026-07-21 | energyDrain/boostedEnergyDrain × max((2−EFF)÷DUR, 0.25); 12→8.4 at 130% EFF |
+| Nyx Absorb convert×STR | 2026-07-21 | weaponDamageConvert 0.025%×STR (cap 400% Misc) |
+| Nyx Absorb √buff DPS | 2026-07-21 | Sim-gated absorbed damage (0–64k) → additive weapon buff √(0.025%×STR×absorbed) cap 400%; wiki 20k@130% STR → +255% |
+| Nourish energy×STR | 2026-07-21 | energyMultiplier 1+((base−1)×STR); native 2→2.3 / Helminth 1.6→1.78 at 130% STR |
+| Gloom channeled drain | 2026-07-21 | energyDrainPerEnemy × max((2−EFF)÷DUR, 0.25); fixed 0.75→75% / cap→10% display bugs |
+| Equinox channeled drains | 2026-07-21 | Pacify 0.5/s/enemy + Mend & Maim 3.5/s × max((2−EFF)÷DUR, 0.25) |
+| Channeled drain batch | 2026-07-21 | Peacemaker/Hysteria/Spectral Scream/Effigy/Exalted Blade(+Umbra family)/Elude/Sound Quake/Danse/Razorwing/Primal Fury/Prism/Navigator/Prowl/Renewal/Mass Vitrify/Glory/Pulverize/Silken Stride/Mach Rush/Tail Wind/Guard Mode/Ironbride × EFF/DUR |
+| Hildryn shield costs | 2026-07-21 | Haven/Aegis drains × EFF/DUR; Haven recharge × DUR; Haven/Aegis/Balefire shieldCost cast × EFF (25% floor) |
 | Genesis leftovers paper | 2026-07-21 | Boar Reified 24; Steadfast ×3 CM; Felarx MM +60% FR; Kinetic CM set 4; Lethal +90% reload; OA +1200%; Sawblades +70% FR; Gambit +150% CC |
 | Genesis P0 + Shroud + stance | 2026-07-21 | Bo +50% HAE; Templar +70% HAE; Ballistica FR/CC stacks; Ruvox Impetus/Brutal; Phenmor Spiteful/Lingering; Praedos TM; Shroud CD/SC×STR; Coiling Viper 1.85 |
 | Ammo efficiency sustained | 2026-07-21 | AE extends mag cycle; Daring/Trusty/Enough/Feather/Agile/Reaper paper; arcane AE no longer no-op |
@@ -145,7 +155,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Qorvex kit | 2026-07-21 | Pillar 1000/8m/35s; Wall 50/3500 Impact+200 Rad tick; Guard 75/5–10 stacks×STR; Blast 100/10k DPS; Helminth→Pillar |
 | B5 Lavos kit | 2026-07-21 | Bite 1000/10m/8s CD +15% heal×STR; Vial 250/s 30m/8s/5s CD; Probe 250/s 6m/10s CD +1.5s CDR×EFF; Catalyze 2000/25m/30s CD |
 | B5 Kullervo kit | 2026-07-21 | WA +200% flat final melee CC×STR (Helminth +100%/12.5m); Recompense 500/8m; Curse 50% redirect; Ukko 2500/s/10m/15s |
-| B5 Sevagoth kit | 2026-07-21 | Reap 250 Rad/8m +50% vuln; Sow 50/250 True DPS; Gloom 50+0.75/s slow/lifesteal×STR; Shadow Death Well 75%/1%/s |
+| B5 Sevagoth kit | 2026-07-21 | Reap 250 Rad/8m +50% vuln; Sow 50/250 True DPS; Gloom 50+0.75/s/enemy×EFF/DUR slow/lifesteal×STR; Shadow Death Well 75%/1%/s |
 | B5 Dagath kit | 2026-07-21 | Wyrd 500/1000 Viral +35% slow; Doom 500/15m; Grave +50% CD×STR; Cavalry 30k/strip; Helminth→Wyrd (was Doom) |
 | B5 Caliban kit | 2026-07-21 | Gyre 500 Tau/s; Wrath 2000/+35% vuln; Progeny 50/45s; Fusion 15k/s +50% strip; Helminth Wrath filled |
 | B5 Baruuk kit | 2026-07-21 | Elude 25+2.5/s 180°; Lull 50/20s/25m; Hands 250 Blast/8 daggers×STR; Storm 250 +25% DR (cap 40%) |
@@ -154,35 +164,35 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Nezha kit | 2026-07-21 | Walker 200 Heat/s +1250 blast; Chakram 250/+100% vuln; Halo 1000 HP/125 Slash; Spears 600/19m/12s |
 | B5 Styanax Helminth | 2026-07-21 | Helminth→Tharros Strike (was wrongly Rally Point); native Tharros 1000 Impact / 50% strip / 100 heal |
 | B5 Voruna kit | 2026-07-21 | Shroud flat melee CD×STR buff; Helminth→Lycath's Hunt 50% orbs (was wrongly Shroud); Ulfrun kill CD numeric |
-| B5 Nekros kit | 2026-07-21 | Soul Punch mark/threshold; Desecrate 25m/60% orb; Shadows +150% dmg/+100% HP/SP; Helminth Terrify 75 |
+| B5 Nekros kit | 2026-07-21 | Soul Punch mark/threshold; Desecrate 25m/60% orb/10e/corpse×EFF; Shadows +150% dmg/+100% HP/SP +3% decay÷DUR; Helminth Terrify 75 |
 | B5 Hydroid kit | 2026-07-21 | Barrage 300 Corrosive; Plunder 75/25m armor+Corrosive bonus; Tentacle 50/200 DPS (was 100 energy) |
 | B5 Limbo kit | 2026-07-21 | Banish 250 Impact/35m/25s; Stasis 15s; Surge 25m/18s banish; Cataclysm 500 Blast/16→5m |
 | B5 Loki kit | 2026-07-21 | Decoy 25s/15% absorb; Invis 12s (was 30); Switch 75m/+50% speed; Disarm 500 Impact/20m |
 | B5 Mag kit | 2026-07-21 | Pull 300/25m; Magnetize 300 Blast/2×/15s; Polarize 400/8m; Crush 1500/18m |
 | B5 Frost kit | 2026-07-21 | Freeze 350/150 area/5m; Ice Wave 700/20m/45°; Globe 3500/5m; Avalanche 1500/15m/60% strip |
 | B5 Gara kit | 2026-07-21 | Lash 400/12m; Storm 250/s 70% DR/2.5m; Spectrorage 800/1500; Vitrify 75/11m/50% vuln |
-| B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day buffs; Rest&Rage 25/50m/22s; Pacify 10/16m; Mend&Maim 50/150 Slash/18m |
-| B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5×; Prowl +40% HS/4m steal; Artemis 240×7 |
-| B5 Ash kit | 2026-07-21 | Shuriken 750×5; Smoke 12s/10m; Teleport +200% finisher; Blade Storm 1500 True/12/mark |
+| B5 Equinox kit | 2026-07-21 | Meta 25s Night/Day buffs; Rest&Rage 25/50m/22s; Pacify 50% DR via 1−(0.5÷STR)/16m +0.5/s/enemy×EFF/DUR +3e/ability×EFF; Mend&Maim 50/150 Slash/18m +3.5/s×EFF/DUR |
+| B5 Ivara kit | 2026-07-21 | Quiver Cloak 12s/2.5m; Navigator 5× +growth÷DUR +drain/growth×EFF/DUR; Prowl +40% HS/stealTime÷DUR +melee/dmg energy×EFF; Artemis 240×7 |
+| B5 Ash kit | 2026-07-21 | Shuriken 750×5; Smoke 12s/10m; Teleport +200% finisher; Blade Storm 1500 True/12e/mark×EFF |
 | B5 Atlas kit | 2026-07-21 | Landslide 350/12m; Tectonics 1500 HP/500 Puncture; Petrify 20s/14m/+50% vuln; Rumblers 2000/1200 HP |
 | B5 Banshee kit | 2026-07-21 | Boom 50 Impact/15m; Sonar 5×/35m/30s; Silence 30s/20m; Quake 200 Blast/s/20m |
 | B5 Revenant kit | 2026-07-21 | Enthrall 1000/30s; Mesmer 6 charges; Reave 50/8%/6m (was 75); Danse 1250/s |
 | B5 Oberon kit | 2026-07-21 | Smite 500/35%/50m; Ground 100 Rad/15m; Renewal 25/50% armor/40 HPS; Reckoning 7500/60% strip |
 | B5 Octavia kit | 2026-07-21 | Mallet 2.5×/10m/20s; Resonator 125/6→15m; Metronome 12m/20s buffs; Amp 25–200%/14m |
-| B5 Trinity kit | 2026-07-21 | Well 100 HPS/1% LS/20s; Vampire 25 energy/pulse; Link 3/75% redirect; Blessing 80%/50% DR |
+| B5 Trinity kit | 2026-07-21 | Well 100 HPS/1% LS/20s; Vampire 25 energy/pulse×STR +interval÷DUR (floor 0.5s); Link 3/75% redirect; Blessing 80%/50% DR |
 | B5 Nova kit | 2026-07-21 | Null Star 200 Blast/12/10m/5% DR; AMD 200/8×; Wormhole 50m/4; MP 800/50% slow/30s |
 | B5 Volt kit | 2026-07-21 | Shock 15/200/5 chains; Speed 75%/25% reload; Shield +50% Elec; Discharge 1200/s |
-| B5 Excalibur kit | 2026-07-21 | Slash Dash 20m/7m chain (dmg via Exalted); Blind/Howl 25m/15s; Javelin 1000/25m; Blade 250/2.5/s +5m/6s slide blind |
-| B5 Wisp kit | 2026-07-21 | Reservoirs 5m/30s motes (300 HP/30 HPS/20% haste/10 Shock); Wil-O 4s; Breach 2×/18m/16s; Sol Gate 1500/s; Helminth 18m |
-| B5 Zephyr kit | 2026-07-21 | Tail Wind 750/4500 dive/2m/7m; Airburst 500/8m/+35%; Turbulence 6m/20s; Tornado 160/0.25s (640 DPS)/25m/3 |
-| B5 Nyx kit | 2026-07-21 | Mind Control 60m/60s; Bolts 80% strip/6/11s; Chaos 25m/25s/10 Rad; Absorb 1500/15m→50m/5s; Helminth MC 60s |
+| B5 Excalibur kit | 2026-07-21 | Slash Dash 20m/7m chain (dmg via Exalted); Blind/Howl 25m/15s; Javelin 1000/25m; Blade 250/2.5/s +5m/6s slide blind +25 slide×EFF |
+| B5 Wisp kit | 2026-07-21 | Reservoirs 5m/30s motes (300 HP/30 HPS/20% haste/10 Shock); Wil-O 4s; Breach 2×/18m/16s; Sol Gate 1500/s +drain×EFF/DUR; Helminth 18m |
+| B5 Zephyr kit | 2026-07-21 | Tail Wind 750/4500 dive/2m/7m +12.5 air×EFF; Airburst 500/8m/+35% +25 air×EFF; Turbulence 6m/20s; Tornado 160/0.25s (640 DPS)/25m/3 |
+| B5 Nyx kit | 2026-07-21 | Mind Control 60m/60s; Bolts 80% strip/6/11s; Chaos 25m/25s/10 Rad; Absorb 1500/15m→50m/5s +0.025% convert×STR; Helminth MC 60s |
 | B5 Mesa kit | 2026-07-21 | Battery 70%/140/5k; Gallery 25%/16m/30s; Shatter 80% DR (cap 95%); Peacemaker 50/+150%/15/s/50m |
 | B5 Mirage kit | 2026-07-21 | Hall 4 clones/25s; Sleight 200/40m/18s; Eclipse 75% DR/200% dmg/25s (cap 90%); Prism 250/12s/20 lasers; Helminth Eclipse 25s |
 | B5 Nidus kit | 2026-07-21 | Virulence 200 Puncture/16m; Larva 12m (Helminth 8m); Link 1 stack/40m; Ravenous 150/20 HPS/8m |
 | B5 Rhino kit | 2026-07-21 | Charge 650/12m/2m; Iron Skin 1200 OG/2.5×/3s invuln; Roar 50%/25m/30s; Stomp 800/97.5% slow; Helminth Roar 30% |
 | B5 Valkyr kit | 2026-07-21 | Rip Line 600/75m; Warcry 50% AS/50% armor/20s (Affinity); Paralysis 400/10m/30% slow; Hysteria 250/5/s; Helminth Warcry AS 30% |
-| B5 Grendel kit | 2026-07-21 | Feast 500 Toxin/25m/5; Nourish +75% Viral/2× energy/1000 heal/25s; Pulverize 500–2000/50% strip; Regurgitate 2000/6m/75% strip; Helminth Nourish 45%/1.6×/no heal (energy mult formula unmodeled) |
-| B5 Hildryn kit | 2026-07-21 | Balefire 500–1500/3m/50 shields; Pillage 8m/25% strip; Haven 500 ally shields/200 Rad DPS; Aegis Storm 200 DPS/500 Impact |
+| B5 Grendel kit | 2026-07-21 | Feast 500 Toxin/25m/5; Nourish +75% Viral/2× energy/1000 heal/25s; Pulverize 500–2000/50% strip; Regurgitate 2000/6m/75% strip; Helminth Nourish 45%/1.6×/no heal; energy 1+((mult−1)×STR) |
+| B5 Hildryn kit | 2026-07-21 | Balefire 500–1500/3m/50 shields×EFF; Pillage 8m/25% strip/150 shields×EFF; Haven 500 ally shields/80% recharge×DUR/drains×EFF/DUR; Aegis Storm 200 DPS/500 Impact/drains×EFF/DUR |
 | B5 Titania kit | 2026-07-21 | Spellbind 50m/5m/16s; Tribute 500/12s +120s aura; Lantern 350 DPS/2500/25s; Razorwing 160/Diwata 200/5/s; Helminth→Spellbind (was wrongly Tribute) |
 | B5 Saryn kit | 2026-07-21 | Spores 10/60m/16m spread/+2 growth; Molt 500 HP/400 Toxin/40s/50% speed; Toxic Lash 30%/60%/45s; Miasma 150 Viral/s ×4 Spores; Helminth Molt 40s |
 | B5 Wukong kit | 2026-07-21 | Twin 2× HP/0.5×/3× mark; Cloud 8m/1%/m; Defy 7.5×/1.5× armor/1500 cap; Primal Fury/Iron Staff 300/5/s; Helminth Defy armorCap 750 |
@@ -203,9 +213,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Uriel kit | 2026-07-21 | Infernalis 1500 cast/250 DPS/2m/35s; Remedium 50e/50% heal; Demonium 75e/250/50% vuln/6m; Brimstone 75e/1500/15m/10s; Helminth Remedium 35% (no demons) |
 | B5 Follie kit | 2026-07-21 | Forced Perspective 750/5m/3.5s invuln; Shadowgraph 250/4m/20s; Self Portrait 550/50% DR (cap 90%)/8→20m; Plein Air 250–25k/50% strip/18m; Helminth Portrait DR cap 75% |
 | B5 Sirius & Orion kit | 2026-07-21 | Coronal 1500 Heat/5m; Gravitic 2000 Slash/50% strip/8m; Jade Stars 500/35s/7 motes; Astral Shell 35s/200 Blast decoy; Sanctuary 30s/25–55 HPS/45% DR (cap 75%); Event Horizon 750/8m→12m; Clash 10k Blast/26m; Helminth→Jade Stars 500/35s |
-| B5 Nokko kit | 2026-07-21 | Stinkbrain 250 Viral/5m/25s/4 cap; Brightbonnet 15e/+30% STR (cap 150%)/15m/25s; Reroot 50e/10s/10 HPS/80 pickup; Sporespring 75e/2500 Toxin/3m/10 bounces×1.5; Helminth Brightbonnet 10e/+20% STR (cap 100%) |
+| B5 Nokko kit | 2026-07-21 | Stinkbrain 250 Viral/5m/25s/4 cap; Brightbonnet 15 energy×STR/+30% STR (cap 150%)/15m/25s; Reroot 50e/10s/10 HPS/80 pickup; Sporespring 75e/2500 Toxin/3m/10 bounces×1.5; Helminth Brightbonnet 10e/+20% STR (cap 100%) |
 | B5 Voidrig kit | 2026-07-21 | Necraweb 2000 Blast/20m mire/25m explode/50% slow; Storm Shroud 50e/1200 HP/2× absorb/100% reflect; Gravemines 75e/200 Heat×24/8m; Guard Mode 50e/500/5eps (Arquebex) |
-| B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP/2× reflect/2.5× armor; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
+| B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP/2× reflect/2.5× armor/Kiss 15e×EFF; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
 | B5 Helminth unique | 2026-07-21 | Infested Mobility +60% sprint/+30% parkour/8s; Energized Munitions 75% ammo/5s; Empower +50% next STR; Marked for Death 75% spread; Rebuild Shields 12s CD |
 
 ## New / extended test files

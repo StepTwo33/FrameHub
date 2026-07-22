@@ -236,6 +236,42 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(withLash.burstDps / bare.burstDps).toBeCloseTo(1 + 0.3 * 1.3, 4);
   });
 
+  it("Absorb adds sim-gated additive weapon damage from √(convert×STR×absorbed)", () => {
+    const absorb: Ability = {
+      name: "Absorb",
+      energyCost: 75,
+      description: "absorb",
+      miscStats: { weaponDamageConvert: 0.025, weaponDamageCap: 4 },
+    };
+    const sim: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Absorb"],
+      absorbAbsorbedDamage: 20_000,
+    };
+    const buffs = resolveWeaponExternalBuffs(
+      testRifle,
+      { warframeId: "nyx", warframeStats: wfStats, warframeAbilities: [absorb] },
+      sim,
+    );
+    // wiki: √(0.025% × 130% × 20000) = √6.5 ≈ 2.54951 → +254.951%
+    expect(buffs[0]?.damageBonus).toBeCloseTo(Math.sqrt(0.00025 * 1.3 * 20_000), 5);
+
+    const atCap = resolveWeaponExternalBuffs(
+      testRifle,
+      { warframeId: "nyx", warframeStats: wfStats, warframeAbilities: [absorb] },
+      { ...sim, absorbAbsorbedDamage: 64_000 },
+    );
+    // √(0.00025 × 1.3 × 64000) = √20.8 > 4 → capped
+    expect(atCap[0]?.damageBonus).toBe(4);
+
+    const off = resolveWeaponExternalBuffs(
+      testRifle,
+      { warframeId: "nyx", warframeStats: wfStats, warframeAbilities: [absorb] },
+      { ...sim, absorbAbsorbedDamage: 0 },
+    );
+    expect(off.find((b) => b.id === "ability:Absorb")).toBeUndefined();
+  });
+
   it("Contagion Cloud adds sim-gated ability toxin DPS (gun/melee) when augment equipped", () => {
     const lash: Ability = {
       name: "Toxic Lash",

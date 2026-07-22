@@ -1024,7 +1024,7 @@ function parseSeconds(value: unknown): number | null {
 
 /** Keys that store duration as a bare number of seconds (not a "5s" string). */
 function isDurationSecondsKey(key: string): boolean {
-  return /duration|Duration|delay|Delay|Cooldown|Interval|tickInterval|Lifetime|Countdown|travelTime|Airtime|Invulnerability/.test(
+  return /duration|Duration|delay|Delay|Cooldown|Interval|tickInterval|Lifetime|Countdown|travelTime|Airtime|Invulnerability|stealTime/.test(
     key,
   );
 }
@@ -1054,6 +1054,13 @@ function scaleMultiplier(ctx: AbilityScaleContext, attr: AbilityScaleAttribute):
   return ctx.range;
 }
 
+/** Effective scale factor; inverse rules divide by the attribute (e.g. interval ÷ DUR). */
+function scaleFactor(ctx: AbilityScaleContext, rule: VerifiedStatScaling): number {
+  const mult = scaleMultiplier(ctx, rule.scale);
+  if (!rule.inverse) return mult;
+  return mult > 0 ? 1 / mult : Number.POSITIVE_INFINITY;
+}
+
 function resolveCap(
   rule: VerifiedStatScaling,
   miscStats: Record<string, unknown>,
@@ -1071,6 +1078,12 @@ function resolveCap(
 
 function applyCap(value: number, cap: number | undefined): number {
   return cap != null ? Math.min(value, cap) : value;
+}
+
+function applyBounds(value: number, cap: number | undefined, floor: number | undefined): number {
+  let next = applyCap(value, cap);
+  if (floor != null) next = Math.max(next, floor);
+  return next;
 }
 
 function formatBaseValue(key: string, value: unknown): string {
@@ -1161,6 +1174,9 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "contactDamagePerSecond" ||
       key === "dischargeDamage" ||
       key === "energyDrain" ||
+      key === "energyDrainPerEnemy" ||
+      key === "energyDrainEnemyCap" ||
+      key === "energyDrainMoving" ||
       key === "energyRegen" ||
       key === "altFireEnergy" ||
       key === "wellsLimit" ||
@@ -1216,6 +1232,16 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "slideEnergyCost" ||
       key === "diveBombDamage" ||
       key === "airborneEnergyCost" ||
+      key === "meleeEnergyCost" ||
+      key === "damageEnergyCost" ||
+      key === "kissEnergyCost" ||
+      key === "energyPerMark" ||
+      key === "energyPerAbility" ||
+      key === "energyPerCorpse" ||
+      key === "energyPerPulse" ||
+      key === "energyDrainGrowth" ||
+      key === "mutationStackCost" ||
+      key === "backbeatAmmoCost" ||
       key === "tickDamage" ||
       key === "tornadoCount" ||
       key === "travelDistance" ||
@@ -1311,6 +1337,9 @@ function formatBaseValue(key: string, value: unknown): string {
     return key === "contagionCloudDps" ||
       key === "heatDps" ||
       key === "energyDrain" ||
+      key === "energyDrainPerEnemy" ||
+      key === "energyDrainMoving" ||
+      key === "energyDrainGrowth" ||
       key === "energyRegen" ||
       key === "fieldDamagePerSecond" ||
       key === "contactDamagePerSecond" ||
@@ -1332,7 +1361,13 @@ function formatBaseValue(key: string, value: unknown): string {
       key === "shieldDrainPerAlly" ||
       key === "shieldDrainPerEnemy" ||
       key === "vortexDamagePerSecond"
-      ? `${Number.isInteger(value) ? value : value.toFixed(1)}/s`
+      ? `${
+          Number.isInteger(value)
+            ? value
+            : key === "energyDrainPerEnemy"
+              ? value.toFixed(2)
+              : value.toFixed(1)
+        }/s`
       : key === "damageRampCap"
         ? `${value.toFixed(0)}x`
       : key === "travelDistance"
@@ -1372,17 +1407,95 @@ function scaleVerifiedValue(
   ctx: AbilityScaleContext,
   miscStats: Record<string, unknown>,
 ): { scaled: string; modified: boolean; positive: boolean } | null {
-  const mult = scaleMultiplier(ctx, rule.scale);
+  const attrMult = scaleMultiplier(ctx, rule.scale);
+  const mult = scaleFactor(ctx, rule);
   const cap = resolveCap(rule, miscStats);
+  const floor = rule.floor;
+  const modified = Math.abs(attrMult - 1) > 0.001;
+  // Tint by whether the driving attribute is above baseline (inverse stats may shrink).
+  const positive = attrMult >= 1;
+
+  if (rule.formula === "one_minus_base_over_attr") {
+    const base = parsePercentValue(value);
+    if (base == null || attrMult <= 0) return null;
+    const scaled = applyBounds(1 - base / attrMult, cap, floor);
+    return {
+      scaled: fmtPct(scaled),
+      modified,
+      positive,
+    };
+  }
+
+  if (rule.formula === "channeled_drain") {
+    const base = parseNumeric(value);
+    if (base == null) return null;
+    const eff = ctx.efficiency ?? 1;
+    const dur = ctx.duration > 0 ? ctx.duration : 1;
+    const factor = Math.max((2 - eff) / dur, 0.25);
+    const scaled = applyBounds(base * factor, cap, floor);
+    const fmt =
+      Math.abs(scaled - Math.round(scaled)) < 0.05
+        ? String(Math.round(scaled))
+        : scaled < 1
+          ? scaled.toFixed(2)
+          : scaled.toFixed(1);
+    return {
+      scaled: `${fmt}/s`,
+      modified: Math.abs(factor - 1) > 0.001,
+      // Lower drain is better once EFF/DUR reduce the factor.
+      positive: factor <= 1,
+    };
+  }
+
+  // wiki cast/activation cost (energy or shields): base × max(2 − min(EFF, 1.75), 0.25)
+  if (rule.formula === "cast_cost") {
+    const base = parseNumeric(value);
+    if (base == null) return null;
+    const scaled = applyBounds(scaledAbilityEnergyCost(base, ctx.efficiency ?? 1), cap, floor);
+    const fmt =
+      Math.abs(scaled - Math.round(scaled)) < 0.05 ? String(Math.round(scaled)) : scaled.toFixed(1);
+    return {
+      scaled: fmt,
+      modified: Math.abs(scaled - base) > 0.001,
+      // Lower cast cost is better.
+      positive: scaled <= base,
+    };
+  }
+
+  // wiki Nourish: 1 + ((storedMultiplier − 1) × STR); Helminth 1.6 → 1.78 at 130% STR
+  if (rule.formula === "one_plus_bonus_times_attr") {
+    const base = parseNumeric(value);
+    if (base == null) return null;
+    const scaled = applyBounds(1 + (base - 1) * attrMult, cap, floor);
+    return {
+      scaled: scaled <= 1 ? `${scaled.toFixed(2)}x` : `${scaled.toFixed(1)}x`,
+      modified,
+      positive,
+    };
+  }
+
+  // Wiki card percent-points (Absorb 0.025%, Mind Control 0.06%) — not 0–1 fractions.
+  if (
+    typeof value === "number" &&
+    (key === "weaponDamageConvert" || key === "damageConversionRate")
+  ) {
+    const scaled = applyBounds(value * mult, cap, floor);
+    const fmt = Number.parseFloat(scaled.toPrecision(6)).toString();
+    return {
+      scaled: `${fmt}%`,
+      modified,
+      positive,
+    };
+  }
 
   if (key === "arc" || key === "coneAngle" || key === "firingArc" || key === "seekAngle") {
     const base = parseDegrees(value);
     if (base == null) return null;
-    const scaled = applyCap(base * mult, cap);
+    const scaled = applyBounds(base * mult, cap, floor);
     return {
       scaled: `${scaled.toFixed(1)}°`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
 
@@ -1410,11 +1523,11 @@ function scaleVerifiedValue(
       key === "tornadoHeight" ||
       key === "travelDistance")
   ) {
-    const scaled = applyCap(meters * mult, cap);
+    const scaled = applyBounds(meters * mult, cap, floor);
     return {
       scaled: `${scaled.toFixed(1)}m`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
 
@@ -1422,42 +1535,42 @@ function scaleVerifiedValue(
     typeof value === "number" &&
     (key === "probeSpeed" || key === "chargeSpeed" || key === "waveSpeed" || key === "airSpeed")
   ) {
-    const scaled = applyCap(value * mult, cap);
+    const scaled = applyBounds(value * mult, cap, floor);
     const fmt = key === "waveSpeed" || key === "airSpeed" ? scaled.toFixed(0) : scaled.toFixed(2);
     return {
       scaled: `${fmt}m/s`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
   if (typeof value === "number" && key === "cooldownReduction") {
-    const scaled = applyCap(value * mult, cap);
+    const scaled = applyBounds(value * mult, cap, floor);
     return {
       scaled: `${scaled.toFixed(1)}s`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
 
   const seconds = parseDurationSeconds(key, value);
   if (seconds != null) {
-    const scaled = applyCap(seconds * mult, cap);
+    const scaled = applyBounds(seconds * mult, cap, floor);
     return {
       scaled: `${scaled.toFixed(1)}s`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
 
   if (typeof value === "string" && key === "damageReduction") {
     const range = parseRangePercent(value);
     if (range) {
-      const minScaled = applyCap(range.min * mult, cap);
-      const maxScaled = applyCap(range.max * mult, cap);
+      const minScaled = applyBounds(range.min * mult, cap, floor);
+      const maxScaled = applyBounds(range.max * mult, cap, floor);
       return {
         scaled: `${fmtPct(minScaled)}–${fmtPct(maxScaled)}`,
-        modified: mult !== 1,
-        positive: mult >= 1,
+        modified,
+        positive,
       };
     }
   }
@@ -1467,16 +1580,16 @@ function scaleVerifiedValue(
     if (range) {
       return {
         scaled: `${Math.round(range.min * mult)}–${Math.round(range.max * mult)}/s`,
-        modified: mult !== 1,
-        positive: mult >= 1,
+        modified,
+        positive,
       };
     }
     const single = parseSinglePerSecond(value);
     if (single != null) {
       return {
         scaled: `${Math.round(single * mult)}/s`,
-        modified: mult !== 1,
-        positive: mult >= 1,
+        modified,
+        positive,
       };
     }
   }
@@ -1486,19 +1599,19 @@ function scaleVerifiedValue(
     numEarly != null &&
     (key.endsWith("Multiplier") || key.endsWith("Mult") || key === "damageGrowth")
   ) {
-    const scaledNum = applyCap(numEarly * mult, cap);
+    const scaledNum = applyBounds(numEarly * mult, cap, floor);
     return {
       scaled: scaledNum <= 1 ? `${scaledNum.toFixed(2)}x` : `${scaledNum.toFixed(1)}x`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
   if (numEarly != null && key === "critDamageBonus") {
-    const scaledNum = applyCap(numEarly * mult, cap);
+    const scaledNum = applyBounds(numEarly * mult, cap, floor);
     return {
       scaled: `+${scaledNum.toFixed(1)}x`,
-      modified: mult !== 1,
-      positive: mult >= 1,
+      modified,
+      positive,
     };
   }
 
@@ -1518,6 +1631,9 @@ function scaleVerifiedValue(
       key === "contactDamagePerSecond" ||
       key === "dischargeDamage" ||
       key === "energyDrain" ||
+      key === "energyDrainPerEnemy" ||
+      key === "energyDrainEnemyCap" ||
+      key === "energyDrainMoving" ||
       key === "energyRegen" ||
       key === "wellsLimit" ||
       key === "charges" ||
@@ -1573,6 +1689,16 @@ function scaleVerifiedValue(
       key === "slideEnergyCost" ||
       key === "diveBombDamage" ||
       key === "airborneEnergyCost" ||
+      key === "meleeEnergyCost" ||
+      key === "damageEnergyCost" ||
+      key === "kissEnergyCost" ||
+      key === "energyPerMark" ||
+      key === "energyPerAbility" ||
+      key === "energyPerCorpse" ||
+      key === "energyPerPulse" ||
+      key === "energyDrainGrowth" ||
+      key === "mutationStackCost" ||
+      key === "backbeatAmmoCost" ||
       key === "tickDamage" ||
       key === "tornadoCount" ||
       key === "travelDistance" ||
@@ -1653,7 +1779,17 @@ function scaleVerifiedValue(
       key === "comboDamageCap" ||
       key === "minRingDamagePerSecond" ||
       key === "energyPerEnemy" ||
-      key === "maxEnergyTargets")
+      key === "maxEnergyTargets" ||
+      key === "energyRestore" ||
+      key === "pickupHeal" ||
+      key === "healthShieldPerSecond" ||
+      key === "fungalSpores" ||
+      key === "maxMushrooms" ||
+      key === "maxSporesprings" ||
+      key === "bounces" ||
+      key === "sproutDamage" ||
+      key === "minHealthRegen" ||
+      key === "maxHealthRegen")
   ) {
     const scaledNum =
       key === "energyRegen" ? Math.round(num * mult * 100) / 100 : Math.round(num * mult);
@@ -1662,6 +1798,9 @@ function scaleVerifiedValue(
         key === "contagionCloudDps" ||
         key === "heatDps" ||
         key === "energyDrain" ||
+        key === "energyDrainPerEnemy" ||
+        key === "energyDrainMoving" ||
+        key === "energyDrainGrowth" ||
         key === "energyRegen" ||
         key === "fieldDamagePerSecond" ||
         key === "contactDamagePerSecond" ||
@@ -1680,7 +1819,11 @@ function scaleVerifiedValue(
         key === "shieldDrainPerAlly" ||
         key === "shieldDrainPerEnemy" ||
         key === "vortexDamagePerSecond"
-          ? `${scaledNum}/s`
+          ? `${
+              key === "energyDrainPerEnemy" && !Number.isInteger(scaledNum)
+                ? Number(scaledNum).toFixed(2)
+                : scaledNum
+            }/s`
           : key === "damageRampCap"
             ? `${scaledNum}x`
           : key === "travelDistance"
@@ -1692,30 +1835,30 @@ function scaleVerifiedValue(
   }
 
   if (num != null && isFractionPercentKey(key)) {
-    const scaled = applyCap(num * mult, cap);
+    const scaled = applyBounds(num * mult, cap, floor);
     return {
       scaled: fmtPct(scaled),
       modified: Math.abs(scaled - num) > 0.001,
-      positive: scaled >= num,
+      positive,
     };
   }
 
   const pct = parsePercentValue(value);
   if (pct != null) {
-    const scaled = applyCap(pct * mult, cap);
+    const scaled = applyBounds(pct * mult, cap, floor);
     return {
       scaled: fmtPct(scaled),
       modified: Math.abs(scaled - pct) > 0.001,
-      positive: scaled >= pct,
+      positive,
     };
   }
 
   if (num != null) {
-    const scaledNum = applyCap(num * mult, cap);
+    const scaledNum = applyBounds(num * mult, cap, floor);
     return {
       scaled: String(Math.round(scaledNum)),
       modified: Math.round(scaledNum) !== Math.round(num),
-      positive: scaledNum >= num,
+      positive,
     };
   }
 

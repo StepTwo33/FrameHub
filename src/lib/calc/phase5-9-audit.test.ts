@@ -346,7 +346,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
   it("Effigy / Lycath / Ulfrun / Shroud misc extras stay fixed (wiki Misc / Strength N/A)", () => {
     expect(getVerifiedMiscScaling("chroma", "Effigy", "sentryArmor")).toBeNull();
     expect(getVerifiedMiscScaling("chroma", "Effigy", "stunRadius")).toBeNull();
-    expect(getVerifiedMiscScaling("chroma", "Effigy", "energyDrain")).toBeNull();
+    expect(getVerifiedMiscScaling("chroma", "Effigy", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("voruna", "Lycath's Hunt", "healthOrbChance")).toBeNull();
     expect(getVerifiedMiscScaling("voruna", "Lycath's Hunt", "heavyAttackEfficiency")).toBeNull();
     expect(getVerifiedMiscScaling("voruna", "Lycath's Hunt", "durationExtension")).toEqual({
@@ -427,7 +430,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "range",
     });
     expect(getVerifiedMiscScaling("jade", "Glory On High", "judgmentChance")).toBeNull();
-    expect(getVerifiedMiscScaling("jade", "Glory On High", "energyDrain")).toBeNull();
+    expect(getVerifiedMiscScaling("jade", "Glory On High", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("jade", "Glory On High", "speedBuff")).toBeNull();
   });
 
@@ -763,7 +769,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("sevagoth", "Gloom", "rangeGrowthPerSecond")).toEqual({
       scale: "duration",
     });
-    expect(getVerifiedMiscScaling("sevagoth", "Gloom", "energyDrainPerEnemy")).toBeNull();
+    expect(getVerifiedMiscScaling("sevagoth", "Gloom", "energyDrainPerEnemy")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Gloom", "energyDrainPerEnemy")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("helminth", "Gloom", "slowPercent")).toEqual({
       scale: "strength",
       useSiblingSlowCap: true,
@@ -825,7 +838,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
 
   it("Baruuk Elude angle × RNG; Desolate Hands charges × STR; Storm DR × STR", () => {
     expect(getVerifiedMiscScaling("baruuk", "Elude", "evasionAngle")).toEqual({ scale: "range" });
-    expect(getVerifiedMiscScaling("baruuk", "Elude", "energyDrain")).toBeNull();
+    expect(getVerifiedMiscScaling("baruuk", "Elude", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("baruuk", "Lull", "waveDuration")).toEqual({ scale: "duration" });
     expect(getVerifiedMiscScaling("helminth", "Lull", "waveDuration")).toEqual({ scale: "duration" });
     expect(getVerifiedMiscScaling("baruuk", "Desolate Hands", "daggerCharges")).toEqual({
@@ -968,15 +984,22 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("helminth", "Shroud Of Dynar", "critDamageBonus")).toBeNull();
   });
 
-  it("Nekros Shadows bonuses × STR; Desecrate drop chances Misc-fixed", () => {
+  it("Nekros Shadows bonuses × STR; Desecrate drop chances Misc-fixed; corpse cost × EFF", () => {
     expect(getVerifiedMiscScaling("nekros", "Shadows Of The Dead", "damageBonus")).toEqual({
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("nekros", "Shadows Of The Dead", "healthBonus")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("nekros", "Shadows Of The Dead", "healthDecayPerSecond")).toBeNull();
+    expect(getVerifiedMiscScaling("nekros", "Shadows Of The Dead", "healthDecayPerSecond")).toEqual({
+      scale: "duration",
+      inverse: true,
+    });
     expect(getVerifiedMiscScaling("nekros", "Desecrate", "healthOrbChance")).toBeNull();
+    expect(getVerifiedMiscScaling("nekros", "Desecrate", "energyPerCorpse")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("nekros_prime", "Shadows Of The Dead", "shieldBonus")).toEqual({
       scale: "strength",
     });
@@ -1136,9 +1159,28 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
       cap: 0.5,
     });
-    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "pacifyDamageReduction")).toBeNull();
+    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "pacifyDamageReduction")).toEqual({
+      scale: "strength",
+      formula: "one_minus_base_over_attr",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "energyDrainPerEnemy")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Pacify & Provoke", "energyPerAbility")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("equinox_prime", "Pacify & Provoke", "pacifyDamageReduction")).toEqual({
+      scale: "strength",
+      formula: "one_minus_base_over_attr",
+    });
     expect(getVerifiedMiscScaling("equinox", "Mend & Maim", "shieldsPerKill")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("equinox", "Mend & Maim", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
     });
     expect(getVerifiedMiscScaling("equinox_prime", "Mend & Maim", "damageConversion")).toBeNull();
   });
@@ -1157,7 +1199,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("ivara", "Navigator", "maxDamageMultiplier")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("ivara", "Navigator", "multiplierGrowth")).toBeNull();
+    expect(getVerifiedMiscScaling("ivara", "Navigator", "multiplierGrowth")).toEqual({
+      scale: "duration",
+      inverse: true,
+    });
+    expect(getVerifiedMiscScaling("ivara", "Navigator", "energyDrainGrowth")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("ivara", "Prowl", "headshotBonus")).toEqual({
       scale: "strength",
     });
@@ -1165,15 +1214,37 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
       cap: 1,
     });
-    expect(getVerifiedMiscScaling("ivara_prime", "Prowl", "stealTime")).toBeNull();
+    expect(getVerifiedMiscScaling("ivara", "Prowl", "stealTime")).toEqual({
+      scale: "duration",
+      inverse: true,
+    });
+    expect(getVerifiedMiscScaling("ivara", "Prowl", "meleeEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("ivara", "Prowl", "damageEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("ivara_prime", "Prowl", "stealTime")).toEqual({
+      scale: "duration",
+      inverse: true,
+    });
   });
 
-  it("Ash Teleport finisher bonus × STR; Blade Storm mark cost fixed", () => {
+  it("Ash Teleport finisher bonus × STR; Blade Storm mark cost × EFF", () => {
     expect(getVerifiedMiscScaling("ash", "Teleport", "finisherDamageBonus")).toEqual({
       scale: "strength",
     });
     expect(getVerifiedMiscScaling("ash", "Teleport", "energyRefund")).toBeNull();
-    expect(getVerifiedMiscScaling("ash", "Blade Storm", "energyPerMark")).toBeNull();
+    expect(getVerifiedMiscScaling("ash", "Blade Storm", "energyPerMark")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("ash_prime", "Blade Storm", "energyPerMark")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("ash_prime", "Teleport", "finisherDamageBonus")).toEqual({
       scale: "strength",
     });
@@ -1236,6 +1307,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("helminth", "Reave", "thrallHitpointsDrain")).toBeNull();
     expect(getVerifiedMiscScaling("revenant", "Danse Macabre", "boostedDamage")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Danse Macabre", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("revenant", "Danse Macabre", "boostedEnergyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
     });
     expect(getVerifiedMiscScaling("revenant", "Enthrall", "pillarRadius")).toEqual({
       scale: "range",
@@ -1313,7 +1392,16 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("trinity", "Energy Vampire", "energyPerPulse")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("trinity", "Energy Vampire", "pulseInterval")).toBeNull();
+    expect(getVerifiedMiscScaling("trinity", "Energy Vampire", "pulseInterval")).toEqual({
+      scale: "duration",
+      inverse: true,
+      floor: 0.5,
+    });
+    expect(getVerifiedMiscScaling("trinity_prime", "Energy Vampire", "pulseInterval")).toEqual({
+      scale: "duration",
+      inverse: true,
+      floor: 0.5,
+    });
     expect(getVerifiedMiscScaling("trinity", "Link", "affectedEnemies")).toEqual({
       scale: "strength",
     });
@@ -1382,6 +1470,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     });
     expect(getVerifiedMiscScaling("valkyr", "Hysteria", "healthPerHit")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("valkyr", "Hysteria", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
     });
     const valkyr = allWarframes.find((w) => w.id === "valkyr")!;
     const rip = valkyr.abilities.find((a) => a.name === "Rip Line")!;
@@ -1541,6 +1633,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("mesa", "Peacemaker", "rampUpDamageBonus")).toEqual({
       scale: "strength",
     });
+    expect(getVerifiedMiscScaling("mesa", "Peacemaker", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedFieldScaling("mesa", "Shatter Shield", "damageReduction")).toEqual({
       scale: "strength",
       useSiblingDrCap: true,
@@ -1589,6 +1685,13 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("nyx", "Absorb", "absorbDuration")).toEqual({
       scale: "duration",
     });
+    expect(getVerifiedMiscScaling("nyx", "Absorb", "weaponDamageConvert")).toEqual({
+      scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("nyx", "Absorb", "weaponDamageCap")).toBeNull();
+    expect(getVerifiedMiscScaling("nyx_prime", "Absorb", "weaponDamageConvert")).toEqual({
+      scale: "strength",
+    });
     const nyx = allWarframes.find((w) => w.id === "nyx")!;
     const mind = nyx.abilities.find((a) => a.name === "Mind Control")!;
     expect(mind.range).toBe(60);
@@ -1629,8 +1732,16 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("zephyr", "Tail Wind", "diveBombDamage")).toEqual({
       scale: "strength",
     });
+    expect(getVerifiedMiscScaling("zephyr", "Tail Wind", "airborneEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("zephyr", "Tornado", "tickDamage")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("zephyr", "Airburst", "airborneEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
     });
     expect(getVerifiedMiscScaling("zephyr", "Airburst", "damageGrowthPerEnemy")).toBeNull();
     const zephyr = allWarframes.find((w) => w.id === "zephyr")!;
@@ -1638,11 +1749,20 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(dash.damage).toBe(750);
     expect(dash.range).toBe(2);
     expect(dash.radius).toBe(7);
-    expect(dash.miscStats).toMatchObject({ diveBombDamage: 4500, airSpeed: 30, energyDrain: 5 });
+    expect(dash.miscStats).toMatchObject({
+      diveBombDamage: 4500,
+      airSpeed: 30,
+      energyDrain: 5,
+      airborneEnergyCost: 12.5,
+    });
     const burst = zephyr.abilities.find((a) => a.name === "Airburst")!;
     expect(burst.damage).toBe(500);
     expect(burst.range).toBe(8);
-    expect(burst.miscStats).toMatchObject({ damageGrowthPerEnemy: 0.35, statusChance: 0.5 });
+    expect(burst.miscStats).toMatchObject({
+      damageGrowthPerEnemy: 0.35,
+      statusChance: 0.5,
+      airborneEnergyCost: 25,
+    });
     const turb = zephyr.abilities.find((a) => a.name === "Turbulence")!;
     expect(turb.range).toBe(6);
     expect(turb.duration).toBe(20);
@@ -1704,6 +1824,19 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     const gate = wisp.abilities.find((a) => a.name === "Sol Gate")!;
     expect(gate.damagePerSecond).toBe(1500);
     expect(gate.miscStats).toMatchObject({ energyDrain: 12, boostedDamagePerSecond: 3000 });
+    expect(getVerifiedMiscScaling("wisp", "Sol Gate", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Sol Gate", "boostedEnergyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("wisp", "Sol Gate", "damageRampCap")).toBeNull();
+    expect(getVerifiedMiscScaling("wisp_prime", "Sol Gate", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     const helminth = allHelminthAbilities.find((h) => h.id === "subsume_wisp")!;
     expect(helminth.range).toBe(18);
     expect(helminth.duration).toBe(16);
@@ -1731,6 +1864,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       waveRange: 70,
       waveSpeed: 30,
       slideEnergyCost: 25,
+    });
+    expect(getVerifiedMiscScaling("excalibur", "Exalted Blade", "slideEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("excalibur_umbra", "Exalted Blade", "slideEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
     });
     const javelin = excal.abilities.find((a) => a.name === "Radial Javelin")!;
     expect(javelin.damage).toBe(1000);
@@ -1910,6 +2051,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "shieldHealth")).toEqual({
       scale: "strength",
     });
+    expect(getVerifiedMiscScaling("bonewidow", "Shield Maiden", "kissEnergyCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     const bonewidow = allWarframes.find((w) => w.id === "bonewidow")!;
     const hook = bonewidow.abilities.find((a) => a.name === "Meathook")!;
     expect(hook.damage).toBeUndefined();
@@ -1921,7 +2066,11 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     });
     const maiden = bonewidow.abilities.find((a) => a.name === "Shield Maiden")!;
     expect(maiden.energyCost).toBe(25);
-    expect(maiden.miscStats).toMatchObject({ shieldHealth: 2000, reflectMultiplier: 2 });
+    expect(maiden.miscStats).toMatchObject({
+      shieldHealth: 2000,
+      reflectMultiplier: 2,
+      kissEnergyCost: 15,
+    });
     const line = bonewidow.abilities.find((a) => a.name === "Firing Line")!;
     expect(line.energyCost).toBe(50);
     expect(line.damage).toBeUndefined();
@@ -2315,7 +2464,10 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("chroma", "Vex Armor", "furyMax")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("chroma", "Effigy", "energyDrain")).toBeNull();
+    expect(getVerifiedMiscScaling("chroma", "Effigy", "energyDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     const chroma = allWarframes.find((w) => w.id === "chroma")!;
     const scream = chroma.abilities.find((a) => a.name === "Spectral Scream")!;
     expect(scream.damagePerSecond).toBe(400);
@@ -2614,7 +2766,14 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     expect(getVerifiedMiscScaling("grendel", "Nourish", "selfHeal")).toEqual({
       scale: "strength",
     });
-    expect(getVerifiedMiscScaling("grendel", "Nourish", "energyMultiplier")).toBeNull();
+    expect(getVerifiedMiscScaling("grendel", "Nourish", "energyMultiplier")).toEqual({
+      scale: "strength",
+      formula: "one_plus_bonus_times_attr",
+    });
+    expect(getVerifiedMiscScaling("helminth", "Nourish", "energyMultiplier")).toEqual({
+      scale: "strength",
+      formula: "one_plus_bonus_times_attr",
+    });
     expect(getVerifiedMiscScaling("helminth", "Nourish", "viralDamageBonus")).toEqual({
       scale: "strength",
     });
@@ -2679,11 +2838,34 @@ describe("Phase 8 — ability scaling registry + sets", () => {
       scale: "strength",
       cap: 1,
     });
+    expect(getVerifiedMiscScaling("hildryn", "Pillage", "shieldCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
     expect(getVerifiedMiscScaling("hildryn", "Haven", "allyShieldBonus")).toEqual({
       scale: "strength",
     });
+    expect(getVerifiedMiscScaling("hildryn", "Haven", "shieldRechargeRate")).toEqual({
+      scale: "duration",
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Haven", "shieldCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Haven", "shieldDrainPerAlly")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
     expect(getVerifiedMiscScaling("hildryn", "Aegis Storm", "deactivationDamage")).toEqual({
       scale: "strength",
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Aegis Storm", "shieldDrain")).toEqual({
+      scale: "efficiency",
+      formula: "channeled_drain",
+    });
+    expect(getVerifiedMiscScaling("hildryn", "Balefire", "shieldCost")).toEqual({
+      scale: "efficiency",
+      formula: "cast_cost",
     });
     const hildryn = allWarframes.find((w) => w.id === "hildryn")!;
     const balefire = hildryn.abilities.find((a) => a.name === "Balefire")!;
@@ -2693,7 +2875,11 @@ describe("Phase 8 — ability scaling registry + sets", () => {
     const pillage = hildryn.abilities.find((a) => a.name === "Pillage")!;
     expect(pillage.range).toBe(8);
     expect(pillage.duration).toBe(2);
-    expect(pillage.miscStats).toMatchObject({ shieldStrip: 0.25, armorStrip: 0.25 });
+    expect(pillage.miscStats).toMatchObject({
+      shieldStrip: 0.25,
+      armorStrip: 0.25,
+      shieldCost: 150,
+    });
     const haven = hildryn.abilities.find((a) => a.name === "Haven")!;
     expect(haven.damagePerSecond).toBe(200);
     expect(haven.range).toBe(15);

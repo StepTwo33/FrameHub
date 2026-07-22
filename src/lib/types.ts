@@ -363,6 +363,11 @@ export interface SimulationParams {
    * (×2 melee) × enemies — not folded into single-target TTK.
    */
   contagionCloudEnemies?: number;
+  /**
+   * Nyx Absorb: damage absorbed before release (0 = off). Drives post-blast
+   * additive weapon damage buff √(0.025% × STR × absorbed), capped at 400%.
+   */
+  absorbAbsorbedDamage?: number;
   /** Tenacious Bond: +1.2× crit damage when companion crit > 50%. Default on in loadout calcs. */
   applyTenaciousBondCrit?: boolean;
   /** Reinforced Bond: +60% fire rate when companion shields exceed threshold. Default on in loadout calcs. */

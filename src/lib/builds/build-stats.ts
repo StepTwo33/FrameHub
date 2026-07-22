@@ -72,6 +72,8 @@ function helminthToAbility(h: HelminthAbility): Ability {
     range: h.range,
     radius: h.radius,
     castTime: h.castTime,
+    statusChance: h.statusChance,
+    damageType: h.damageType,
     miscStats: h.miscStats,
   };
 }

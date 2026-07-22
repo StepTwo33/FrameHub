@@ -474,6 +474,32 @@ function resolveShootingGalleryBuff(
   };
 }
 
+/**
+ * Wiki Absorb: Weapon Damage Buff = √(0.025% × STR × Absorbed), cap 400%.
+ * Convert is wiki percent-points (0.025); sim absorbed damage gates the buff.
+ */
+function resolveAbsorbBuff(
+  ability: Ability,
+  strength: number,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  const absorbed = Math.max(0, simParams.absorbAbsorbedDamage ?? 0);
+  if (absorbed <= 0) return null;
+  const misc = ability.miscStats ?? {};
+  const convertPts = typeof misc.weaponDamageConvert === "number" ? misc.weaponDamageConvert : 0.025;
+  const cap = typeof misc.weaponDamageCap === "number" ? misc.weaponDamageCap : 4;
+  const convertFrac = convertPts / 100;
+  const buff = Math.min(Math.sqrt(convertFrac * strength * absorbed), cap);
+  if (buff <= 0) return null;
+  return {
+    id: `ability:${ability.name}`,
+    label: ability.name,
+    category: "ability",
+    damageBonus: buff,
+    nominal: `+${(buff * 100).toFixed(0)}% weapon damage (√ convert×STR×${Math.round(absorbed)} absorbed)`,
+  };
+}
+
 function resolveNamedAbilityWeaponBuff(
   weapon: Weapon,
   ctx: WeaponBuffContext,
@@ -496,6 +522,8 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Symphony of Mercy — Deathbringer song is additive with Serration (like SG)
     case "Symphony Of Mercy":
       return resolveShootingGalleryBuff(ability, strength);
+    case "Absorb":
+      return resolveAbsorbBuff(ability, strength, simParams);
     // wiki: Redline — full-battery fire/attack speed × Duration
     case "Redline":
       return resolveRedlineBuff(weapon, ability, ctx.warframeStats!.abilityDuration);
@@ -763,6 +791,7 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Grave Spirit",
   "Penance",
   "Shroud Of Dynar",
+  "Absorb",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */

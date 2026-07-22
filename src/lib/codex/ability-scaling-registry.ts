@@ -7,15 +7,38 @@
  * Only stats listed here are scaled with the build. Everything else shows
  * base values until verified for that specific ability.
  *
- * Keys use `warframeFamily::Ability Name` where warframeFamily strips `_prime`.
+ * Keys use `warframeFamily::Ability Name` where warframeFamily strips `_prime` / `_umbra`.
  */
 
 export type AbilityScaleAttribute = "strength" | "duration" | "range" | "efficiency";
 
+/** Non-linear misc formulas (wiki-verified per ability). */
+export type VerifiedStatFormula =
+  /** Pacify: 1 − (baseDR ÷ AbilityStrengthMultiplier). */
+  | "one_minus_base_over_attr"
+  /** Channeled drain: base × max((2 − EFF) ÷ DUR, 0.25). */
+  | "channeled_drain"
+  /** Cast/activation cost: base × max(2 − min(EFF, 1.75), 0.25). */
+  | "cast_cost"
+  /**
+   * Nourish energy: 1 + ((storedMultiplier − 1) × attr).
+   * Catalog stores full multiplier (native 2× / Helminth 1.6×); only the bonus portion scales.
+   */
+  | "one_plus_bonus_times_attr";
+
 export interface VerifiedStatScaling {
   scale: AbilityScaleAttribute;
-  /** Hard cap after scaling, as a fraction (1 = 100%). */
+  /**
+   * When true, divide by the scale attribute instead of multiplying
+   * (e.g. pulse interval ÷ Ability Duration).
+   */
+  inverse?: boolean;
+  /** Optional non-linear formula; when set, replaces ×/÷ scaling. */
+  formula?: VerifiedStatFormula;
+  /** Hard cap after scaling, as a fraction (1 = 100%) or absolute for non-percents. */
   cap?: number;
+  /** Hard floor after scaling (e.g. Energy Vampire pulse interval 0.5s). */
+  floor?: number;
   /** Read `drCap` from the ability's miscStats for this stat. */
   useSiblingDrCap?: boolean;
   /** Read `slowCap` from miscStats (percent or fraction). */
@@ -29,7 +52,7 @@ export type VerifiedAbilityFields = Partial<
 type MiscScalingTable = Record<string, VerifiedStatScaling>;
 
 function familyId(warframeId: string): string {
-  return warframeId.replace(/_prime$/, "");
+  return warframeId.replace(/_prime$/, "").replace(/_umbra$/, "");
 }
 
 function abilityKey(warframeId: string, abilityName: string): string {
@@ -86,10 +109,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     blindRadius: { scale: "range" },
     blindDuration: { scale: "duration" },
   },
-  // wiki: Prism — laser count Misc-fixed; blind duration × DUR; seeking via ability.range
+  // wiki: Prism — laser count Misc-fixed; blind duration × DUR; seeking via ability.range;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "mirage::Prism": {
     blindDuration: { scale: "duration" },
     damageBonusPerHit: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Ballistic Battery — store % / caps × STR
@@ -98,10 +123,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     maxDamagePerInstance: { scale: "strength" },
     maxStoredDamage: { scale: "strength" },
   },
-  // wiki: Peacemaker — innate damage bonus scales STR; FoV/max distance Misc; drain fixed
+  // wiki: Peacemaker — innate damage bonus scales STR; FoV/max distance Misc;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "mesa::Peacemaker": {
     damageBonus: { scale: "strength" },
     rampUpDamageBonus: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Virulence — length scales RNG; width is fixed 4 m (not listed)
@@ -128,9 +155,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     infestedSlow: { scale: "strength" },
   },
   // wiki: Absorb — min Magnetic via ability.damage × STR; min radius via ability.range;
-  // absorbDuration × DUR; weapon buff duration via ability.duration; convert/cap Misc
+  // absorbDuration × DUR; weaponDamageConvert (0.025%) × STR; buff √(convert×STR×absorbed) via sim absorbAbsorbedDamage
   "nyx::Absorb": {
     absorbDuration: { scale: "duration" },
+    weaponDamageConvert: { scale: "strength" },
   },
 
   // wiki: Iron Skin — armor multiplier in overguard formula scales STR; invuln Misc-fixed
@@ -154,9 +182,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     slowPercent: { scale: "strength", useSiblingSlowCap: true },
     meleeDamageVulnerability: { scale: "strength" },
   },
-  // wiki: Hysteria — claw damage via ability.damage; heal/hit × STR; drain Misc-fixed
+  // wiki: Hysteria — claw damage via ability.damage; heal/hit × STR;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "valkyr::Hysteria": {
     healthPerHit: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Molt — decoy health/explosion via ability; speed buff × STR (cap 100%); Helminth unaltered
@@ -183,40 +213,61 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
   // wiki: Miasma — Viral DPS via ability.damagePerSecond; Spores ×4 Misc-fixed
   // wiki: Nourish — Viral weapon bonus/heal/retaliation × STR (Helminth base 45%/no heal);
-  // energy multiplier uses 1+(bonus×STR) and is Misc-displayed unscaled.
+  // energy: 1+((mult−1)×STR) — native bonus 1.0 / Helminth 0.6
   "grendel::Nourish": {
     viralDamageBonus: { scale: "strength" },
     selfHeal: { scale: "strength" },
     viralDamage: { scale: "strength" },
     digestionDamage: { scale: "strength" },
+    energyMultiplier: { scale: "strength", formula: "one_plus_bonus_times_attr" },
   },
   "helminth::Nourish": {
     viralDamageBonus: { scale: "strength" },
     viralDamage: { scale: "strength" },
+    energyMultiplier: { scale: "strength", formula: "one_plus_bonus_times_attr" },
   },
-  // wiki: Pulverize — heal/toxin DPS/strip × STR; collision enemy-count formula unmodeled
+  // wiki: Pulverize — heal/toxin DPS/strip × STR; collision enemy-count formula unmodeled;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "grendel::Pulverize": {
     healPerSecond: { scale: "strength" },
     armorStrip: { scale: "strength", cap: 1 },
     toxinDamagePerSecond: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
   // wiki: Regurgitate — armor strip × STR; slow Misc-fixed 80%/6s
   "grendel::Regurgitate": {
     armorStrip: { scale: "strength", cap: 1 },
   },
-  // wiki: Haven — ally shields × STR; Rad DPS via ability.damagePerSecond
+  // wiki: Haven — ally shields × STR; Rad DPS via ability.damagePerSecond;
+  // shield recharge × DUR; shieldCost cast × EFF; drains × max((2−EFF)÷DUR, 0.25)
   "hildryn::Haven": {
     allyShieldBonus: { scale: "strength" },
+    shieldRechargeRate: { scale: "duration" },
+    shieldCost: { scale: "efficiency", formula: "cast_cost" },
+    shieldDrainPerAlly: { scale: "efficiency", formula: "channeled_drain" },
+    shieldDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },
-  // wiki: Aegis Storm — deactivation Impact × STR; Rad DPS via ability.damagePerSecond
+  // wiki: Aegis Storm — deactivation Impact × STR; Rad DPS via ability.damagePerSecond;
+  // shieldCost cast × EFF; shieldDrain / per-enemy × max((2−EFF)÷DUR, 0.25)
   "hildryn::Aegis Storm": {
     deactivationDamage: { scale: "strength" },
+    shieldCost: { scale: "efficiency", formula: "cast_cost" },
+    shieldDrain: { scale: "efficiency", formula: "channeled_drain" },
+    shieldDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },
-  // wiki: Balefire — charge damage via ability.damage; explosion radius Misc-fixed 3m
+  // wiki: Balefire — charge damage via ability.damage; explosion radius Misc-fixed 3m;
+  // shieldCost per charge × EFF (cast_cost)
+  "hildryn::Balefire": {
+    shieldCost: { scale: "efficiency", formula: "cast_cost" },
+  },
   // wiki: Spellbind — range/duration/radius top-level; Helminth→Spellbind (not Tribute)
   // wiki: Tribute — Impact via ability.damage; aura duration/radius Misc-fixed
   // wiki: Lantern — DPS/explode via ability; attract radius via ability.radius
-  // wiki: Razorwing — Dex Pixia via ability.damage; Diwata/drone Misc; drain Misc-fixed
+  // wiki: Razorwing — Dex Pixia via ability.damage; Diwata/drone Misc;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "titania::Razorwing": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
   // wiki: Xata's Whisper — Void Extra Hit % scales STR
   "xaku::Xata's Whisper": {
     voidDamageBonus: { scale: "strength" },
@@ -250,14 +301,22 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     coldArmorBonus: { scale: "strength" },
     coldReflectMult: { scale: "strength" },
   },
-  // wiki: Spectral Scream — elemental DPS via ability.damagePerSecond; drain Misc-fixed 3/s
+  // wiki: Spectral Scream — elemental DPS via ability.damagePerSecond;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "chroma::Spectral Scream": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
   // wiki: Vex Armor — aura × RNG; Scorn/Fury max × STR; kill rates Misc-fixed
   "chroma::Vex Armor": {
     auraRadius: { scale: "range" },
     scornMax: { scale: "strength" },
     furyMax: { scale: "strength" },
   },
-  // wiki: Effigy — sentry damage/HP via ability; drain/stun/credits Misc-fixed
+  // wiki: Effigy — sentry damage/HP via ability; stun/credits Misc-fixed;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "chroma::Effigy": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
 
   // wiki: Tesla Nervos — discharge via ability.damage; DPS × STR; shock radius × RNG; charges × DUR
   "vauban::Tesla Nervos": {
@@ -291,10 +350,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     armorStrip: { scale: "strength", cap: 1 },
     healthPerHit: { scale: "strength" },
   },
-  // wiki: Pillage — 25% shield/armor drain scales STR (full strip at 400% STR)
+  // wiki: Pillage — 25% shield/armor drain scales STR (full strip at 400% STR);
+  // activation shieldCost × EFF (cast_cost); Helminth uses energyCost top-level
   "hildryn::Pillage": {
     shieldStrip: { scale: "strength", cap: 1 },
     armorStrip: { scale: "strength", cap: 1 },
+    shieldCost: { scale: "efficiency", formula: "cast_cost" },
   },
   "helminth::Pillage": {
     shieldStrip: { scale: "strength", cap: 1 },
@@ -378,11 +439,13 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "oraxia::Widow's Brood": {
     scuttlerDuration: { scale: "duration" },
   },
-  // wiki: Silken Stride — health mult / toxin weapon / explosion × STR; drain Misc-fixed
+  // wiki: Silken Stride — health mult / toxin weapon / explosion × STR;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "oraxia::Silken Stride": {
     healthMultiplier: { scale: "strength" },
     toxinWeaponDamage: { scale: "strength" },
     wallLatchToxinWeaponDamage: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Infernalis — cast Heat via damage; aura DPS via damagePerSecond; Catenach slow × STR (cap 95%)
@@ -437,7 +500,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   "voidrig::Gravemines": {
     charges: { scale: "duration" },
   },
-  // wiki: Guard Mode — Blast/Heat via damage; Arquebex exalted; drain Misc-fixed 5/s
+  // wiki: Guard Mode — Blast/Heat via damage; Arquebex exalted;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "voidrig::Guard Mode": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
 
   // wiki: Meathook — % max HP drain/lifesteal/explosion × STR
   "bonewidow::Meathook": {
@@ -445,14 +512,20 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     lifesteal: { scale: "strength" },
     explosionHealthPercent: { scale: "strength" },
   },
-  // wiki: Shield Maiden — shield HP + reflect + armor mult × STR
+  // wiki: Shield Maiden — shield HP + reflect + armor mult × STR;
+  // Maiden's Kiss bash energy × EFF (cast_cost)
   "bonewidow::Shield Maiden": {
     shieldHealth: { scale: "strength" },
     reflectMultiplier: { scale: "strength" },
     armorMultiplier: { scale: "strength" },
+    kissEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
   // wiki: Firing Line — Lifted vulnerability Misc-fixed 1.5×; range via ability
-  // wiki: Exalted Ironbride — Blast/Heat via damage; Ironbride weapon; drain 2.5/s
+  // wiki: Exalted Ironbride — Blast/Heat via damage; Ironbride weapon;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "bonewidow::Exalted Ironbride": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
 
   // wiki: Infested Mobility — sprint/parkour × STR
   "helminth::Infested Mobility": {
@@ -464,7 +537,12 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
 
   // wiki: Excalibur — Slash Dash Strength N/A (Exalted Blade weapon); chainRange×RNG via Ability.chainRange
   // Radial Blind/Howl — range/duration top-level; Radial Javelin damage×STR; Exalted Blade
-  // damage×STR, slide blind via duration/range, energyDrain/wave misc fixed
+  // damage×STR, slide blind via duration/range; channeled energyDrain × max((2−EFF)÷DUR, 0.25);
+  // Judged Severance slideEnergyCost × EFF (cast_cost)
+  "excalibur::Exalted Blade": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    slideEnergyCost: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Speed — reload buff scales STR; movement buff scales STR (ally move cap 150%)
   "volt::Speed": {
@@ -498,7 +576,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     damageMultiplier: { scale: "strength" },
     armorMultiplier: { scale: "strength" },
   },
-  // wiki: Primal Fury — staff damage via ability.damage / Iron Staff; drain Misc-fixed
+  // wiki: Primal Fury — staff damage via ability.damage / Iron Staff;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "wukong::Primal Fury": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
   // wiki: Grasp of Lohk — Void scaling dmg × STR; maxTargets × STR; targetRange × RNG
   "xaku::Grasp Of Lohk": {
     maxTargets: { scale: "strength" },
@@ -561,13 +643,15 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
   // wiki: Scarab Swarm — % health as Corrosive Misc-fixed (scales with Inaros health, not STR)
 
-  // wiki: Gloom — slow/lifesteal × STR (slow cap 95%); radii × RNG; range growth × DUR
+  // wiki: Gloom — slow/lifesteal × STR (slow cap 95%); radii × RNG; range growth × DUR;
+  // energyDrainPerEnemy × max((2−EFF)÷DUR, 0.25) (channeled; enemy cap Misc-fixed 10)
   "sevagoth::Gloom": {
     slowPercent: { scale: "strength", useSiblingSlowCap: true },
     lifeStealPercent: { scale: "strength" },
     minRadius: { scale: "range" },
     maxRadius: { scale: "range" },
     rangeGrowthPerSecond: { scale: "duration" },
+    energyDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },
   "helminth::Gloom": {
     slowPercent: { scale: "strength", useSiblingSlowCap: true },
@@ -575,6 +659,7 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     minRadius: { scale: "range" },
     maxRadius: { scale: "range" },
     rangeGrowthPerSecond: { scale: "duration" },
+    energyDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Reservoirs — Vitality/Haste/Shock STR buffs; Shock range × RNG; mote lifespan via duration
@@ -596,13 +681,24 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     sparkDamageMultiplier: { scale: "strength" },
     radiationStatusChance: { scale: "strength" },
   },
-  // wiki: Sol Gate — beam DPS via damagePerSecond × STR; drain/ramp/boost misc (drain also × EFF/DUR in-game unmodeled)
+  // wiki: Sol Gate — beam DPS via damagePerSecond × STR; drain × max((2−EFF)÷DUR, 0.25); ramp/boost Misc
+  "wisp::Sol Gate": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    boostedEnergyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
 
-  // wiki: Tail Wind — dash damage via ability.damage × STR; dive bomb × STR; contact/explosion radii × RNG
+  // wiki: Tail Wind — dash damage via ability.damage × STR; dive bomb × STR; contact/explosion radii × RNG;
+  // hold-channel energyDrain × max((2−EFF)÷DUR, 0.25); airborne cast × EFF (cast_cost)
   "zephyr::Tail Wind": {
     diveBombDamage: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    airborneEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
-  // wiki: Airburst — +35% damage growth per enemy is Misc-fixed (not STR); explosion via ability.range
+  // wiki: Airburst — +35% damage growth per enemy is Misc-fixed (not STR); explosion via ability.range;
+  // airborne cast × EFF (cast_cost)
+  "zephyr::Airburst": {
+    airborneEnergyCost: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Tornado — tick damage × STR (DPS via damagePerSecond); count/height/pull Misc-fixed
   "zephyr::Tornado": {
@@ -684,9 +780,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     healthRegen: { scale: "strength" },
   },
 
-  // wiki: Glory on High — alt explosion × RNG; drain / Judgment chance / +100% move Misc-fixed
+  // wiki: Glory on High — alt explosion × RNG; Judgment chance / +100% move Misc-fixed;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "jade::Glory On High": {
     altFireExplosion: { scale: "range" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Thermal Sunder — radii × RNG; Cold/Heat damage use ability.damage / aoeDamage (× STR)
@@ -705,6 +803,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     minDamageReduction: { scale: "strength", cap: 0.5 },
   },
 
+  // wiki: Mach Rush — hold-channel energyDrain × max((2−EFF)÷DUR, 0.25)
+  "gauss::Mach Rush": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
   // wiki: Redline — speed buffs scale with Duration (battery-max values); projectile dmg × STR via damage
   "gauss::Redline": {
     fireRateBuff: { scale: "duration" },
@@ -923,9 +1025,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     shieldStrip: { scale: "strength", cap: 1 },
   },
 
-  // wiki: Elude — evasion angle × RNG; drain / restraint Misc-fixed
+  // wiki: Elude — evasion angle × RNG; restraint Misc-fixed;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "baruuk::Elude": {
     evasionAngle: { scale: "range" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Lull — sleep via duration; wave duration × DUR; range via ability.range
@@ -1022,12 +1126,17 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
 
   // wiki: Soul Punch — Impact via damage; mark / projectile / explosion Misc-fixed
 
-  // wiki: Desecrate — drop chances Misc-fixed (rank); range via ability.range
-  // wiki: Shadows of the Dead — damage/shield/health bonuses × STR; decay inverse-DUR unmodeled
+  // wiki: Desecrate — drop chances Misc-fixed (rank); range via ability.range;
+  // energy per corpse × EFF (cast_cost)
+  "nekros::Desecrate": {
+    energyPerCorpse: { scale: "efficiency", formula: "cast_cost" },
+  },
+  // wiki: Shadows of the Dead — damage/shield/health bonuses × STR; health decay ÷ DUR
   "nekros::Shadows Of The Dead": {
     damageBonus: { scale: "strength" },
     shieldBonus: { scale: "strength" },
     healthBonus: { scale: "strength" },
+    healthDecayPerSecond: { scale: "duration", inverse: true },
   },
 
   // wiki: Tempest Barrage — Corrosive via damage; barrage radius / salvos Misc-fixed
@@ -1140,12 +1249,14 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     charmRadius: { scale: "range" },
   },
 
-  // wiki: Mass Vitrify — explosion via damage; vuln / segment HP × STR; armor mult Misc-fixed; expansion × DUR; explosion range × RNG
+  // wiki: Mass Vitrify — explosion via damage; vuln / segment HP × STR; armor mult Misc-fixed;
+  // expansion × DUR; explosion range × RNG; channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "gara::Mass Vitrify": {
     damageVulnerability: { scale: "strength" },
     segmentHealth: { scale: "strength" },
     expansionTime: { scale: "duration" },
     explosionRange: { scale: "range" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Metamorphosis — Night armor/shields + Day dmg/speed × STR; decay over duration
@@ -1166,14 +1277,20 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     enemySpeedBonus: { scale: "strength" },
   },
 
-  // wiki: Pacify & Provoke — Provoke STR bonus × STR (cap 50%); Pacify DR uses 1−(base÷STR) unmodeled as ×STR
+  // wiki: Pacify & Provoke — Provoke STR bonus × STR (cap 50%); Pacify DR = 1−(base÷STR);
+  // Pacify energyDrainPerEnemy × max((2−EFF)÷DUR, 0.25); Provoke energyPerAbility × EFF
   "equinox::Pacify & Provoke": {
     abilityStrengthBonus: { scale: "strength", cap: 0.5 },
+    pacifyDamageReduction: { scale: "strength", formula: "one_minus_base_over_attr" },
+    energyDrainPerEnemy: { scale: "efficiency", formula: "channeled_drain" },
+    energyPerAbility: { scale: "efficiency", formula: "cast_cost" },
   },
 
-  // wiki: Mend & Maim — Slash aura via damage; shields/kill × STR; conversion % Misc-fixed
+  // wiki: Mend & Maim — Slash aura via damage; shields/kill × STR; conversion % Misc-fixed;
+  // channeled energyDrain 3.5/s × max((2−EFF)÷DUR, 0.25)
   "equinox::Mend & Maim": {
     shieldsPerKill: { scale: "strength" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Quiver — Cloak/Sleep durations via ability/misc; radii × RNG; Helminth Cloak+Noise only
@@ -1186,15 +1303,26 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     noiseRadius: { scale: "range" },
   },
 
-  // wiki: Navigator — max dmg mult × STR; growth inverse-DUR unmodeled
+  // wiki: Navigator — max dmg mult × STR; multiplier growth ÷ DUR;
+  // channeled energyDrain / energyDrainGrowth × max((2−EFF)÷DUR, 0.25)
   "ivara::Navigator": {
     maxDamageMultiplier: { scale: "strength" },
+    multiplierGrowth: { scale: "duration", inverse: true },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    energyDrainGrowth: { scale: "efficiency", formula: "channeled_drain" },
   },
 
-  // wiki: Prowl — headshot bonus / loot chance × STR; steal time inverse-DUR unmodeled
+  // wiki: Prowl — headshot bonus / loot chance × STR; steal time ÷ DUR;
+  // channeled energyDrain / energyDrainMoving × max((2−EFF)÷DUR, 0.25);
+  // melee / damage energy costs × EFF (cast_cost)
   "ivara::Prowl": {
     headshotBonus: { scale: "strength" },
     lootChance: { scale: "strength", cap: 1 },
+    stealTime: { scale: "duration", inverse: true },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    energyDrainMoving: { scale: "efficiency", formula: "channeled_drain" },
+    meleeEnergyCost: { scale: "efficiency", formula: "cast_cost" },
+    damageEnergyCost: { scale: "efficiency", formula: "cast_cost" },
   },
 
   // wiki: Artemis Bow — Puncture-heavy via damage; arrow count / energy per shot Misc-fixed
@@ -1207,7 +1335,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     finisherDamageBonus: { scale: "strength" },
   },
 
-  // wiki: Blade Storm — True via damage; mark cost / clones Misc-fixed
+  // wiki: Blade Storm — True via damage; clones Misc-fixed; energyPerMark × EFF (cast_cost)
+  "ash::Blade Storm": {
+    energyPerMark: { scale: "efficiency", formula: "cast_cost" },
+  },
 
   // wiki: Landslide — Impact via damage; hit radii × RNG; combo window Misc-fixed
   "atlas::Landslide": {
@@ -1242,7 +1373,10 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
   },
 
   // wiki: Silence — stun Misc-fixed; aura via ability.range/duration
-  // wiki: Sound Quake — Blast DPS via damage; drain Misc-fixed
+  // wiki: Sound Quake — Blast DPS via damage; channeled energyDrain × max((2−EFF)÷DUR, 0.25)
+  "banshee::Sound Quake": {
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+  },
 
   // wiki: Enthrall — pillar DPS via damage; projectile / pillar radius × STR/RNG; thrall duration via ability.duration
   "revenant::Enthrall": {
@@ -1266,11 +1400,14 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     hitpointsDrain: { scale: "strength" },
   },
 
-  // wiki: Danse Macabre — DPS via damage; boosted DPS × STR; beam radii × RNG
+  // wiki: Danse Macabre — DPS via damage; boosted DPS × STR; beam radii × RNG;
+  // channeled energyDrain / boostedEnergyDrain × max((2−EFF)÷DUR, 0.25)
   "revenant::Danse Macabre": {
     boostedDamage: { scale: "strength" },
     beamRadius: { scale: "range" },
     boostedBeamRadius: { scale: "range" },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
+    boostedEnergyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Smite — Radiation via damage; % current HP × STR (cap 75% native / 50% Helminth)
@@ -1285,12 +1422,14 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
 
   // wiki: Hallowed Ground — Radiation tick via damage; tick interval / ground cap Misc-fixed
 
-  // wiki: Renewal — armor / heal / HPS × STR; bleedout slow × DUR
+  // wiki: Renewal — armor / heal / HPS × STR; bleedout slow × DUR;
+  // channeled energyDrain × max((2−EFF)÷DUR, 0.25)
   "oberon::Renewal": {
     armorBuff: { scale: "strength", cap: 1 },
     initialHeal: { scale: "strength" },
     healthPerSecond: { scale: "strength" },
     bleedoutSlow: { scale: "duration", cap: 0.9 },
+    energyDrain: { scale: "efficiency", formula: "channeled_drain" },
   },
 
   // wiki: Reckoning — Radiation via damage; armor strip / Rad bonus / armor per enemy × STR; orb chance Misc
@@ -1340,10 +1479,11 @@ const VERIFIED_MISC_SCALING: Record<string, MiscScalingTable> = {
     healingRadius: { scale: "range" },
   },
 
-  // wiki: Energy Vampire — energy/pulse × STR; pulse radius × RNG; interval inverse-DUR (capped) unmodeled
+  // wiki: Energy Vampire — energy/pulse × STR; pulse radius × RNG; interval ÷ DUR (floor 0.5s)
   "trinity::Energy Vampire": {
     energyPerPulse: { scale: "strength" },
     pulseRadius: { scale: "range" },
+    pulseInterval: { scale: "duration", inverse: true, floor: 0.5 },
   },
 
   // wiki: Link — affected enemies × STR; damage redirection Misc-fixed (rank)

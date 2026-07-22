@@ -153,6 +153,19 @@ export function WeaponSimControls({
                 />
               </>
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Absorb") && (
+              <SimSlider
+                label="Absorb damage"
+                value={Math.round((simParams.absorbAbsorbedDamage ?? 0) / 1000)}
+                min={0}
+                max={64}
+                suffix="k"
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, absorbAbsorbedDamage: v * 1000 })
+                }
+                tooltip="Damage absorbed before Absorb release (thousands). 0 = off. Weapon buff = √(0.025% × Strength × absorbed), capped at 400% (64k at 100% STR)."
+              />
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select
