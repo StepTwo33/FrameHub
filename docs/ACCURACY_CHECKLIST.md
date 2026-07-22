@@ -217,6 +217,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 Voidrig kit | 2026-07-21 | Necraweb 2000 Blast/20m mire/25m explode/50% slow; Storm Shroud 50e/1200 HP/2× absorb/100% reflect; Gravemines 75e/200 Heat×24/8m; Guard Mode 50e/500/5eps (Arquebex) |
 | B5 Bonewidow kit | 2026-07-21 | Meathook 20% HP/s/40% LS/50% throw; Shield Maiden 25e/2000 HP Misc/2× reflect×STR/2.5× armor Misc + Initial pool/Kiss 15e×EFF; Firing Line 50e/25m/5s Lifted/+50% vuln; Ironbride 50e/1500/2.5eps |
 | B5 Helminth unique | 2026-07-21 | Infested Mobility +60% sprint/+30% parkour/8s; Energized Munitions 75% ammo/5s; Empower +50% next STR; Marked for Death 75% spread; Rebuild Shields 12s CD |
+| Misc flat≠% root fix | 2026-07-21 | Bare numbers ≥1 no longer auto-% (was Shuriken 5%, AMD 25000%, angles…); true fraction keys + cooldown/angles/× growth; Plunder/Covenant caps 200% |
 
 ## New / extended test files
 

@@ -922,7 +922,15 @@ function isFractionPercentKey(key: string): boolean {
     key === "impactStatusChance" ||
     key === "ammoEfficiency" ||
     key === "damageSpread" ||
-    key === "sprintSpeedBonus"
+    key === "sprintSpeedBonus" ||
+    key === "rumblerHeal" ||
+    key === "finisherDamageVulnerability" ||
+    key === "lootChance" ||
+    key === "statusChance" ||
+    key === "heavyAttackEfficiency" ||
+    key === "armorBuffCap" ||
+    key === "corrosiveBonusCap" ||
+    key === "headshotCritChanceCap"
   );
 }
 
@@ -931,7 +939,10 @@ function humanizeKey(key: string): string {
 }
 
 function parsePercentValue(value: unknown): number | null {
-  if (typeof value === "number") return value <= 1 ? value : value / 100;
+  // Bare numbers: only unit-interval fractions (e.g. 0.5 → 50%).
+  // Values ≥ 1 are flat counts/damage/etc. unless handled via isFractionPercentKey.
+  // Never treat 75 as "75 percent points" here — that path made Shuriken Count → 5%.
+  if (typeof value === "number") return value > 0 && value < 1 ? value : null;
   if (typeof value === "string") {
     const match = value.match(/^([\d.]+)\s*%/);
     if (match) return parseFloat(match[1]) / 100;
@@ -986,7 +997,7 @@ function parseSeconds(value: unknown): number | null {
 
 /** Keys that store duration as a bare number of seconds (not a "5s" string). */
 function isDurationSecondsKey(key: string): boolean {
-  return /duration|Duration|delay|Delay|Cooldown|Interval|tickInterval|Lifetime|Countdown|travelTime|Airtime|Invulnerability|stealTime/.test(
+  return /duration|delay|cooldown|interval|lifetime|countdown|travelTime|airtime|invulnerability|stealTime|assemblyTime/i.test(
     key,
   );
 }
@@ -1050,7 +1061,25 @@ function applyBounds(value: number, cap: number | undefined, floor: number | und
 
 function formatBaseValue(key: string, value: unknown): string {
   if (typeof value === "boolean") return String(value);
-  if (key === "arc" || key === "coneAngle" || key === "firingArc" || key === "seekAngle" || key === "minFov") {
+  if (
+    key === "arc" ||
+    key === "coneAngle" ||
+    key === "firingArc" ||
+    key === "seekAngle" ||
+    key === "minFov" ||
+    key === "homingAngle" ||
+    key === "evasionAngle" ||
+    key === "waveAngle" ||
+    key === "pullAngle" ||
+    key === "sweepArc" ||
+    key === "blockAngle" ||
+    key === "augmentBlockAngle" ||
+    key === "minChargeAngle" ||
+    key === "maxChargeAngle" ||
+    key === "spreadAngle" ||
+    key === "horizontalSpread" ||
+    key === "verticalSpread"
+  ) {
     const deg = parseDegrees(value);
     if (deg != null) return `${deg.toFixed(1)}°`;
   }
@@ -1112,7 +1141,10 @@ function formatBaseValue(key: string, value: unknown): string {
   // Multipliers like Celestial Twin 2× must not go through percent parsing (2 → 2%).
   if (
     typeof value === "number" &&
-    (key.endsWith("Multiplier") || key.endsWith("Mult") || key === "damageGrowth")
+    (key.endsWith("Multiplier") ||
+      key.endsWith("Mult") ||
+      key === "damageGrowth" ||
+      key === "multiplierGrowth")
   ) {
     return value <= 1 ? `${value.toFixed(2)}x` : `${value.toFixed(1)}x`;
   }
@@ -1574,7 +1606,10 @@ function scaleVerifiedValue(
   const numEarly = parseNumeric(value);
   if (
     numEarly != null &&
-    (key.endsWith("Multiplier") || key.endsWith("Mult") || key === "damageGrowth")
+    (key.endsWith("Multiplier") ||
+      key.endsWith("Mult") ||
+      key === "damageGrowth" ||
+      key === "multiplierGrowth")
   ) {
     const scaledNum = applyBounds(numEarly * mult, cap, floor);
     return {

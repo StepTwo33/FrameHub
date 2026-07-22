@@ -101,6 +101,47 @@ describe("scaleAbilityMiscStats", () => {
     expect(globe.find((l) => l.label === "Health Cap")!.base).toBe("1000000");
   });
 
+  it("does not format flat counts/damage/angles as percent points", () => {
+    const shuriken = scaleAbilityMiscStats(
+      { shurikenCount: 5, homingAngle: 90 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "ash", abilityName: "Shuriken" },
+    );
+    expect(shuriken.find((l) => l.label === "Shuriken Count")!.base).toBe("5");
+    expect(shuriken.find((l) => l.label === "Homing Angle")!.base).toBe("90.0°");
+    const amd = scaleAbilityMiscStats(
+      { absorbedDamageCap: 25000 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "nova", abilityName: "Antimatter Drop" },
+    );
+    expect(amd.find((l) => l.label === "Absorbed Damage Cap")!.base).toBe("25000");
+    const progeny = scaleAbilityMiscStats(
+      { maxSummulysts: 1 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "caliban", abilityName: "Lethal Progeny" },
+    );
+    expect(progeny.find((l) => l.label === "Max Summulysts")!.base).toBe("1");
+    const evade = scaleAbilityMiscStats(
+      { cooldown: 60 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "cyte_09", abilityName: "Evade" },
+    );
+    expect(evade.find((l) => l.label === "Cooldown")!.base).toBe("60.0s");
+    // Real 100%/200% fraction fields still format as percent
+    const petrify = scaleAbilityMiscStats(
+      { rumblerHeal: 1 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "atlas", abilityName: "Petrify" },
+    );
+    expect(petrify.find((l) => l.label === "Rumbler Heal")!.base).toBe("100%");
+    const plunder = scaleAbilityMiscStats(
+      { corrosiveBonusCap: 2 },
+      { strength: 1, duration: 1, range: 1, efficiency: 1 },
+      { warframeId: "hydroid", abilityName: "Plunder" },
+    );
+    expect(plunder.find((l) => l.label === "Corrosive Bonus Cap")!.base).toBe("200%");
+  });
+
   it("keeps Warding Halo halo/armor/absorb mults Misc-fixed", () => {
     const lines = scaleAbilityMiscStats(
       { haloHealth: 1000, armorMultiplier: 2.5, absorptionMultiplier: 2.5 },
@@ -801,9 +842,10 @@ describe("scaleAbilityMiscStats", () => {
       { strength: 1, duration: 2, range: 1 },
       { warframeId: "ivara", abilityName: "Navigator" },
     );
+    // wiki: 100%/s growth ≡ +1.0x/s; Modified = base ÷ Duration (HUD shows multipliers)
     expect(nav.find((l) => l.label === "Multiplier Growth")!).toMatchObject({
-      base: "100%",
-      scaled: "50%",
+      base: "1.00x",
+      scaled: "0.50x",
       modified: true,
       scaleAttr: "duration",
     });
