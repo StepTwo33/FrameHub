@@ -2655,6 +2655,51 @@ export function computeRevenantShieldPulseDamageAtDistance(
   return pulse.damage * (1 - pulse.maxFalloff * t);
 }
 
+export interface OctaviaInspirationPassive {
+  energyPerSecond: number;
+  durationSec: number;
+  radiusM: number;
+  /** Total energy restored over a full Inspiration buff (1/s × 30s). */
+  totalEnergy: number;
+}
+
+/** wiki Octavia Inspiration: on ability cast, 1 energy/s for 30s within 15m. */
+export function computeOctaviaInspirationPassive(): OctaviaInspirationPassive {
+  const energyPerSecond = 1;
+  const durationSec = 30;
+  const radiusM = 15;
+  return {
+    energyPerSecond,
+    durationSec,
+    radiusM,
+    totalEnergy: energyPerSecond * durationSec,
+  };
+}
+
+/** Remaining Inspiration energy from elapsed time (refresh resets to full 30s). */
+export function computeOctaviaInspirationEnergyRemaining(
+  elapsedSec: number,
+  passive: OctaviaInspirationPassive = computeOctaviaInspirationPassive(),
+): number {
+  const remaining = Math.max(0, passive.durationSec - Math.max(0, elapsedSec));
+  return remaining * passive.energyPerSecond;
+}
+
+export interface NekrosDeathHealPassive {
+  healthPerDeath: number;
+  radiusM: number;
+}
+
+/** wiki Nekros: restore 5 Health (self + companions) per enemy death within 10m. */
+export function computeNekrosDeathHealPassive(): NekrosDeathHealPassive {
+  return { healthPerDeath: 5, radiusM: 10 };
+}
+
+export function computeNekrosDeathHealTotal(deaths: number): number {
+  const { healthPerDeath } = computeNekrosDeathHealPassive();
+  return Math.max(0, Math.floor(deaths)) * healthPerDeath;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

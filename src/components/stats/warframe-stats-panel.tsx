@@ -42,6 +42,10 @@ import {
   computeEquinoxOrbConversion,
   computeRevenantShieldDepletionPulse,
   computeRevenantShieldPulseDamageAtDistance,
+  computeOctaviaInspirationPassive,
+  computeOctaviaInspirationEnergyRemaining,
+  computeNekrosDeathHealPassive,
+  computeNekrosDeathHealTotal,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -879,6 +883,68 @@ function RevenantShieldPulsePassive() {
   );
 }
 
+function OctaviaInspirationPassivePanel() {
+  const insp = computeOctaviaInspirationPassive();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeOctaviaInspirationEnergyRemaining(elapsedSec, insp);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={insp.durationSec}
+        onChange={setElapsedSec}
+        tooltip="Octavia Inspiration: casting an ability grants 1 energy/s for 30s to allies within 15m (recast refreshes)."
+      />
+      <StatRow
+        label="Energy/s"
+        value={`${insp.energyPerSecond}/s`}
+        color="text-sky-400"
+        tooltip={`Within ${insp.radiusM}m. Not affected by Ability Strength/Duration.`}
+      />
+      <StatRow
+        label="Remaining Energy"
+        value={`+${remaining.toFixed(0)}`}
+        color="text-sky-400"
+        tooltip={`Full buff restores ${insp.totalEnergy} energy over ${insp.durationSec}s.`}
+      />
+    </div>
+  );
+}
+
+function NekrosDeathHealPassivePanel() {
+  const heal = computeNekrosDeathHealPassive();
+  const [deaths, setDeaths] = useState(10);
+  const total = computeNekrosDeathHealTotal(deaths);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Enemy Deaths"
+        value={deaths}
+        min={0}
+        max={50}
+        onChange={setDeaths}
+        tooltip={`Nekros: +${heal.healthPerDeath} Health per enemy death within ${heal.radiusM}m (also heals companions).`}
+      />
+      <StatRow
+        label="Heal / Death"
+        value={`+${heal.healthPerDeath}`}
+        color="text-green-400"
+        tooltip="Flat heal, not × Ability Strength."
+      />
+      <StatRow
+        label="Total Heal"
+        value={`+${total}`}
+        color="text-green-400"
+        tooltip={`${deaths} deaths × ${heal.healthPerDeath} Health.`}
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1024,6 +1090,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {warframe.id === "dagath" && <DagathAbundantAbyssPassive />}
           {(warframe.id === "equinox" || warframe.id === "equinox_prime") && <EquinoxOrbConversionPassive />}
           {(warframe.id === "revenant" || warframe.id === "revenant_prime") && <RevenantShieldPulsePassive />}
+          {(warframe.id === "octavia" || warframe.id === "octavia_prime") && <OctaviaInspirationPassivePanel />}
+          {(warframe.id === "nekros" || warframe.id === "nekros_prime") && <NekrosDeathHealPassivePanel />}
         </CollapsibleSection>
       )}
 

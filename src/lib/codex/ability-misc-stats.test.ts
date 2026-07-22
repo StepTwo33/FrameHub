@@ -50,6 +50,10 @@ import {
   computeEquinoxOrbConversion,
   computeRevenantShieldDepletionPulse,
   computeRevenantShieldPulseDamageAtDistance,
+  computeOctaviaInspirationPassive,
+  computeOctaviaInspirationEnergyRemaining,
+  computeNekrosDeathHealPassive,
+  computeNekrosDeathHealTotal,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -576,6 +580,30 @@ describe("Revenant shield-depletion pulse", () => {
     expect(computeRevenantShieldPulseDamageAtDistance(0)).toBe(100);
     expect(computeRevenantShieldPulseDamageAtDistance(1)).toBeCloseTo(25, 5);
     expect(computeRevenantShieldPulseDamageAtDistance(0.5)).toBeCloseTo(62.5, 5);
+  });
+});
+
+describe("Octavia Inspiration passive", () => {
+  it("restores 1 energy/s for 30s within 15m (30 total)", () => {
+    expect(computeOctaviaInspirationPassive()).toEqual({
+      energyPerSecond: 1,
+      durationSec: 30,
+      radiusM: 15,
+      totalEnergy: 30,
+    });
+    expect(computeOctaviaInspirationEnergyRemaining(0)).toBe(30);
+    expect(computeOctaviaInspirationEnergyRemaining(10)).toBe(20);
+    expect(computeOctaviaInspirationEnergyRemaining(30)).toBe(0);
+    expect(computeOctaviaInspirationEnergyRemaining(40)).toBe(0);
+  });
+});
+
+describe("Nekros death heal passive", () => {
+  it("restores 5 Health per death within 10m", () => {
+    expect(computeNekrosDeathHealPassive()).toEqual({ healthPerDeath: 5, radiusM: 10 });
+    expect(computeNekrosDeathHealTotal(0)).toBe(0);
+    expect(computeNekrosDeathHealTotal(3)).toBe(15);
+    expect(computeNekrosDeathHealTotal(10)).toBe(50);
   });
 });
 
