@@ -60,10 +60,30 @@ describe("Torid Incarnon Form", () => {
     expect(stats.magazine).toBe(179);
   });
 
-  it("Plentiful Mayhem papers +31 flat and +60% damage", () => {
+  it("Plentiful Mayhem papers +31 flat + capacity-MS pellet % (form boosts MS bonuses)", () => {
     const changes = mergeIncarnonStatChanges(data, { 2: 1 }, "torid");
     expect(changes?.flatBaseDamage).toBe(31);
-    expect(changes?.damage).toBeCloseTo(0.6, 5);
+    expect(changes?.capacityMsDamageMult).toBeCloseTo(0.6, 5);
+    const form = mergeIncarnonStatChanges(data, { 2: 1 }, "torid", { formActive: true });
+    expect(form?.capacityMsDamageMult).toBe(0);
+    expect(form?.capacityMsBonusMult).toBeCloseTo(0.6, 5);
+
+    // Base: MS=2 → EV +60% × 1/2 → total ×1.3
+    const bare = calculateWeaponBuild(torid, [], modsMap(), { flatBaseDamage: 31 });
+    const withCap = calculateWeaponBuild(torid, [], modsMap(), {
+      flatBaseDamage: 31,
+      capacityMsDamageMult: 0.6,
+      multishot: 1,
+    });
+    expect(withCap.multishot).toBeCloseTo(2, 5);
+    expect(withCap.totalDamage).toBeCloseTo(bare.totalDamage * 1.3, 5);
+
+    // Form: +20% MS from perk becomes +32% when capacityMsBonusMult 0.6
+    const formMs = calculateWeaponBuild(torid, [], modsMap(), {
+      multishot: 0.2,
+      capacityMsBonusMult: 0.6,
+    });
+    expect(formMs.multishot).toBeCloseTo(1 * (1 + 0.2 * 1.6), 5);
   });
 
   it("Final Fusillade papers last-shot base MS EV (3/mag)", () => {
@@ -576,12 +596,12 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "dex_sybaris")?.flatBaseDamage).toBe(30);
   });
 
-  it("Despair Vendetta papers +60 flat +30% MS +100% capacity-MS damage (Dread+Hate set)", () => {
+  it("Despair Vendetta papers +60 flat +30% MS +100% capacity-MS pellet mult (Dread+Hate set)", () => {
     const data = incarnonDataMap.get("despair")!;
     const changes = mergeIncarnonStatChanges(data, { 2: 1 }, "despair");
     expect(changes?.flatBaseDamage).toBe(60);
     expect(changes?.multishot).toBeCloseTo(0.3, 5);
-    expect(changes?.damage).toBeCloseTo(1, 5);
+    expect(changes?.capacityMsDamageMult).toBeCloseTo(1, 5);
   });
 
   it("Paris Vicious Promise papers undamaged +40% CC / +2× CM", () => {
@@ -1023,11 +1043,20 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(data, { 2: 0 }, "braton_prime")?.flatBaseDamage).toBe(42);
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.flatBaseDamage).toBe(2);
     expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.multishot).toBe(0.2);
-    // Capacity-MS pellet damage Y% (paper assumes clause up, like Torid Plentiful)
-    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.damage).toBeCloseTo(0.6, 5);
-    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "mk1_braton")?.damage).toBeCloseTo(0.48, 5);
-    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_vandal")?.damage).toBeCloseTo(0.58, 5);
-    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.damage).toBeCloseTo(0.54, 5);
+    // Capacity-MS pellet unique mult Y% (paper assumes clause up)
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton")?.capacityMsDamageMult).toBeCloseTo(0.6, 5);
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "mk1_braton")?.capacityMsDamageMult).toBeCloseTo(
+      0.48,
+      5,
+    );
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_vandal")?.capacityMsDamageMult).toBeCloseTo(
+      0.58,
+      5,
+    );
+    expect(mergeIncarnonStatChanges(data, { 2: 1 }, "braton_prime")?.capacityMsDamageMult).toBeCloseTo(
+      0.54,
+      5,
+    );
   });
 
   it("Overwhelming Attrition / King's Gambit / Swift form / Seeing Red family", () => {

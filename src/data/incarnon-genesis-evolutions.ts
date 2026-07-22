@@ -110,7 +110,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain Radial Heat damage.", statChanges: {} },
     // Assumes channeled ability active for paper DPS (X+Y) + always-on +50% AE
     { tier: 2, slot: 0, name: "Daring Reverie", description: "Increase Base Damage by +X. With Channeled Ability active: Increase Base Damage by +Y. +50% Ammo Efficiency", statChanges: {"flatBaseDamage":54,"ammoEfficiency":0.5}, variantStatChanges: {"braton":{"flatBaseDamage":54,"ammoEfficiency":0.5},"mk1_braton":{"flatBaseDamage":50,"ammoEfficiency":0.5},"braton_vandal":{"flatBaseDamage":46,"ammoEfficiency":0.5},"braton_prime":{"flatBaseDamage":42,"ammoEfficiency":0.5}} },
-    { tier: 2, slot: 1, name: "Munitions Grit", description: "Increase Base Damage by +X. Multishot consumes ammo directly from Capacity and does +Y Damage. +20% Multishot.", statChanges: {"flatBaseDamage":14,"multishot":0.2,"damage":0.6}, variantStatChanges: {"braton":{"flatBaseDamage":14,"multishot":0.2,"damage":0.6},"mk1_braton":{"flatBaseDamage":20,"multishot":0.2,"damage":0.48},"braton_vandal":{"flatBaseDamage":8,"multishot":0.2,"damage":0.58},"braton_prime":{"flatBaseDamage":2,"multishot":0.2,"damage":0.54}} },
+    // capacityMsDamageMult: unique × on capacity-MS pellets only (wiki); Y% per variant
+    { tier: 2, slot: 1, name: "Munitions Grit", description: "Increase Base Damage by +X. Multishot consumes ammo directly from Capacity and does +Y Damage. +20% Multishot.", statChanges: {"flatBaseDamage":14,"multishot":0.2,"capacityMsDamageMult":0.6}, variantStatChanges: {"braton":{"flatBaseDamage":14,"multishot":0.2,"capacityMsDamageMult":0.6},"mk1_braton":{"flatBaseDamage":20,"multishot":0.2,"capacityMsDamageMult":0.48},"braton_vandal":{"flatBaseDamage":8,"multishot":0.2,"capacityMsDamageMult":0.58},"braton_prime":{"flatBaseDamage":2,"multishot":0.2,"capacityMsDamageMult":0.54}} },
     { tier: 3, slot: 0, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to X.", statChanges: {"ammoMaxSet":675}, variantStatChanges: {"braton":{"ammoMaxSet":675},"mk1_braton":{"ammoMaxSet":600},"braton_vandal":{"ammoMaxSet":750},"braton_prime":{"ammoMaxSet":1125}} },
     { tier: 3, slot: 1, name: "Void's Guidance", description: "+60% Accuracy -60% Recoil", statChanges: {"accuracy":0.6,"recoil":-0.6} },
     { tier: 3, slot: 2, name: "Gunsmoke Pick Up", description: "On Punch Through Hit: 20% chance for 10% Ammo restored.", statChanges: {"ammoRestoreChance":0.2,"ammoRestoreMagFraction":0.1} },
@@ -190,7 +191,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Gain embedding projectiles that explode with Heat Damage.", statChanges: {} },
     { tier: 2, slot: 0, name: "Fatal Affliction", description: "Increase Damage by +50. +40% Direct Damage per Status Type affecting the target.", statChanges: {"flatBaseDamage":50,"fatalAfflictionPerStatus":0.4} },
     // Assumes Dread+Hate set for paper DPS (+30% MS; +100% capacity-MS pellet damage like Torid Plentiful)
-    { tier: 2, slot: 1, name: "Stalker's Vendetta", description: "Increase Damage by +60. With Dread and Hate equipped: Multishot consumes ammo directly from Capacity and increases Damage by +100%. +30% Multishot.", statChanges: {"flatBaseDamage":60,"multishot":0.3,"damage":1} },
+    // Assumes Dread+Hate set; capacity-MS pellets only get +100% unique mult
+    { tier: 2, slot: 1, name: "Stalker's Vendetta", description: "Increase Damage by +60. With Dread and Hate equipped: Multishot consumes ammo directly from Capacity and increases Damage by +100%. +30% Multishot.", statChanges: {"flatBaseDamage":60,"multishot":0.3,"capacityMsDamageMult":1} },
     { tier: 3, slot: 0, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {"zoom":-0.3} },
     { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 2, name: "Rapid Reinforcement", description: "+100% Reload Speed.", statChanges: {"reloadSpeed":1} },
@@ -704,8 +706,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct shots charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire a long-range Toxin beam.", statChanges: {} },
     // lastShotBaseMultishot: +3 MS on last mag shot; paper EV = 3/mag before % MS mods
     { tier: 2, slot: 0, name: "Final Fusillade", description: "Increase Base Damage by +51. +3 Multishot on last shot in magazine.", statChanges: {"flatBaseDamage":51,"lastShotBaseMultishot":3} },
-    // +60% damage from capacity-MS clause assumed up for paper DPS
-    { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +31. Multishot consumes ammo directly from Capacity and increases Damage by +60%.", statChanges: {"flatBaseDamage":31,"damage":0.6} },
+    // Base: +60% on capacity-MS pellets (Serration-multiplicative unique). Form: MS bonuses ×1.6 (wiki)
+    { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +31. Multishot consumes ammo directly from Capacity and increases Damage by +60%.", statChanges: {"flatBaseDamage":31,"capacityMsDamageMult":0.6}, formStatChanges: {"capacityMsDamageMult":-0.6,"capacityMsBonusMult":0.6} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Renewed Horror", description: "On Reload from Empty: Lingering damage field duration doubles on first shot.", statChanges: {"lingeringFieldDurationMult":2} },
     { tier: 3, slot: 2, name: "Extended Volley", description: "Increase Base Magazine Capacity by +9.", statChanges: {"flatMagazine":9} },

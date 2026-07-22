@@ -963,6 +963,9 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "bodyshotCritChanceMult") return `body CC: ×${n}`;
                         if (s === "additiveBaseDamage") return `+dmg (Serration): +${(n * 100).toFixed(0)}%`;
                         if (s === "halfHealthAdditiveDamage") return `half-HP +dmg: +${(n * 100).toFixed(0)}%`;
+                        if (s === "capacityMsDamageMult") return `MS-pellet dmg: +${(n * 100).toFixed(0)}%`;
+                        if (s === "capacityMsBonusMult") return `MS bonus ×${(1 + n).toFixed(2)}`;
+                        if (s === "flatMsPelletDamage") return `MS-pellet flat: +${n}`;
                         if (s === "stunRadiusOnFinisher") return `stun: ${n}m`;
                         if (s === "knockdownRadiusOnFinisher") return `KD: ${n}m`;
                         if (s === "shardDuration") return `shard: ${n}s`;

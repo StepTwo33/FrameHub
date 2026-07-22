@@ -971,6 +971,8 @@ export function calculateWeaponBuild(
         case 'halfHealthAdditiveDamage':
         case 'lastShotBaseMultishot':
         case 'flatMsPelletDamage':
+        case 'capacityMsDamageMult':
+        case 'capacityMsBonusMult':
         case 'sawbladeStormBlast':
         case 'sawbladeStormRadius':
         case 'bodyshotCritChanceMult':
@@ -1223,15 +1225,41 @@ export function calculateWeaponBuild(
   if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
   if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
 
-  // Miter Plentiful Mayhem: flat +N only on capacity-MS pellets (not Serration-scaled;
-  // phys/elem/crit still apply). Paper EV into per-pellet average: (MS−1)/MS × flat × scale
-  // where scale strips Serration/flatBase via damageMultTotal.
+  // Torid Plentiful (form): "all multishot bonuses are increased by 60%" — scales the
+  // bonus portion above base(+last-shot EV), including incarnon flat MS adds.
+  const capacityMsBonusMult = incarnonStatChanges?.capacityMsBonusMult ?? 0;
+  if (capacityMsBonusMult > 0) {
+    const baseMs = baseWeapon.multishot + lastShotBaseMsEv;
+    const bonusPortion = stats.multishot - baseMs;
+    if (bonusPortion > 0) {
+      stats.multishot = baseMs + bonusPortion * (1 + capacityMsBonusMult);
+    }
+  }
+
+  // Capacity-MS pellet bonuses (paper EV into per-pellet average):
+  // - flatMsPelletDamage: flat +N not Serration-scaled (Miter Plentiful)
+  // - capacityMsDamageMult: unique × on MS pellets only, after Serration (Munitions Grit /
+  //   Vendetta / Torid Plentiful base). frac = (MS−1)/MS → total *= 1 + mult×frac
   if (incarnonStatChanges) {
+    const ms = stats.multishot;
+    const frac = ms > 1 ? (ms - 1) / ms : 0;
+
     const flatMsPellet = incarnonStatChanges.flatMsPelletDamage ?? 0;
-    if (flatMsPellet > 0 && stats.multishot > 1 && baseWeapon.damage > 0 && damageMultTotal > 0) {
-      const frac = (stats.multishot - 1) / stats.multishot;
+    if (flatMsPellet > 0 && frac > 0 && baseWeapon.damage > 0 && damageMultTotal > 0) {
       const scale = stats.totalDamage / damageMultTotal / baseWeapon.damage;
       stats.totalDamage += flatMsPellet * frac * scale;
+    }
+
+    const capacityMsDmg = incarnonStatChanges.capacityMsDamageMult ?? 0;
+    if (capacityMsDmg > 0 && frac > 0 && stats.totalDamage > 0) {
+      const dm = 1 + capacityMsDmg * frac;
+      damageMultTotal *= dm;
+      stats.totalDamage *= dm;
+      stats.impact *= dm;
+      stats.puncture *= dm;
+      stats.slash *= dm;
+      for (const e of stats.elements) e.value *= dm;
+      for (const e of stats.rawElements) e.value *= dm;
     }
 
     // Feigned Retreat / Hitman's Opportunity / Swift Conclusion: half-HP % is Hornet/Serration-
