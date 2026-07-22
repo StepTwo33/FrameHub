@@ -98,6 +98,10 @@ import {
   computeNokkoVitalDecayPassive,
   computeNokkoVitalDecayRemaining,
   computeWukongFiveTechniquesPassive,
+  computeVorunaWolvesPassive,
+  computeVorunaUlfrunCooldownRemaining,
+  computeUrielLegionPassive,
+  computeUrielDemonResurrectRemaining,
   type MesaSidearmStyle,
   type NovaSpeedState,
   type ChromaElement,
@@ -1981,6 +1985,120 @@ function WukongFiveTechniquesPassivePanel() {
   );
 }
 
+function VorunaWolvesPassivePanel() {
+  const pack = computeVorunaWolvesPassive();
+  const [wolfIdx, setWolfIdx] = useState(0);
+  const [ulfrunElapsed, setUlfrunElapsed] = useState(0);
+  const wolf =
+    pack.wolves[Math.min(Math.max(0, Math.floor(wolfIdx)), pack.wolves.length - 1)]
+    ?? pack.wolves[0]!;
+  const ulfrunCd = computeVorunaUlfrunCooldownRemaining(ulfrunElapsed, pack);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Wolf (0 Dynar / 1 Raksh / 2 Lycath / 3 Ulfrun)"
+        value={wolfIdx}
+        min={0}
+        max={pack.wolves.length - 1}
+        onChange={setWolfIdx}
+        tooltip="Voruna: hold ability 1–4 to invoke that wolf's passive. Helminth replacements disable the matching wolf."
+      />
+      <StatRow
+        label={`${wolf.name} (Hold ${wolf.abilitySlot})`}
+        value={wolf.summary}
+        color="text-rose-300"
+        tooltip={
+          wolf.id === "lycath"
+            ? `HAE hard-caps at ${(pack.heavyAttackEfficiencyCap * 100).toFixed(0)}%; +100% only helps with negative HAE Rivens.`
+            : wolf.id === "ulfrun"
+              ? `${wolf.invulnSec}s invuln + full Health/Shields; ${wolf.cooldownSec}s cooldown after sacrifice or swap-out.`
+              : "Persists until swapped or revoked. Not disabled by Nullifiers."
+        }
+      />
+      {wolf.id === "ulfrun" && (
+        <>
+          <SimSlider
+            label="Ulfrun CD Elapsed (s)"
+            value={ulfrunElapsed}
+            min={0}
+            max={wolf.cooldownSec ?? 60}
+            onChange={setUlfrunElapsed}
+            tooltip="Cooldown starts after Ulfrun sacrifices himself or when the passive is swapped out."
+          />
+          <StatRow
+            label="Ulfrun Ready"
+            value={ulfrunCd > 0 ? `${ulfrunCd.toFixed(0)}s CD` : "Ready"}
+            color={ulfrunCd > 0 ? "text-muted-foreground" : "text-green-400"}
+            tooltip="Death prevention only while Ulfrun's passive is active and off cooldown."
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+function UrielLegionPassivePanel() {
+  const legion = computeUrielLegionPassive();
+  const [demonIdx, setDemonIdx] = useState(0);
+  const [deadElapsed, setDeadElapsed] = useState(0);
+  const demon =
+    legion.demons[Math.min(Math.max(0, Math.floor(demonIdx)), legion.demons.length - 1)]
+    ?? legion.demons[0]!;
+  const resurrectLeft = computeUrielDemonResurrectRemaining(deadElapsed, legion);
+
+  let detail = "";
+  if (demon.id === "catenach") {
+    const c = legion.catenach;
+    detail = `${c.maxChained} chained · ${c.damagePerSec}/s · ${(c.slowFraction * 100).toFixed(0)}% slow · ${(c.damageShare * 100).toFixed(0)}% share · ${c.durationSec}s`;
+  } else if (demon.id === "gulphagor") {
+    const g = legion.gulphagor;
+    detail = `${g.damagePerTick}×${g.ticksPerSec}/s latch · ${(g.healthOrbChance * 100).toFixed(0)}% HP orb · pain ${g.painRadiusM}m ${g.painHeatPerSec} Heat/s`;
+  } else {
+    const v = legion.vythelas;
+    detail = `+${(v.fireRateBonus * 100).toFixed(0)}% FR · +${(v.heatDamageBonus * 100).toFixed(0)}% Heat Extra Hit · ${v.runeDurationSec}s · max ${v.maxRunes}`;
+  }
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Demon (0 Catenach / 1 Gulphagor / 2 Vythelas)"
+        value={demonIdx}
+        min={0}
+        max={legion.demons.length - 1}
+        onChange={setDemonIdx}
+        tooltip="Uriel's Legion: three Health-based intangible summons. Helminth keeps the demon but freezes its stats at defaults."
+      />
+      <StatRow
+        label={`${demon.name} (${demon.unlockAbility})`}
+        value={demon.summary}
+        color="text-orange-400"
+        tooltip={detail}
+      />
+      <StatRow
+        label="Key Stats"
+        value={detail}
+        color="text-amber-400"
+        tooltip="Base (unmodded) values from wiki; Ability Strength scales some fields when the unlock ability is equipped."
+      />
+      <SimSlider
+        label="Dead Elapsed (s)"
+        value={deadElapsed}
+        min={0}
+        max={legion.resurrectSec}
+        onChange={setDeadElapsed}
+        tooltip={`Demons auto-resurrect after ${legion.resurrectSec}s. Remedium heals/revives instantly. Teleport if >${legion.teleportRangeM}m from Uriel.`}
+      />
+      <StatRow
+        label="Resurrect"
+        value={resurrectLeft > 0 ? `${resurrectLeft.toFixed(0)}s` : "Alive"}
+        color={resurrectLeft > 0 ? "text-muted-foreground" : "text-green-400"}
+        tooltip="Brimstone gauge builds from chained/latched kills, rune pickups, and Demonium split-soul hits."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -2169,6 +2287,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "wukong" || warframe.id === "wukong_prime") && (
             <WukongFiveTechniquesPassivePanel />
           )}
+          {(warframe.id === "voruna" || warframe.id === "voruna_prime") && <VorunaWolvesPassivePanel />}
+          {warframe.id === "uriel" && <UrielLegionPassivePanel />}
         </CollapsibleSection>
       )}
 

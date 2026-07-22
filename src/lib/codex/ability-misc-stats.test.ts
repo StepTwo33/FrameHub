@@ -106,6 +106,10 @@ import {
   computeNokkoVitalDecayPassive,
   computeNokkoVitalDecayRemaining,
   computeWukongFiveTechniquesPassive,
+  computeVorunaWolvesPassive,
+  computeVorunaUlfrunCooldownRemaining,
+  computeUrielLegionPassive,
+  computeUrielDemonResurrectRemaining,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -1036,6 +1040,49 @@ describe("Wukong Five Techniques passive", () => {
       "monkey_luck",
       "sly_alchemy",
     ]);
+  });
+});
+
+describe("Voruna wolf passives", () => {
+  it("lists Dynar / Raksh / Lycath / Ulfrun with Ulfrun 60s CD", () => {
+    const p = computeVorunaWolvesPassive();
+    expect(p.wolves.map((w) => w.id)).toEqual(["dynar", "raksh", "lycath", "ulfrun"]);
+    expect(p.wolves[0]).toMatchObject({ bonus: 0.5, summary: "+50% Parkour Velocity" });
+    expect(p.wolves[2]).toMatchObject({ bonus: 1 });
+    expect(p.heavyAttackEfficiencyCap).toBe(0.9);
+    expect(p.wolves[3]).toMatchObject({ cooldownSec: 60, invulnSec: 3 });
+    expect(computeVorunaUlfrunCooldownRemaining(0)).toBe(60);
+    expect(computeVorunaUlfrunCooldownRemaining(45)).toBe(15);
+    expect(computeVorunaUlfrunCooldownRemaining(60)).toBe(0);
+  });
+});
+
+describe("Uriel Legion passive", () => {
+  it("defines three demons with 60s resurrect and key numbers", () => {
+    const p = computeUrielLegionPassive();
+    expect(p.resurrectSec).toBe(60);
+    expect(p.demons.map((d) => d.id)).toEqual(["catenach", "gulphagor", "vythelas"]);
+    expect(p.catenach).toMatchObject({
+      maxChained: 5,
+      durationSec: 10,
+      damagePerSec: 100,
+      slowFraction: 0.5,
+      damageShare: 1,
+    });
+    expect(p.gulphagor).toMatchObject({
+      latchDurationSec: 10,
+      damagePerTick: 750,
+      ticksPerSec: 4,
+      healthOrbChance: 3,
+      painRadiusM: 4,
+    });
+    expect(p.vythelas).toMatchObject({
+      ritualIntervalSec: 12,
+      fireRateBonus: 0.3,
+      heatDamageBonus: 0.3,
+      maxRunes: 3,
+    });
+    expect(computeUrielDemonResurrectRemaining(20)).toBe(40);
   });
 });
 

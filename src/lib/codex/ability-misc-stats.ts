@@ -3415,6 +3415,177 @@ export function computeWukongFiveTechniquesPassive(): WukongFiveTechniquesPassiv
   };
 }
 
+export type VorunaWolfId = "dynar" | "raksh" | "lycath" | "ulfrun";
+
+export interface VorunaWolfPassive {
+  id: VorunaWolfId;
+  name: string;
+  abilitySlot: 1 | 2 | 3 | 4;
+  summary: string;
+  /** Ulfrun-only: cooldown after sacrifice or swap-out (s). */
+  cooldownSec?: number;
+  /** Ulfrun-only: invulnerability on sacrifice (s). */
+  invulnSec?: number;
+  /** Numeric bonus when applicable (parkour / HAE fractions). */
+  bonus?: number;
+}
+
+export interface VorunaWolvesPassive {
+  wolves: VorunaWolfPassive[];
+  /** Game hard-cap on Heavy Attack Efficiency (Lycath grants +100%). */
+  heavyAttackEfficiencyCap: number;
+}
+
+/** Remaining Ulfrun cooldown from elapsed seconds since sacrifice/swap-out. */
+export function computeVorunaUlfrunCooldownRemaining(
+  elapsedSec: number,
+  wolves: VorunaWolvesPassive = computeVorunaWolvesPassive(),
+): number {
+  const ulfrun = wolves.wolves.find((w) => w.id === "ulfrun");
+  const cd = ulfrun?.cooldownSec ?? 60;
+  return Math.max(0, cd - Math.max(0, elapsedSec));
+}
+
+/** wiki Voruna: hold 1–4 to invoke Dynar / Raksh / Lycath / Ulfrun wolf passives. */
+export function computeVorunaWolvesPassive(): VorunaWolvesPassive {
+  return {
+    heavyAttackEfficiencyCap: 0.9,
+    wolves: [
+      {
+        id: "dynar",
+        name: "Dynar",
+        abilitySlot: 1,
+        summary: "+50% Parkour Velocity",
+        bonus: 0.5,
+      },
+      {
+        id: "raksh",
+        name: "Raksh",
+        abilitySlot: 2,
+        summary: "Status Effect immunity",
+      },
+      {
+        id: "lycath",
+        name: "Lycath",
+        abilitySlot: 3,
+        summary: "+100% Heavy Attack Efficiency",
+        bonus: 1,
+      },
+      {
+        id: "ulfrun",
+        name: "Ulfrun",
+        abilitySlot: 4,
+        summary: "Death prevention · full HP/Shield restore",
+        cooldownSec: 60,
+        invulnSec: 3,
+      },
+    ],
+  };
+}
+
+export type UrielDemonId = "catenach" | "gulphagor" | "vythelas";
+
+export interface UrielDemonPassive {
+  id: UrielDemonId;
+  name: string;
+  unlockAbility: string;
+  summary: string;
+}
+
+export interface UrielLegionPassive {
+  /** Seconds until a killed demon auto-resurrects. */
+  resurrectSec: number;
+  /** Teleport-to-Uriel distance threshold (m). */
+  teleportRangeM: number;
+  demons: UrielDemonPassive[];
+  catenach: {
+    maxChained: number;
+    durationSec: number;
+    damagePerSec: number;
+    slowFraction: number;
+    slowCap: number;
+    damageShare: number;
+  };
+  gulphagor: {
+    latchDurationSec: number;
+    damagePerTick: number;
+    ticksPerSec: number;
+    healthOrbChance: number;
+    energyOrbChance: number;
+    painRadiusM: number;
+    painDurationSec: number;
+    painHeatPerSec: number;
+  };
+  vythelas: {
+    ritualIntervalSec: number;
+    runeDurationSec: number;
+    fireRateBonus: number;
+    heatDamageBonus: number;
+    maxRunes: number;
+  };
+}
+
+/** Remaining demon resurrect time from elapsed seconds since death. */
+export function computeUrielDemonResurrectRemaining(
+  elapsedSec: number,
+  passive: UrielLegionPassive = computeUrielLegionPassive(),
+): number {
+  return Math.max(0, passive.resurrectSec - Math.max(0, elapsedSec));
+}
+
+/** wiki Uriel: Catenach / Gulphagor / Vythelas legion; 60s auto-resurrect. */
+export function computeUrielLegionPassive(): UrielLegionPassive {
+  return {
+    resurrectSec: 60,
+    teleportRangeM: 30,
+    demons: [
+      {
+        id: "catenach",
+        name: "Catenach",
+        unlockAbility: "Infernalis",
+        summary: "Chains enemies; shared damage + slow",
+      },
+      {
+        id: "gulphagor",
+        name: "Gulphagor",
+        unlockAbility: "Remedium",
+        summary: "Latches foes; death drops orbs + pain circle",
+      },
+      {
+        id: "vythelas",
+        name: "Vythelas",
+        unlockAbility: "Demonium",
+        summary: "Demonium Runes: Fire Rate + Heat Extra Hit",
+      },
+    ],
+    catenach: {
+      maxChained: 5,
+      durationSec: 10,
+      damagePerSec: 100,
+      slowFraction: 0.5,
+      slowCap: 0.95,
+      damageShare: 1,
+    },
+    gulphagor: {
+      latchDurationSec: 10,
+      damagePerTick: 750,
+      ticksPerSec: 4,
+      healthOrbChance: 3,
+      energyOrbChance: 1,
+      painRadiusM: 4,
+      painDurationSec: 10,
+      painHeatPerSec: 200,
+    },
+    vythelas: {
+      ritualIntervalSec: 12,
+      runeDurationSec: 10,
+      fireRateBonus: 0.3,
+      heatDamageBonus: 0.3,
+      maxRunes: 3,
+    },
+  };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
