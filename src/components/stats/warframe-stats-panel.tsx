@@ -37,6 +37,8 @@ import {
   computeVaubanIncapacitatedDamageBonus,
   computeAshSlashPassiveBonuses,
   computeHydroidCorrosiveArmorStrip,
+  computeDanteChroniclersMarkStatusChance,
+  computeDagathAbundantAbyss,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -722,6 +724,87 @@ function HydroidCorrosivePassive() {
   );
 }
 
+function DanteChroniclersMarkPassive() {
+  const [scanned, setScanned] = useState(1);
+  const [baseScPct, setBaseScPct] = useState(40);
+  const scaled = computeDanteChroniclersMarkStatusChance(baseScPct / 100, scanned > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Weapon SC %"
+        value={baseScPct}
+        min={0}
+        max={100}
+        onChange={setBaseScPct}
+        tooltip="Post-mod Status Chance before Chronicler's Mark (multiplicative ×1.5 on fully scanned foes)."
+      />
+      <SimSlider
+        label="Fully Scanned"
+        value={scanned}
+        min={0}
+        max={1}
+        onChange={setScanned}
+        tooltip="Dante: completed Codex research on the enemy type grants Chronicler's Mark."
+      />
+      <StatRow
+        label="Status Chance"
+        value={`${(scaled * 100).toFixed(0)}%`}
+        color={scanned > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Wiki example: 40% × 1.5 = 60% vs fully researched enemies."
+      />
+    </div>
+  );
+}
+
+function DagathAbundantAbyssPassive() {
+  const [orbValue, setOrbValue] = useState(25);
+  const [forceProc, setForceProc] = useState(2); // 0=off, 1=on, 2=expected
+  const result = computeDagathAbundantAbyss(
+    orbValue,
+    forceProc === 2 ? undefined : { forceProc: forceProc === 1 },
+  );
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Base Orb Value"
+        value={orbValue}
+        min={25}
+        max={100}
+        onChange={setOrbValue}
+        tooltip="Small Energy/Health orb is 25; large 50; Empowered Health 100."
+      />
+      <SimSlider
+        label="Proc (0 off / 1 on / 2 avg)"
+        value={forceProc}
+        min={0}
+        max={2}
+        onChange={setForceProc}
+        tooltip="Dagath Abundant Abyss: 35% chance orbs are +300% more effective (×4 yield)."
+      />
+      <StatRow
+        label="Proc Chance"
+        value={`${(result.procChance * 100).toFixed(0)}%`}
+        color="text-violet-300"
+        tooltip="Rolled separately for Health and Energy on Universal Orbs."
+      />
+      <StatRow
+        label="Orb Yield"
+        value={result.effectiveValue.toFixed(1)}
+        color="text-violet-400"
+        tooltip={
+          forceProc === 2
+            ? `Expected value at ${((result.expectedYieldMultiplier - 1) * 100).toFixed(0)}% average uplift (×${result.expectedYieldMultiplier.toFixed(2)}).`
+            : forceProc === 1
+              ? "Proc active: ×4 yield (+300%)."
+              : "No proc: base orb value."
+        }
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -863,6 +946,8 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "vauban" || warframe.id === "vauban_prime") && <VaubanIncapacitatedPassive />}
           {(warframe.id === "ash" || warframe.id === "ash_prime") && <AshSlashPassive />}
           {(warframe.id === "hydroid" || warframe.id === "hydroid_prime") && <HydroidCorrosivePassive />}
+          {warframe.id === "dante" && <DanteChroniclersMarkPassive />}
+          {warframe.id === "dagath" && <DagathAbundantAbyssPassive />}
         </CollapsibleSection>
       )}
 

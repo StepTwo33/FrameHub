@@ -45,6 +45,8 @@ import {
   computeVaubanIncapacitatedDamageBonus,
   computeAshSlashPassiveBonuses,
   computeHydroidCorrosiveArmorStrip,
+  computeDanteChroniclersMarkStatusChance,
+  computeDagathAbundantAbyss,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -523,6 +525,26 @@ describe("Hydroid Corrosive armor strip passive", () => {
       firstStackStrip: 0.5,
       fullStackStrip: 1,
     });
+  });
+});
+
+describe("Dante Chronicler's Mark passive", () => {
+  it("multiplies status chance by 1.5 on fully scanned targets", () => {
+    expect(computeDanteChroniclersMarkStatusChance(0.4, false)).toBeCloseTo(0.4, 5);
+    expect(computeDanteChroniclersMarkStatusChance(0.4, true)).toBeCloseTo(0.6, 5);
+    expect(computeDanteChroniclersMarkStatusChance(0, true)).toBe(0);
+  });
+});
+
+describe("Dagath Abundant Abyss passive", () => {
+  it("has 35% chance of ×4 orb yield; expected ≈2.05×", () => {
+    const avg = computeDagathAbundantAbyss(25);
+    expect(avg.procChance).toBeCloseTo(0.35, 5);
+    expect(avg.procYieldMultiplier).toBe(4);
+    expect(avg.expectedYieldMultiplier).toBeCloseTo(2.05, 5);
+    expect(avg.effectiveValue).toBeCloseTo(51.25, 5);
+    expect(computeDagathAbundantAbyss(25, { forceProc: true }).effectiveValue).toBe(100);
+    expect(computeDagathAbundantAbyss(25, { forceProc: false }).effectiveValue).toBe(25);
   });
 });
 

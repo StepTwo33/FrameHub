@@ -2564,6 +2564,49 @@ export function computeHydroidCorrosiveArmorStrip(markedByHydroid: boolean): Hyd
     : { firstStackStrip: 0.26, fullStackStrip: 0.8 };
 }
 
+/**
+ * wiki Dante Chronicler's Mark: ×1.5 Status Chance vs fully Codex-scanned enemies
+ * (multiplicative to post-mod status chance).
+ */
+export function computeDanteChroniclersMarkStatusChance(
+  baseStatusChance: number,
+  fullyScanned: boolean,
+): number {
+  const base = Math.max(0, baseStatusChance);
+  return fullyScanned ? base * 1.5 : base;
+}
+
+export interface DagathAbundantAbyssResult {
+  /** Chance Abundant Abyss procs on an orb pickup. */
+  procChance: number;
+  /** Orb yield multiplier when the passive procs (+300% → ×4). */
+  procYieldMultiplier: number;
+  /** Expected yield multiplier: procChance×4 + (1−procChance)×1. */
+  expectedYieldMultiplier: number;
+  /** Effective orb value after optional proc. */
+  effectiveValue: number;
+}
+
+/**
+ * wiki Dagath Abundant Abyss: 35% chance Health/Energy orbs are +300% more effective (×4).
+ */
+export function computeDagathAbundantAbyss(
+  baseOrbValue: number,
+  opts?: { forceProc?: boolean },
+): DagathAbundantAbyssResult {
+  const procChance = 0.35;
+  const procYieldMultiplier = 4;
+  const expectedYieldMultiplier = procChance * procYieldMultiplier + (1 - procChance);
+  const value = Math.max(0, baseOrbValue);
+  const effectiveValue =
+    opts?.forceProc === true
+      ? value * procYieldMultiplier
+      : opts?.forceProc === false
+        ? value
+        : value * expectedYieldMultiplier;
+  return { procChance, procYieldMultiplier, expectedYieldMultiplier, effectiveValue };
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;
