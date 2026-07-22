@@ -109,6 +109,15 @@ export function countAugurSetPieces(warframeMods?: ModSlot[], secondaryMods?: Mo
   return countSetModsInSlots(concatSlots(warframeMods, secondaryMods), AUGUR_SET);
 }
 
+/**
+ * wiki Augur Set: each piece converts +40% of Energy spent on abilities into Shields
+ * (max 240% at 6). Pass the actual Energy spent after Ability Efficiency.
+ */
+export function augurShieldsFromEnergySpent(energySpent: number, pieces: number): number {
+  if (pieces <= 0 || energySpent <= 0) return 0;
+  return energySpent * pieces * 0.4;
+}
+
 /** Hunter set spans frame, weapons, and companion. */
 export function countHunterSetPieces(linkage: SetBonusLinkage | undefined, warframeMods: ModSlot[]): number {
   return countSetModsInSlots(

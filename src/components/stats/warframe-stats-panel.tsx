@@ -102,10 +102,12 @@ import {
   computeVorunaUlfrunCooldownRemaining,
   computeUrielLegionPassive,
   computeUrielDemonResurrectRemaining,
+  scaledAbilityEnergyCost,
   type MesaSidearmStyle,
   type NovaSpeedState,
   type ChromaElement,
 } from "@/lib/codex/ability-misc-stats";
+import { augurShieldsFromEnergySpent } from "@/lib/calc/set-bonuses";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
 
 function GaussPassiveBattery() {
@@ -2038,6 +2040,44 @@ function VorunaWolvesPassivePanel() {
   );
 }
 
+function AugurCastShieldsPanel({
+  convertPercent,
+  abilityEfficiency,
+}: {
+  convertPercent: number;
+  abilityEfficiency: number;
+}) {
+  const pieces = Math.round(convertPercent / 40);
+  const [baseCost, setBaseCost] = useState(25);
+  const spent = scaledAbilityEnergyCost(baseCost, abilityEfficiency);
+  const shields = augurShieldsFromEnergySpent(spent, pieces);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Base Cast Cost"
+        value={baseCost}
+        min={0}
+        max={100}
+        onChange={setBaseCost}
+        tooltip="Augur converts Energy actually spent (after Ability Efficiency) into Shields. Cap 175% EFF / floor 25% cost."
+      />
+      <StatRow
+        label="Energy Spent"
+        value={spent.toFixed(1)}
+        color="text-muted-foreground"
+        tooltip={`At ${(abilityEfficiency * 100).toFixed(0)}% Ability Efficiency.`}
+      />
+      <StatRow
+        label="Shields / Cast"
+        value={`+${shields.toFixed(1)}`}
+        color="text-sky-400"
+        tooltip={`${pieces} Augur piece${pieces === 1 ? "" : "s"} × ${convertPercent}% of ${spent.toFixed(1)} Energy. Can create Overshields.`}
+      />
+    </div>
+  );
+}
+
 function UrielLegionPassivePanel() {
   const legion = computeUrielLegionPassive();
   const [demonIdx, setDemonIdx] = useState(0);
@@ -2361,7 +2401,17 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
               </div>
             ))}
             {(stats.augurEnergyToShieldsPercent ?? 0) > 0 && (
-              <StatRow label="Augur (shields)" value={`${stats.augurEnergyToShieldsPercent}% of energy → shields`} color="text-sky-400" />
+              <>
+                <StatRow
+                  label="Augur (shields)"
+                  value={`${stats.augurEnergyToShieldsPercent}% of energy → shields`}
+                  color="text-sky-400"
+                />
+                <AugurCastShieldsPanel
+                  convertPercent={stats.augurEnergyToShieldsPercent ?? 0}
+                  abilityEfficiency={stats.abilityEfficiency}
+                />
+              </>
             )}
             {(stats.hunterCompanionVsStatusDamagePercent ?? 0) > 0 && (
               <StatRow label="Hunter (companion)" value={`+${stats.hunterCompanionVsStatusDamagePercent}% dmg vs status targets`} color="text-amber-400" />

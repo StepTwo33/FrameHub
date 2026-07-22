@@ -323,7 +323,7 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 //   also counts Vigilante on linked Warframe or sim.extraVigilanteModsFromWarframe; folded into avg crit for DPS).
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
 // Warframe panel: Augur/Hunter/Mecha/Synth/Tek piece counts + Augur shields % / Hunter companion dmg % (per piece).
-// Not modeled in DPS: Augur shield sustain from casts, Hunter companion combat, Mecha mark/status-spread.
+// Augur shields/cast is panel-sim only (EFF × 40%/piece). Not in weapon DPS: Hunter companion combat, Mecha mark/status-spread.
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
 // Sacrificial full set bonus: +75% when both mods equipped

@@ -6,10 +6,12 @@ import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
 import { calculateWarframeBuild } from "@/lib/calc/calculator";
 import {
+  augurShieldsFromEnergySpent,
   buildWarframeSetBonusSummary,
   countAugurSetPieces,
   countHunterSetPieces,
 } from "@/lib/calc/set-bonuses";
+import { scaledAbilityEnergyCost } from "@/lib/codex/ability-misc-stats";
 import { resolveWeaponExternalBuffs } from "@/lib/weapons/weapon-external-buffs";
 import type { Ability, SimulationParams, WarframeCalculatedStats, Weapon } from "@/lib/types";
 import { DEFAULT_SIM_PARAMS } from "@/lib/types";
@@ -51,6 +53,17 @@ describe("Augur set (wiki: +40% energy→shields per piece)", () => {
       secondaryMods: secondary,
     });
     expect(stats.augurEnergyToShieldsPercent).toBe(240);
+  });
+
+  it("converts spent energy to shields at 40%/piece after Ability Efficiency", () => {
+    // 3 pieces × 25 energy (100% EFF) → 30 shields; with 130% EFF cost drops to 17.5 → 21 shields
+    expect(augurShieldsFromEnergySpent(25, 3)).toBe(30);
+    expect(augurShieldsFromEnergySpent(0, 3)).toBe(0);
+    expect(augurShieldsFromEnergySpent(25, 0)).toBe(0);
+    const spent = scaledAbilityEnergyCost(25, 1.3);
+    expect(spent).toBeCloseTo(17.5, 5);
+    expect(augurShieldsFromEnergySpent(spent, 3)).toBeCloseTo(21, 5);
+    expect(augurShieldsFromEnergySpent(scaledAbilityEnergyCost(25, 1), 6)).toBe(60);
   });
 });
 
