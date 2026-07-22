@@ -345,7 +345,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
             label="Holster Reload"
             value={`${(stats.holsterReloadPerSec * 100).toFixed(0)}%/s`}
             color="text-sky-400"
-            tooltip="Magazine fraction reloaded per second while holstered (display; not folded into sustained DPS)."
+            tooltip="Magazine fraction reloaded per second while holstered (display; swap-gated — not in same-weapon sustained DPS)."
           />
         )}
         {stats.instantReloadOnKillChance != null && stats.instantReloadOnKillChance > 0 && (
@@ -405,7 +405,15 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                 : `${(stats.ammoRestoreChance * 100).toFixed(0)}% → ${stats.ammoRestoreFlat ?? 0} rnd`
             }
             color="text-amber-400"
-            tooltip="Chance to restore ammo on perk trigger (kill / punch-through / Electric status). Display only; not folded into sustained DPS."
+            tooltip="Chance to restore ammo on perk trigger. Sustained DPS assumes one opportunity per magazine dump (extends effective mag)."
+          />
+        )}
+        {stats.lingeringFieldDurationMult != null && stats.lingeringFieldDurationMult > 0 && (
+          <StatRow
+            label="Linger Field Duration"
+            value={`×${stats.lingeringFieldDurationMult}`}
+            color="text-emerald-400"
+            tooltip="Lingering damage-field duration mult after empty reload (display)."
           />
         )}
         {stats.incarnonHeadshotChargeBonus != null && stats.incarnonHeadshotChargeBonus > 0 && (
@@ -585,6 +593,94 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
               value={`${stats.slamRadius > 0 ? "+" : ""}${(stats.slamRadius * 100).toFixed(0)}%`}
               color="text-orange-400"
               tooltip="Incarnon slam radius bonus (display; not modeled in DPS)."
+            />
+          )}
+          {stats.comboOnFinisher != null && stats.comboOnFinisher > 0 && (
+            <StatRow
+              label="Combo on Finisher"
+              value={`+${stats.comboOnFinisher}`}
+              color="text-orange-400"
+              tooltip="Flat combo granted on finisher (display)."
+            />
+          )}
+          {stats.comboPerSlamHit != null && stats.comboPerSlamHit > 0 && (
+            <StatRow
+              label="Combo per Slam Hit"
+              value={`+${stats.comboPerSlamHit}`}
+              color="text-orange-400"
+              tooltip="Combo per enemy hit by slam radius (display)."
+            />
+          )}
+          {stats.comboPerSlideHit != null && stats.comboPerSlideHit > 0 && (
+            <StatRow
+              label="Combo per Slide Hit"
+              value={`+${stats.comboPerSlideHit}`}
+              color="text-orange-400"
+              tooltip="Combo per enemy hit by slide attack (display)."
+            />
+          )}
+          {stats.comboPerSlideMeters != null && stats.comboPerSlideMeters > 0 && (
+            <StatRow
+              label="Combo per Slide"
+              value={`+${stats.comboPerSlideMeters}/${stats.comboSlideMeterInterval ?? 10}m`}
+              color="text-orange-400"
+              tooltip="Combo gained per continuous slide distance (display)."
+            />
+          )}
+          {stats.comboOnShardDamage != null && stats.comboOnShardDamage > 0 && (
+            <StatRow
+              label="Combo on Shard"
+              value={`+${stats.comboOnShardDamage}`}
+              color="text-orange-400"
+              tooltip="Combo granted on shard damage (display)."
+            />
+          )}
+          {stats.stunRadiusOnFinisher != null && stats.stunRadiusOnFinisher > 0 && (
+            <StatRow
+              label="Finisher Stun Radius"
+              value={`${stats.stunRadiusOnFinisher}m`}
+              color="text-yellow-400"
+              tooltip="Stun radius on finisher (display)."
+            />
+          )}
+          {stats.knockdownRadiusOnFinisher != null && stats.knockdownRadiusOnFinisher > 0 && (
+            <StatRow
+              label="Finisher KD Radius"
+              value={`${stats.knockdownRadiusOnFinisher}m`}
+              color="text-yellow-400"
+              tooltip="Knockdown radius on ground finisher (display)."
+            />
+          )}
+          {stats.shardDuration != null && stats.shardDuration > 0 && (
+            <StatRow
+              label="Shard Duration"
+              value={`${stats.shardDuration}s`}
+              color="text-violet-400"
+              tooltip="Embedded shard duration (display)."
+            />
+          )}
+          {stats.shardWeakSpotCritBonus != null && stats.shardWeakSpotCritBonus !== 0 && (
+            <StatRow
+              label="Shard Weak Spot CC"
+              value={`+${(stats.shardWeakSpotCritBonus * 100).toFixed(0)}%`}
+              color="text-violet-400"
+              tooltip="Extra crit chance vs shard weak spots (display)."
+            />
+          )}
+          {stats.shardDamageMult != null && stats.shardDamageMult !== 0 && (
+            <StatRow
+              label="Shard Damage"
+              value={`${stats.shardDamageMult > 0 ? "+" : ""}${(stats.shardDamageMult * 100).toFixed(0)}%`}
+              color="text-violet-400"
+              tooltip="Shard damage multiplier (display)."
+            />
+          )}
+          {stats.shardFullyGrownDamageMult != null && stats.shardFullyGrownDamageMult > 0 && (
+            <StatRow
+              label="Grown Shard Erupt"
+              value={`×${stats.shardFullyGrownDamageMult}`}
+              color="text-violet-400"
+              tooltip="Fully grown shard erupt damage mult (display)."
             />
           )}
           {stats.bloodRushStacks > 0 && (
@@ -822,6 +918,19 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "statusChanceVulnerability") return `SC vuln: +${(n * 100).toFixed(0)}%`;
                         if (s === "punctureStatusOnImpale") return `impale PT status: ${n}`;
                         if (s === "finisherComboCountChance") return `finisher combo: +${(n * 100).toFixed(0)}%`;
+                        if (s === "comboOnFinisher") return `combo@finisher: +${n}`;
+                        if (s === "comboPerSlamHit") return `combo@slam: +${n}`;
+                        if (s === "comboPerSlideHit") return `combo@slide: +${n}`;
+                        if (s === "comboPerSlideMeters") return `combo@slide: +${n}`;
+                        if (s === "comboSlideMeterInterval") return `every ${n}m`;
+                        if (s === "comboOnShardDamage") return `combo@shard: +${n}`;
+                        if (s === "stunRadiusOnFinisher") return `stun: ${n}m`;
+                        if (s === "knockdownRadiusOnFinisher") return `KD: ${n}m`;
+                        if (s === "shardDuration") return `shard: ${n}s`;
+                        if (s === "shardWeakSpotCritBonus") return `shard CC: +${(n * 100).toFixed(0)}%`;
+                        if (s === "shardDamageMult") return `shard dmg: ${(n * 100).toFixed(0)}%`;
+                        if (s === "shardFullyGrownDamageMult") return `grown shard: ×${n}`;
+                        if (s === "lingeringFieldDurationMult") return `linger: ×${n}`;
                         if (s === "holsterReloadPerSec") return `holster: ${(n * 100).toFixed(0)}%/s`;
                         if (s === "instantReloadOnKillChance") return `reload@kill: ${(n * 100).toFixed(0)}%`;
                         if (s === "instantReloadOnHeadshotChance") return `reload@HS: ${(n * 100).toFixed(0)}%`;

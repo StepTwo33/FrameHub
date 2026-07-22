@@ -1053,6 +1053,45 @@ export function calculateWeaponBuild(
         case 'finisherComboCountChance':
           stats.finisherComboCountChance = (stats.finisherComboCountChance ?? 0) + value;
           break;
+        case 'comboOnFinisher':
+          stats.comboOnFinisher = (stats.comboOnFinisher ?? 0) + value;
+          break;
+        case 'comboPerSlamHit':
+          stats.comboPerSlamHit = (stats.comboPerSlamHit ?? 0) + value;
+          break;
+        case 'comboPerSlideHit':
+          stats.comboPerSlideHit = (stats.comboPerSlideHit ?? 0) + value;
+          break;
+        case 'comboPerSlideMeters':
+          stats.comboPerSlideMeters = (stats.comboPerSlideMeters ?? 0) + value;
+          break;
+        case 'comboSlideMeterInterval':
+          stats.comboSlideMeterInterval = value;
+          break;
+        case 'comboOnShardDamage':
+          stats.comboOnShardDamage = (stats.comboOnShardDamage ?? 0) + value;
+          break;
+        case 'stunRadiusOnFinisher':
+          stats.stunRadiusOnFinisher = (stats.stunRadiusOnFinisher ?? 0) + value;
+          break;
+        case 'knockdownRadiusOnFinisher':
+          stats.knockdownRadiusOnFinisher = (stats.knockdownRadiusOnFinisher ?? 0) + value;
+          break;
+        case 'shardDuration':
+          stats.shardDuration = value;
+          break;
+        case 'shardWeakSpotCritBonus':
+          stats.shardWeakSpotCritBonus = (stats.shardWeakSpotCritBonus ?? 0) + value;
+          break;
+        case 'shardDamageMult':
+          stats.shardDamageMult = (stats.shardDamageMult ?? 0) + value;
+          break;
+        case 'shardFullyGrownDamageMult':
+          stats.shardFullyGrownDamageMult = value;
+          break;
+        case 'lingeringFieldDurationMult':
+          stats.lingeringFieldDurationMult = value;
+          break;
         case 'comboDuration': stats.comboDuration += value; break;
         case 'followThrough':
           stats.followThrough = (stats.followThrough ?? 0) + value;
@@ -1738,10 +1777,17 @@ function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): num
   const ae = Math.min(Math.max(stats.ammoEfficiency ?? 0, 0), 1);
   if (ae >= 0.99) return burstDps;
   const ammoPerShot = 1 - ae;
-  const magTime = stats.magazine / (ammoPerShot * efr);
+  // Ammo restore (kill / PT / Electric): one opportunity per mag dump →
+  // E[extra rounds] = p × flat + p × frac × mag. Holster reload is swap-gated
+  // and stays out of same-weapon sustained.
+  const restoreP = stats.ammoRestoreChance ?? 0;
+  const expectedRestore =
+    restoreP * (stats.ammoRestoreFlat ?? 0) +
+    restoreP * (stats.ammoRestoreMagFraction ?? 0) * stats.magazine;
+  const effectiveMag = stats.magazine + expectedRestore;
+  const magTime = effectiveMag / (ammoPerShot * efr);
   // Instant reload on kill / headshot(-kill): paper assumes one qualifying
   // opportunity per magazine dump → E[reload] = reload × (1 − p).
-  // Holster reload and ammo-restore procs stay panel-only (swap / hit-gated).
   const instantReloadChance = Math.min(
     1,
     (stats.instantReloadOnKillChance ?? 0) + (stats.instantReloadOnHeadshotChance ?? 0),

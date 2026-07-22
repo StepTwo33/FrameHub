@@ -501,6 +501,32 @@ export interface CalculatedStats {
   punctureStatusOnImpale?: number;
   /** Combo count chance bonus on finishers (fraction) — display only. */
   finisherComboCountChance?: number;
+  /** Flat combo granted on finisher — display only. */
+  comboOnFinisher?: number;
+  /** Combo granted per slam-radius enemy hit — display only. */
+  comboPerSlamHit?: number;
+  /** Combo granted per slide-attack enemy hit — display only. */
+  comboPerSlideHit?: number;
+  /** Combo granted per N meters of continuous slide — display only. */
+  comboPerSlideMeters?: number;
+  /** Slide distance (m) required for comboPerSlideMeters — display only. */
+  comboSlideMeterInterval?: number;
+  /** Combo granted on shard damage tick — display only. */
+  comboOnShardDamage?: number;
+  /** Stun radius on finisher (m) — display only. */
+  stunRadiusOnFinisher?: number;
+  /** Knockdown radius on ground finisher (m) — display only. */
+  knockdownRadiusOnFinisher?: number;
+  /** Embedded shard duration (s) — display only. */
+  shardDuration?: number;
+  /** Extra crit chance while attacking shard weak spots — display only. */
+  shardWeakSpotCritBonus?: number;
+  /** Shard damage multiplier delta (e.g. −0.5) — display only. */
+  shardDamageMult?: number;
+  /** Fully grown shard erupt damage mult — display only. */
+  shardFullyGrownDamageMult?: number;
+  /** Lingering damage-field duration multiplier (Renewed Horror) — display only. */
+  lingeringFieldDurationMult?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

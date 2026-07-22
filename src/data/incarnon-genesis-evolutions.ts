@@ -337,17 +337,17 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Orokin Reach", description: "+0.5 Range", statChanges: {"range":0.5} },
     { tier: 2, slot: 1, name: "Bladed Harmony", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
     { tier: 2, slot: 2, name: "Striking Swiftness", description: "+30% Sprint Speed", statChanges: {"sprintSpeed":0.3} },
-    { tier: 3, slot: 0, name: "Hawk Momentum", description: "Gain 5 Combo for every 10m of continuous slide", statChanges: {} },
+    { tier: 3, slot: 0, name: "Hawk Momentum", description: "Gain 5 Combo for every 10m of continuous slide", statChanges: {"comboPerSlideMeters":5,"comboSlideMeterInterval":10} },
     // Assumes aerial attacks for paper display range
     { tier: 3, slot: 1, name: "Skyborne Hunter", description: "Increase range of aerial melee attacks by +0.5m.", statChanges: {"range":0.5} },
     { tier: 3, slot: 2, name: "Blade Twister", description: "+60% Finisher Damage", statChanges: {"finisherDamage":0.6} },
     { tier: 4, slot: 0, name: "Incarnon Imago", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
     // Max stacks assumed for paper DPS (+50% × 3)
     { tier: 4, slot: 1, name: "Swooping Lunge", description: "On Airborne Melee Kill: +50% Melee Damage for 10s. Stacks up to 3x.", statChanges: {"damage":1.5} },
-    { tier: 4, slot: 2, name: "Protracted Execution", description: "On Finisher: 20 Combo on Finisher", statChanges: {} },
+    { tier: 4, slot: 2, name: "Protracted Execution", description: "On Finisher: 20 Combo on Finisher", statChanges: {"comboOnFinisher":20} },
     // Assumes finisher buff up for paper DPS
     { tier: 5, slot: 0, name: "Blood Anointed", description: "On Finisher: +40% Heavy Attack Efficiency for 40s", statChanges: {"heavyAttackEfficiency":0.4} },
-    { tier: 5, slot: 1, name: "Stunning Brutality", description: "On Finisher: Stun aware enemies in a 10m Radius", statChanges: {} },
+    { tier: 5, slot: 1, name: "Stunning Brutality", description: "On Finisher: Stun aware enemies in a 10m Radius", statChanges: {"stunRadiusOnFinisher":10} },
     { tier: 5, slot: 2, name: "Armed Inspiration", description: "Collecting ammo grants 5 Melee Combo counter", statChanges: {"comboOnAmmoPickup":5} },
   ],
   "kunai_incarnon": [
@@ -549,7 +549,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Seismic Slam", description: "+50% Slam Radius", statChanges: {"slamRadius":0.5} },
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
     { tier: 2, slot: 2, name: "Drifting Grace", description: "+20% Sprint Speed +20% Slide", statChanges: {"sprintSpeed":0.2,"slideSpeed":0.2} },
-    { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count", statChanges: {} },
+    { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count", statChanges: {"comboPerSlamHit":4} },
     // Assumes slide attacks for paper display range
     { tier: 3, slot: 1, name: "Reaching Lunge", description: "+1.5m Slide Attack Range", statChanges: {"range":1.5} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
@@ -568,7 +568,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Lethal Impetus", description: "On Kill: +15% Attack Speed for 15s. Stacks up to 3x.", statChanges: {"fireRate":0.45} },
     // Assumes 12× combo multiplier for paper panel (+5% × 12)
     { tier: 2, slot: 2, name: "Gathering Momentum", description: "Gain +5% Movement Speed per Melee Combo Multiplier", statChanges: {"movementSpeed":0.6} },
-    { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Shockwave Synergy", description: "For each enemy hit by Slam radius, gain 4 Combo Count.", statChanges: {"comboPerSlamHit":4} },
     { tier: 3, slot: 1, name: "Seismic Slam", description: "+60% Slam Radius", statChanges: {"slamRadius":0.6} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
@@ -682,15 +682,15 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Whirling Flurry", description: "+20% Attack Speed", statChanges: {"fireRate":0.2} },
     // Assumes sliding for paper DPS (+80% AS); +20% Slide always applied
     { tier: 2, slot: 2, name: "Raging Drift", description: "+80% Attack Speed while sliding. +20% Slide", statChanges: {"fireRate":0.8,"slideSpeed":0.2} },
-    { tier: 3, slot: 0, name: "Nimble Scythe", description: "For each enemy hit by Slide Attack, gain +5 Combo Count", statChanges: {} },
-    { tier: 3, slot: 1, name: "Echoes of Rage", description: "+1 Combo Count on Shard Damage", statChanges: {} },
+    { tier: 3, slot: 0, name: "Nimble Scythe", description: "For each enemy hit by Slide Attack, gain +5 Combo Count", statChanges: {"comboPerSlideHit":5} },
+    { tier: 3, slot: 1, name: "Echoes of Rage", description: "+1 Combo Count on Shard Damage", statChanges: {"comboOnShardDamage":1} },
     { tier: 3, slot: 2, name: "Adept Reflexes", description: "+20 Initial Combo", statChanges: {"initialCombo":20} },
     { tier: 4, slot: 0, name: "Swift Transmute", description: "Reach 3x Combo and Heavy Attack to activate Incarnon Form", statChanges: {} },
     { tier: 4, slot: 1, name: "Vaulting Leap", description: "+100% Jump and Double Jump Height", statChanges: {"jumpStrength":1} },
-    { tier: 4, slot: 2, name: "Devastating Mercy", description: "Ground Finishers knock enemies down in 6m radius", statChanges: {} },
-    { tier: 5, slot: 0, name: "Explosive Growth", description: "Shards grow when a new shard is created, up to 3 times. Fully grown shards erupt dealing x2 damage.", statChanges: {} },
+    { tier: 4, slot: 2, name: "Devastating Mercy", description: "Ground Finishers knock enemies down in 6m radius", statChanges: {"knockdownRadiusOnFinisher":6} },
+    { tier: 5, slot: 0, name: "Explosive Growth", description: "Shards grow when a new shard is created, up to 3 times. Fully grown shards erupt dealing x2 damage.", statChanges: {"shardFullyGrownDamageMult":2} },
     { tier: 5, slot: 1, name: "Chain Shatter", description: "Heavy attacks detonate shards. Nearby shards also detonate.", statChanges: {} },
-    { tier: 5, slot: 2, name: "Void Splinters", description: "Shard duration 30s; shards are weak spots (+100% CC). Shard damage -50%.", statChanges: {} },
+    { tier: 5, slot: 2, name: "Void Splinters", description: "Shard duration 30s; shards are weak spots (+100% CC). Shard damage -50%.", statChanges: {"shardDuration":30,"shardWeakSpotCritBonus":1,"shardDamageMult":-0.5} },
   ],
   "torid_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Direct shots charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire a long-range Toxin beam.", statChanges: {} },
@@ -698,7 +698,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // +60% damage from capacity-MS clause assumed up for paper DPS
     { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +31. Multishot consumes ammo directly from Capacity and increases Damage by +60%.", statChanges: {"flatBaseDamage":31,"damage":0.6} },
     { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
-    { tier: 3, slot: 1, name: "Renewed Horror", description: "On Reload from Empty: Lingering damage field duration doubles on first shot.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Renewed Horror", description: "On Reload from Empty: Lingering damage field duration doubles on first shot.", statChanges: {"lingeringFieldDurationMult":2} },
     { tier: 3, slot: 2, name: "Extended Volley", description: "Increase Base Magazine Capacity by +9.", statChanges: {"flatMagazine":9} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +20%.", statChanges: {"criticalChance":0.2} },
     { tier: 4, slot: 1, name: "Survivor's Edge", description: "Increase Base Critical Chance by +15%. Increase Base Status Chance by +15%.", statChanges: {"criticalChance":0.15,"statusChance":0.15} },

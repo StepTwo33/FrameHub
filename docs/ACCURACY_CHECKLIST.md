@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + aim-feel/mobility/utility panel + **instant-reload → sustained DPS** (1 proc/mag); remain: holster reload + ammo-restore procs in sustained |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + **instant-reload + ammo-restore → sustained** (1 proc/mag); holster reload documented swap-only; remain: form mechanics / Chain Shatter |
 
 ---
 
@@ -278,6 +278,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Genesis melee/ammo utility panel | 2026-07-22 | Finisher/slam/move; Standoff combo pause; Gunsmoke/Hunter/Galvanic ammo restore; HS charge; Silent Running; Rapid Conclusion 16× |
 | Instant reload → sustained DPS | 2026-07-22 | Kill/HS instant-reload chance shortens E[reload] (one opportunity per mag); Exact Penance / Executioner's Fortune goldens |
 | Genesis leftover utility panel | 2026-07-22 | Gathering Momentum 12×; Vault/Ternary; ammo-combo; Poison Parasite heal; Vulnerability Serum SC×1.35; Permanent Perforation |
+| Ammo restore → sustained DPS | 2026-07-22 | Hunter/Gunsmoke/Galvanic E[extra ammo] extends mag (1 opportunity/mag); holster reload stays swap-only |
+| Genesis combo/shard panel | 2026-07-22 | Hawk/Shockwave/Nimble/Echoes/Protracted combo; stun/KD radii; Void Splinters/Explosive Growth; Renewed Horror ×2 linger |
 
 ## New / extended test files
 

@@ -784,6 +784,54 @@ describe("evolution numeric fixes", () => {
     );
   });
 
+  it("combo generators / shard / Renewed Horror panel leftovers", () => {
+    const innodem = allWeapons.find((w) => w.id === "innodem")!;
+    const hawk = mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 3: 0 }, "innodem");
+    expect(hawk).toMatchObject({ comboPerSlideMeters: 5, comboSlideMeterInterval: 10 });
+    expect(calculateWeaponBuild(innodem, [], modsMap(), hawk).comboPerSlideMeters).toBe(5);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 4: 2 }, "innodem")?.comboOnFinisher,
+    ).toBe(20);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("innodem")!, { 5: 1 }, "innodem")
+        ?.stunRadiusOnFinisher,
+    ).toBe(10);
+
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("praedos")!, { 3: 0 }, "praedos")?.comboPerSlamHit,
+    ).toBe(4);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 3: 0 }, "ruvox")?.comboPerSlamHit,
+    ).toBe(4);
+
+    const thalys = allWeapons.find((w) => w.id === "thalys")!;
+    const scythe = mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 3: 0 }, "thalys");
+    expect(scythe?.comboPerSlideHit).toBe(5);
+    expect(calculateWeaponBuild(thalys, [], modsMap(), scythe).comboPerSlideHit).toBe(5);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 3: 1 }, "thalys")?.comboOnShardDamage,
+    ).toBe(1);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 4: 2 }, "thalys")
+        ?.knockdownRadiusOnFinisher,
+    ).toBe(6);
+    const splinters = mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 5: 2 }, "thalys");
+    expect(splinters).toMatchObject({
+      shardDuration: 30,
+      shardWeakSpotCritBonus: 1,
+      shardDamageMult: -0.5,
+    });
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("thalys")!, { 5: 0 }, "thalys")
+        ?.shardFullyGrownDamageMult,
+    ).toBe(2);
+
+    const torid = allWeapons.find((w) => w.id === "torid")!;
+    const horror = mergeIncarnonStatChanges(incarnonDataMap.get("torid")!, { 3: 1 }, "torid");
+    expect(horror?.lingeringFieldDurationMult).toBe(2);
+    expect(calculateWeaponBuild(torid, [], modsMap(), horror).lingeringFieldDurationMult).toBe(2);
+  });
+
   it("ruvox / praedos / ichor leftover utility panel + SC vulnerability", () => {
     const ruvox = allWeapons.find((w) => w.id === "ruvox")!;
     const gather = mergeIncarnonStatChanges(incarnonDataMap.get("ruvox")!, { 2: 2 }, "ruvox");
@@ -1313,6 +1361,27 @@ describe("evolution numeric fixes", () => {
     expect(mergeIncarnonStatChanges(lex, { 2: 1 }, "lex")?.ammoEfficiency).toBe(0.6);
     const bronco = incarnonDataMap.get("bronco")!;
     expect(mergeIncarnonStatChanges(bronco, { 4: 0 }, "bronco")?.ammoEfficiency).toBe(0.8);
+  });
+
+  it("ammo restore folds into sustained DPS (one proc per mag)", () => {
+    const onos = allWeapons.find((w) => w.id === "onos")!;
+    const base = calculateWeaponBuild(onos, [], modsMap());
+    const rearm = mergeIncarnonStatChanges(incarnonDataMap.get("onos")!, { 3: 2 }, "onos");
+    expect(rearm).toMatchObject({ ammoRestoreChance: 0.1, ammoRestoreFlat: 10 });
+    const withRestore = calculateWeaponBuild(onos, [], modsMap(), rearm);
+    expect(withRestore.burstDps).toBeCloseTo(base.burstDps, 5);
+    expect(withRestore.sustainedDps).toBeGreaterThan(base.sustainedDps);
+    // E[extra] = 0.1×10 = 1 → magTime uses magazine+1
+    const efr = base.fireRate;
+    const magTime = (base.magazine + 1) / efr;
+    const expected = base.burstDps * (magTime / (magTime + base.reloadTime));
+    expect(withRestore.sustainedDps).toBeCloseTo(expected, 4);
+
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const gunsmoke = mergeIncarnonStatChanges(incarnonDataMap.get("braton")!, { 3: 2 }, "braton");
+    const bareBraton = calculateWeaponBuild(braton, [], modsMap());
+    const withGunsmoke = calculateWeaponBuild(braton, [], modsMap(), gunsmoke);
+    expect(withGunsmoke.sustainedDps).toBeGreaterThan(bareBraton.sustainedDps);
   });
 
   it("instant reload chance folds into sustained DPS (one proc per mag)", () => {
