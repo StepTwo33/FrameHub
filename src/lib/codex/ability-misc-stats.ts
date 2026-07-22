@@ -2830,6 +2830,43 @@ export function computeOberonRighteousNegationStacks(stacks: number): number {
   return Math.min(3, Math.max(0, Math.floor(stacks)));
 }
 
+export interface JadeJudgmentPassive {
+  /** +50% damage vulnerability on Judged enemies. */
+  damageVulnerability: number;
+  durationSec: number;
+  /** Jade has two Aura mod slots. */
+  auraSlots: number;
+}
+
+/** wiki Jade: Judgments apply 50% damage vulnerability for 10s; two Aura slots. */
+export function computeJadeJudgmentPassive(): JadeJudgmentPassive {
+  return { damageVulnerability: 0.5, durationSec: 10, auraSlots: 2 };
+}
+
+/** Remaining Judgment duration from elapsed time since application. */
+export function computeJadeJudgmentRemaining(
+  elapsedSec: number,
+  passive: JadeJudgmentPassive = computeJadeJudgmentPassive(),
+): number {
+  return Math.max(0, passive.durationSec - Math.max(0, elapsedSec));
+}
+
+/**
+ * Effective damage multiplier vs a Judged enemy (1 + vulnerability).
+ * Returns 1 when Judgment is inactive.
+ */
+export function computeJadeJudgmentDamageMultiplier(judged: boolean): number {
+  return judged ? 1 + computeJadeJudgmentPassive().damageVulnerability : 1;
+}
+
+/**
+ * wiki Temple Backbeat: casting on the metronome zone grants +50% Ability Efficiency
+ * (among other per-ability amplifications). Returns additive EFF bonus fraction.
+ */
+export function computeTempleBackbeatEfficiencyBonus(onBackbeat: boolean): number {
+  return onBackbeat ? 0.5 : 0;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

@@ -59,6 +59,10 @@ import {
   computeKhoraVenariPassive,
   computeOberonRighteousNegationPassive,
   computeOberonRighteousNegationStacks,
+  computeJadeJudgmentPassive,
+  computeJadeJudgmentRemaining,
+  computeJadeJudgmentDamageMultiplier,
+  computeTempleBackbeatEfficiencyBonus,
   type MesaSidearmStyle,
   type NovaSpeedState,
 } from "@/lib/codex/ability-misc-stats";
@@ -1201,6 +1205,79 @@ function OberonRighteousNegationPassivePanel() {
   );
 }
 
+function JadeJudgmentPassivePanel() {
+  const judgment = computeJadeJudgmentPassive();
+  const [judged, setJudged] = useState(1);
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const remaining = computeJadeJudgmentRemaining(elapsedSec, judgment);
+  const active = judged > 0 && remaining > 0;
+  const dmgMult = computeJadeJudgmentDamageMultiplier(active);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Judged"
+        value={judged}
+        min={0}
+        max={1}
+        onChange={setJudged}
+        tooltip="Jade Judgments: +50% damage vulnerability for 10s. Also has two Aura mod slots."
+      />
+      <SimSlider
+        label="Elapsed (s)"
+        value={elapsedSec}
+        min={0}
+        max={judgment.durationSec}
+        onChange={setElapsedSec}
+        tooltip="Judgment duration countdown (kills while Judged can extend ability durations separately)."
+      />
+      <StatRow
+        label="Vulnerability"
+        value={active ? `+${(judgment.damageVulnerability * 100).toFixed(0)}%` : "Inactive"}
+        color={active ? "text-rose-400" : "text-muted-foreground"}
+        tooltip={`Enemy takes ×${dmgMult.toFixed(1)} damage while Judged (${remaining.toFixed(0)}s left).`}
+      />
+      <StatRow
+        label="Aura Slots"
+        value={`${judgment.auraSlots}`}
+        color="text-amber-400"
+        tooltip="Jade uniquely has two Aura polarity slots."
+      />
+    </div>
+  );
+}
+
+function TempleBackbeatPassivePanel({ abilityEfficiency }: { abilityEfficiency: number }) {
+  const [onBeat, setOnBeat] = useState(1);
+  const bonus = computeTempleBackbeatEfficiencyBonus(onBeat > 0);
+  const effectiveEff = abilityEfficiency + bonus;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="On Backbeat"
+        value={onBeat}
+        min={0}
+        max={1}
+        onChange={setOnBeat}
+        tooltip="Temple: casting while the metronome is in the Backbeat zone grants +50% Ability Efficiency and amplifies the ability."
+      />
+      <StatRow
+        label="Backbeat EFF"
+        value={bonus > 0 ? `+${(bonus * 100).toFixed(0)}%` : "Missed"}
+        color={bonus > 0 ? "text-fuchsia-400" : "text-muted-foreground"}
+        tooltip="Additive Ability Efficiency on timed casts (also fuels Exalted and per-ability bonuses)."
+      />
+      <StatRow
+        label="Effective EFF"
+        value={`${(effectiveEff * 100).toFixed(0)}%`}
+        color="text-amber-400"
+        tooltip="Current Ability Efficiency + Backbeat bonus when on beat."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -1356,6 +1433,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
           {(warframe.id === "lavos" || warframe.id === "lavos_prime") && <LavosValenceBlockPassivePanel />}
           {(warframe.id === "khora" || warframe.id === "khora_prime") && <KhoraVenariPassivePanel />}
           {(warframe.id === "oberon" || warframe.id === "oberon_prime") && <OberonRighteousNegationPassivePanel />}
+          {warframe.id === "jade" && <JadeJudgmentPassivePanel />}
+          {warframe.id === "temple" && (
+            <TempleBackbeatPassivePanel abilityEfficiency={stats.abilityEfficiency} />
+          )}
         </CollapsibleSection>
       )}
 

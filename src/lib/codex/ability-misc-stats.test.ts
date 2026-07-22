@@ -67,6 +67,10 @@ import {
   computeKhoraVenariPassive,
   computeOberonRighteousNegationPassive,
   computeOberonRighteousNegationStacks,
+  computeJadeJudgmentPassive,
+  computeJadeJudgmentRemaining,
+  computeJadeJudgmentDamageMultiplier,
+  computeTempleBackbeatEfficiencyBonus,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -707,6 +711,27 @@ describe("Oberon Righteous Negation passive", () => {
     expect(computeOberonRighteousNegationStacks(0)).toBe(0);
     expect(computeOberonRighteousNegationStacks(2)).toBe(2);
     expect(computeOberonRighteousNegationStacks(5)).toBe(3);
+  });
+});
+
+describe("Jade Judgment passive", () => {
+  it("applies 50% vulnerability for 10s and two Aura slots", () => {
+    expect(computeJadeJudgmentPassive()).toEqual({
+      damageVulnerability: 0.5,
+      durationSec: 10,
+      auraSlots: 2,
+    });
+    expect(computeJadeJudgmentRemaining(0)).toBe(10);
+    expect(computeJadeJudgmentRemaining(4)).toBe(6);
+    expect(computeJadeJudgmentDamageMultiplier(false)).toBe(1);
+    expect(computeJadeJudgmentDamageMultiplier(true)).toBeCloseTo(1.5, 5);
+  });
+});
+
+describe("Temple Backbeat efficiency", () => {
+  it("grants +50% Ability Efficiency on Backbeat casts", () => {
+    expect(computeTempleBackbeatEfficiencyBonus(false)).toBe(0);
+    expect(computeTempleBackbeatEfficiencyBonus(true)).toBeCloseTo(0.5, 5);
   });
 });
 
