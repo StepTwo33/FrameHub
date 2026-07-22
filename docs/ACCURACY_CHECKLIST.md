@@ -50,7 +50,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B5 | Ability scaling sparse | … + Nidus/Rhino + **Valkyr kit** | **Improved** — Contagion + EFF + Absorb √buff + Nourish + drains + Hildryn + armor-pool invuln absorb sim |
 | B6 | Arcane custom handlers | Kinship + Hot Shot stack→DPS; Merciless | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
-| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud sim-gated DPS (enemies×STR; not in TTK); utility Genesis remain |
+| B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + PT/projSpeed panel paper; remain: aim-feel / holster / reload procs |
 
 ---
 
@@ -226,6 +226,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Ember heat lerps | 2026-07-21 | Inferno ring DPS×(1+heat)×STR; Immolation DR wiki blend (75%@130%→80%); Fire Blast strip 50–100%×STR cap |
 | Fireball heat + Gauss battery | 2026-07-21 | Fireball ×(1+2×heat)×STR (×3 at max heat); Kinetic Plating DR at battery (wiki 80%→84%) |
 | Gauss Redline + Sunder battery | 2026-07-21 | Redline FR/AS/reload/cast lerp min→max (÷5) × battery × DUR; Thermal Sunder Cold/Heat dmg + status dur × battery (not radius; Helminth fixed) |
+| Genesis PT + projectileSpeed | 2026-07-21 | CalculatedStats punchThrough/projectileSpeed; Swift Deliverance/Frictionless; Fortress Salvo/Hunter's Mantra/Tenno/Inciting PT; Speeding Bullet (assume uptime) |
 
 ## New / extended test files
 

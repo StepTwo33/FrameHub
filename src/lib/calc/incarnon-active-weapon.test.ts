@@ -627,6 +627,58 @@ describe("evolution numeric fixes", () => {
     expect(calculateWeaponBuild(gammacor, [], modsMap(), range).range).toBe(8);
   });
 
+  it("punchThrough and projectileSpeed appear on CalculatedStats", () => {
+    const despair = allWeapons.find((w) => w.id === "despair")!;
+    const despairSpeed = mergeIncarnonStatChanges(
+      incarnonDataMap.get("despair")!,
+      { 3: 1 },
+      "despair",
+    );
+    expect(despairSpeed?.projectileSpeed).toBe(0.5);
+    expect(calculateWeaponBuild(despair, [], modsMap(), despairSpeed).projectileSpeed).toBe(0.5);
+
+    const phenmor = allWeapons.find((w) => w.id === "phenmor")!;
+    const phenmorSpeed = mergeIncarnonStatChanges(
+      incarnonDataMap.get("phenmor")!,
+      { 2: 2 },
+      "phenmor",
+    );
+    expect(phenmorSpeed?.projectileSpeed).toBe(0.8);
+    expect(calculateWeaponBuild(phenmor, [], modsMap(), phenmorSpeed).projectileSpeed).toBe(0.8);
+
+    const boar = allWeapons.find((w) => w.id === "boar")!;
+    const fortress = mergeIncarnonStatChanges(incarnonDataMap.get("boar")!, { 2: 1 }, "boar");
+    expect(fortress?.flatBaseDamage).toBe(16);
+    expect(fortress?.punchThrough).toBe(4);
+    expect(calculateWeaponBuild(boar, [], modsMap(), fortress).punchThrough).toBe(4);
+
+    const boltor = allWeapons.find((w) => w.id === "boltor")!;
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("boltor")!, { 2: 0 }, "boltor")?.punchThrough).toBe(4);
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("boltor")!, { 2: 0 }, "boltor_prime")?.punchThrough,
+    ).toBe(4);
+
+    const strun = allWeapons.find((w) => w.id === "strun")!;
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("strun")!, { 2: 0 }, "strun")?.punchThrough).toBe(4);
+    expect(calculateWeaponBuild(strun, [], modsMap(), mergeIncarnonStatChanges(incarnonDataMap.get("strun")!, { 2: 0 }, "strun")).punchThrough).toBe(4);
+
+    const vectis = allWeapons.find((w) => w.id === "vectis")!;
+    expect(mergeIncarnonStatChanges(incarnonDataMap.get("vectis")!, { 2: 0 }, "vectis")?.punchThrough).toBe(2);
+
+    const bronco = allWeapons.find((w) => w.id === "bronco")!;
+    expect(
+      mergeIncarnonStatChanges(incarnonDataMap.get("bronco")!, { 2: 0 }, "bronco")?.projectileSpeed,
+    ).toBe(0.6);
+    expect(
+      calculateWeaponBuild(
+        bronco,
+        [],
+        modsMap(),
+        mergeIncarnonStatChanges(incarnonDataMap.get("bronco")!, { 2: 0 }, "bronco"),
+      ).projectileSpeed,
+    ).toBe(0.6);
+  });
+
   it("Braton Daring Reverie / Munitions Grit variant flats", () => {
     const data = incarnonDataMap.get("braton")!;
     // Channel-active paper: X+Y (24+30)

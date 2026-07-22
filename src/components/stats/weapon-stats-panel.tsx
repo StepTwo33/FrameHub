@@ -296,6 +296,20 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
         {stats.ammoMax != null && stats.ammoMax > 0 && (
           <StatRow label="Ammo Max" value={stats.ammoMax.toString()} tooltip="Incarnon ammo capacity perk (display)." />
         )}
+        {stats.punchThrough != null && stats.punchThrough !== 0 && (
+          <StatRow
+            label="Punch Through"
+            value={`+${stats.punchThrough.toFixed(1)}m`}
+            tooltip="Incarnon / riven punch through (display; not modeled in DPS)."
+          />
+        )}
+        {stats.projectileSpeed != null && stats.projectileSpeed !== 0 && (
+          <StatRow
+            label="Projectile Speed"
+            value={`${stats.projectileSpeed > 0 ? "+" : ""}${(stats.projectileSpeed * 100).toFixed(0)}%`}
+            tooltip="Incarnon / riven projectile speed (display; not modeled in DPS)."
+          />
+        )}
         {(stats.sprintSpeedBonus ?? 0) !== 0 && (
           <StatRow
             label="Sprint Speed"
@@ -605,6 +619,8 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                         if (s === "flatAmmoMax") return `ammoMax: +${n}`;
                         if (s === "ammoMaxSet") return `ammoMax: ${n}`;
                         if (s === "range") return `range: +${n}m`;
+                        if (s === "punchThrough") return `PT: +${n}m`;
+                        if (s === "projectileSpeed") return `projSpeed: +${(n * 100).toFixed(0)}%`;
                         if (s === "criticalMultiplier") return `critMult: ${n > 0 ? "+" : ""}${n}x`;
                         if (s === "devouringAttrition") return `nonCritDmg: +${(n * 100).toFixed(0)}% (50%)`;
                         return `${s}: ${n > 0 ? "+" : ""}${(n * 100).toFixed(0)}%`;

@@ -23,7 +23,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Haven Foray", description: "Increase Base Damage by +50. With Overshields: Increase Base Damage by +50.", statChanges: {"flatBaseDamage":100} },
     // Assumes Energy Max ≥700 for paper DPS
     { tier: 2, slot: 1, name: "Paladin Virtue", description: "Increase Base Damage by +75. With Energy Max Over 700: Increase Base Critical Damage Multiplier by +0.5x.", statChanges: {"flatBaseDamage":75,"criticalMultiplier":0.5} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed.", statChanges: {"projectileSpeed":0.3} },
     { tier: 3, slot: 1, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {"reloadSpeed":0.5} },
     { tier: 3, slot: 2, name: "Hitman's Hoard", description: "Increase Base Ammo Capacity by +9.", statChanges: {"flatAmmoMax":9} },
     { tier: 4, slot: 0, name: "Critical Parallel", description: "Increase Base Critical Chance by +14%. Increase Base Critical Damage Multiplier by +0.2x.", statChanges: {"criticalChance":0.14,"criticalMultiplier":0.2}, variantStatChanges: {"angstrum":{"criticalChance":0.14,"criticalMultiplier":0.2},"prisma_angstrum":{"criticalChance":0.1,"criticalMultiplier":0.2}} },
@@ -63,7 +63,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Max stacks assumed for paper DPS (+10% × 8 relative CC)
     { tier: 2, slot: 1, name: "Prolific Perforation", description: "Increase Base Damage by +30. On Punch Through Hit: +10% Critical Chance for 3s. Stacks up to 8x.", statChanges: {"flatBaseDamage":30,"critChanceBonus":0.8}, variantStatChanges: {"ballistica":{"flatBaseDamage":30,"critChanceBonus":0.8},"rakta_ballistica":{"flatBaseDamage":10,"critChanceBonus":0.8},"ballistica_prime":{"flatBaseDamage":3,"critChanceBonus":0.8}} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed", statChanges: {"reloadSpeed":0.5} },
-    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 2, name: "Void's Guidance", description: "+40% Accuracy -40% Weapon Recoil", statChanges: {} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status by +20 per projectile. Increase Base Status by +20 for Incarnon Form.", statChanges: {"statusChance":0.2}, variantStatChanges: {"ballistica":{"statusChance":0.2},"rakta_ballistica":{"statusChance":0.2},"ballistica_prime":{"statusChance":0.18}}, formStatChanges: {"statusChance":0}, variantFormStatChanges: {"ballistica":{"statusChance":0},"rakta_ballistica":{"statusChance":0},"ballistica_prime":{"statusChance":0.54}} },
     { tier: 4, slot: 1, name: "Survivor's Edge", description: "Increase Base Critical Chance by +10. Increase Base Status by +10 per projectile. Increase Base Status by +10 for Incarnon Form", statChanges: {"criticalChance":0.1,"statusChance":0.1}, variantStatChanges: {"ballistica":{"criticalChance":0.1,"statusChance":0.1},"rakta_ballistica":{"criticalChance":0.08,"statusChance":0.08},"ballistica_prime":{"criticalChance":0.07,"statusChance":0.07}}, formStatChanges: {"statusChance":0}, variantFormStatChanges: {"ballistica":{"statusChance":0},"rakta_ballistica":{"statusChance":0},"ballistica_prime":{"statusChance":0.21}} },
@@ -84,7 +84,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fires three short-range beams that chain link enemies.", statChanges: {} },
     // Assumes empty-reload buff up for paper DPS (+10 + +14)
     { tier: 2, slot: 0, name: "Reified Bane", description: "Increase Base Damage by +10. On Reload From Empty: Increase Base Damage by +14.", statChanges: {"flatBaseDamage":24} },
-    { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +16. With Armor Over 450: +4 Punch Through", statChanges: {"flatBaseDamage":16} },
+    // Assumes Armor ≥450 for paper panel PT
+    { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +16. With Armor Over 450: +4 Punch Through", statChanges: {"flatBaseDamage":16,"punchThrough":4} },
     { tier: 3, slot: 0, name: "Ready Retaliation", description: "On Reload From Empty: +100% Reload Speed.", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 1, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to 195.", statChanges: {"ammoMaxSet":195} },
     { tier: 3, slot: 2, name: "Practiced Grip", description: "Increase Accuracy by +50%.", statChanges: {} },
@@ -94,10 +95,11 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "boltor_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Prioritize Slash Damage and gain Multishot.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Hunter's Mantra", description: "Increase Base Damage by +18. With Channeled Ability active: Punch Through +4 and +40% Accuracy.", statChanges: {"flatBaseDamage":18}, variantStatChanges: {"boltor":{"flatBaseDamage":18},"telos_boltor":{"flatBaseDamage":4},"boltor_prime":{"flatBaseDamage":4}} },
+    // Assumes channeled ability active for paper panel PT (+40% Acc still text-only)
+    { tier: 2, slot: 0, name: "Hunter's Mantra", description: "Increase Base Damage by +18. With Channeled Ability active: Punch Through +4 and +40% Accuracy.", statChanges: {"flatBaseDamage":18,"punchThrough":4}, variantStatChanges: {"boltor":{"flatBaseDamage":18,"punchThrough":4},"telos_boltor":{"flatBaseDamage":4,"punchThrough":4},"boltor_prime":{"flatBaseDamage":4,"punchThrough":4}} },
     // Max stacks assumed for paper DPS (Boltor +2×4 + AE 20%×4; Telos/Prime +2×3 + AE 20%×3). Form mag ignores AE.
     { tier: 2, slot: 1, name: "Crimson Overture", description: "Increase Base Damage by +12. On Kill: Increase Base Damage by +2 and +20% Ammo Efficiency for 5 seconds. Stacks up to Yx", statChanges: {"flatBaseDamage":20,"ammoEfficiency":0.8}, variantStatChanges: {"boltor":{"flatBaseDamage":20,"ammoEfficiency":0.8},"telos_boltor":{"flatBaseDamage":6,"ammoEfficiency":0.6},"boltor_prime":{"flatBaseDamage":6,"ammoEfficiency":0.6}} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +20.", statChanges: {"flatMagazine":20} },
     { tier: 3, slot: 2, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {"reloadSpeed":0.6} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status Chance by +20%", statChanges: {"statusChance":0.2}, variantStatChanges: {"boltor":{"statusChance":0.2},"telos_boltor":{"statusChance":0.2},"boltor_prime":{"statusChance":0.18}} },
@@ -118,7 +120,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "bronco_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Increase Range and Ricochet.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Speeding Bullet", description: "Increase Base Damage by +36. With Sprint Speed 1.2 or Higher: +60% Projectile Speed.", statChanges: {"flatBaseDamage":36}, variantStatChanges: {"bronco":{"flatBaseDamage":36},"bronco_prime":{"flatBaseDamage":30}} },
+    // Assumes Sprint Speed ≥1.2 for paper panel projectile speed
+    { tier: 2, slot: 0, name: "Speeding Bullet", description: "Increase Base Damage by +36. With Sprint Speed 1.2 or Higher: +60% Projectile Speed.", statChanges: {"flatBaseDamage":36,"projectileSpeed":0.6}, variantStatChanges: {"bronco":{"flatBaseDamage":36,"projectileSpeed":0.6},"bronco_prime":{"flatBaseDamage":30,"projectileSpeed":0.6}} },
     // Max stacks assumed for paper DPS (+10 × 4)
     { tier: 2, slot: 1, name: "Infused Shots", description: "Increase Base Damage by +20. On 50 Energy Spent: Increase Base Damage by +10 for 10s. Stacks up to 4x.", statChanges: {"flatBaseDamage":60}, variantStatChanges: {"bronco":{"flatBaseDamage":60},"bronco_prime":{"flatBaseDamage":56}} },
     { tier: 3, slot: 0, name: "Kinetic Battle", description: "-50% Weapon Recoil.", statChanges: {} },
@@ -132,7 +135,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   "burston_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain an Auto Fire mode and deal Radial Heat Damage.", statChanges: {} },
     { tier: 2, slot: 0, name: "Forceful Finality", description: "Increase Base Damage by +42. +5 Base Multishot on final magazine burst.", statChanges: {"flatBaseDamage":42} },
-    { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +42. With Armor Over 450: +2 Punch Through.", statChanges: {"flatBaseDamage":42} },
+    // Assumes Armor ≥450 for paper panel PT
+    { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +42. With Armor Over 450: +2 Punch Through.", statChanges: {"flatBaseDamage":42,"punchThrough":2} },
     { tier: 3, slot: 0, name: "Extended Volley", description: "Increase Base Magazine Capacity by +21.", statChanges: {"flatMagazine":21} },
     { tier: 3, slot: 1, name: "Kinetic Battle", description: "-50% Weapon Recoil.", statChanges: {} },
     // Assumes Full Burst Hit buff active for paper DPS
@@ -162,7 +166,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 1, name: "Fortress Salvo", description: "Increase Base Damage by +10. With Armor Over 450: +80% Multishot.", statChanges: {"flatBaseDamage":10,"multishot":0.8} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {"reloadSpeed":0.5} },
     { tier: 3, slot: 1, name: "Slayer's Nerve", description: "On Hit: +6% Accuracy and -6% Weapon Recoil for 6s. Stacks up to 10x.", statChanges: {} },
-    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +18%.", statChanges: {"criticalChance":0.18} },
     { tier: 4, slot: 1, name: "Deathtrap Trigger", description: "Increase Base Critical Damage Multiplier by +2x.", statChanges: {"criticalMultiplier":2} },
     { tier: 4, slot: 2, name: "Wiseman's Regard", description: "Increase Base Status Chance by 30% of current Critical Chance, up to 40%.", statChanges: {"statusFromCritFraction":0.3,"statusFromCritCap":0.4} },
@@ -173,7 +177,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Crimson Overture", description: "Increase Base Damage by +8. On Kill: +20% Ammo Efficiency for 5s. Stacks up to 4x.", statChanges: {"flatBaseDamage":8,"ammoEfficiency":0.8}, variantStatChanges: {"dera":{"flatBaseDamage":8,"ammoEfficiency":0.8},"dera_vandal":{"flatBaseDamage":6,"ammoEfficiency":0.8}} },
     // Max stacks assumed for paper DPS (+5% × 6)
     { tier: 2, slot: 1, name: "Paragon Essence", description: "Increase Base Damage by +6. On Status Effect: +5% Fire Rate for 5s. Stacks up to 6x.", statChanges: {"flatBaseDamage":6,"fireRate":0.3}, variantStatChanges: {"dera":{"flatBaseDamage":6,"fireRate":0.3},"dera_vandal":{"flatBaseDamage":4,"fireRate":0.3}} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +22", statChanges: {"flatMagazine":22} },
     { tier: 3, slot: 2, name: "Evolved Autoloader", description: "+50% Magazine Reloaded per second when Holstered.", statChanges: {} },
     { tier: 4, slot: 0, name: "Deathtrap Trigger", description: "Increase Base Critical Chance by +14% Increase Base Critical Damage Multiplier by +0.6x", statChanges: {"criticalChance":0.14,"criticalMultiplier":0.6}, variantStatChanges: {"dera":{"criticalChance":0.14,"criticalMultiplier":0.6},"dera_vandal":{"criticalChance":0.14,"criticalMultiplier":0.4}} },
@@ -186,7 +190,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes Dread+Hate set for paper DPS (+30% MS; unique +100% MS-pellet damage still unmodeled)
     { tier: 2, slot: 1, name: "Stalker's Vendetta", description: "Increase Damage by +60. With Dread and Hate equipped: Multishot consumes ammo directly from Capacity and increases Damage by +100%. +30% Multishot.", statChanges: {"flatBaseDamage":60,"multishot":0.3} },
     { tier: 3, slot: 0, name: "Marksman's Focus", description: "-30% Zoom.", statChanges: {} },
-    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 2, name: "Rapid Reinforcement", description: "+100% Reload Speed.", statChanges: {"reloadSpeed":1} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Status Chance by +24%.", statChanges: {"statusChance":0.24} },
     { tier: 4, slot: 1, name: "Survivor's Edge", description: "Increase Critical Chance by +12% Increase Status Chance by +12%", statChanges: {"criticalChance":0.12,"statusChance":0.12} },
@@ -211,7 +215,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Hitman's Opportunity", description: "Increase Base Damage by +70. +100% Damage to enemies below half Health", statChanges: {"flatBaseDamage":70,"damage":1} },
     // Max stacks assumed for paper DPS (+10 × 5 flat, +10% FR × 5); set equipped assumed
     { tier: 2, slot: 1, name: "Stalker's Resentment", description: "Increase Base Damage by +50. With Hate and Despair Equipped: Hits increase Base Damage by +10 and Fire Rate by +10%, stacks up to 5x. Resets on missed shot.", statChanges: {"flatBaseDamage":100,"fireRate":0.5} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+30% Projectile Speed", statChanges: {"projectileSpeed":0.3} },
     { tier: 3, slot: 1, name: "Marksman's Focus", description: "-30% Zoom", statChanges: {} },
     { tier: 3, slot: 2, name: "Hitman's Hoard", description: "Increase Base Ammo Capacity to 144", statChanges: {"ammoMaxSet":144} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +10% Increase Base Status Chance by +10%", statChanges: {"criticalChance":0.1,"statusChance":0.1} },
@@ -246,7 +250,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint Hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge.", statChanges: {} },
     { tier: 2, slot: 0, name: "Attuned Accuracy", description: "+40% Accuracy when Aiming.", statChanges: {} },
     { tier: 2, slot: 1, name: "Kinetic Baffle", description: "-50% Weapon Recoil", statChanges: {} },
-    { tier: 2, slot: 2, name: "Frictionless Flight", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 2, slot: 2, name: "Frictionless Flight", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 0, name: "Evolved Autoloader", description: "+50% Magazine Reloaded/s when Holstered", statChanges: {} },
     // Paper: one full base mag (6 shells) reload → +60% FR (not infinite 99-stack)
     { tier: 3, slot: 1, name: "Mounting Momentum", description: "Reload increases Fire Rate by +10% per shell. Resets on reload.", statChanges: {"fireRate":0.6} },
@@ -301,7 +305,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "gorgon_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire embedding projectiles that explode with Heat Damage.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Hunter's Mantra", description: "Increase Base Damage by +10. With Channeled Ability Active: +3 Punch Through, +40% Accuracy.", statChanges: {"flatBaseDamage":10}, variantStatChanges: {"gorgon":{"flatBaseDamage":10},"gorgon_wraith":{"flatBaseDamage":5},"prisma_gorgon":{"flatBaseDamage":5}} },
+    // Assumes channeled ability active for paper panel PT (+40% Acc still text-only)
+    { tier: 2, slot: 0, name: "Hunter's Mantra", description: "Increase Base Damage by +10. With Channeled Ability Active: +3 Punch Through, +40% Accuracy.", statChanges: {"flatBaseDamage":10,"punchThrough":3}, variantStatChanges: {"gorgon":{"flatBaseDamage":10,"punchThrough":3},"gorgon_wraith":{"flatBaseDamage":5,"punchThrough":3},"prisma_gorgon":{"flatBaseDamage":5,"punchThrough":3}} },
     // Assumes shield-break buff up for paper DPS
     { tier: 2, slot: 1, name: "Hoplite Virtue", description: "Increase Base Damage by +10. On Shield Break: Increase Base Damage by +13 for 8s.", statChanges: {"flatBaseDamage":23}, variantStatChanges: {"gorgon":{"flatBaseDamage":23},"gorgon_wraith":{"flatBaseDamage":18},"prisma_gorgon":{"flatBaseDamage":18}} },
     // Max stacks assumed for paper DPS (+15 × 3)
@@ -348,7 +353,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Swift Conclusion", description: "Increase Damage by +70. Increase Damage by +200% if enemy has less than half health.", statChanges: {"flatBaseDamage":70,"damage":2}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"damage":2},"mk1_kunai":{"flatBaseDamage":80,"damage":2}} },
     // Assumes channeled ability active for paper DPS
     { tier: 2, slot: 1, name: "Sage's Resolve", description: "Increase Base Damage by +70 With Channeled Ability active: +100% Multishot.", statChanges: {"flatBaseDamage":70,"multishot":1}, variantStatChanges: {"kunai":{"flatBaseDamage":70,"multishot":1},"mk1_kunai":{"flatBaseDamage":80,"multishot":1}} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
     { tier: 3, slot: 1, name: "Extended Volley", description: "Increase Base Magazine Capacity by +10.", statChanges: {"flatMagazine":10} },
     { tier: 3, slot: 2, name: "Rapid Reinforcement", description: "+50% Reload Speed.", statChanges: {"reloadSpeed":0.5} },
     // Assumes equip buff active for paper DPS
@@ -435,7 +440,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes channeled ability active for paper DPS
     { tier: 2, slot: 0, name: "Swift Sawblades", description: "Increase Base Damage by +77. With Channeled Ability active: +70% Fire Rate.", statChanges: {"flatBaseDamage":77,"fireRate":0.7} },
     { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +57. Multishot consumes ammo directly from Capacity and increases Damage by +20.", statChanges: {"flatBaseDamage":57} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 2, name: "Mercenary Chamber", description: "Increase Base Ammo Capacity to 160", statChanges: {"ammoMaxSet":160} },
     { tier: 4, slot: 0, name: "Sawblade Storm", description: "Hold charged shot for 1s to increase area of effect.", statChanges: {} },
@@ -481,7 +486,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint Hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge.", statChanges: {} },
     { tier: 2, slot: 0, name: "Marksman's Hand", description: "-30% Recoil", statChanges: {} },
     { tier: 2, slot: 1, name: "Rapid Wrath", description: "+25% Fire Rate", statChanges: {"fireRate":0.25} },
-    { tier: 2, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 2, slot: 2, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 0, name: "Extended Volley", description: "+10 Base Magazine Capacity", statChanges: {"flatMagazine":10} },
     { tier: 3, slot: 1, name: "Rapid Reinforcement", description: "+30% Reload Speed", statChanges: {"reloadSpeed":0.3} },
     { tier: 3, slot: 2, name: "Hunter's Rearmament", description: "On Kill: 10% chance to replenish 10 Ammo", statChanges: {} },
@@ -504,7 +509,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     // Assumes punch-through buff up for paper DPS
     { tier: 3, slot: 0, name: "Ardent Trigger", description: "On Punch Through Hit: +40% Fire Rate for 6s.", statChanges: {"fireRate":0.4} },
     { tier: 3, slot: 1, name: "Markman's Focus", description: "-30% Zoom.", statChanges: {} },
-    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+60% Projectile Speed.", statChanges: {"projectileSpeed":0.6} },
     { tier: 4, slot: 0, name: "Vicious Promise", description: "Increase Base Critical Chance by +40% on undamaged enemies. Increase Base Critical Damage Multiplier by +2x on undamaged enemies.", statChanges: {} },
     { tier: 4, slot: 1, name: "Elemental Balance", description: "Increase Base Status Chance by +60%.", statChanges: {"statusChance":0.6} },
     // Max stacks assumed for paper DPS (4× +15)
@@ -514,7 +519,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint Hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge.", statChanges: {} },
     { tier: 2, slot: 0, name: "Void's Guidance", description: "+50% Accuracy and +50% less Recoil while Aiming", statChanges: {} },
     { tier: 2, slot: 1, name: "Rapid Wrath", description: "+20% Fire Rate", statChanges: {"fireRate":0.2} },
-    { tier: 2, slot: 2, name: "Swift Deliverance", description: "+80% Projectile Speed", statChanges: {} },
+    { tier: 2, slot: 2, name: "Swift Deliverance", description: "+80% Projectile Speed", statChanges: {"projectileSpeed":0.8} },
     { tier: 3, slot: 0, name: "Retribution's Vessel", description: "+50% Magazine Capacity", statChanges: {"magazine":0.5} },
     { tier: 3, slot: 1, name: "Ready Retaliation", description: "On Reload from Empty: +100% Reload Speed for 6 seconds", statChanges: {"reloadSpeed":1} },
     { tier: 3, slot: 2, name: "Executioner's Fortune", description: "On Headshot kill: 20% chance to instant Reload.", statChanges: {} },
@@ -603,7 +608,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "soma_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Gain increased Status Chance and Multishot while slowing fire rate.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Fortress Salvo", description: "Increase Base Damage by +12. With Armor Over 450: +4 Punch Through.", statChanges: {"flatBaseDamage":12} },
+    // Assumes Armor ≥450 for paper panel PT
+    { tier: 2, slot: 0, name: "Fortress Salvo", description: "Increase Base Damage by +12. With Armor Over 450: +4 Punch Through.", statChanges: {"flatBaseDamage":12,"punchThrough":4} },
     { tier: 2, slot: 1, name: "Fortifying Bloodshed", description: "Increase Base Damage by +10. On Slash Status Kill: +100 Overshield.", statChanges: {"flatBaseDamage":10} },
     { tier: 3, slot: 0, name: "Kinetic Battle", description: "-50% Weapon Recoil.", statChanges: {} },
     { tier: 3, slot: 1, name: "Practiced Grip", description: "Increase Accuracy by +50%.", statChanges: {} },
@@ -615,12 +621,13 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "strun_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; Alt Fire transmutes. Switching back will expend any remaining charge. Fire staggering explosive projectiles.", statChanges: {} },
-    { tier: 2, slot: 0, name: "Tenno Targeting", description: "Increase Base Damage by +54. With Channeled Ability Active: +4 Punch Through", statChanges: {"flatBaseDamage":54}, variantStatChanges: {"strun":{"flatBaseDamage":54},"mk1_strun":{"flatBaseDamage":68},"strun_wraith":{"flatBaseDamage":24},"strun_prime":{"flatBaseDamage":2}} },
+    // Assumes channeled ability active for paper panel PT
+    { tier: 2, slot: 0, name: "Tenno Targeting", description: "Increase Base Damage by +54. With Channeled Ability Active: +4 Punch Through", statChanges: {"flatBaseDamage":54,"punchThrough":4}, variantStatChanges: {"strun":{"flatBaseDamage":54,"punchThrough":4},"mk1_strun":{"flatBaseDamage":68,"punchThrough":4},"strun_wraith":{"flatBaseDamage":24,"punchThrough":4},"strun_prime":{"flatBaseDamage":2,"punchThrough":4}} },
     // Max stacks assumed for paper DPS (+0.05 base MS × 5)
     { tier: 2, slot: 1, name: "Blazing Barrel", description: "Increase Base Damage by +54. On Firing: +0.05 Base Multishot. Stacks up to 5x.", statChanges: {"flatBaseDamage":54,"multishot":0.25}, variantStatChanges: {"strun":{"flatBaseDamage":54,"multishot":0.25},"mk1_strun":{"flatBaseDamage":68,"multishot":0.25},"strun_wraith":{"flatBaseDamage":24,"multishot":0.25},"strun_prime":{"flatBaseDamage":2,"multishot":0.25}} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {"reloadSpeed":0.6} },
     { tier: 3, slot: 1, name: "Galvanic Reload", description: "On hitting a target affected by an Electricity status, 40% chance to restore 1 round in the magazine from ammo pool.", statChanges: {} },
-    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+30% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 2, name: "Swift Deliverance", description: "+30% Projectile Speed.", statChanges: {"projectileSpeed":0.3} },
     { tier: 4, slot: 0, name: "Elemental Balance", description: "Increase Base Status Chance by +11%. Increase Base Status Chance by +132% for Incarnon Form.", statChanges: {"statusChance":0.11}, variantStatChanges: {"strun":{"statusChance":0.11},"mk1_strun":{"statusChance":0.11},"strun_wraith":{"statusChance":0.1},"strun_prime":{"statusChance":0.113}}, formStatChanges: {"statusChance":1.21}, variantFormStatChanges: {"strun":{"statusChance":1.21},"mk1_strun":{"statusChance":0.99},"strun_wraith":{"statusChance":0.9},"strun_prime":{"statusChance":1.247}} },
     { tier: 4, slot: 1, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +16%.", statChanges: {"criticalChance":0.16}, variantStatChanges: {"strun":{"criticalChance":0.16},"mk1_strun":{"criticalChance":0.1},"strun_wraith":{"criticalChance":0.12},"strun_prime":{"criticalChance":0.12}} },
     { tier: 4, slot: 2, name: "Brutal Edge", description: "Increase Base Critical Chance by +4%. Increase Base Status Chance by +4%. Increase Base Status Chance by +48% for Incarnon Form.", statChanges: {"criticalChance":0.04,"statusChance":0.04}, variantStatChanges: {"strun":{"criticalChance":0.04,"statusChance":0.04},"mk1_strun":{"criticalChance":0.02,"statusChance":0.02},"strun_wraith":{"criticalChance":0.04,"statusChance":0.048},"strun_prime":{"criticalChance":0.04,"statusChance":0.04}}, formStatChanges: {"statusChance":0.44}, variantFormStatChanges: {"strun":{"statusChance":0.44},"mk1_strun":{"statusChance":0.18},"strun_wraith":{"statusChance":0.432},"strun_prime":{"statusChance":0.44}} },
@@ -631,7 +638,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Blazing Barrel", description: "Increase Base Damage by +175. On Firing: +5% Multishot. Stacks up to 10x", statChanges: {"flatBaseDamage":175,"multishot":0.5} },
     { tier: 2, slot: 1, name: "Overcharge Blast", description: "Increase Base Damage by +300. With Energy Max above 700: +50% Blast Radius", statChanges: {"flatBaseDamage":300} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+50% Reload Speed", statChanges: {"reloadSpeed":0.5} },
-    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {} },
+    { tier: 3, slot: 1, name: "Swift Deliverance", description: "+50% Projectile Speed.", statChanges: {"projectileSpeed":0.5} },
     // Max stacks assumed for paper DPS (+10 × 3)
     { tier: 3, slot: 2, name: "Resonant Restore", description: "On Reload From Empty: Increase Base Magazine Capacity by +10. Stacks up to 3x.", statChanges: {"flatMagazine":30} },
     { tier: 4, slot: 0, name: "Survivor's Edge", description: "Increase Base Critical Chance by +15%. Increase Base Status Chance by +15%.", statChanges: {"criticalChance":0.15,"statusChance":0.15} },
@@ -676,7 +683,7 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
     { tier: 2, slot: 0, name: "Final Fusillade", description: "Increase Base Damage by +51. +3 Multishot on last shot in magazine.", statChanges: {"flatBaseDamage":51} },
     // +60% damage from capacity-MS clause assumed up for paper DPS
     { tier: 2, slot: 1, name: "Plentiful Mayhem", description: "Increase Base Damage by +31. Multishot consumes ammo directly from Capacity and increases Damage by +60%.", statChanges: {"flatBaseDamage":31,"damage":0.6} },
-    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {} },
+    { tier: 3, slot: 0, name: "Swift Deliverance", description: "+50% Projectile Speed", statChanges: {"projectileSpeed":0.5} },
     { tier: 3, slot: 1, name: "Renewed Horror", description: "On Reload from Empty: Lingering damage field duration doubles on first shot.", statChanges: {} },
     { tier: 3, slot: 2, name: "Extended Volley", description: "Increase Base Magazine Capacity by +9.", statChanges: {"flatMagazine":9} },
     { tier: 4, slot: 0, name: "Commodore's Fortune", description: "Increase Base Critical Chance by +20%.", statChanges: {"criticalChance":0.2} },
@@ -699,7 +706,8 @@ export const WIKI_INCARNON_EVOLUTIONS: Record<string, IncarnonEvolution[]> = {
   ],
   "vectis_incarnon": [
     { tier: 1, slot: 0, name: "Incarnon Form", description: "Weakpoint hits charge Incarnon Transmutation; alt fire transmutes. Switching back will expend any remaining charge. Fire slowing projectiles that explode on headshot", statChanges: {} },
-    { tier: 2, slot: 0, name: "Inciting Incident", description: "Increase Base Damage by +100. With Channeled Ability Active: +2 Punch Through", statChanges: {"flatBaseDamage":100}, variantStatChanges: {"vectis":{"flatBaseDamage":100},"vectis_prime":{"flatBaseDamage":200}} },
+    // Assumes channeled ability active for paper panel PT
+    { tier: 2, slot: 0, name: "Inciting Incident", description: "Increase Base Damage by +100. With Channeled Ability Active: +2 Punch Through", statChanges: {"flatBaseDamage":100,"punchThrough":2}, variantStatChanges: {"vectis":{"flatBaseDamage":100,"punchThrough":2},"vectis_prime":{"flatBaseDamage":200,"punchThrough":2}} },
     // Assumes no enemies within 5m for paper DPS
     { tier: 2, slot: 1, name: "Lone Enforcer", description: "Increase Base Damage by +75. +25% Multishot if no enemies are within 5m.", statChanges: {"flatBaseDamage":75,"multishot":0.25}, variantStatChanges: {"vectis":{"flatBaseDamage":75,"multishot":0.25},"vectis_prime":{"flatBaseDamage":150,"multishot":0.25}} },
     { tier: 3, slot: 0, name: "Rapid Reinforcement", description: "+60% Reload Speed.", statChanges: {"reloadSpeed":0.6} },

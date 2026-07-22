@@ -439,6 +439,10 @@ export interface CalculatedStats {
   range?: number;
   /** Ammo reserve after incarnon set/add perks — display only (base ammo not always in weapon data). */
   ammoMax?: number;
+  /** Punch Through meters from incarnon/rivens — display only (no DPS model). */
+  punchThrough?: number;
+  /** Projectile speed bonus fraction from incarnon/rivens — display only. */
+  projectileSpeed?: number;
   // DPS
   burstDps: number;
   sustainedDps: number;

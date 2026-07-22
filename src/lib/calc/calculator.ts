@@ -999,10 +999,14 @@ export function calculateWeaponBuild(
         case 'slideAttack': /* slide attack bonus — visual only */ break;
         case 'finisherDamage': /* finisher bonus — visual only */ break;
         case 'comboDuration': stats.comboDuration += value; break;
-        // Ranged-specific riven stats
-        case 'projectileSpeed': /* visual only */ break;
+        // Ranged-specific riven / incarnon stats (panel display; no DPS model)
+        case 'projectileSpeed':
+          stats.projectileSpeed = (stats.projectileSpeed ?? 0) + value;
+          break;
         case 'zoom': /* visual only */ break;
-        case 'punchThrough': /* visual only */ break;
+        case 'punchThrough':
+          stats.punchThrough = (stats.punchThrough ?? 0) + value;
+          break;
         case 'ammoMax': /* riven % of ammo max — no base ammoMax on Weapon yet */ break;
         case 'flatAmmoMax':
           stats.ammoMax = (stats.ammoMax ?? 0) + value;
