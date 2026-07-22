@@ -185,6 +185,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "pax_soar",
   "secondary_cryogenic",
   "virtuos_null",
+  "conjunction_voltage",
 ]);
 
 /** Wiki Primary Compression: continuous/beam AoE — no bonus despite radial data. */
@@ -1414,6 +1415,21 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
       return true;
     }
 
+    case "conjunction_voltage": {
+      // wiki R5: +1.5% reload / +3% MS per Electricity stack (cap 40); 12s duration (not × stacks).
+      const reloadLine = findEffect(def, "reloadSpeed");
+      const msLine = findEffect(def, "multishot");
+      const durLine = findEffect(def, "buffDuration");
+      const reload = (reloadLine ? scaleArcaneEffectLine(reloadLine, rank, def.maxRank) : 0) * stacks;
+      const ms = (msLine ? scaleArcaneEffectLine(msLine, rank, def.maxRank) : 0) * stacks;
+      if (reload > 0) stats.reloadTime /= 1 + reload / 100;
+      if (ms > 0) stats.multishot *= 1 + ms / 100;
+      trackBonus(stats, "reloadSpeed", reload);
+      trackBonus(stats, "multishot", ms);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 12);
+      return true;
+    }
+
     default:
       return false;
   }
@@ -1471,9 +1487,17 @@ export function applyCustomArcaneToWarframe(
     }
 
     case "arcane_energize": {
-      trackBonus(stats, "energyPickupChance", scaledLine(def, findEffect(def, "energyPickupChance"), rank, stacks));
-      trackBonus(stats, "energyOrbBonus", scaledLine(def, findEffect(def, "energyOrbBonus"), rank, stacks));
-      trackBonus(stats, "allyEnergyRadius", scaledLine(def, findEffect(def, "allyEnergyRadius"), rank, stacks));
+      // wiki R5: On Energy Orb — 60% chance replenish 25–150 Energy to self + allies in 15m; 15s CD.
+      const chanceLine = findEffect(def, "energyPickupChance");
+      const energyLine = findEffect(def, "energyOrbBonus");
+      const allyLine = findEffect(def, "allyEnergy");
+      const radLine = findEffect(def, "allyEnergyRadius");
+      const cdLine = findEffect(def, "cooldown");
+      trackBonus(stats, "energyPickupChance", chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 60);
+      trackBonus(stats, "energyOrbBonus", energyLine ? scaleArcaneEffectLine(energyLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "allyEnergy", allyLine ? scaleArcaneEffectLine(allyLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "allyEnergyRadius", radLine ? scaleArcaneEffectLine(radLine, rank, def.maxRank) : 15);
+      trackBonus(stats, "cooldown", cdLine ? scaleArcaneEffectLine(cdLine, rank, def.maxRank) : 15);
       return true;
     }
 

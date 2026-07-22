@@ -184,22 +184,36 @@
   },
   "arcane_energize": {
     "replace": true,
+    "trigger": "onPickup",
     "effects": [
+      {
+        "stat": "energyPickupChance",
+        "maxValue": 60,
+        "constantAtAllRanks": true
+      },
       {
         "stat": "energyOrbBonus",
         "maxValue": 150,
+        "flat": true,
         "baseValue": 25
       },
       {
         "stat": "allyEnergy",
         "maxValue": 150,
+        "flat": true,
         "baseValue": 25
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 60,
+        "stat": "allyEnergyRadius",
+        "maxValue": 15,
         "flat": true,
-        "baseValue": 60
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -818,13 +832,21 @@
         "stat": "reloadSpeed",
         "maxValue": 1.5,
         "flat": false,
-        "stacking": true
+        "stacking": true,
+        "baseValue": 0.25
       },
       {
         "stat": "multishot",
         "maxValue": 3,
         "flat": false,
-        "stacking": true
+        "stacking": true,
+        "baseValue": 0.5
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

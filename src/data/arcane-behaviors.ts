@@ -165,9 +165,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "arcane_energize",
     customHandler: "arcane_energize",
     effects: [
-      {"statKey": "energyOrbBonus", "target": "arcane_panel", "mode": "custom", "source": "Arcane Energize: custom handler"},
-      {"statKey": "allyEnergy", "target": "arcane_panel", "mode": "custom", "source": "Arcane Energize: custom handler"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "Arcane Energize: custom handler"},
+      {"statKey": "energyPickupChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Energize — 60% chance on Energy Orb (constant)"},
+      {"statKey": "energyOrbBonus", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Energize — replenish 25–150 Energy to self"},
+      {"statKey": "allyEnergy", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Energize — same Energy to allies in radius"},
+      {"statKey": "allyEnergyRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Energize — 15m ally radius (constant)"},
+      {"statKey": "cooldown", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Energize — 15s cooldown (constant)"},
     ],
   },
   "arcane_eruption": {
@@ -545,9 +547,11 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "conjunction_voltage": {
     arcaneId: "conjunction_voltage",
+    customHandler: "conjunction_voltage",
     effects: [
-      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Conjunction Voltage — +1.5% Reload Speed / stack at R5 (cap 40 → +60%; applies at sim stack count)"},
-      {"statKey": "multishot", "target": "weapon_dps", "mode": "multiplicative_percent", "source": "wiki: Conjunction Voltage — +3% Multishot / stack at R5 (cap 40 → +120%; applies at sim stack count)"},
+      {"statKey": "reloadSpeed", "target": "weapon_dps", "mode": "custom", "source": "wiki: Conjunction Voltage — +1.5% Reload Speed / stack at R5 (cap 40 → +60%; applies at sim stack count)"},
+      {"statKey": "multishot", "target": "weapon_dps", "mode": "custom", "source": "wiki: Conjunction Voltage — +3% Multishot / stack at R5 (cap 40 → +120%; applies at sim stack count)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Conjunction Voltage — 12s stack duration (constant; expiry clears all stacks)"},
     ],
   },
   "emergence_dissipate": {

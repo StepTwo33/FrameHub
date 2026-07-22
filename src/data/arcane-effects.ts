@@ -397,20 +397,33 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
     "maxRank": 5,
     "effects": [
       {
+        "stat": "energyPickupChance",
+        "maxValue": 60,
+        "constantAtAllRanks": true
+      },
+      {
         "stat": "energyOrbBonus",
         "maxValue": 150.0,
+        "flat": true,
         "baseValue": 25.0
       },
       {
         "stat": "allyEnergy",
         "maxValue": 150.0,
+        "flat": true,
         "baseValue": 25.0
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 60.0,
+        "stat": "allyEnergyRadius",
+        "maxValue": 15,
         "flat": true,
-        "baseValue": 10.0
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "cooldown",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -1156,6 +1169,12 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "flat": false,
         "stacking": true,
         "baseValue": 0.5
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 12,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ],
     "stackCap": 40

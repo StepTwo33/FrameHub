@@ -256,12 +256,13 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.criticalChance).toBeCloseTo(braton.criticalChance * (1 + 3.0), 4);
   });
 
-  it("Conjunction Voltage: 0 stacks = no buff; 40 stacks R5 → +120% MS / +60% reload", () => {
+  it("Conjunction Voltage: 0 stacks = no buff; 40 stacks R5 → +120% MS / +60% reload / 12s", () => {
     const lex = allWeapons.find((w) => w.id === "lex")!;
     const cv = allArcanes.find((a) => a.id === "conjunction_voltage")!;
     const def = getArcaneEffectDef("conjunction_voltage")!;
     expect(def.trigger).toBe("stacks");
     expect(def.stackCap).toBe(40);
+    expect(def.effects.find((e) => e.stat === "buffDuration")?.maxValue).toBe(12);
 
     const zero = calculateWeaponBuildWithArcanes(
       lex,
@@ -285,6 +286,7 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     // wiki R5: +3% MS × 40 = +120%; +1.5% reload × 40 = +60%
     expect(full.multishot).toBeCloseTo(lex.multishot * 2.2, 4);
     expect(full.reloadTime).toBeCloseTo(lex.reloadTime / 1.6, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(12, 4);
     expect(full.burstDps).toBeGreaterThan(zero.burstDps);
   });
 
@@ -2321,6 +2323,27 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(20, 4);
     expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(4, 4);
+  });
+
+  it("Arcane Energize: 60% / 150 Energy / 15m / 15s CD", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const energize = allArcanes.find((a) => a.id === "arcane_energize")!;
+    const chanceLine = getArcaneEffectDef("arcane_energize")!.effects.find(
+      (e) => e.stat === "energyPickupChance",
+    )!;
+    expect(chanceLine.constantAtAllRanks).toBe(true);
+    expect(chanceLine.maxValue).toBe(60);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [energize],
+    );
+    expect(full.arcaneBonuses?.energyPickupChance).toBeCloseTo(60, 4);
+    expect(full.arcaneBonuses?.energyOrbBonus).toBeCloseTo(150, 4);
+    expect(full.arcaneBonuses?.allyEnergy).toBeCloseTo(150, 4);
+    expect(full.arcaneBonuses?.allyEnergyRadius).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.cooldown).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.healthRegenChance ?? 0).toBe(0);
   });
 
   it("Exodia Triumph: Zaw +50% combo chance panel; non-Zaw gated", () => {
