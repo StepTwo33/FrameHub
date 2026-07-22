@@ -2488,6 +2488,33 @@ export function computeQorvexPassivePunchThrough(): number {
   return 3;
 }
 
+export interface ExcaliburSwordsmanshipBonuses {
+  /** +10% melee damage while wielding eligible swords. */
+  damageBonus: number;
+  /** +10% attack speed while wielding eligible swords. */
+  attackSpeedBonus: number;
+}
+
+/**
+ * wiki Excalibur Swordsmanship: +10% damage and +10% attack speed with swords,
+ * dual swords, nikanas, and rapiers (Umbra shares the same blade bonuses).
+ */
+export function computeExcaliburSwordsmanshipBonuses(
+  wieldingSword: boolean,
+): ExcaliburSwordsmanshipBonuses {
+  return wieldingSword
+    ? { damageBonus: 0.1, attackSpeedBonus: 0.1 }
+    : { damageBonus: 0, attackSpeedBonus: 0 };
+}
+
+/**
+ * wiki Saryn passive: Status Effects from weapons and abilities last 25% longer.
+ * Returns the duration multiplier (1.25), not a percent.
+ */
+export function computeSarynPassiveStatusDurationMultiplier(): number {
+  return 1.25;
+}
+
 /** Treat stored DR/buff as 0–1 fraction when ≤1, else already a percent value 0–100. */
 export function abilityPercentFraction(value: number): number {
   return value <= 1 ? value : value / 100;

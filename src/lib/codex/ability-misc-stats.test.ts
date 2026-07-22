@@ -39,6 +39,8 @@ import {
   computeTrinityLifegiverBonusHealth,
   computeMesaPassiveBonuses,
   computeQorvexPassivePunchThrough,
+  computeExcaliburSwordsmanshipBonuses,
+  computeSarynPassiveStatusDurationMultiplier,
   lerpBatteryValue,
   lerpBatteryMaxStat,
 } from "@/lib/codex/ability-misc-stats";
@@ -460,6 +462,25 @@ describe("Mesa sidearm / health passive", () => {
 describe("Qorvex Core Exposure passive", () => {
   it("grants +3 Punch Through", () => {
     expect(computeQorvexPassivePunchThrough()).toBe(3);
+  });
+});
+
+describe("Excalibur Swordsmanship passive", () => {
+  it("grants +10% damage and attack speed with swords", () => {
+    expect(computeExcaliburSwordsmanshipBonuses(false)).toEqual({
+      damageBonus: 0,
+      attackSpeedBonus: 0,
+    });
+    expect(computeExcaliburSwordsmanshipBonuses(true)).toEqual({
+      damageBonus: 0.1,
+      attackSpeedBonus: 0.1,
+    });
+  });
+});
+
+describe("Saryn status duration passive", () => {
+  it("multiplies status duration by 1.25", () => {
+    expect(computeSarynPassiveStatusDurationMultiplier()).toBe(1.25);
   });
 });
 

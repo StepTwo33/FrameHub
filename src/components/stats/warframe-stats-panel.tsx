@@ -31,6 +31,8 @@ import {
   computeTrinityLifegiverBonusHealth,
   computeMesaPassiveBonuses,
   computeQorvexPassivePunchThrough,
+  computeExcaliburSwordsmanshipBonuses,
+  computeSarynPassiveStatusDurationMultiplier,
   type MesaSidearmStyle,
 } from "@/lib/codex/ability-misc-stats";
 import { CollapsibleSection, SimSlider, StatRow } from "./stat-primitives";
@@ -552,6 +554,59 @@ function QorvexCoreExposurePassive() {
   );
 }
 
+function ExcaliburSwordsmanshipPassive() {
+  const [wieldingSword, setWieldingSword] = useState(1);
+  const { damageBonus, attackSpeedBonus } = computeExcaliburSwordsmanshipBonuses(wieldingSword > 0);
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <SimSlider
+        label="Wielding Sword"
+        value={wieldingSword}
+        min={0}
+        max={1}
+        onChange={setWieldingSword}
+        tooltip="Excalibur Swordsmanship: +10% damage and +10% attack speed with swords, dual swords, nikanas, and rapiers."
+      />
+      <StatRow
+        label="Melee Damage"
+        value={damageBonus > 0 ? `+${(damageBonus * 100).toFixed(0)}%` : "Inactive"}
+        color={damageBonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Additive melee damage bonus (panel-only)."
+      />
+      <StatRow
+        label="Attack Speed"
+        value={attackSpeedBonus > 0 ? `+${(attackSpeedBonus * 100).toFixed(0)}%` : "Inactive"}
+        color={attackSpeedBonus > 0 ? "text-amber-400" : "text-muted-foreground"}
+        tooltip="Additive attack speed (panel-only). Umbra also keeps sentience outside Transference."
+      />
+    </div>
+  );
+}
+
+function SarynStatusDurationPassive() {
+  const mult = computeSarynPassiveStatusDurationMultiplier();
+  const exampleBase = 6; // default Slash proc duration
+  const exampleScaled = exampleBase * mult;
+
+  return (
+    <div className="py-1 space-y-1 border-t border-border/60 mt-1">
+      <StatRow
+        label="Status Duration"
+        value={`+${((mult - 1) * 100).toFixed(0)}%`}
+        color="text-green-400"
+        tooltip="Saryn passive: status effects from weapons and abilities last 25% longer (additive with duration mods)."
+      />
+      <StatRow
+        label="Example Slash Proc"
+        value={`${exampleBase}s → ${exampleScaled.toFixed(1)}s`}
+        color="text-muted-foreground"
+        tooltip="Default 6s Slash DoT stretched by the passive alone (before other duration mods)."
+      />
+    </div>
+  );
+}
+
 function AdaptationSurvivability({ stats }: { stats: WarframeCalculatedStats }) {
   const [stacks, setStacks] = useState(ADAPTATION_MAX_STACKS);
   const armorDR = stats.damageReduction / 100;
@@ -685,6 +740,10 @@ export function WarframeStatsPanel({ stats, warframe, equippedMods, allMods, equ
             <MesaPassiveBonusesPanel moddedHealth={stats.totalHealth} />
           )}
           {warframe.id === "qorvex" && <QorvexCoreExposurePassive />}
+          {(warframe.id === "excalibur" ||
+            warframe.id === "excalibur_prime" ||
+            warframe.id === "excalibur_umbra") && <ExcaliburSwordsmanshipPassive />}
+          {(warframe.id === "saryn" || warframe.id === "saryn_prime") && <SarynStatusDurationPassive />}
         </CollapsibleSection>
       )}
 
