@@ -90,6 +90,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_arachne",
   "secondary_surge",
   "zid_an_uskos",
+  "zid_an_asheir",
   "primary_plated_round",
   "primary_bulwark",
   "secondary_fortifier",
@@ -109,6 +110,7 @@ export const WEAPON_CUSTOM_ARCANE_IDS = new Set([
   "arcane_melee_animosity",
   "melee_afflictions",
   "primary_compression",
+  "secondary_encumber",
   "magus_aggress",
   "secondary_irradiate",
   "exodia_brave",
@@ -196,6 +198,7 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_consequence",
   "arcane_double_back",
   "arcane_grace",
+  "arcane_victory",
   "magus_firewall",
   "magus_overload",
 ]);
@@ -932,7 +935,65 @@ export function applyCustomArcaneToWeapon(stats: CalculatedStats, ctx: ArcaneHan
     }
 
     case "zid_an_uskos": {
-      trackBonus(stats, "secondaryHeatDamage", scaledLine(def, findEffect(def, "secondaryHeatDamage"), rank, stacks));
+      // wiki R5: +2.4% Heat / Operator|Tauron kill (cap ~105 → max +250%). Does not combine.
+      // Paper: sim stacks = kill stacks; Heat = base × min(250, 2.4×stacks)% of base (IPS-scaled).
+      const heatLine = findEffect(def, "secondaryHeatDamage");
+      const perStack = heatLine ? scaleArcaneEffectLine(heatLine, rank, def.maxRank) : 0;
+      const heatPct = Math.min(250, perStack * Math.max(stacks, 0));
+      const isSecondary =
+        /secondary|pistol|kitgun/i.test(ctx.baseWeapon?.category ?? "") ||
+        ctx.baseWeapon?.hasSecondaryArcaneSlot === true;
+      if (isSecondary && heatPct > 0 && ctx.baseWeapon) {
+        const base = ctx.baseWeapon.damage;
+        const baseIps =
+          (ctx.baseWeapon.impact ?? 0) +
+          (ctx.baseWeapon.puncture ?? 0) +
+          (ctx.baseWeapon.slash ?? 0);
+        const phys = stats.impact + stats.puncture + stats.slash;
+        const dmgMult = baseIps > 0 ? phys / baseIps : 1;
+        const amount = base * (heatPct / 100) * dmgMult;
+        const existing = stats.elements.find((e) => e.type === "heat");
+        if (existing) existing.value += amount;
+        else stats.elements.push({ type: "heat", value: amount });
+        if (stats.rawElements) {
+          const raw = stats.rawElements.find((e) => e.type === "heat");
+          if (raw) raw.value += amount;
+          else stats.rawElements.push({ type: "heat", value: amount });
+        }
+        stats.totalDamage += amount;
+      }
+      trackBonus(stats, "secondaryHeatDamage", heatPct);
+      return true;
+    }
+
+    case "zid_an_asheir": {
+      // wiki R5: +6% SC / Tauron hit (cap 50 → +300%) for all WF weapons; +18% Tauron charge passive.
+      const scLine = findEffect(def, "statusChancePerHit");
+      const perStack = scLine ? scaleArcaneEffectLine(scLine, rank, def.maxRank) : 0;
+      const scPct = perStack * Math.max(stacks, 0);
+      const baseSc = ctx.baseWeapon?.statusChance ?? stats.statusChance;
+      if (scPct > 0) stats.statusChance += baseSc * (scPct / 100);
+      trackBonus(stats, "statusChancePerHit", scPct);
+      const chargeLine = findEffect(def, "tauronStrikeCharge");
+      if (chargeLine) {
+        trackBonus(stats, "tauronStrikeCharge", scaleArcaneEffectLine(chargeLine, rank, def.maxRank));
+      }
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
+    case "secondary_encumber": {
+      // wiki R5: 24% chance on status → 1 extra random status (max 1 per instant).
+      // Paper: stacks>0 = buff up; E[extra] ≈ min(1, SC) × 0.24 added to statusChance.
+      const chanceLine = findEffect(def, "secondaryStatusProc");
+      const chancePct = chanceLine ? scaleArcaneEffectLine(chanceLine, rank, def.maxRank) : 0;
+      const expectedExtra = Math.min(1, Math.max(0, stats.statusChance)) * (chancePct / 100);
+      if (expectedExtra > 0) stats.statusChance += expectedExtra;
+      trackBonus(stats, "secondaryStatusProc", chancePct);
+      trackBonus(stats, "encumberExpectedExtra", expectedExtra * 100);
       return true;
     }
 
@@ -1221,6 +1282,42 @@ export function applyCustomArcaneToWarframe(
       return true;
     }
 
+    case "arcane_victory": {
+      // wiki R5: 75% on HS kill → +3% max HP/s for 9s. Paper: equipped = buff up.
+      const regenLine = findEffect(def, "headshotHealthRegen");
+      const pct = regenLine ? scaleArcaneEffectLine(regenLine, rank, def.maxRank) : 0;
+      const hp =
+        stats.baseHealth * (1 + stats.healthBonus) + stats.flatHealthBonus;
+      if (pct > 0) stats.healthRegenPerSec += (pct / 100) * hp;
+      trackBonus(stats, "headshotHealthRegen", pct);
+      return true;
+    }
+
+    case "theorem_infection": {
+      // wiki R5: +24%/s companion+summon damage in Residual zone (cap 15 → +360%).
+      const dmgLine = findEffect(def, "companionDamageRamp");
+      const perStack = dmgLine ? scaleArcaneEffectLine(dmgLine, rank, def.maxRank) : 0;
+      const total = perStack * Math.max(stacks, 1);
+      trackBonus(stats, "companionDamageRamp", total);
+      return true;
+    }
+
+    case "zid_an_asheir": {
+      // wiki: SC buff is on weapons (weapon handler); warframe panel tracks charge + SC stacks.
+      const scLine = findEffect(def, "statusChancePerHit");
+      const perStack = scLine ? scaleArcaneEffectLine(scLine, rank, def.maxRank) : 0;
+      trackBonus(stats, "statusChancePerHit", perStack * Math.max(stacks, 1));
+      const chargeLine = findEffect(def, "tauronStrikeCharge");
+      if (chargeLine) {
+        trackBonus(stats, "tauronStrikeCharge", scaleArcaneEffectLine(chargeLine, rank, def.maxRank));
+      }
+      const durLine = findEffect(def, "buffDuration");
+      if (durLine) {
+        trackBonus(stats, "buffDuration", scaleArcaneEffectLine(durLine, rank, def.maxRank));
+      }
+      return true;
+    }
+
     case "magus_firewall": {
       // wiki R5: Operator Void Mode — 6×12.5% = 75% Operator DR. Does not affect Warframes.
       const drLine = findEffect(def, "damageReduction");
@@ -1256,8 +1353,6 @@ export function applyCustomArcaneToWarframe(
     case "magus_cloud":
     case "molt_reconstruct":
     case "theorem_contagion":
-    case "theorem_infection":
-    case "zid_an_asheir":
     case "zid_an_sek_eel":
     case "melee_vortex":
     case "primary_debilitate":

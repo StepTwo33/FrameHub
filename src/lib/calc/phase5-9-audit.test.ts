@@ -1929,6 +1929,128 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     expect(full.arcaneBonuses?.damage ?? 0).toBe(0);
   });
 
+  it("Zid-An Uskos: 105 stacks R5 → +250% Heat on Lex (cap); 0 stacks = no Heat", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const uskos = allArcanes.find((a) => a.id === "zid_an_uskos")!;
+    const def = getArcaneEffectDef("zid_an_uskos")!;
+    expect(def.trigger).toBe("stacks");
+    expect(def.stackCap).toBe(105);
+
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [uskos],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.totalDamage).toBeCloseTo(bare.totalDamage, 4);
+
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [uskos],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 105 },
+    );
+    const heat = full.elements.find((e) => e.type === "heat")?.value ?? 0;
+    const bareHeat = bare.elements.find((e) => e.type === "heat")?.value ?? 0;
+    expect(heat - bareHeat).toBeCloseTo(lex.damage * 2.5, 4);
+    expect(full.arcaneBonuses?.secondaryHeatDamage).toBeCloseTo(250, 4);
+  });
+
+  it("Zid-An Asheir: 50 stacks R5 → +300% SC on Braton", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const asheir = allArcanes.find((a) => a.id === "zid_an_asheir")!;
+    const bare = calculateWeaponBuild(braton, [], new Map());
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [asheir],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 50 },
+    );
+    expect(full.statusChance).toBeCloseTo(bare.statusChance * 4, 4);
+    expect(full.arcaneBonuses?.statusChancePerHit).toBeCloseTo(300, 4);
+  });
+
+  it("Arcane Victory: equipped → regen 3% of max Health per second", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const victory = allArcanes.find((a) => a.id === "arcane_victory")!;
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [victory],
+    );
+    expect(full.healthRegenPerSec).toBeCloseTo(bare.healthRegenPerSec + bare.totalHealth * 0.03, 4);
+  });
+
+  it("Secondary Encumber: stacks>0 → +SC×0.24 expected extra status on Lex", () => {
+    const lex = allWeapons.find((w) => w.id === "lex")!;
+    const encumber = allArcanes.find((a) => a.id === "secondary_encumber")!;
+    const bare = calculateWeaponBuild(lex, [], new Map());
+    const zero = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [encumber],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.statusChance).toBeCloseTo(bare.statusChance, 5);
+    const full = calculateWeaponBuildWithArcanes(
+      lex,
+      [],
+      new Map(),
+      [encumber],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    const expectedExtra = Math.min(1, bare.statusChance) * 0.24;
+    expect(full.statusChance).toBeCloseTo(bare.statusChance + expectedExtra, 5);
+  });
+
+  it("Theorem Infection: paper max stacks → +360% companion damage ramp", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const infection = allArcanes.find((a) => a.id === "theorem_infection")!;
+    const def = getArcaneEffectDef("theorem_infection")!;
+    expect(def.stackCap).toBe(15);
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [infection],
+    );
+    // warframe stacking assumes stackCap
+    expect(full.arcaneBonuses?.companionDamageRamp).toBeCloseTo(360, 4);
+  });
+
+  it("Primary Exhilarate: 3 Impact stacks R5 → +3.6 Energy/s tracked", () => {
+    const braton = allWeapons.find((w) => w.id === "braton")!;
+    const exh = allArcanes.find((a) => a.id === "primary_exhilarate")!;
+    const zero = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [exh],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 0 },
+    );
+    expect(zero.arcaneBonuses?.energyRegen ?? 0).toBe(0);
+    const full = calculateWeaponBuildWithArcanes(
+      braton,
+      [],
+      new Map(),
+      [exh],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 3 },
+    );
+    expect(full.arcaneBonuses?.energyRegen).toBeCloseTo(3.6, 4);
+  });
+
   it("Melee Fortification: paper 30 kill stacks → +6300 flat Armor", () => {
     const excal = allWarframes.find((w) => w.id === "excalibur")!;
     const fort = allArcanes.find((a) => a.id === "melee_fortification")!;

@@ -2692,7 +2692,8 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "stacking": true,
         "baseValue": 4.0
       }
-    ]
+    ],
+    "stackCap": 15
   },
   "virtuos_forge": {
     "name": "Virtuos Forge",
@@ -2853,7 +2854,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "zid_an_asheir": {
     "name": "Zid-An Asheir",
-    "trigger": "conditional",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
@@ -2952,7 +2953,7 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "zid_an_uskos": {
     "name": "Zid-An Uskos",
-    "trigger": "conditional",
+    "trigger": "stacks",
     "maxRank": 5,
     "effects": [
       {
@@ -2963,6 +2964,6 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
         "baseValue": 0.4
       }
     ],
-    "stackCap": 25
+    "stackCap": 105
   }
 };

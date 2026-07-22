@@ -48,7 +48,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur shields/cast; Hunter vs Slash DPS toggle; Mecha **mark timing** + **Empowered +150% vs marked** DPS toggle | **Improved** — Mecha status-spread DoT → C7 |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
-| B6 | Arcane custom handlers | Hard batch: Animosity/Afflictions/Compression/Contagion/Firewall/Overload + prior | **Improved** |
+| B6 | Arcane custom handlers | Uskos/Asheir/Victory/Encumber/Infection + hard batch + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks | **Locked** Phase 3 |
 | B8 | Incarnon + radials | … + Mk1-Furis/Kunai forms + Kunai Genesis + **Vasto Prime Deathtrap +0.8× CM** | **Improved** — Contagion Cloud + utility panel + instant-reload/ammo-restore sustained; form/Chain Shatter mechanics remain C-adjacent |
 
@@ -302,6 +302,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Blessing/Augmented/Concentration/Sculptor/armor procs | 2026-07-22 | Blessing +1200 HP; Augmented +60% STR; Conc +60% DUR; Sculptor lock 175% EFF; Ultimatum/Tanker/Guardian/Reaper flat armor |
 | Intention/Agility/Consequence/Double Back/Grace/Duplicate/Fortification | 2026-07-22 | Intention ×4→+1000 HP; parkour +60%; Double Back ×3 DR; Grace 6% HP/s; Duplicate ×2; Fortification ×30 armor |
 | Animosity/Afflictions/Compression/Contagion/Firewall/Overload | 2026-07-22 | Animosity heavy-only +42% CC×10; Afflictions ×2 DoT; Compression 0.8×radius aiming; Contagion 1× burst panel; Firewall Operator DR; Overload 80% enemy HP panel |
+| Uskos/Asheir/Victory/Encumber/Infection/Exhilarate | 2026-07-22 | Uskos Heat cap 250% (stackCap 105); Asheir +300% SC; Victory 3% HP/s; Encumber +SC×0.24; Infection ×15→+360%; Exhilarate +3.6 energy/s |
 
 ## New / extended test files
 

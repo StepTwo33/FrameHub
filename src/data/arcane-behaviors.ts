@@ -476,8 +476,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_victory": {
     arcaneId: "arcane_victory",
+    customHandler: "arcane_victory",
     effects: [
-      {"statKey": "headshotHealthRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Victory: headshotHealthRegen (on headshot proc)"},
+      {"statKey": "headshotHealthRegen", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Victory — +3% max HP/s for 9s on HS kill (paper: equipped = buff up)"},
     ],
   },
   "arcane_warmth": {
@@ -954,8 +955,8 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   "primary_exhilarate": {
     arcaneId: "primary_exhilarate",
     effects: [
-      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Primary Exhilarate: energyRegen (stacking — applies at sim stack count)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Primary Exhilarate: buffDuration (stacking — applies at sim stack count)"},
+      {"statKey": "energyRegen", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "wiki: Primary Exhilarate — +1.2 Energy/s per Impact stack at R5 (cap 3 → +3.6/s; tracked at sim stacks)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "flat", "source": "wiki: Primary Exhilarate — 10s duration (loses 1 stack on expiry)"},
     ],
   },
   "primary_frostbite": {
@@ -1030,8 +1031,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "secondary_encumber": {
     arcaneId: "secondary_encumber",
+    customHandler: "secondary_encumber",
     effects: [
-      {"statKey": "secondaryStatusProc", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Secondary Encumber: secondaryStatusProc (on status proc)"},
+      {"statKey": "secondaryStatusProc", "target": "weapon_dps", "mode": "custom", "source": "wiki: Secondary Encumber — 24% on status → 1 extra random status (paper: stacks>0 → +SC×0.24 expected)"},
     ],
   },
   "secondary_enervate": {
@@ -1109,7 +1111,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "theorem_infection",
     customHandler: "theorem_infection",
     effects: [
-      {"statKey": "companionDamageRamp", "target": "arcane_panel", "mode": "custom", "source": "Theorem Infection: custom handler"},
+      {"statKey": "companionDamageRamp", "target": "arcane_panel", "mode": "custom", "source": "wiki: Theorem Infection — +24%/s companion+summon damage in Residual zone (cap 15 → +360%; paper max stacks)"},
     ],
   },
   "virtuos_forge": {
@@ -1187,9 +1189,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "zid_an_asheir",
     customHandler: "zid_an_asheir",
     effects: [
-      {"statKey": "statusChancePerHit", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Asheir: custom handler"},
-      {"statKey": "tauronStrikeCharge", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Asheir: custom handler"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Asheir: custom handler"},
+      {"statKey": "statusChancePerHit", "target": "weapon_dps", "mode": "custom", "source": "wiki: Zid-An Asheir — +6% SC / Tauron hit (cap 50 → +300%) for WF weapons"},
+      {"statKey": "tauronStrikeCharge", "target": "arcane_panel", "mode": "custom", "source": "wiki: Zid-An Asheir — +18% Tauron Strike initial charge (passive)"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Zid-An Asheir — 30s SC buff"},
     ],
   },
   "zid_an_haras": {
@@ -1222,7 +1224,7 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     arcaneId: "zid_an_uskos",
     customHandler: "zid_an_uskos",
     effects: [
-      {"statKey": "secondaryHeatDamage", "target": "arcane_panel", "mode": "custom", "source": "Zid-An Uskos: custom handler"},
+      {"statKey": "secondaryHeatDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Zid-An Uskos — +2.4% Heat / kill (cap 105 → max +250%; does not combine; paper uses sim stacks)"},
     ],
   },
 };

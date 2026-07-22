@@ -1861,6 +1861,7 @@
   "theorem_infection": {
     "replace": true,
     "trigger": "stacks",
+    "stackCap": 15,
     "effects": [
       {
         "stat": "companionDamageRamp",
@@ -2019,20 +2020,22 @@
   },
   "zid_an_asheir": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "stacks",
     "stackCap": 50,
     "effects": [
       {
         "stat": "statusChancePerHit",
         "maxValue": 6,
         "flat": false,
-        "stacking": true
+        "stacking": true,
+        "baseValue": 1
       },
       {
         "stat": "tauronStrikeCharge",
         "maxValue": 18,
         "flat": false,
-        "stacking": false
+        "stacking": false,
+        "baseValue": 3
       },
       {
         "stat": "buffDuration",
@@ -2109,14 +2112,15 @@
   },
   "zid_an_uskos": {
     "replace": true,
-    "trigger": "conditional",
-    "stackCap": 25,
+    "trigger": "stacks",
+    "stackCap": 105,
     "effects": [
       {
         "stat": "secondaryHeatDamage",
         "maxValue": 2.4,
         "flat": false,
-        "stacking": true
+        "stacking": true,
+        "baseValue": 0.4
       }
     ]
   },
