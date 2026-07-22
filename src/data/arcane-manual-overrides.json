@@ -1697,100 +1697,141 @@
   },
   "residual_boils": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onKill",
     "effects": [
+      {
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
+      },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "baseValue": 3
-      },
-      {
-        "stat": "healthRegenChance",
-        "maxValue": 20,
-        "baseValue": 20
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 80,
-        "baseValue": 80
+        "flat": true,
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "baseValue": 10
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_malodor": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onKill",
     "effects": [
       {
-        "stat": "healthRegenChance",
+        "stat": "killProcChance",
         "maxValue": 20,
-        "baseValue": 20
+        "constantAtAllRanks": true
       },
       {
-        "stat": "buffDuration",
+        "stat": "zoneDuration",
         "maxValue": 12,
         "flat": true,
-        "baseValue": 3
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamagePerSec",
         "maxValue": 40,
-        "baseValue": 40
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_shock": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onKill",
     "effects": [
       {
-        "stat": "electricZoneDuration",
-        "maxValue": 12,
-        "flat": true,
-        "baseValue": 3
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20,
-        "baseValue": 20
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
         "flat": true,
-        "baseValue": 200
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
         "flat": true,
-        "baseValue": 10
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_viremia": {
     "replace": true,
-    "trigger": "conditional",
+    "trigger": "onKill",
     "effects": [
       {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "flat": true,
-        "baseValue": 40
-      },
-      {
-        "stat": "healthRegenChance",
+        "stat": "killProcChance",
         "maxValue": 20,
-        "baseValue": 20
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "baseValue": 3
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
+      },
+      {
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2349,6 +2390,24 @@
         "stat": "armorSteal",
         "maxValue": 50,
         "baseValue": 25
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "armorStealCap",
+        "maxValue": 1000,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "overguardStealCap",
+        "maxValue": 10000,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

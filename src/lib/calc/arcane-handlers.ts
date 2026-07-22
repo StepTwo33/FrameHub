@@ -277,6 +277,9 @@ export const WARFRAME_CUSTOM_ARCANE_IDS = new Set([
   "arcane_ice",
   "arcane_nullifier",
   "arcane_resistance",
+  "arcane_deflection",
+  "arcane_warmth",
+  "arcane_circumvent",
 ]);
 
 /** Stacking damage (+ optional reload) — Merciless, Deadhead, Dexterity, Cascadia Flare. */
@@ -1949,12 +1952,30 @@ export function applyCustomArcaneToWarframe(
 
     case "arcane_ice":
     case "arcane_nullifier":
-    case "arcane_resistance": {
-      // wiki R5: 17–102% chance to resist Cold / Magnetic / Toxin. Panel + elementalResistance UI.
+    case "arcane_resistance":
+    case "arcane_deflection":
+    case "arcane_warmth": {
+      // wiki R5: 17–102% chance to resist Cold / Magnetic / Toxin / Radiation / Heat.
       const resistLine = findEffect(def, "statusResistance");
       const resist = resistLine ? scaleArcaneEffectLine(resistLine, rank, def.maxRank) : 0;
       if (resist > 0) stats.elementalResistance += resist;
       trackBonus(stats, "statusResistance", resist);
+      return true;
+    }
+
+    case "arcane_circumvent": {
+      // wiki R5: Roll through enemies — steal 25–50% defenses; armor buff cap 1000 / 15s.
+      // Paper: equipped = SP roll → armor at cap.
+      const stealLine = findEffect(def, "armorSteal");
+      const durLine = findEffect(def, "buffDuration");
+      const armorCapLine = findEffect(def, "armorStealCap");
+      const ogCapLine = findEffect(def, "overguardStealCap");
+      const armorCap = armorCapLine ? scaleArcaneEffectLine(armorCapLine, rank, def.maxRank) : 1000;
+      if (armorCap > 0) stats.flatArmorBonus += armorCap;
+      trackBonus(stats, "armorSteal", stealLine ? scaleArcaneEffectLine(stealLine, rank, def.maxRank) : 0);
+      trackBonus(stats, "buffDuration", durLine ? scaleArcaneEffectLine(durLine, rank, def.maxRank) : 15);
+      trackBonus(stats, "armorStealCap", armorCap);
+      trackBonus(stats, "overguardStealCap", ogCapLine ? scaleArcaneEffectLine(ogCapLine, rank, def.maxRank) : 10000);
       return true;
     }
 

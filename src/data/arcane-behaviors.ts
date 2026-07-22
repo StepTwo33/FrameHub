@@ -116,8 +116,12 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_circumvent": {
     arcaneId: "arcane_circumvent",
+    customHandler: "arcane_circumvent",
     effects: [
-      {"statKey": "armorSteal", "target": "arcane_panel", "mode": "multiplicative_percent", "source": "Arcane Circumvent: armorSteal (conditional proc)"},
+      {"statKey": "armorSteal", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Circumvent — steal 25–50% defenses on roll"},
+      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Circumvent — 15s armor buff duration"},
+      {"statKey": "armorStealCap", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Circumvent — armor buff cap 1000 (paper: equipped = SP roll → +1000 flat armor)"},
+      {"statKey": "overguardStealCap", "target": "arcane_panel", "mode": "custom", "source": "wiki: Arcane Circumvent — Overguard steal cap 10000"},
     ],
   },
   "arcane_concentration": {
@@ -145,8 +149,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_deflection": {
     arcaneId: "arcane_deflection",
+    customHandler: "arcane_deflection",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Deflection: statusResistance (always active while equipped)"},
+      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Deflection — 17–102% chance to resist Radiation"},
     ],
   },
   "arcane_double_back": {
@@ -502,8 +507,9 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
   },
   "arcane_warmth": {
     arcaneId: "arcane_warmth",
+    customHandler: "arcane_warmth",
     effects: [
-      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "multiplicative_percent", "source": "Arcane Warmth: statusResistance (always active while equipped)"},
+      {"statKey": "statusResistance", "target": "warframe_totals", "mode": "custom", "source": "wiki: Arcane Warmth — 17–102% chance to resist Heat"},
     ],
   },
   "cascadia_accuracy": {
@@ -1036,9 +1042,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     customHandler: "residual_boils",
     effects: [
       {"statKey": "zoneDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Boils — 80 Heat explosion (paper: stacks>0 = zone up; 1 hit/s → +80 DPS)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 20% spawn chance on kill (constant)"},
       {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 3–12s duration by rank"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 10m"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 20% spawn chance on kill (panel)"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 10m explosion radius"},
+      {"statKey": "zoneBuffRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Boils — 9m Theorem buff radius"},
     ],
   },
   "residual_malodor": {
@@ -1046,8 +1053,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     customHandler: "residual_malodor",
     effects: [
       {"statKey": "zoneDamagePerSec", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Malodor — 40 Cold/s (paper: stacks>0 = zone up)"},
-      {"statKey": "buffDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 12s duration"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 20% spawn chance on kill (panel)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 20% spawn chance on kill (constant)"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 3–12s duration by rank"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 9m damage radius"},
+      {"statKey": "zoneBuffRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Malodor — 9m Theorem buff radius"},
     ],
   },
   "residual_shock": {
@@ -1055,9 +1064,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     customHandler: "residual_shock",
     effects: [
       {"statKey": "zoneDamage", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Shock — 200 Electricity (paper: stacks>0 = zone up; 1 hit/s → +200 DPS)"},
-      {"statKey": "electricZoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 3–12s duration"},
-      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 10m"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 20% spawn chance on kill (panel)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 20% spawn chance on kill (constant)"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 3–12s duration by rank"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 10m range"},
+      {"statKey": "zoneBuffRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Shock — 9m Theorem buff radius"},
     ],
   },
   "residual_viremia": {
@@ -1065,8 +1075,10 @@ export const VERIFIED_ARCANE_BEHAVIORS: Record<string, VerifiedArcaneBehavior> =
     customHandler: "residual_viremia",
     effects: [
       {"statKey": "zoneDamagePerSec", "target": "weapon_dps", "mode": "custom", "source": "wiki: Residual Viremia — 40 Toxin/s (paper: stacks>0 = zone up)"},
-      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 3–12s duration"},
-      {"statKey": "healthRegenChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 20% spawn chance on kill (panel)"},
+      {"statKey": "killProcChance", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 20% spawn chance on kill (constant)"},
+      {"statKey": "zoneDuration", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 3–12s duration by rank"},
+      {"statKey": "zoneRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 9m range"},
+      {"statKey": "zoneBuffRadius", "target": "arcane_panel", "mode": "custom", "source": "wiki: Residual Viremia — 9m Theorem buff radius"},
     ],
   },
   "secondary_cryogenic": {

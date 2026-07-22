@@ -294,7 +294,25 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
       {
         "stat": "armorSteal",
         "maxValue": 50.0,
-        "baseValue": 8.333333
+        "baseValue": 25.0
+      },
+      {
+        "stat": "buffDuration",
+        "maxValue": 15,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "armorStealCap",
+        "maxValue": 1000,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "overguardStealCap",
+        "maxValue": 10000,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
@@ -2393,144 +2411,145 @@ export const ARCANE_EFFECTS: Record<string, ArcaneEffectDef> = {
   },
   "residual_boils": {
     "name": "Residual Boils",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneDuration",
-        "maxValue": 12,
-        "valuesByRank": [
-          3,
-          6,
-          9,
-          12
-        ]
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 80,
-        "valuesByRank": [
-          80,
-          80,
-          80,
-          80
-        ]
+        "flat": true,
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
-        "valuesByRank": [
-          10,
-          10,
-          10,
-          10
-        ]
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_malodor": {
     "name": "Residual Malodor",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
       },
       {
-        "stat": "buffDuration",
+        "stat": "zoneDuration",
         "maxValue": 12,
         "flat": true,
-        "constantAtAllRanks": true
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamagePerSec",
         "maxValue": 40,
-        "valuesByRank": [
-          40,
-          40,
-          40,
-          40
-        ]
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_shock": {
     "name": "Residual Shock",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "electricZoneDuration",
-        "maxValue": 12.0,
-        "flat": true,
-        "baseValue": 3.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
       },
       {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "zoneDuration",
+        "maxValue": 12,
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
       },
       {
         "stat": "zoneDamage",
         "maxValue": 200,
         "flat": true,
-        "valuesByRank": [
-          200,
-          200,
-          200,
-          200
-        ]
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneRadius",
         "maxValue": 10,
         "flat": true,
-        "valuesByRank": [
-          10,
-          10,
-          10,
-          10
-        ]
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },
   "residual_viremia": {
     "name": "Residual Viremia",
-    "trigger": "conditional",
+    "trigger": "onKill",
     "maxRank": 3,
     "effects": [
       {
-        "stat": "zoneDamagePerSec",
-        "maxValue": 40,
-        "flat": true,
-        "valuesByRank": [
-          40,
-          40,
-          40,
-          40
-        ]
-      },
-      {
-        "stat": "healthRegenChance",
-        "maxValue": 20.0,
-        "baseValue": 5.0
+        "stat": "killProcChance",
+        "maxValue": 20,
+        "constantAtAllRanks": true
       },
       {
         "stat": "zoneDuration",
         "maxValue": 12,
-        "valuesByRank": [
-          3,
-          6,
-          9,
-          12
-        ]
+        "flat": true,
+        "valuesByRank": [3, 6, 9, 12]
+      },
+      {
+        "stat": "zoneDamagePerSec",
+        "maxValue": 40,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
+      },
+      {
+        "stat": "zoneBuffRadius",
+        "maxValue": 9,
+        "flat": true,
+        "constantAtAllRanks": true
       }
     ]
   },

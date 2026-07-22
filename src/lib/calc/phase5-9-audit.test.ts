@@ -2179,6 +2179,10 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
     );
     expect(withBoils.residualZoneDps).toBeCloseTo(80, 4);
     expect(withBoils.burstDps).toBeCloseTo(bare.burstDps + 80, 2);
+    expect(withBoils.arcaneBonuses?.killProcChance).toBeCloseTo(20, 4);
+    expect(withBoils.arcaneBonuses?.zoneDuration).toBeCloseTo(12, 4);
+    expect(withBoils.arcaneBonuses?.zoneBuffRadius).toBeCloseTo(9, 4);
+    expect(getArcaneEffectDef("residual_boils")!.trigger).toBe("onKill");
     const withShock = calculateWeaponBuildWithArcanes(
       kit,
       [],
@@ -2188,6 +2192,58 @@ describe("Phase 6 — arcane passives on paper DPS", () => {
       { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
     );
     expect(withShock.residualZoneDps).toBeCloseTo(200, 4);
+    expect(withShock.arcaneBonuses?.zoneDuration).toBeCloseTo(12, 4);
+    expect(withShock.arcaneBonuses?.electricZoneDuration ?? 0).toBe(0);
+  });
+
+  it("Residual Malodor: wiki panel — 20% / 12s / 9m / 40 DPS", () => {
+    const kit = allWeapons.find((w) => w.id === "catchmoon_chamber")!;
+    const malodor = allArcanes.find((a) => a.id === "residual_malodor")!;
+    const full = calculateWeaponBuildWithArcanes(
+      kit,
+      [],
+      new Map(),
+      [malodor],
+      undefined,
+      { ...DEFAULT_SIM_PARAMS, arcaneStacks: 1 },
+    );
+    expect(full.arcaneBonuses?.killProcChance).toBeCloseTo(20, 4);
+    expect(full.arcaneBonuses?.zoneDuration).toBeCloseTo(12, 4);
+    expect(full.arcaneBonuses?.zoneRadius).toBeCloseTo(9, 4);
+    expect(full.arcaneBonuses?.healthRegenChance ?? 0).toBe(0);
+  });
+
+  it("Arcane Circumvent: +1000 flat armor paper / 50% steal / 15s", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    const circ = allArcanes.find((a) => a.id === "arcane_circumvent")!;
+    const stealLine = getArcaneEffectDef("arcane_circumvent")!.effects.find((e) => e.stat === "armorSteal")!;
+    expect(stealLine.baseValue).toBe(25);
+    const bare = calculateWarframeBuild(excal, [], new Map());
+    const full = applyWarframeShardsAndArcanes(
+      calculateWarframeBuild(excal, [], new Map()),
+      undefined,
+      [circ],
+    );
+    expect(full.flatArmorBonus).toBeCloseTo(bare.flatArmorBonus + 1000, 4);
+    expect(full.arcaneBonuses?.armorSteal).toBeCloseTo(50, 4);
+    expect(full.arcaneBonuses?.buffDuration).toBeCloseTo(15, 4);
+    expect(full.arcaneBonuses?.armorStealCap).toBe(1000);
+    expect(full.arcaneBonuses?.overguardStealCap).toBe(10000);
+  });
+
+  it("Arcane Deflection/Warmth: +102% status resist", () => {
+    const excal = allWarframes.find((w) => w.id === "excalibur")!;
+    for (const id of ["arcane_deflection", "arcane_warmth"] as const) {
+      const arc = allArcanes.find((a) => a.id === id)!;
+      const bare = calculateWarframeBuild(excal, [], new Map());
+      const full = applyWarframeShardsAndArcanes(
+        calculateWarframeBuild(excal, [], new Map()),
+        undefined,
+        [arc],
+      );
+      expect(full.elementalResistance).toBeCloseTo(bare.elementalResistance + 102, 4);
+      expect(full.arcaneBonuses?.statusResistance).toBeCloseTo(102, 4);
+    }
   });
 
   it("Exodia Triumph: Zaw +50% combo chance panel; non-Zaw gated", () => {

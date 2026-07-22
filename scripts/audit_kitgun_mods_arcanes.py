@@ -53,24 +53,28 @@ WIKI_RANKS = {
         "zoneDuration": (3, 12),
         "zoneDamage": (80, 80),
         "zoneRadius": (10, 10),
+        "zoneBuffRadius": (9, 9),
     },
     "residual_malodor": {
         "killProcChance": (20, 20),
         "zoneDuration": (3, 12),
         "zoneDamagePerSec": (40, 40),
         "zoneRadius": (9, 9),
+        "zoneBuffRadius": (9, 9),
     },
     "residual_shock": {
         "killProcChance": (20, 20),
         "zoneDuration": (3, 12),
         "zoneDamage": (200, 200),
         "zoneRadius": (10, 10),
+        "zoneBuffRadius": (9, 9),
     },
     "residual_viremia": {
         "killProcChance": (20, 20),
         "zoneDuration": (3, 12),
         "zoneDamagePerSec": (40, 40),
         "zoneRadius": (9, 9),
+        "zoneBuffRadius": (9, 9),
     },
 }
 
