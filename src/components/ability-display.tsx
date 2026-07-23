@@ -184,6 +184,7 @@ export function AbilityStatRow({
   isPositive,
   scaleHint,
   compact = false,
+  title,
 }: {
   label: string;
   baseValue: string;
@@ -193,10 +194,13 @@ export function AbilityStatRow({
   isPositive: boolean;
   scaleHint?: AbilityScaleHint;
   compact?: boolean;
+  /** Hover tip (e.g. exalted dual-display caveat). */
+  title?: string;
 }) {
   const display = isModified ? modifiedValue : baseValue;
   return (
     <div
+      title={title}
       className={cn(
         "group flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-muted/40",
         compact ? "py-0.5" : "py-1",
@@ -323,11 +327,14 @@ export function AbilityStatsBlock({
   stats,
   display,
   compact = false,
+  /** When set, Damage row is unmodded wiki×STR — modded DPS lives on the exalted weapon panel. */
+  hasExaltedWeapon = false,
 }: {
   ability: AbilityStatSource;
   stats: WarframeCalculatedStats | null;
   display: AbilityDisplayContext;
   compact?: boolean;
+  hasExaltedWeapon?: boolean;
 }) {
   const str = stats?.abilityStrength ?? 1;
   const dur = stats?.abilityDuration ?? 1;
@@ -559,12 +566,17 @@ export function AbilityStatsBlock({
       <AbilityStatRow
         key="damage"
         compact={compact}
-        label="Damage"
+        label={hasExaltedWeapon ? "Base damage (unmodded)" : "Damage"}
         baseValue={ability.damage.toFixed(0)}
         modifiedValue={(ability.damage * str).toFixed(0)}
         isModified={str !== 1}
         isPositive={str > 1}
         scaleHint="strength"
+        title={
+          hasExaltedWeapon
+            ? "Wiki ability base × Ability Strength only — not modded. Use Exalted Weapon DPS below as the source of truth."
+            : undefined
+        }
       />,
     );
   }

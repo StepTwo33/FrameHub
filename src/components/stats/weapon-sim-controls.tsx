@@ -124,6 +124,14 @@ export function WeaponSimControls({
             onChange={(v) => onSimParamsChange({ ...simParams, mechaSpreadEnemies: v })}
             tooltip="Enemies hit by Mecha mark-kill status spread (0 = off). Papers transferred DoT DPS amortized over mark cooldown. Needs ≥1 Mecha set piece in the loadout."
           />
+          <SimSlider
+            label="Mecha cascade enemies"
+            value={simParams.mechaCascadeEnemies ?? 0}
+            min={0}
+            max={12}
+            onChange={(v) => onSimParamsChange({ ...simParams, mechaCascadeEnemies: v })}
+            tooltip="Extra enemies from a second Mecha mark-kill cascade in the same cooldown window (0 = off). Same transferred-DoT math as first hop — user estimate, not mission AI."
+          />
           {isMelee && (
             <>
               <SimSlider

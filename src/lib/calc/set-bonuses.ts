@@ -230,12 +230,15 @@ export function sumClawElementalBonuses(
 
 /**
  * wiki Mecha Set: transferred DoT tick = sum(DoT procs on marked) × type fraction
- * × (1 + matching claw elemental %). Paper DPS amortizes one mark-kill spread over
- * mark cooldown (not in TTK). Cascade re-procs remain out of scope.
+ * × (1 + matching claw elemental %). Paper DPS amortizes mark-kill spreads over
+ * mark cooldown (not in TTK). Optional cascadeEnemies models a second hop in the
+ * same CD window (user-estimated; not mission AI).
  */
 export function computeMechaSpreadPaperDps(opts: {
   pieces: number;
   enemies: number;
+  /** Extra enemies from a second mark-kill cascade (same tick math). */
+  cascadeEnemies?: number;
   /** damagePerTick of each DoT type present on the marked target */
   dotTicks: { type: string; damagePerTick: number }[];
   /** Assumed remaining duration of transferred DoTs (s). Default 6. */
@@ -243,7 +246,9 @@ export function computeMechaSpreadPaperDps(opts: {
   /** Claw elemental fractions by type (e.g. toxin: 3.3 for Sepsis R10). */
   clawElementalBonuses?: Record<string, number>;
 }): number {
-  const enemies = Math.max(0, Math.floor(opts.enemies));
+  const firstHop = Math.max(0, Math.floor(opts.enemies));
+  const cascade = Math.max(0, Math.floor(opts.cascadeEnemies ?? 0));
+  const enemies = firstHop + cascade;
   if (enemies <= 0) return 0;
   const mark = computeMechaSetMarkStats(opts.pieces);
   if (!mark || mark.cooldownSec <= 0) return 0;
@@ -262,7 +267,7 @@ export function computeMechaSpreadPaperDps(opts: {
     tickSum += sum * frac * clawMult;
   }
   const duration = opts.remainingDurationSec ?? 6;
-  // 1 tick/s for duration, once per mark cycle
+  // 1 tick/s for duration, once per mark cycle (first hop + optional cascade)
   return (enemies * tickSum * duration) / mark.cooldownSec;
 }
 

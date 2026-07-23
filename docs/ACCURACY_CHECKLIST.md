@@ -46,12 +46,12 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B1 | Stance DPS | PvE Neutral hit avgs wiki-locked (81/81 mapped); Conclave/Contempt→1.0 | **Locked** — Neutral hit-avg scalar only; full combo strings → C6 |
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
-| B4 | Set effects not in DPS | Augur/Hunter/Mecha mark+Empowered + **mark-kill spread DoT** + **claw elemental on transfer** | **Improved** — cascade re-procs still out of scope |
+| B4 | Set effects not in DPS | Augur/Hunter/Mecha mark+Empowered + **mark-kill spread DoT** + **claw elemental** + **sim cascade enemies** | **Improved** — cascade is user-estimated hops (not mission AI) |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
 | B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
-| B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR) | **Locked** — ability-panel `ability.damage × STR` may still dual-display vs weapon DPS |
+| B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
 
 ---
 
@@ -65,7 +65,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
 | C6 | Stance full combo strings | Forward/Block/Heavy/Slide strings, AS-scaled cycle DPS, combo picker — B1 ships Neutral hit-avg scalars only (**deferred**; no half-slice without reopening Neutral lock) |
-| C7 | Mecha set status-spread DoT | **Moved → B4** (sim-gated DoT + claw elemental); cascade re-procs remain out of scope |
+| C7 | Mecha set status-spread DoT | **Moved → B4** (sim-gated DoT + claw + cascade slider); full mark AI / Gas graphs remain out of scope |
 
 ---
 
@@ -327,6 +327,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mecha spread + Thalys shards + melee form stacks | 2026-07-22 | Mecha mark-kill DoT DPS (sum×frac/CD); Thalys shardTrigger+Chain Shatter; form additiveBaseDamage; Swooping/Destreza sim stacks |
 | Explosive Growth + Mecha claw elemental | 2026-07-22 | Thalys shardFullyGrownHosts ×2 erupt; claw mods via companionWeaponMods (Sepsis wiki 1075); C6 deferred |
 | Exalted weapons accuracy | 2026-07-22 | STR×base before mods (Lizzie additive; Garuda ignore); P0–P2 wiki row fixes (Balefire/Arquebex/Shadow Clones/Artemis/Desert Wind/Talons/Exalted Blade/Regulators/Diwata/Iron Staff/Shattered Lash/Ironbride/Shadow Claws); `exalted-weapon-audit` goldens |
+| Mecha cascade + Titania Diwata | 2026-07-23 | `mechaCascadeEnemies` sim hop; ability Damage dual-display tooltip; Titania Exalted Melee grid (Diwata) + save/loadout preview |
 
 ## New / extended test files
 

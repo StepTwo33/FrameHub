@@ -11,6 +11,7 @@ import type { Mod, ModSlot, Weapon } from "@/lib/types";
 import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
 import {
   getExaltedWeaponsForWarframe,
+  getMeleeExaltedWeapon,
   getPrimaryExaltedWeapon,
 } from "@/lib/weapons/exalted-weapons";
 
@@ -476,9 +477,12 @@ describe("exalted weapon inventory", () => {
     }
   });
 
-  it("Titania primary exalted prefers Dex Pixia over Diwata", () => {
+  it("Titania primary exalted prefers Dex Pixia; melee exalted is Diwata", () => {
     expect(getPrimaryExaltedWeapon("titania", allWeapons)?.id).toBe("dex_pixia");
     expect(getPrimaryExaltedWeapon("titania_prime", allWeapons)?.id).toBe("dex_pixia_prime");
+    expect(getMeleeExaltedWeapon("titania", allWeapons)?.id).toBe("diwata");
+    expect(getMeleeExaltedWeapon("titania_prime", allWeapons)?.id).toBe("diwata_prime");
+    expect(getMeleeExaltedWeapon("excalibur", allWeapons)).toBeNull();
   });
 });
 

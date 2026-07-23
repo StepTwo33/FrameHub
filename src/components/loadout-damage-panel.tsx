@@ -207,7 +207,8 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
 
   if (!stats) return null;
 
-  const hasAnyWeapon = stats.primary || stats.secondary || stats.melee || stats.exalted;
+  const hasAnyWeapon =
+    stats.primary || stats.secondary || stats.melee || stats.exalted || stats.exaltedMelee;
 
   if (!stats.warframe && !hasAnyWeapon && !stats.companion) {
     return null;
@@ -342,6 +343,13 @@ export function LoadoutDamagePanel({ loadout }: { loadout: Loadout }) {
         <WeaponRow label="Secondary" icon={<Crosshair className="h-3.5 w-3.5" />} color="text-cyan-400" entry={stats.secondary} showTtk={showTtk} />
         <WeaponRow label="Melee" icon={<Swords className="h-3.5 w-3.5" />} color="text-orange-400" entry={stats.melee} showTtk={showTtk} />
         <WeaponRow label="Exalted" icon={<Sparkles className="h-3.5 w-3.5" />} color="text-violet-400" entry={stats.exalted} showTtk={showTtk} />
+        <WeaponRow
+          label="Exalted Melee"
+          icon={<Sparkles className="h-3.5 w-3.5" />}
+          color="text-fuchsia-400"
+          entry={stats.exaltedMelee}
+          showTtk={showTtk}
+        />
 
         {stats.companion && (
           <div className="border border-green-500/25 rounded-lg overflow-hidden bg-green-500/[0.04]">

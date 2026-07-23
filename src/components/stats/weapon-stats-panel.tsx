@@ -798,7 +798,7 @@ export function WeaponStatsPanel({ stats, baseStats, weapon, isMelee, selectedEv
                   value={mechaSpread.toFixed(0)}
                   color="text-cyan-300"
                   changed={flash.has("mechaSpreadDps")}
-                  tooltip="Mecha mark-kill status spread: transferred DoT ticks × claw elemental × sim enemies / mark cooldown. Cascade re-procs not modeled. Not in TTK."
+                  tooltip="Mecha mark-kill status spread: transferred DoT ticks × claw elemental × (spread + cascade) enemies / mark cooldown. Cascade is a sim estimate, not AI. Not in TTK."
                 />
               )}
               {shardChain > 0 && (

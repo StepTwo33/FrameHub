@@ -257,6 +257,19 @@ describe("Mecha set (wiki: mark timing + Empowered vs marked)", () => {
     // tickSum = 175+250 = 425; 2 enemies × 425 × 6 / 15s CD = 340
     expect(dps).toBeCloseTo(340, 5);
 
+    // Cascade: +2 more enemies in the same CD → 4 × 425 × 6 / 15 = 680
+    const withCascade = computeMechaSpreadPaperDps({
+      pieces: 4,
+      enemies: 2,
+      cascadeEnemies: 2,
+      dotTicks: [
+        { type: "slash", damagePerTick: 100 },
+        { type: "toxin", damagePerTick: 400 },
+      ],
+      remainingDurationSec: 6,
+    });
+    expect(withCascade).toBeCloseTo(680, 5);
+
     // Wiki Sepsis Claws: Toxin tick (500)×0.5×(1+3.30)=1075; Slash unchanged 175
     const sepsis = sumClawElementalBonuses(
       [{ modId: "sepsis_claws", rank: 10, slotIndex: 0 }],

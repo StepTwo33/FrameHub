@@ -12,7 +12,7 @@ import { resolveSavedArcaneSlots } from "@/lib/builds/build-storage";
 import { resolveDefaultCompanionWeapon } from "@/lib/weapons/companion-weapons";
 import { weaponFromModularData } from "@/lib/builds/modular-resolve";
 import { enrichWeapon } from "@/lib/weapons/weapon-enrich";
-import { getPrimaryExaltedWeapon } from "@/lib/weapons/exalted-weapons";
+import { getMeleeExaltedWeapon, getPrimaryExaltedWeapon } from "@/lib/weapons/exalted-weapons";
 import {
   applyWarframeShardsAndArcanes,
   calculateWarframeBuild,
@@ -99,6 +99,8 @@ export interface LoadoutStatsResult {
   secondary: LoadoutWeaponSlotStats | null;
   melee: LoadoutWeaponSlotStats | null;
   exalted: LoadoutWeaponSlotStats | null;
+  /** Titania Diwata when Dex Pixia is the primary exalted. */
+  exaltedMelee: LoadoutWeaponSlotStats | null;
   companion: {
     name: string;
     bodyStats: CompanionCalculatedStats;
@@ -323,6 +325,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
     secondary: null,
     melee: null,
     exalted: null,
+    exaltedMelee: null,
     companion: null,
   };
 
@@ -390,26 +393,28 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         allMods: modsMap,
       };
 
-      const exaltedWeapon = getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList);
-      if (exaltedWeapon && ((loadout.warframeBuild.exaltedMods?.length ?? 0) > 0 || (loadout.warframeBuild.exaltedArcaneIds?.some(Boolean)))) {
-        const base = weaponWithPassive(exaltedWeapon);
-        const exaltedArcanes = resolveSavedArcaneSlots(loadout.warframeBuild.exaltedArcaneIds, 2).filter(
-          (m): m is Mod => m != null,
-        );
-        const modSlots = loadout.warframeBuild.exaltedMods || [];
+      const wfStr = result.warframe?.stats.abilityStrength ?? 1;
+      const calcExaltedSlot = (
+        weapon: Weapon | null,
+        modSlots: ModSlot[],
+        arcaneIds: (string | null)[] | undefined,
+      ): LoadoutWeaponSlotStats | null => {
+        if (!weapon) return null;
+        const arcanes = resolveSavedArcaneSlots(arcaneIds, 2).filter((m): m is Mod => m != null);
+        if (modSlots.length === 0 && arcanes.length === 0) return null;
+        const base = weaponWithPassive(weapon);
         const externalBuffs = resolveWeaponExternalBuffs(base, buffContext, simParams);
-        const wfStr = result.warframe?.stats.abilityStrength ?? 1;
         const calcOptions = {
           ...mergeWeaponCalcOptions(undefined, externalBuffs),
           abilityStrength: wfStr,
         };
         const statsEx =
-          exaltedArcanes.length > 0
+          arcanes.length > 0
             ? calculateWeaponBuildWithArcanes(
                 base,
                 modSlots,
                 modsMap,
-                exaltedArcanes,
+                arcanes,
                 undefined,
                 simParams,
                 calcOptions,
@@ -427,19 +432,31 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         const isMelee = base.category === "melee" || base.triggerType === "Melee";
         const ttk =
           enemy && enemyLevel > 0 ? calculateTTK(statsEx, enemy, enemyLevel) : undefined;
-        const contributionContext = buildWeaponContributionContext({
-          weapon: base,
-          modSlots,
-          allMods: modsMap,
-          arcanes: exaltedArcanes,
-          simParams,
-          linkage: setLinkage,
-          buffContext,
-          abilityStrength: wfStr,
-        });
-        const contributions = computeDpsContributions(contributionContext);
-        result.exalted = { name: base.name, stats: statsEx, ttk, isMelee, contributions };
-      }
+        const contributions = computeDpsContributions(
+          buildWeaponContributionContext({
+            weapon: base,
+            modSlots,
+            allMods: modsMap,
+            arcanes,
+            simParams,
+            linkage: setLinkage,
+            buffContext,
+            abilityStrength: wfStr,
+          }),
+        );
+        return { name: base.name, stats: statsEx, ttk, isMelee, contributions };
+      };
+
+      result.exalted = calcExaltedSlot(
+        getPrimaryExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList),
+        loadout.warframeBuild.exaltedMods || [],
+        loadout.warframeBuild.exaltedArcaneIds,
+      );
+      result.exaltedMelee = calcExaltedSlot(
+        getMeleeExaltedWeapon(loadout.warframeBuild!.warframeId, weaponList),
+        loadout.warframeBuild.exaltedMeleeMods || [],
+        loadout.warframeBuild.exaltedMeleeArcaneIds,
+      );
     }
   }
 
@@ -544,6 +561,7 @@ export function bestSustainedDps(stats: LoadoutStatsResult): {
     { slot: "Secondary", entry: stats.secondary },
     { slot: "Melee", entry: stats.melee },
     { slot: "Exalted", entry: stats.exalted },
+    { slot: "Exalted Melee", entry: stats.exaltedMelee },
   ];
   let best: { slot: string; name: string; sustainedDps: number } | null = null;
   for (const { slot, entry } of slots) {

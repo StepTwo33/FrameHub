@@ -54,7 +54,7 @@ export function getExaltedWeaponsForWarframe(warframeId: string, weapons: Weapon
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** Primary exalted weapon shown in the warframe builder mod section. */
+/** Primary exalted weapon shown in the warframe builder mod section (ranged / main). */
 export function getPrimaryExaltedWeapon(warframeId: string, weapons: Weapon[]): Weapon | null {
   const owned = getExaltedWeaponsForWarframe(warframeId, weapons);
   if (owned.length === 0) return null;
@@ -84,6 +84,32 @@ export function getPrimaryExaltedWeapon(warframeId: string, weapons: Weapon[]): 
     if (match) return match;
   }
   return owned[0];
+}
+
+/**
+ * Secondary melee exalted when a frame has two (Titania Diwata alongside Dex Pixia).
+ * Returns null when the primary is already melee or there is no second weapon.
+ */
+export function getMeleeExaltedWeapon(warframeId: string, weapons: Weapon[]): Weapon | null {
+  const owned = getExaltedWeaponsForWarframe(warframeId, weapons);
+  if (owned.length < 2) return null;
+  const primary = getPrimaryExaltedWeapon(warframeId, weapons);
+  const meleePrefer: Partial<Record<string, string>> = {
+    titania: "diwata",
+    titania_prime: "diwata_prime",
+  };
+  const preferred = meleePrefer[warframeId];
+  if (preferred) {
+    const match = owned.find((w) => w.id === preferred);
+    if (match && match.id !== primary?.id) return match;
+  }
+  return (
+    owned.find(
+      (w) =>
+        w.id !== primary?.id &&
+        (w.category === "melee" || w.category === "archmelee" || w.triggerType === "Melee"),
+    ) ?? null
+  );
 }
 
 /** Match an ability name to its exalted weapon, if any. */

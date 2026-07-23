@@ -387,6 +387,12 @@ export interface SimulationParams {
    */
   mechaSpreadEnemies?: number;
   /**
+   * Mecha Set: extra enemies from a second mark-kill cascade within the same
+   * amortized cooldown window (0 = off). Same tick math as first-hop spread;
+   * user-estimated — not mission AI.
+   */
+  mechaCascadeEnemies?: number;
+  /**
    * Thalys Incarnon: number of enemies with embedded shards (0 = off).
    * Papers form embed triggers + Chain Shatter heavy detonations.
    */
@@ -964,6 +970,9 @@ export interface Loadout {
     exaltedMods?: ModSlot[];
     exaltedSlotPolarities?: Record<number, string>;
     exaltedArcaneIds?: (string | null)[];
+    exaltedMeleeMods?: ModSlot[];
+    exaltedMeleeSlotPolarities?: Record<number, string>;
+    exaltedMeleeArcaneIds?: (string | null)[];
     /** Non-default form mod configs for dual-form warframes (e.g. Orion on Sirius & Orion). */
     dualFormBuilds?: Record<string, { mods: ModSlot[]; slotPolarities?: Record<number, string> }>;
   };

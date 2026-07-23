@@ -333,7 +333,7 @@ function quantizeStatsDamage(stats: CalculatedStats, moddedBaseDamage: number): 
 // Cross-slot: Synth 4pc +15% pistol reload; Tek 4pc optional ×1.6 vs marked (primary); loadout linkage in set-bonuses.ts.
 // Warframe panel: Augur/Hunter/Mecha/Synth/Tek + Augur shields/cast + Mecha mark timing.
 // Hunter vs Slash / Mecha Empowered vs marked are optional DPS toggles.
-// Status-spread DoT damage from Mecha mark-kills remains unmodeled.
+// Mecha mark-kill status-spread DoT is sim-gated via applyMechaSpreadDps (not in TTK).
 const SACRIFICIAL_MOD_IDS = ['sacrificial_pressure', 'sacrificial_steel'];
 
 // Sacrificial full set bonus: +75% when both mods equipped
@@ -398,13 +398,15 @@ function applyMechaSpreadDps(
   clawElementalBonuses?: Record<string, number>,
 ): void {
   const enemies = sim.mechaSpreadEnemies ?? 0;
-  if (enemies <= 0 || mechaPieces <= 0) return;
+  const cascade = sim.mechaCascadeEnemies ?? 0;
+  if ((enemies <= 0 && cascade <= 0) || mechaPieces <= 0) return;
   const dots = (stats.statusProcs ?? [])
     .filter((p) => p.damagePerTick > 0)
     .map((p) => ({ type: p.type, damagePerTick: p.damagePerTick }));
   const dps = computeMechaSpreadPaperDps({
     pieces: mechaPieces,
     enemies,
+    cascadeEnemies: cascade,
     dotTicks: dots,
     clawElementalBonuses,
   });
