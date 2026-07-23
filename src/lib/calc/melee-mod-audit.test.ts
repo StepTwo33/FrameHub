@@ -497,16 +497,26 @@ describe("melee leftovers (wiki max rank, Phase M14)", () => {
   });
 });
 
-describe("melee trigger conditionals (wiki max rank, Phase M17)", () => {
-  it("Proton Snap: paper SC unchanged; toxin catalog key is panel; trigger → +50% SC", () => {
+describe("melee trigger conditionals (wiki max rank, Phase M17/Sim1)", () => {
+  it("Proton Snap: paper SC/toxin unchanged; trigger → +50% SC and +100% toxin", () => {
     const weapon = requireWeapon("skana");
     const beh = VERIFIED_MOD_BEHAVIORS.proton_snap;
-    expect(beh?.stats.find((s) => s.statKey === "damage")?.target).toBe("mod_panel");
+    expect(beh?.stats.find((s) => s.statKey === "damage")?.mode).toBe(
+      "conditional_stat_on_trigger",
+    );
     expect(withMod("proton_snap").statusChance).toBeCloseTo(weapon.statusChance, 5);
     expect(withMod("proton_snap").moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
-    expect(
-      withMod("proton_snap", { ...DEFAULT_SIM_PARAMS, applyTriggerBuffs: true }).statusChance,
-    ).toBeCloseTo(weapon.statusChance * 1.5, 5);
+    expect(withMod("proton_snap").elements.find((e) => e.type === "toxin")).toBeUndefined();
+    const active = withMod("proton_snap", {
+      ...DEFAULT_SIM_PARAMS,
+      applyTriggerBuffs: true,
+    });
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 1.5, 5);
+    expect(active.moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(active.elements.find((e) => e.type === "toxin")?.value).toBeCloseTo(
+      weapon.damage * 1.0,
+      5,
+    );
   });
 });
 

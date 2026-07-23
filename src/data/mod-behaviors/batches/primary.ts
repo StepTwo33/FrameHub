@@ -17,7 +17,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   adhesive_blast: mod("adhesive_blast", [], "wiki: Adhesive Blast \u2014 Grenades have 100% chance to stick to surfaces."),
   aerial_ace: mod("aerial_ace", [], "wiki: Aerial Ace \u2014 On Kill:\\\\nRefresh Double Jump up to 6x while Airborne."),
   aero_agility: mod("aero_agility", [
-    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Aero Agility — aim-glide gated reload"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_trigger", "wiki: Aero Agility — +100% Reload Speed while Aim Gliding"),
   ]),
   aero_periphery: mod("aero_periphery", [
     line("zoom", "mod_panel", "multiplicative_percent", "Aero Periphery: zoom \u2014 -50% Zoom while Aim Gliding (arsenal display only)"),
@@ -74,7 +74,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   combat_reload: mod("combat_reload", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Combat Reload — headshot-pellet gated"),
-    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Combat Reload — headshot-pellet gated reload"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_trigger", "wiki: Combat Reload — If 5 pellets are headshots: +120% Reload Speed for 3s"),
   ]),
   combustion_beam: mod("combustion_beam", [
     line("explosionDamage", "mod_panel", "multiplicative_percent", "Combustion Beam: explosionDamage \u2014 Enemies killed explode, dealing 600 Damage shortly after death."),
@@ -106,7 +106,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("accuracy", "mod_panel", "multiplicative_percent", "Directed Convergence: accuracy \u2014 +100% Accuracy when Aiming (arsenal display only)"),
   ]),
   double_tap: mod("double_tap", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Double Tap — on-hit stack damage (not always-on)"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Double Tap — On Hit: +20% Damage/stack (cap 20; sim assumes max)"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Double Tap — stack window"),
   ]),
   dreadful_killshot: mod("dreadful_killshot", [
@@ -130,7 +130,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Feathered Arrows: projectileSpeed \u2014 +60% Projectile Speed, -20% Damage"),
   ]),
   final_tap: mod("final_tap", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Final Tap — hit-window conditional"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Final Tap — On 4 Hits within 0.05s: +100% Damage for 0.2s"),
     line("duration", "mod_panel", "multiplicative_percent", "Final Tap: duration \u2014 On 4 Hits within 0.05s:\\\\n+100% Damage for 0.2s"),
   ]),
   firestorm: mod("firestorm", [
@@ -213,8 +213,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Maximum Capacity: reloadSpeed \u2014 +30% Magazine Capacity, -15% Reload Speed"),
   ]),
   measured_burst: mod("measured_burst", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Measured Burst — aiming-gated"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Measured Burst — aiming-gated"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Measured Burst — When Aiming: +30% Damage"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Measured Burst — When Aiming: −60% Fire Rate"),
   ]),
   mending_shot: mod("mending_shot", [
     line("energyOrbBonus", "mod_panel", "multiplicative_percent", "Mending Shot: energyOrbBonus \u2014 Shoot Health Orbs to obtain them with +110% extra effect."),
@@ -229,7 +229,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   motus_setup: mod("motus_setup", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Motus Setup — post jump-land gated"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Motus Setup — post jump-land gated SC/CC"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Motus Setup — +100% CC for 4s after Double/Bullet Jump land"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Motus Setup — +100% SC for 4s after Double/Bullet Jump land"),
   ]),
   necrophagic_vigor: mod("necrophagic_vigor", [
     line("health", "mod_panel", "multiplicative_percent", "wiki: Necrophagic Vigor — reload drains HP for CC/CD (not always-on health)"),
@@ -361,10 +362,10 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("ammoConversion", "mod_panel", "multiplicative_percent", "Sniper Ammo Mutation: ammoConversion \u2014 Converts Secondary ammo pickups to 50% of Ammo Pick Up."),
   ]),
   soaring_strike: mod("soaring_strike", [
-    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Soaring Strike — airborne-gated fire rate"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Soaring Strike — +50% Fire Rate when Airborne"),
   ]),
   spectral_serration: mod("spectral_serration", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Spectral Serration — invisibility-gated damage"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Spectral Serration — +330% Damage while Invisible"),
   ]),
   speed_trigger_r3: mod("speed_trigger_r3", [
     line("fireRate", "weapon_dps", "multiplicative_percent", "Speed Trigger: fireRate \u2014 +60% Fire Rate (x2 for Bows)"),
@@ -392,7 +393,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   sudden_justice: mod("sudden_justice", [
     line("duration", "mod_panel", "multiplicative_percent", "Sudden Justice: duration \u2014 On 2 Hits within 0.2s:\\\\n+30% Fire Rate for 2s"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Sudden Justice — hit-window conditional FR"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Sudden Justice — On 2 Hits within 0.2s: +30% Fire Rate for 2s"),
   ]),
   tactical_reload_r3: mod("tactical_reload_r3", [
     line("holsterRate", "mod_panel", "multiplicative_percent", "Tactical Reload: holsterRate \u2014 +20% Magazine Reloaded/s when Holstered (arsenal display only)"),
@@ -414,7 +415,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("magazine", "weapon_dps", "multiplicative_percent", "Thundermiter: magazine \u2014 +100% chance charged Projectiles explode, -60% Magazine Capacity"),
   ]),
   triple_tap: mod("triple_tap", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Triple Tap — hit-window conditional"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Triple Tap — On 2 Hits within 0.02s: +40% Damage for 0.2s"),
     line("duration", "mod_panel", "multiplicative_percent", "Triple Tap: duration \u2014 On 2 Hits within 0.02s:\\\\n+40% Damage for 0.2s"),
   ]),
   twitch: mod("twitch", [

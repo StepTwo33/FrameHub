@@ -810,6 +810,18 @@ export function calculateWeaponBuild(
   const activeBuffPools: Record<string, number>[] = [];
   if (sim.killStacks > 0) activeBuffPools.push(onKill);
   if (sim.applyTriggerBuffs) activeBuffPools.push(trigger);
+  const triggerElementalTypes = [
+    "heat",
+    "cold",
+    "toxin",
+    "electricity",
+    "radiation",
+    "viral",
+    "corrosive",
+    "gas",
+    "magnetic",
+    "blast",
+  ] as const;
   for (const pool of activeBuffPools) {
     damageBonus += pool.damage ?? 0;
     critChanceBonus += pool.criticalChance ?? 0;
@@ -818,6 +830,26 @@ export function calculateWeaponBuild(
     statusBonus += pool.statusChance ?? 0;
     multishotBonus += pool.multishot ?? 0;
     reloadBonus += pool.reloadSpeed ?? 0;
+    // Elemental fractions (e.g. Proton Snap toxin) — folded into elementalMods below dmgMult scale.
+    for (const elem of triggerElementalTypes) {
+      const frac = pool[elem];
+      if (frac) {
+        elementalMods.push({ type: elem, value: baseWeapon.damage * frac });
+      }
+    }
+  }
+  // Refresh toxin fraction after trigger/on-kill elemental rows (Toxic Lash Extra Hit dip).
+  if (baseWeapon.damage > 0) {
+    let toxinFrac = 0;
+    let elementalDip = 0;
+    for (const e of elementalMods) {
+      elementalDip += e.value / baseWeapon.damage;
+      if (e.type === "toxin") toxinFrac += e.value / baseWeapon.damage;
+    }
+    stats.toxinModBonusFraction = toxinFrac;
+    if (externalExtraHit.fraction > 0) {
+      stats.extraHitDamageFraction = externalExtraHit.fraction * (1 + elementalDip);
+    }
   }
   // Galvanized Steel / Elementalist: per-kill-stack bonuses (cap 4).
   const onKillStacks = Math.min(sim.killStacks, weaponModAcc.onKillPerStackCap);

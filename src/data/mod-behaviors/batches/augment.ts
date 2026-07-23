@@ -768,8 +768,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Lasting Covenant: duration \u2014 Covenant Augment: Headshot kills increase Critical Chance bonus duration by 3s."),
   ]),
   lasting_purity: mod("lasting_purity", [
-    line("damage", "mod_panel", "multiplicative_percent", "Lasting Purity: damage \u2014 +60% Damage when Aiming, +1 'Purity'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Lasting Purity: syndicatePower \u2014 +60% Damage when Aiming, +1 'Purity'"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Lasting Purity — +60% Damage when Aiming"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Lasting Purity: syndicatePower \u2014 +1 'Purity' (syndicate proc)"),
   ]),
   mesmer_shield: mod("mesmer_shield", [
     line("range", "mod_panel", "multiplicative_percent", "Mesmer Shield: range \u2014 Mesmer Skin Augment: Revenant receives +50% Mesmer Skin Strength and allies with\u2026"),

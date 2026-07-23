@@ -6715,6 +6715,7 @@ const RAW_MODS: Mod[] = [
     "category": "primary",
     "subCategory": "",
     "stats": {
+      "criticalChance": 25.0,
       "statusChance": 25.0,
       "duration": 1.0
     },

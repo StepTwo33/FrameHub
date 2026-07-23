@@ -285,7 +285,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
 
   lashing_coil: mod("lashing_coil", [], "wiki: Lashing Coil \u2014 Fighting form devised for Conclave."),
   laser_sight: mod("laser_sight", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Laser Sight — headshot+aim gated CC"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Laser Sight — On Headshot: +120% Critical Chance when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Laser Sight — buff duration"),
   ]),
   last_herald: mod("last_herald", [], "wiki: Last Herald \u2014 Fighting form devised for Conclave."),
@@ -342,7 +342,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   munitions_vortex: mod("munitions_vortex", [], "wiki: Munitions Vortex \u2014 Vortex that absorbs incoming fire and detonates, releasing damage."),
   nano_applicator: mod("nano_applicator", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Nano-Applicator — cast+aim gated SC"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Nano-Applicator — cast+aim gated SC"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Nano-Applicator — On Ability Cast: +90% Status Chance when Aiming for 9s"),
   ]),
   naramon_transmute_core: mod("naramon_transmute_core", [], "wiki: Naramon Transmute Core \u2014 Ensures transmuted mod is of Naramon polarity and eliminates credit cost."),
   narrow_barrel: mod("narrow_barrel", [
@@ -455,7 +455,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   rending_wind: mod("rending_wind", [], "wiki: Rending Wind \u2014 Fighting form devised for Conclave."),
   repeater_clip: mod("repeater_clip", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Repeater Clip — reload+aim gated fire rate"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Repeater Clip — reload+aim gated fire rate"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_trigger", "wiki: Repeater Clip — On Reload: +105% Fire Rate when Aiming for 9s"),
   ]),
   revo_reducer: mod("revo_reducer", [], "wiki: Revo Reducer \u2014 -60.8% Omni Revolite Consumption"),
   rifle_riven_mod: mod("rifle_riven_mod", [], "wiki: Rifle Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
@@ -515,7 +515,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Shotgun Savvy: statusChance \u2014 +90% Status Chance"),
   ]),
   shrapnel_shot: mod("shrapnel_shot", [
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Shrapnel Shot — kill+aim gated CD"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Shrapnel Shot — On Kill: +99% Critical Damage when Aiming for 9s"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Shrapnel Shot — buff duration"),
   ]),
   shred_shot: mod("shred_shot", [

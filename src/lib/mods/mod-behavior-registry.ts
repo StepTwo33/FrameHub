@@ -220,9 +220,20 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       acc.onKillPerStackBonuses[statKey] = (acc.onKillPerStackBonuses[statKey] ?? 0) + modValue;
       acc.onKillPerStackCap = GALV_STACK_CAPS[ctx.modId] ?? acc.onKillPerStackCap ?? 4;
       return true;
-    case "conditional_stat_on_trigger":
-      acc.triggerStatBonuses[statKey] = (acc.triggerStatBonuses[statKey] ?? 0) + modValue;
+    case "conditional_stat_on_trigger": {
+      // Proton Snap: catalog `damage` is wiki +Toxin (not base damage).
+      let key = statKey;
+      let value = modValue;
+      if (ctx.modId === "proton_snap" && statKey === "damage") {
+        key = "toxin";
+      }
+      // Double Tap: catalog is +20%/stack; assume max 20 stacks when trigger active.
+      if (ctx.modId === "double_tap" && statKey === "damage") {
+        value = modValue * 20;
+      }
+      acc.triggerStatBonuses[key] = (acc.triggerStatBonuses[key] ?? 0) + value;
       return true;
+    }
     case "slash_on_crit":
       acc.slashOnCritChance += modValue;
       return true;

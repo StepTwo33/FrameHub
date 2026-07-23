@@ -1189,14 +1189,9 @@ describe("gun leftovers (wiki max rank, Phase M15)", () => {
     expect(modded.burstDps / bare.burstDps).toBeCloseTo(1 + 1.1 / bare.magazine, 5);
   });
 
-  it("Spectral Serration / Soaring Strike / Measured Burst / Jet Stream: gated lines are panel-only", () => {
-    for (const id of ["spectral_serration", "soaring_strike", "measured_burst", "jet_stream"]) {
-      const beh = VERIFIED_MOD_BEHAVIORS[id];
-      expect(beh, id).toBeDefined();
-      expect(
-        beh!.stats.every((s) => s.target === "mod_panel"),
-        id,
-      ).toBe(true);
-    }
+  it("Jet Stream: ability-gated lines stay panel-only", () => {
+    const beh = VERIFIED_MOD_BEHAVIORS.jet_stream;
+    expect(beh).toBeDefined();
+    expect(beh!.stats.every((s) => s.target === "mod_panel")).toBe(true);
   });
 });

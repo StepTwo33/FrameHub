@@ -293,7 +293,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Primed Smite The Murmur: factionMurmur \u2014 x1.55 Damage to Murmur"),
   ]),
   proton_snap: mod("proton_snap", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Proton Snap — catalog damage key is toxin (not base damage; unmodeled elemental gate)"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap — Hold Wall Latch for 2s: +100% Toxin (catalog key damage→toxin)"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Proton Snap — wall-latch buff duration"),
     line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap — Hold Wall Latch for 2s: +50% Status Chance for 20s"),
   ]),

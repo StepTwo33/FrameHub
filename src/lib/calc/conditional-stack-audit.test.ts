@@ -319,3 +319,112 @@ describe("remaining trigger/on-kill conditionals (wiki max rank, Phase M17)", ()
     expect(active.statusChance).toBeCloseTo(weapon.statusChance * 2.2, 5);
   });
 });
+
+describe("Sim1 trigger-gated exclusives (wiki max rank)", () => {
+  it("Spectral Serration / Soaring Strike / Measured Burst: paper unchanged; trigger applies", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "spectral_serration", {}).moddedBaseDamage).toBeCloseTo(
+      weapon.damage,
+      5,
+    );
+    expect(
+      build("braton", "spectral_serration", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 4.3, 5);
+
+    expect(build("braton", "soaring_strike", {}).fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(
+      build("braton", "soaring_strike", { applyTriggerBuffs: true }).fireRate,
+    ).toBeCloseTo(weapon.fireRate * 1.5, 5);
+
+    const paperMb = build("braton", "measured_burst", {});
+    expect(paperMb.moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(paperMb.fireRate).toBeCloseTo(weapon.fireRate, 5);
+    const activeMb = build("braton", "measured_burst", { applyTriggerBuffs: true });
+    expect(activeMb.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.3, 5);
+    expect(activeMb.fireRate).toBeCloseTo(weapon.fireRate * 0.4, 5);
+  });
+
+  it("Aero Agility / Combat Reload / Motus Setup: paper unchanged; trigger applies", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "aero_agility", {}).reloadTime).toBeCloseTo(weapon.reloadTime, 5);
+    expect(
+      build("braton", "aero_agility", { applyTriggerBuffs: true }).reloadTime,
+    ).toBeCloseTo(weapon.reloadTime / 2, 5);
+
+    expect(build("braton", "combat_reload", {}).reloadTime).toBeCloseTo(weapon.reloadTime, 5);
+    expect(
+      build("braton", "combat_reload", { applyTriggerBuffs: true }).reloadTime,
+    ).toBeCloseTo(weapon.reloadTime / 2.2, 5);
+
+    const paper = build("braton", "motus_setup", {});
+    expect(paper.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+    expect(paper.statusChance).toBeCloseTo(weapon.statusChance, 5);
+    const active = build("braton", "motus_setup", { applyTriggerBuffs: true });
+    expect(active.criticalChance).toBeCloseTo(weapon.criticalChance * 2, 5);
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 2, 5);
+  });
+
+  it("Laser Sight / Nano-Applicator / Repeater Clip / Shrapnel Shot: paper unchanged; trigger applies", () => {
+    const braton = requireWeapon("braton");
+    expect(build("braton", "laser_sight", {}).criticalChance).toBeCloseTo(
+      braton.criticalChance,
+      5,
+    );
+    expect(
+      build("braton", "laser_sight", { applyTriggerBuffs: true }).criticalChance,
+    ).toBeCloseTo(braton.criticalChance * 2.2, 5);
+
+    expect(build("braton", "nano_applicator", {}).statusChance).toBeCloseTo(
+      braton.statusChance,
+      5,
+    );
+    expect(
+      build("braton", "nano_applicator", { applyTriggerBuffs: true }).statusChance,
+    ).toBeCloseTo(braton.statusChance * 1.9, 5);
+
+    expect(build("braton", "repeater_clip", {}).fireRate).toBeCloseTo(braton.fireRate, 5);
+    expect(
+      build("braton", "repeater_clip", { applyTriggerBuffs: true }).fireRate,
+    ).toBeCloseTo(braton.fireRate * 2.05, 5);
+
+    const bareCm = calculateWeaponBuild(braton, [], modsMap()).criticalMultiplier;
+    expect(build("braton", "shrapnel_shot", {}).criticalMultiplier).toBeCloseTo(bareCm, 5);
+    expect(
+      build("braton", "shrapnel_shot", { applyTriggerBuffs: true }).criticalMultiplier,
+    ).toBeCloseTo(bareCm * 1.99, 4);
+  });
+
+  it("Lasting Purity: paper damage unchanged; syndicate panel; trigger → +60% damage", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "lasting_purity", {}).moddedBaseDamage).toBeCloseTo(
+      weapon.damage,
+      5,
+    );
+    expect(
+      build("braton", "lasting_purity", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 1.6, 5);
+  });
+
+  it("Hit-window taps: paper unchanged; trigger → Double Tap +400% / Triple +40% / Final +100% / Sudden +30% FR", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "double_tap", {}).moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(
+      build("braton", "double_tap", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 5, 5);
+
+    expect(build("braton", "triple_tap", {}).moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(
+      build("braton", "triple_tap", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 1.4, 5);
+
+    expect(build("braton", "final_tap", {}).moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(
+      build("braton", "final_tap", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 2, 5);
+
+    expect(build("braton", "sudden_justice", {}).fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(
+      build("braton", "sudden_justice", { applyTriggerBuffs: true }).fireRate,
+    ).toBeCloseTo(weapon.fireRate * 1.3, 5);
+  });
+});
