@@ -101,7 +101,8 @@ describe("Torid Incarnon Form", () => {
     expect(formStats.totalDamage).toBeCloseTo(102, 0);
 
     const baseStats = calculateWeaponBuild(torid, [], modsMap(), { flatBaseDamage: 51 });
-    expect(baseStats.totalDamage).toBeCloseTo(140 * (1 + 51 / 140), 0);
+    // Wiki base Torid is 100 Toxin (direct); Incarnon cloud/radial is separate.
+    expect(baseStats.totalDamage).toBeCloseTo(100 * (1 + 51 / 100), 0);
   });
 });
 

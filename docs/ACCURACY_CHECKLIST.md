@@ -52,6 +52,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
 | B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
 | B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
+| B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 165 wiki-locked goldens | **Locked** — launchers + dual-mode/radial/Kohm pellet-SC/battery mag deferred |
 
 ---
 
@@ -328,6 +329,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Explosive Growth + Mecha claw elemental | 2026-07-22 | Thalys shardFullyGrownHosts ×2 erupt; claw mods via companionWeaponMods (Sepsis wiki 1075); C6 deferred |
 | Exalted weapons accuracy | 2026-07-22 | STR×base before mods (Lizzie additive; Garuda ignore); P0–P2 wiki row fixes (Balefire/Arquebex/Shadow Clones/Artemis/Desert Wind/Talons/Exalted Blade/Regulators/Diwata/Iron Staff/Shattered Lash/Ironbride/Shadow Claws); `exalted-weapon-audit` goldens |
 | Mecha cascade + Titania Diwata | 2026-07-23 | `mechaCascadeEnemies` sim hop; ability Damage dual-display tooltip; Titania Exalted Melee grid (Diwata) + save/loadout preview |
+| Primary weapons base paper | 2026-07-23 | Wiki-lock 165 primaries (innate elements, IPS/CC/CM/reload/burst FR); defer Acceltra/Astilla/Kohm/Fulmin/Stradavar/launchers; `primary-weapon-audit` |
 
 ## New / extended test files
 
@@ -340,3 +342,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/set-bonus-audit.test.ts` — Augur/Hunter/Mecha + damageBuff gating
 - `src/lib/calc/ttk-discrete.test.ts` — shield overflow case
 - `src/lib/calc/exalted-weapon-audit.test.ts` — B9 inventory + STR + bare wiki goldens
+- `src/lib/calc/primary-weapon-audit.test.ts` — B10 primary bare paper (+ `primary-bare-goldens.ts`)
