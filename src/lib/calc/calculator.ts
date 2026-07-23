@@ -1542,6 +1542,7 @@ export function calculateWeaponBuild(
     stats.stanceDamageMultiplier = resolveStanceDamageMultiplier(
       equippedMods,
       sim.stanceComboDirection ?? "neutral",
+      sim.stanceDpsModel ?? "hitAvg",
     );
   } else {
     stats.stanceDamageMultiplier = 1;

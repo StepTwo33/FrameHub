@@ -486,6 +486,11 @@ export interface SimulationParams {
    */
   stanceComboDirection?: "neutral" | "forward" | "forwardBlock" | "block" | "heavy" | "slide";
   /**
+   * Stance DPS model (C6b). Default / unset = hit-avg (B1/C6).
+   * `cycle` = wiki Avg Dmg Multi/s (ΣDmg%/Duration) × Attack Speed.
+   */
+  stanceDpsModel?: "hitAvg" | "cycle";
+  /**
    * Treat aim/reload/cast/wall-latch trigger buffs as active
    * (Catalyzer Link, Spring-Loaded Chamber, Deadly Efficiency, …). Default false —
    * the in-game arsenal never includes them.

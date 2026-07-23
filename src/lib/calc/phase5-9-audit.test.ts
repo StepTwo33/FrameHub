@@ -170,6 +170,37 @@ describe("Phase 5 — stance damage multipliers", () => {
     expect(forward.burstDps).toBeLessThan(neutral.burstDps);
   });
 
+  it("C6b cycle model uses wiki Avg Dmg Multi/s and raises Neutral paper vs hit-avg", () => {
+    expect(
+      resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "neutral", "hitAvg"),
+    ).toBeCloseTo(2.3, 8);
+    expect(
+      resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "neutral", "cycle"),
+    ).toBeCloseTo(5.2, 8);
+    expect(
+      resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "forward", "cycle"),
+    ).toBeCloseTo(4.6, 8);
+
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const modsMap = new Map(allMods.map((m) => [m.id, m]));
+    const slots = [{ modId: "stance_iron_phoenix", rank: 3, slotIndex: 0 }];
+    const hitAvg = calculateWeaponBuild(skana, slots, modsMap, undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      applyStanceMultiplier: true,
+      stanceComboDirection: "neutral",
+      stanceDpsModel: "hitAvg",
+    });
+    const cycle = calculateWeaponBuild(skana, slots, modsMap, undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      applyStanceMultiplier: true,
+      stanceComboDirection: "neutral",
+      stanceDpsModel: "cycle",
+    });
+    expect(hitAvg.stanceDamageMultiplier).toBeCloseTo(2.3, 5);
+    expect(cycle.stanceDamageMultiplier).toBeCloseTo(5.2, 5);
+    expect(cycle.burstDps).toBeGreaterThan(hitAvg.burstDps);
+  });
+
   it("applies stance mult to Skana paper burst DPS when stance equipped", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const modsMap = new Map(allMods.map((m) => [m.id, m]));

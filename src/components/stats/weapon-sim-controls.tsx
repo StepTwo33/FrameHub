@@ -334,35 +334,56 @@ export function WeaponSimControls({
                   )}
                 </label>
                 {simParams.applyStanceMultiplier !== false && (
-                  <label
-                    className="block text-[10px] text-muted-foreground"
-                    title="Wiki Module:Stances hit-avg scalars. Neutral = B1 lock; other strings change paper DPS."
-                  >
-                    Combo string
-                    <select
-                      value={simParams.stanceComboDirection ?? "neutral"}
-                      onChange={(e) =>
-                        onSimParamsChange({
-                          ...simParams,
-                          stanceComboDirection: e.target.value as
-                            | "neutral"
-                            | "forward"
-                            | "forwardBlock"
-                            | "block"
-                            | "heavy"
-                            | "slide",
-                        })
-                      }
-                      className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                  <>
+                    <label
+                      className="block text-[10px] text-muted-foreground"
+                      title="Wiki Module:Stances hit-avg scalars. Neutral = B1 lock; other strings change paper DPS."
                     >
-                      <option value="neutral">Neutral (default)</option>
-                      <option value="forward">Forward</option>
-                      <option value="forwardBlock">Forward Block</option>
-                      <option value="block">Block</option>
-                      <option value="heavy">Heavy</option>
-                      <option value="slide">Slide</option>
-                    </select>
-                  </label>
+                      Combo string
+                      <select
+                        value={simParams.stanceComboDirection ?? "neutral"}
+                        onChange={(e) =>
+                          onSimParamsChange({
+                            ...simParams,
+                            stanceComboDirection: e.target.value as
+                              | "neutral"
+                              | "forward"
+                              | "forwardBlock"
+                              | "block"
+                              | "heavy"
+                              | "slide",
+                          })
+                        }
+                        className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                      >
+                        <option value="neutral">Neutral (default)</option>
+                        <option value="forward">Forward</option>
+                        <option value="forwardBlock">Forward Block</option>
+                        <option value="block">Block</option>
+                        <option value="heavy">Heavy</option>
+                        <option value="slide">Slide</option>
+                      </select>
+                    </label>
+                    <label
+                      className="block text-[10px] text-muted-foreground"
+                      title="Hit avg = mean hit mult (B1). Cycle = wiki Avg Dmg Multi/s (ΣDmg%/Duration), still × Attack Speed."
+                    >
+                      Stance DPS model
+                      <select
+                        value={simParams.stanceDpsModel ?? "hitAvg"}
+                        onChange={(e) =>
+                          onSimParamsChange({
+                            ...simParams,
+                            stanceDpsModel: e.target.value === "cycle" ? "cycle" : "hitAvg",
+                          })
+                        }
+                        className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                      >
+                        <option value="hitAvg">Hit avg (default)</option>
+                        <option value="cycle">Cycle (Avg Dmg Multi/s)</option>
+                      </select>
+                    </label>
+                  </>
                 )}
               </>
             )}

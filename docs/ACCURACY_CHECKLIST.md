@@ -67,7 +67,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B22 | Alternate modes (Staticor + DSS) | `alternateModeStats` toggle: Staticor Fully Charged Explosion 106/9.6m; DSS Heavy Blade paper + slams; Dual Swords slams corrected to 232/462 | **Locked** — charged timing/ammo in B24 |
 | B23 | Arbucep attack cycle | Sim `arbucepAttackMode` 1–6 swaps Space 16/114 or Atmosphere 32/228 element (Blast→…→Viral); builder dropdown | **Locked** |
 | B24 | Staticor charged timing + ammo | Charged mode: ChargeTime 1s (standard EFR), ammoCost 5; sustained/TTK consume multi-ammo | **Locked** |
-| C6 | Stance combo strings (hit-avg) | Sim `stanceComboDirection` Forward/Block/Forward Block/Heavy/Slide wiki hit-avgs (78 stances); Neutral default unchanged (B1) | **Locked** — AS-scaled cycle DPS / per-hit animation strings still out of scope |
+| C6 | Stance combo strings (hit-avg) | Sim `stanceComboDirection` Forward/Block/Forward Block/Heavy/Slide wiki hit-avgs (78 stances); Neutral default unchanged (B1) | **Locked** — cycle model in C6b |
+| C6b | Stance cycle DPS (Avg Dmg Multi/s) | Sim `stanceDpsModel=cycle`: (ΣDmg%/Duration) × AS; 57 stances with Duration; default remains hit-avg | **Locked** — per-hit animation graphs still out of scope |
 
 ---
 
@@ -80,7 +81,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | C3 | Weapon passives text | Not wired into DPS |
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
-| C6 | Stance AS-scaled cycle / per-hit strings | Hit-avg direction picker shipped above; full Duration/AS cycle DPS + animation hit graphs remain out of scope |
+| C6 | Stance per-hit animation graphs | Hit-avg + cycle Multi/s shipped; frame-accurate hit timelines remain out of scope |
 | C7 | Mecha set status-spread DoT | **Moved → B4** (sim-gated DoT + claw + cascade slider); full mark AI / Gas graphs remain out of scope |
 
 ---
@@ -360,6 +361,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Arbucep attack cycle (B23) | 2026-07-23 | Sim mode 1–6 elemental paper (Space 16/114, Atmosphere 32/228); `weapon-arbucep-mode` + builder dropdown |
 | Staticor charged timing + ammo (B24) | 2026-07-23 | Charged overlay: CT 1s / Charge trigger / ammoCost 5; sustained + TTK + radial mag cycles |
 | Stance combo directions (C6) | 2026-07-23 | Wiki Forward/Block/Forward Block hit-avgs for 78 stances; Neutral B1 lock intact; sim combo-string picker |
+| Stance cycle DPS (C6b) | 2026-07-23 | Optional `stanceDpsModel=cycle` wiki Avg Dmg Multi/s (Σ/Duration); Iron Phoenix Neutral 5.2 vs hit-avg 2.3 |
 
 ## New / extended test files
 

@@ -3,6 +3,7 @@ import {
   STANCE_COMBO_DAMAGE_MULTIPLIER,
   type StanceComboDirectionKey,
 } from "@/lib/calc/stance-combo-multipliers";
+import { STANCE_COMBO_CYCLE_MULTIPLIER } from "@/lib/calc/stance-combo-cycle-multipliers";
 
 /**
  * Shared combat multipliers: faction (Bane), headshots, stance averages, status damage.
@@ -11,6 +12,9 @@ import {
 
 /** Stance combo string direction for paper DPS (Neutral = B1 lock). */
 export type StanceComboDirection = "neutral" | StanceComboDirectionKey;
+
+/** Hit-avg (B1/C6 default) vs wiki Avg Dmg Multi/s cycle (C6b). */
+export type StanceDpsModel = "hitAvg" | "cycle";
 
 /** Map mod stat keys → normalized faction ids used by ENEMY_TYPES / sim UI. */
 export const FACTION_STAT_TO_ID: Record<string, string> = {
@@ -275,10 +279,15 @@ export const DEFAULT_STANCE_AVG_MULTIPLIER = 1.55;
 export function resolveStanceDamageMultiplier(
   equippedMods: { modId: string }[],
   direction: StanceComboDirection = "neutral",
+  model: StanceDpsModel = "hitAvg",
 ): number {
   for (const slot of equippedMods) {
     const type = STANCE_WEAPON_TYPE[slot.modId];
     if (!type) continue;
+    if (model === "cycle") {
+      const cycle = STANCE_COMBO_CYCLE_MULTIPLIER[slot.modId]?.[direction];
+      if (cycle != null && cycle > 0) return cycle;
+    }
     if (direction !== "neutral") {
       const combo = STANCE_COMBO_DAMAGE_MULTIPLIER[slot.modId]?.[direction];
       if (combo != null && combo > 0) return combo;
