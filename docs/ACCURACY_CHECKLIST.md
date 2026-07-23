@@ -9,13 +9,13 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | `npm test` (vitest) | Green at Phase 0 (190); expanded with phase audit suites |
 | `scripts/audit_item_behavior_coverage.py` | **1556/1556** after removing hallucinated catalog stubs |
 
-### Coverage counts (post Phase 2b)
+### Coverage counts (post Phase 2b + M3 aura paper lines)
 
 | Kind | Count |
 |------|------:|
-| Mod lines → `weapon_dps` | 514 |
-| Mod lines → `warframe_totals` | 181 |
-| Mod lines → `mod_panel` | 1355 |
+| Mod lines → `weapon_dps` | 519 (+5 amp-aura `damage` lines) |
+| Mod lines → `warframe_totals` | 179 (CP/SD armor/shield moved to panel) |
+| Mod lines → `mod_panel` | 1355+ |
 | Arcane lines → `weapon_dps` | 20 (+ Cascadia Overcharge) |
 | Arcane lines → `warframe_totals` | 30 |
 | Arcane lines → `arcane_panel` | 224 |
@@ -31,8 +31,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | A2 | `biting_frost` | Was missing behavior; bad maxRank | **Fixed** Phase 2b (R3, +200% CC/CD, mod_panel conditional) |
 | A3 | Audit regex `&` | False missing `push_&_pull` | **Fixed** Phase 2b |
 | A4 | Amprex innate | Has `electricity` on weapon row | **Verified** Phase 1 |
-| A5 | High-use gun mods | Serration…Blaze / Hornet…Primed TC | **Locked** Phase 2a (`gun-mod-audit.test.ts`) |
-| A6 | High-use melee mods | PP/TS/OS/60-60s; Volcanic Edge heat | **Fixed+locked** Phase 2b (`melee-mod-audit.test.ts`) |
+| A5 | High-use gun mods | Serration…Blaze / Hornet…Primed TC + M1 remainder | **Locked** Phase 2a+M1 (`gun-mod-audit.test.ts`) |
+| A6 | High-use melee mods | PP/TS/OS/60-60s; Volcanic Edge; M2 primed/sacrificial | **Locked** Phase 2b+M2 (`melee-mod-audit.test.ts`) |
 | A7 | Warframe power mods | Intensify…Primed Flow post-U34 | **Locked** Phase 2c (`warframe-mod-audit.test.ts`) |
 | A8 | Passive weapon arcanes | Gated behind `arcaneStacks>0` | **Fixed** Phase 6 (`effectiveArcaneStacks` + Cascadia Overcharge → `weapon_dps`) |
 | A9 | TTK shield overflow | Was `overflowFrac * 0` (no-op) | **Fixed** Phase 4 |
@@ -69,6 +69,12 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B24 | Staticor charged timing + ammo | Charged mode: ChargeTime 1s (standard EFR), ammoCost 5; sustained/TTK consume multi-ammo | **Locked** |
 | C6 | Stance combo strings (hit-avg) | Sim `stanceComboDirection` Forward/Block/Forward Block/Heavy/Slide wiki hit-avgs (78 stances); Neutral default unchanged (B1) | **Locked** — cycle model in C6b |
 | C6b | Stance cycle DPS (Avg Dmg Multi/s) | Sim `stanceDpsModel=cycle`: (ΣDmg%/Duration) × AS; 57 stances with Duration; default remains hit-avg | **Locked** — per-hit animation graphs still out of scope |
+| M0 | Mod paper inventory | Unlocked `weapon_dps`/`warframe_totals` with non-empty stats (excl. 2a/2b/2c/amalgam) | **Report** — ~493 before M1–M3; `scripts/_m0_mod_paper_inventory.py` |
+| M1 | Gun mod remainder apply goldens | Heavy Caliber, Hunter Munitions, Primed Cryo, Speed Trigger, Hammer Shot, Critical Delay, 60/60s, Lethal Torrent, Anemic Agility, Gunslinger, pistol 90s/60-60s, Primed Ravage, Contagious Spread, shotgun cores | **Locked** — +31 IDs in `gun-mod-audit.test.ts` |
+| M2 | Melee remainder apply goldens | Primed Fever/Fury/Smite, Molten Impact, Berserker Fury stacks, Sacrificial Steel/Pressure; Primed Reach catalog+panel | **Locked** — +8 IDs in `melee-mod-audit.test.ts` |
+| M3 | DPS aura apply goldens | Rifle/Pistol/Shotgun Amp, Steel Charge, Dead Eye paper `damage`; Growing Power panel; CP/SD no longer strip warframe armor/shield | **Locked** — `aura-mod-audit.test.ts` |
+
+**Remaining unlocked paper-moving mods (post M1–M3):** ~450+ catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (archgun/companion/set/niche). Vigilante Offense is punch-through panel-only (not paper DPS). CO/BR/WW stay in conditional-stack audit.
 
 ---
 
@@ -95,6 +101,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | 2a Gun mods | 2026-07-21 | 20 wiki max-rank apply tests |
 | 2b Melee + biting_frost | 2026-07-21 | Volcanic Edge heat restore; biting_frost; coverage 1600/1600 |
 | 2c Warframe mods | 2026-07-21 | Post-U34 survivability + power mod goldens |
+| M0–M3 Mod paper | 2026-07-23 | Inventory + gun/melee/aura apply goldens; amp aura paper; CP/SD panel fix |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |
@@ -362,12 +369,14 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Staticor charged timing + ammo (B24) | 2026-07-23 | Charged overlay: CT 1s / Charge trigger / ammoCost 5; sustained + TTK + radial mag cycles |
 | Stance combo directions (C6) | 2026-07-23 | Wiki Forward/Block/Forward Block hit-avgs for 78 stances; Neutral B1 lock intact; sim combo-string picker |
 | Stance cycle DPS (C6b) | 2026-07-23 | Optional `stanceDpsModel=cycle` wiki Avg Dmg Multi/s (Σ/Duration); Iron Phoenix Neutral 5.2 vs hit-avg 2.3 |
+| Mod paper verification (M0–M3) | 2026-07-23 | Inventory ~493 unlocked paper mods; +31 gun / +8 melee / +8 aura apply goldens; amp aura `damage`→weapon_dps; CP/SD no longer strip warframe armor/shield |
 
 ## New / extended test files
 
 - `src/lib/calc/warframe-math-audit.test.ts` — Phase 1 bare-weapon block
-- `src/lib/calc/gun-mod-audit.test.ts`
-- `src/lib/calc/melee-mod-audit.test.ts`
+- `src/lib/calc/gun-mod-audit.test.ts` — Phase 2a + M1 gun remainder
+- `src/lib/calc/melee-mod-audit.test.ts` — Phase 2b + M2 melee remainder
+- `src/lib/calc/aura-mod-audit.test.ts` — M3 DPS aura apply goldens
 - `src/lib/calc/warframe-mod-audit.test.ts`
 - `src/lib/calc/conditional-stack-audit.test.ts`
 - `src/lib/calc/phase5-9-audit.test.ts`

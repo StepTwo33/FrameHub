@@ -106,6 +106,76 @@ describe("melee damage / crit / status mods (wiki max rank)", () => {
   });
 });
 
+describe("melee remainder (wiki max rank, Phase M2)", () => {
+  it("Primed Fever Strike R10: +165% toxin from base", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("primed_fever_strike");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "toxin")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.65, scale),
+      8,
+    );
+  });
+
+  it("Molten Impact R5: +90% heat from base", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("molten_impact_r3");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "heat")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.9, scale),
+      8,
+    );
+  });
+
+  it("Primed Fury R10: +55% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("primed_fury");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.55, 8);
+  });
+
+  it("Primed Reach R10: catalog +3 range (panel / arsenal; not paper DPS)", () => {
+    const mod = requireMod("primed_reach");
+    expect(mod.stats.range! * (mod.maxRank + 1)).toBeCloseTo(3, 5);
+    expect(VERIFIED_MOD_BEHAVIORS.primed_reach?.stats.every((s) => s.target === "mod_panel")).toBe(
+      true,
+    );
+  });
+
+  it("Berserker Fury R5: +35% AS per kill stack (cap 2) via killStacks", () => {
+    const weapon = requireWeapon("skana");
+    const bare = withMod("berserker_fury", { ...DEFAULT_SIM_PARAMS, killStacks: 0 });
+    expect(bare.fireRate).toBeCloseTo(weapon.fireRate, 8);
+
+    const stacked = withMod("berserker_fury", { ...DEFAULT_SIM_PARAMS, killStacks: 2 });
+    expect(stacked.fireRate).toBeCloseTo(weapon.fireRate * 1.7, 5);
+  });
+
+  it("Sacrificial Steel R10: +220% crit chance", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("sacrificial_steel");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 3.2, 8);
+  });
+
+  it("Sacrificial Pressure R10: +110% damage", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("sacrificial_pressure");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2.1, 8);
+  });
+
+  it("Primed Smite Grineer: ×1.55 paper DPS when targetFaction=grineer", () => {
+    const bare = calculateWeaponBuild(requireWeapon("skana"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "grineer",
+    });
+    const modded = withMod("primed_smite_grineer", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "grineer",
+    });
+    expect(modded.factionBonuses?.grineer).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

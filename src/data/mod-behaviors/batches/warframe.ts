@@ -111,8 +111,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   augur_secrets: mod("augur_secrets", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Augur Secrets: abilityStrength \u2014 +6% Ability Strength per rank"),
   ]),
+  // Enemy armor strip — not player armor. Keep both lines panel until TTK enemy-aura wiring.
   aura_corrosive_projection: mod("aura_corrosive_projection", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Corrosive Projection: armor \u2014 -6% Enemy Armor per rank"),
+    line("armor", "mod_panel", "multiplicative_percent", "Corrosive Projection: armor \u2014 -6% Enemy Armor per rank (enemy-side; not warframe armor)"),
     line("armorReduction", "mod_panel", "multiplicative_percent", "Corrosive Projection: armorReduction \u2014 -6% Enemy Armor per rank"),
   ]),
   aura_cunning_drift: mod("aura_cunning_drift", [
@@ -137,23 +138,24 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Physique: health \u2014 Squad gains +20% Maximum Health"),
   ]),
   aura_pistol_amplification: mod("aura_pistol_amplification", [
-    line("damage", "mod_panel", "multiplicative_percent", "Pistol Amp: damage \u2014 Squad receives +27% Pistol Damage"),
-    line("pistolDamage", "mod_panel", "multiplicative_percent", "Pistol Amp: pistolDamage \u2014 Squad receives +27% Pistol Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Pistol Amp: damage \u2014 Squad receives +27% Pistol Damage"),
+    line("pistolDamage", "mod_panel", "multiplicative_percent", "Pistol Amp: pistolDamage \u2014 Squad receives +27% Pistol Damage (display key; damage line is paper)"),
   ]),
   aura_rejuvenation: mod("aura_rejuvenation", [
     line("healthRegen", "mod_panel", "multiplicative_percent", "Rejuvenation: healthRegen \u2014 Squad receives +3 Health Regen/s"),
   ]),
   aura_rifle_amplification: mod("aura_rifle_amplification", [
-    line("damage", "mod_panel", "multiplicative_percent", "Rifle Amp: damage \u2014 Squad receives +27% Rifle Damage"),
-    line("rifleDamage", "mod_panel", "multiplicative_percent", "Rifle Amp: rifleDamage \u2014 Squad receives +27% Rifle Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Rifle Amp: damage \u2014 Squad receives +27% Rifle Damage"),
+    line("rifleDamage", "mod_panel", "multiplicative_percent", "Rifle Amp: rifleDamage \u2014 Squad receives +27% Rifle Damage (display key; damage line is paper)"),
   ]),
+  // Enemy shield strip — not player shields.
   aura_shield_disruption: mod("aura_shield_disruption", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Shield Disruption: shield \u2014 Enemies lose -18% Shield Capacity"),
+    line("shield", "mod_panel", "multiplicative_percent", "Shield Disruption: shield \u2014 Enemies lose -18% Shield Capacity (enemy-side; not warframe shields)"),
     line("shieldReduction", "mod_panel", "multiplicative_percent", "Shield Disruption: shieldReduction \u2014 Enemies lose -18% Shield Capacity"),
   ]),
   aura_shotgun_amplification: mod("aura_shotgun_amplification", [
-    line("damage", "mod_panel", "multiplicative_percent", "Shotgun Amp: damage \u2014 Squad receives +18% Shotgun Damage"),
-    line("shotgunDamage", "mod_panel", "multiplicative_percent", "Shotgun Amp: shotgunDamage \u2014 Squad receives +18% Shotgun Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Shotgun Amp: damage \u2014 Squad receives +18% Shotgun Damage"),
+    line("shotgunDamage", "mod_panel", "multiplicative_percent", "Shotgun Amp: shotgunDamage \u2014 Squad receives +18% Shotgun Damage (display key; damage line is paper)"),
   ]),
   aura_speed_holster: mod("aura_speed_holster", [
     line("holsterSpeed", "mod_panel", "multiplicative_percent", "Speed Holster: holsterSpeed \u2014 +20% Holster Speed per rank"),
@@ -165,8 +167,8 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Sprint Speed: sprintSpeed \u2014 +2% Sprint Speed per rank"),
   ]),
   aura_steel_charge: mod("aura_steel_charge", [
-    line("damage", "mod_panel", "multiplicative_percent", "Steel Charge: damage \u2014 Squad receives +60% Melee Damage"),
-    line("meleeDamage", "mod_panel", "multiplicative_percent", "Steel Charge: meleeDamage \u2014 Squad receives +60% Melee Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Steel Charge: damage \u2014 Squad receives +60% Melee Damage"),
+    line("meleeDamage", "mod_panel", "multiplicative_percent", "Steel Charge: meleeDamage \u2014 Squad receives +60% Melee Damage (display key; damage line is paper)"),
   ]),
   aura_toxin_resistance: mod("aura_toxin_resistance", [
     line("toxin", "mod_panel", "multiplicative_percent", "Toxin Resistance: toxin \u2014 +15% Toxin Resistance per rank"),
@@ -222,7 +224,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Damage Decoy: damage \u2014 Decoy Augment: Decoy can be cast on enemies. Enemies who attack that decoy recei\u2026"),
   ]),
   dead_eye: mod("dead_eye", [
-    line("damage", "mod_panel", "multiplicative_percent", "Dead Eye: damage \u2014 Squad receives +52.5% Sniper Rifle Damage"),
+    line("damage", "weapon_dps", "multiplicative_percent", "Dead Eye: damage \u2014 Squad receives +52.5% Sniper Rifle Damage"),
   ]),
   diamond_skin: mod("diamond_skin", [
     line("radiation", "mod_panel", "multiplicative_percent", "Diamond Skin: radiation \u2014 +82.5% <DT_RADIATION_COLOR>Radiation Resistance"),

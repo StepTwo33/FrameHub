@@ -186,3 +186,181 @@ describe("shotgun mods (wiki max rank)", () => {
     expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
   });
 });
+
+describe("primary remainder (wiki max rank, Phase M1)", () => {
+  it("Heavy Caliber R10: +165% damage (accuracy panel-only)", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "heavy_caliber");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2.65, 8);
+  });
+
+  it("Amalgam Serration R10: +155% damage (cross-check amalgam-serration.test.ts)", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "amalgam_serration");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2.55, 4);
+  });
+
+  it("Hunter Munitions R5: +30% slash-on-crit chance", () => {
+    const stats = withMod("braton", "hunter_munitions");
+    expect(stats.slashOnCritChance).toBeCloseTo(0.3, 8);
+  });
+
+  it("Primed Cryo Rounds R10: +165% cold from base", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "primed_cryo_rounds");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.65, scale),
+      8,
+    );
+  });
+
+  it("Speed Trigger R5: +60% fire rate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "speed_trigger_r3");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.6, 8);
+  });
+
+  it("Hammer Shot R3: +60% crit damage, +80% status", () => {
+    const weapon = requireWeapon("braton");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("braton", "hammer_shot");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.6, 8);
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.8, 8);
+  });
+
+  it("Critical Delay R5: +200% crit chance, −20% fire rate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "critical_delay");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 3, 4);
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.8, 4);
+  });
+
+  it("High Voltage / Rime Rounds / Malignant Force / Thermite: 60/60 dual-stat", () => {
+    for (const [modId, type] of [
+      ["high_voltage_r3", "electricity"],
+      ["rime_rounds_r3", "cold"],
+      ["malignant_force_r3", "toxin"],
+      ["thermite_rounds_nightmare", "heat"],
+    ] as const) {
+      const weapon = requireWeapon("braton");
+      const stats = withMod("braton", modId);
+      expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.6, scale),
+        8,
+      );
+    }
+  });
+});
+
+describe("secondary remainder (wiki max rank, Phase M1)", () => {
+  it("Lethal Torrent R5: +60% fire rate and +60% multishot", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "lethal_torrent");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.6, 8);
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 1.6, 8);
+  });
+
+  it("Anemic Agility R5: +90% fire rate, −15% damage", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "anemic_agility");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.9, 8);
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 0.85, 8);
+  });
+
+  it("Gunslinger R5: +72% fire rate", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "gunslinger_r3");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.72, 8);
+  });
+
+  it("Heated Charge / Pathogen / Deep Freeze / Convulsion: ±90% elementals", () => {
+    for (const [modId, type] of [
+      ["heated_charge_r3", "heat"],
+      ["pathogen_rounds_r3", "toxin"],
+      ["deep_freeze_r3", "cold"],
+      ["convulsion_r3", "electricity"],
+    ] as const) {
+      const weapon = requireWeapon("lex");
+      const stats = withMod("lex", modId);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.9, scale),
+        8,
+      );
+    }
+  });
+
+  it("Frostbite / Pistol Pestilence / Jolt / Scorch: 60/60 dual-stat", () => {
+    for (const [modId, type] of [
+      ["frostbite_r3", "cold"],
+      ["pistol_pestilence_r3", "toxin"],
+      ["jolt_r3", "electricity"],
+      ["scorch_r3", "heat"],
+    ] as const) {
+      const weapon = requireWeapon("lex");
+      const stats = withMod("lex", modId);
+      expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.6, scale),
+        8,
+      );
+    }
+  });
+});
+
+describe("shotgun remainder (wiki max rank, Phase M1)", () => {
+  it("Primed Ravage R10: +110% crit damage", () => {
+    const weapon = requireWeapon("strun");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("strun", "primed_ravage");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 2.1, 8);
+  });
+
+  it("Contagious Spread R5: +90% toxin from base", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "contagious_spread_r3");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "toxin")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.9, scale),
+      8,
+    );
+  });
+
+  it("Incendiary Coat / Charged Shell / Chilling Grasp: ±90% elementals", () => {
+    for (const [modId, type] of [
+      ["incendiary_coat_r3", "heat"],
+      ["charged_shell_r3", "electricity"],
+      ["chilling_grasp_r3", "cold"],
+    ] as const) {
+      const weapon = requireWeapon("strun");
+      const stats = withMod("strun", modId);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.9, scale),
+        8,
+      );
+    }
+  });
+
+  it("Frigid Blast / Shell Shock / Scattering Inferno / Toxic Barrage: 60/60", () => {
+    for (const [modId, type] of [
+      ["frigid_blast_r3", "cold"],
+      ["shell_shock_r3", "electricity"],
+      ["scattering_inferno_r3", "heat"],
+      ["toxic_barrage_r3", "toxin"],
+    ] as const) {
+      const weapon = requireWeapon("strun");
+      const stats = withMod("strun", modId);
+      expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.6, scale),
+        8,
+      );
+    }
+  });
+});
