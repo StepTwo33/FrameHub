@@ -266,7 +266,10 @@ export function calculateRailjackBuild(
 ): RailjackCalculatedStats {
   const base = { ...railjackBaseStats };
   let avionicsCapacity = 0;
-  let shieldRecharge = 0;
+  let shieldRechargePct = railjackBaseStats.shieldRecharge;
+  let shieldRechargeDelayReduction = railjackBaseStats.shieldRechargeDelayReduction;
+  let engineFlatSpeed = 0;
+  let engineBoostAddon = 0;
 
   const reactor = input.reactorId ? findRailjackComponent(input.reactorId) : undefined;
   const shield = input.shieldId ? findRailjackComponent(input.shieldId) : undefined;
@@ -282,16 +285,17 @@ export function calculateRailjackBuild(
   }
   if (shield) {
     if (shield.stats.shieldCapacity != null) base.shield = shield.stats.shieldCapacity;
-    shieldRecharge = shield.stats.shieldRecharge ?? 0;
+    shieldRechargePct = shield.stats.shieldRecharge ?? shieldRechargePct;
+    shieldRechargeDelayReduction =
+      shield.stats.shieldRechargeDelayReduction ?? shieldRechargeDelayReduction;
   }
-  // Engines: cruise = wiki base 150 + item Engine Speed; boostSpeed = wiki equipped boost speed.
+  // Engines: wiki cruise = [150 × (1 + Conic/Cruising)] + item Engine Speed
+  // Boost mult = [baseBoost × (1 + Ion Burn)] + item Engine Boost; SWB = cruise × mult
   if (engine) {
-    base.speed = railjackBaseStats.speed + (engine.stats.speed ?? 0);
-    if (engine.stats.boostSpeed != null) base.boostSpeed = engine.stats.boostSpeed;
-    base.boostCost = Math.max(0, base.boostCost - (engine.stats.boostCostReduction ?? 0));
+    engineFlatSpeed = engine.stats.speed ?? 0;
+    engineBoostAddon = engine.stats.boostMultiplier ?? 0;
   }
   if (reactor) {
-    base.fluxCapacity += reactor.stats.fluxCapacity ?? 0;
     avionicsCapacity += reactor.stats.avionicsCapacity ?? 0;
   }
 
@@ -312,9 +316,12 @@ export function calculateRailjackBuild(
   const hull = Math.round(base.hull * (1 + acc.hullBonus));
   const armor = Math.round(base.armor * (1 + acc.armorBonus));
   const shieldCap = Math.round(base.shield * (1 + acc.shieldBonus));
-  const shieldRechargeRate = Math.round(shieldRecharge * (1 + acc.shieldRechargeBonus));
-  const speed = Math.round(base.speed * (1 + acc.speedBonus));
-  const boostSpeed = Math.round(base.boostSpeed * (1 + acc.boostSpeedBonus));
+  const shieldRechargeRate =
+    Math.round(shieldRechargePct * (1 + acc.shieldRechargeBonus) * 10) / 10;
+  const speed = Math.round(railjackBaseStats.speed * (1 + acc.speedBonus) + engineFlatSpeed);
+  const boostMultiplier =
+    railjackBaseStats.boostMultiplier * (1 + acc.boostSpeedBonus) + engineBoostAddon;
+  const boostSpeed = Math.round(speed * boostMultiplier);
   const boostCost = Math.max(0, Math.round(base.boostCost * (1 - acc.boostCostReduction)));
   const fluxCapacity = Math.round(base.fluxCapacity * (1 + acc.fluxBonus));
   const avionics = Math.round(avionicsCapacity * (1 + acc.avionicsBonus));
@@ -340,13 +347,15 @@ export function calculateRailjackBuild(
     baseBoostCost: railjackBaseStats.boostCost,
     baseFluxCapacity: railjackBaseStats.fluxCapacity,
     baseAvionicsCapacity: 0,
-    baseShieldRecharge: 0,
+    baseShieldRecharge: railjackBaseStats.shieldRecharge,
     hull,
     armor,
     shield: shieldCap,
     shieldRecharge: shieldRechargeRate,
+    shieldRechargeDelayReduction,
     speed,
     boostSpeed,
+    boostMultiplier,
     boostCost,
     fluxCapacity,
     avionicsCapacity: avionics,

@@ -64,7 +64,7 @@ describe("railjack remainder cores (wiki max rank, Phase M14)", () => {
     const stats = calculateRailjackBuild({
       integratedMods: [{ modId: "conic_nozzle", rank: 5, slotIndex: 0 }],
     });
-    // Catalog residue + Math.round yields ~+25% on base 100 vs exact wiki 25.5%
+    // Wiki: Conic scales base 150 only (no engine here → same as full-speed %)
     expect(stats.speed).toBe(Math.round(bare.baseSpeed * (1 + (4.25 * 6) / 100)));
   });
 
@@ -73,7 +73,7 @@ describe("railjack remainder cores (wiki max rank, Phase M14)", () => {
     const stats = calculateRailjackBuild({
       integratedMods: [{ modId: "ion_burn", rank: 5, slotIndex: 0 }],
     });
-    // Math.round on wiki-mid base 195 × 1.45 → 283 (ratio ~1.4513)
+    // Leave mod paper alone — golden only: 150 × (1.3 × 1.45) → 283
     expect(stats.boostSpeed).toBe(Math.round(bare.boostSpeed * 1.45));
   });
 

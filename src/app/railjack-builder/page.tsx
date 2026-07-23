@@ -364,9 +364,13 @@ export default function RailjackBuilderPage() {
                 <div className="flex justify-between"><span className="text-muted-foreground">Hull</span><span className="font-mono">{computedStats.hull}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Armor</span><span className="font-mono">{computedStats.armor}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Shield</span><span className="font-mono">{computedStats.shield}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Shield Recharge</span><span className="font-mono">{computedStats.shieldRecharge}/s</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Speed</span><span className="font-mono">{computedStats.speed}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Boost Speed</span><span className="font-mono">{computedStats.boostSpeed}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Shield Recharge</span><span className="font-mono">{computedStats.shieldRecharge}%/s</span></div>
+                {(computedStats.shieldRechargeDelayReduction ?? 0) > 0 && (
+                  <div className="flex justify-between"><span className="text-muted-foreground">Recharge Delay −</span><span className="font-mono">{computedStats.shieldRechargeDelayReduction}s</span></div>
+                )}
+                <div className="flex justify-between"><span className="text-muted-foreground">Speed</span><span className="font-mono">{computedStats.speed} m/s</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Boost Speed</span><span className="font-mono">{computedStats.boostSpeed} m/s</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Boost Mult</span><span className="font-mono">{(computedStats.boostMultiplier ?? 0).toFixed(2)}×</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Boost Cost</span><span className="font-mono">{computedStats.boostCost}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Flux Capacity</span><span className="font-mono">{computedStats.fluxCapacity}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Avionics</span><span className="font-mono">{computedStats.avionicsCapacity}</span></div>
@@ -448,7 +452,10 @@ export default function RailjackBuilderPage() {
                   <span className="text-sm font-medium">{selectedReactor?.name ?? "None"}</span>
                   {selectedReactor && (
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      Flux +{selectedReactor.stats.fluxCapacity} • Avionics +{selectedReactor.stats.avionicsCapacity}
+                      Avionics {selectedReactor.stats.avionicsCapacity}
+                      {selectedReactor.stats.abilityStrength != null && ` • STR +${Math.round(selectedReactor.stats.abilityStrength * 100)}%`}
+                      {selectedReactor.stats.abilityRange != null && ` • RNG +${Math.round(selectedReactor.stats.abilityRange * 100)}%`}
+                      {selectedReactor.stats.abilityDuration != null && ` • DUR +${Math.round(selectedReactor.stats.abilityDuration * 100)}%`}
                     </div>
                   )}
                 </button>
@@ -468,7 +475,9 @@ export default function RailjackBuilderPage() {
                   <span className="text-sm font-medium">{selectedShield?.name ?? "None"}</span>
                   {selectedShield && (
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      Cap +{selectedShield.stats.shieldCapacity} • Recharge +{selectedShield.stats.shieldRecharge}/s
+                      Cap {selectedShield.stats.shieldCapacity} • {selectedShield.stats.shieldRecharge}%/s
+                      {(selectedShield.stats.shieldRechargeDelayReduction ?? 0) > 0 &&
+                        ` • Delay −${selectedShield.stats.shieldRechargeDelayReduction}s`}
                     </div>
                   )}
                 </button>
@@ -488,7 +497,9 @@ export default function RailjackBuilderPage() {
                   <span className="text-sm font-medium">{selectedEngine?.name ?? "None"}</span>
                   {selectedEngine && (
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      Speed +{selectedEngine.stats.speed} • Boost +{selectedEngine.stats.boostSpeed}
+                      Cruise +{selectedEngine.stats.speed} m/s
+                      {(selectedEngine.stats.boostMultiplier ?? 0) > 0 &&
+                        ` • Boost +${selectedEngine.stats.boostMultiplier}×`}
                     </div>
                   )}
                 </button>
@@ -508,7 +519,7 @@ export default function RailjackBuilderPage() {
                   <span className="text-sm font-medium">{selectedPlating?.name ?? "None"}</span>
                   {selectedPlating && (
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      Hull +{selectedPlating.stats.hullBonus} • Armor +{selectedPlating.stats.armorBonus}
+                      Hull {selectedPlating.stats.hullBonus} • Armor {selectedPlating.stats.armorBonus}
                     </div>
                   )}
                 </button>

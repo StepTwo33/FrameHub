@@ -4,7 +4,7 @@ import { railjackPresets } from "@/data/railjack";
 import { allMods } from "@/data/mods";
 
 describe("calculateRailjackBuild", () => {
-  it("applies wiki mid-range absolute plating/shields and engine cruise", () => {
+  it("applies wiki mid-range absolute plating/shields and engine cruise/boost", () => {
     const stats = calculateRailjackBuild({
       reactorId: "lavan_reactor_mk3",
       shieldId: "lavan_shield_mk3",
@@ -15,13 +15,25 @@ describe("calculateRailjackBuild", () => {
     expect(stats.hull).toBe(5250);
     expect(stats.armor).toBe(2419);
     expect(stats.shield).toBe(1700);
-    expect(stats.shieldRecharge).toBe(22);
+    expect(stats.shieldRecharge).toBe(22.5);
+    expect(stats.shieldRechargeDelayReduction).toBeCloseTo(0.55, 5);
     expect(stats.speed).toBe(150 + 20);
-    expect(stats.boostSpeed).toBe(290);
-    expect(stats.fluxCapacity).toBe(200 + 200);
+    // SWB = cruise × (1.3 + 0.45 engine boost)
+    expect(stats.boostMultiplier).toBeCloseTo(1.75, 5);
+    expect(stats.boostSpeed).toBe(Math.round(170 * 1.75));
+    expect(stats.fluxCapacity).toBe(273);
     expect(stats.avionicsCapacity).toBe(85);
     expect(stats.abilityDurationBonus).toBeCloseTo(0.5, 5);
     expect(stats.abilityStrengthBonus).toBeCloseTo(0.3, 5);
+  });
+
+  it("applies Conic Nozzle only to base 150 before engine flat speed", () => {
+    const stats = calculateRailjackBuild({
+      engineId: "lavan_engine_mk3",
+      integratedMods: [{ modId: "conic_nozzle", rank: 5, slotIndex: 0 }],
+    });
+    const conic = (4.25 * 6) / 100;
+    expect(stats.speed).toBe(Math.round(150 * (1 + conic) + 20));
   });
 
   it("exposes Vidar reactor avionics capacity for Integrated Plexus cap", () => {
@@ -138,7 +150,7 @@ describe("calculateRailjackBuild", () => {
       turretIds: ["zetki_apoc_mk4"],
     });
 
-    expect(stats.fluxCapacity).toBeGreaterThan(200);
+    expect(stats.fluxCapacity).toBe(273);
     expect(stats.ordnance?.damage).toBeGreaterThan(3400);
     expect(stats.turrets[0]!.damage).toBeGreaterThan(748);
   });

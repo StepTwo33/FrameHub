@@ -979,9 +979,14 @@ export interface RailjackCalculatedStats {
   hull: number;
   armor: number;
   shield: number;
+  /** % of max shields recharged per second. */
   shieldRecharge: number;
+  /** Seconds removed from shield recharge delay (wiki mid). */
+  shieldRechargeDelayReduction?: number;
   speed: number;
   boostSpeed: number;
+  /** Equipped boost multiplier used to derive boostSpeed. */
+  boostMultiplier?: number;
   boostCost: number;
   fluxCapacity: number;
   avionicsCapacity: number;
