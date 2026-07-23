@@ -85,8 +85,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M14 | RJ remainder + gun/melee leftovers | RJ Conic/Ion/Ordnance Velocity/Overloader/Turret Velocity; mag/cannonade/Shell Rush/Necramech Redirection; Galv Shot/Savvy paper SC + Reflex HAE; Harkonar comboDuration; false always-ons→panel; turretProjectileSpeed no longer double-counts into ordnance | **Locked** — +~25 IDs; RJ speed/munitions goldens |
 | M15 | Chamber/Higasa + precept cleanup | Higasa Serration +450%; Primed Chamber / Primed Charged Chamber first-shot DPS average; Jet Stream/Metem-Hakh/companion precepts/gated gun lines→panel; rename catalog `odenata`→`odonata` | **Locked** — +~15 IDs; Odonata id fix |
 | M16 | Conditional paper locks + precepts | Secondary Wind/Bladed/Sharpened/Lie In Wait/Argon/Hydraulic/Galv Scope+Crosshairs/Pistol Acuity/Hemorrhage; Critical Focus/Marked Target; Protective Shots sim gate; remaining companion precept false always-ons→panel | **Locked** — +~25 IDs; conditional paper/sim goldens |
+| M17 | Final gated exclusives | Archgun Ace / Deadly Efficiency(+Primed); Emergent Aftermath / Gorgon Frenzy; Catalyzer Link / Embedded Catalyzer; Spring-Loaded / Pressurized Mag; Proton Jet; Proton Snap SC (+ toxin→panel) | **Locked** — +11 IDs; always-on paper inventory cleared |
 
-**Remaining unlocked paper-moving mods (post M16):** mostly other sim-gated `conditional_stat_on_*` exclusives (archgun ace/efficiency, proton latch, catalyzer cast, etc.). Core Galv/CO/BR/WW already in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M17):** none for `weapon_dps`/`warframe_totals`/`companion_totals`/`railjack_totals` with live catalog stats (excludes description-only / empty-stat / already-locked). Further work is sim depth, exclusives not in catalog stats, or Tier B/C items.
 
 ---
 
@@ -126,6 +127,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M14 RJ/gun leftovers | 2026-07-23 | +~25 RJ remainder + mag/cannonade/Galv SC/Reflex/Harkonar; panel mis-tags; turret proj speed alias fix |
 | M15 Chamber/precepts | 2026-07-23 | +~15 Higasa/Chamber goldens; precept/gated panel cleanup; Odonata rename |
 | M16 Conditional locks | 2026-07-23 | +~25 on-kill/trigger/headshot paper vs sim goldens; companion precept panel; Protective Shots sim |
+| M17 Final gated exclusives | 2026-07-23 | +11 Archgun Ace/Deadly Eff/Catalyzer/Spring-Loaded/Proton Jet/Snap; toxin mis-tag panel |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

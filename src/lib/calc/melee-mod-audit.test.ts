@@ -497,6 +497,19 @@ describe("melee leftovers (wiki max rank, Phase M14)", () => {
   });
 });
 
+describe("melee trigger conditionals (wiki max rank, Phase M17)", () => {
+  it("Proton Snap: paper SC unchanged; toxin catalog key is panel; trigger → +50% SC", () => {
+    const weapon = requireWeapon("skana");
+    const beh = VERIFIED_MOD_BEHAVIORS.proton_snap;
+    expect(beh?.stats.find((s) => s.statKey === "damage")?.target).toBe("mod_panel");
+    expect(withMod("proton_snap").statusChance).toBeCloseTo(weapon.statusChance, 5);
+    expect(withMod("proton_snap").moddedBaseDamage).toBeCloseTo(weapon.damage, 5);
+    expect(
+      withMod("proton_snap", { ...DEFAULT_SIM_PARAMS, applyTriggerBuffs: true }).statusChance,
+    ).toBeCloseTo(weapon.statusChance * 1.5, 5);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

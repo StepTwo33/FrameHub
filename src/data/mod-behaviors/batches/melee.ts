@@ -293,9 +293,9 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Primed Smite The Murmur: factionMurmur \u2014 x1.55 Damage to Murmur"),
   ]),
   proton_snap: mod("proton_snap", [
-    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap \u2014 Hold Wall Latch for 2s: +100% Toxin Damage for 20s"),
-    line("duration", "mod_panel", "multiplicative_percent", "Proton Snap: duration \u2014 Hold Wall Latch for 2s to gain +100% <DT_POISON_COLOR>Toxin Damage,  and +50% St\u2026"),
-    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap \u2014 Hold Wall Latch for 2s: +50% Status Chance for 20s"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Proton Snap — catalog damage key is toxin (not base damage; unmodeled elemental gate)"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Proton Snap — wall-latch buff duration"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Proton Snap — Hold Wall Latch for 2s: +50% Status Chance for 20s"),
   ]),
   quick_return: mod("quick_return", [
     line("ricochetBounces", "mod_panel", "multiplicative_percent", "Quick Return: ricochetBounces \u2014 -4 Bounce"),

@@ -256,6 +256,45 @@ describe("archgun trigger conditionals (wiki max rank, Phase M16)", () => {
   });
 });
 
+describe("archgun trigger conditionals (wiki max rank, Phase M17)", () => {
+  it("Archgun Ace: paper FR/reload unchanged; kill → +50% FR, +100% reload", () => {
+    const weapon = requireWeapon("imperator");
+    const paper = withMod("imperator", "archgun_ace");
+    expect(paper.fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(paper.reloadTime).toBeCloseTo(weapon.reloadTime, 5);
+    const active = withMod("imperator", "archgun_ace", {
+      ...DEFAULT_SIM_PARAMS,
+      killStacks: 1,
+    });
+    expect(active.fireRate).toBeCloseTo(weapon.fireRate * 1.5, 4);
+    expect(active.reloadTime).toBeCloseTo(weapon.reloadTime / 2, 4);
+  });
+
+  it("Deadly Efficiency / Primed: paper damage unchanged; trigger → +120% / +220%", () => {
+    const weapon = requireWeapon("imperator");
+    expect(withMod("imperator", "deadly_efficiency").moddedBaseDamage).toBeCloseTo(
+      weapon.damage,
+      5,
+    );
+    expect(
+      withMod("imperator", "deadly_efficiency", {
+        ...DEFAULT_SIM_PARAMS,
+        applyTriggerBuffs: true,
+      }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 2.2, 5);
+    expect(withMod("imperator", "primed_deadly_efficiency").moddedBaseDamage).toBeCloseTo(
+      weapon.damage,
+      5,
+    );
+    expect(
+      withMod("imperator", "primed_deadly_efficiency", {
+        ...DEFAULT_SIM_PARAMS,
+        applyTriggerBuffs: true,
+      }).moddedBaseDamage,
+    ).toBeCloseTo(weapon.damage * 3.2, 5);
+  });
+});
+
 describe("archmelee cores (wiki max rank, Phase M8)", () => {
   it("Cutting Edge R10: +110% melee damage", () => {
     const weapon = requireWeapon("veritux");

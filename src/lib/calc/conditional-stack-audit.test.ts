@@ -267,3 +267,55 @@ describe("on-kill / trigger conditionals (wiki max rank, Phase M16)", () => {
     expect(forced!.chance).toBeCloseTo(impact!.chance * Math.min(0.35 * rateMult, 1), 5);
   });
 });
+
+describe("remaining trigger/on-kill conditionals (wiki max rank, Phase M17)", () => {
+  it("Emergent Aftermath / Gorgon Frenzy: paper unchanged; kill → +50% reload / +30% FR", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "emergent_aftermath", {}).reloadTime).toBeCloseTo(weapon.reloadTime, 5);
+    expect(build("braton", "emergent_aftermath", { killStacks: 1 }).reloadTime).toBeCloseTo(
+      weapon.reloadTime / 1.5,
+      5,
+    );
+    expect(build("braton", "gorgon_frenzy", {}).fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(build("braton", "gorgon_frenzy", { killStacks: 1 }).fireRate).toBeCloseTo(
+      weapon.fireRate * 1.3,
+      5,
+    );
+  });
+
+  it("Catalyzer Link / Embedded Catalyzer: paper SC unchanged; trigger → +60% / +90% SC", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    expect(build("braton", "catalyzer_link", {}).statusChance).toBeCloseTo(braton.statusChance, 5);
+    expect(
+      build("braton", "catalyzer_link", { applyTriggerBuffs: true }).statusChance,
+    ).toBeCloseTo(braton.statusChance * 1.6, 5);
+    expect(build("lex", "embedded_catalyzer", {}).statusChance).toBeCloseTo(lex.statusChance, 5);
+    expect(
+      build("lex", "embedded_catalyzer", { applyTriggerBuffs: true }).statusChance,
+    ).toBeCloseTo(lex.statusChance * 1.9, 5);
+  });
+
+  it("Spring-Loaded Chamber / Pressurized Magazine: paper FR unchanged; trigger → +75% / +90% FR", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    expect(build("braton", "spring_loaded_chamber", {}).fireRate).toBeCloseTo(braton.fireRate, 5);
+    expect(
+      build("braton", "spring_loaded_chamber", { applyTriggerBuffs: true }).fireRate,
+    ).toBeCloseTo(braton.fireRate * 1.75, 5);
+    expect(build("lex", "pressurized_magazine", {}).fireRate).toBeCloseTo(lex.fireRate, 5);
+    expect(
+      build("lex", "pressurized_magazine", { applyTriggerBuffs: true }).fireRate,
+    ).toBeCloseTo(lex.fireRate * 1.9, 5);
+  });
+
+  it("Proton Jet: paper CC/SC unchanged; trigger → +120% CC and SC", () => {
+    const weapon = requireWeapon("braton");
+    const paper = build("braton", "proton_jet", {});
+    expect(paper.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+    expect(paper.statusChance).toBeCloseTo(weapon.statusChance, 5);
+    const active = build("braton", "proton_jet", { applyTriggerBuffs: true });
+    expect(active.criticalChance).toBeCloseTo(weapon.criticalChance * 2.2, 5);
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 2.2, 5);
+  });
+});
