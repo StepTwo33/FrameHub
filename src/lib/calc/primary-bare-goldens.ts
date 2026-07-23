@@ -1,6 +1,26 @@
 /** Wiki-matched primary bare catalog goldens (B10). Generated — do not hand-edit. */
 export const PRIMARY_BARE_GOLDENS = [
   {
+    "id": "acceltra",
+    "damage": 35,
+    "criticalChance": 0.31999999,
+    "criticalMultiplier": 2.8,
+    "statusChance": 0.060000002,
+    "fireRate": 12.000001,
+    "multishot": 1,
+    "impact": 35
+  },
+  {
+    "id": "acceltra_prime",
+    "damage": 44,
+    "criticalChance": 0.34,
+    "criticalMultiplier": 3,
+    "statusChance": 0.18000001,
+    "fireRate": 10.000001,
+    "multishot": 1,
+    "impact": 44
+  },
+  {
     "id": "aeolak",
     "damage": 60,
     "criticalChance": 0.20999999,
@@ -98,6 +118,26 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 4,
     "puncture": 60,
     "slash": 16
+  },
+  {
+    "id": "astilla",
+    "damage": 70,
+    "criticalChance": 0.17,
+    "criticalMultiplier": 1.9,
+    "statusChance": 0.33,
+    "fireRate": 4.33,
+    "multishot": 1,
+    "impact": 70
+  },
+  {
+    "id": "astilla_prime",
+    "damage": 100,
+    "criticalChance": 0.20999999,
+    "criticalMultiplier": 1.9,
+    "statusChance": 0.37,
+    "fireRate": 4.3333335,
+    "multishot": 1,
+    "impact": 100
   },
   {
     "id": "ax_52",

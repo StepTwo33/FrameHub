@@ -119,3 +119,16 @@ describe("amp prism wiki goldens", () => {
     expect(a!.statusChance).toBeCloseTo(g.statusChance, 4);
   });
 });
+
+describe("legacy weapons.ts modular stubs (B16)", () => {
+  it("builder-hidden categories still exist in allWeapons for arcane/codex paths", async () => {
+    const { allWeapons } = await import("@/data/weapons");
+    const stubs = allWeapons.filter((w) =>
+      ["kitgun_chamber", "zaw_strike", "amp_prism"].includes(w.category),
+    );
+    expect(stubs.length).toBeGreaterThan(0);
+    // Modular builder source of truth — stubs are not goldens.
+    expect(kitgunChambers.every((c) => stubs.some((s) => s.id === c.id))).toBe(true);
+    expect(ampPrisms.every((a) => stubs.some((s) => s.id === a.id))).toBe(true);
+  });
+});

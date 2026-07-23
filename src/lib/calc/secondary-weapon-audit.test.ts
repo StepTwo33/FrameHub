@@ -11,17 +11,8 @@ import type { Mod, Weapon } from "@/lib/types";
 
 const SECONDARY_CATS = new Set(["secondary", "pistol", "dual_pistols"]);
 
-/** Radial / dual-mode / charge-blob rows intentionally not wiki-locked this pass. */
-const DEFERRED_SECONDARY_IDS = new Set([
-  "akarius",
-  "akarius_prime",
-  "angstrum",
-  "prisma_angstrum",
-  "sepulcrum",
-  "sonicor",
-  "staticor",
-  "stug",
-]);
+/** Remaining dual-mode / charge rows intentionally not wiki-locked (B16 promoted radials). */
+const DEFERRED_SECONDARY_IDS = new Set<string>([]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -65,7 +56,7 @@ describe("secondary weapon inventory (B11)", () => {
 
 describe("secondary bare wiki goldens", () => {
   it("locks every non-deferred secondary against wiki-matched catalog", () => {
-    expect(SECONDARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(130);
+    expect(SECONDARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(145);
   });
 
   it.each(SECONDARY_BARE_GOLDENS)("$id catalog bare paper", (g) => {

@@ -1104,12 +1104,6 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "prisma_angstrum": [
     {
-      "name": "Single Rocket Impact",
-      "blast": 200.0,
-      "totalDamage": 200.0,
-      "radius": 3.0
-    },
-    {
       "name": "Single Rocket Explosion",
       "blast": 250.0,
       "totalDamage": 250.0,
@@ -1208,12 +1202,6 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
     }
   ],
   "angstrum": [
-    {
-      "name": "Single Rocket Impact",
-      "blast": 200.0,
-      "totalDamage": 200.0,
-      "radius": 3.0
-    },
     {
       "name": "Single Rocket Explosion",
       "blast": 250.0,
@@ -1423,23 +1411,9 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
       "totalDamage": 88.0,
       "radius": 2.4,
       "falloffReduction": 0.3
-    },
-    {
-      "name": "Fully Charged Explosion",
-      "radiation": 106.0,
-      "totalDamage": 106.0,
-      "radius": 9.6,
-      "falloffReduction": 0.9
     }
   ],
   "stug": [
-    {
-      "name": "Blob Embed",
-      "corrosive": 4.0,
-      "totalDamage": 4.0,
-      "radius": 2.0,
-      "falloffReduction": 1.0
-    },
     {
       "name": "Blob Explosion",
       "corrosive": 75.0,
@@ -1447,13 +1421,6 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
       "radius": 0.3,
       "falloffReduction": 0.3,
       "explosionDelay": 1.5
-    },
-    {
-      "name": "Incarnon Form Blob Embed",
-      "corrosive": 50.0,
-      "totalDamage": 50.0,
-      "radius": 2.0,
-      "falloffReduction": 1.0
     },
     {
       "name": "Incarnon Form Blob Explosion",

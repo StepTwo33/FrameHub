@@ -72,6 +72,26 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "akarius",
+    "damage": 68.0,
+    "impact": 68.0,
+    "criticalChance": 0.059999999,
+    "criticalMultiplier": 1.8,
+    "statusChance": 0.27999997,
+    "fireRate": 4.33,
+    "multishot": 1.0
+  },
+  {
+    "id": "akarius_prime",
+    "damage": 68.0,
+    "impact": 68.0,
+    "criticalChance": 0.18000001,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.34000003,
+    "fireRate": 3.667,
+    "multishot": 1.0
+  },
+  {
     "id": "akbolto",
     "damage": 64.0,
     "impact": 6.4,
@@ -284,6 +304,16 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "criticalMultiplier": 2.0,
     "statusChance": 0.13999999,
     "fireRate": 20.000002,
+    "multishot": 1.0
+  },
+  {
+    "id": "angstrum",
+    "damage": 200.0,
+    "blast": 200.0,
+    "criticalChance": 0.16,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.22,
+    "fireRate": 2.0,
     "multishot": 1.0
   },
   {
@@ -1079,6 +1109,16 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "prisma_angstrum",
+    "damage": 200.0,
+    "blast": 200.0,
+    "criticalChance": 0.18,
+    "criticalMultiplier": 2.2,
+    "statusChance": 0.26,
+    "fireRate": 2.0,
+    "multishot": 1.0
+  },
+  {
     "id": "prisma_twin_gremlins",
     "damage": 27.0,
     "impact": 2.97,
@@ -1206,6 +1246,18 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "sepulcrum",
+    "damage": 48.0,
+    "impact": 9.6,
+    "puncture": 26.88,
+    "slash": 11.52,
+    "criticalChance": 0.30000001,
+    "criticalMultiplier": 2.2,
+    "statusChance": 0.13999999,
+    "fireRate": 1.83,
+    "multishot": 1.0
+  },
+  {
     "id": "sicarus",
     "damage": 30.0,
     "impact": 21.0,
@@ -1227,6 +1279,16 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "criticalMultiplier": 2.0,
     "statusChance": 0.2,
     "fireRate": 5.0,
+    "multishot": 1.0
+  },
+  {
+    "id": "sonicor",
+    "damage": 150.0,
+    "impact": 150.0,
+    "criticalChance": 0.0,
+    "criticalMultiplier": 1.0,
+    "statusChance": 0.0,
+    "fireRate": 1.2500001,
     "multishot": 1.0
   },
   {
@@ -1276,6 +1338,16 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "staticor",
+    "damage": 44.0,
+    "radiation": 44.0,
+    "criticalChance": 0.14,
+    "criticalMultiplier": 2.2,
+    "statusChance": 0.27999997,
+    "fireRate": 3.5000002,
+    "multishot": 1.0
+  },
+  {
     "id": "stubba",
     "damage": 33.0,
     "impact": 14.19,
@@ -1285,6 +1357,16 @@ export const SECONDARY_BARE_GOLDENS: Array<{
     "criticalMultiplier": 1.9,
     "statusChance": 0.13,
     "fireRate": 6.3333335,
+    "multishot": 1.0
+  },
+  {
+    "id": "stug",
+    "damage": 4.0,
+    "corrosive": 4.0,
+    "criticalChance": 0.050000001,
+    "criticalMultiplier": 1.5,
+    "statusChance": 0.1,
+    "fireRate": 4.0,
     "multishot": 1.0
   },
   {

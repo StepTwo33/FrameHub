@@ -11,12 +11,8 @@ import type { Mod, Weapon } from "@/lib/types";
 
 const PRIMARY_CATS = new Set(["rifle", "shotgun", "bow", "primary"]);
 
-/** Dual-mode / radial / pellet-SC / battery rows intentionally not wiki-locked this pass. */
+/** Dual-mode / pellet-SC / battery rows intentionally not wiki-locked this pass. */
 const DEFERRED_PRIMARY_IDS = new Set([
-  "acceltra",
-  "acceltra_prime",
-  "astilla",
-  "astilla_prime",
   "cernos_prime",
   "convectrix",
   "evensong",
@@ -88,7 +84,7 @@ describe("primary weapon inventory (B10)", () => {
 
 describe("primary bare wiki goldens", () => {
   it("locks every non-deferred primary against wiki-matched catalog", () => {
-    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(160);
+    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(169);
   });
 
   it.each(PRIMARY_BARE_GOLDENS)("$id catalog bare paper", (g) => {

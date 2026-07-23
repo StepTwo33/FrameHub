@@ -135,6 +135,16 @@ MANUAL_RADIAL_ATTACKS: dict[str, list[dict]] = {
             "radius": 1.0,
         },
     ],
+    # Uncharged explosion only — charged mode remains dual-mode deferred for DPS.
+    "staticor": [
+        {
+            "name": "Uncharged Explosion",
+            "radiation": 88.0,
+            "totalDamage": 88.0,
+            "radius": 2.4,
+            "falloffReduction": 0.3,
+        },
+    ],
 }
 
 RADIAL_NAME_HINTS = (
@@ -173,13 +183,16 @@ ALT_FIRE_CONTACT_RADIUS = 1.0
 
 def is_radial_attack(shot_type: str | None, attack_name: str, dmg: dict | None = None) -> bool:
     an = attack_name.lower()
+    # Direct-hit paper lives on the weapon row (Rocket/Slug/Projectile Impact, Blob Embed).
+    if "impact" in an and shot_type != "AoE":
+        return False
+    if "embed" in an and "explosion" not in an and shot_type != "AoE":
+        return False
     if shot_type == "AoE":
         return True
     if dmg and len(dmg) == 1 and dmg.get("blast"):
         return True
     if any(h in an for h in RADIAL_NAME_HINTS):
-        if "impact" in an and shot_type == "Projectile":
-            return False
         return True
     return False
 
@@ -397,9 +410,8 @@ def main() -> None:
                 unmatched.append(wid)
 
     for wid, attacks in MANUAL_RADIAL_ATTACKS.items():
-        if wid not in known_ids:
-            continue
-        if wid not in merged:
+        if wid in known_ids:
+            # Manual always wins (e.g. Staticor uncharged-only; Ignis spherical blast).
             merged[wid] = attacks
 
     OUT.write_text(to_ts(merged), encoding="utf-8")
