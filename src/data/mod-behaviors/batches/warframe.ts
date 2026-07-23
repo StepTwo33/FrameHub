@@ -100,7 +100,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Augmented Sonar: duration \u2014 Sonar Augment: Affected enemies also become visible through walls for 10s."),
   ]),
   augur_accord: mod("augur_accord", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Augur Accord: shield \u2014 +25% Shield Capacity per rank"),
+    line("shield", "warframe_totals", "multiplicative_percent", "wiki: Augur Accord — +70% Shield Capacity at max"),
   ]),
   augur_message: mod("augur_message", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Augur Message: abilityDuration \u2014 +6% Ability Duration per rank"),
@@ -239,9 +239,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("abilityDuration", "mod_panel", "multiplicative_percent", "Endless Lullaby: abilityDuration \u2014 Lull Augment: Performing a finisher on or killing a sleeping enemy will retrigge\u2026"),
   ]),
   endurance_drift: mod("endurance_drift", [
-    line("energy", "warframe_totals", "multiplicative_percent", "Endurance Drift: energy \u2014 +10% Energy Max, +12% Parkour Velocity"),
-    line("energyMax", "warframe_totals", "multiplicative_percent", "Endurance Drift: energyMax \u2014 +10% Energy Max, +12% Parkour Velocity"),
-    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Endurance Drift: parkourVelocity \u2014 +10% Energy Max, +12% Parkour Velocity"),
+    line("energy", "warframe_totals", "multiplicative_percent", "wiki: Endurance Drift — +10% Energy Max"),
+    line("energyMax", "mod_panel", "multiplicative_percent", "wiki: Endurance Drift — energyMax catalog duplicate of energy (panel; avoid double-count)"),
+    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "wiki: Endurance Drift — +12% Parkour Velocity"),
   ]),
   enemy_sense_r3: mod("enemy_sense_r3", [
     line("range", "mod_panel", "multiplicative_percent", "Enemy Sense: range \u2014 +55m Enemy Radar (arsenal display only)"),
@@ -250,8 +250,8 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("energyOnKill", "mod_panel", "multiplicative_percent", "Energy Nexus: energyOnKill \u2014 Warframe receives +3 Energy Regen/s"),
   ]),
   equilibrium: mod("equilibrium", [
-    line("energy", "warframe_totals", "multiplicative_percent", "Equilibrium: energy \u2014 Health pickups give +110% Energy. Energy pickups give +110% Health."),
-    line("health", "warframe_totals", "multiplicative_percent", "Equilibrium: health \u2014 Health pickups give +110% Energy. Energy pickups give +110% Health."),
+    line("energy", "mod_panel", "multiplicative_percent", "wiki: Equilibrium — Health/Energy pickup conversion (not max pool)"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Equilibrium — Health/Energy pickup conversion (not max pool)"),
   ]),
   fast_deflection_r3: mod("fast_deflection_r3", [
     line("shield", "warframe_totals", "multiplicative_percent", "Fast Deflection: shield \u2014 +90% Shield Recharge\\\\n-45% Shield Recharge Delay"),

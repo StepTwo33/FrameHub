@@ -115,3 +115,88 @@ describe("survivability mods post-U34 (wiki max rank)", () => {
     expect(stats.totalEnergy).toBeCloseTo(bare.totalEnergy * (1 + bonus), 4);
   });
 });
+
+describe("warframe power/survivability remainder (wiki max rank, Phase M10)", () => {
+  it("Archon Continuity R10: +55% duration", () => {
+    expect(withMod("archon_continuity").abilityDuration).toBeCloseTo(1.55, 8);
+  });
+
+  it("Archon Intensify R10: +30% strength (heal conditional is panel)", () => {
+    expect(withMod("archon_intensify").abilityStrength).toBeCloseTo(1.3, 5);
+  });
+
+  it("Archon Stretch R10: +45% range", () => {
+    expect(withMod("archon_stretch").abilityRange).toBeCloseTo(1.45, 5);
+  });
+
+  it("Archon Flow R10: +185% energy (matches Primed Flow paper)", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("archon_flow").totalEnergy / bare.totalEnergy).toBeCloseTo(2.85, 5);
+  });
+
+  it("Archon Vitality R10: +100% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("archon_vitality").totalHealth / bare.totalHealth).toBeCloseTo(2, 5);
+  });
+
+  it("Augur Message / Reach / Secrets R5: +24% duration / range / strength", () => {
+    expect(withMod("augur_message").abilityDuration).toBeCloseTo(1.24, 8);
+    expect(withMod("augur_reach").abilityRange).toBeCloseTo(1.3, 8);
+    expect(withMod("augur_secrets").abilityStrength).toBeCloseTo(1.24, 8);
+  });
+
+  it("Augur Accord R5: +70% shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("augur_accord").totalShield / bare.totalShield).toBeCloseTo(1.7, 5);
+  });
+
+  it("Constitution R3: +28% duration", () => {
+    expect(withMod("constitution").abilityDuration).toBeCloseTo(1.28, 8);
+  });
+
+  it("Armored Agility R5: +40% armor, +15% sprint", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("armored_agility");
+    expect(stats.totalArmor / bare.totalArmor).toBeCloseTo(1.4, 5);
+    expect(stats.sprintSpeedBonus).toBeCloseTo(0.15, 8);
+  });
+
+  it("Gladiator Aegis R5: +40% armor", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("gladiator_aegis").totalArmor / bare.totalArmor).toBeCloseTo(1.4, 5);
+  });
+
+  it("Carnis Carapace R5: +55% armor, +20% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("carnis_carapace");
+    expect(stats.totalArmor / bare.totalArmor).toBeCloseTo(1.55, 5);
+    expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(1.2, 5);
+  });
+
+  it("Cunning Drift R5: +15% ability range", () => {
+    expect(withMod("aura_cunning_drift").abilityRange).toBeCloseTo(1.15, 8);
+  });
+
+  it("Physique R5: +20% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("aura_physique").totalHealth / bare.totalHealth).toBeCloseTo(1.2, 5);
+  });
+
+  it("Sprint Boost R5: +15% sprint speed", () => {
+    expect(withMod("aura_sprint_boost").sprintSpeedBonus).toBeCloseTo(0.15, 8);
+  });
+
+  it("Endurance Drift R5: +10% energy, +12% parkour velocity", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("endurance_drift");
+    expect(stats.totalEnergy / bare.totalEnergy).toBeCloseTo(1.1, 5);
+    expect(stats.parkourVelocityBonus).toBeCloseTo(0.12, 8);
+  });
+
+  it("Equilibrium: pickup conversion is panel-only (no max pool inflate)", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("equilibrium");
+    expect(stats.totalHealth).toBeCloseTo(bare.totalHealth, 8);
+    expect(stats.totalEnergy).toBeCloseTo(bare.totalEnergy, 8);
+  });
+});

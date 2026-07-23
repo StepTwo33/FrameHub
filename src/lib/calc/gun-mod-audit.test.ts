@@ -1030,4 +1030,8 @@ describe("gun utility leftovers (wiki max rank, Phase M9)", () => {
   it("Perpetual Agony R5: +90% status duration", () => {
     expect(withMod("lex", "perpetual_agony").statusDurationBonus).toBeCloseTo(0.9, 8);
   });
+
+  it("Augur Seeker R5: +90% status duration", () => {
+    expect(withMod("lex", "augur_seeker").statusDurationBonus).toBeCloseTo(0.9, 8);
+  });
 });

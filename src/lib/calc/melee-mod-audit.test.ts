@@ -432,6 +432,37 @@ describe("melee utility cores (wiki max rank, Phase M9)", () => {
   });
 });
 
+describe("contempt + charge cores (wiki max rank, Phase M10)", () => {
+  it("Amar's Contempt R5: +90% damage, +30% slash (stacks on modded IPS)", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("amars_contempt");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+    expect(stats.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9 * 1.3, stats.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Boreal's Contempt R5: +90% damage, +60% status damage", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("boreals_contempt");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+    expect(stats.statusDamageBonus).toBeCloseTo(0.6, 8);
+  });
+
+  it("Nira's Contempt R5: +90% damage, +60% status chance", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("niras_contempt");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+  });
+
+  it("Corrupt Charge R3: −40% attack speed (initial combo panel-only)", () => {
+    const weapon = requireWeapon("skana");
+    expect(withMod("corrupt_charge").fireRate).toBeCloseTo(weapon.fireRate * 0.6, 5);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

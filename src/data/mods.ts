@@ -4761,7 +4761,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "shield": 11.6667
     },
-    "description": "+25% Shield Capacity per rank",
+    "description": "+70% Shield Capacity at max",
     "rarity": "uncommon"
   },
   {
@@ -11441,7 +11441,7 @@ const RAW_MODS: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "energy": 0.909091,
+      "energy": 16.8182,
       "cooldown": 0.909091
     },
     "description": "+185% Energy Max, Enemies killed by <DT_FREEZE_COLOR>Cold Abilities have 10% chance to drop an Energy Orb. Cooldown: 10s",
