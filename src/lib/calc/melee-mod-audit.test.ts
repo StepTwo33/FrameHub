@@ -276,6 +276,81 @@ describe("melee cores (wiki max rank, Phase M5)", () => {
   });
 });
 
+describe("melee cores (wiki max rank, Phase M6)", () => {
+  it("Spoiled Strike R3: +100% damage, −20% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("spoiled_strike_r3");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2, 8);
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.8, 8);
+  });
+
+  it("Jagged Edge R5: +90% slash", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("jagged_edge");
+    expect(stats.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, stats.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Sundering Strike R5: +90% puncture", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("sundering_strike");
+    expect(stats.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, stats.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Rending Strike R3: +60% slash, +80% puncture", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("rending_strike");
+    expect(stats.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.6, stats.moddedBaseDamage / 32),
+      8,
+    );
+    expect(stats.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.8, stats.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Carnis Mandible / Jugulus Barbs / Saxum Thorax: 90 IPS / 60 status", () => {
+    const weapon = requireWeapon("skana");
+    const slash = withMod("carnis_mandible");
+    const puncture = withMod("jugulus_barbs");
+    const impact = withMod("saxum_thorax");
+    expect(slash.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(puncture.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(impact.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Primed Smite Corpus: ×1.55 paper DPS when targetFaction=corpus", () => {
+    const bare = calculateWeaponBuild(requireWeapon("skana"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "corpus",
+    });
+    const modded = withMod("primed_smite_corpus", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "corpus",
+    });
+    expect(modded.factionBonuses?.corpus).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

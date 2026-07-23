@@ -560,3 +560,105 @@ describe("shotgun cores (wiki max rank, Phase M5)", () => {
     );
   });
 });
+
+describe("primary cores (wiki max rank, Phase M6)", () => {
+  it("Wildfire R3: +60% heat from base, +20% magazine", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "wildfire");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.2));
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "heat")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Vile Precision R5: −36% fire rate (recoil panel-only)", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "vile_precision");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.64, 8);
+  });
+
+  it("Primed Bane of Infested: ×1.55 paper DPS when targetFaction=infested", () => {
+    const bare = calculateWeaponBuild(requireWeapon("braton"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "infested",
+    });
+    const modded = withMod("braton", "primed_bane_of_infested", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "infested",
+    });
+    expect(modded.factionBonuses?.infested).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+});
+
+describe("secondary cores (wiki max rank, Phase M6)", () => {
+  it("Amalgam Barrel Diffusion R5: +110% multishot", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "amalgam_barrel_diffusion");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 2.1, 5);
+  });
+
+  it("Ice Storm R3: +40% cold from base, +40% magazine", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "ice_storm");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.4));
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.4, scale),
+      8,
+    );
+  });
+
+  it("Sure Shot R5: +90% status chance", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "sure_shot");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.9, 8);
+  });
+
+  it("Stunning Speed R3: +30% status, +40% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "stunning_speed");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.3, 8);
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.4, 8);
+  });
+
+  it("Shrapnel Rounds R0: +200% multishot, −66% damage", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "shrapnel_rounds");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 3, 8);
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 0.34, 8);
+  });
+
+  it("Carnis Stinger / Jugulus Spines / Saxum Spittle: 90 IPS / 60 status", () => {
+    const weapon = requireWeapon("lex");
+    const slash = withMod("lex", "carnis_stinger");
+    const puncture = withMod("lex", "jugulus_spines");
+    const impact = withMod("lex", "saxum_spittle");
+    expect(slash.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(puncture.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(impact.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+});
+
+describe("shotgun cores (wiki max rank, Phase M6)", () => {
+  it("Critical Deceleration R5: +200% crit chance, −20% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "critical_deceleration");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 3, 4);
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.8, 4);
+  });
+});
