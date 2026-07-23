@@ -22,6 +22,7 @@ import { resolveIncarnonActiveWeapon, isIncarnonFormActive } from "@/lib/calc/in
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
 import { applyAlternateMode, weaponHasAlternateMode } from "@/lib/weapons/weapon-alternate-mode";
+import { applyArbucepAttackMode } from "@/lib/weapons/weapon-arbucep-mode";
 import {
   weaponSupportsProgenitor,
   PROGENITOR_BONUS_DEFAULT,
@@ -101,17 +102,27 @@ export default function WeaponBuilderPage() {
   const [gravimagMode, setGravimagMode] = useState(false);
   const [alternateMode, setAlternateMode] = useState(false);
 
-  /** Archgun Gravimag / alternate fire-form overlays, then Incarnon resolution. */
+  /** Archgun Gravimag / alternate fire-form / Arbucep cycle, then Incarnon resolution. */
   const activeWeapon = useMemo<Weapon | null>(() => {
     if (!selectedWeapon) return null;
     let w = selectedWeapon;
     if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) w = applyGravimagMode(selectedWeapon);
     if (alternateMode && weaponHasAlternateMode(w)) w = applyAlternateMode(w);
+    if (w.id === "arbucep") {
+      w = applyArbucepAttackMode(w, simParams.arbucepAttackMode, { atmosphere: gravimagMode });
+    }
     const data = incarnonDataMap.get(w.id);
     return resolveIncarnonActiveWeapon(w, data, selectedEvolutions, {
       onosIncarnonMode: simParams.onosIncarnonMode,
     });
-  }, [selectedWeapon, gravimagMode, alternateMode, selectedEvolutions, simParams.onosIncarnonMode]);
+  }, [
+    selectedWeapon,
+    gravimagMode,
+    alternateMode,
+    selectedEvolutions,
+    simParams.onosIncarnonMode,
+    simParams.arbucepAttackMode,
+  ]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
     const data = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;

@@ -191,6 +191,31 @@ export function WeaponSimControls({
                 </select>
               </label>
             )}
+            {weapon?.id === "arbucep" && (
+              <label
+                className="block text-[10px] text-muted-foreground"
+                title="Wiki Arbucep attack cycle — Space 16/114; Atmosphere (Gravimag) 32/228"
+              >
+                Arbucep attack
+                <select
+                  value={simParams.arbucepAttackMode ?? 1}
+                  onChange={(e) =>
+                    onSimParamsChange({
+                      ...simParams,
+                      arbucepAttackMode: Number(e.target.value) as 1 | 2 | 3 | 4 | 5 | 6,
+                    })
+                  }
+                  className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                >
+                  <option value={1}>1st Attack (Blast)</option>
+                  <option value={2}>2nd Attack (Corrosive)</option>
+                  <option value={3}>3rd Attack (Gas)</option>
+                  <option value={4}>4th Attack (Magnetic)</option>
+                  <option value={5}>5th Attack (Radiation)</option>
+                  <option value={6}>6th Attack (Viral)</option>
+                </select>
+              </label>
+            )}
             {(simParams.activeWeaponAbilityBuffs ?? []).includes("Vex Armor") && (
               <SimSlider
                 label="Vex Fury fill"

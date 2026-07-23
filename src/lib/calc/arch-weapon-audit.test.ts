@@ -1,6 +1,6 @@
 /**
- * Arch weapons accuracy (B13 Space + B21 Atmosphere) — non-exalted archgun/archmelee.
- * Arbucep locked to 1st Attack paper (modes 2–6 unmodeled).
+ * Arch weapons accuracy (B13 Space + B21 Atmosphere + B23 Arbucep cycle).
+ * Arbucep default = 1st Attack (Blast); modes 2–6 via applyArbucepAttackMode.
  * Wiki Module:Weapons/data/archwing Space → ARCH_BARE_GOLDENS;
  * Atmosphere / Gravimag overlays → ARCH_ATMOSPHERE_GOLDENS.
  */
@@ -202,5 +202,35 @@ describe("arch Atmosphere / Gravimag goldens (B21)", () => {
     expect(getWeaponRadialAttacks(atmos)[0]?.totalDamage).toBeCloseTo(228, 5);
     const stats = calculateWeaponBuild(atmos, [], modsMap());
     expect(stats.moddedBaseDamage).toBeCloseTo(32, 3);
+  });
+
+  it.each([
+    [2, "corrosive"],
+    [3, "gas"],
+    [4, "magnetic"],
+    [5, "radiation"],
+    [6, "viral"],
+  ] as const)("Arbucep mode %i swaps Space paper to %s", async (mode, element) => {
+    const { applyArbucepAttackMode } = await import("@/lib/weapons/weapon-arbucep-mode");
+    const w = allWeapons.find((x) => x.id === "arbucep")!;
+    const swapped = applyArbucepAttackMode(w, mode);
+    expect(swapped.damage).toBe(16);
+    expect(swapped[element]).toBe(16);
+    expect(swapped.blast ?? 0).toBe(0);
+    const radial = getWeaponRadialAttacks(swapped)[0]!;
+    expect(radial.totalDamage).toBeCloseTo(114, 5);
+    expect(radial[element]).toBeCloseTo(114, 5);
+    const stats = calculateWeaponBuild(swapped, [], modsMap());
+    expect(stats.elements.some((e) => e.type === element)).toBe(true);
+  });
+
+  it("Arbucep mode 4 under Gravimag uses Atmosphere magnitudes", async () => {
+    const { applyArbucepAttackMode } = await import("@/lib/weapons/weapon-arbucep-mode");
+    const w = applyGravimagMode(allWeapons.find((x) => x.id === "arbucep")!);
+    const swapped = applyArbucepAttackMode(w, 4, { atmosphere: true });
+    expect(swapped.damage).toBe(32);
+    expect(swapped.magnetic).toBe(32);
+    expect(swapped.blast ?? 0).toBe(0);
+    expect(getWeaponRadialAttacks(swapped)[0]?.magnetic).toBeCloseTo(228, 5);
   });
 });

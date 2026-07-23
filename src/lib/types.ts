@@ -407,6 +407,11 @@ export interface SimulationParams {
    */
   onosIncarnonMode?: "held" | "charge";
   /**
+   * Arbucep attack cycle (1–6). Default / unset = 1st Attack (Blast).
+   * Wiki: Blast → Corrosive → Gas → Magnetic → Radiation → Viral.
+   */
+  arbucepAttackMode?: 1 | 2 | 3 | 4 | 5 | 6;
+  /**
    * Toxic Lash + Spores synergy: Spore-afflicted target takes TWO Extra Hits
    * (wiki), but still only one Toxin status stack.
    */
