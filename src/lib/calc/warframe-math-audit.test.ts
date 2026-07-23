@@ -524,10 +524,25 @@ describe("alternate weapon modes (Staticor charged / DSS Heavy Blade)", () => {
     expect(getWeaponRadialAttacks(w)[0]?.radius).toBeCloseTo(2.4, 5);
     const charged = applyAlternateMode(w);
     expect(charged.damage).toBe(44);
+    expect(charged.ammoCost).toBe(5);
+    expect(charged.chargeTime).toBe(1);
+    expect(charged.chargeMode).toBe("standard");
+    expect(charged.triggerType).toBe("Charge");
     expect(getWeaponRadialAttacks(charged)[0]?.name).toBe("Fully Charged Explosion");
     expect(getWeaponRadialAttacks(charged)[0]?.totalDamage).toBeCloseTo(106, 5);
     expect(getWeaponRadialAttacks(charged)[0]?.radius).toBeCloseTo(9.6, 5);
     expect(getWeaponRadialAttacks(charged)[0]?.falloffReduction).toBeCloseTo(0.9, 5);
+
+    // Wiki: EFR = 1 / (CT + 1/FR) = 1 / (1 + 1/3.5)
+    const chargedStats = calculateWeaponBuild(charged, [], modsMap());
+    expect(chargedStats.ammoCost).toBe(5);
+    expect(chargedStats.effectiveFireRate).toBeCloseTo(1 / (1 + 1 / 3.5000002), 4);
+    // Mag 48 / 5 ammo = 9.6 shots before reload
+    const efr = chargedStats.effectiveFireRate!;
+    const magTime = 48 / (5 * efr);
+    const cycle = magTime + 1.5;
+    const expectedSustain = chargedStats.burstDps * (magTime / cycle);
+    expect(chargedStats.sustainedDps).toBeCloseTo(expectedSustain, 2);
   });
 
   it("Dark Split-Sword default Dual Swords; Heavy Blade overlay swaps paper + stance + slams", async () => {

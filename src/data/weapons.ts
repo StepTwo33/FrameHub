@@ -10028,6 +10028,10 @@ export const allWeapons: Weapon[] = [
     "multishot": 1,
     "alternateModeStats": {
       "label": "Charged",
+      "chargeTime": 1,
+      "chargeMode": "standard",
+      "triggerType": "Charge",
+      "ammoCost": 5,
       "radialAttacks": [
         {
           "name": "Fully Charged Explosion",

@@ -550,6 +550,7 @@ export function calculateWeaponBuild(
     statusChancePerShot: evolvedBaseSC,
     magazine: baseWeapon.magazine,
     reloadTime: baseWeapon.reloadTime,
+    ammoCost: baseWeapon.ammoCost ?? 1,
     ammoEfficiency: 0,
     multishot: baseWeapon.multishot,
     burstDps: 0,
@@ -2043,10 +2044,11 @@ function calculateSustainedDps(stats: CalculatedStats, baseWeapon?: Weapon): num
   if (baseWeapon?.chargeMode === "bow" || baseWeapon?.triggerType === "Bow") {
     return burstDps;
   }
-  // Ammo Efficiency: expected ammo per shot = 1 − AE → longer mag before reload.
+  // Ammo Efficiency: expected ammo per shot = ammoCost × (1 − AE) → longer mag before reload.
   const ae = Math.min(Math.max(stats.ammoEfficiency ?? 0, 0), 1);
   if (ae >= 0.99) return burstDps;
-  const ammoPerShot = 1 - ae;
+  const ammoCost = Math.max(0.01, stats.ammoCost ?? baseWeapon?.ammoCost ?? 1);
+  const ammoPerShot = ammoCost * (1 - ae);
   // Ammo restore (kill / PT / Electric): one opportunity per mag dump →
   // E[extra rounds] = p × flat + p × frac × mag. Holster reload is swap-gated
   // and stays out of same-weapon sustained.

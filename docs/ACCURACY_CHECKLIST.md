@@ -64,8 +64,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B19 | Remaining primary deferred + DSS | Kohm fully-spooled MS/SC, Higasa auto FR, Nataruk charged mag, Synoid/Sirocco Void paper, Dark Split-Sword Dual Swords form | **Locked** — DSS Heavy Blade alternate (B22) |
 | B20 | Arbucep / Deconstructor / Rabvee / radial cleanup | Arbucep 1st Attack mag36/MS1 + single radial; Deconstructor(+Prime) First Attack; Rabvee stub synced; Sepulcrum lock-on radial removed | **Locked** — modes 2–6 via sim (B23) |
 | B21 | Archgun Atmosphere / Gravimag paper | 19 `atmosphereStats` overlays wiki-locked (Arbucep Atmosphere + prior Gravimag profiles); Corvas Prime intentionally no overlay | **Locked** |
-| B22 | Alternate modes (Staticor + DSS) | `alternateModeStats` toggle: Staticor Fully Charged Explosion 106/9.6m; DSS Heavy Blade paper + slams; Dual Swords slams corrected to 232/462 | **Locked** — Staticor ammo-cost/charge FR not modeled |
-| B23 | Arbucep attack cycle | Sim `arbucepAttackMode` 1–6 swaps Space 16/114 or Atmosphere 32/228 element (Blast→…→Viral); builder dropdown | **Locked** — Staticor ammo-cost/charge FR; C6 stances |
+| B22 | Alternate modes (Staticor + DSS) | `alternateModeStats` toggle: Staticor Fully Charged Explosion 106/9.6m; DSS Heavy Blade paper + slams; Dual Swords slams corrected to 232/462 | **Locked** — charged timing/ammo in B24 |
+| B23 | Arbucep attack cycle | Sim `arbucepAttackMode` 1–6 swaps Space 16/114 or Atmosphere 32/228 element (Blast→…→Viral); builder dropdown | **Locked** |
+| B24 | Staticor charged timing + ammo | Charged mode: ChargeTime 1s (standard EFR), ammoCost 5; sustained/TTK consume multi-ammo | **Locked** — C6 stance strings |
 
 ---
 
@@ -356,6 +357,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Arch Atmosphere / Gravimag (B21) | 2026-07-23 | Wiki-lock 19 atmosphereStats overlays (add Arbucep Atmosphere blast32/radial228); Corvas Prime no overlay; `ARCH_ATMOSPHERE_GOLDENS` |
 | Alternate modes Staticor + DSS (B22) | 2026-07-23 | `alternateModeStats` + builder toggle; Staticor charged radial 106/9.6m; DSS Heavy Blade paper; Dual Swords slam radials 232/462 |
 | Arbucep attack cycle (B23) | 2026-07-23 | Sim mode 1–6 elemental paper (Space 16/114, Atmosphere 32/228); `weapon-arbucep-mode` + builder dropdown |
+| Staticor charged timing + ammo (B24) | 2026-07-23 | Charged overlay: CT 1s / Charge trigger / ammoCost 5; sustained + TTK + radial mag cycles |
 
 ## New / extended test files
 

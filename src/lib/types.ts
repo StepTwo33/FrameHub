@@ -41,6 +41,10 @@ export interface Weapon {
   magazine: number;
   reloadTime: number;
   multishot: number;
+  /**
+   * Ammo consumed per shot (default 1). Staticor charged fire costs 5.
+   */
+  ammoCost?: number;
   triggerType: string;
   modSlots: number;
   hasPrimaryArcaneSlot: boolean;
@@ -144,6 +148,12 @@ export interface WeaponAlternateModeStats {
   magazine?: number;
   reloadTime?: number;
   multishot?: number;
+  /** Ammo consumed per shot while this mode is active (e.g. Staticor charged = 5). */
+  ammoCost?: number;
+  /** Charge timing for effective fire rate while this mode is active. */
+  chargeTime?: number;
+  chargeMode?: "standard" | "bow" | "lanka";
+  triggerType?: string;
   /** Melee form swap (e.g. Dual Swords → Heavy Blade). */
   stanceType?: string;
   /** Replace default radial profiles while alternate mode is on. */
@@ -525,6 +535,8 @@ export interface CalculatedStats {
   statusChancePerShot: number;
   magazine: number;
   reloadTime: number;
+  /** Ammo consumed per shot (default 1). Used with ammoEfficiency for sustained DPS. */
+  ammoCost?: number;
   /**
    * Chance not to consume ammo (0–1). Extends mag cycle in sustained DPS;
    * ≥0.99 treated as no reload.

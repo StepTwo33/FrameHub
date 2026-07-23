@@ -647,7 +647,7 @@ export function simulateDiscreteTTK(
     }
 
     shots += 1;
-    ammo -= 1;
+    ammo -= Math.max(0.01, stats.ammoCost ?? 1);
     time += shotInterval;
 
     // Apply immediate DoT tick at shot time
@@ -700,9 +700,11 @@ export function simulateDiscreteTTK(
   const burstDps = healthPerShot * efr + (killed && ttk > 0 ? (scaledHp + scaledShield) / ttk * 0 : 0);
   // Prefer sim-derived average DPS when killed
   const avgDps = killed && ttk > 0 ? (scaledHp + scaledShield) / ttk : healthPerShot * efr;
+  const ammoCost = Math.max(0.01, stats.ammoCost ?? 1);
+  const shotsPerMag = stats.magazine / ammoCost;
   const sustainFactor =
     stats.magazine > 0 && stats.reloadTime > 0 && efr > 0
-      ? stats.magazine / efr / (stats.magazine / efr + stats.reloadTime)
+      ? shotsPerMag / efr / (shotsPerMag / efr + stats.reloadTime)
       : 1;
 
   return {
