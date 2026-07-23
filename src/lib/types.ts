@@ -1026,6 +1026,8 @@ export interface RailjackCalculatedStats {
   abilityTurretDamageBonus?: number;
   /** House unique traits currently applied to paper stats. */
   activeHouseTraits?: { id: string; text: string }[];
+  /** Selected wreckage trait rolls (one per house component), including display-only. */
+  selectedHouseTraits?: { id: string; text: string }[];
 }
 
 export interface RailjackAbilityComputed {

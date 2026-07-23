@@ -50,6 +50,10 @@ export interface RailjackBuildInput {
   shieldId?: string;
   engineId?: string;
   platingId?: string;
+  /** Selected Mk III wreckage unique trait ids (one roll per house component). */
+  reactorTraitId?: string;
+  shieldTraitId?: string;
+  engineTraitId?: string;
   /** Nose / Dorsal / Ventral turret hardpoints (length 1–3; legacy 1–2 supported). */
   turretIds?: (string | undefined)[];
   /** Legacy single-turret saves. */
@@ -60,6 +64,19 @@ export interface RailjackBuildInput {
   tacticalMods?: EquippedMod[];
   eliteCrewId?: string;
   simulation?: RailjackSimulationInput;
+}
+
+/** Prefer an explicitly chosen trait; else first paper-effect trait; else first listed. */
+export function resolveHouseTrait(
+  traits: RailjackHouseTrait[],
+  selectedId?: string,
+): RailjackHouseTrait | undefined {
+  if (!traits.length) return undefined;
+  if (selectedId) {
+    const picked = traits.find((t) => t.id === selectedId);
+    if (picked) return picked;
+  }
+  return traits.find((t) => t.effect) ?? traits[0];
 }
 
 function modStatFraction(perRank: number, rank: number): number {
@@ -317,23 +334,31 @@ export function calculateRailjackBuild(
   const tacticalAbilities = tacticalSummaries.map((s) => scaleAbilitySummary(s, reactor, input.simulation));
   const extraTurretDamageBonus = abilityTurretDamageBonus(battleAbilities, tacticalAbilities);
 
-  const reactorTraits = reactor ? getRailjackComponentTraits(reactor.id) : [];
-  const shieldTraits = shield ? getRailjackComponentTraits(shield.id) : [];
-  const engineTraits = engine ? getRailjackComponentTraits(engine.id) : [];
+  const reactorTrait = resolveHouseTrait(
+    reactor ? getRailjackComponentTraits(reactor.id) : [],
+    input.reactorTraitId,
+  );
+  const shieldTrait = resolveHouseTrait(
+    shield ? getRailjackComponentTraits(shield.id) : [],
+    input.shieldTraitId,
+  );
+  const engineTrait = resolveHouseTrait(
+    engine ? getRailjackComponentTraits(engine.id) : [],
+    input.engineTraitId,
+  );
+  const selectedHouseTraits = [reactorTrait, shieldTrait, engineTrait].filter(
+    (t): t is RailjackHouseTrait => !!t,
+  );
   const activeHouseTraits: RailjackHouseTrait[] = [];
 
-  // Lavan reactor trait: +25% max shields when Lavan plating is also equipped (planning default roll).
+  // Lavan reactor plating-synergy trait only when that roll is selected (+ Lavan plating).
   let houseShieldBonus = 0;
   if (
-    reactor &&
-    plating &&
-    reactor.tier === "lavan" &&
-    plating.tier === "lavan" &&
-    reactorTraits.some((t) => t.effect === "lavan_plating_shield")
+    reactorTrait?.effect === "lavan_plating_shield" &&
+    plating?.tier === "lavan"
   ) {
     houseShieldBonus += 0.25;
-    const trait = reactorTraits.find((t) => t.effect === "lavan_plating_shield");
-    if (trait) activeHouseTraits.push(trait);
+    activeHouseTraits.push(reactorTrait);
   }
 
   let houseSpeedBonus = 0;
@@ -341,7 +366,8 @@ export function calculateRailjackBuild(
   let houseTurretDamageBonus = 0;
   const shieldsDepleted = !!input.simulation?.shieldsDepleted;
   if (shieldsDepleted) {
-    for (const trait of [...engineTraits, ...shieldTraits]) {
+    for (const trait of [engineTrait, shieldTrait]) {
+      if (!trait) continue;
       if (trait.effect === "shields_depleted_speed") {
         houseSpeedBonus += 0.2;
         activeHouseTraits.push(trait);
@@ -426,6 +452,7 @@ export function calculateRailjackBuild(
     battleAbilities,
     tacticalAbilities,
     abilityTurretDamageBonus: extraTurretDamageBonus,
+    selectedHouseTraits,
   };
 }
 
@@ -436,13 +463,19 @@ export function railjackBuildNeedsSimulation(input: RailjackBuildInput): boolean
   const hasAbilityBoost =
     (input.battleMods ?? []).some((m) => RAILJACK_PLEXUS_ABILITIES[m.modId]?.turretDamageWhileActive) ||
     (input.tacticalMods ?? []).some((m) => RAILJACK_PLEXUS_ABILITIES[m.modId]?.turretDamageWhileActive);
-  const hasShieldsDepletedTrait = [input.engineId, input.shieldId].some((id) =>
-    getRailjackComponentTraits(id ?? "").some(
-      (t) =>
-        t.effect === "shields_depleted_speed" ||
-        t.effect === "shields_depleted_boost" ||
-        t.effect === "shields_depleted_damage",
-    ),
+  const engineTrait = resolveHouseTrait(
+    getRailjackComponentTraits(input.engineId ?? ""),
+    input.engineTraitId,
+  );
+  const shieldTrait = resolveHouseTrait(
+    getRailjackComponentTraits(input.shieldId ?? ""),
+    input.shieldTraitId,
+  );
+  const hasShieldsDepletedTrait = [engineTrait, shieldTrait].some(
+    (t) =>
+      t?.effect === "shields_depleted_speed" ||
+      t?.effect === "shields_depleted_boost" ||
+      t?.effect === "shields_depleted_damage",
   );
   return hasConditionalIntegrated || hasAbilityBoost || hasShieldsDepletedTrait;
 }

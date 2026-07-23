@@ -104,6 +104,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ2 | Railjack ship paper | Wiki mid-range absolute plating/shields; engine cruise/boost house roles; reactor avionics + dual ability %; Mk IV components still projected | **Locked** — component goldens |
 | RJ3 | Railjack engine/shield formulas | Conic on base 150 + flat engine m/s; SWB = cruise × (1.3×IonBurn + engine boost); shield %/s + delay; flux base 273 (no reactor flux); absolute UI labels | **Locked** — calc + UI goldens |
 | RJ4 | Railjack house unique traits | Wiki Mk III trait catalog; Lavan reactor+plating +25% shields; shields-depleted engine/shield combat traits via sim; UI trait list | **Locked** — trait goldens |
+| RJ5 | Railjack trait roll selection | One wreckage trait per house component; paper effects only for selected roll; save/load + UI selects | **Locked** — trait-roll goldens |
 
 **Remaining unlocked paper-moving mods (post Sim12):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
 
@@ -164,6 +165,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ2 Railjack ship paper | 2026-07-23 | Absolute plating/shields; engine house cruise/boost; reactor avionics + dual ability % |
 | RJ3 Engine/shield formulas | 2026-07-23 | Conic on base 150; SWB mult model; shield %/s + delay; flux 273; absolute UI labels |
 | RJ4 House unique traits | 2026-07-23 | Trait catalog; Lavan plating synergy; shields-depleted sim traits; UI |
+| RJ5 Trait roll selection | 2026-07-23 | Per-component trait picker; effects gated to selected roll |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

@@ -14,7 +14,7 @@ describe("calculateRailjackBuild", () => {
 
     expect(stats.hull).toBe(5250);
     expect(stats.armor).toBe(2419);
-    // Lavan reactor + Lavan plating trait: +25% max shields
+    // Default Lavan reactor roll is plating synergy → +25% max shields
     expect(stats.shield).toBe(Math.round(1700 * 1.25));
     expect(stats.shieldRecharge).toBe(22.5);
     expect(stats.shieldRechargeDelayReduction).toBeCloseTo(0.55, 5);
@@ -37,19 +37,36 @@ describe("calculateRailjackBuild", () => {
     expect(stats.speed).toBe(Math.round(150 * (1 + conic) + 20));
   });
 
-  it("applies Lavan reactor + Lavan plating shield synergy (+25%)", () => {
-    const without = calculateRailjackBuild({
-      shieldId: "lavan_shield_mk3",
-      platingId: "lavan_plating_mk3",
-    });
+  it("applies Lavan reactor + Lavan plating shield synergy only for that trait roll", () => {
     const withSynergy = calculateRailjackBuild({
       reactorId: "lavan_reactor_mk3",
       shieldId: "lavan_shield_mk3",
       platingId: "lavan_plating_mk3",
+      reactorTraitId: "lavan_reactor_plating_shields",
+    });
+    const otherRoll = calculateRailjackBuild({
+      reactorId: "lavan_reactor_mk3",
+      shieldId: "lavan_shield_mk3",
+      platingId: "lavan_plating_mk3",
+      reactorTraitId: "lavan_reactor_slingshot_damage",
     });
     expect(withSynergy.shield).toBe(Math.round(1700 * 1.25));
-    expect(withSynergy.shield).toBeGreaterThan(without.shield);
+    expect(otherRoll.shield).toBe(1700);
     expect(withSynergy.activeHouseTraits?.some((t) => t.id === "lavan_reactor_plating_shields")).toBe(true);
+  });
+
+  it("applies shields-depleted boost only when that engine trait roll is selected", () => {
+    const boostRoll = calculateRailjackBuild({
+      engineId: "vidar_engine_mk3",
+      engineTraitId: "vidar_engine_depleted_boost",
+      simulation: { shieldsDepleted: true },
+    });
+    const armorRoll = calculateRailjackBuild({
+      engineId: "vidar_engine_mk3",
+      engineTraitId: "vidar_engine_intruder_armor",
+      simulation: { shieldsDepleted: true },
+    });
+    expect(boostRoll.boostSpeed).toBeGreaterThan(armorRoll.boostSpeed);
   });
 
   it("applies shields-depleted house engine/shield traits only when simulated", () => {

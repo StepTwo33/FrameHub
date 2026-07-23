@@ -15,7 +15,11 @@ import {
   getRailjackComponentTraits,
 } from "@/data/railjack";
 import { EquippedMod } from "@/lib/types";
-import { calculateRailjackBuild, railjackBuildNeedsSimulation } from "@/lib/calc/railjack-calculator";
+import { calculateRailjackBuild, railjackBuildNeedsSimulation, resolveHouseTrait } from "@/lib/calc/railjack-calculator";
+
+function defaultTraitId(componentId: string): string | undefined {
+  return resolveHouseTrait(getRailjackComponentTraits(componentId))?.id;
+}
 import { filterRailjackModsForTab } from "@/lib/mods/railjack-plexus-mods";
 import { cn } from "@/lib/utils";
 import { Save, FolderOpen, Crosshair, Shield, Zap, Gauge, ChevronRight, Users } from "lucide-react";
@@ -40,6 +44,9 @@ export default function RailjackBuilderPage() {
   const [selectedShield, setSelectedShield] = useState<RailjackComponent | null>(null);
   const [selectedEngine, setSelectedEngine] = useState<RailjackComponent | null>(null);
   const [selectedPlating, setSelectedPlating] = useState<RailjackComponent | null>(null);
+  const [reactorTraitId, setReactorTraitId] = useState<string | undefined>();
+  const [shieldTraitId, setShieldTraitId] = useState<string | undefined>();
+  const [engineTraitId, setEngineTraitId] = useState<string | undefined>();
 
   // Armament state — Nose / Dorsal / Ventral turrets + munitions launcher
   const [selectedTurrets, setSelectedTurrets] = useState<[RailjackArmament | null, RailjackArmament | null, RailjackArmament | null]>([null, null, null]);
@@ -122,6 +129,9 @@ export default function RailjackBuilderPage() {
       shieldId: selectedShield?.id,
       engineId: selectedEngine?.id,
       platingId: selectedPlating?.id,
+      reactorTraitId,
+      shieldTraitId,
+      engineTraitId,
       turretIds: selectedTurrets.map((t) => t?.id),
       ordnanceId: selectedOrdnance?.id,
       integratedMods: integratedMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
@@ -142,6 +152,9 @@ export default function RailjackBuilderPage() {
       selectedShield,
       selectedEngine,
       selectedPlating,
+      reactorTraitId,
+      shieldTraitId,
+      engineTraitId,
       selectedTurrets,
       selectedOrdnance,
       integratedMods,
@@ -172,6 +185,9 @@ export default function RailjackBuilderPage() {
       shieldId: selectedShield?.id,
       engineId: selectedEngine?.id,
       platingId: selectedPlating?.id,
+      reactorTraitId,
+      shieldTraitId,
+      engineTraitId,
       turretIds: selectedTurrets.map((t) => t?.id),
       ordnanceId: selectedOrdnance?.id,
       integratedMods: integratedMods.map((m) => ({ modId: m.modId, rank: m.rank, slotIndex: m.slotIndex })),
@@ -209,7 +225,7 @@ export default function RailjackBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, selectedTurrets, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, selectedEliteCrewId, crimsonFugueStacks, cruisingSpeedActive, protectiveShotsActive, shieldsDepleted, activeBattleAbilityId, activeTacticalAbilityId, currentBuildId]);
+  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, reactorTraitId, shieldTraitId, engineTraitId, selectedTurrets, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, selectedEliteCrewId, crimsonFugueStacks, cruisingSpeedActive, protectiveShotsActive, shieldsDepleted, activeBattleAbilityId, activeTacticalAbilityId, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as RailjackBuildData;
@@ -220,6 +236,9 @@ export default function RailjackBuilderPage() {
     setSelectedShield(findRailjackComponent(d.shieldId ?? "") ?? null);
     setSelectedEngine(findRailjackComponent(d.engineId ?? "") ?? null);
     setSelectedPlating(findRailjackComponent(d.platingId ?? "") ?? null);
+    setReactorTraitId(d.reactorTraitId);
+    setShieldTraitId(d.shieldTraitId);
+    setEngineTraitId(d.engineTraitId);
     const turretIds = d.turretIds?.length
       ? d.turretIds
       : d.turretId
@@ -555,10 +574,16 @@ export default function RailjackBuilderPage() {
                         key={comp.id}
                         onClick={() => {
                           beginNewRailjackDraft();
-                          if (showComponentPicker === "reactor") setSelectedReactor(comp);
-                          else if (showComponentPicker === "shield") setSelectedShield(comp);
-                          else if (showComponentPicker === "engine") setSelectedEngine(comp);
-                          else setSelectedPlating(comp);
+                          if (showComponentPicker === "reactor") {
+                            setSelectedReactor(comp);
+                            setReactorTraitId(defaultTraitId(comp.id));
+                          } else if (showComponentPicker === "shield") {
+                            setSelectedShield(comp);
+                            setShieldTraitId(defaultTraitId(comp.id));
+                          } else if (showComponentPicker === "engine") {
+                            setSelectedEngine(comp);
+                            setEngineTraitId(defaultTraitId(comp.id));
+                          } else setSelectedPlating(comp);
                           setShowComponentPicker(null);
                         }}
                         className="flex items-center justify-between p-2.5 rounded-lg border border-border hover:border-primary/40 transition-all text-left"
@@ -577,6 +602,44 @@ export default function RailjackBuilderPage() {
                       );
                     })}
                   </div>
+                </div>
+              )}
+
+              {/* House unique trait rolls (Mk III wreckage) */}
+              {([
+                ["Reactor", selectedReactor, reactorTraitId, setReactorTraitId],
+                ["Shield", selectedShield, shieldTraitId, setShieldTraitId],
+                ["Engines", selectedEngine, engineTraitId, setEngineTraitId],
+              ] as const).some(([, comp]) => comp && getRailjackComponentTraits(comp.id).length > 0) && (
+                <div className="mt-3 border border-border rounded-xl p-3 bg-card space-y-2">
+                  <h3 className="text-[10px] font-semibold tracking-wider text-muted-foreground">HOUSE TRAIT ROLLS</h3>
+                  {([
+                    ["Reactor", selectedReactor, reactorTraitId, setReactorTraitId],
+                    ["Shield", selectedShield, shieldTraitId, setShieldTraitId],
+                    ["Engines", selectedEngine, engineTraitId, setEngineTraitId],
+                  ] as const).map(([label, comp, traitId, setTraitId]) => {
+                    if (!comp) return null;
+                    const traits = getRailjackComponentTraits(comp.id);
+                    if (!traits.length) return null;
+                    const value = traitId ?? defaultTraitId(comp.id) ?? traits[0]!.id;
+                    return (
+                      <label key={label} className="block text-xs">
+                        <span className="text-muted-foreground">{label}</span>
+                        <select
+                          className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1.5 text-[11px]"
+                          value={value}
+                          onChange={(e) => {
+                            beginNewRailjackDraft();
+                            setTraitId(e.target.value);
+                          }}
+                        >
+                          {traits.map((t) => (
+                            <option key={t.id} value={t.id}>{t.text}</option>
+                          ))}
+                        </select>
+                      </label>
+                    );
+                  })}
                 </div>
               )}
             </div>

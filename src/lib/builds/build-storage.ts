@@ -226,6 +226,10 @@ export interface RailjackBuildData {
   tacticalPolarities: Record<number, string>;
   /** Elite crew member (Update 43 protoframes). */
   eliteCrewId?: string;
+  /** Selected Mk III house unique trait rolls. */
+  reactorTraitId?: string;
+  shieldTraitId?: string;
+  engineTraitId?: string;
   /** Simulation toggles for conditional integrated mods and active abilities. */
   simulation?: {
     crimsonFugueStacks?: number;
