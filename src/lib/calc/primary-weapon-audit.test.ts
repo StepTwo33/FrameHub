@@ -22,14 +22,10 @@ const DEFERRED_PRIMARY_IDS = new Set([
   "hind",
   "kohm",
   "kuva_kohm",
-  "kuva_ogris",
-  "kuva_tonkor",
   "miter",
   "nataruk",
-  "ogris",
   "panthera",
   "panthera_prime",
-  "shedu",
   "stradavar",
   "stradavar_prime",
   "synoid_simulor",
@@ -84,7 +80,7 @@ describe("primary weapon inventory (B10)", () => {
 
 describe("primary bare wiki goldens", () => {
   it("locks every non-deferred primary against wiki-matched catalog", () => {
-    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(169);
+    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(173);
   });
 
   it.each(PRIMARY_BARE_GOLDENS)("$id catalog bare paper", (g) => {

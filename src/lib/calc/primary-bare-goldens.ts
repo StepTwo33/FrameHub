@@ -794,7 +794,7 @@ export const PRIMARY_BARE_GOLDENS = [
   },
   {
     "id": "kuva_bramma",
-    "damage": 1026,
+    "damage": 187,
     "criticalChance": 0.34999999,
     "criticalMultiplier": 2.0999999,
     "statusChance": 0.20999998,
@@ -861,6 +861,17 @@ export const PRIMARY_BARE_GOLDENS = [
     "slash": 9.66
   },
   {
+    "id": "kuva_ogris",
+    "damage": 27,
+    "criticalChance": 0.090000004,
+    "criticalMultiplier": 2,
+    "statusChance": 0.47000003,
+    "fireRate": 1.5000001,
+    "multishot": 1,
+    "impact": 18.9,
+    "puncture": 8.1
+  },
+  {
     "id": "kuva_quartakk",
     "damage": 54,
     "criticalChance": 0.20999999,
@@ -883,6 +894,16 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 57.75,
     "puncture": 9.625,
     "slash": 9.625
+  },
+  {
+    "id": "kuva_tonkor",
+    "damage": 59,
+    "criticalChance": 0.30000001,
+    "criticalMultiplier": 2.5,
+    "statusChance": 0.17000002,
+    "fireRate": 3.1666667,
+    "multishot": 1,
+    "puncture": 59
   },
   {
     "id": "kuva_zarr",
@@ -1035,6 +1056,16 @@ export const PRIMARY_BARE_GOLDENS = [
     "slash": 155.7
   },
   {
+    "id": "ogris",
+    "damage": 100,
+    "criticalChance": 0.050000001,
+    "criticalMultiplier": 2,
+    "statusChance": 0.35000002,
+    "fireRate": 1.5000001,
+    "multishot": 1,
+    "blast": 100
+  },
+  {
     "id": "opticor",
     "damage": 1000,
     "criticalChance": 0.2,
@@ -1094,7 +1125,7 @@ export const PRIMARY_BARE_GOLDENS = [
   },
   {
     "id": "penta",
-    "damage": 425,
+    "damage": 75,
     "criticalChance": 0.1,
     "criticalMultiplier": 2,
     "statusChance": 0.10000002,
@@ -1384,6 +1415,16 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 2.6666667,
     "multishot": 1,
     "corrosive": 80
+  },
+  {
+    "id": "shedu",
+    "damage": 71,
+    "criticalChance": 0.25,
+    "criticalMultiplier": 2.0999999,
+    "statusChance": 0.23000002,
+    "fireRate": 2.5000002,
+    "multishot": 1,
+    "heat": 71
   },
   {
     "id": "simulor",
@@ -1756,7 +1797,7 @@ export const PRIMARY_BARE_GOLDENS = [
   },
   {
     "id": "tonkor",
-    "damage": 725,
+    "damage": 75,
     "criticalChance": 0.25,
     "criticalMultiplier": 2.5,
     "statusChance": 0.10000002,

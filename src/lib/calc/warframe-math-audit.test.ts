@@ -436,13 +436,15 @@ describe("radial DPS inference (wiki: launchers, alt-fires, glaives)", () => {
     expect(airBurst?.burstDps ?? 0).toBe(0);
   });
 
-  it("launcher explosions folded into weapon damage are not double-counted (Kuva Bramma)", () => {
+  it("launcher direct-hit paper + radial explosion (Kuva Bramma, B17)", () => {
     const weapon = allWeapons.find((w) => w.id === "kuva_bramma");
     if (!weapon) return;
+    expect(weapon.damage).toBeCloseTo(187, 4);
+    expect(weapon.impact).toBeCloseTo(187, 4);
     const stats = calculateWeaponBuild(weapon, [], modsMap());
     const main = (stats.radialAttacks ?? []).find((a) => a.name === "Radial Attack");
-    expect(main?.includedInDirect).toBe(true);
-    expect(main?.burstDps ?? 0).toBe(0);
+    expect(main?.includedInDirect).toBe(false);
+    expect(main?.burstDps ?? 0).toBeGreaterThan(0);
     // Cluster bombs are extra damage on top and still counted.
     const cluster = (stats.radialAttacks ?? []).find((a) => /cluster/i.test(a.name));
     expect(cluster?.burstDps ?? 0).toBeGreaterThan(0);

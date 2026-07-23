@@ -52,13 +52,14 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
 | B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
 | B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
-| B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 169 wiki-locked goldens | **Locked** — launchers + dual-mode/Kohm pellet-SC/battery mag deferred |
+| B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 173 wiki-locked goldens | **Locked** — dual-mode/Kohm pellet-SC/battery mag deferred; most boomsticks promoted in B17 |
 | B11 | Secondary weapons (base paper) | Non-exalted pistol/secondary/`dual_pistols` vs Module:Weapons/data/secondary; 145 wiki-locked goldens | **Locked** — prior radial deferred set promoted in B16 |
 | B12 | Melee weapons (base paper) | Non-exalted melee vs Module:Weapons/data/melee; 220 wiki-locked goldens | **Locked** — Dark Split-Sword dual-form + Rabvee zaw stub deferred |
 | B13 | Archgun / archmelee (base paper) | Non-exalted arch vs Module:Weapons/data/archwing Space paper; 27 wiki-locked goldens | **Locked** — Arbucep 6-mode mag/MS cycler deferred; Atmosphere overlays not locked |
 | B14 | Sentinel weapons (base paper) | `sentinel_weapon` vs Module:Weapons/data/companion; 10 wiki-locked goldens | **Locked** — Deconstructor IPS-cycling deferred; Cryotra Cold Field AoE / Stinger embed DoT not in base paper |
 | B15 | Modular parts (base paper) | Kitgun chambers + Zaw strikes + Amp prisms in `modular-weapons.ts` vs Modular/data + Weapons/data/modular | **Locked** — Sporelacer/Vermisplicer grip deltas still category-shared approx; amp mag/reload brace-composed; legacy `weapons.ts` kitgun/zaw/amp stubs not locked |
 | B16 | Radial direct-hit split + legacy stubs | Acceltra/Astilla + B11 deferred secondaries: catalog = wiki direct hit; radials = explosion only; `weapons.ts` modular stubs documented as non-builder | **Locked** — dual-mode chargers/lock-ons (Fulmin/Kohm/…); Staticor charged explosion; Sepulcrum lock-on radial still dual-mode approx |
+| B17 | Launcher / rocket direct-hit paper | Ogris/Tonkor/Penta/Bramma/Shedu + category=`launcher` Envoy/Secura Penta: wiki Impact paper; explosions in radial DPS | **Locked** — Zarr dual cannon/barrage + Miter charge + Fulmin/Kohm dual-mode still deferred |
 
 ---
 
@@ -342,6 +343,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sentinel weapons base paper | 2026-07-23 | Wiki-lock 10 sentinel guns (Artax/Sweeper/Vulklok/etc.); defer Deconstructor cycling; `sentinel-weapon-audit` |
 | Modular parts base paper | 2026-07-23 | Wiki-lock kitgun Damage.Base + zaw strikes + amp prism Direct/Normal; Sporelacer CM3; Tombfinger grip deltas; Granmu Direct 1000; `modular-weapon-audit` |
 | Radial direct-hit paper (B16) | 2026-07-23 | Split Acceltra/Astilla/Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug direct vs radial; drop Impact/Embed from radial table; legacy modular stubs documented |
+| Launcher / rocket direct-hit (B17) | 2026-07-23 | Split Ogris/Kuva Ogris/Tonkor/Kuva Tonkor/Penta/Secura Penta/Tenet Envoy/Kuva Bramma/Shedu; `launcher-weapon-audit`; Bramma radial no longer folded |
 
 ## New / extended test files
 
@@ -360,3 +362,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/arch-weapon-audit.test.ts` — B13 archgun/archmelee Space bare paper (+ `arch-bare-goldens.ts`)
 - `src/lib/calc/sentinel-weapon-audit.test.ts` — B14 sentinel bare paper (+ `sentinel-bare-goldens.ts`)
 - `src/lib/calc/modular-weapon-audit.test.ts` — B15 kitgun/zaw/amp modular part paper
+- `src/lib/calc/launcher-weapon-audit.test.ts` — B17 category=launcher bare paper (+ `launcher-bare-goldens.ts`)

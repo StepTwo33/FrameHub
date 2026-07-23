@@ -807,12 +807,6 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "ogris": [
     {
-      "name": "Rocket Impact",
-      "blast": 100.0,
-      "totalDamage": 100.0,
-      "radius": 3.0
-    },
-    {
       "name": "Rocket Explosion",
       "blast": 600.0,
       "totalDamage": 600.0,
