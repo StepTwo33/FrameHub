@@ -1035,3 +1035,40 @@ describe("gun utility leftovers (wiki max rank, Phase M9)", () => {
     expect(withMod("lex", "augur_seeker").statusDurationBonus).toBeCloseTo(0.9, 8);
   });
 });
+
+describe("shotgun/general leftovers (wiki max rank, Phase M12)", () => {
+  it("Ravage R5: +60% crit damage", () => {
+    const weapon = requireWeapon("strun");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    expect(withMod("strun", "ravage_r3").criticalMultiplier).toBeCloseTo(cmq * 1.6, 8);
+  });
+
+  it("Shotgun Barrage R5: +90% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "shotgun_barrage").fireRate).toBeCloseTo(weapon.fireRate * 1.9, 8);
+  });
+
+  it("Tactical Pump R5: +60% reload speed", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "tactical_pump_r3").reloadTime).toBeCloseTo(weapon.reloadTime / 1.6, 8);
+  });
+
+  it("Tainted Shell R10: −55% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "tainted_shell_r10").fireRate).toBeCloseTo(weapon.fireRate * 0.45, 8);
+  });
+
+  it("Shredder R5 / Sweeping Serration R5: +90% / +120% slash", () => {
+    const weapon = requireWeapon("strun");
+    const shred = withMod("strun", "shredder");
+    expect(shred.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, shred.moddedBaseDamage / 32),
+      8,
+    );
+    const sweep = withMod("strun", "sweeping_serration");
+    expect(sweep.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 2.2, sweep.moddedBaseDamage / 32),
+      8,
+    );
+  });
+});

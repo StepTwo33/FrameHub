@@ -21,7 +21,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Adaptation: duration \u2014 When Damaged:\\\\n+10% Resistance to that Damage Type for 20s. Stacks up to 90%."),
   ]),
   adept_surge: mod("adept_surge", [
-    line("health", "warframe_totals", "multiplicative_percent", "Adept Surge: health \u2014 +10% Mobility, -25 Health"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Adept Surge — flat −25 Health (not % pool)"),
     line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Adept Surge: parkourVelocity \u2014 +10% Mobility, -25 Health"),
   ]),
   adrenaline_boost: mod("adrenaline_boost", [
@@ -289,7 +289,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("armor", "warframe_totals", "multiplicative_percent", "Gladiator Aegis: armor \u2014 +7.5% Armor per rank (Set)"),
   ]),
   gladiator_finesse: mod("gladiator_finesse", [
-    line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Gladiator Finesse: abilityEfficiency \u2014 Drains Energy to stop Lethal Damage with 60% Efficiency."),
+    line("abilityEfficiency", "mod_panel", "multiplicative_percent", "wiki: Gladiator Finesse — lethal-damage energy drain (not efficiency pool)"),
   ]),
   gladiator_resolve: mod("gladiator_resolve", [
     line("health", "warframe_totals", "multiplicative_percent", "Gladiator Resolve: health \u2014 +40% Health"),
@@ -459,10 +459,10 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Provoked: damage \u2014 +110% Damage during Bleedout"),
   ]),
   quick_charge: mod("quick_charge", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Quick Charge: shield \u2014 -20% Shield Recharge Delay, -20 Shield Capacity"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Quick Charge — recharge delay + flat shield penalty (not % pool)"),
   ]),
   quick_thinking: mod("quick_thinking", [
-    line("abilityEfficiency", "warframe_totals", "multiplicative_percent", "Quick Thinking: abilityEfficiency \u2014 Drains Energy to stop Lethal Damage with 240% Efficiency."),
+    line("abilityEfficiency", "mod_panel", "multiplicative_percent", "wiki: Quick Thinking — lethal-damage energy drain (not efficiency pool)"),
   ]),
   rage: mod("rage", [
     line("damage", "mod_panel", "multiplicative_percent", "Rage: damage \u2014 Convert +60% of Damage on Health to Energy. Without Shields, ally Overguard imit\u2026"),
@@ -635,7 +635,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Vigilante Pursuit: range \u2014 +5m Enemy Radar per rank (Set) (arsenal display only)"),
   ]),
   vigilante_vigor: mod("vigilante_vigor", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Vigilante Vigor: shield \u2014 +60% Shield Recharge, -30% Shield Recharge Delay"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Vigilante Vigor — shield recharge/delay (not capacity)"),
     line("shieldRecharge", "mod_panel", "multiplicative_percent", "Vigilante Vigor: shieldRecharge \u2014 +60% Shield Recharge, -30% Shield Recharge Delay"),
     line("shieldRechargeDelay", "mod_panel", "multiplicative_percent", "Vigilante Vigor: shieldRechargeDelay \u2014 +60% Shield Recharge, -30% Shield Recharge Delay"),
   ]),

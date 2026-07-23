@@ -289,3 +289,43 @@ describe("warframe remainder (wiki max rank, Phase M11)", () => {
     }
   });
 });
+
+describe("warframe remainder (wiki max rank, Phase M12)", () => {
+  it("Vigor R5: +50% health and shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("vigor_r5");
+    expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(1.5, 5);
+    expect(stats.totalShield / bare.totalShield).toBeCloseTo(1.5, 5);
+  });
+
+  it("Mobilize R3: +20% parkour velocity", () => {
+    expect(withMod("mobilize_r3").parkourVelocityBonus).toBeCloseTo(0.2, 8);
+  });
+
+  it("Adrenaline Boost R3: +50% energy, −20% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("adrenaline_boost");
+    expect(stats.totalEnergy / bare.totalEnergy).toBeCloseTo(1.5, 5);
+    expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(0.8, 5);
+  });
+
+  it("Adept Surge R3: +10% parkour (flat health penalty is panel)", () => {
+    expect(withMod("adept_surge").parkourVelocityBonus).toBeCloseTo(0.1, 8);
+  });
+
+  it("Quick Charge / Vigilante Vigor / Quick Thinking / Gladiator Finesse: panel-only", () => {
+    for (const id of [
+      "quick_charge",
+      "vigilante_vigor",
+      "quick_thinking",
+      "gladiator_finesse",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
+  });
+});

@@ -1579,7 +1579,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "health": 22.7273
     },
-    "description": "+275% Health",
+    "description": "+250% Health",
     "rarity": "common"
   },
   {
@@ -1671,7 +1671,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "armor": 22.7273
     },
-    "description": "+275% Armor",
+    "description": "+250% Armor",
     "rarity": "common"
   },
   {

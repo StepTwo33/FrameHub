@@ -15,7 +15,7 @@ function mod(modId: string, stats: VerifiedItemStatLine[], descriptionOnly?: str
 
 export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   accelerated_deflection: mod("accelerated_deflection", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Accelerated Deflection: shield \u2014 +90% Shield Recharge\\\\n-45% Shield Recharge Delay"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Accelerated Deflection — recharge delay (not capacity)"),
     line("shieldRecharge", "mod_panel", "multiplicative_percent", "Accelerated Deflection: shieldRecharge \u2014 +90% Shield Recharge\\\\n-45% Shield Recharge Delay"),
   ]),
   acidic_spittle: mod("acidic_spittle", [
@@ -66,10 +66,10 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("impactStatusStacks", "companion_totals", "flat", "Bell Ringer: impactStatusStacks \u2014 Melee attacks knock down enemies and apply +4 Impact Status Effects"),
   ]),
   bite: mod("bite", [
-    line("critChance", "mod_panel", "multiplicative_percent", "Bite: critChance \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
-    line("critDamage", "companion_totals", "multiplicative_percent", "Bite: critDamage \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Bite: criticalChance \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Bite: criticalMultiplier \u2014 +330% Critical Chance\\\\n+220% Critical Damage"),
+    line("critChance", "mod_panel", "multiplicative_percent", "wiki: Bite — duplicate critChance key"),
+    line("critDamage", "mod_panel", "multiplicative_percent", "wiki: Bite — duplicate critDamage key (CM via criticalMultiplier)"),
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Bite — +330% CC at max"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "wiki: Bite — +220% CM at max"),
   ]),
   blast_shield: mod("blast_shield", [
     line("range", "mod_panel", "multiplicative_percent", "Blast Shield: range \u2014 Overshields increased by +3000. Leap at an enemy within 10m dealing 30 <DT_IMPAC\u2026 (arsenal display only)"),
@@ -168,7 +168,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("energyOnAssist", "mod_panel", "multiplicative_percent", "Energy Generator: energyOnAssist \u2014 Dethcube drops an Energy Orb after assisting in 10 kills."),
   ]),
   enhanced_vitality: mod("enhanced_vitality", [
-    line("health", "warframe_totals", "multiplicative_percent", "Enhanced Vitality: health \u2014 +275% Health"),
+    line("health", "warframe_totals", "multiplicative_percent", "wiki: Enhanced Vitality — +250% Health at max"),
   ]),
   equilibrium_audit: mod("equilibrium_audit", [
     line("range", "mod_panel", "multiplicative_percent", "Equilibrium Audit: range \u2014 Unleashes a series of shockwaves that knockdown enemies within 15m and deal 300 \u2026 (arsenal display only)"),
@@ -218,7 +218,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("spinDamage", "mod_panel", "multiplicative_percent", "Hard Engage: spinDamage \u2014 Engages enemies within 10m with melee attacks, dealing 90 Impact Damage. Melee a\u2026"),
   ]),
   hastened_deflection: mod("hastened_deflection", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Hastened Deflection: shield \u2014 +90% Shield Recharge, -45% Shield Recharge Delay"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Hastened Deflection — shield recharge/delay (not capacity)"),
   ]),
   helminth_ferocity: mod("helminth_ferocity", [
     line("finisherDamage", "companion_totals", "multiplicative_percent", "Helminth Ferocity: finisherDamage \u2014 +120% Finisher Damage"),
@@ -262,18 +262,18 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("linkArmor", "mod_panel", "multiplicative_percent", "Link Armor: linkArmor \u2014 +10% Link Armor per rank"),
   ]),
   link_fiber: mod("link_fiber", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Link Fiber: armor \u2014 Increase Max Armor by +125% of Warframe's Armor"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Link Fiber — +125% of Warframe armor (not companion base %)"),
     line("armorLink", "mod_panel", "multiplicative_percent", "Link Fiber: armorLink \u2014 Increase Max Armor by +125% of Warframe's Armor"),
   ]),
   link_redirection: mod("link_redirection", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Link Redirection: shield \u2014 Increase Shield by +125% of Warframe's Max Shield"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Link Redirection — +125% of Warframe shields (not companion base %)"),
     line("shieldLink", "mod_panel", "multiplicative_percent", "Link Redirection: shieldLink \u2014 Increase Shield by +125% of Warframe's Max Shield"),
   ]),
   link_shields: mod("link_shields", [
     line("linkShields", "mod_panel", "multiplicative_percent", "Link Shields: linkShields \u2014 +10% Link Shields per rank"),
   ]),
   link_vitality: mod("link_vitality", [
-    line("health", "warframe_totals", "multiplicative_percent", "Link Vitality: health \u2014 Increase Health by +125% of Warframe's Max Health"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Link Vitality — +125% of Warframe health (not companion base %)"),
     line("healthLink", "mod_panel", "multiplicative_percent", "Link Vitality: healthLink \u2014 Increase Health by +125% of Warframe's Max Health"),
   ]),
   looter: mod("looter", [
@@ -332,7 +332,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Assault Mode: range \u2014 Sentinel will attack the first visible enemy within 30m. (arsenal display only)"),
   ]),
   metal_fiber: mod("metal_fiber", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Metal Fiber: armor \u2014 +275% Armor"),
+    line("armor", "warframe_totals", "multiplicative_percent", "wiki: Metal Fiber — +250% Armor at max"),
   ]),
   mischief: mod("mischief", [
     line("damage", "mod_panel", "multiplicative_percent", "Mischief: damage \u2014 Smeeta Kavat becomes invisible for 9s every <LOWER_IS_BETTER>7s while a decoy ka\u2026"),
@@ -620,7 +620,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   vicious_bond: mod("vicious_bond", [
     line("damage", "mod_panel", "multiplicative_percent", "Vicious Bond: damage \u2014 Companion melee attacks strip 15% of enemy armor. Enemies recently damaged by Ab\u2026"),
     line("meleeAttackSpeed", "mod_panel", "multiplicative_percent", "Vicious Bond: meleeAttackSpeed \u2014 Companion melee attacks strip 15% of enemy armor. Enemies recently damaged by Ab\u2026"),
-    line("meleeDamage", "companion_totals", "multiplicative_percent", "Vicious Bond: meleeDamage \u2014 Companion melee attacks strip 15% of enemy armor. Enemies recently damaged by Ab\u2026"),
+    line("meleeDamage", "mod_panel", "multiplicative_percent", "wiki: Vicious Bond — armor strip / spread (not always-on melee damage)"),
     line("range", "mod_panel", "multiplicative_percent", "Vicious Bond: range \u2014 Companion melee attacks strip 15% of enemy armor. Enemies recently damaged by Ab\u2026 (arsenal display only)"),
   ]),
   viral_quills: mod("viral_quills", [

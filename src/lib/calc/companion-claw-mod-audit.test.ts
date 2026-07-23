@@ -104,4 +104,31 @@ describe("beast claw cores (wiki max rank, Phase M11)", () => {
     expect(beh).toBeDefined();
     expect(beh!.stats.every((s) => s.target === "mod_panel")).toBe(true);
   });
+
+  it("Flame Gland / Frost Jaw / Shock Collar / Venom Teeth: 60/60 dual-stat", () => {
+    const weapon = requireClaws("chesa_claws");
+    for (const [modId, type] of [
+      ["flame_gland", "heat"],
+      ["frost_jaw", "cold"],
+      ["shock_collar", "electricity"],
+      ["venom_teeth", "toxin"],
+    ] as const) {
+      const stats = withMod(modId);
+      expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 0.6, scale),
+        8,
+      );
+    }
+  });
+
+  it("Bite / Maul (companion catalog): +330% CC/CM / +330% damage on claws", () => {
+    const weapon = requireClaws("chesa_claws");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const bite = withMod("bite");
+    expect(bite.criticalChance).toBeCloseTo(weapon.criticalChance * 4.3, 8);
+    expect(bite.criticalMultiplier).toBeCloseTo(cmq * 3.2, 8);
+    expect(withMod("maul").moddedBaseDamage).toBeCloseTo(weapon.damage * 4.3, 5);
+  });
 });
