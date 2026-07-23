@@ -4,6 +4,39 @@ import { railjackPresets } from "@/data/railjack";
 import { allMods } from "@/data/mods";
 
 describe("calculateRailjackBuild", () => {
+  it("applies Gunnery 1 +50% to Dorsal/Ventral only (not Nose)", () => {
+    const bare = calculateRailjackBuild({
+      turretIds: ["sigma_apoc", "sigma_apoc", "sigma_apoc"],
+      intrinsics: { gunnery: 0 },
+    });
+    const gunned = calculateRailjackBuild({
+      turretIds: ["sigma_apoc", "sigma_apoc", "sigma_apoc"],
+      intrinsics: { gunnery: 1 },
+    });
+    expect(gunned.turrets[0]!.damage).toBe(bare.turrets[0]!.damage);
+    expect(gunned.turrets[1]!.damage).toBe(Math.round((bare.turrets[1]!.damage) * 1.5));
+    expect(gunned.turrets[2]!.damage).toBe(Math.round((bare.turrets[2]!.damage) * 1.5));
+  });
+
+  it("applies Tactical 6/7/9 battle energy and tactical cooldown paper", () => {
+    const base = calculateRailjackBuild({
+      battleMods: [{ modId: "phoenix_blaze", rank: 0, slotIndex: 0 }],
+      tacticalMods: [{ modId: "void_cloak", rank: 0, slotIndex: 0 }],
+      intrinsics: { tactical: 0 },
+    });
+    const scaled = calculateRailjackBuild({
+      battleMods: [{ modId: "phoenix_blaze", rank: 0, slotIndex: 0 }],
+      tacticalMods: [{ modId: "void_cloak", rank: 0, slotIndex: 0 }],
+      intrinsics: { tactical: 9 },
+    });
+    expect(scaled.battleAbilities![0]!.energyCost).toBe(
+      Math.round((base.battleAbilities![0]!.energyCost ?? 0) * 0.75),
+    );
+    expect(scaled.tacticalAbilities![0]!.cooldownSec).toBe(
+      Math.round((base.tacticalAbilities![0]!.cooldownSec ?? 0) * 0.6),
+    );
+  });
+
   it("papers Tunguska Cannon with wiki base and red-crit average shot", () => {
     const stats = calculateRailjackBuild({});
     expect(stats.artillery?.damage).toBe(56500);

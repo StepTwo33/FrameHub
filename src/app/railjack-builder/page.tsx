@@ -14,6 +14,14 @@ import {
   findRailjackComponent, findRailjackArmament,
   getRailjackComponentTraits,
 } from "@/data/railjack";
+import {
+  DEFAULT_RAILJACK_INTRINSICS,
+  MAX_INTRINSIC_RANK,
+  RAILJACK_INTRINSIC_RANK_NAMES,
+  RAILJACK_INTRINSIC_TREES,
+  type RailjackIntrinsicTree,
+  type RailjackIntrinsics,
+} from "@/data/railjack-intrinsics";
 import { EquippedMod } from "@/lib/types";
 import { calculateRailjackBuild, railjackBuildNeedsSimulation, resolveHouseTrait } from "@/lib/calc/railjack-calculator";
 
@@ -67,6 +75,9 @@ export default function RailjackBuilderPage() {
   const [integratedPolarities, setIntegratedPolarities] = useState<Record<number, string>>({});
   const [battlePolarities, setBattlePolarities] = useState<Record<number, string>>({});
   const [tacticalPolarities, setTacticalPolarities] = useState<Record<number, string>>({});
+
+  // Intrinsics (Dirac/grid removed U29.10 — Plexus uses Endo + Forma)
+  const [intrinsics, setIntrinsics] = useState<RailjackIntrinsics>({ ...DEFAULT_RAILJACK_INTRINSICS });
 
   // Elite crew & simulation
   const [selectedEliteCrewId, setSelectedEliteCrewId] = useState<string | null>(null);
@@ -138,6 +149,7 @@ export default function RailjackBuilderPage() {
       battleMods: battleMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
       tacticalMods: tacticalMods.map(({ modId, rank, slotIndex }) => ({ modId, rank, slotIndex })),
       eliteCrewId: selectedEliteCrewId ?? undefined,
+      intrinsics,
       simulation: {
         crimsonFugueStacks,
         cruisingSpeedActive,
@@ -161,6 +173,7 @@ export default function RailjackBuilderPage() {
       battleMods,
       tacticalMods,
       selectedEliteCrewId,
+      intrinsics,
       crimsonFugueStacks,
       cruisingSpeedActive,
       protectiveShotsActive,
@@ -197,6 +210,7 @@ export default function RailjackBuilderPage() {
       battlePolarities,
       tacticalPolarities,
       eliteCrewId: selectedEliteCrewId ?? undefined,
+      intrinsics,
       simulation: {
         crimsonFugueStacks,
         cruisingSpeedActive,
@@ -225,7 +239,7 @@ export default function RailjackBuilderPage() {
     } else {
       toast.success("Build saved locally", { description: "Log in to sync builds to your account" });
     }
-  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, reactorTraitId, shieldTraitId, engineTraitId, selectedTurrets, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, selectedEliteCrewId, crimsonFugueStacks, cruisingSpeedActive, protectiveShotsActive, shieldsDepleted, activeBattleAbilityId, activeTacticalAbilityId, currentBuildId]);
+  }, [selectedReactor, selectedShield, selectedEngine, selectedPlating, reactorTraitId, shieldTraitId, engineTraitId, selectedTurrets, selectedOrdnance, integratedMods, battleMods, tacticalMods, integratedPolarities, battlePolarities, tacticalPolarities, selectedEliteCrewId, intrinsics, crimsonFugueStacks, cruisingSpeedActive, protectiveShotsActive, shieldsDepleted, activeBattleAbilityId, activeTacticalAbilityId, currentBuildId]);
 
   const handleLoadBuild = useCallback((build: SavedBuild) => {
     const d = build.data as RailjackBuildData;
@@ -239,6 +253,13 @@ export default function RailjackBuilderPage() {
     setReactorTraitId(d.reactorTraitId);
     setShieldTraitId(d.shieldTraitId);
     setEngineTraitId(d.engineTraitId);
+    setIntrinsics({
+      tactical: d.intrinsics?.tactical ?? 0,
+      piloting: d.intrinsics?.piloting ?? 0,
+      gunnery: d.intrinsics?.gunnery ?? 0,
+      engineering: d.intrinsics?.engineering ?? 0,
+      command: d.intrinsics?.command ?? 0,
+    });
     const turretIds = d.turretIds?.length
       ? d.turretIds
       : d.turretId
@@ -642,6 +663,94 @@ export default function RailjackBuilderPage() {
                   })}
                 </div>
               )}
+            </div>
+
+            {/* Intrinsics */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xs font-semibold tracking-wider text-muted-foreground">INTRINSICS</h2>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="text-[10px] text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      beginNewRailjackDraft();
+                      setIntrinsics({ ...DEFAULT_RAILJACK_INTRINSICS });
+                    }}
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="button"
+                    className="text-[10px] text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      beginNewRailjackDraft();
+                      setIntrinsics({
+                        tactical: MAX_INTRINSIC_RANK,
+                        piloting: MAX_INTRINSIC_RANK,
+                        gunnery: MAX_INTRINSIC_RANK,
+                        engineering: MAX_INTRINSIC_RANK,
+                        command: MAX_INTRINSIC_RANK,
+                      });
+                    }}
+                  >
+                    Max all
+                  </button>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted-foreground mb-2">
+                Dirac / Avionics Grid removed in U29.10 (→ Endo). Rank Plexus mods + Forma as usual.
+              </p>
+              <div className="border border-border rounded-xl p-3 bg-card space-y-2.5">
+                {RAILJACK_INTRINSIC_TREES.map((tree) => {
+                  const rank = intrinsics[tree.id];
+                  const rankName = RAILJACK_INTRINSIC_RANK_NAMES[tree.id][rank] ?? "—";
+                  return (
+                    <label key={tree.id} className="block text-xs">
+                      <div className="flex justify-between gap-2 mb-0.5">
+                        <span className="font-medium">{tree.name}</span>
+                        <span className="font-mono text-muted-foreground">{rank}/{MAX_INTRINSIC_RANK}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={MAX_INTRINSIC_RANK}
+                        step={1}
+                        value={rank}
+                        onChange={(e) => {
+                          beginNewRailjackDraft();
+                          const next = Number(e.target.value) as number;
+                          setIntrinsics((prev) => ({ ...prev, [tree.id]: next }));
+                        }}
+                        className="w-full"
+                      />
+                      <p className="text-[10px] text-muted-foreground mt-0.5" title={tree.blurb}>
+                        {rankName}
+                      </p>
+                    </label>
+                  );
+                })}
+                {(computedStats.intrinsicEffects?.dorsalVentralTurretDamageBonus ?? 0) > 0 && (
+                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400 pt-1 border-t border-border/50">
+                    Paper: +50% Dorsal/Ventral turret damage (Gunnery 1)
+                  </p>
+                )}
+                {(computedStats.intrinsicEffects?.battleEnergyCostMult ?? 1) < 1 && (
+                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400">
+                    Paper: Battle Mod energy ×{computedStats.intrinsicEffects!.battleEnergyCostMult} (Tactical 6)
+                  </p>
+                )}
+                {(computedStats.intrinsicEffects?.tacticalCooldownReduction ?? 0) > 0 && (
+                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400">
+                    Paper: −{Math.round((computedStats.intrinsicEffects!.tacticalCooldownReduction ?? 0) * 100)}% Tactical cooldown
+                  </p>
+                )}
+                {selectedEliteCrewId && !(computedStats.intrinsicEffects?.eliteCrewUnlocked) && (
+                  <p className="text-[10px] text-amber-700 dark:text-amber-300">
+                    Elite crew requires Command 10 (still applied for planning).
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Elite Crew */}

@@ -11,6 +11,12 @@ import {
   type RailjackHouseTrait,
 } from "@/data/railjack";
 import {
+  intrinsicPaperEffects,
+  normalizeIntrinsics,
+  type RailjackIntrinsicPaperEffects,
+  type RailjackIntrinsics,
+} from "@/data/railjack-intrinsics";
+import {
   crewBonusesFromCompetency,
   RAILJACK_PLEXUS_ABILITIES,
   summarizeEquippedAbilities,
@@ -64,6 +70,8 @@ export interface RailjackBuildInput {
   battleMods?: EquippedMod[];
   tacticalMods?: EquippedMod[];
   eliteCrewId?: string;
+  /** Player Intrinsics ranks (0–10 per tree). Dirac/grid removed U29.10. */
+  intrinsics?: Partial<RailjackIntrinsics>;
   simulation?: RailjackSimulationInput;
 }
 
@@ -112,6 +120,7 @@ function scaleAbilitySummary(
   summary: RailjackAbilitySummary,
   reactor: RailjackComponent | undefined,
   simulation: RailjackSimulationInput | undefined,
+  intrinsicFx: RailjackIntrinsicPaperEffects,
 ): RailjackAbilityComputed {
   const scale = reactorScaling(reactor);
   const isActive =
@@ -126,8 +135,14 @@ function scaleAbilitySummary(
   if (energyCost !== undefined && summary.scalesWith?.includes("strength")) {
     energyCost = Math.round(energyCost * scale.strength);
   }
+  if (energyCost !== undefined && summary.tab === "battle") {
+    energyCost = Math.round(energyCost * intrinsicFx.battleEnergyCostMult);
+  }
   if (cooldownSec !== undefined && summary.scalesWith?.includes("duration")) {
     cooldownSec = Math.round(cooldownSec / scale.duration);
+  }
+  if (cooldownSec !== undefined && summary.tab === "tactical" && intrinsicFx.tacticalCooldownReduction > 0) {
+    cooldownSec = Math.round(cooldownSec * (1 - intrinsicFx.tacticalCooldownReduction));
   }
   if (turretDamageWhileActive !== undefined) {
     if (summary.modId === "phoenix_blaze") {
@@ -352,6 +367,8 @@ export function calculateRailjackBuild(
   }
 
   const { acc, panel } = applyIntegratedMods(input.integratedMods, allMods, input.simulation);
+  const intrinsics = normalizeIntrinsics(input.intrinsics);
+  const intrinsicFx = intrinsicPaperEffects(intrinsics);
 
   if (crewBonuses) {
     acc.turretDamageBonus += crewBonuses.turretDamageBonus;
@@ -361,8 +378,12 @@ export function calculateRailjackBuild(
 
   const battleSummaries = summarizeEquippedAbilities(input.battleMods ?? [], "battle");
   const tacticalSummaries = summarizeEquippedAbilities(input.tacticalMods ?? [], "tactical");
-  const battleAbilities = battleSummaries.map((s) => scaleAbilitySummary(s, reactor, input.simulation));
-  const tacticalAbilities = tacticalSummaries.map((s) => scaleAbilitySummary(s, reactor, input.simulation));
+  const battleAbilities = battleSummaries.map((s) =>
+    scaleAbilitySummary(s, reactor, input.simulation, intrinsicFx),
+  );
+  const tacticalAbilities = tacticalSummaries.map((s) =>
+    scaleAbilitySummary(s, reactor, input.simulation, intrinsicFx),
+  );
   const extraTurretDamageBonus = abilityTurretDamageBonus(battleAbilities, tacticalAbilities);
 
   const reactorTrait = resolveHouseTrait(
@@ -430,10 +451,21 @@ export function calculateRailjackBuild(
   const totalExtraTurretDamage = extraTurretDamageBonus + houseTurretDamageBonus;
 
   const turretIds = resolveTurretIds(input);
+  // Nose=0, Dorsal=1, Ventral=2 — Gunnery 1 +50% applies to Dorsal/Ventral only.
   const turrets = turretIds
-    .map((id) => (id ? findRailjackArmament(id) : undefined))
-    .filter((t): t is RailjackArmament => !!t && t.type === "turret")
-    .map((t) => computeRailjackArmamentStats(t, acc, totalExtraTurretDamage));
+    .map((id, slotIndex) => {
+      if (!id) return undefined;
+      const armament = findRailjackArmament(id);
+      if (!armament || armament.type !== "turret") return undefined;
+      const gunnerySlotBonus =
+        (slotIndex === 1 || slotIndex === 2) ? intrinsicFx.dorsalVentralTurretDamageBonus : 0;
+      return computeRailjackArmamentStats(
+        armament,
+        acc,
+        totalExtraTurretDamage + gunnerySlotBonus,
+      );
+    })
+    .filter((t): t is RailjackArmamentComputed => !!t);
 
   const ordnanceRaw = input.ordnanceId ? findRailjackArmament(input.ordnanceId) : undefined;
   const ordnance =
@@ -488,6 +520,16 @@ export function calculateRailjackBuild(
     tacticalAbilities,
     abilityTurretDamageBonus: extraTurretDamageBonus,
     selectedHouseTraits,
+    intrinsics,
+    intrinsicEffects: {
+      dorsalVentralTurretDamageBonus: intrinsicFx.dorsalVentralTurretDamageBonus,
+      battleEnergyCostMult: intrinsicFx.battleEnergyCostMult,
+      tacticalCooldownReduction: intrinsicFx.tacticalCooldownReduction,
+      domeChargeForge: intrinsicFx.domeChargeForge,
+      ordnanceForge: intrinsicFx.ordnanceForge,
+      eliteCrewUnlocked: intrinsicFx.eliteCrewUnlocked,
+      panelNotes: intrinsicFx.panelNotes,
+    },
   };
 }
 

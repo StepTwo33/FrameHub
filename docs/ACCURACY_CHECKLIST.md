@@ -108,6 +108,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ4 | Railjack house unique traits | Wiki Mk III trait catalog; Lavan reactor+plating +25% shields; shields-depleted engine/shield combat traits via sim; UI trait list | **Locked** — trait goldens |
 | RJ5 | Railjack trait roll selection | One wreckage trait per house component; paper effects only for selected roll; save/load + UI selects | **Locked** — trait-roll goldens |
 | RJ6 | Tunguska Forward Artillery paper | Wiki 56.5k / 300% CC / 2× CD / 4s charge; Forward Artillery mod scales damage; avg red-crit shot + charge DPS; Dome Charges out of scope | **Locked** — artillery goldens |
+| RJ7 | Intrinsics (+ Dirac note) | Gunnery 1 +50% Dorsal/Ventral; Tactical 6/7/9 Battle energy & Tac CD; Engineering/Command unlocks; Dirac/grid removed U29.10 → Endo (documented) | **Locked** — intrinsic goldens |
 
 **Remaining unlocked paper-moving mods (post Sim14):** none for always-on paper; further work is Valence Formation (needs guaranteed-status), miss/grenade decay, or Tier B/C items.
 
@@ -172,6 +173,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ4 House unique traits | 2026-07-23 | Trait catalog; Lavan plating synergy; shields-depleted sim traits; UI |
 | RJ5 Trait roll selection | 2026-07-23 | Per-component trait picker; effects gated to selected roll |
 | RJ6 Tunguska paper | 2026-07-23 | Fixed chin mount paper; FA mod × damage; red-crit avg shot; Dome Charges deferred |
+| RJ7 Intrinsics | 2026-07-23 | Gunnery/Tactical paper; forge/elite unlocks; Dirac→Endo note (no grid) |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

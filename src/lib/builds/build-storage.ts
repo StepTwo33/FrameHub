@@ -230,6 +230,14 @@ export interface RailjackBuildData {
   reactorTraitId?: string;
   shieldTraitId?: string;
   engineTraitId?: string;
+  /** Player Intrinsics ranks 0–10 (Dirac/grid removed U29.10 → Endo). */
+  intrinsics?: {
+    tactical?: number;
+    piloting?: number;
+    gunnery?: number;
+    engineering?: number;
+    command?: number;
+  };
   /** Simulation toggles for conditional integrated mods and active abilities. */
   simulation?: {
     crimsonFugueStacks?: number;

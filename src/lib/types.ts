@@ -1057,6 +1057,24 @@ export interface RailjackCalculatedStats {
   activeHouseTraits?: { id: string; text: string }[];
   /** Selected wreckage trait rolls (one per house component), including display-only. */
   selectedHouseTraits?: { id: string; text: string }[];
+  /** Normalized Intrinsics ranks (0–10). */
+  intrinsics?: {
+    tactical: number;
+    piloting: number;
+    gunnery: number;
+    engineering: number;
+    command: number;
+  };
+  /** Paper / unlock effects derived from Intrinsics. */
+  intrinsicEffects?: {
+    dorsalVentralTurretDamageBonus: number;
+    battleEnergyCostMult: number;
+    tacticalCooldownReduction: number;
+    domeChargeForge: boolean;
+    ordnanceForge: boolean;
+    eliteCrewUnlocked: boolean;
+    panelNotes: string[];
+  };
 }
 
 export interface RailjackAbilityComputed {
