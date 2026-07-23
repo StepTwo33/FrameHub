@@ -94,6 +94,7 @@ const GALV_STACK_CAPS: Record<string, number> = {
   galvanized_shot: 3,
   galvanized_scope: 5,
   galvanized_crosshairs: 5,
+  split_flights: 4,
   galvanized_steel: 4,
   galvanized_elementalist: 4,
 };
@@ -222,14 +223,27 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       return true;
     case "conditional_stat_on_trigger": {
       // Proton Snap: catalog `damage` is wiki +Toxin (not base damage).
+      // Pain Points: catalog `damage` is weak-point damage stacks.
       let key = statKey;
       let value = modValue;
       if (ctx.modId === "proton_snap" && statKey === "damage") {
         key = "toxin";
       }
-      // Double Tap: catalog is +20%/stack; assume max 20 stacks when trigger active.
+      if (ctx.modId === "pain_points" && statKey === "damage") {
+        key = "weakPointDamage";
+      }
+      // Stack exclusives: catalog is per-stack; assume max stacks when trigger active.
       if (ctx.modId === "double_tap" && statKey === "damage") {
         value = modValue * 20;
+      }
+      if (ctx.modId === "critical_mutation" && (statKey === "criticalChance" || statKey === "criticalMultiplier")) {
+        value = modValue * 10;
+      }
+      if (ctx.modId === "pain_points" && key === "weakPointDamage") {
+        value = modValue * 10;
+      }
+      if (ctx.modId === "critical_precision" && statKey === "criticalChance") {
+        value = modValue * 50;
       }
       acc.triggerStatBonuses[key] = (acc.triggerStatBonuses[key] ?? 0) + value;
       return true;

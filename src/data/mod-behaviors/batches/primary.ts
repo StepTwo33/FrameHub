@@ -62,7 +62,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "conditional_stat_on_kill", "wiki: Biotic Rounds — On Weak Point Kill: +150% Status Chance for 15s"),
   ]),
   brain_storm: mod("brain_storm", [
-    line("ammoEfficiency", "mod_panel", "multiplicative_percent", "Brain Storm: ammoEfficiency \u2014 On Headshot:\\\\n+100% Ammo Efficiency for 0.5s"),
+    line("ammoEfficiency", "weapon_dps", "conditional_stat_on_trigger", "wiki: Brain Storm — On Headshot: +100% Ammo Efficiency for 0.5s"),
     line("duration", "mod_panel", "multiplicative_percent", "Brain Storm: duration \u2014 On Headshot:\\\\n+100% Ammo Efficiency for 0.5s"),
   ]),
   catalyzer_link: mod("catalyzer_link", [
@@ -90,8 +90,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("impact", "weapon_dps", "multiplicative_percent", "Crash Course: impact \u2014 +120% <DT_IMPACT_COLOR>Impact"),
   ]),
   critical_precision: mod("critical_precision", [
-    line("critBonusPerKill", "mod_panel", "multiplicative_percent", "wiki: Critical Precision — headshot stacks"),
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Critical Precision — headshot stacks (not always-on CC)"),
+    line("critBonusPerKill", "mod_panel", "multiplicative_percent", "wiki: Critical Precision — duplicate stack display key"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Precision — HS stacks +10% CC up to +500% (sim assumes max; miss decay unmodeled)"),
   ]),
   cryo_rounds_r3: mod("cryo_rounds_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Cryo Rounds: cold \u2014 +90% <DT_FREEZE_COLOR>Cold"),
@@ -375,9 +375,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("multishot", "weapon_dps", "multiplicative_percent", "Split Chamber: multishot \u2014 +90% Multishot"),
   ]),
   split_flights: mod("split_flights", [
-    line("accuracy", "mod_panel", "multiplicative_percent", "wiki: Split Flights — on-hit stacks"),
+    line("accuracy", "mod_panel", "multiplicative_percent", "wiki: Split Flights — on-hit accuracy penalty"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Split Flights — stack duration"),
-    line("multishot", "mod_panel", "multiplicative_percent", "wiki: Split Flights — on-hit multishot stacks (not always-on)"),
+    line("multishot", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Split Flights — On Hit: +100% Multishot/stack (cap 4; sim uses killStacks)"),
   ]),
   spontaneous_singularity: mod("spontaneous_singularity", [
     line("damage", "mod_panel", "multiplicative_percent", "wiki: Spontaneous Singularity — orb-explode bonus (not always-on damage)"),

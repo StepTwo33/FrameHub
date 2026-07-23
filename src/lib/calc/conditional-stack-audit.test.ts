@@ -496,3 +496,67 @@ describe("Sim2 weak-point / situational exclusives (wiki max rank)", () => {
     ).toBeCloseTo(lex.criticalChance * 5, 5);
   });
 });
+
+describe("Sim3 AE + max-stack exclusives (wiki max rank)", () => {
+  it("Brain Storm / Skull Shots / Zazvat-Kar: paper AE 0; trigger → +100% / +100% / +75% AE", () => {
+    expect(build("braton", "brain_storm", {}).ammoEfficiency ?? 0).toBeCloseTo(0, 5);
+    expect(
+      build("braton", "brain_storm", { applyTriggerBuffs: true }).ammoEfficiency,
+    ).toBeCloseTo(1, 5);
+
+    expect(build("lex", "skull_shots", {}).ammoEfficiency ?? 0).toBeCloseTo(0, 5);
+    expect(
+      build("lex", "skull_shots", { applyTriggerBuffs: true }).ammoEfficiency,
+    ).toBeCloseTo(1, 5);
+
+    expect(build("lex", "zazvat_kar", {}).ammoEfficiency ?? 0).toBeCloseTo(0, 5);
+    expect(
+      build("lex", "zazvat_kar", { applyTriggerBuffs: true }).ammoEfficiency,
+    ).toBeCloseTo(0.75, 5);
+  });
+
+  it("Critical Mutation: paper CC/CD unchanged; trigger → +300% CC and CD", () => {
+    const lex = requireWeapon("lex");
+    const bareCm = calculateWeaponBuild(lex, [], modsMap()).criticalMultiplier;
+    const paper = build("lex", "critical_mutation", {});
+    expect(paper.criticalChance).toBeCloseTo(lex.criticalChance, 5);
+    expect(paper.criticalMultiplier).toBeCloseTo(bareCm, 5);
+    const active = build("lex", "critical_mutation", { applyTriggerBuffs: true });
+    expect(active.criticalChance).toBeCloseTo(lex.criticalChance * 4, 5);
+    expect(active.criticalMultiplier).toBeCloseTo(bareCm * 4, 4);
+  });
+
+  it("Pain Points: paper WP bonus 0; trigger → +600% weak-point damage", () => {
+    expect(build("lex", "pain_points", {}).headshotDamageBonus ?? 0).toBeCloseTo(0, 5);
+    expect(
+      build("lex", "pain_points", { applyTriggerBuffs: true }).headshotDamageBonus,
+    ).toBeCloseTo(6, 5);
+  });
+
+  it("Split Flights: paper MS unchanged; killStacks 4 → +400% multishot", () => {
+    const weapon = requireWeapon("paris");
+    expect(build("paris", "split_flights", { killStacks: 0 }).multishot).toBeCloseTo(
+      weapon.multishot,
+      5,
+    );
+    expect(build("paris", "split_flights", { killStacks: 4 }).multishot).toBeCloseTo(
+      weapon.multishot * 5,
+      5,
+    );
+    expect(build("paris", "split_flights", { killStacks: 9 }).multishot).toBeCloseTo(
+      weapon.multishot * 5,
+      5,
+    );
+  });
+
+  it("Critical Precision: paper CC unchanged; trigger → +500% CC", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "critical_precision", {}).criticalChance).toBeCloseTo(
+      weapon.criticalChance,
+      5,
+    );
+    expect(
+      build("braton", "critical_precision", { applyTriggerBuffs: true }).criticalChance,
+    ).toBeCloseTo(weapon.criticalChance * 6, 5);
+  });
+});

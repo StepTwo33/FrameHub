@@ -830,6 +830,12 @@ export function calculateWeaponBuild(
     statusBonus += pool.statusChance ?? 0;
     multishotBonus += pool.multishot ?? 0;
     reloadBonus += pool.reloadSpeed ?? 0;
+    if (pool.ammoEfficiency) {
+      stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + pool.ammoEfficiency;
+    }
+    if (pool.weakPointDamage) {
+      stats.headshotDamageBonus = (stats.headshotDamageBonus ?? 0) + pool.weakPointDamage;
+    }
     // Elemental fractions (e.g. Proton Snap toxin) — folded into elementalMods below dmgMult scale.
     for (const elem of triggerElementalTypes) {
       const frac = pool[elem];

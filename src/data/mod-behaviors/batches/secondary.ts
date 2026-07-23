@@ -56,8 +56,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Convulsion: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),
   ]),
   critical_mutation: mod("critical_mutation", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Critical Mutation — kill stacks (not always-on)"),
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Critical Mutation — kill stacks (not always-on)"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CC/kill up to +300% (sim assumes max; grenade decay unmodeled)"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CD/kill up to +300% (sim assumes max; grenade decay unmodeled)"),
   ]),
   damzav_vati: mod("damzav_vati", [
     line("viral", "weapon_dps", "elemental_from_base_damage", "Damzav-Vati: viral \u2014 +240% <DT_VIRAL_COLOR>Viral"),
@@ -208,7 +208,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("puncture", "weapon_dps", "multiplicative_percent", "No Return: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),
   ]),
   pain_points: mod("pain_points", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Pain Points — weak-point stack damage"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Pain Points — +60% WP dmg/stack up to +600% (catalog damage→weakPointDamage; sim assumes max)"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Pain Points — stack duration"),
   ]),
   pathogen_rounds_r3: mod("pathogen_rounds_r3", [
@@ -325,7 +325,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("multishot", "weapon_dps", "multiplicative_percent", "Shrapnel Rounds: multishot \u2014 +200% Multishot, -66% Damage"),
   ]),
   skull_shots: mod("skull_shots", [
-    line("ammoEfficiency", "mod_panel", "multiplicative_percent", "Skull Shots: ammoEfficiency \u2014 On Headshot:\\\\n+100% Ammo Efficiency for 2s"),
+    line("ammoEfficiency", "weapon_dps", "conditional_stat_on_trigger", "wiki: Skull Shots — On Headshot: +100% Ammo Efficiency for 2s"),
     line("duration", "mod_panel", "multiplicative_percent", "Skull Shots: duration \u2014 On Headshot:\\\\n+100% Ammo Efficiency for 2s"),
   ]),
   slip_magazine_r3: mod("slip_magazine_r3", [
@@ -388,6 +388,6 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("energyOnCast", "mod_panel", "multiplicative_percent", "Xata Invocation: energyOnCast \u2014 Alternate Fire grants 1 Energy Regen/s for 20s for each enemy hit. Stacks up to \u2026"),
   ]),
   zazvat_kar: mod("zazvat_kar", [
-    line("ammoEfficiency", "mod_panel", "multiplicative_percent", "Zazvat-Kar: ammoEfficiency \u2014 +75% Ammo Efficiency while Airborne"),
+    line("ammoEfficiency", "weapon_dps", "conditional_stat_on_trigger", "wiki: Zazvat-Kar — +75% Ammo Efficiency while Airborne"),
   ]),
 };
