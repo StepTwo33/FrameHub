@@ -207,7 +207,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("magnetic", "weapon_dps", "elemental_from_base_damage", "Magnetic Rush: magnetic \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +20% Attack Speed"),
   ]),
   maiming_strike: mod("maiming_strike", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Maiming Strike: criticalChance \u2014 +150% Critical Chance for Slide Attack"),
+    // Wiki: +150% Critical Chance for Slide Attack only — not standing paper CC.
+    line("criticalChance", "mod_panel", "multiplicative_percent", "Maiming Strike: criticalChance \u2014 +150% Critical Chance for Slide Attack (slide-only; not standing paper DPS)"),
   ]),
   mark_of_the_beast: mod("mark_of_the_beast", [
     line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast \u2014 buffs the SECONDARY weapon on melee kills, not this melee (panel only)"),

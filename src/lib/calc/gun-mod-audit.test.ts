@@ -662,3 +662,117 @@ describe("shotgun cores (wiki max rank, Phase M6)", () => {
     expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.8, 4);
   });
 });
+
+describe("primary magazine/reload cores (wiki max rank, Phase M7)", () => {
+  it("Fast Hands R5: +30% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "fast_hands_r3");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.3, 8);
+  });
+
+  it("Seeking Fury R5: +15% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "seeking_fury");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.15, 8);
+  });
+
+  it("Magazine Warp R5 / Primed Magazine Warp R10: +30% / +55% magazine", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "magazine_warp_r3").magazine).toBe(Math.round(weapon.magazine * 1.3));
+    expect(withMod("braton", "primed_magazine_warp").magazine).toBe(Math.round(weapon.magazine * 1.55));
+  });
+
+  it("Tainted Mag R10: +66% magazine, −33% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "tainted_mag");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.66));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.33, 8);
+  });
+
+  it("Depleted Reload R5: −60% magazine, +48% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "depleted_reload");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 0.4));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.48, 8);
+  });
+
+  it("Maximum Capacity R5: +30% magazine, −15% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "maximum_capacity");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.3));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.15, 8);
+  });
+});
+
+describe("secondary magazine/reload cores (wiki max rank, Phase M7)", () => {
+  it("Slip Magazine R5 / Primed Slip Magazine R10: +30% / +55% magazine", () => {
+    const weapon = requireWeapon("lex");
+    expect(withMod("lex", "slip_magazine_r3").magazine).toBe(Math.round(weapon.magazine * 1.3));
+    expect(withMod("lex", "primed_slip_magazine").magazine).toBe(Math.round(weapon.magazine * 1.55));
+  });
+
+  it("Quickdraw R5: +48% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "quickdraw_r3");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.48, 8);
+  });
+
+  it("Loose Magazine R5: +50% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "loose_magazine");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.5, 5);
+  });
+
+  it("Tainted Clip R5: +60% magazine, −30% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "tainted_clip");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.6));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.3, 8);
+  });
+
+  it("Full Capacity R5: +30% magazine, −15% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "full_capacity");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.3));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.15, 8);
+  });
+
+  it("Merciless Gunfight R5: +45% crit damage", () => {
+    const weapon = requireWeapon("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("lex", "merciless_gunfight");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.45, 8);
+  });
+
+  it("Magnetic Might R3: +60% magnetic from base, +40% crit damage", () => {
+    const weapon = requireWeapon("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("lex", "magnetic_might");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Accelerated Isotope R3: +60% radiation from base, +40% fire rate", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "accelerated_isotope");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "radiation")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+});
+
+describe("shotgun magazine cores (wiki max rank, Phase M7)", () => {
+  it("Burdened Magazine R5: +60% magazine, −18% reload speed", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "burdened_magazine");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.6));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.18, 8);
+  });
+});

@@ -351,6 +351,46 @@ describe("melee cores (wiki max rank, Phase M6)", () => {
   });
 });
 
+describe("melee cores (wiki max rank, Phase M7)", () => {
+  it("Magnetic Rush R3: +60% magnetic from base, +20% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("magnetic_rush");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.2, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Martial Fury R3: +20% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("martial_fury");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.2, 8);
+  });
+
+  it("Primed Smite Infested: ×1.55 paper DPS when targetFaction=infested", () => {
+    const bare = calculateWeaponBuild(requireWeapon("skana"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "infested",
+    });
+    const modded = withMod("primed_smite_infested", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "infested",
+    });
+    expect(modded.factionBonuses?.infested).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+
+  it("Maiming Strike: slide crit is panel-only (no standing paper CC)", () => {
+    const weapon = requireWeapon("skana");
+    const beh = VERIFIED_MOD_BEHAVIORS.maiming_strike;
+    expect(beh?.stats.every((s) => s.target === "mod_panel")).toBe(true);
+    const stats = withMod("maiming_strike");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance, 8);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");
