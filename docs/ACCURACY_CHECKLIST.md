@@ -105,6 +105,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ3 | Railjack engine/shield formulas | Conic on base 150 + flat engine m/s; SWB = cruise × (1.3×IonBurn + engine boost); shield %/s + delay; flux base 273 (no reactor flux); absolute UI labels | **Locked** — calc + UI goldens |
 | RJ4 | Railjack house unique traits | Wiki Mk III trait catalog; Lavan reactor+plating +25% shields; shields-depleted engine/shield combat traits via sim; UI trait list | **Locked** — trait goldens |
 | RJ5 | Railjack trait roll selection | One wreckage trait per house component; paper effects only for selected roll; save/load + UI selects | **Locked** — trait-roll goldens |
+| RJ6 | Tunguska Forward Artillery paper | Wiki 56.5k / 300% CC / 2× CD / 4s charge; Forward Artillery mod scales damage; avg red-crit shot + charge DPS; Dome Charges out of scope | **Locked** — artillery goldens |
 
 **Remaining unlocked paper-moving mods (post Sim12):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
 
@@ -166,6 +167,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ3 Engine/shield formulas | 2026-07-23 | Conic on base 150; SWB mult model; shield %/s + delay; flux 273; absolute UI labels |
 | RJ4 House unique traits | 2026-07-23 | Trait catalog; Lavan plating synergy; shields-depleted sim traits; UI |
 | RJ5 Trait roll selection | 2026-07-23 | Per-component trait picker; effects gated to selected roll |
+| RJ6 Tunguska paper | 2026-07-23 | Fixed chin mount paper; FA mod × damage; red-crit avg shot; Dome Charges deferred |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |
@@ -464,4 +466,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/launcher-weapon-audit.test.ts` — B17 category=launcher bare paper (+ `launcher-bare-goldens.ts`)
 - `src/lib/calc/riven-calculator.test.ts` — R1 grader ranges / scoring / disposition
 - `src/lib/calc/railjack-armament-inventory.test.ts` — RJ1 Cryophon/Glazio/Lavan/ordnance inventory
-- `src/lib/calc/railjack-calculator.test.ts` — RJ2/RJ3 ship paper + Conic/engine/shield/flux goldens
+- `src/lib/calc/railjack-calculator.test.ts` — RJ2–RJ6 ship paper + Tunguska / Conic / traits goldens

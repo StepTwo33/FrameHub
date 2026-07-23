@@ -151,6 +151,23 @@ export const mk4Turrets: RailjackArmament[] = turrets
 
 export const allTurrets: RailjackArmament[] = [...turrets, ...mk4Turrets];
 
+/**
+ * Tunguska Cannon (Forward Artillery) — fixed chin mount, not a turret slot.
+ * Wiki: 56,500 Puncture, 300% CC (guaranteed red), 2.0× CD, 0% SC, 4s charge.
+ * Dome Charges / Artillery Cheap Shot economy left out of paper DPS.
+ */
+export const tunguskaCannon = {
+  id: "tunguska_cannon",
+  name: "Tunguska Cannon",
+  damage: 56500,
+  critChance: 3.0,
+  critMultiplier: 2.0,
+  statusChance: 0,
+  /** Wiki charge time to fire (seconds). */
+  chargeTime: 4,
+  description: "Chin-mounted Forward Artillery — consumes Dome Charges; 4s charge",
+} as const;
+
 /** Ordnance is Sigma-only (Dry Dock research). Wiki Mk tiers — no house variants. */
 export const ordnance: RailjackArmament[] = [
   { id: "sigma_milati", name: "Milati", type: "ordnance", house: "sigma", damage: 10800, critChance: 0.10, critMultiplier: 2.0, statusChance: 0, fireRate: 0.5, description: "12-rocket dumbfire swarm (base)" },

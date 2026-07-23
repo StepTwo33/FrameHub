@@ -39,11 +39,16 @@ describe("railjack integrated cores (wiki max rank, Phase M13)", () => {
   });
 
   it("Forward Artillery R10: +100% artillery damage (not turret)", () => {
+    const bare = calculateRailjackBuild({});
     const stats = calculateRailjackBuild({
       integratedMods: [{ modId: "forward_artillery", rank: 10, slotIndex: 0 }],
     });
     expect(stats.artilleryDamageBonus).toBeCloseTo(1, 3);
     expect(stats.turretDamageBonus).toBeCloseTo(0, 8);
+    // Catalog residue ≈ +100%; Tunguska avg shot = damage × (1 + 3.0×(2−1)) = ×4
+    expect(stats.artillery?.damage).toBe(Math.round(56500 * (1 + stats.artilleryDamageBonus)));
+    expect(stats.artillery?.avgShotDamage).toBe((stats.artillery?.damage ?? 0) * 4);
+    expect(stats.artillery?.damage).toBeGreaterThan(bare.artillery?.damage ?? 0);
   });
 
   it("Fortifying/Defensive Fire / Onslaught Matrix: conditional are panel-only", () => {

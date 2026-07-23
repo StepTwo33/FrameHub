@@ -1017,6 +1017,20 @@ export interface RailjackCalculatedStats {
   munitionsCapacityBonus: number;
   turrets: RailjackArmamentComputed[];
   ordnance: RailjackArmamentComputed | null;
+  /** Tunguska / Forward Artillery paper (always equipped). */
+  artillery?: {
+    id: string;
+    name: string;
+    damage: number;
+    critChance: number;
+    critMultiplier: number;
+    statusChance: number;
+    chargeTime: number;
+    /** Average damage per charged shot (includes crit expectation). */
+    avgShotDamage: number;
+    /** Avg shot damage ÷ charge time (Dome Charge economy not modeled). */
+    estimatedDps: number;
+  };
   modBonuses?: Record<string, number>;
   /** Reactor battle-mod scaling from equipped reactor. */
   abilityStrengthBonus?: number;

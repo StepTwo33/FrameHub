@@ -5,6 +5,7 @@ import {
   findRailjackEliteCrew,
   getRailjackComponentTraits,
   railjackBaseStats,
+  tunguskaCannon,
   type RailjackArmament,
   type RailjackComponent,
   type RailjackHouseTrait,
@@ -248,6 +249,36 @@ function abilityTurretDamageBonus(
   return bonus;
 }
 
+/** Expected crit multiplier; linear form holds for CC above 100% (red/orange tiers). */
+export function railjackCritAvgMultiplier(critChance: number, critMultiplier: number): number {
+  return 1 + Math.max(0, critChance) * (critMultiplier - 1);
+}
+
+export function computeTunguskaStats(
+  artilleryDamageBonus: number,
+  extraRailjackDamageBonus = 0,
+): NonNullable<RailjackCalculatedStats["artillery"]> {
+  const damageMult = 1 + artilleryDamageBonus + extraRailjackDamageBonus;
+  const damage = Math.round(tunguskaCannon.damage * damageMult);
+  const avgHitMult = railjackCritAvgMultiplier(
+    tunguskaCannon.critChance,
+    tunguskaCannon.critMultiplier,
+  );
+  const avgShotDamage = Math.round(damage * avgHitMult);
+  const estimatedDps = Math.round(avgShotDamage / tunguskaCannon.chargeTime);
+  return {
+    id: tunguskaCannon.id,
+    name: tunguskaCannon.name,
+    damage,
+    critChance: tunguskaCannon.critChance,
+    critMultiplier: tunguskaCannon.critMultiplier,
+    statusChance: tunguskaCannon.statusChance,
+    chargeTime: tunguskaCannon.chargeTime,
+    avgShotDamage,
+    estimatedDps,
+  };
+}
+
 export function computeRailjackArmamentStats(
   armament: RailjackArmament,
   bonuses: Pick<
@@ -265,7 +296,7 @@ export function computeRailjackArmamentStats(
     armament.critChance + (isTurret ? bonuses.turretCritBonus : 0),
   );
   const critMultiplier = armament.critMultiplier * (1 + (isTurret ? bonuses.turretCritDmgBonus : 0));
-  const avgHitMult = 1 + critChance * (critMultiplier - 1);
+  const avgHitMult = railjackCritAvgMultiplier(critChance, critMultiplier);
   const estimatedDps = Math.round(damage * avgHitMult * armament.fireRate);
 
   return {
@@ -411,6 +442,9 @@ export function calculateRailjackBuild(
         computeRailjackArmamentStats(ordnanceRaw, acc, houseTurretDamageBonus)
       : null;
 
+  // Tunguska: Forward Artillery mod + Zetki depleted-shield “Railjack damage” trait.
+  const artillery = computeTunguskaStats(acc.artilleryDamageBonus, houseTurretDamageBonus);
+
   return {
     baseHull: railjackBaseStats.hull,
     baseArmor: railjackBaseStats.armor,
@@ -444,6 +478,7 @@ export function calculateRailjackBuild(
     munitionsCapacityBonus: acc.munitionsCapacityBonus,
     turrets,
     ordnance,
+    artillery,
     modBonuses: panel.modBonuses,
     abilityStrengthBonus: reactor?.stats.abilityStrength,
     abilityRangeBonus: reactor?.stats.abilityRange,

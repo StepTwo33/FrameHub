@@ -4,6 +4,17 @@ import { railjackPresets } from "@/data/railjack";
 import { allMods } from "@/data/mods";
 
 describe("calculateRailjackBuild", () => {
+  it("papers Tunguska Cannon with wiki base and red-crit average shot", () => {
+    const stats = calculateRailjackBuild({});
+    expect(stats.artillery?.damage).toBe(56500);
+    expect(stats.artillery?.critChance).toBe(3);
+    expect(stats.artillery?.critMultiplier).toBe(2);
+    expect(stats.artillery?.chargeTime).toBe(4);
+    // 300% CC × 2.0 CD → expected mult 4 → 226,000 avg shot; DPS = shot / 4s
+    expect(stats.artillery?.avgShotDamage).toBe(226000);
+    expect(stats.artillery?.estimatedDps).toBe(56500);
+  });
+
   it("applies wiki mid-range absolute plating/shields and engine cruise/boost", () => {
     const stats = calculateRailjackBuild({
       reactorId: "lavan_reactor_mk3",

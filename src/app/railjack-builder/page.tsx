@@ -1005,37 +1005,49 @@ export default function RailjackBuilderPage() {
             ) : null}
 
             {/* Armament Stats */}
-            {(computedStats.turrets.length > 0 || computedStats.ordnance) && (
-              <div className="border border-border rounded-xl p-4 bg-card">
-                <h3 className="text-xs font-semibold text-muted-foreground mb-3">ARMAMENT STATS (WITH PLEXUS)</h3>
-                {computedStats.turrets.map((turret, index) => (
-                  <div key={turret.id} className={cn(index > 0 && "mt-3 pt-3 border-t border-border/50")}>
-                    <div className="text-xs font-medium text-red-400 mb-1.5">Turret {index + 1} — {turret.name}</div>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{turret.damage}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{turret.estimatedDps}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(turret.critChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{turret.critMultiplier.toFixed(1)}x</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(turret.statusChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{turret.fireRate}</span></div>
-                    </div>
+            <div className="border border-border rounded-xl p-4 bg-card">
+              <h3 className="text-xs font-semibold text-muted-foreground mb-3">ARMAMENT STATS (WITH PLEXUS)</h3>
+              {computedStats.artillery && (
+                <div>
+                  <div className="text-xs font-medium text-orange-400 mb-1.5">Forward Artillery — {computedStats.artillery.name}</div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                    <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{computedStats.artillery.damage}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Avg Shot</span><span className="font-mono text-cyan-400">{computedStats.artillery.avgShotDamage}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(computedStats.artillery.critChance * 100).toFixed(0)}%</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{computedStats.artillery.critMultiplier.toFixed(1)}x</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Charge</span><span className="font-mono">{computedStats.artillery.chargeTime}s</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{computedStats.artillery.estimatedDps}</span></div>
                   </div>
-                ))}
-                {computedStats.ordnance && (
-                  <div className={cn(computedStats.turrets.length > 0 && "mt-3 pt-3 border-t border-border/50")}>
-                    <div className="text-xs font-medium text-purple-400 mb-1.5">Munitions — {computedStats.ordnance.name}</div>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{computedStats.ordnance.damage}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{computedStats.ordnance.estimatedDps}</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(computedStats.ordnance.critChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{computedStats.ordnance.critMultiplier.toFixed(1)}x</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(computedStats.ordnance.statusChance * 100).toFixed(1)}%</span></div>
-                      <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{computedStats.ordnance.fireRate}</span></div>
-                    </div>
+                  <p className="text-[10px] text-muted-foreground mt-1.5">Paper only — Dome Charge economy not modeled.</p>
+                </div>
+              )}
+              {computedStats.turrets.map((turret, index) => (
+                <div key={turret.id} className={cn((index > 0 || computedStats.artillery) && "mt-3 pt-3 border-t border-border/50")}>
+                  <div className="text-xs font-medium text-red-400 mb-1.5">Turret {index + 1} — {turret.name}</div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                    <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{turret.damage}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{turret.estimatedDps}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(turret.critChance * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{turret.critMultiplier.toFixed(1)}x</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(turret.statusChance * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{turret.fireRate}</span></div>
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              ))}
+              {computedStats.ordnance && (
+                <div className={cn((computedStats.turrets.length > 0 || computedStats.artillery) && "mt-3 pt-3 border-t border-border/50")}>
+                  <div className="text-xs font-medium text-purple-400 mb-1.5">Munitions — {computedStats.ordnance.name}</div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                    <div className="flex justify-between"><span className="text-muted-foreground">Damage</span><span className="font-mono">{computedStats.ordnance.damage}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Est. DPS</span><span className="font-mono text-cyan-400">{computedStats.ordnance.estimatedDps}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Chance</span><span className="font-mono">{(computedStats.ordnance.critChance * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Crit Multi</span><span className="font-mono">{computedStats.ordnance.critMultiplier.toFixed(1)}x</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className="font-mono">{(computedStats.ordnance.statusChance * 100).toFixed(1)}%</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Fire Rate</span><span className="font-mono">{computedStats.ordnance.fireRate}</span></div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
