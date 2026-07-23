@@ -364,3 +364,199 @@ describe("shotgun remainder (wiki max rank, Phase M1)", () => {
     }
   });
 });
+
+describe("primary cores (wiki max rank, Phase M5)", () => {
+  it("Shred R5: +30% fire rate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "shred");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.3, 8);
+  });
+
+  it("Primed Shred R10: +55% fire rate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "primed_shred");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.55, 8);
+  });
+
+  it("Vigilante Armaments R5: +60% multishot", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "vigilante_armaments");
+    expect(stats.multishot).toBeCloseTo(weapon.multishot * 1.6, 8);
+  });
+
+  it("Vigilante Fervor R5: +45% fire rate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "vigilante_fervor");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.45, 8);
+  });
+
+  it("Vile Acceleration R5: +90% fire rate, −15% damage", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "vile_acceleration");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.9, 8);
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 0.85, 8);
+  });
+
+  it("Frail Momentum R5: +90% fire rate, −15% damage", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "frail_momentum");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.9, 8);
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 0.85, 8);
+  });
+
+  it("Rifle Aptitude R5: +90% status chance", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "rifle_aptitude_r3");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.9, 8);
+  });
+
+  it("Sawtooth Clip / Piercing Hit / Rupture: +90% Slash/Puncture/Impact", () => {
+    const weapon = requireWeapon("braton");
+    const slash = withMod("braton", "sawtooth_clip");
+    const puncture = withMod("braton", "piercing_hit");
+    const impact = withMod("braton", "rupture");
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Fanged Fusillade / Piercing Caliber / Crash Course: +120% Slash/Puncture/Impact", () => {
+    const weapon = requireWeapon("braton");
+    const slash = withMod("braton", "fanged_fusillade");
+    const puncture = withMod("braton", "piercing_caliber");
+    const impact = withMod("braton", "crash_course");
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 2.2, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 2.2, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 2.2, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Primed Bane of Corpus: ×1.55 paper DPS when targetFaction=corpus", () => {
+    const bare = calculateWeaponBuild(requireWeapon("braton"), [], modsMap(), undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "corpus",
+    });
+    const modded = withMod("braton", "primed_bane_of_corpus", {
+      ...DEFAULT_SIM_PARAMS,
+      targetFaction: "corpus",
+    });
+    expect(modded.factionBonuses?.corpus).toBeCloseTo(0.55, 8);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1.55, 8);
+  });
+});
+
+describe("secondary cores (wiki max rank, Phase M5)", () => {
+  it("Magnum Force R10: +165% damage (accuracy panel-only)", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "magnum_force");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 2.65, 8);
+  });
+
+  it("Augur Pact (augur_breach) R5: +90% damage", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "augur_breach");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 1.9, 8);
+  });
+
+  it("Creeping Bullseye R5: +200% crit chance, −20% fire rate", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "creeping_bullseye");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 3, 4);
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 0.8, 4);
+  });
+
+  it("Hollow Point R5: +60% crit damage, −15% damage", () => {
+    const weapon = requireWeapon("lex");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("lex", "hollow_point");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.6, 8);
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage * 0.85, 8);
+  });
+
+  it("Primed Convulsion R10: +165% electricity from base", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "primed_convulsion");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "electricity")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.65, scale),
+      8,
+    );
+  });
+
+  it("Bore / Maim / Pummel: +120% Puncture/Slash/Impact", () => {
+    const weapon = requireWeapon("lex");
+    const puncture = withMod("lex", "bore");
+    const slash = withMod("lex", "maim");
+    const impact = withMod("lex", "pummel");
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 2.2, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 2.2, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 2.2, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Concussion Rounds / No Return / Razor Shot: +90% Impact/Puncture/Slash", () => {
+    const weapon = requireWeapon("lex");
+    const impact = withMod("lex", "concussion_rounds");
+    const puncture = withMod("lex", "no_return");
+    const slash = withMod("lex", "razor_shot");
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, impact.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 1.9, slash.moddedBaseDamage / 32),
+      8,
+    );
+  });
+});
+
+describe("shotgun cores (wiki max rank, Phase M5)", () => {
+  it("Primed Charged Shell R10: +165% electricity from base", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "primed_charged_shell");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "electricity")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.65, scale),
+      8,
+    );
+  });
+
+  it("Primed Chilling Grasp R10: +165% cold from base", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "primed_chilling_grasp");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.65, scale),
+      8,
+    );
+  });
+});

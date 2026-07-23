@@ -191,9 +191,10 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Jugulus Barbs: statusChance \u2014 +90% <DT_PUNCTURE_COLOR>Puncture, +60% Status Chance"),
   ]),
   killing_blow: mod("killing_blow", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Killing Blow: damage \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
+    // Wiki: +120% Melee Damage On Heavy Attack only — not light/paper DPS.
+    line("damage", "mod_panel", "multiplicative_percent", "Killing Blow: damage \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
     line("heavyAttackDamage", "mod_panel", "multiplicative_percent", "Killing Blow: heavyAttackDamage \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Killing Blow: heavyAttackEfficiency \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed"),
+    line("heavyAttackEfficiency", "mod_panel", "multiplicative_percent", "Killing Blow: heavyAttackEfficiency \u2014 +120% Melee Damage On Heavy Attack\\\\n+60% Heavy Attack Wind Up Speed (wind-up; panel until heavy DPS model)"),
   ]),
   lasting_sting: mod("lasting_sting", [
     line("statusDuration", "weapon_dps", "multiplicative_percent", "Lasting Sting: statusDuration \u2014 +110% Status Duration (extends DoT ticks)"),

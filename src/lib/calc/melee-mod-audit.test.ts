@@ -176,6 +176,106 @@ describe("melee remainder (wiki max rank, Phase M2)", () => {
   });
 });
 
+describe("melee cores (wiki max rank, Phase M5)", () => {
+  it("Fury R5: +30% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("fury_r3");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.3, 8);
+  });
+
+  it("Quickening R3: +40% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("quickening_r3");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.4, 8);
+  });
+
+  it("Gladiator Might R5: +60% crit damage", () => {
+    const weapon = requireWeapon("skana");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("gladiator_might");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.6, 8);
+  });
+
+  it("Gladiator Vice R5: +30% attack speed", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("gladiator_vice");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.3, 8);
+  });
+
+  it("Melee Prowess R5: +90% status chance", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("melee_prowess");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.9, 8);
+  });
+
+  it("Killing Blow: heavy-attack damage is panel-only (no light paper DPS)", () => {
+    const weapon = requireWeapon("skana");
+    const beh = VERIFIED_MOD_BEHAVIORS.killing_blow;
+    expect(beh?.stats.find((s) => s.statKey === "damage")?.target).toBe("mod_panel");
+    expect(beh?.stats.find((s) => s.statKey === "heavyAttackDamage")?.target).toBe("mod_panel");
+    const stats = withMod("killing_blow");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage, 8);
+  });
+
+  it("Amalgam Organ Shatter R5: +85% crit damage", () => {
+    const weapon = requireWeapon("skana");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("amalgam_organ_shatter");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.85, 4);
+  });
+
+  it("Buzz Kill / Auger Strike / Collision Force: +120% Slash/Puncture/Impact", () => {
+    const weapon = requireWeapon("skana");
+    const slash = withMod("buzz_kill");
+    const puncture = withMod("auger_strike");
+    const impact = withMod("collision_force");
+    expect(slash.slash).toBeCloseTo(
+      quantizeDamageValue(weapon.slash * 2.2, slash.moddedBaseDamage / 32),
+      8,
+    );
+    expect(puncture.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 2.2, puncture.moddedBaseDamage / 32),
+      8,
+    );
+    expect(impact.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 2.2, impact.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Heavy Trauma / Primed Heavy Trauma: +90% / +165% Impact", () => {
+    const weapon = requireWeapon("skana");
+    const ht = withMod("heavy_trauma");
+    const pht = withMod("primed_heavy_trauma");
+    expect(ht.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, ht.moddedBaseDamage / 32),
+      8,
+    );
+    expect(pht.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 2.65, pht.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Focus Energy R3: +60% electricity from base", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("focus_energy_r3");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "electricity")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Drifting Contact R3: +40% status chance; catalog +10s combo duration", () => {
+    const weapon = requireWeapon("skana");
+    const mod = requireMod("drifting_contact_r3");
+    expect(mod.stats.comboDuration! * (mod.maxRank + 1)).toBeCloseTo(10, 8);
+    const stats = withMod("drifting_contact_r3");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.4, 8);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");
