@@ -747,8 +747,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damageReduction", "mod_panel", "multiplicative_percent", "Ironclad Flight: damageReduction \u2014 Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne."),
   ]),
   jet_stream: mod("jet_stream", [
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Jet Stream: sprintSpeed \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
-    line("flightSpeed", "mod_panel", "multiplicative_percent", "Jet Stream: flightSpeed \u2014 Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies."),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated movement (not always-on sprint)"),
+    line("flightSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated projectile speed"),
   ]),
   justice_blades: mod("justice_blades", [
     line("damage", "mod_panel", "multiplicative_percent", "Justice Blades: damage \u2014 +100% Melee Damage, +1 'Justice'"),

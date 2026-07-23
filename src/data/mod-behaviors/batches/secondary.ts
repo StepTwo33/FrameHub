@@ -169,9 +169,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("universalOrbChance", "mod_panel", "multiplicative_percent", "Khra Canticle: universalOrbChance \u2014 Enemies have a 12% chance to drop a Universal Orb on death."),
   ]),
   leaded_gas: mod("leaded_gas", [
-    line("duration", "mod_panel", "multiplicative_percent", "Leaded Gas: duration \u2014 On Weak Point Hit:\\\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s"),
-    line("gas", "weapon_dps", "elemental_from_base_damage", "Leaded Gas: gas \u2014 On Weak Point Hit:\\\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Leaded Gas: statusChance \u2014 On Weak Point Hit:\\\\n+300% <DT_GAS_COLOR>Gas Damage and Status Chance for 6s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated"),
+    line("gas", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated gas"),
+    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated SC"),
   ]),
   lethal_momentum: mod("lethal_momentum", [
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Lethal Momentum: projectileSpeed \u2014 +40% Projectile Speed"),
@@ -208,8 +208,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("puncture", "weapon_dps", "multiplicative_percent", "No Return: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),
   ]),
   pain_points: mod("pain_points", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Pain Points: damage \u2014 On Weak Point hits with Primary Fire:\\\\n+60% Weak Point Damage for 5s. Stacks up\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Pain Points: duration \u2014 On Weak Point hits with Primary Fire:\\\\n+60% Weak Point Damage for 5s. Stacks up\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Pain Points — weak-point stack damage"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Pain Points — stack duration"),
   ]),
   pathogen_rounds_r3: mod("pathogen_rounds_r3", [
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Pathogen Rounds: toxin \u2014 +90% <DT_POISON_COLOR>Toxin"),
@@ -281,8 +281,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("slash", "weapon_dps", "multiplicative_percent", "Razor Shot: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),
   ]),
   recuperate: mod("recuperate", [
-    line("duration", "mod_panel", "multiplicative_percent", "Recuperate: duration \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
-    line("health", "warframe_totals", "multiplicative_percent", "Recuperate: health \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Recuperate — on-kill heal rate"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Recuperate — on-kill heal (not max health)"),
   ]),
   reflex_draw: mod("reflex_draw", [
     line("accuracy", "mod_panel", "multiplicative_percent", "Reflex Draw: accuracy \u2014 On Equip: \\\\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s (arsenal display only)"),
@@ -380,8 +380,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("storedDamage", "mod_panel", "multiplicative_percent", "Vile Discharge: storedDamage \u2014 Damage is accumulated up to 30,000. Use Alt-fire to launch an explosive vile sac\u2026"),
   ]),
   vome_invocation: mod("vome_invocation", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Vome Invocation: abilityStrength \u2014 Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stac\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Vome Invocation: duration \u2014 Alternate Fire increases Ability Strength by 4% for 20s for each enemy hit. Stac\u2026"),
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "wiki: Vome Invocation — alt-fire hit stacks (not always-on strength)"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Vome Invocation — stack duration"),
   ]),
   xata_invocation: mod("xata_invocation", [
     line("duration", "mod_panel", "multiplicative_percent", "Xata Invocation: duration \u2014 Alternate Fire grants 1 Energy Regen/s for 20s for each enemy hit. Stacks up to \u2026"),

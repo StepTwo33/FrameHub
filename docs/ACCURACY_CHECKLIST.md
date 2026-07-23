@@ -79,12 +79,13 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M8 | Arch + leftover gun cores | Magnetic Capacity, Radiated Reload, Loose Hatch, Damzav-Vati; Rifle/Pistol/Shotgun Elementalist statusDamage (not base damage); Imperator/Veritux archgun+archmelee always-on cores | **Locked** — +47 IDs; Elementalist damage→statusDamage |
 | M9 | Shotgun + utility cores | Shotgun general (Blunderbuss/Primed, Ammo Stock/Primed, Amalgam Barrage, Accelerated Blast, IPS, Chilling Reload, Atomic Fallout, Meltdown, Cryo Coating, Magnetic Strafe/Core, Loaded/Loose Chamber, Lingering Torment, Conductive Blade, Savvy); Hydraulic Gauge/Barrel, Bhisaj-Bal, Dizzying Rounds, Perpetual Agony; Lasting Sting, Reflex Coil, Focus Radon, Body Count/Rush/Combo Killer; HAE+comboDuration apply fixes; True Punishment combo→panel | **Locked** — +33 IDs |
 | M10 | Warframe/Necramech + contempt | Archon Continuity/Intensify/Stretch/Flow(+185% fix)/Vitality; Augur Message/Reach/Secrets/Accord; Constitution, Armored Agility, Gladiator Aegis, Carnis Carapace, Cunning Drift, Physique, Sprint Boost, Endurance Drift; Equilibrium→panel; Necramech power/survivability; Amar/Boreal/Nira Contempt + Corrupt Charge; Augur Seeker; Necramech Augur/Deflection/Repair→panel | **Locked** — +33 IDs; Archon Flow energy fix |
-| M11 | Archwing + WF remainder + claws | Archwing power/survivability (Odenata); Primed Redirection/Vigor/Streamline, Rush, Drift/Carapace/Resolve/Hastened/Controlled Slide/Sprint Speed; Flame/Frost Claws per-rank fix; Bite desc; Fast Deflection/Fortitude/Precision Intensify/Preparation/Armored DR/Mecha Pulse/Cull→panel | **Locked** — +~35 IDs; claw heat/cold 90→15 |
+| M11 | Archwing + WF remainder + claws | Archwing power/survivability (Odonata); Primed Redirection/Vigor/Streamline, Rush, Drift/Carapace/Resolve/Hastened/Controlled Slide/Sprint Speed; Flame/Frost Claws per-rank fix; Bite desc; Fast Deflection/Fortitude/Precision Intensify/Preparation/Armored DR/Mecha Pulse/Cull→panel | **Locked** — +~35 IDs; claw heat/cold 90→15 |
 | M12 | Companion + WF/gun leftovers | Carrier survivability (+250% wiki); Retrievers; Flame Gland/Frost Jaw/Shock Collar/Venom Teeth + Bite/Maul on claws; Vigor/Mobilize/Adrenaline; Ravage/Barrage/Tactical Pump/Tainted Shell/IPS slash; Link/Deflection/Vicious Bond/QT/Finesse→panel | **Locked** — +~30 IDs; EV/MF desc +250% |
 | M13 | RJ + parkour + convert cleanup | Railjack Hyperstrike/Predator/Section/Warhead/Artillery (alias double-count fix); WF parkour suite + Power Donation −30%; convert claws/conditioning; Galv Diffusion/Hell paper MS; IPS convert/finisher/slam/precept→panel | **Locked** — +~40 IDs; Power Donation sign fix |
 | M14 | RJ remainder + gun/melee leftovers | RJ Conic/Ion/Ordnance Velocity/Overloader/Turret Velocity; mag/cannonade/Shell Rush/Necramech Redirection; Galv Shot/Savvy paper SC + Reflex HAE; Harkonar comboDuration; false always-ons→panel; turretProjectileSpeed no longer double-counts into ordnance | **Locked** — +~25 IDs; RJ speed/munitions goldens |
+| M15 | Chamber/Higasa + precept cleanup | Higasa Serration +450%; Primed Chamber / Primed Charged Chamber first-shot DPS average; Jet Stream/Metem-Hakh/companion precepts/gated gun lines→panel; rename catalog `odenata`→`odonata` | **Locked** — +~15 IDs; Odonata id fix |
 
-**Remaining unlocked paper-moving mods (post M14):** mostly gated conditionals (aim/kill/cast), Galv stack lines, exclusive/augments/precepts. Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M15):** mostly sim-gated conditionals (`conditional_stat_on_*`), Galv stack lines, exclusives. Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
 
 ---
 
@@ -122,6 +123,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M12 Companion/WF/gun | 2026-07-23 | +~30 companion survivability + claw glands + WF/gun leftovers; Link/recharge panel fixes |
 | M13 RJ/parkour/convert | 2026-07-23 | +~40 RJ cores + parkour + convert claws; RJ alias double-count + Power Donation sign |
 | M14 RJ/gun leftovers | 2026-07-23 | +~25 RJ remainder + mag/cannonade/Galv SC/Reflex/Harkonar; panel mis-tags; turret proj speed alias fix |
+| M15 Chamber/precepts | 2026-07-23 | +~15 Higasa/Chamber goldens; precept/gated panel cleanup; Odonata rename |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

@@ -15750,7 +15750,7 @@ const RAW_MODS: Mod[] = [
     },
     "description": "Energy Shell Augment: Energy Shell applies to allies within 140m.",
     "rarity": "rare",
-    "warframeId": "odenata"
+    "warframeId": "odonata"
   },
   {
     "id": "energy_inversion",

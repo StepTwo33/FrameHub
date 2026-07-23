@@ -1,6 +1,6 @@
 /**
  * Phase M11 — Archwing always-on mod apply goldens (wiki max rank).
- * Host: Odenata (catalog id `odenata`).
+ * Host: Odonata (catalog id `odonata`).
  */
 import { describe, expect, it } from "vitest";
 import { archwings } from "@/data/archwing";
@@ -23,29 +23,29 @@ function requireWing(id: string) {
 }
 
 function withMod(modId: string) {
-  const wing = requireWing("odenata");
+  const wing = requireWing("odonata");
   const mod = requireMod(modId);
   return calculateArchwingBuild(wing, [{ modId, rank: mod.maxRank }], modsMap());
 }
 
 describe("archwing cores (wiki max rank, Phase M11)", () => {
   it("Argon Plating R5: +100% armor", () => {
-    const bare = calculateArchwingBuild(requireWing("odenata"), [], modsMap());
+    const bare = calculateArchwingBuild(requireWing("odonata"), [], modsMap());
     expect(withMod("argon_plating").totalArmor / bare.totalArmor).toBeCloseTo(2, 5);
   });
 
   it("Auxiliary Power R5: +100% energy", () => {
-    const bare = calculateArchwingBuild(requireWing("odenata"), [], modsMap());
+    const bare = calculateArchwingBuild(requireWing("odonata"), [], modsMap());
     expect(withMod("auxiliary_power").totalEnergy / bare.totalEnergy).toBeCloseTo(2, 5);
   });
 
   it("Energy Inversion R3: +100% shields", () => {
-    const bare = calculateArchwingBuild(requireWing("odenata"), [], modsMap());
+    const bare = calculateArchwingBuild(requireWing("odonata"), [], modsMap());
     expect(withMod("energy_inversion").totalShield / bare.totalShield).toBeCloseTo(2, 5);
   });
 
   it("Enhanced Durability R5: +100% health", () => {
-    const bare = calculateArchwingBuild(requireWing("odenata"), [], modsMap());
+    const bare = calculateArchwingBuild(requireWing("odonata"), [], modsMap());
     expect(withMod("enhanced_durability").totalHealth / bare.totalHealth).toBeCloseTo(2, 5);
   });
 
@@ -67,7 +67,7 @@ describe("archwing cores (wiki max rank, Phase M11)", () => {
   });
 
   it("Hyperion Thrusters R10: +27.5% flight speed", () => {
-    const bare = calculateArchwingBuild(requireWing("odenata"), [], modsMap());
+    const bare = calculateArchwingBuild(requireWing("odonata"), [], modsMap());
     expect(withMod("hyperion_thrusters").totalFlightSpeed / bare.totalFlightSpeed).toBeCloseTo(
       1.275,
       5,

@@ -55,10 +55,10 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   blind_justice: mod("blind_justice", [], "wiki: Blind Justice \u2014 Reverse grip style emphasizing slashing and impaling strikes."),
   blood_for_ammo: mod("blood_for_ammo", [], "wiki: Blood For Ammo \u2014 Mercy Kill refills Primary and Secondary Magazine by 100%"),
   blood_for_energy: mod("blood_for_energy", [
-    line("energy", "warframe_totals", "multiplicative_percent", "Blood For Energy: energy \u2014 50% chance to drop an Energy Orb on Mercy"),
+    line("energy", "mod_panel", "multiplicative_percent", "wiki: Blood For Energy — mercy energy orb drop (not max energy)"),
   ]),
   blood_for_life: mod("blood_for_life", [
-    line("health", "warframe_totals", "multiplicative_percent", "Blood For Life: health \u2014 100% chance to drop a Health Orb on Mercy"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Blood For Life — mercy health orb drop (not max health)"),
   ]),
   blunderbuss_r3: mod("blunderbuss_r3", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Blunderbuss: criticalChance \u2014 +90% Critical Chance"),
@@ -240,8 +240,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   harrowing_spire: mod("harrowing_spire", [], "wiki: Harrowing Spire \u2014 Relentless jabs and powerful sweeping lunges."),
   hawksetmod: mod("hawksetmod", [], "wiki: Hawksetmod \u2014 catalog entry (stats in ability logic)"),
   hit_and_run: mod("hit_and_run", [
-    line("duration", "mod_panel", "multiplicative_percent", "Hit And Run: duration \u2014 +60% Parkour Speed after a Mercy for 15s"),
-    line("parkourVelocity", "warframe_totals", "multiplicative_percent", "Hit And Run: parkourVelocity \u2014 +60% Parkour Speed after a Mercy for 15s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Hit And Run — post-mercy parkour"),
+    line("parkourVelocity", "mod_panel", "multiplicative_percent", "wiki: Hit And Run — post-mercy parkour"),
   ]),
   hungering_blades: mod("hungering_blades", [], "wiki: Hungering Blades \u2014 Spectral weapons have a 100% chance to attack the same enemy a second time."),
   huntersetmod: mod("huntersetmod", [], "wiki: Huntersetmod \u2014 catalog entry (stats in ability logic)"),
@@ -285,8 +285,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
 
   lashing_coil: mod("lashing_coil", [], "wiki: Lashing Coil \u2014 Fighting form devised for Conclave."),
   laser_sight: mod("laser_sight", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Laser Sight: criticalChance \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 9s"),
-    line("duration", "mod_panel", "multiplicative_percent", "Laser Sight: duration \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 9s"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Laser Sight — headshot+aim gated CC"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Laser Sight — buff duration"),
   ]),
   last_herald: mod("last_herald", [], "wiki: Last Herald \u2014 Fighting form devised for Conclave."),
   lingering_torment: mod("lingering_torment", [
@@ -316,7 +316,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("magnetic", "weapon_dps", "elemental_from_base_damage", "Magnetic Strafe: magnetic \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +40% Fire Rate"),
   ]),
   magnetic_welt: mod("magnetic_welt", [
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Magnetic Welt: fireRate \u2014  <DT_IMPACT_COLOR>Impact Status Effects have 35% chance to apply a <DT_MAGNETIC_\u2026"),
+    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Magnetic Welt — Impact→Magnetic proc chance (not fire rate)"),
   ]),
   magnetized_core: mod("magnetized_core", [
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Magnetized Core: criticalMultiplier \u2014 +60% <DT_MAGNETIC_COLOR>Magnetic, +40% Critical Damage"),
@@ -335,14 +335,14 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   mending_soul: mod("mending_soul", [], "wiki: Mending Soul \u2014 The first 4 revives are instantaneous. Additional revives are 100% faster."),
   mending_unity: mod("mending_unity", [], "wiki: Mending Unity \u2014 Increases Affinity Radius by 25m."),
   momentary_pause: mod("momentary_pause", [
-    line("duration", "mod_panel", "multiplicative_percent", "Momentary Pause: duration \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
-    line("health", "warframe_totals", "multiplicative_percent", "Momentary Pause: health \u2014 On Kill:\\\\n+15 Heal Rate for 10s, -25% from Health Orbs"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Momentary Pause — on-kill heal rate"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Momentary Pause — on-kill heal (not max health)"),
   ]),
   mountains_edge: mod("mountains_edge", [], "wiki: Mountain's Edge \u2014 Sharp movements with wide reach."),
   munitions_vortex: mod("munitions_vortex", [], "wiki: Munitions Vortex \u2014 Vortex that absorbs incoming fire and detonates, releasing damage."),
   nano_applicator: mod("nano_applicator", [
-    line("duration", "mod_panel", "multiplicative_percent", "Nano-Applicator: duration \u2014 On Ability Cast:\\\\n+90% Status Chance when Aiming for 9s"),
-    line("statusChance", "weapon_dps", "multiplicative_percent", "Nano-Applicator: statusChance \u2014 On Ability Cast:\\\\n+90% Status Chance when Aiming for 9s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Nano-Applicator — cast+aim gated SC"),
+    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Nano-Applicator — cast+aim gated SC"),
   ]),
   naramon_transmute_core: mod("naramon_transmute_core", [], "wiki: Naramon Transmute Core \u2014 Ensures transmuted mod is of Naramon polarity and eliminates credit cost."),
   narrow_barrel: mod("narrow_barrel", [
@@ -393,7 +393,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("damage", "weapon_dps", "multiplicative_percent", "Point Blank: damage \u2014 +90% Damage"),
   ]),
   power_drain: mod("power_drain", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Power Drain: abilityStrength \u2014 Next ability cast after Mercy Kill gains +50% Ability Strength"),
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "wiki: Power Drain — next cast after mercy (not always-on strength)"),
   ]),
   power_spike: mod("power_spike", [], "wiki: Power Spike \u2014 Melee Combo Counter now decays while out of combat by 5 every few seconds, instead of depleting completely."),
   predator: mod("predator", [
@@ -515,8 +515,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Shotgun Savvy: statusChance \u2014 +90% Status Chance"),
   ]),
   shrapnel_shot: mod("shrapnel_shot", [
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Shrapnel Shot: criticalMultiplier \u2014 On Kill:\\\\n+99% Critical Damage when Aiming for 9s"),
-    line("duration", "mod_panel", "multiplicative_percent", "Shrapnel Shot: duration \u2014 On Kill:\\\\n+99% Critical Damage when Aiming for 9s"),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Shrapnel Shot — kill+aim gated CD"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Shrapnel Shot — buff duration"),
   ]),
   shred_shot: mod("shred_shot", [
     line("damage", "mod_panel", "multiplicative_percent", "wiki: Shred Shot — IPS convert (not always-on damage)"),
@@ -530,7 +530,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   slicing_feathers: mod("slicing_feathers", [], "wiki: Slicing Feathers \u2014 Twirling, acrobatic slashes with a refined touch."),
   sling_strength: mod("sling_strength", [], "wiki: Sling Strength \u2014 Switching to Warframe after a Chained Sling adds 40% Ability Strength for 20s."),
   snap_shot: mod("snap_shot", [
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Snap Shot: sprintSpeed \u2014 +20% Movement Speed when Aiming"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Snap Shot — aiming-gated movement"),
   ]),
   soft_hands: mod("soft_hands", [
     line("accuracy", "mod_panel", "multiplicative_percent", "Soft Hands: accuracy \u2014 On Equip: \\\\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s (arsenal display only)"),

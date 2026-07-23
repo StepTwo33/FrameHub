@@ -63,7 +63,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Auto Omni: damage \u2014 Nautilus has 100% chance to repair nearby Railjack hull damages and extinguishes\u2026"),
   ]),
   bell_ringer: mod("bell_ringer", [
-    line("impactStatusStacks", "companion_totals", "flat", "Bell Ringer: impactStatusStacks \u2014 Melee attacks knock down enemies and apply +4 Impact Status Effects"),
+    line("impactStatusStacks", "mod_panel", "flat", "wiki: Bell Ringer — precept knockdown/Impact stacks (AI)"),
   ]),
   bite: mod("bite", [
     line("critChance", "mod_panel", "multiplicative_percent", "wiki: Bite — duplicate critChance key"),
@@ -92,10 +92,10 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Calculated Shot: range \u2014 Sentinel charges a powerful shot and fires at the first enemy within 70m. (arsenal display only)"),
   ]),
   cats_eye: mod("cats_eye", [
-    line("critBuff", "mod_panel", "multiplicative_percent", "Cat's Eye: critBuff \u2014 Adarza Kavat grants 60% increased critical chance for 10s to allies within 25m e\u2026"),
-    line("criticalChance", "companion_totals", "multiplicative_percent", "Cat's Eye: criticalChance \u2014 Adarza Kavat grants 60% increased critical chance for 10s to allies within 25m e\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Cat's Eye: duration \u2014 Adarza Kavat grants 60% increased critical chance for 10s to allies within 25m e\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Cat's Eye: range \u2014 Adarza Kavat grants 60% increased critical chance for 10s to allies within 25m e\u2026 (arsenal display only)"),
+    line("critBuff", "mod_panel", "multiplicative_percent", "wiki: Cat's Eye — timed ally CC buff (precept)"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Cat's Eye — timed ally CC buff (not always-on companion CC)"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Cat's Eye — buff duration"),
+    line("range", "mod_panel", "multiplicative_percent", "wiki: Cat's Eye — affinity range display"),
   ]),
   charm: mod("charm", [
     line("buffChance", "mod_panel", "multiplicative_percent", "Charm: buffChance \u2014 Smeeta Kavat has a 40% chance every 27s to bestow its owner with good fortune."),
@@ -151,10 +151,10 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("lifeSteal", "mod_panel", "multiplicative_percent", "Draining Bite: lifeSteal \u2014 Vasca Kavat inflicts 5 stacks of Slash at 150% of its melee damage and restores \u2026"),
   ]),
   duplex_bond: mod("duplex_bond", [
-    line("companionDamage", "mod_panel", "multiplicative_percent", "Duplex Bond: companionDamage \u2014 Companion will clone itself each time you expend 100 energy, up to 3 clones. Clo\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Duplex Bond: duration \u2014 Companion will clone itself each time you expend 100 energy, up to 3 clones. Clo\u2026"),
-    line("energy", "warframe_totals", "multiplicative_percent", "Duplex Bond: energy \u2014 Companion will clone itself each time you expend 100 energy, up to 3 clones. Clo\u2026"),
-    line("extraAttack", "mod_panel", "multiplicative_percent", "Duplex Bond: extraAttack \u2014 Companion will clone itself each time you expend 100 energy, up to 3 clones. Clo\u2026"),
+    line("companionDamage", "mod_panel", "multiplicative_percent", "wiki: Duplex Bond — clone precept"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Duplex Bond — clone duration"),
+    line("energy", "mod_panel", "multiplicative_percent", "wiki: Duplex Bond — energy spend threshold (not max energy)"),
+    line("extraAttack", "mod_panel", "multiplicative_percent", "wiki: Duplex Bond — clone attacks"),
   ]),
   electro_pulse: mod("electro_pulse", [
     line("duration", "mod_panel", "multiplicative_percent", "Electro Pulse: duration \u2014 Every 5s, Sentinel will continually zap an enemy within 15m, trapping them in a \u2026"),
@@ -241,8 +241,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("lifestealToOwner", "mod_panel", "multiplicative_percent", "Hunter Recovery: lifestealToOwner \u2014 Warframe healed for +30% Companion Damage dealt"),
   ]),
   hunter_synergy: mod("hunter_synergy", [
-    line("critLink", "mod_panel", "multiplicative_percent", "Hunter Synergy: critLink \u2014 +30% Primary Weapon Critical Chance added to Companion"),
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Hunter Synergy: criticalChance \u2014 +30% Primary Weapon Critical Chance added to Companion"),
+    line("critLink", "mod_panel", "multiplicative_percent", "wiki: Hunter Synergy — links primary CC to companion (not weapon paper)"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Hunter Synergy — companion receives linked CC"),
   ]),
   iatric_mycelium: mod("iatric_mycelium", [
     line("duration", "mod_panel", "multiplicative_percent", "Iatric Mycelium: duration \u2014 Release a trail of spores every <LOWER_IS_BETTER>8s that heal the companion and \u2026"),
@@ -297,8 +297,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("cooldown", "mod_panel", "multiplicative_percent", "Manifold Bond: cooldown \u2014 Companion Precept Mods apply Status Effects from Companion weapons. Killing enem\u2026"),
   ]),
   martyr_symbiosis: mod("martyr_symbiosis", [
-    line("health", "warframe_totals", "multiplicative_percent", "Martyr Symbiosis: health \u2014 Drains and stores 20 health from corpses within 25m up to 40% of your health. If\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Martyr Symbiosis: range \u2014 Drains and stores 20 health from corpses within 25m up to 40% of your health. If\u2026 (arsenal display only)"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Martyr Symbiosis — stored heal on death (not max health)"),
+    line("range", "mod_panel", "multiplicative_percent", "wiki: Martyr Symbiosis — corpse drain range"),
   ]),
   maul: mod("maul", [
     line("damage", "weapon_dps", "multiplicative_percent", "Maul: damage \u2014 +330% Melee Damage (duplicate meleeDamage key removed)"),
@@ -425,9 +425,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("regenCharges", "mod_panel", "multiplicative_percent", "Regen: regenCharges \u2014 Sentinel recovery time reduced by 20s. Revives with 10s of invulnerability."),
   ]),
   reinforced_bond: mod("reinforced_bond", [
-    line("overguard", "mod_panel", "multiplicative_percent", "Reinforced Bond: overguard \u2014 If the Companion exceeds 1200 Max Shields or Overshields then your fire rate is \u2026"),
-    line("reviveOverguard", "mod_panel", "multiplicative_percent", "Reinforced Bond: reviveOverguard \u2014 If the Companion exceeds 1200 Max Shields or Overshields then your fire rate is \u2026"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Reinforced Bond: shield \u2014 If the Companion exceeds 1200 Max Shields or Overshields then your fire rate is \u2026"),
+    line("overguard", "mod_panel", "multiplicative_percent", "wiki: Reinforced Bond — overguard on revive"),
+    line("reviveOverguard", "mod_panel", "multiplicative_percent", "wiki: Reinforced Bond — overguard on revive"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Reinforced Bond — companion shield threshold for fire rate (not WF shields)"),
   ]),
   repair_kit: mod("repair_kit", [
     line("healthRegen", "mod_panel", "multiplicative_percent", "Repair Kit: healthRegen \u2014 +18 Companion Health Regen/s"),

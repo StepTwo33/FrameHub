@@ -3,6 +3,7 @@
  * Each case is wiki-checked for that mod ID (max rank).
  */
 import { describe, expect, it } from "vitest";
+import { VERIFIED_MOD_BEHAVIORS } from "@/data/mod-behaviors";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { calculateWeaponBuild, quantizeDamageValue } from "@/lib/calc/calculator";
@@ -1160,5 +1161,42 @@ describe("gun leftovers (wiki max rank, Phase M14)", () => {
 
   it("Harkonar Scope R5: +12s combo duration (base 5 → 17)", () => {
     expect(withMod("braton", "harkonar_scope").comboDuration).toBeCloseTo(17, 8);
+  });
+});
+
+describe("gun leftovers (wiki max rank, Phase M15)", () => {
+  it("Higasa Serration R5: +450% damage", () => {
+    const weapon = requireWeapon("higasa");
+    expect(withMod("higasa", "higasa_serration").moddedBaseDamage).toBeCloseTo(
+      weapon.damage * 5.5,
+      5,
+    );
+  });
+
+  it("Primed Chamber R3: +100% first-shot averaged over magazine in DPS", () => {
+    const weapon = requireWeapon("braton");
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const modded = withMod("braton", "primed_chamber");
+    expect(modded.totalDamage).toBeCloseTo(bare.totalDamage, 5);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1 + 1 / bare.magazine, 5);
+  });
+
+  it("Primed Charged Chamber R10: +110% first-shot averaged over magazine in DPS", () => {
+    const weapon = requireWeapon("braton");
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const modded = withMod("braton", "primed_charged_chamber");
+    expect(modded.totalDamage).toBeCloseTo(bare.totalDamage, 5);
+    expect(modded.burstDps / bare.burstDps).toBeCloseTo(1 + 1.1 / bare.magazine, 5);
+  });
+
+  it("Spectral Serration / Soaring Strike / Measured Burst / Jet Stream: gated lines are panel-only", () => {
+    for (const id of ["spectral_serration", "soaring_strike", "measured_burst", "jet_stream"]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
   });
 });

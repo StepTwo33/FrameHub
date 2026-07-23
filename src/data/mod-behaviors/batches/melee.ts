@@ -95,8 +95,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
   disciplines_merit: mod("disciplines_merit", [], "wiki: Discipline's Merit \u2014 Enables Tennokai. Opportunities occur every 4 melee hits instead of at random."),
   dispatch_overdrive: mod("dispatch_overdrive", [
-    line("duration", "mod_panel", "multiplicative_percent", "Dispatch Overdrive: duration \u2014 On Heavy Attack Hit:\\\\n+60% Movement Speed for 15s"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Dispatch Overdrive: sprintSpeed \u2014 On Heavy Attack Hit:\\\\n+60% Movement Speed for 15s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Dispatch Overdrive — heavy-hit gated movement"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Dispatch Overdrive — heavy-hit gated movement"),
   ]),
   dreamers_wrath: mod("dreamers_wrath", [
     line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Dreamer's Wrath — Tennokai-only crit damage"),
@@ -376,7 +376,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("damageReduction", "mod_panel", "multiplicative_percent", "Stand Ground: damageReduction \u2014 Blocking reduces damage taken from enemy abilities by 60%."),
   ]),
   strain_infection: mod("strain_infection", [
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Strain Infection: criticalMultiplier \u2014 Melee Attacks gain +20% Critical Damage per Cyst."),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Strain Infection — per-cyst CD (not always-on)"),
   ]),
   sundering_strike: mod("sundering_strike", [
     line("puncture", "weapon_dps", "multiplicative_percent", "Sundering Strike: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),
