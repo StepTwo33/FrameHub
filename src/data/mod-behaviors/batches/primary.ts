@@ -57,8 +57,9 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   biotic_rounds: mod("biotic_rounds", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Biotic Rounds — weak-point-kill gated"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Biotic Rounds — weak-point-kill gated SC"),
-    line("viral", "mod_panel", "multiplicative_percent", "wiki: Biotic Rounds — weak-point-kill gated viral"),
+    line("viral", "weapon_dps", "conditional_stat_on_kill", "wiki: Biotic Rounds — On Weak Point Kill: +150% Viral for 15s"),
+    line("magnetic", "weapon_dps", "conditional_stat_on_kill", "wiki: Biotic Rounds — On Weak Point Kill: +150% Magnetic for 15s"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_kill", "wiki: Biotic Rounds — On Weak Point Kill: +150% Status Chance for 15s"),
   ]),
   brain_storm: mod("brain_storm", [
     line("ammoEfficiency", "mod_panel", "multiplicative_percent", "Brain Storm: ammoEfficiency \u2014 On Headshot:\\\\n+100% Ammo Efficiency for 0.5s"),

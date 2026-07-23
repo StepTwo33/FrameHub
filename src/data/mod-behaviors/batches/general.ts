@@ -279,7 +279,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   khra: mod("khra", [], "wiki: Khra \u2014 To cosmic forms from tangent planes  We end as we began"),
   kill_switch: mod("kill_switch", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Kill Switch — on-kill reload"),
-    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Kill Switch — on-kill reload"),
+    line("reloadSpeed", "weapon_dps", "conditional_stat_on_kill", "wiki: Kill Switch — On Kill: +50% Reload Speed for 3s"),
   ]),
   killers_rush: mod("killers_rush", [], "wiki: Killer's Rush \u2014 catalog entry (stats in ability logic)"),
 

@@ -5955,6 +5955,7 @@ const RAW_MODS: Mod[] = [
     "subCategory": "weapon",
     "stats": {
       "viral": 25,
+      "magnetic": 25,
       "statusChance": 25.0,
       "duration": 2.5
     },

@@ -87,8 +87,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M16 | Conditional paper locks + precepts | Secondary Wind/Bladed/Sharpened/Lie In Wait/Argon/Hydraulic/Galv Scope+Crosshairs/Pistol Acuity/Hemorrhage; Critical Focus/Marked Target; Protective Shots sim gate; remaining companion precept false always-ons→panel | **Locked** — +~25 IDs; conditional paper/sim goldens |
 | M17 | Final gated exclusives | Archgun Ace / Deadly Efficiency(+Primed); Emergent Aftermath / Gorgon Frenzy; Catalyzer Link / Embedded Catalyzer; Spring-Loaded / Pressurized Mag; Proton Jet; Proton Snap SC (+ toxin→panel) | **Locked** — +11 IDs; always-on paper inventory cleared |
 | Sim1 | Trigger-gated exclusives | Spectral Serration / Soaring Strike / Measured Burst; Aero Agility / Combat Reload / Motus Setup(+CC catalog); Laser Sight / Nano-Applicator / Repeater Clip / Shrapnel Shot; Lasting Purity; Double/Triple/Final Tap / Sudden Justice; Proton Snap toxin via trigger elemental pool | **Locked** — +15 IDs; elemental trigger apply |
+| Sim2 | Weak-point / situational | Biotic Rounds (+magnetic catalog) / Leaded Gas; Kill Switch; Eximus Advantage / Range Advantage / Deadly Maneuvers | **Locked** — +6 IDs; WP elemental on kill/trigger |
 
-**Remaining unlocked paper-moving mods (post Sim1):** none for always-on paper; further work is deeper sim (ability/mission gates), description-only precepts, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim2):** none for always-on paper; further work is ability gates (Jet Stream), AE mods, stack-decay exclusives, description-only precepts, or Tier B/C items.
 
 ---
 
@@ -130,6 +131,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M16 Conditional locks | 2026-07-23 | +~25 on-kill/trigger/headshot paper vs sim goldens; companion precept panel; Protective Shots sim |
 | M17 Final gated exclusives | 2026-07-23 | +11 Archgun Ace/Deadly Eff/Catalyzer/Spring-Loaded/Proton Jet/Snap; toxin mis-tag panel |
 | Sim1 Trigger-gated exclusives | 2026-07-23 | +15 panel→trigger; Proton Snap toxin remap; Motus CC catalog; elemental trigger pool |
+| Sim2 Weak-point / situational | 2026-07-23 | +6 Biotic/Leaded/Kill Switch/Eximus/Range/Deadly; Biotic magnetic catalog |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

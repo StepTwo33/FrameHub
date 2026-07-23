@@ -63,7 +63,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("viral", "weapon_dps", "elemental_from_base_damage", "Damzav-Vati: viral \u2014 +240% <DT_VIRAL_COLOR>Viral"),
   ]),
   deadly_maneuvers: mod("deadly_maneuvers", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Deadly Maneuvers — dodge-gated headshot CC"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Deadly Maneuvers — On Dodge: +400% Headshot Critical Chance for next 2 shots"),
   ]),
   deep_freeze_r3: mod("deep_freeze_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Deep Freeze: cold \u2014 +90% <DT_FREEZE_COLOR>Cold"),
@@ -99,7 +99,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Expel The Murmur: factionMurmur \u2014 x1.3 Damage to Murmur"),
   ]),
   eximus_advantage: mod("eximus_advantage", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Eximus Advantage — eximus headshot gated"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Eximus Advantage — Eximus headshot: +600% Secondary Damage for 10s"),
   ]),
   fass_canticle: mod("fass_canticle", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Fass Canticle — kill-gated ally buff"),
@@ -170,8 +170,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   leaded_gas: mod("leaded_gas", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated"),
-    line("gas", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated gas"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Leaded Gas — weak-point-hit gated SC"),
+    line("gas", "weapon_dps", "conditional_stat_on_trigger", "wiki: Leaded Gas — On Weak Point Hit: +300% Gas for 6s"),
+    line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Leaded Gas — On Weak Point Hit: +300% Status Chance for 6s"),
   ]),
   lethal_momentum: mod("lethal_momentum", [
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Lethal Momentum: projectileSpeed \u2014 +40% Projectile Speed"),
@@ -271,7 +271,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Quickdraw: reloadSpeed \u2014 +48% Reload Speed"),
   ]),
   range_advantage: mod("range_advantage", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Range Advantage — no-enemies-nearby gated"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Range Advantage — +300% damage if no enemies within 10m"),
     line("range", "mod_panel", "multiplicative_percent", "wiki: Range Advantage — condition display"),
   ]),
   razor_munitions: mod("razor_munitions", [

@@ -428,3 +428,71 @@ describe("Sim1 trigger-gated exclusives (wiki max rank)", () => {
     ).toBeCloseTo(weapon.fireRate * 1.3, 5);
   });
 });
+
+describe("Sim2 weak-point / situational exclusives (wiki max rank)", () => {
+  it("Biotic Rounds: paper unchanged; kill → +150% Viral, Magnetic, SC", () => {
+    const weapon = requireWeapon("braton");
+    const paper = build("braton", "biotic_rounds", { killStacks: 0 });
+    expect(paper.statusChance).toBeCloseTo(weapon.statusChance, 5);
+    expect(paper.elements.find((e) => e.type === "viral")).toBeUndefined();
+    expect(paper.elements.find((e) => e.type === "magnetic")).toBeUndefined();
+
+    const active = build("braton", "biotic_rounds", { killStacks: 1 });
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 2.5, 5);
+    expect(active.elements.find((e) => e.type === "viral")?.value).toBeCloseTo(
+      weapon.damage * 1.5,
+      5,
+    );
+    expect(active.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      weapon.damage * 1.5,
+      5,
+    );
+  });
+
+  it("Leaded Gas: paper unchanged; trigger → +300% Gas and SC", () => {
+    const weapon = requireWeapon("lex");
+    const paper = build("lex", "leaded_gas", {});
+    expect(paper.statusChance).toBeCloseTo(weapon.statusChance, 5);
+    expect(paper.elements.find((e) => e.type === "gas")).toBeUndefined();
+
+    const active = build("lex", "leaded_gas", { applyTriggerBuffs: true });
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 4, 5);
+    expect(active.elements.find((e) => e.type === "gas")?.value).toBeCloseTo(
+      weapon.damage * 3,
+      5,
+    );
+  });
+
+  it("Kill Switch: paper reload unchanged; kill → +50% reload", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "kill_switch", { killStacks: 0 }).reloadTime).toBeCloseTo(
+      weapon.reloadTime,
+      5,
+    );
+    expect(build("braton", "kill_switch", { killStacks: 1 }).reloadTime).toBeCloseTo(
+      weapon.reloadTime / 1.5,
+      5,
+    );
+  });
+
+  it("Eximus / Range Advantage / Deadly Maneuvers: paper unchanged; trigger applies", () => {
+    const lex = requireWeapon("lex");
+    expect(build("lex", "eximus_advantage", {}).moddedBaseDamage).toBeCloseTo(lex.damage, 5);
+    expect(
+      build("lex", "eximus_advantage", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(lex.damage * 7, 5);
+
+    expect(build("lex", "range_advantage", {}).moddedBaseDamage).toBeCloseTo(lex.damage, 5);
+    expect(
+      build("lex", "range_advantage", { applyTriggerBuffs: true }).moddedBaseDamage,
+    ).toBeCloseTo(lex.damage * 4, 5);
+
+    expect(build("lex", "deadly_maneuvers", {}).criticalChance).toBeCloseTo(
+      lex.criticalChance,
+      5,
+    );
+    expect(
+      build("lex", "deadly_maneuvers", { applyTriggerBuffs: true }).criticalChance,
+    ).toBeCloseTo(lex.criticalChance * 5, 5);
+  });
+});
