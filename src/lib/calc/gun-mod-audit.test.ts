@@ -839,3 +839,195 @@ describe("primary/secondary leftovers + elementalist (wiki max rank, Phase M8)",
     );
   });
 });
+
+describe("shotgun general cores (wiki max rank, Phase M9)", () => {
+  it("Blunderbuss R5 / Primed Blunderbuss R10: +90% / +165% crit chance", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "blunderbuss_r3").criticalChance).toBeCloseTo(
+      weapon.criticalChance * 1.9,
+      8,
+    );
+    expect(withMod("strun", "primed_blunderbuss").criticalChance).toBeCloseTo(
+      weapon.criticalChance * 2.65,
+      8,
+    );
+  });
+
+  it("Shotgun Savvy R5: +90% status chance", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "shotgun_savvy").statusChance).toBeCloseTo(
+      weapon.statusChance * 1.9,
+      8,
+    );
+  });
+
+  it("Ammo Stock R5 / Primed Ammo Stock R10: +60% / +110% magazine", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "ammo_stock_r3").magazine).toBe(Math.round(weapon.magazine * 1.6));
+    expect(withMod("strun", "primed_ammo_stock").magazine).toBe(Math.round(weapon.magazine * 2.1));
+  });
+
+  it("Amalgam Shotgun Barrage R5: +85% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "amalgam_shotgun_barrage").fireRate).toBeCloseTo(
+      weapon.fireRate * 1.85,
+      3,
+    );
+  });
+
+  it("Accelerated Blast R3: +60% fire rate, +60% puncture", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "accelerated_blast_r3");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.6, 8);
+    expect(stats.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.6, stats.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Breach Loader / Full Contact: +120% puncture / impact; Flechette / Disruptor: +90%", () => {
+    const weapon = requireWeapon("strun");
+    const breach = withMod("strun", "breach_loader");
+    const flechette = withMod("strun", "flechette");
+    const full = withMod("strun", "full_contact");
+    const disruptor = withMod("strun", "disruptor");
+    expect(breach.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 2.2, breach.moddedBaseDamage / 32),
+      8,
+    );
+    expect(flechette.puncture).toBeCloseTo(
+      quantizeDamageValue(weapon.puncture * 1.9, flechette.moddedBaseDamage / 32),
+      8,
+    );
+    expect(full.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 2.2, full.moddedBaseDamage / 32),
+      8,
+    );
+    expect(disruptor.impact).toBeCloseTo(
+      quantizeDamageValue(weapon.impact * 1.9, disruptor.moddedBaseDamage / 32),
+      8,
+    );
+  });
+
+  it("Chilling Reload R3: +60% cold from base, +40% reload speed", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "chilling_reload");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Atomic Fallout R3: +60% radiation from base, +40% magazine", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "atomic_fallout");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.4));
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "radiation")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Critical Meltdown R3: +60% radiation from base, +60% crit chance", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "critical_meltdown");
+    expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance * 1.6, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "radiation")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Cryo Coating R3: +60% cold from base, +60% status chance", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "cryo_coating");
+    expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.6, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Magnetic Strafe R3: +60% magnetic from base, +40% fire rate", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "magnetic_strafe");
+    expect(stats.fireRate).toBeCloseTo(weapon.fireRate * 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Magnetized Core R3: +60% magnetic from base, +40% crit damage", () => {
+    const weapon = requireWeapon("strun");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    const stats = withMod("strun", "magnetized_core");
+    expect(stats.criticalMultiplier).toBeCloseTo(cmq * 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Loaded Capacity R5: +30% magazine, −15% reload speed", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "loaded_capacity");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.3));
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.15, 8);
+  });
+
+  it("Loose Chamber R5: +30% reload speed", () => {
+    const weapon = requireWeapon("strun");
+    expect(withMod("strun", "loose_chamber").reloadTime).toBeCloseTo(weapon.reloadTime / 1.3, 8);
+  });
+
+  it("Lingering Torment R5: +90% status duration", () => {
+    expect(withMod("strun", "lingering_torment").statusDurationBonus).toBeCloseTo(0.9, 8);
+  });
+
+  it("Conductive Blade R5: +120% electricity from base", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "conductive_blade");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "electricity")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 1.2, scale),
+      8,
+    );
+  });
+});
+
+describe("gun utility leftovers (wiki max rank, Phase M9)", () => {
+  it("Hydraulic Gauge R3: −10% magazine", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "hydraulic_gauge").magazine).toBe(Math.round(weapon.magazine * 0.9));
+  });
+
+  it("Hydraulic Barrel R3: −20% magazine", () => {
+    const weapon = requireWeapon("lex");
+    expect(withMod("lex", "hydraulic_barrel").magazine).toBe(Math.round(weapon.magazine * 0.8));
+  });
+
+  it("Bhisaj-Bal R5: +90% status chance", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "bhisaj_bal").statusChance).toBeCloseTo(weapon.statusChance * 1.9, 8);
+  });
+
+  it("Dizzying Rounds R3: +200% status chance", () => {
+    const weapon = requireWeapon("lex");
+    expect(withMod("lex", "dizzying_rounds").statusChance).toBeCloseTo(
+      weapon.statusChance * 3,
+      8,
+    );
+  });
+
+  it("Perpetual Agony R5: +90% status duration", () => {
+    expect(withMod("lex", "perpetual_agony").statusDurationBonus).toBeCloseTo(0.9, 8);
+  });
+});

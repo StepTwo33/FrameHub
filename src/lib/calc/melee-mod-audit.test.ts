@@ -257,7 +257,7 @@ describe("melee cores (wiki max rank, Phase M5)", () => {
     );
   });
 
-  it("Focus Energy R3: +60% electricity from base", () => {
+  it("Focus Energy R3: +60% electricity from base, +40% heavy attack efficiency", () => {
     const weapon = requireWeapon("skana");
     const stats = withMod("focus_energy_r3");
     const scale = stats.moddedBaseDamage / 32;
@@ -265,14 +265,16 @@ describe("melee cores (wiki max rank, Phase M5)", () => {
       quantizeDamageValue(weapon.damage * 0.6, scale),
       8,
     );
+    expect(stats.heavyAttackEfficiency).toBeCloseTo(0.4, 8);
   });
 
-  it("Drifting Contact R3: +40% status chance; catalog +10s combo duration", () => {
+  it("Drifting Contact R3: +40% status chance; +10s combo duration", () => {
     const weapon = requireWeapon("skana");
     const mod = requireMod("drifting_contact_r3");
     expect(mod.stats.comboDuration! * (mod.maxRank + 1)).toBeCloseTo(10, 8);
     const stats = withMod("drifting_contact_r3");
     expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 1.4, 8);
+    expect(stats.comboDuration).toBeCloseTo(5 + 10, 8);
   });
 });
 
@@ -388,6 +390,45 @@ describe("melee cores (wiki max rank, Phase M7)", () => {
     expect(beh?.stats.every((s) => s.target === "mod_panel")).toBe(true);
     const stats = withMod("maiming_strike");
     expect(stats.criticalChance).toBeCloseTo(weapon.criticalChance, 8);
+  });
+});
+
+describe("melee utility cores (wiki max rank, Phase M9)", () => {
+  it("Lasting Sting R10: +110% status duration", () => {
+    expect(withMod("lasting_sting").statusDurationBonus).toBeCloseTo(1.1, 8);
+  });
+
+  it("Reflex Coil R5: +60% heavy attack efficiency", () => {
+    expect(withMod("reflex_coil_r3").heavyAttackEfficiency).toBeCloseTo(0.6, 8);
+  });
+
+  it("Focus Radon R3: +60% radiation from base, +40% heavy attack efficiency", () => {
+    const weapon = requireWeapon("skana");
+    const stats = withMod("focus_radon");
+    expect(stats.heavyAttackEfficiency).toBeCloseTo(0.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "radiation")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Body Count R5: +12s combo duration (base 5 → 17)", () => {
+    expect(withMod("body_count").comboDuration).toBeCloseTo(17, 8);
+  });
+
+  it("Gladiator Rush R5: +9s combo duration (base 5 → 14)", () => {
+    expect(withMod("gladiator_rush").comboDuration).toBeCloseTo(14, 8);
+  });
+
+  it("Combo Killer R5: +5s combo duration (base 5 → ~10; catalog 0.83×6)", () => {
+    expect(withMod("combo_killer").comboDuration).toBeCloseTo(5 + 0.83 * 6, 5);
+  });
+
+  it("True Punishment: −50% combo duration is panel-only (standing timer unchanged)", () => {
+    const beh = VERIFIED_MOD_BEHAVIORS.true_punishment;
+    expect(beh?.stats.find((s) => s.statKey === "comboDuration")?.target).toBe("mod_panel");
+    expect(withMod("true_punishment").comboDuration).toBeCloseTo(5, 8);
   });
 });
 

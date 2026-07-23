@@ -77,8 +77,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M6 | Mag/reload/set IPS cores | Wildfire, Vile Precision, Primed Bane Infested; Amalgam Barrel Diffusion, Ice Storm, Sure Shot, Stunning Speed, Shrapnel Rounds, Carnis/Jugulus/Saxum pistol; Critical Deceleration; Spoiled Strike, Jagged/Sundering/Rending, Carnis/Jugulus/Saxum melee, Primed Smite Corpus | **Locked** — +20 IDs |
 | M7 | Mag/reload + magnetic cores | Fast Hands, Seeking Fury, Magazine Warp/Primed, Tainted Mag, Depleted Reload, Maximum Capacity; Slip/Primed Slip, Quickdraw, Loose Mag, Tainted Clip, Full Capacity, Merciless Gunfight, Magnetic Might, Accelerated Isotope; Burdened Magazine; Magnetic Rush, Martial Fury, Primed Smite Infested; Maiming Strike→panel | **Locked** — +21 IDs |
 | M8 | Arch + leftover gun cores | Magnetic Capacity, Radiated Reload, Loose Hatch, Damzav-Vati; Rifle/Pistol/Shotgun Elementalist statusDamage (not base damage); Imperator/Veritux archgun+archmelee always-on cores | **Locked** — +47 IDs; Elementalist damage→statusDamage |
+| M9 | Shotgun + utility cores | Shotgun general (Blunderbuss/Primed, Ammo Stock/Primed, Amalgam Barrage, Accelerated Blast, IPS, Chilling Reload, Atomic Fallout, Meltdown, Cryo Coating, Magnetic Strafe/Core, Loaded/Loose Chamber, Lingering Torment, Conductive Blade, Savvy); Hydraulic Gauge/Barrel, Bhisaj-Bal, Dizzying Rounds, Perpetual Agony; Lasting Sting, Reflex Coil, Focus Radon, Body Count/Rush/Combo Killer; HAE+comboDuration apply fixes; True Punishment combo→panel | **Locked** — +33 IDs |
 
-**Remaining unlocked paper-moving mods (post M8):** ~320 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (companion/exclusive/conditional/convert). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M9):** ~290 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (companion/warframe/necramech/exclusive/conditional/convert). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
 
 ---
 
@@ -110,6 +111,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M6 Mag/set IPS cores | 2026-07-23 | +20 Wildfire/Ice Storm/Amalgam BD/Sure Shot/Shrapnel/set IPS/Spoiled/Smite Corpus |
 | M7 Mag/reload cores | 2026-07-23 | +21 magazine/reload/magnetic/smite; Maiming Strike slide→panel |
 | M8 Arch + leftovers | 2026-07-23 | +47 gun leftovers/Elementalist + archgun/archmelee cores; Elementalist statusDamage fix |
+| M9 Shotgun + utility | 2026-07-23 | +33 shotgun/utility/melee cores; HAE+comboDuration apply; True Punishment panel |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |
@@ -382,6 +384,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mod paper cores (M6) | 2026-07-23 | +20 mag/reload/set-IPS/bane/smite/spoiled cores |
 | Mod paper cores (M7) | 2026-07-23 | +21 mag/reload/magnetic cores; Maiming Strike panel fix |
 | Mod paper cores (M8) | 2026-07-23 | +47 leftovers/Elementalist + arch cores; Elementalist damage→statusDamage |
+| Mod paper cores (M9) | 2026-07-23 | +33 shotgun/utility cores; HAE+comboDuration apply; True Punishment panel |
 
 ## New / extended test files
 

@@ -670,7 +670,11 @@ export function calculateWeaponBuild(
       isBow && /x2 for Bows/i.test(mod.description ?? "") ? 2 : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
-      let modValue = (value * multiplier * setMult) / 100.0;
+      // Combo duration catalog values are absolute seconds/rank (Body Count +2s), not %.
+      let modValue =
+        statName === "comboDuration"
+          ? value * multiplier * setMult
+          : (value * multiplier * setMult) / 100.0;
       if (statName === "fireRate") modValue *= bowFireRateMult;
       applyVerifiedModStatToWeapon(stats, {
         modId: modSlot.modId,

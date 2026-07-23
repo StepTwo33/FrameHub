@@ -45,7 +45,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalChancePerCombo", "weapon_dps", "conditional_combo_crit", "Blood Rush: criticalChancePerCombo \u2014 +40% Critical Chance per Combo Multiplier at max rank"),
   ]),
   body_count: mod("body_count", [
-    line("comboDuration", "weapon_dps", "multiplicative_percent", "Body Count: comboDuration \u2014 +2s Combo Duration per rank"),
+    line("comboDuration", "weapon_dps", "additive_percent", "wiki: Body Count — +2s Combo Duration per rank (flat seconds)"),
     line("duration", "mod_panel", "multiplicative_percent", "Body Count: duration \u2014 +2s Combo Duration per rank"),
   ]),
   boreals_contempt: mod("boreals_contempt", [
@@ -71,7 +71,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Combo Fury: reloadSpeed \u2014 On Melee Kill:\\\\n+100% Reload Speed\\\\n+100% Magazine Capacity for 12s on Seconda\u2026"),
   ]),
   combo_killer: mod("combo_killer", [
-    line("comboDuration", "weapon_dps", "multiplicative_percent", "Combo Killer: comboDuration \u2014 +5s Combo Duration, On Kill with Secondary Weapon:\\\\nReset Melee Combo Timer"),
+    line("comboDuration", "weapon_dps", "additive_percent", "wiki: Combo Killer — +5s Combo Duration (flat seconds)"),
     line("duration", "mod_panel", "multiplicative_percent", "Combo Killer: duration \u2014 +5s Combo Duration, On Kill with Secondary Weapon:\\\\nReset Melee Combo Timer"),
   ]),
   condition_overload: mod("condition_overload", [
@@ -102,7 +102,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Dreamer's Wrath: criticalMultiplier \u2014 Enables Tennokai. Increases opportunity chance by 50% and critical damage by 32%\u2026"),
   ]),
   drifting_contact_r3: mod("drifting_contact_r3", [
-    line("comboDuration", "weapon_dps", "multiplicative_percent", "Drifting Contact: comboDuration \u2014 +10s Combo Duration, +40% Status Chance"),
+    line("comboDuration", "weapon_dps", "additive_percent", "wiki: Drifting Contact — +10s Combo Duration (flat seconds)"),
     line("duration", "mod_panel", "multiplicative_percent", "Drifting Contact: duration \u2014 +10s Combo Duration, +40% Status Chance"),
     line("statusChance", "weapon_dps", "multiplicative_percent", "Drifting Contact: statusChance \u2014 +10s Combo Duration, +40% Status Chance"),
   ]),
@@ -127,10 +127,10 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
   focus_energy_r3: mod("focus_energy_r3", [
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Focus Energy: electricity \u2014 +40% Heavy Attack Efficiency, +60% <DT_ELECTRICITY_COLOR>Electricity"),
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Focus Energy: heavyAttackEfficiency \u2014 +40% Heavy Attack Efficiency, +60% <DT_ELECTRICITY_COLOR>Electricity"),
+    line("heavyAttackEfficiency", "weapon_dps", "additive_percent", "wiki: Focus Energy — +40% Heavy Attack Efficiency"),
   ]),
   focus_radon: mod("focus_radon", [
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Focus Radon: heavyAttackEfficiency \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Heavy Attack Efficiency"),
+    line("heavyAttackEfficiency", "weapon_dps", "additive_percent", "wiki: Focus Radon — +40% Heavy Attack Efficiency"),
     line("radiation", "weapon_dps", "elemental_from_base_damage", "Focus Radon: radiation \u2014 +60% <DT_RADIATION_COLOR>Radiation, +40% Heavy Attack Efficiency"),
   ]),
   focused_defense: mod("focused_defense", [
@@ -146,7 +146,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
   galvanized_reflex: mod("galvanized_reflex", [
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Reflex: duration \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Galvanized Reflex: heavyAttackEfficiency \u2014 +50% Heavy Attack Efficiency\\\\nOn Melee Kill:\\\\n+20 Initial Combo for 20s. Stack\u2026"),
+    line("heavyAttackEfficiency", "weapon_dps", "additive_percent", "wiki: Galvanized Reflex — +50% Heavy Attack Efficiency (base; stacks conditional)"),
   ]),
   galvanized_steel: mod("galvanized_steel", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Steel — +110% Critical Chance (x2 for Heavy Attacks)"),
@@ -158,7 +158,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Gladiator Might: criticalMultiplier \u2014 +7.5% Critical Damage per rank (Set)"),
   ]),
   gladiator_rush: mod("gladiator_rush", [
-    line("comboDuration", "weapon_dps", "multiplicative_percent", "Gladiator Rush: comboDuration \u2014 +1.5s Combo Duration per rank (Set)"),
+    line("comboDuration", "weapon_dps", "additive_percent", "wiki: Gladiator Rush — +1.5s Combo Duration per rank (flat seconds)"),
     line("duration", "mod_panel", "multiplicative_percent", "Gladiator Rush: duration \u2014 +1.5s Combo Duration per rank (Set)"),
   ]),
   gladiator_vice: mod("gladiator_vice", [
@@ -311,7 +311,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("ricochetBounces", "mod_panel", "multiplicative_percent", "Rebound: ricochetBounces \u2014 +4 Bounce"),
   ]),
   reflex_coil_r3: mod("reflex_coil_r3", [
-    line("heavyAttackEfficiency", "weapon_dps", "multiplicative_percent", "Reflex Coil: heavyAttackEfficiency \u2014 +60% Heavy Attack Efficiency"),
+    line("heavyAttackEfficiency", "weapon_dps", "additive_percent", "wiki: Reflex Coil — +60% Heavy Attack Efficiency"),
   ]),
   relentless_assault: mod("relentless_assault", [
     line("duration", "mod_panel", "multiplicative_percent", "Relentless Assault: duration \u2014 On Kill:\\\\n+2 Energy Rate for 4s"),
@@ -389,7 +389,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
   true_punishment: mod("true_punishment", [
     line("comboCountChance", "mod_panel", "multiplicative_percent", "True Punishment: comboCountChance \u2014 +100% Additional Combo Count Chance, -50% Combo Duration"),
-    line("comboDuration", "weapon_dps", "multiplicative_percent", "True Punishment: comboDuration \u2014 +100% Additional Combo Count Chance, -50% Combo Duration"),
+    line("comboDuration", "mod_panel", "multiplicative_percent", "wiki: True Punishment — -50% Combo Duration (percent of base; panel until duration mult model)"),
   ]),
   true_steel_r3: mod("true_steel_r3", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "True Steel: criticalChance \u2014 +120% Critical Chance (x2 for Heavy Attacks)"),
