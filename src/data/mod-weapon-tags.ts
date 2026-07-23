@@ -282,7 +282,7 @@ export const MOD_EXCLUSIVE_WEAPON_IDS: Record<string, readonly string[]> = {
   "bursting_mass": ["mutalist_quanta"],
   "clip_delegation": ["sobek"],
   "combat_reload": ["tigris", "tigris_prime"],
-  "critical_mutation": ["catabolyst"],
+  "critical_mutation": ["catabolyst", "coda_catabolyst"],
   "critical_precision": ["tiberon", "tiberon_prime"],
   "damzav_vati": ["akbronco_prime"],
   "deadly_maneuvers": ["magnus", "magnus_prime"],

@@ -431,6 +431,34 @@ export function WeaponSimControls({
                 Trigger buffs (aim / reload / cast / latch)
               </label>
             )}
+            {weapon &&
+              (weapon.id === "tiberon" || weapon.id === "tiberon_prime") &&
+              (stats.triggerStatBonuses?.criticalChance ?? 0) > 0 && (
+                <SimSlider
+                  label="Crit Precision stacks"
+                  value={simParams.criticalPrecisionStacks ?? 50}
+                  min={0}
+                  max={50}
+                  onChange={(v) =>
+                    onSimParamsChange({ ...simParams, criticalPrecisionStacks: v })
+                  }
+                  tooltip="Critical Precision: headshot stacks (max 50 = +500% CC at R5). Full-burst miss removes ~10 stacks. Needs Trigger buffs enabled."
+                />
+              )}
+            {weapon &&
+              (weapon.id === "catabolyst" || weapon.id === "coda_catabolyst") &&
+              (stats.triggerStatBonuses?.criticalChance ?? 0) > 0 && (
+                <SimSlider
+                  label="Crit Mutation stacks"
+                  value={simParams.criticalMutationStacks ?? 10}
+                  min={0}
+                  max={10}
+                  onChange={(v) =>
+                    onSimParamsChange({ ...simParams, criticalMutationStacks: v })
+                  }
+                  tooltip="Critical Mutation: kill stacks (max 10 = +300% CC/CD at R5). Grenade hitting fewer than 3 enemies removes 1 stack. Needs Trigger buffs enabled."
+                />
+              )}
             {isMelee && (
               <>
                 <label

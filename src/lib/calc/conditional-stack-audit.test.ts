@@ -551,6 +551,24 @@ describe("Sim3 AE + max-stack exclusives (wiki max rank)", () => {
     expect(active.criticalMultiplier).toBeCloseTo(bareCm * 4, 4);
   });
 
+  it("Critical Mutation: criticalMutationStacks models grenade decay (Sim16)", () => {
+    const lex = requireWeapon("lex");
+    const bareCm = calculateWeaponBuild(lex, [], modsMap()).criticalMultiplier;
+    // 9 stacks after one bad grenade from max → +270%
+    const decayed = build("lex", "critical_mutation", {
+      applyTriggerBuffs: true,
+      criticalMutationStacks: 9,
+    });
+    expect(decayed.criticalChance).toBeCloseTo(lex.criticalChance * (1 + 2.7), 5);
+    expect(decayed.criticalMultiplier).toBeCloseTo(bareCm * (1 + 2.7), 4);
+    const zero = build("lex", "critical_mutation", {
+      applyTriggerBuffs: true,
+      criticalMutationStacks: 0,
+    });
+    expect(zero.criticalChance).toBeCloseTo(lex.criticalChance, 5);
+    expect(zero.criticalMultiplier).toBeCloseTo(bareCm, 4);
+  });
+
   it("Pain Points: paper WP bonus 0; trigger → +600% weak-point damage", () => {
     expect(build("lex", "pain_points", {}).headshotDamageBonus ?? 0).toBeCloseTo(0, 5);
     expect(
@@ -583,6 +601,23 @@ describe("Sim3 AE + max-stack exclusives (wiki max rank)", () => {
     expect(
       build("braton", "critical_precision", { applyTriggerBuffs: true }).criticalChance,
     ).toBeCloseTo(weapon.criticalChance * 6, 5);
+  });
+
+  it("Critical Precision: criticalPrecisionStacks models burst-miss decay (Sim16)", () => {
+    const weapon = requireWeapon("braton");
+    // One full-burst miss from max: 50 → 40 stacks → +400% CC
+    expect(
+      build("braton", "critical_precision", {
+        applyTriggerBuffs: true,
+        criticalPrecisionStacks: 40,
+      }).criticalChance,
+    ).toBeCloseTo(weapon.criticalChance * 5, 5);
+    expect(
+      build("braton", "critical_precision", {
+        applyTriggerBuffs: true,
+        criticalPrecisionStacks: 0,
+      }).criticalChance,
+    ).toBeCloseTo(weapon.criticalChance, 5);
   });
 });
 

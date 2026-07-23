@@ -493,6 +493,16 @@ export interface SimulationParams {
     | "viral"
     | "corrosive";
   /**
+   * Critical Precision (Tiberon): headshot stacks (0–50). Undefined = max when trigger on.
+   * Miss with full burst removes ~10 stacks (100% CC of the bonus track).
+   */
+  criticalPrecisionStacks?: number;
+  /**
+   * Critical Mutation (Catabolyst): kill stacks (0–10). Undefined = max when trigger on.
+   * Grenade hitting fewer than 3 enemies removes 1 stack (30% at R5).
+   */
+  criticalMutationStacks?: number;
+  /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
    */

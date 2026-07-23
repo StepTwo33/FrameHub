@@ -760,6 +760,10 @@ export function calculateWeaponBuild(
         elementalMods,
         comboDuration: { add: (v) => { stats.comboDuration += v; } },
         heavyAttackEfficiency: { add: (v) => { stats.heavyAttackEfficiency += v; } },
+        simStacks: {
+          criticalPrecision: sim.criticalPrecisionStacks,
+          criticalMutation: sim.criticalMutationStacks,
+        },
       });
     }
   }

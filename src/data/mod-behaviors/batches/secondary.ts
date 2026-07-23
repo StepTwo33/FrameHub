@@ -56,8 +56,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Convulsion: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),
   ]),
   critical_mutation: mod("critical_mutation", [
-    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CC/kill up to +300% (sim assumes max; grenade decay unmodeled)"),
-    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CD/kill up to +300% (sim assumes max; grenade decay unmodeled)"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CC/kill up to +300% (criticalMutationStacks; grenade <3 hits −1 stack)"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Mutation — +30% CD/kill up to +300% (criticalMutationStacks; grenade <3 hits −1 stack)"),
   ]),
   damzav_vati: mod("damzav_vati", [
     line("viral", "weapon_dps", "elemental_from_base_damage", "Damzav-Vati: viral \u2014 +240% <DT_VIRAL_COLOR>Viral"),

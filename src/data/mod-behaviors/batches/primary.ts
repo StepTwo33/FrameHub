@@ -91,7 +91,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
   ]),
   critical_precision: mod("critical_precision", [
     line("critBonusPerKill", "mod_panel", "multiplicative_percent", "wiki: Critical Precision — duplicate stack display key"),
-    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Precision — HS stacks +10% CC up to +500% (sim assumes max; miss decay unmodeled)"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Critical Precision — HS stacks +10% CC up to +500% (criticalPrecisionStacks; miss ≈ −10 stacks)"),
   ]),
   cryo_rounds_r3: mod("cryo_rounds_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Cryo Rounds: cold \u2014 +90% <DT_FREEZE_COLOR>Cold"),

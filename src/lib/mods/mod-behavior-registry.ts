@@ -72,6 +72,11 @@ export type ModApplyWeaponContext = {
   elementalMods: { type: string; value: number }[];
   comboDuration?: { add: (v: number) => void };
   heavyAttackEfficiency?: { add: (v: number) => void };
+  /** Sim stack counts for exclusives that decay (miss / grenade). */
+  simStacks?: {
+    criticalPrecision?: number;
+    criticalMutation?: number;
+  };
 };
 
 export function getVerifiedModBehavior(modId: string): VerifiedModBehavior | undefined {
@@ -257,18 +262,27 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       if (ctx.modId === "fired_up" && statKey === "damage") {
         key = "heat";
       }
-      // Stack exclusives: catalog is per-stack; assume max stacks when trigger active.
+      // Stack exclusives: catalog is per-stack; default max when trigger active.
+      // Critical Precision / Mutation accept sim stack counts for miss/grenade decay.
       if (ctx.modId === "double_tap" && statKey === "damage") {
         value = modValue * 20;
       }
       if (ctx.modId === "critical_mutation" && (statKey === "criticalChance" || statKey === "criticalMultiplier")) {
-        value = modValue * 10;
+        const stacks =
+          ctx.simStacks?.criticalMutation !== undefined
+            ? Math.min(10, Math.max(0, Math.floor(ctx.simStacks.criticalMutation)))
+            : 10;
+        value = modValue * stacks;
       }
       if (ctx.modId === "pain_points" && key === "weakPointDamage") {
         value = modValue * 10;
       }
       if (ctx.modId === "critical_precision" && statKey === "criticalChance") {
-        value = modValue * 50;
+        const stacks =
+          ctx.simStacks?.criticalPrecision !== undefined
+            ? Math.min(50, Math.max(0, Math.floor(ctx.simStacks.criticalPrecision)))
+            : 50;
+        value = modValue * stacks;
       }
       if (ctx.modId === "fired_up" && key === "heat") {
         value = modValue * 20;
