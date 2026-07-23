@@ -1765,15 +1765,15 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   "dark_split_sword": [
     {
       "name": "Slam Attack",
-      "impact": 460.0,
-      "totalDamage": 460.0,
+      "impact": 232.0,
+      "totalDamage": 232.0,
       "radius": 8.0,
       "falloffReduction": 0.5
     },
     {
       "name": "Heavy Slam Attack",
-      "blast": 690.0,
-      "totalDamage": 690.0,
+      "blast": 462.0,
+      "totalDamage": 462.0,
       "radius": 9.0,
       "falloffReduction": 0.3
     }

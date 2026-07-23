@@ -21,11 +21,12 @@ import { mergeIncarnonStatChanges, mergeRivenStatChanges } from "@/lib/calc/weap
 import { resolveIncarnonActiveWeapon, isIncarnonFormActive } from "@/lib/calc/incarnon-active-weapon";
 import { Weapon, Mod, CalculatedStats, EquippedMod, SimulationParams, DEFAULT_SIM_PARAMS, WeaponCalculationOptions } from "@/lib/types";
 import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
+import { applyAlternateMode, weaponHasAlternateMode } from "@/lib/weapons/weapon-alternate-mode";
 import {
   weaponSupportsProgenitor,
   PROGENITOR_BONUS_DEFAULT,
 } from "@/lib/weapons/weapon-progenitor";
-import { Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Crosshair, Orbit } from "lucide-react";
+import { Zap, Flag, Flame, Plus, X, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Crosshair, Orbit, Swords } from "lucide-react";
 import { isPrimaryWeaponCategory } from "@/lib/mods/mod-weapon-eligibility";
 import { isTomeWeapon } from "@/lib/weapons/tome-weapons";
 import { getWeaponArcanes } from "@/lib/weapons/weapon-arcane-config";
@@ -98,17 +99,19 @@ export default function WeaponBuilderPage() {
   const [progenitorElement, setProgenitorElement] = useState<string>("heat");
   const [progenitorBonusPercent, setProgenitorBonusPercent] = useState(PROGENITOR_BONUS_DEFAULT);
   const [gravimagMode, setGravimagMode] = useState(false);
+  const [alternateMode, setAlternateMode] = useState(false);
 
-  /** Archgun with Gravimag on → atmosphere stat profile; otherwise the base (Archwing) weapon. */
+  /** Archgun Gravimag / alternate fire-form overlays, then Incarnon resolution. */
   const activeWeapon = useMemo<Weapon | null>(() => {
     if (!selectedWeapon) return null;
     let w = selectedWeapon;
     if (gravimagMode && weaponHasGravimagMode(selectedWeapon)) w = applyGravimagMode(selectedWeapon);
+    if (alternateMode && weaponHasAlternateMode(w)) w = applyAlternateMode(w);
     const data = incarnonDataMap.get(w.id);
     return resolveIncarnonActiveWeapon(w, data, selectedEvolutions, {
       onosIncarnonMode: simParams.onosIncarnonMode,
     });
-  }, [selectedWeapon, gravimagMode, selectedEvolutions, simParams.onosIncarnonMode]);
+  }, [selectedWeapon, gravimagMode, alternateMode, selectedEvolutions, simParams.onosIncarnonMode]);
 
   const weaponCalcOptions = useMemo<WeaponCalculationOptions | undefined>(() => {
     const data = selectedWeapon ? incarnonDataMap.get(selectedWeapon.id) : undefined;
@@ -431,6 +434,7 @@ export default function WeaponBuilderPage() {
   const handleSelectWeapon = useCallback((weapon: Weapon) => {
     setSelectedWeapon(weapon);
     setGravimagMode(false);
+    setAlternateMode(false);
     setEquippedMods([]);
     setHasOrokinCatalyst(false);
     setSelectedEvolutions({});
@@ -724,6 +728,36 @@ export default function WeaponBuilderPage() {
                       <span className="hidden sm:inline">Gravimag</span>
                     </button>
                   )}
+                  {weaponHasAlternateMode(selectedWeapon) && (
+                    <button
+                      onClick={() => {
+                        setAlternateMode((v) => {
+                          const next = !v;
+                          // Stance pool changes with Dual Swords ↔ Heavy Blade.
+                          if (selectedWeapon.alternateModeStats?.stanceType) {
+                            setStanceMod(null);
+                          }
+                          return next;
+                        });
+                      }}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all font-medium",
+                        alternateMode
+                          ? "bg-amber-500/10 text-amber-400"
+                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      )}
+                      title={
+                        alternateMode
+                          ? `${selectedWeapon.alternateModeStats!.label} mode on — click for default form.`
+                          : `Default form — click for ${selectedWeapon.alternateModeStats!.label}.`
+                      }
+                    >
+                      <Swords className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">
+                        {selectedWeapon.alternateModeStats!.label}
+                      </span>
+                    </button>
+                  )}
                 </BuilderActionGroup>
 
                 {selectedWeapon && weaponSupportsProgenitor(selectedWeapon) && (
@@ -949,7 +983,7 @@ export default function WeaponBuilderPage() {
           open={stancePickerOpen}
           onOpenChange={setStancePickerOpen}
           allMods={allMods}
-          stanceType={selectedWeapon.stanceType}
+          stanceType={activeWeapon?.stanceType ?? selectedWeapon.stanceType}
           onSelect={setStanceMod}
         />
       )}

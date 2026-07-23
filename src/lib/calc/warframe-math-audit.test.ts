@@ -510,6 +510,63 @@ describe("archgun Gravimag modes (wiki: Archwing vs Atmosphere)", () => {
   });
 });
 
+describe("alternate weapon modes (Staticor charged / DSS Heavy Blade)", () => {
+  it("Staticor default keeps uncharged explosion; charged overlay swaps radial only", async () => {
+    const { applyAlternateMode, weaponHasAlternateMode } = await import(
+      "@/lib/weapons/weapon-alternate-mode"
+    );
+    const { getWeaponRadialAttacks } = await import("@/lib/weapons/weapon-radial-utils");
+    const w = allWeapons.find((x) => x.id === "staticor")!;
+    expect(weaponHasAlternateMode(w)).toBe(true);
+    expect(w.damage).toBe(44);
+    expect(w.radiation).toBe(44);
+    expect(getWeaponRadialAttacks(w)[0]?.totalDamage).toBeCloseTo(88, 5);
+    expect(getWeaponRadialAttacks(w)[0]?.radius).toBeCloseTo(2.4, 5);
+    const charged = applyAlternateMode(w);
+    expect(charged.damage).toBe(44);
+    expect(getWeaponRadialAttacks(charged)[0]?.name).toBe("Fully Charged Explosion");
+    expect(getWeaponRadialAttacks(charged)[0]?.totalDamage).toBeCloseTo(106, 5);
+    expect(getWeaponRadialAttacks(charged)[0]?.radius).toBeCloseTo(9.6, 5);
+    expect(getWeaponRadialAttacks(charged)[0]?.falloffReduction).toBeCloseTo(0.9, 5);
+  });
+
+  it("Dark Split-Sword default Dual Swords; Heavy Blade overlay swaps paper + stance + slams", async () => {
+    const { applyAlternateMode, weaponHasAlternateMode } = await import(
+      "@/lib/weapons/weapon-alternate-mode"
+    );
+    const { getWeaponRadialAttacks } = await import("@/lib/weapons/weapon-radial-utils");
+    const w = allWeapons.find((x) => x.id === "dark_split_sword")!;
+    expect(weaponHasAlternateMode(w)).toBe(true);
+    expect(w.stanceType).toBe("dual_swords");
+    expect(w.damage).toBe(116);
+    expect(w.puncture).toBe(56);
+    expect(w.slash).toBe(28);
+    expect(w.radiation).toBe(32);
+    expect(w.criticalChance).toBeCloseTo(0.25, 4);
+    expect(w.fireRate).toBeCloseTo(1.17, 4);
+    const dualSlams = getWeaponRadialAttacks(w);
+    expect(dualSlams[0]?.totalDamage).toBeCloseTo(232, 5);
+    expect(dualSlams[1]?.totalDamage).toBeCloseTo(462, 5);
+
+    const heavy = applyAlternateMode(w);
+    expect(heavy.stanceType).toBe("heavy_blade");
+    expect(heavy.damage).toBe(230);
+    expect(heavy.puncture).toBe(78);
+    expect(heavy.slash).toBe(52);
+    expect(heavy.radiation).toBe(100);
+    expect(heavy.criticalChance).toBeCloseTo(0.15, 4);
+    expect(heavy.criticalMultiplier).toBeCloseTo(2, 4);
+    expect(heavy.statusChance).toBeCloseTo(0.25, 4);
+    expect(heavy.fireRate).toBeCloseTo(0.917, 4);
+    const heavySlams = getWeaponRadialAttacks(heavy);
+    expect(heavySlams[0]?.totalDamage).toBeCloseTo(460, 5);
+    expect(heavySlams[1]?.totalDamage).toBeCloseTo(690, 5);
+
+    const stats = calculateWeaponBuild(heavy, [], modsMap());
+    expect(stats.moddedBaseDamage).toBeCloseTo(230, 3);
+  });
+});
+
 describe("Animal Instinct radar values (wiki: Animal Instinct stats)", () => {
   it.each([
     ["animal_instinct", 5, 30, 18],

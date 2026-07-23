@@ -10026,6 +10026,18 @@ export const allWeapons: Weapon[] = [
     "magazine": 48,
     "reloadTime": 1.5,
     "multishot": 1,
+    "alternateModeStats": {
+      "label": "Charged",
+      "radialAttacks": [
+        {
+          "name": "Fully Charged Explosion",
+          "radiation": 106.0,
+          "totalDamage": 106.0,
+          "radius": 9.6,
+          "falloffReduction": 0.9
+        }
+      ]
+    },
     "triggerType": "Pistol",
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,
@@ -11348,6 +11360,34 @@ export const allWeapons: Weapon[] = [
     "magazine": 0,
     "reloadTime": 0,
     "multishot": 1,
+    "alternateModeStats": {
+      "label": "Heavy Blade",
+      "stanceType": "heavy_blade",
+      "damage": 230,
+      "puncture": 78,
+      "slash": 52,
+      "radiation": 100,
+      "fireRate": 0.917,
+      "criticalChance": 0.15,
+      "criticalMultiplier": 2,
+      "statusChance": 0.25,
+      "radialAttacks": [
+        {
+          "name": "Slam Attack",
+          "impact": 460.0,
+          "totalDamage": 460.0,
+          "radius": 8.0,
+          "falloffReduction": 0.5
+        },
+        {
+          "name": "Heavy Slam Attack",
+          "blast": 690.0,
+          "totalDamage": 690.0,
+          "radius": 9.0,
+          "falloffReduction": 0.3
+        }
+      ]
+    },
     "triggerType": "Melee",
     "modSlots": 8,
     "hasPrimaryArcaneSlot": false,

@@ -85,6 +85,11 @@ export interface Weapon {
    * (and radial attacks, when provided) with the atmospheric values.
    */
   atmosphereStats?: WeaponAtmosphereStats;
+  /**
+   * Optional alternate fire/form overlay (e.g. Staticor charged, Dark Split-Sword
+   * Heavy Blade). Catalog default is the primary form; toggle merges these fields.
+   */
+  alternateModeStats?: WeaponAlternateModeStats;
 }
 
 /** Stat overrides applied when an archgun is deployed via Gravimag (atmosphere). */
@@ -111,6 +116,37 @@ export interface WeaponAtmosphereStats {
   reloadTime?: number;
   multishot?: number;
   /** Atmosphere-specific radial attack profiles (replace the Archwing ones). */
+  radialAttacks?: WeaponRadialAttack[];
+}
+
+/** Alternate fire / stance-form overlays (builder toggle; default catalog = off). */
+export interface WeaponAlternateModeStats {
+  /** Short UI label when the alternate mode is active. */
+  label: string;
+  damage?: number;
+  impact?: number;
+  puncture?: number;
+  slash?: number;
+  heat?: number;
+  cold?: number;
+  toxin?: number;
+  electricity?: number;
+  radiation?: number;
+  viral?: number;
+  corrosive?: number;
+  blast?: number;
+  gas?: number;
+  magnetic?: number;
+  fireRate?: number;
+  criticalChance?: number;
+  criticalMultiplier?: number;
+  statusChance?: number;
+  magazine?: number;
+  reloadTime?: number;
+  multishot?: number;
+  /** Melee form swap (e.g. Dual Swords → Heavy Blade). */
+  stanceType?: string;
+  /** Replace default radial profiles while alternate mode is on. */
   radialAttacks?: WeaponRadialAttack[];
 }
 
