@@ -1271,9 +1271,10 @@ describe("gun leftovers (wiki max rank, Phase M15)", () => {
     expect(modded.burstDps / bare.burstDps).toBeCloseTo(1 + 1.1 / bare.magazine, 5);
   });
 
-  it("Jet Stream: ability-gated lines stay panel-only", () => {
+  it("Jet Stream: paper stays panel; Turbulence gate applies via external buffs", () => {
     const beh = VERIFIED_MOD_BEHAVIORS.jet_stream;
     expect(beh).toBeDefined();
     expect(beh!.stats.every((s) => s.target === "mod_panel")).toBe(true);
+    expect(beh!.stats.map((s) => s.statKey).sort()).toEqual(["projectileSpeed", "sprintSpeed"]);
   });
 });

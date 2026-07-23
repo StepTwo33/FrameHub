@@ -392,6 +392,22 @@ function applyAbilityCloudDps(
   stats.sustainedDps += cloud;
 }
 
+/** Jet Stream (and similar) display-only projectile speed from external buffs. */
+function applyExternalProjectileSpeed(
+  stats: CalculatedStats,
+  externalBuffs?: WeaponExternalBuff[],
+): void {
+  if (!externalBuffs?.length) return;
+  let bonus = 0;
+  for (const buff of externalBuffs) {
+    if (buff.projectileSpeedBonus && buff.projectileSpeedBonus > 0) {
+      bonus += buff.projectileSpeedBonus;
+    }
+  }
+  if (bonus <= 0) return;
+  stats.projectileSpeed = (stats.projectileSpeed ?? 0) + bonus;
+}
+
 /** Mecha mark-kill status-spread DoT DPS (sim-gated; not in TTK). */
 function applyMechaSpreadDps(
   stats: CalculatedStats,
@@ -1642,6 +1658,7 @@ export function calculateWeaponBuild(
     incarnonStatChanges,
   );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
+  applyExternalProjectileSpeed(stats, calcOptions?.externalBuffs);
   applyMechaSpreadDps(
     stats,
     sim,
@@ -2053,6 +2070,7 @@ export function calculateWeaponBuildWithArcanes(
     incarnonStatChanges,
   );
   applyAbilityCloudDps(stats, calcOptions?.externalBuffs);
+  applyExternalProjectileSpeed(stats, calcOptions?.externalBuffs);
   if ((stats.residualZoneDps ?? 0) > 0) {
     stats.burstDps += stats.residualZoneDps!;
     stats.sustainedDps += stats.residualZoneDps!;

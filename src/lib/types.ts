@@ -346,6 +346,14 @@ export interface WeaponExternalBuff {
    * burst/sustained after direct DPS when sim enemies > 0.
    */
   abilityCloudDps?: number;
+  /**
+   * Projectile speed bonus fraction (Jet Stream). Display-only — does not change DPS.
+   */
+  projectileSpeedBonus?: number;
+  /**
+   * Sprint / move speed bonus fraction (Jet Stream). Applied to warframe totals in loadout.
+   */
+  sprintSpeedBonus?: number;
   nominal?: string;
 }
 

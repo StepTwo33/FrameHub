@@ -12444,7 +12444,7 @@ const RAW_MODS: Mod[] = [
     "subCategory": "",
     "stats": {
       "sprintSpeed": 10.0,
-      "flightSpeed": 25.0
+      "projectileSpeed": 25.0
     },
     "description": "Turbulence Augment: Turbulence increases Movement Speed by 40% and Projectile Speed by 100% for Zephyr and her allies.",
     "rarity": "rare",

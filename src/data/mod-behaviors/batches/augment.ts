@@ -747,8 +747,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damageReduction", "mod_panel", "multiplicative_percent", "Ironclad Flight: damageReduction \u2014 Disable vacuum in Razorwing. Reduced Damage by 40% while Airborne."),
   ]),
   jet_stream: mod("jet_stream", [
-    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated movement (not always-on sprint)"),
-    line("flightSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated projectile speed"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated movement (× Strength; not always-on)"),
+    line("projectileSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated projectile speed (× Strength)"),
   ]),
   justice_blades: mod("justice_blades", [
     line("damage", "weapon_dps", "multiplicative_percent", "wiki: Justice Blades — +100% Melee Damage"),

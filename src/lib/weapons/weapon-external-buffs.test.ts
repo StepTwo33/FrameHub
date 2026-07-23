@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { computeDpsContributions } from "@/lib/calc/dps-contributions";
 import {
+  applyJetStreamWarframeMove,
   resolveWeaponExternalBuffs,
   weaponDamageBuffAbilities,
 } from "@/lib/weapons/weapon-external-buffs";
@@ -270,6 +271,75 @@ describe("resolveWeaponExternalBuffs", () => {
       { ...sim, absorbAbsorbedDamage: 0 },
     );
     expect(off.find((b) => b.id === "ability:Absorb")).toBeUndefined();
+  });
+
+  it("Jet Stream: Turbulence-gated move + projectile speed × Strength (display; no DPS)", () => {
+    const turbulence: Ability = {
+      name: "Turbulence",
+      energyCost: 75,
+      description: "deflect",
+      range: 6,
+      duration: 20,
+    };
+    const simOn: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Turbulence"],
+    };
+    const jetSlots: ModSlot[] = [{ modId: "jet_stream", slotIndex: 0, rank: 3 }];
+    const ctx = {
+      warframeId: "zephyr",
+      warframeStats: { ...wfStats, abilityStrength: 1 },
+      warframeAbilities: [turbulence],
+      warframeModSlots: jetSlots,
+      allMods: modsMap,
+    };
+
+    expect(weaponDamageBuffAbilities([turbulence]).map((a) => a.name)).toContain("Turbulence");
+
+    // Paper / Turbulence off → no Jet Stream buff
+    const off = resolveWeaponExternalBuffs(testRifle, ctx, DEFAULT_SIM_PARAMS);
+    expect(off.find((b) => b.id === "ability:Jet Stream")).toBeUndefined();
+
+    // Turbulence on, no augment → no buff
+    const noAug = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...ctx, warframeModSlots: [] },
+      simOn,
+    );
+    expect(noAug.find((b) => b.id === "ability:Jet Stream")).toBeUndefined();
+
+    // R3 @ 100% STR → +40% move / +100% proj
+    const buffs = resolveWeaponExternalBuffs(testRifle, ctx, simOn);
+    const jet = buffs.find((b) => b.id === "ability:Jet Stream");
+    expect(jet?.sprintSpeedBonus).toBeCloseTo(0.4, 8);
+    expect(jet?.projectileSpeedBonus).toBeCloseTo(1.0, 8);
+
+    const withJet = calculateWeaponBuild(testRifle, [], new Map(), undefined, simOn, {
+      externalBuffs: buffs,
+    });
+    const bare = calculateWeaponBuild(testRifle, [], new Map(), undefined, simOn);
+    expect(withJet.projectileSpeed).toBeCloseTo(1.0, 8);
+    expect(withJet.burstDps).toBeCloseTo(bare.burstDps, 5);
+    expect(withJet.sustainedDps).toBeCloseTo(bare.sustainedDps, 5);
+
+    // STR=2 → double
+    const buffs2 = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...ctx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+      simOn,
+    );
+    const jet2 = buffs2.find((b) => b.id === "ability:Jet Stream");
+    expect(jet2?.sprintSpeedBonus).toBeCloseTo(0.8, 8);
+    expect(jet2?.projectileSpeedBonus).toBeCloseTo(2.0, 8);
+
+    const wfMove = { ...wfStats, abilityStrength: 1, sprintSpeedBonus: 0, totalSprint: 1, baseSprint: 1 };
+    applyJetStreamWarframeMove(wfMove, jetSlots, modsMap, simOn);
+    expect(wfMove.sprintSpeedBonus).toBeCloseTo(0.4, 8);
+    expect(wfMove.totalSprint).toBeCloseTo(1.4, 8);
+
+    const wfOff = { ...wfStats, abilityStrength: 1, sprintSpeedBonus: 0, totalSprint: 1, baseSprint: 1 };
+    applyJetStreamWarframeMove(wfOff, jetSlots, modsMap, DEFAULT_SIM_PARAMS);
+    expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
   it("Contagion Cloud adds sim-gated ability toxin DPS (gun/melee) when augment equipped", () => {

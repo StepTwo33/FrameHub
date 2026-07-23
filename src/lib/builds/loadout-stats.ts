@@ -26,6 +26,7 @@ import { calculateTTK, ENEMY_TYPES, type EnemyType, type TTKResult } from "@/lib
 import { buildWeaponContributionContext, computeDpsContributions, type DpsContribution } from "@/lib/calc/dps-contributions";
 import { rivenStatChangesFromModSlots } from "@/lib/warframe-arsenal/riven-resolve";
 import {
+  applyJetStreamWarframeMove,
   mergeWeaponCalcOptions,
   resolveAbilitiesWithHelminth,
   resolveWeaponExternalBuffs,
@@ -379,6 +380,24 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
           wb.arcaneRanks,
         );
         result.warframe = { name: wf.name, stats };
+      }
+
+      // Jet Stream: Turbulence-gated move speed × Strength (augment on warframe bar).
+      // Dual-form default stats may share a reference with forms[] — apply once per object.
+      {
+        const seen = new Set<WarframeCalculatedStats>();
+        const applyOnce = (stats: WarframeCalculatedStats) => {
+          if (seen.has(stats)) return;
+          seen.add(stats);
+          applyJetStreamWarframeMove(
+            stats,
+            setLinkage.warframeMods,
+            modsMap,
+            simParams,
+          );
+        };
+        applyOnce(result.warframe.stats);
+        for (const form of result.warframe.forms ?? []) applyOnce(form.stats);
       }
 
       buffContext = {

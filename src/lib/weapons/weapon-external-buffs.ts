@@ -344,9 +344,81 @@ function resolveNourishBuff(
 }
 
 const CONTAGION_CLOUD_MOD_ID = "augment_saryn_contagion_cloud";
+const JET_STREAM_MOD_ID = "jet_stream";
+/** Catalog fallbacks when allMods is omitted (R0 per-rank; maxRank 3). */
+const JET_STREAM_SPRINT_PER_RANK = 10;
+const JET_STREAM_PROJ_PER_RANK = 25;
+const JET_STREAM_MAX_RANK = 3;
 
 function hasContagionCloudAugment(ctx: WeaponBuffContext): boolean {
   return (ctx.warframeModSlots ?? []).some((s) => s.modId === CONTAGION_CLOUD_MOD_ID);
+}
+
+function findJetStreamSlot(ctx: WeaponBuffContext): ModSlot | undefined {
+  return (ctx.warframeModSlots ?? []).find((s) => s.modId === JET_STREAM_MOD_ID);
+}
+
+/** Wiki Jet Stream R3: +40% move / +100% proj × Ability Strength while Turbulence is active. */
+function jetStreamFractions(ctx: WeaponBuffContext, slot: ModSlot): { move: number; proj: number } {
+  const mod = ctx.allMods?.get(JET_STREAM_MOD_ID);
+  const maxRank = mod?.maxRank ?? JET_STREAM_MAX_RANK;
+  const rank = Math.min(Math.max(slot.rank ?? 0, 0), maxRank);
+  if (mod) {
+    return {
+      move: modStatFraction(mod, "sprintSpeed", rank),
+      proj: modStatFraction(mod, "projectileSpeed", rank),
+    };
+  }
+  return {
+    move: (JET_STREAM_SPRINT_PER_RANK * (rank + 1)) / 100,
+    proj: (JET_STREAM_PROJ_PER_RANK * (rank + 1)) / 100,
+  };
+}
+
+/**
+ * Wiki Jet Stream: while Turbulence active, movement + projectile speed × Strength.
+ * Paper-off (mod_panel); applied only via this ability gate.
+ */
+function resolveJetStreamBuff(
+  strength: number,
+  ctx: WeaponBuffContext,
+): WeaponExternalBuff | null {
+  const slot = findJetStreamSlot(ctx);
+  if (!slot) return null;
+  const { move, proj } = jetStreamFractions(ctx, slot);
+  const moveBonus = move * strength;
+  const projBonus = proj * strength;
+  if (moveBonus <= 0 && projBonus <= 0) return null;
+  return {
+    id: "ability:Jet Stream",
+    label: "Jet Stream",
+    category: "ability",
+    ...(moveBonus > 0 ? { sprintSpeedBonus: moveBonus } : {}),
+    ...(projBonus > 0 ? { projectileSpeedBonus: projBonus } : {}),
+    nominal: `+${(move * 100).toFixed(0)}% move / +${(proj * 100).toFixed(0)}% projectile speed (× Strength)`,
+  };
+}
+
+/**
+ * Apply Jet Stream move-speed to warframe totals when Turbulence is toggled.
+ * Call after `calculateWarframeBuild` in loadout resolution.
+ */
+export function applyJetStreamWarframeMove(
+  stats: WarframeCalculatedStats,
+  warframeModSlots: ModSlot[] | undefined,
+  allMods: Map<string, Mod> | undefined,
+  simParams: SimulationParams,
+): void {
+  const active = simParams.activeWeaponAbilityBuffs ?? [];
+  if (!active.includes("Turbulence")) return;
+  const slot = (warframeModSlots ?? []).find((s) => s.modId === JET_STREAM_MOD_ID);
+  if (!slot) return;
+  const ctx: WeaponBuffContext = { warframeModSlots, allMods };
+  const { move } = jetStreamFractions(ctx, slot);
+  const bonus = move * stats.abilityStrength;
+  if (bonus <= 0) return;
+  stats.sprintSpeedBonus += bonus;
+  stats.totalSprint = stats.baseSprint * (1 + stats.sprintSpeedBonus);
 }
 
 /**
@@ -529,6 +601,9 @@ function resolveNamedAbilityWeaponBuff(
       return resolveShootingGalleryBuff(ability, strength);
     case "Absorb":
       return resolveAbsorbBuff(ability, strength, simParams);
+    // wiki: Jet Stream — Turbulence-gated move + projectile speed × Strength
+    case "Turbulence":
+      return resolveJetStreamBuff(strength, ctx);
     // wiki: Redline — full-battery fire/attack speed × Duration
     case "Redline":
       return resolveRedlineBuff(weapon, ability, ctx.warframeStats!.abilityDuration);
@@ -797,6 +872,7 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Penance",
   "Shroud Of Dynar",
   "Absorb",
+  "Turbulence",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */
