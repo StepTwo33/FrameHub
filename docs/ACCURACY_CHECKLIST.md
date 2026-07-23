@@ -89,8 +89,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim1 | Trigger-gated exclusives | Spectral Serration / Soaring Strike / Measured Burst; Aero Agility / Combat Reload / Motus Setup(+CC catalog); Laser Sight / Nano-Applicator / Repeater Clip / Shrapnel Shot; Lasting Purity; Double/Triple/Final Tap / Sudden Justice; Proton Snap toxin via trigger elemental pool | **Locked** — +15 IDs; elemental trigger apply |
 | Sim2 | Weak-point / situational | Biotic Rounds (+magnetic catalog) / Leaded Gas; Kill Switch; Eximus Advantage / Range Advantage / Deadly Maneuvers | **Locked** — +6 IDs; WP elemental on kill/trigger |
 | Sim3 | AE + max-stack exclusives | Brain Storm / Skull Shots / Zazvat-Kar AE; Critical Mutation / Pain Points / Critical Precision (max-stack trigger); Split Flights MS/killStacks cap 4 | **Locked** — +7 IDs; AE+WP trigger pool |
+| Sim4 | Tendril / HP-cap exclusives | Sentient Surge (+SC catalog) / Dreadful Killshot / Necrophagic Vigor / Fired Up heat / Unseen Dread; Strain Infection cysts; Lohk Canticle FR | **Locked** — +7 IDs; HP-cap remaps |
 
-**Remaining unlocked paper-moving mods (post Sim3):** none for always-on paper; further work is ability gates (Jet Stream), miss/grenade decay fidelity, tendril/HP-scaled exclusives, description-only precepts, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim4):** none for always-on paper; further work is ability gates (Jet Stream), miss/grenade decay fidelity, cross-slot melee→secondary buffs, description-only precepts, or Tier B/C items.
 
 ---
 
@@ -134,6 +135,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim1 Trigger-gated exclusives | 2026-07-23 | +15 panel→trigger; Proton Snap toxin remap; Motus CC catalog; elemental trigger pool |
 | Sim2 Weak-point / situational | 2026-07-23 | +6 Biotic/Leaded/Kill Switch/Eximus/Range/Deadly; Biotic magnetic catalog |
 | Sim3 AE + max-stack exclusives | 2026-07-23 | +7 Brain/Skull/Zazvat AE; Mutation/Pain/Precision max stacks; Split Flights cap 4 |
+| Sim4 Tendril / HP-cap exclusives | 2026-07-23 | +7 Surge/Killshot/Vigor/Fired Up/Unseen/Strain/Lohk; Surge SC catalog; HP→cap remaps |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

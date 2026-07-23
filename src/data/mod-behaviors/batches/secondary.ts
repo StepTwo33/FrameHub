@@ -178,7 +178,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   lohk_canticle: mod("lohk_canticle", [
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Lohk Canticle — kill-gated ally fire rate"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Lohk Canticle — kill-gated ally fire rate"),
+    line("fireRate", "weapon_dps", "conditional_stat_on_kill", "wiki: Lohk Canticle — On Kill: Allies +30% Fire Rate for 15s (sim: self uptime)"),
   ]),
   loose_magazine: mod("loose_magazine", [
     line("recoil", "mod_panel", "multiplicative_percent", "Loose Magazine: recoil \u2014 +50% Reload Speed, +50% Weapon Recoil (arsenal display only)"),
@@ -314,7 +314,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Semi-Pistol Cannonade: punchThrough \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+300% Da\u2026 (arsenal display only)"),
   ]),
   sentient_surge: mod("sentient_surge", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Sentient Surge — kill-stack SC/CC (not always-on paper)"),
+    line("criticalChance", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Sentient Surge — +60% CC per tendril (cap 4; sim uses killStacks)"),
+    line("statusChance", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Sentient Surge — +60% SC per tendril (cap 4; sim uses killStacks)"),
   ]),
   sharpened_bullets: mod("sharpened_bullets", [
     line("criticalMultiplier", "weapon_dps", "conditional_stat_on_kill", "wiki: Sharpened Bullets \u2014 On Kill: +75% Critical Damage when Aiming for 9s"),

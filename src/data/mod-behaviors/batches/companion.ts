@@ -192,7 +192,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "wiki: Ferocity — precept range"),
   ]),
   fired_up: mod("fired_up", [
-    line("damage", "mod_panel", "multiplicative_percent", "wiki: Fired Up — per-hit heat stacks (not always-on damage)"),
+    line("damage", "weapon_dps", "conditional_stat_on_trigger", "wiki: Fired Up — +5% Heat/hit up to +100% (catalog damage→heat; sim assumes max)"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Fired Up — stack reset window"),
   ]),
   flame_gland: mod("flame_gland", [

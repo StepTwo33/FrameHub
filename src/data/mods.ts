@@ -8947,7 +8947,8 @@ const RAW_MODS: Mod[] = [
     "category": "secondary",
     "subCategory": "weapon",
     "stats": {
-      "criticalChance": 3.333333
+      "criticalChance": 10,
+      "statusChance": 10
     },
     "description": "Each target eliminated refills 20% of Ocucor's magazine. Status Chance and Critical Chance are increased by 60% for each Tendril active.",
     "rarity": "rare"

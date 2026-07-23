@@ -376,7 +376,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("damageReduction", "mod_panel", "multiplicative_percent", "Stand Ground: damageReduction \u2014 Blocking reduces damage taken from enemy abilities by 60%."),
   ]),
   strain_infection: mod("strain_infection", [
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Strain Infection — per-cyst CD (not always-on)"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_per_kill_stack", "wiki: Strain Infection — +20% CD per cyst (cap 8 full set; sim uses killStacks)"),
   ]),
   sundering_strike: mod("sundering_strike", [
     line("puncture", "weapon_dps", "multiplicative_percent", "Sundering Strike: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),

@@ -85,12 +85,11 @@ describe("companion survivability (wiki max rank, Phase M12)", () => {
 });
 
 describe("companion precept leftovers (wiki max rank, Phase M16)", () => {
-  it("Ferocity / Fired Up / Manifold / Shelter / Synth Deconstruct / Transfusion: panel-only", () => {
+  it("Ferocity / Manifold / Shelter / Synth Deconstruct / Transfusion: panel-only", () => {
     for (const id of [
       "crescent_charge",
       "detect_vulnerability",
       "ferocity",
-      "fired_up",
       "magnetic_strike",
       "manifold_bond",
       "shelter",

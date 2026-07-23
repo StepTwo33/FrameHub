@@ -95,6 +95,8 @@ const GALV_STACK_CAPS: Record<string, number> = {
   galvanized_scope: 5,
   galvanized_crosshairs: 5,
   split_flights: 4,
+  sentient_surge: 4,
+  strain_infection: 8,
   galvanized_steel: 4,
   galvanized_elementalist: 4,
 };
@@ -222,8 +224,23 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       acc.onKillPerStackCap = GALV_STACK_CAPS[ctx.modId] ?? acc.onKillPerStackCap ?? 4;
       return true;
     case "conditional_stat_on_trigger": {
+      // HP-cap exclusives: catalog `health` is a placeholder; assume wiki +360% cap.
+      if (ctx.modId === "dreadful_killshot" && statKey === "health") {
+        acc.triggerStatBonuses.damage = (acc.triggerStatBonuses.damage ?? 0) + 3.6;
+        acc.triggerStatBonuses.statusChance =
+          (acc.triggerStatBonuses.statusChance ?? 0) + 3.6;
+        return true;
+      }
+      if (ctx.modId === "necrophagic_vigor" && statKey === "health") {
+        acc.triggerStatBonuses.criticalChance =
+          (acc.triggerStatBonuses.criticalChance ?? 0) + 3.6;
+        acc.triggerStatBonuses.criticalMultiplier =
+          (acc.triggerStatBonuses.criticalMultiplier ?? 0) + 3.6;
+        return true;
+      }
       // Proton Snap: catalog `damage` is wiki +Toxin (not base damage).
       // Pain Points: catalog `damage` is weak-point damage stacks.
+      // Fired Up: catalog `damage` is per-hit Heat.
       let key = statKey;
       let value = modValue;
       if (ctx.modId === "proton_snap" && statKey === "damage") {
@@ -231,6 +248,9 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       }
       if (ctx.modId === "pain_points" && statKey === "damage") {
         key = "weakPointDamage";
+      }
+      if (ctx.modId === "fired_up" && statKey === "damage") {
+        key = "heat";
       }
       // Stack exclusives: catalog is per-stack; assume max stacks when trigger active.
       if (ctx.modId === "double_tap" && statKey === "damage") {
@@ -244,6 +264,9 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
       }
       if (ctx.modId === "critical_precision" && statKey === "criticalChance") {
         value = modValue * 50;
+      }
+      if (ctx.modId === "fired_up" && key === "heat") {
+        value = modValue * 20;
       }
       acc.triggerStatBonuses[key] = (acc.triggerStatBonuses[key] ?? 0) + value;
       return true;

@@ -111,7 +111,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Double Tap — stack window"),
   ]),
   dreadful_killshot: mod("dreadful_killshot", [
-    line("health", "mod_panel", "multiplicative_percent", "wiki: Dreadful Killshot — HP-scaled damage/SC (not always-on health)"),
+    line("health", "weapon_dps", "conditional_stat_on_trigger", "wiki: Dreadful Killshot — +20% Damage & SC per 75 current HP, cap +360% (sim assumes cap)"),
   ]),
   eagle_eye: mod("eagle_eye", [
     line("zoom", "mod_panel", "multiplicative_percent", "Eagle Eye: zoom \u2014 +40% Zoom (arsenal display only)"),
@@ -234,7 +234,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Motus Setup — +100% SC for 4s after Double/Bullet Jump land"),
   ]),
   necrophagic_vigor: mod("necrophagic_vigor", [
-    line("health", "mod_panel", "multiplicative_percent", "wiki: Necrophagic Vigor — reload drains HP for CC/CD (not always-on health)"),
+    line("health", "weapon_dps", "conditional_stat_on_trigger", "wiki: Necrophagic Vigor — +20% CC & CD per 20 HP drained on reload, cap +360% (sim assumes cap)"),
   ]),
   overview: mod("overview", [
     line("zoom", "mod_panel", "multiplicative_percent", "Overview: zoom \u2014 -60% Zoom while Aim Gliding (arsenal display only)"),
@@ -424,7 +424,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Twitch: duration \u2014 On Equip: \\\\n<LOWER_IS_BETTER>-40% Weapon Recoil and +40% Accuracy for 8s"),
   ]),
   unseen_dread: mod("unseen_dread", [
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Unseen Dread — multi-hit invis / CD (not always-on)"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Unseen Dread — +175% Critical Damage while invisible after multi-hit"),
     line("duration", "mod_panel", "multiplicative_percent", "wiki: Unseen Dread — multi-hit invis duration"),
   ]),
   vanquished_prey: mod("vanquished_prey", [

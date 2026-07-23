@@ -560,3 +560,83 @@ describe("Sim3 AE + max-stack exclusives (wiki max rank)", () => {
     ).toBeCloseTo(weapon.criticalChance * 6, 5);
   });
 });
+
+describe("Sim4 tendril / HP-cap exclusives (wiki max rank)", () => {
+  it("Sentient Surge: paper unchanged; 4 tendrils → +240% CC and SC", () => {
+    const weapon = requireWeapon("ocucor");
+    const paper = build("ocucor", "sentient_surge", { killStacks: 0 });
+    expect(paper.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+    expect(paper.statusChance).toBeCloseTo(weapon.statusChance, 5);
+    const active = build("ocucor", "sentient_surge", { killStacks: 4 });
+    expect(active.criticalChance).toBeCloseTo(weapon.criticalChance * 3.4, 5);
+    expect(active.statusChance).toBeCloseTo(weapon.statusChance * 3.4, 5);
+  });
+
+  it("Dreadful Killshot / Necrophagic Vigor: paper unchanged; trigger → +360% caps", () => {
+    const basmu = requireWeapon("basmu");
+    const hema = requireWeapon("hema");
+    expect(build("basmu", "dreadful_killshot", {}).moddedBaseDamage).toBeCloseTo(
+      basmu.damage,
+      5,
+    );
+    expect(build("basmu", "dreadful_killshot", {}).statusChance).toBeCloseTo(
+      basmu.statusChance,
+      5,
+    );
+    const dk = build("basmu", "dreadful_killshot", { applyTriggerBuffs: true });
+    expect(dk.moddedBaseDamage).toBeCloseTo(basmu.damage * 4.6, 5);
+    expect(dk.statusChance).toBeCloseTo(basmu.statusChance * 4.6, 5);
+
+    const paperNv = build("hema", "necrophagic_vigor", {});
+    expect(paperNv.criticalChance).toBeCloseTo(hema.criticalChance, 5);
+    const bareCm = calculateWeaponBuild(hema, [], modsMap()).criticalMultiplier;
+    expect(paperNv.criticalMultiplier).toBeCloseTo(bareCm, 5);
+    const nv = build("hema", "necrophagic_vigor", { applyTriggerBuffs: true });
+    expect(nv.criticalChance).toBeCloseTo(hema.criticalChance * 4.6, 5);
+    expect(nv.criticalMultiplier).toBeCloseTo(bareCm * 4.6, 4);
+  });
+
+  it("Fired Up: paper no heat; trigger → +100% Heat", () => {
+    const weapon = requireWeapon("deconstructor");
+    expect(build("deconstructor", "fired_up", {}).elements.find((e) => e.type === "heat")).toBeUndefined();
+    expect(
+      build("deconstructor", "fired_up", { applyTriggerBuffs: true }).elements.find(
+        (e) => e.type === "heat",
+      )?.value,
+    ).toBeCloseTo(weapon.damage * 1, 5);
+  });
+
+  it("Unseen Dread: paper CM unchanged; trigger → +175% CD", () => {
+    const dread = requireWeapon("dread");
+    const bareCm = calculateWeaponBuild(dread, [], modsMap()).criticalMultiplier;
+    expect(build("dread", "unseen_dread", {}).criticalMultiplier).toBeCloseTo(bareCm, 5);
+    expect(
+      build("dread", "unseen_dread", { applyTriggerBuffs: true }).criticalMultiplier,
+    ).toBeCloseTo(bareCm * 2.75, 4);
+  });
+
+  it("Strain Infection: paper CM unchanged; 8 cysts → +160% CD", () => {
+    const skana = requireWeapon("skana");
+    const bareCm = calculateWeaponBuild(skana, [], modsMap()).criticalMultiplier;
+    expect(build("skana", "strain_infection", { killStacks: 0 }).criticalMultiplier).toBeCloseTo(
+      bareCm,
+      5,
+    );
+    expect(build("skana", "strain_infection", { killStacks: 8 }).criticalMultiplier).toBeCloseTo(
+      bareCm * 2.6,
+      4,
+    );
+  });
+
+  it("Lohk Canticle: paper FR unchanged; kill → +30% FR", () => {
+    const weapon = requireWeapon("lex");
+    expect(build("lex", "lohk_canticle", { killStacks: 0 }).fireRate).toBeCloseTo(
+      weapon.fireRate,
+      5,
+    );
+    expect(build("lex", "lohk_canticle", { killStacks: 1 }).fireRate).toBeCloseTo(
+      weapon.fireRate * 1.3,
+      5,
+    );
+  });
+});
