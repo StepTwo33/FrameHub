@@ -431,6 +431,18 @@ export const MELEE_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "dark_split_sword",
+    "damage": 116.0,
+    "puncture": 56.0,
+    "slash": 28.0,
+    "radiation": 32.0,
+    "criticalChance": 0.25,
+    "criticalMultiplier": 2.5,
+    "statusChance": 0.15,
+    "fireRate": 1.17,
+    "multishot": 1.0
+  },
+  {
     "id": "destreza",
     "damage": 158.0,
     "impact": 3.95,

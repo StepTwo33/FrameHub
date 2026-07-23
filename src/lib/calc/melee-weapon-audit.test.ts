@@ -10,8 +10,8 @@ import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { MELEE_BARE_GOLDENS } from "@/lib/calc/melee-bare-goldens";
 import type { Mod, Weapon } from "@/lib/types";
 
-/** Dual-form / zaw-component stubs intentionally not wiki-locked this pass. */
-const DEFERRED_MELEE_IDS = new Set(["dark_split_sword", "rabvee"]);
+/** Zaw-component stub only — dual-form Dark Split-Sword locked to Dual Swords paper in B19. */
+const DEFERRED_MELEE_IDS = new Set(["rabvee"]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -61,7 +61,7 @@ describe("melee weapon inventory (B12)", () => {
 
 describe("melee bare wiki goldens", () => {
   it("locks every non-deferred melee against wiki-matched catalog", () => {
-    expect(MELEE_BARE_GOLDENS.length).toBeGreaterThanOrEqual(210);
+    expect(MELEE_BARE_GOLDENS.length).toBeGreaterThanOrEqual(221);
   });
 
   it.each(MELEE_BARE_GOLDENS)("$id catalog bare paper", (g) => {
@@ -87,6 +87,7 @@ describe("melee bare wiki goldens", () => {
       "blast",
       "gas",
       "magnetic",
+      "tau",
     ] as const) {
       const expected = (g as Record<string, number | undefined>)[key];
       if (expected != null) {

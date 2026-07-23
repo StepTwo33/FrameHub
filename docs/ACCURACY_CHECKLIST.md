@@ -52,15 +52,16 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
 | B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
 | B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
-| B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 185 wiki-locked goldens | **Locked** — Kohm spool/pellet-SC, Higasa charge, Nataruk, Synoid Simulor, Sirocco deferred |
+| B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 191 wiki-locked goldens | **Locked** — primary deferred set cleared in B19 |
 | B11 | Secondary weapons (base paper) | Non-exalted pistol/secondary/`dual_pistols` vs Module:Weapons/data/secondary; 145 wiki-locked goldens | **Locked** — prior radial deferred set promoted in B16 |
-| B12 | Melee weapons (base paper) | Non-exalted melee vs Module:Weapons/data/melee; 220 wiki-locked goldens | **Locked** — Dark Split-Sword dual-form + Rabvee zaw stub deferred |
+| B12 | Melee weapons (base paper) | Non-exalted melee vs Module:Weapons/data/melee; 221 wiki-locked goldens | **Locked** — Rabvee zaw stub deferred (modular `zaw_rabvee` locked); DSS Heavy Blade form not locked |
 | B13 | Archgun / archmelee (base paper) | Non-exalted arch vs Module:Weapons/data/archwing Space paper; 27 wiki-locked goldens | **Locked** — Arbucep 6-mode mag/MS cycler deferred; Atmosphere overlays not locked |
 | B14 | Sentinel weapons (base paper) | `sentinel_weapon` vs Module:Weapons/data/companion; 10 wiki-locked goldens | **Locked** — Deconstructor IPS-cycling deferred; Cryotra Cold Field AoE / Stinger embed DoT not in base paper |
 | B15 | Modular parts (base paper) | Kitgun chambers + Zaw strikes + Amp prisms in `modular-weapons.ts` vs Modular/data + Weapons/data/modular | **Locked** — Sporelacer/Vermisplicer grip deltas still category-shared approx; amp mag/reload brace-composed; legacy `weapons.ts` kitgun/zaw/amp stubs not locked |
 | B16 | Radial direct-hit split + legacy stubs | Acceltra/Astilla + B11 deferred secondaries: catalog = wiki direct hit; radials = explosion only; `weapons.ts` modular stubs documented as non-builder | **Locked** — dual-mode chargers/lock-ons (Fulmin/Kohm/…); Staticor charged explosion; Sepulcrum lock-on radial still dual-mode approx |
 | B17 | Launcher / rocket direct-hit paper | Ogris/Tonkor/Penta/Bramma/Shedu + category=`launcher` Envoy/Secura Penta: wiki Impact paper; explosions in radial DPS | **Locked** — Zarr dual cannon/barrage + Miter charge + Fulmin/Kohm dual-mode still deferred |
-| B18 | Dual-mode primary default fire | Fulmin auto, Stradavar auto, Hind burst, Panthera(+Prime), Convectrix, Miter charged, Cernos Prime/Evensong charged, Vinquibus, Zarr cannon direct | **Locked** — Kohm spool, Higasa, Nataruk, Synoid Simulor, Sirocco still deferred |
+| B18 | Dual-mode primary default fire | Fulmin auto, Stradavar auto, Hind burst, Panthera(+Prime), Convectrix, Miter charged, Cernos Prime/Evensong charged, Vinquibus, Zarr cannon direct | **Locked** — remaining deferred cleared in B19 |
+| B19 | Remaining primary deferred + DSS | Kohm fully-spooled MS/SC, Higasa auto FR, Nataruk charged mag, Synoid/Sirocco Void paper, Dark Split-Sword Dual Swords form | **Locked** — Rabvee zaw stub; DSS Heavy Blade alternate form |
 
 ---
 
@@ -346,6 +347,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Radial direct-hit paper (B16) | 2026-07-23 | Split Acceltra/Astilla/Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug direct vs radial; drop Impact/Embed from radial table; legacy modular stubs documented |
 | Launcher / rocket direct-hit (B17) | 2026-07-23 | Split Ogris/Kuva Ogris/Tonkor/Kuva Tonkor/Penta/Secura Penta/Tenet Envoy/Kuva Bramma/Shedu; `launcher-weapon-audit`; Bramma radial no longer folded |
 | Dual-mode primary default fire (B18) | 2026-07-23 | Wiki-lock Fulmin auto / Stradavar / Hind / Panthera / Convectrix / Miter charged / bows / Vinquibus / Zarr cannon direct; 185 primary goldens |
+| Remaining primary deferred + DSS (B19) | 2026-07-23 | Kohm/Kuva Kohm fully-spooled; Higasa auto; Nataruk charged; Synoid/Sirocco; Dark Split-Sword Dual Swords; 191 primary / 221 melee goldens |
 
 ## New / extended test files
 

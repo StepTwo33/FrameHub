@@ -1,4 +1,4 @@
-/** Wiki-matched primary bare catalog goldens (B10/B17/B18). Generated — do not hand-edit. */
+/** Wiki-matched primary bare catalog goldens (B10–B19). Generated — do not hand-edit. */
 export const PRIMARY_BARE_GOLDENS = [
   {
     "id": "acceltra",
@@ -784,6 +784,17 @@ export const PRIMARY_BARE_GOLDENS = [
     "viral": 47
   },
   {
+    "id": "higasa",
+    "damage": 26.0,
+    "puncture": 15.6,
+    "slash": 10.4,
+    "criticalChance": 0.23999999,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.18000001,
+    "fireRate": 2.5,
+    "multishot": 1.0
+  },
+  {
     "id": "hind",
     "damage": 30.0,
     "impact": 7.5,
@@ -848,6 +859,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 13.95,
     "puncture": 9.3,
     "slash": 7.75
+  },
+  {
+    "id": "kohm",
+    "damage": 30.0,
+    "impact": 6.0,
+    "puncture": 6.0,
+    "slash": 18.0,
+    "criticalChance": 0.11,
+    "criticalMultiplier": 2.3,
+    "statusChance": 0.0625,
+    "fireRate": 3.67,
+    "multishot": 12.0
   },
   {
     "id": "komorex",
@@ -928,6 +951,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 7.13,
     "puncture": 6.21,
     "slash": 9.66
+  },
+  {
+    "id": "kuva_kohm",
+    "damage": 20.0,
+    "impact": 4.0,
+    "puncture": 4.0,
+    "slash": 12.0,
+    "criticalChance": 0.19,
+    "criticalMultiplier": 2.3,
+    "statusChance": 0.075,
+    "fireRate": 4.17,
+    "multishot": 12.0
   },
   {
     "id": "kuva_ogris",
@@ -1135,6 +1170,17 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 1.73,
     "puncture": 15.57,
     "slash": 155.7
+  },
+  {
+    "id": "nataruk",
+    "damage": 900.0,
+    "puncture": 648.0,
+    "slash": 252.0,
+    "criticalChance": 0.5,
+    "criticalMultiplier": 2.2,
+    "statusChance": 0.5,
+    "fireRate": 0.66666669,
+    "multishot": 1.0
   },
   {
     "id": "ogris",
@@ -1541,6 +1587,16 @@ export const PRIMARY_BARE_GOLDENS = [
     "multishot": 1
   },
   {
+    "id": "sirocco",
+    "damage": 2000.0,
+    "tau": 2000.0,
+    "criticalChance": 0.40000001,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.19999999,
+    "fireRate": 3.0000002,
+    "multishot": 1.0
+  },
+  {
     "id": "snipetron",
     "damage": 180,
     "criticalChance": 0.30000001,
@@ -1752,6 +1808,15 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 12.000001,
     "multishot": 1,
     "corrosive": 20
+  },
+  {
+    "id": "synoid_simulor",
+    "damage": 240.0,
+    "criticalChance": 0.14,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.35,
+    "fireRate": 3.33,
+    "multishot": 1.0
   },
   {
     "id": "telos_boltor",

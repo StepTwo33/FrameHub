@@ -11,15 +11,8 @@ import type { Mod, Weapon } from "@/lib/types";
 
 const PRIMARY_CATS = new Set(["rifle", "shotgun", "bow", "primary"]);
 
-/** Dual-mode / pellet-SC / battery / odd rows intentionally not wiki-locked this pass. */
-const DEFERRED_PRIMARY_IDS = new Set([
-  "higasa",
-  "kohm",
-  "kuva_kohm",
-  "nataruk",
-  "sirocco",
-  "synoid_simulor",
-]);
+/** Remaining odd / non-builder stubs intentionally not wiki-locked this pass. */
+const DEFERRED_PRIMARY_IDS = new Set<string>([]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -68,7 +61,7 @@ describe("primary weapon inventory (B10)", () => {
 
 describe("primary bare wiki goldens", () => {
   it("locks every non-deferred primary against wiki-matched catalog", () => {
-    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(185);
+    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(191);
   });
 
   it.each(PRIMARY_BARE_GOLDENS)("$id catalog bare paper", (g) => {
@@ -94,6 +87,7 @@ describe("primary bare wiki goldens", () => {
       "blast",
       "gas",
       "magnetic",
+      "tau",
     ] as const) {
       const expected = (g as Record<string, number | undefined>)[key];
       if (expected != null) {
@@ -113,11 +107,12 @@ describe("primary bare wiki goldens", () => {
     expect(stats.moddedBaseDamage).toBeCloseTo(24 * 2.65, 3);
   });
 
-  it("Amprex / Alternox / Arca Plasmor keep innate elements on bare calc", () => {
+  it("Amprex / Alternox / Arca Plasmor / Sirocco keep innate elements on bare calc", () => {
     for (const [id, type] of [
       ["amprex", "electricity"],
       ["alternox", "electricity"],
       ["arca_plasmor", "radiation"],
+      ["sirocco", "tau"],
     ] as const) {
       const w = allWeapons.find((x) => x.id === id)!;
       const stats = calculateWeaponBuild(w, [], modsMap());
