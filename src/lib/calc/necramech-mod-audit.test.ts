@@ -70,3 +70,9 @@ describe("necramech power / survivability (wiki max rank, Phase M10)", () => {
     }
   });
 });
+
+describe("necramech leftovers (wiki max rank, Phase M14)", () => {
+  it("Necramech Redirection R10: +100% shield bonus (Voidrig base shield 0)", () => {
+    expect(withMod("necramech_redirection").shieldBonus).toBeCloseTo(1, 5);
+  });
+});

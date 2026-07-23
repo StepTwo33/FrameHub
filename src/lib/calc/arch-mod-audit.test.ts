@@ -219,6 +219,13 @@ describe("archgun cores (wiki max rank, Phase M8)", () => {
   });
 });
 
+describe("archgun leftovers (wiki max rank, Phase M14)", () => {
+  it("Shell Rush R3: +50% charge rate (fire rate)", () => {
+    const weapon = requireWeapon("imperator");
+    expect(withMod("imperator", "shell_rush").fireRate).toBeCloseTo(weapon.fireRate * 1.5, 8);
+  });
+});
+
 describe("archmelee cores (wiki max rank, Phase M8)", () => {
   it("Cutting Edge R10: +110% melee damage", () => {
     const weapon = requireWeapon("veritux");

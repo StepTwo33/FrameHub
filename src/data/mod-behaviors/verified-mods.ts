@@ -53,15 +53,15 @@ export const VERIFIED_MOD_BEHAVIORS: Record<string, VerifiedModBehavior> = {
     line("multishotOnKill", "weapon_dps", "conditional_multishot_on_kill", "wiki: Galvanized Diffusion — multishot per kill stack"),
   ]),
   galvanized_aptitude: mod("galvanized_aptitude", [
-    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Aptitude — base status"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Aptitude — +80% Status Chance (always-on paper)"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Aptitude — damage per status per stack"),
   ]),
   galvanized_savvy: mod("galvanized_savvy", [
-    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Savvy — base status"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Savvy — +80% Status Chance (always-on paper)"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Savvy — damage per status per stack"),
   ]),
   galvanized_shot: mod("galvanized_shot", [
-    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Shot — base status"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Shot — +80% Status Chance (always-on paper)"),
     line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Shot — damage per status per stack"),
   ]),
 

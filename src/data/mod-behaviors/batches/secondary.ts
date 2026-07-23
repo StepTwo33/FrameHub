@@ -35,9 +35,9 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("puncture", "weapon_dps", "multiplicative_percent", "Bore: puncture \u2014 +120% <DT_PUNCTURE_COLOR>Puncture"),
   ]),
   calculated_victory: mod("calculated_victory", [
-    line("duration", "mod_panel", "multiplicative_percent", "Calculated Victory: duration \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
-    line("health", "warframe_totals", "multiplicative_percent", "Calculated Victory: health \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Calculated Victory: shield \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Calculated Victory — on-kill shield recharge"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Calculated Victory — on-kill health orb effect"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Calculated Victory — on-kill shield recharge"),
   ]),
   cannonade: mod("cannonade", [
     line("explosionChance", "mod_panel", "multiplicative_percent", "Cannonade: explosionChance \u2014 +30% Chance to Explode (Use with Caution)"),
@@ -56,14 +56,14 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Convulsion: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),
   ]),
   critical_mutation: mod("critical_mutation", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Critical Mutation: criticalChance \u2014 Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduc\u2026"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Critical Mutation: criticalMultiplier \u2014 Each kill increases Critical Chance and Critical Damage by 30% up to 300%. Reduc\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Critical Mutation — kill stacks (not always-on)"),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Critical Mutation — kill stacks (not always-on)"),
   ]),
   damzav_vati: mod("damzav_vati", [
     line("viral", "weapon_dps", "elemental_from_base_damage", "Damzav-Vati: viral \u2014 +240% <DT_VIRAL_COLOR>Viral"),
   ]),
   deadly_maneuvers: mod("deadly_maneuvers", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Deadly Maneuvers: criticalChance \u2014 On Dodge, gain 400% Headshot Critical Chance for your next 2 shots."),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Deadly Maneuvers — dodge-gated headshot CC"),
   ]),
   deep_freeze_r3: mod("deep_freeze_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Deep Freeze: cold \u2014 +90% <DT_FREEZE_COLOR>Cold"),
@@ -74,11 +74,11 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
   ]),
   draining_gloom: mod("draining_gloom", [
     line("ammoMaximum", "mod_panel", "multiplicative_percent", "Draining Gloom: ammoMaximum \u2014 +100% chance of Energy Drain explosion, -60% Magazine Capacity, -60% Ammo Maximu\u2026"),
-    line("energy", "warframe_totals", "multiplicative_percent", "Draining Gloom: energy \u2014 +100% chance of Energy Drain explosion, -60% Magazine Capacity, -60% Ammo Maximu\u2026"),
+    line("energy", "mod_panel", "multiplicative_percent", "wiki: Draining Gloom — energy drain explosion (not max energy)"),
     line("magazine", "weapon_dps", "multiplicative_percent", "Draining Gloom: magazine \u2014 +100% chance of Energy Drain explosion, -60% Magazine Capacity, -60% Ammo Maximu\u2026"),
   ]),
   eject_magazine: mod("eject_magazine", [
-    line("magazine", "weapon_dps", "multiplicative_percent", "Eject Magazine: magazine \u2014 +20% Magazine Reloaded/s when Holstered"),
+    line("magazine", "mod_panel", "multiplicative_percent", "wiki: Eject Magazine — holster reload/s (not mag capacity)"),
   ]),
   energizing_shot: mod("energizing_shot", [
     line("energyOrbBonus", "mod_panel", "multiplicative_percent", "Energizing Shot: energyOrbBonus \u2014 Shoot Energy Orbs to obtain them with +110% extra effect."),
@@ -99,11 +99,11 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("factionMurmur", "mod_panel", "multiplicative_percent", "Expel The Murmur: factionMurmur \u2014 x1.3 Damage to Murmur"),
   ]),
   eximus_advantage: mod("eximus_advantage", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Eximus Advantage: damage \u2014 Headshots on Eximus enemies increase Secondary Damage by +600% for 10 secs."),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Eximus Advantage — eximus headshot gated"),
   ]),
   fass_canticle: mod("fass_canticle", [
-    line("duration", "mod_panel", "multiplicative_percent", "Fass Canticle: duration \u2014 Killing enemies grants Allies in Affinity Range 40% Shield Recharge Rate and <LO\u2026"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Fass Canticle: shield \u2014 Killing enemies grants Allies in Affinity Range 40% Shield Recharge Rate and <LO\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Fass Canticle — kill-gated ally buff"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Fass Canticle — kill-gated ally shield recharge"),
   ]),
   frostbite_r3: mod("frostbite_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Frostbite: cold \u2014 +60% <DT_FREEZE_COLOR>Cold, +60% Status Chance"),
@@ -177,8 +177,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Lethal Momentum: projectileSpeed \u2014 +40% Projectile Speed"),
   ]),
   lohk_canticle: mod("lohk_canticle", [
-    line("duration", "mod_panel", "multiplicative_percent", "Lohk Canticle: duration \u2014 Killing enemies grants Allies within Affinity Range +30% Fire Rate for 15s."),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Lohk Canticle: fireRate \u2014 Killing enemies grants Allies within Affinity Range +30% Fire Rate for 15s."),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Lohk Canticle — kill-gated ally fire rate"),
+    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Lohk Canticle — kill-gated ally fire rate"),
   ]),
   loose_magazine: mod("loose_magazine", [
     line("recoil", "mod_panel", "multiplicative_percent", "Loose Magazine: recoil \u2014 +50% Reload Speed, +50% Weapon Recoil (arsenal display only)"),
@@ -271,8 +271,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Quickdraw: reloadSpeed \u2014 +48% Reload Speed"),
   ]),
   range_advantage: mod("range_advantage", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Range Advantage: damage \u2014 +300% damage if no enemies are within 10m."),
-    line("range", "mod_panel", "multiplicative_percent", "Range Advantage: range \u2014 +300% damage if no enemies are within 10m. (arsenal display only)"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Range Advantage — no-enemies-nearby gated"),
+    line("range", "mod_panel", "multiplicative_percent", "wiki: Range Advantage — condition display"),
   ]),
   razor_munitions: mod("razor_munitions", [
     line("damage", "mod_panel", "multiplicative_percent", "wiki: Razor Munitions — IPS convert (not always-on damage)"),
@@ -314,7 +314,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Semi-Pistol Cannonade: punchThrough \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+300% Da\u2026 (arsenal display only)"),
   ]),
   sentient_surge: mod("sentient_surge", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Sentient Surge: criticalChance \u2014 Each target eliminated refills 20% of Ocucor's magazine. Status Chance and Criti\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Sentient Surge — kill-stack SC/CC (not always-on paper)"),
   ]),
   sharpened_bullets: mod("sharpened_bullets", [
     line("criticalMultiplier", "weapon_dps", "conditional_stat_on_kill", "wiki: Sharpened Bullets \u2014 On Kill: +75% Critical Damage when Aiming for 9s"),
@@ -335,10 +335,10 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Soaring Truth: criticalChance \u2014 +200% Critical Chance, +1 'Purity'"),
   ]),
   spry_sights: mod("spry_sights", [
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Spry Sights: sprintSpeed \u2014 +20% Movement Speed when Aiming"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Spry Sights — aiming-gated movement"),
   ]),
   static_alacrity: mod("static_alacrity", [
-    line("blast", "weapon_dps", "elemental_from_base_damage", "Static Alacrity: blast \u2014 +50% Projectile Speed, -50% Blast Radius"),
+    line("blast", "mod_panel", "multiplicative_percent", "wiki: Static Alacrity — blast radius (not blast damage element)"),
     line("blastRange", "mod_panel", "multiplicative_percent", "Static Alacrity: blastRange \u2014 +50% Projectile Speed, -50% Blast Radius"),
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Static Alacrity: projectileSpeed \u2014 +50% Projectile Speed, -50% Blast Radius"),
   ]),
@@ -360,7 +360,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Sure Shot: statusChance \u2014 +90% Status Chance"),
   ]),
   synth_charge_r3: mod("synth_charge_r3", [
-    line("magazine", "weapon_dps", "multiplicative_percent", "Synth Charge: magazine \u2014 +200% Bonus Damage on final shot. Requires Magazine 6 or higher."),
+    line("magazine", "mod_panel", "multiplicative_percent", "wiki: Synth Charge — final-shot bonus damage (not mag capacity)"),
   ]),
   tainted_clip: mod("tainted_clip", [
     line("magazine", "weapon_dps", "multiplicative_percent", "Tainted Clip: magazine \u2014 +60% Magazine Capacity, -30% Reload Speed"),

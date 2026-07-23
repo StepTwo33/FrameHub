@@ -258,8 +258,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("heat", "weapon_dps", "elemental_from_base_damage", "Incendiary Coat: heat \u2014 +90% <DT_FIRE_COLOR>Heat"),
   ]),
   indomitable_matrix: mod("indomitable_matrix", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Indomitable Matrix: armor \u2014 <LOWER_IS_BETTER>-18% Breach Chance\\\\n+22% Shield Recharge during Breach\\\\n+30% \u2026"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Indomitable Matrix: shield \u2014 <LOWER_IS_BETTER>-18% Breach Chance\\\\n+22% Shield Recharge during Breach\\\\n+30% \u2026"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Indomitable Matrix — breach-gated (railjack.ts owns apply)"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Indomitable Matrix — breach-gated (railjack.ts owns apply)"),
   ]),
   inner_might: mod("inner_might", [], "wiki: Inner Might \u2014 Allows Abilities to be cast without using Energy or Shields but requires 60s to recharge."),
   instant_secure: mod("instant_secure", [], "wiki: Instant Secure \u2014 Gain 15% Disinfection and gain 10,000 H\\u00f6llars"),
@@ -271,15 +271,15 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("boostSpeed", "mod_panel", "multiplicative_percent", "Ion Burn: boostSpeed \u2014 +45% Railjack Boost Speed"),
   ]),
   ironclad_matrix: mod("ironclad_matrix", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Ironclad Matrix: armor \u2014 +33.75% Hull and Armor, +38.25% Max Shields and Shield Recharge"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Ironclad Matrix: shield \u2014 +33.75% Hull and Armor, +38.25% Max Shields and Shield Recharge"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Ironclad Matrix — railjack.ts owns hull/armor/shield apply"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Ironclad Matrix — railjack.ts owns hull/armor/shield apply"),
   ]),
   jahu: mod("jahu", [], "wiki: Jahu \u2014 Corporeal laws are unwrit  As suns and love retreat"),
   keep_clean: mod("keep_clean", [], "wiki: Keep-Clean \u2014 There's no Clean like Keep-Clean"),
   khra: mod("khra", [], "wiki: Khra \u2014 To cosmic forms from tangent planes  We end as we began"),
   kill_switch: mod("kill_switch", [
-    line("duration", "mod_panel", "multiplicative_percent", "Kill Switch: duration \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Kill Switch: reloadSpeed \u2014 On Kill:\\\\n+50% Reload Speed for 3s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Kill Switch — on-kill reload"),
+    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Kill Switch — on-kill reload"),
   ]),
   killers_rush: mod("killers_rush", [], "wiki: Killer's Rush \u2014 catalog entry (stats in ability logic)"),
 
@@ -354,22 +354,24 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   nirasetmod: mod("nirasetmod", [], "wiki: Nirasetmod \u2014 catalog entry (stats in ability logic)"),
   noble_cadence: mod("noble_cadence", [], "wiki: Noble Cadence \u2014 Fighting form devised for Conclave."),
   onslaught_matrix: mod("onslaught_matrix", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Onslaught Matrix: damage \u2014 +22% Turret Damage while 100% Hull\\\\n20% chance to Reflect 38% Damage while over\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Onslaught Matrix — full-hull gated (railjack.ts)"),
   ]),
   ordnance_cheap_shot: mod("ordnance_cheap_shot", [], "wiki: Ordnance Cheap Shot \u2014 Ordnance weapons have a +90% chance to not consume Munitions"),
   ordnance_velocity: mod("ordnance_velocity", [
     line("ordnanceSpeed", "mod_panel", "multiplicative_percent", "Ordnance Velocity: ordnanceSpeed \u2014 +60% Ordnance Projectile Speed"),
   ]),
   orgone_tuning_matrix: mod("orgone_tuning_matrix", [
-    line("heat", "weapon_dps", "elemental_from_base_damage", "Orgone Tuning Matrix: heat \u2014 +33.75% Forge Capacity, <LOWER_IS_BETTER>-22.5% Forge Cooldown, +22.5% Elemental\u2026"),
+    line("heat", "mod_panel", "multiplicative_percent", "wiki: Orgone Tuning Matrix — forge/heat capacity (not weapon heat)"),
   ]),
   oull: mod("oull", [], "wiki: Oull \u2014 Through endless faces, countless forms, a multitude unfolds.  (Mimics any Requiem Mod)"),
   out_of_sight: mod("out_of_sight", [
     line("range", "mod_panel", "multiplicative_percent", "Out Of Sight: range \u2014 Blinds enemies within 18m on Mercy Kill (arsenal display only)"),
   ]),
-  overloader: mod("overloader", [], "wiki: Overloader \u2014 +87% Maximum Ordnance Munitions"),
+  overloader: mod("overloader", [
+    line("magazine", "mod_panel", "multiplicative_percent", "wiki: Overloader — railjack.ts owns munitions capacity apply"),
+  ]),
   overwhelming_power: mod("overwhelming_power", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Overwhelming Power: abilityStrength \u2014 Gain +5% Ability Strength for each enemy hit by the initial Tauron Strike for 30\u2026"),
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "wiki: Overwhelming Power — Tauron Strike hit stacks (not always-on)"),
   ]),
   particle_ram: mod("particle_ram", [], "wiki: Particle Ram \u2014 Railjack Ram that deals damage to anything it touches when moving forward."),
   peculiar_audience: mod("peculiar_audience", [
@@ -427,12 +429,12 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   ]),
   prismatic_beam: mod("prismatic_beam", [], "wiki: Prismatic Beam \u2014 Enemies struck by the Tauron Strike fire off smaller beams at other enemies within 20m."),
   prize_kill: mod("prize_kill", [
-    line("duration", "mod_panel", "multiplicative_percent", "Prize Kill: duration \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
-    line("health", "warframe_totals", "multiplicative_percent", "Prize Kill: health \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Prize Kill: shield \u2014 On Kill:\\\\n-100% Shield Recharge Delay for 10s, -25% from Health Orbs"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Prize Kill — on-kill shield recharge"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Prize Kill — on-kill health orb effect"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Prize Kill — on-kill shield recharge"),
   ]),
   protective_shots: mod("protective_shots", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Protective Shots: damage \u2014 +30% Turret Damage when Shields are above 75%"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Protective Shots — shield-gated (railjack sim)"),
   ]),
   protector_posture: mod("protector_posture", [
     line("range", "mod_panel", "multiplicative_percent", "Protector Posture: range \u2014 The companion will prioritize attacking enemies within 15m of the Warframe. Atta\u2026 (arsenal display only)"),
@@ -441,8 +443,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   quick_correct: mod("quick_correct", [], "wiki: Quick Correct \u2014 Gain 10% Disinfection and 10% chance to drop a Live Heartcell "),
   quicklock: mod("quicklock", [], "wiki: Quicklock \u2014 -112.5% Ordnance Lock-On Time"),
   raider_matrix: mod("raider_matrix", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Raider Matrix: damage \u2014 +22% Archwing Speed and Damage\\\\n+36% Archwing Shield and Armor\\\\n+67% Captured \u2026"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Raider Matrix: shield \u2014 +22% Archwing Speed and Damage\\\\n+36% Archwing Shield and Armor\\\\n+67% Captured \u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Raider Matrix — archwing slingshot (not gun/RJ paper)"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Raider Matrix — archwing slingshot utility"),
   ]),
   rain_of_arrows: mod("rain_of_arrows", [], "wiki: Rain Of Arrows \u2014 On dealing damage, fire an arrow at an enemy with 0.35s cooldown between arrows. 30s duration."),
   raptorsetmod: mod("raptorsetmod", [], "wiki: Raptorsetmod \u2014 catalog entry (stats in ability logic)"),
@@ -452,20 +454,20 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   rending_crane: mod("rending_crane", [], "wiki: Rending Crane \u2014 Downward cuts with an impact combo."),
   rending_wind: mod("rending_wind", [], "wiki: Rending Wind \u2014 Fighting form devised for Conclave."),
   repeater_clip: mod("repeater_clip", [
-    line("duration", "mod_panel", "multiplicative_percent", "Repeater Clip: duration \u2014 On Reload:\\\\n+105% Fire Rate when Aiming for 9s"),
-    line("fireRate", "weapon_dps", "multiplicative_percent", "Repeater Clip: fireRate \u2014 On Reload:\\\\n+105% Fire Rate when Aiming for 9s"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Repeater Clip — reload+aim gated fire rate"),
+    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Repeater Clip — reload+aim gated fire rate"),
   ]),
   revo_reducer: mod("revo_reducer", [], "wiki: Revo Reducer \u2014 -60.8% Omni Revolite Consumption"),
   rifle_riven_mod: mod("rifle_riven_mod", [], "wiki: Rifle Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
   rift_waters: mod("rift_waters", [], "wiki: Rift Waters \u2014 Vortex strips enemy Overguard 25% per second."),
   ripload: mod("ripload", [
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Ripload: reloadSpeed \u2014 -63% Ordnance Reload Time"),
+    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Ripload — ordnance reload time (not weapon reload)"),
   ]),
   ris: mod("ris", [], "wiki: Ris \u2014 In luminous space blackened stars  They gaze, accuse, deny"),
   rising_steel: mod("rising_steel", [], "wiki: Rising Steel \u2014 Fighting form devised for Conclave."),
   runtime: mod("runtime", [
-    line("duration", "mod_panel", "multiplicative_percent", "Runtime: duration \u2014 +75% Sprint Speed for 15s after Hacking"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Runtime: sprintSpeed \u2014 +75% Sprint Speed for 15s after Hacking"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Runtime — post-hack sprint"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Runtime — post-hack sprint"),
   ]),
   sacrificesetmod: mod("sacrificesetmod", [], "wiki: Sacrificesetmod \u2014 catalog entry (stats in ability logic)"),
 
@@ -475,11 +477,11 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Scattering Inferno: statusChance \u2014 +60% <DT_FIRE_COLOR>Heat, +60% Status Chance"),
   ]),
   scourging_warheads: mod("scourging_warheads", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Scourging Warheads: shield \u2014 +76.5% chance for Ordnance to ignore enemy Shields"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Scourging Warheads — ordnance ignore shields (special)"),
   ]),
   section_density: mod("section_density", [
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Section Density: criticalMultiplier \u2014 +50% Turret Critical Damage"),
-    line("turretCritDamage", "mod_panel", "multiplicative_percent", "Section Density: turretCritDamage \u2014 +50% Turret Critical Damage"),
+    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Section Density — alias (railjack.ts owns turretCritDamage)"),
+    line("turretCritDamage", "mod_panel", "multiplicative_percent", "wiki: Section Density — railjack.ts owns apply"),
   ]),
   seeker_volley: mod("seeker_volley", [], "wiki: Seeker Volley \u2014 Fires a volley of homing missiles."),
   seeking_force_r3: mod("seeking_force_r3", [
@@ -594,11 +596,11 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   vome: mod("vome", [], "wiki: Vome \u2014 To cosmic madness laws submit  Though stalwart minds entreat"),
   votive_onslaught: mod("votive_onslaught", [], "wiki: Votive Onslaught \u2014 Precise, focused arcs and cuts not hampered by pity."),
   warhead: mod("warhead", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Warhead: damage \u2014 +100% Ordnance Damage"),
-    line("ordnanceDamage", "mod_panel", "multiplicative_percent", "Warhead: ordnanceDamage \u2014 +100% Ordnance Damage"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Warhead — alias (railjack.ts owns ordnanceDamage)"),
+    line("ordnanceDamage", "mod_panel", "multiplicative_percent", "wiki: Warhead — railjack.ts owns apply"),
   ]),
   waveband_disruptor: mod("waveband_disruptor", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Waveband Disruptor: shield \u2014 +76.5% chance for Turret Critical Hits to ignore enemy Shields"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Waveband Disruptor — turret crits ignore shields (special)"),
   ]),
   wellspring: mod("wellspring", [], "wiki: Wellspring \u2014 First Ability creates a well of energy for 8s. Allies passing through the well gain 5 Energy/s for 30s."),
   worm_away: mod("worm_away", [], "wiki: Worm Away \u2014 Get rid of malware, spyware, wetware and worms"),

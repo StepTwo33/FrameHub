@@ -491,6 +491,12 @@ describe("melee leftovers (wiki max rank, Phase M13)", () => {
   });
 });
 
+describe("melee leftovers (wiki max rank, Phase M14)", () => {
+  it("Galvanized Reflex R10 paper: +50% heavy attack efficiency", () => {
+    expect(withMod("galvanized_reflex").heavyAttackEfficiency).toBeCloseTo(0.5, 5);
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

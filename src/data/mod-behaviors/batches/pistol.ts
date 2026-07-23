@@ -40,9 +40,9 @@ export const MOD_BEHAVIORS_PISTOL: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Crosshairs: duration \u2014 On Headshot:\\\\n+120% Critical Chance when Aiming for 12s\\\\nOn Headshot Kill:\\\\n+\u2026"),
   ]),
   galvanized_shot: mod("galvanized_shot", [
-    line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Shot: damagePerStatus \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
+    line("damagePerStatus", "weapon_dps", "conditional_damage_per_status_on_kill", "wiki: Galvanized Shot — on-kill damage per status stack"),
     line("duration", "mod_panel", "multiplicative_percent", "Galvanized Shot: duration \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
-    line("statusChance", "weapon_dps", "conditional_damage_per_status_on_kill", "Galvanized Shot: statusChance \u2014 +80% Status Chance\\\\nOn Kill:\\\\n+40% Direct Damage per Status Type affecting the\u2026"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Galvanized Shot — +80% Status Chance (always-on paper)"),
   ]),
   hydraulic_crosshairs: mod("hydraulic_crosshairs", [
     line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Hydraulic Crosshairs \u2014 On Headshot: +135% Critical Chance when Aiming for 9s"),

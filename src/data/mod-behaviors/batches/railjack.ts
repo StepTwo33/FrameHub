@@ -53,8 +53,8 @@ export const MOD_BEHAVIORS_RAILJACK: Record<string, VerifiedModBehavior> = {
     line("shield", "railjack_totals", "multiplicative_percent", "Ironclad Matrix: +38.25% Shields and Shield Recharge"),
   ]),
   indomitable_matrix: mod("indomitable_matrix", [
-    line("armor", "railjack_totals", "multiplicative_percent", "Indomitable Matrix: breach mitigation + armor"),
-    line("shield", "railjack_totals", "multiplicative_percent", "Indomitable Matrix: shield recharge during breach"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Indomitable Matrix — breach-gated"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Indomitable Matrix — breach-gated"),
   ]),
   fortifying_fire: mod("fortifying_fire", [
     line("shield", "mod_panel", "multiplicative_percent", "wiki: Fortifying Fire — shield on crit (conditional)"),
@@ -104,6 +104,10 @@ export const MOD_BEHAVIORS_RAILJACK: Record<string, VerifiedModBehavior> = {
     line("factionSentient", "mod_panel", "multiplicative_percent", "Sentient Scalpel: x1.27 vs Sentient"),
   ]),
   raider_matrix: mod("raider_matrix", [
-    line("damage", "railjack_totals", "multiplicative_percent", "Raider Matrix: archwing slingshot damage bonus"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Raider Matrix — archwing slingshot (not RJ turret paper)"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Raider Matrix — archwing slingshot utility"),
+  ]),
+  ripload: mod("ripload", [
+    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Ripload — ordnance reload time (not weapon reload / not yet modeled)"),
   ]),
 };

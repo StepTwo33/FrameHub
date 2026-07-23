@@ -1108,3 +1108,57 @@ describe("gun leftovers (wiki max rank, Phase M13)", () => {
     expect(withMod("strun", "galvanized_hell").multishot).toBeCloseTo(strun.multishot * 2.1, 8);
   });
 });
+
+describe("gun leftovers (wiki max rank, Phase M14)", () => {
+  it("Metamorphic Magazine R5: +90% magazine", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "metamorphic_magazine").magazine).toBe(
+      Math.round(weapon.magazine * 1.9),
+    );
+  });
+
+  it("Thundermiter R3: −60% magazine", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "thundermiter").magazine).toBe(Math.round(weapon.magazine * 0.4));
+  });
+
+  it("Draining Gloom R3: −60% magazine", () => {
+    const weapon = requireWeapon("lex");
+    expect(withMod("lex", "draining_gloom").magazine).toBe(Math.round(weapon.magazine * 0.4));
+  });
+
+  it("Semi-Rifle / Semi-Pistol / Semi-Shotgun Cannonade: +240% / +300% / +240% damage", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    const strun = requireWeapon("strun");
+    expect(withMod("braton", "semi_rifle_cannonade").moddedBaseDamage).toBeCloseTo(
+      braton.damage * 3.4,
+      5,
+    );
+    expect(withMod("lex", "semi_pistol_cannonade").moddedBaseDamage).toBeCloseTo(
+      lex.damage * 4,
+      5,
+    );
+    expect(withMod("strun", "semi_shotgun_cannonade").moddedBaseDamage).toBeCloseTo(
+      strun.damage * 3.4,
+      5,
+    );
+  });
+
+  it("Galvanized Shot / Savvy R10 paper: +80% status chance at 0 stacks", () => {
+    const lex = requireWeapon("lex");
+    const braton = requireWeapon("braton");
+    expect(withMod("lex", "galvanized_shot").statusChance).toBeCloseTo(
+      lex.statusChance * 1.8,
+      5,
+    );
+    expect(withMod("braton", "galvanized_savvy").statusChance).toBeCloseTo(
+      braton.statusChance * 1.8,
+      5,
+    );
+  });
+
+  it("Harkonar Scope R5: +12s combo duration (base 5 → 17)", () => {
+    expect(withMod("braton", "harkonar_scope").comboDuration).toBeCloseTo(17, 8);
+  });
+});

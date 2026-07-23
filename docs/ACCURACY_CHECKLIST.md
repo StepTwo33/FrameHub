@@ -82,8 +82,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M11 | Archwing + WF remainder + claws | Archwing power/survivability (Odenata); Primed Redirection/Vigor/Streamline, Rush, Drift/Carapace/Resolve/Hastened/Controlled Slide/Sprint Speed; Flame/Frost Claws per-rank fix; Bite desc; Fast Deflection/Fortitude/Precision Intensify/Preparation/Armored DR/Mecha Pulse/Cull→panel | **Locked** — +~35 IDs; claw heat/cold 90→15 |
 | M12 | Companion + WF/gun leftovers | Carrier survivability (+250% wiki); Retrievers; Flame Gland/Frost Jaw/Shock Collar/Venom Teeth + Bite/Maul on claws; Vigor/Mobilize/Adrenaline; Ravage/Barrage/Tactical Pump/Tainted Shell/IPS slash; Link/Deflection/Vicious Bond/QT/Finesse→panel | **Locked** — +~30 IDs; EV/MF desc +250% |
 | M13 | RJ + parkour + convert cleanup | Railjack Hyperstrike/Predator/Section/Warhead/Artillery (alias double-count fix); WF parkour suite + Power Donation −30%; convert claws/conditioning; Galv Diffusion/Hell paper MS; IPS convert/finisher/slam/precept→panel | **Locked** — +~40 IDs; Power Donation sign fix |
+| M14 | RJ remainder + gun/melee leftovers | RJ Conic/Ion/Ordnance Velocity/Overloader/Turret Velocity; mag/cannonade/Shell Rush/Necramech Redirection; Galv Shot/Savvy paper SC + Reflex HAE; Harkonar comboDuration; false always-ons→panel; turretProjectileSpeed no longer double-counts into ordnance | **Locked** — +~25 IDs; RJ speed/munitions goldens |
 
-**Remaining unlocked paper-moving mods (post M13):** mostly gated conditionals (aim/kill/cast), Galv stack lines, exclusive/augments. Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M14):** mostly gated conditionals (aim/kill/cast), Galv stack lines, exclusive/augments/precepts. Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
 
 ---
 
@@ -120,6 +121,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M11 Archwing/WF/claws | 2026-07-23 | +~35 archwing + warframe remainder + claw goldens; panel mis-tags; claw element per-rank fix |
 | M12 Companion/WF/gun | 2026-07-23 | +~30 companion survivability + claw glands + WF/gun leftovers; Link/recharge panel fixes |
 | M13 RJ/parkour/convert | 2026-07-23 | +~40 RJ cores + parkour + convert claws; RJ alias double-count + Power Donation sign |
+| M14 RJ/gun leftovers | 2026-07-23 | +~25 RJ remainder + mag/cannonade/Galv SC/Reflex/Harkonar; panel mis-tags; turret proj speed alias fix |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

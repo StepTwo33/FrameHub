@@ -825,7 +825,6 @@ export function applyVerifiedModStatToRailjack(
       acc.turretRangeBonus += modValue;
       return true;
     case "turretProjectileSpeed":
-      acc.ordnanceSpeedBonus += modValue;
       acc.turretProjectileSpeedBonus += modValue;
       return true;
     case "ordnanceSpeed":
