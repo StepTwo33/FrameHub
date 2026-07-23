@@ -170,7 +170,7 @@ export function scaleExaltedWeaponByStrength(weapon: Weapon, abilityStrength: nu
   for (const key of EXALTED_DAMAGE_KEYS) {
     const v = next[key];
     if (typeof v === "number" && v !== 0) {
-      (next as Record<string, number>)[key] = v * abilityStrength;
+      (next as unknown as Record<string, number>)[key] = v * abilityStrength;
     }
   }
   return next;
