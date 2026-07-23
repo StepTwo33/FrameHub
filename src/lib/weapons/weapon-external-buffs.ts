@@ -577,6 +577,10 @@ const CRITICAL_SURGE_CC_PER_M_BY_RANK = [0.025, 0.05, 0.075, 0.1] as const;
 const CRITICAL_SURGE_CC_CAP = 2.5;
 const CRITICAL_SURGE_MIN_TELEPORT_M = 10;
 
+const FURIOUS_JAVELIN_MOD_ID = "augment_excalibur_furious_javelin";
+/** Wiki Furious Javelin melee damage % per enemy by rank (non-linear). */
+const FURIOUS_JAVELIN_DMG_BY_RANK = [0.08, 0.1, 0.12, 0.15] as const;
+
 /**
  * Wiki Razorwing Blitz: cast while Razorwing → +25% FR/AS × stacks × Strength (cap 4).
  * Dex Pixia / Diwata only (including primes).
@@ -603,6 +607,37 @@ function resolveRazorwingBlitzBuff(
     category: "ability",
     fireRateBonus: bonus,
     nominal: `+${(RAZORWING_BLITZ_FR_PER_STACK * 100).toFixed(0)}% fire/attack speed × ${stacks} stack${stacks === 1 ? "" : "s"} (× Strength)`,
+  };
+}
+
+/**
+ * Wiki Furious Javelin: each Radial Javelin hit → Eclipse-style melee damage mult × STR.
+ * Applies to melee including Exalted Blade.
+ */
+function resolveFuriousJavelinBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  if (!isMeleeWeapon(weapon)) return null;
+  const enemies = Math.max(0, Math.floor(simParams.furiousJavelinEnemies ?? 0));
+  if (enemies <= 0) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === FURIOUS_JAVELIN_MOD_ID);
+  if (!slot) return null;
+  const rank = Math.min(
+    Math.max(slot.rank ?? 0, 0),
+    FURIOUS_JAVELIN_DMG_BY_RANK.length - 1,
+  );
+  const perEnemy = FURIOUS_JAVELIN_DMG_BY_RANK[rank] ?? 0.15;
+  const bonus = perEnemy * strength * enemies;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Furious Javelin",
+    label: "Furious Javelin",
+    category: "ability",
+    damageMultBonus: bonus,
+    nominal: `+${(perEnemy * 100).toFixed(0)}% melee damage × ${enemies} enem${enemies === 1 ? "y" : "ies"} (× Strength)`,
   };
 }
 
@@ -907,6 +942,9 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Critical Surge — Reservoir teleport meters → primary CC × Strength (cap 250%)
     case "Breach Surge":
       return resolveCriticalSurgeBuff(weapon, strength, ctx, simParams);
+    // wiki: Furious Javelin — Radial Javelin enemy hits → melee damage mult × Strength
+    case "Radial Javelin":
+      return resolveFuriousJavelinBuff(weapon, strength, ctx, simParams);
     // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
     case "Fireball":
     case "Freeze":
@@ -1194,6 +1232,7 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Thermal Sunder",
   "Razorwing",
   "Breach Surge",
+  "Radial Javelin",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */

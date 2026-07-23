@@ -330,6 +330,18 @@ export function WeaponSimControls({
                 tooltip="Critical Surge: meters teleported to a Reservoir (0 = off). In-game min 10m. Primary CC = %/m × meters × Strength, capped at 250% — needs Critical Surge equipped."
               />
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Radial Javelin") && (
+              <SimSlider
+                label="Javelin enemies hit"
+                value={simParams.furiousJavelinEnemies ?? 0}
+                min={0}
+                max={20}
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, furiousJavelinEnemies: v })
+                }
+                tooltip="Furious Javelin: enemies hit by Radial Javelin (0 = off). Melee damage × (1 + 15% × Strength × enemies) at R3 — includes Exalted Blade; needs Furious Javelin equipped."
+              />
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

@@ -467,6 +467,11 @@ export interface SimulationParams {
    */
   criticalSurgeTeleportMeters?: number;
   /**
+   * Furious Javelin: enemies hit by Radial Javelin (0 = off).
+   * Melee damage mult = per-enemy% × Strength × enemies (Eclipse-style; includes exalted).
+   */
+  furiousJavelinEnemies?: number;
+  /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
    */

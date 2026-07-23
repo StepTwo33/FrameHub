@@ -342,6 +342,78 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
+  it("Furious Javelin: Radial Javelin enemy-count melee damage mult × Strength", () => {
+    const javelin: Ability = { name: "Radial Javelin", energyCost: 75, description: "" };
+    expect(weaponDamageBuffAbilities([javelin]).map((a) => a.name)).toContain("Radial Javelin");
+
+    const ctx = {
+      warframeId: "excalibur",
+      warframeStats: { ...wfStats, abilityStrength: 1.3 },
+      warframeAbilities: [javelin],
+      warframeModSlots: [
+        { modId: "augment_excalibur_furious_javelin", slotIndex: 0, rank: 3 },
+      ] as ModSlot[],
+      allMods: modsMap,
+    };
+    const sim: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Radial Javelin"],
+      furiousJavelinEnemies: 5,
+    };
+
+    expect(
+      resolveWeaponExternalBuffs(testMelee, ctx, {
+        ...sim,
+        furiousJavelinEnemies: 0,
+      }).find((b) => b.id === "ability:Furious Javelin"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(testRifle, ctx, sim).find(
+        (b) => b.id === "ability:Furious Javelin",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        testMelee,
+        { ...ctx, warframeModSlots: [] },
+        sim,
+      ).find((b) => b.id === "ability:Furious Javelin"),
+    ).toBeUndefined();
+
+    // R3, 5 enemies, STR 1.3 → 0.15 × 1.3 × 5 = 0.975
+    const fj = resolveWeaponExternalBuffs(testMelee, ctx, sim).find(
+      (b) => b.id === "ability:Furious Javelin",
+    );
+    expect(fj?.damageMultBonus).toBeCloseTo(0.15 * 1.3 * 5, 8);
+    expect(fj?.damageBonus).toBeUndefined();
+
+    // Exalted melee included
+    const exalted = {
+      ...testMelee,
+      id: "exalted_blade",
+      isExalted: true,
+    };
+    expect(
+      resolveWeaponExternalBuffs(exalted, ctx, sim).find(
+        (b) => b.id === "ability:Furious Javelin",
+      )?.damageMultBonus,
+    ).toBeCloseTo(0.975, 8);
+
+    // Wiki worked example: base 100, PP +120%, FJ → 100 × 2.2 × 1.975 = 434.5
+    const pp = allMods.find((m) => m.id === "pressure_point_r3");
+    expect(pp).toBeDefined();
+    const wikiWeapon = { ...testMelee, damage: 100, impact: 100 };
+    const withBoth = calculateWeaponBuild(
+      wikiWeapon,
+      [{ modId: pp!.id, rank: pp!.maxRank, slotIndex: 0 }],
+      modsMap,
+      undefined,
+      sim,
+      { externalBuffs: [fj!] },
+    );
+    expect(withBoth.totalDamage).toBeCloseTo(100 * 2.2 * 1.975, 4);
+  });
+
   it("Razorwing Blitz / Critical Surge: stack and teleport-meter gates", () => {
     const razorwing: Ability = { name: "Razorwing", energyCost: 25, description: "" };
     const breach: Ability = { name: "Breach Surge", energyCost: 50, description: "" };

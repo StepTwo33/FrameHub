@@ -168,7 +168,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_excalibur_furious_javelin: mod("augment_excalibur_furious_javelin", [
     line("duration", "mod_panel", "multiplicative_percent", "Furious Javelin: duration \u2014 Radial Javelin Augment: Each enemy hit will increase Excalibur's Melee Damage by\u2026"),
-    line("meleeDamagePerEnemy", "mod_panel", "multiplicative_percent", "Furious Javelin: meleeDamagePerEnemy \u2014 Radial Javelin Augment: Each enemy hit will increase Excalibur's Melee Damage by\u2026"),
+    line("meleeDamagePerEnemy", "mod_panel", "multiplicative_percent", "wiki: Furious Javelin — Radial Javelin-gated melee damage mult × enemies × Strength (not always-on)"),
   ]),
   augment_excalibur_radiant_finish: mod("augment_excalibur_radiant_finish", [
     line("damage", "mod_panel", "multiplicative_percent", "Radiant Finish: damage \u2014 Radial Blind Augment: Blinded enemies take 300% more Finisher Damage."),
