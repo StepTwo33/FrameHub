@@ -21,7 +21,18 @@ import {
   computeWarframeAuraBonus,
   computeWarframeCapacityUsed,
 } from "@/lib/calc/compute-used-capacity";
-import { Warframe, Mod, Ability, Weapon, WarframeCalculatedStats, CalculatedStats, EquippedMod, EquippedArchonShard, ArchonShard } from "@/lib/types";
+import {
+  Warframe,
+  Mod,
+  Ability,
+  Weapon,
+  WarframeCalculatedStats,
+  CalculatedStats,
+  EquippedMod,
+  EquippedArchonShard,
+  ArchonShard,
+  WeaponCalculationOptions,
+} from "@/lib/types";
 import { Zap, Flag, Gem, Star, Save, FolderOpen, Share2, Check, Upload, Shield } from "lucide-react";
 import { warframeArcanes } from "@/data/arcanes";
 import { ArcaneSlotCard, ArcanePicker } from "@/components/arcane-picker";
@@ -422,6 +433,23 @@ export default function WarframeBuilderPage() {
         ? getWeaponArcanes(exaltedMeleeWeapon)
         : { arcanes: [] as Mod[], slots: 0, label: "" },
     [exaltedMeleeWeapon],
+  );
+
+  const calculatedStats = useMemo<WarframeCalculatedStats | null>(() => {
+    if (!selectedWarframe) return null;
+    const modSlots = equippedMods.map((m) => ({
+      modId: m.modId,
+      rank: m.rank,
+      slotIndex: m.slotIndex,
+    }));
+    const stats = calculateWarframeBuild(selectedWarframe, modSlots, modsMap);
+    return applyWarframeShardsAndArcanes(stats, equippedShards, equippedArcanes, equippedArcaneRanks);
+  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, equippedArcaneRanks, modsMap]);
+
+  /** Exalted DPS scales with host Ability Strength (wiki). */
+  const exaltedCalcOptions = useMemo<WeaponCalculationOptions>(
+    () => ({ abilityStrength: calculatedStats?.abilityStrength ?? 1 }),
+    [calculatedStats?.abilityStrength],
   );
 
   const exaltedStats = useMemo<CalculatedStats | null>(() => {
