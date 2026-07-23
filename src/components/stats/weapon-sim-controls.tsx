@@ -306,6 +306,30 @@ export function WeaponSimControls({
                 </select>
               </label>
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Razorwing") && (
+              <SimSlider
+                label="Razorwing Blitz stacks"
+                value={simParams.razorwingBlitzStacks ?? 0}
+                min={0}
+                max={4}
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, razorwingBlitzStacks: v })
+                }
+                tooltip="Razorwing Blitz: ability casts while Razorwing is active (max 4). 0 = off. +25% fire/attack speed per stack × Ability Strength — Dex Pixia / Diwata only; needs Blitz equipped."
+              />
+            )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Breach Surge") && (
+              <SimSlider
+                label="Surge teleport meters"
+                value={simParams.criticalSurgeTeleportMeters ?? 0}
+                min={0}
+                max={50}
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, criticalSurgeTeleportMeters: v })
+                }
+                tooltip="Critical Surge: meters teleported to a Reservoir (0 = off). In-game min 10m. Primary CC = %/m × meters × Strength, capped at 250% — needs Critical Surge equipped."
+              />
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

@@ -4652,7 +4652,7 @@ const RAW_MODS: Mod[] = [
     "subCategory": "",
     "stats": {
       "breachCritChance": 25,
-      "criticalChance": 12.5,
+      "criticalChance": 2.5,
       "duration": 2.25
     },
     "description": "Breach Surge Augment: Teleporting to a Reservoir costs 50% Energy and grants 10% Critical Chance to Primary Weapons per meter traveled for 9s. Maximum 250% Critical Chance.",

@@ -473,8 +473,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_titania_razorwing_blitz: mod("augment_titania_razorwing_blitz", [
     line("duration", "mod_panel", "multiplicative_percent", "Razorwing Blitz: duration \u2014 Razorwing Augment: Flight Speed increased by 25% and Fire Rate increased by 25% \u2026"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "Razorwing Blitz: fireRate \u2014 Razorwing Augment: Flight Speed increased by 25% and Fire Rate increased by 25% \u2026"),
-    line("flightSpeed", "mod_panel", "multiplicative_percent", "Razorwing Blitz: flightSpeed \u2014 Razorwing Augment: Flight Speed increased by 25% and Fire Rate increased by 25% \u2026"),
+    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Razorwing Blitz — Razorwing-gated FR/AS × stacks × Strength (Dex Pixia / Diwata; not always-on)"),
+    line("flightSpeed", "mod_panel", "multiplicative_percent", "wiki: Razorwing Blitz — flight/sprint display (not weapon DPS)"),
     line("speedPerCast", "mod_panel", "multiplicative_percent", "Razorwing Blitz: speedPerCast \u2014 Razorwing Augment: Flight Speed increased by 25% and Fire Rate increased by 25% \u2026"),
   ]),
   augment_titania_spellbound_harvest: mod("augment_titania_spellbound_harvest", [
@@ -536,7 +536,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_wisp_critical_surge: mod("augment_wisp_critical_surge", [
     line("breachCritChance", "mod_panel", "multiplicative_percent", "Critical Surge: breachCritChance \u2014 Breach Surge Augment: Teleporting to a Reservoir costs 50% Energy and grants 10%\u2026"),
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Critical Surge: criticalChance \u2014 Breach Surge Augment: Teleporting to a Reservoir costs 50% Energy and grants 10%\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Critical Surge — Breach Surge teleport-gated primary CC × meters × Strength (cap 250%; not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Critical Surge: duration \u2014 Breach Surge Augment: Teleporting to a Reservoir costs 50% Energy and grants 10%\u2026"),
   ]),
   augment_wisp_fused_reservoir: mod("augment_wisp_fused_reservoir", [

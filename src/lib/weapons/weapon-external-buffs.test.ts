@@ -342,6 +342,156 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
+  it("Razorwing Blitz / Critical Surge: stack and teleport-meter gates", () => {
+    const razorwing: Ability = { name: "Razorwing", energyCost: 25, description: "" };
+    const breach: Ability = { name: "Breach Surge", energyCost: 50, description: "" };
+    expect(weaponDamageBuffAbilities([razorwing]).map((a) => a.name)).toContain("Razorwing");
+    expect(weaponDamageBuffAbilities([breach]).map((a) => a.name)).toContain("Breach Surge");
+
+    const pixia = { ...testRifle, id: "dex_pixia", name: "Dex Pixia", isExalted: true };
+    const diwata = { ...testMelee, id: "diwata", name: "Diwata", isExalted: true };
+    const blitzCtx = {
+      warframeId: "titania",
+      warframeStats: { ...wfStats, abilityStrength: 1 },
+      warframeAbilities: [razorwing],
+      warframeModSlots: [
+        { modId: "augment_titania_razorwing_blitz", slotIndex: 0, rank: 3 },
+      ] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simBlitz: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Razorwing"],
+      razorwingBlitzStacks: 4,
+    };
+
+    // stacks 0 / no augment / wrong weapon → no Blitz
+    expect(
+      resolveWeaponExternalBuffs(pixia, blitzCtx, {
+        ...simBlitz,
+        razorwingBlitzStacks: 0,
+      }).find((b) => b.id === "ability:Razorwing Blitz"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(testRifle, blitzCtx, simBlitz).find(
+        (b) => b.id === "ability:Razorwing Blitz",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        pixia,
+        { ...blitzCtx, warframeModSlots: [] },
+        simBlitz,
+      ).find((b) => b.id === "ability:Razorwing Blitz"),
+    ).toBeUndefined();
+
+    // 4 stacks @ 100% STR → +100% FR
+    const blitz = resolveWeaponExternalBuffs(pixia, blitzCtx, simBlitz).find(
+      (b) => b.id === "ability:Razorwing Blitz",
+    );
+    expect(blitz?.fireRateBonus).toBeCloseTo(1.0, 8);
+
+    const blitzDiwata = resolveWeaponExternalBuffs(diwata, blitzCtx, simBlitz).find(
+      (b) => b.id === "ability:Razorwing Blitz",
+    );
+    expect(blitzDiwata?.fireRateBonus).toBeCloseTo(1.0, 8);
+
+    const blitzStr2 = resolveWeaponExternalBuffs(
+      pixia,
+      { ...blitzCtx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+      { ...simBlitz, razorwingBlitzStacks: 2 },
+    ).find((b) => b.id === "ability:Razorwing Blitz");
+    // 25% × 2 stacks × 2 STR = 100%
+    expect(blitzStr2?.fireRateBonus).toBeCloseTo(1.0, 8);
+
+    const barePixia = calculateWeaponBuild(pixia, [], new Map(), undefined, simBlitz);
+    const withBlitz = calculateWeaponBuild(pixia, [], new Map(), undefined, simBlitz, {
+      externalBuffs: [blitz!],
+    });
+    expect(withBlitz.fireRate / barePixia.fireRate).toBeCloseTo(2, 5);
+
+    // Critical Surge — 10m @ R3 100% STR → +100% primary CC; 25m → 250% cap
+    const surgeCtx = {
+      warframeId: "wisp",
+      warframeStats: { ...wfStats, abilityStrength: 1 },
+      warframeAbilities: [breach],
+      warframeModSlots: [
+        { modId: "augment_wisp_critical_surge", slotIndex: 0, rank: 3 },
+      ] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simSurge: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Breach Surge"],
+      criticalSurgeTeleportMeters: 10,
+    };
+
+    expect(
+      resolveWeaponExternalBuffs(testRifle, surgeCtx, {
+        ...simSurge,
+        criticalSurgeTeleportMeters: 0,
+      }).find((b) => b.id === "ability:Critical Surge"),
+    ).toBeUndefined();
+    // No spark-mult weapon buff without meters/augment (legacy damageBuff ignored)
+    expect(
+      resolveWeaponExternalBuffs(
+        testRifle,
+        {
+          ...surgeCtx,
+          warframeModSlots: [],
+          warframeAbilities: [{ ...breach, damageBuff: 2 }],
+        },
+        { ...DEFAULT_SIM_PARAMS, activeWeaponAbilityBuffs: ["Breach Surge"] },
+      ).filter((b) => b.label === "Breach Surge"),
+    ).toHaveLength(0);
+
+    const surge10 = resolveWeaponExternalBuffs(testRifle, surgeCtx, simSurge).find(
+      (b) => b.id === "ability:Critical Surge",
+    );
+    expect(surge10?.critChanceBonus).toBeCloseTo(1.0, 8);
+
+    // Values below min teleport clamp to 10m
+    const surge5 = resolveWeaponExternalBuffs(testRifle, surgeCtx, {
+      ...simSurge,
+      criticalSurgeTeleportMeters: 5,
+    }).find((b) => b.id === "ability:Critical Surge");
+    expect(surge5?.critChanceBonus).toBeCloseTo(1.0, 8);
+
+    const surgeCap = resolveWeaponExternalBuffs(testRifle, surgeCtx, {
+      ...simSurge,
+      criticalSurgeTeleportMeters: 50,
+    }).find((b) => b.id === "ability:Critical Surge");
+    expect(surgeCap?.critChanceBonus).toBeCloseTo(2.5, 8);
+
+    const surgeStr2 = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...surgeCtx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+      simSurge,
+    ).find((b) => b.id === "ability:Critical Surge");
+    // 10%/m × 10m × 2 STR = 200%
+    expect(surgeStr2?.critChanceBonus).toBeCloseTo(2.0, 8);
+
+    // Secondary / melee ignored
+    expect(
+      resolveWeaponExternalBuffs(testMelee, surgeCtx, simSurge).find(
+        (b) => b.id === "ability:Critical Surge",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testRifle, category: "pistol", id: "test_pistol_surge" },
+        surgeCtx,
+        simSurge,
+      ).find((b) => b.id === "ability:Critical Surge"),
+    ).toBeUndefined();
+
+    const bareRifle = calculateWeaponBuild(testRifle, [], new Map(), undefined, simSurge);
+    const withSurge = calculateWeaponBuild(testRifle, [], new Map(), undefined, simSurge, {
+      externalBuffs: [surge10!],
+    });
+    expect(withSurge.criticalChance).toBeCloseTo(bareRifle.criticalChance * (1 + 1.0), 5);
+  });
+
   it("Thermal Transfer: Thermal Sunder-gated parallel Cold/Heat/Blast × Strength", () => {
     const sunder: Ability = { name: "Thermal Sunder", energyCost: 50, description: "" };
     expect(weaponDamageBuffAbilities([sunder]).map((a) => a.name)).toContain("Thermal Sunder");

@@ -560,6 +560,88 @@ const THERMAL_TRANSFER_MOD_ID = "augment_gauss_thermal_transfer";
 /** Wiki Thermal Transfer elemental % ranks (non-linear). */
 const THERMAL_TRANSFER_DMG_BY_RANK = [0.4, 0.5, 0.6, 0.75] as const;
 
+const RAZORWING_BLITZ_MOD_ID = "augment_titania_razorwing_blitz";
+/** Wiki: +25% FR/AS per stack at all ranks; stacks to 4. */
+const RAZORWING_BLITZ_FR_PER_STACK = 0.25;
+const RAZORWING_BLITZ_MAX_STACKS = 4;
+const RAZORWING_BLITZ_WEAPON_IDS = new Set([
+  "dex_pixia",
+  "dex_pixia_prime",
+  "diwata",
+  "diwata_prime",
+]);
+
+const CRITICAL_SURGE_MOD_ID = "augment_wisp_critical_surge";
+/** Wiki Critical Surge CC% per meter by rank. */
+const CRITICAL_SURGE_CC_PER_M_BY_RANK = [0.025, 0.05, 0.075, 0.1] as const;
+const CRITICAL_SURGE_CC_CAP = 2.5;
+const CRITICAL_SURGE_MIN_TELEPORT_M = 10;
+
+/**
+ * Wiki Razorwing Blitz: cast while Razorwing → +25% FR/AS × stacks × Strength (cap 4).
+ * Dex Pixia / Diwata only (including primes).
+ */
+function resolveRazorwingBlitzBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  if (!RAZORWING_BLITZ_WEAPON_IDS.has(weapon.id)) return null;
+  const stacks = Math.min(
+    RAZORWING_BLITZ_MAX_STACKS,
+    Math.max(0, Math.floor(simParams.razorwingBlitzStacks ?? 0)),
+  );
+  if (stacks <= 0) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === RAZORWING_BLITZ_MOD_ID);
+  if (!slot) return null;
+  const bonus = RAZORWING_BLITZ_FR_PER_STACK * stacks * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Razorwing Blitz",
+    label: "Razorwing Blitz",
+    category: "ability",
+    fireRateBonus: bonus,
+    nominal: `+${(RAZORWING_BLITZ_FR_PER_STACK * 100).toFixed(0)}% fire/attack speed × ${stacks} stack${stacks === 1 ? "" : "s"} (× Strength)`,
+  };
+}
+
+/**
+ * Wiki Critical Surge: teleport to Reservoir → primary CC per meter × Strength, cap 250%.
+ * Min teleport distance 10m. Does not affect secondary/melee/archgun/exalted.
+ */
+function resolveCriticalSurgeBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  if (!isGroundPrimaryWeapon(weapon)) return null;
+  let meters = Math.max(0, simParams.criticalSurgeTeleportMeters ?? 0);
+  if (meters <= 0) return null;
+  if (meters < CRITICAL_SURGE_MIN_TELEPORT_M) meters = CRITICAL_SURGE_MIN_TELEPORT_M;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === CRITICAL_SURGE_MOD_ID);
+  if (!slot) return null;
+  const mod = ctx.allMods?.get(CRITICAL_SURGE_MOD_ID);
+  const rank = Math.min(
+    Math.max(slot.rank ?? 0, 0),
+    CRITICAL_SURGE_CC_PER_M_BY_RANK.length - 1,
+  );
+  const perM =
+    mod != null
+      ? modStatFraction(mod, "criticalChance", rank)
+      : (CRITICAL_SURGE_CC_PER_M_BY_RANK[rank] ?? 0.1);
+  const bonus = Math.min(CRITICAL_SURGE_CC_CAP, perM * meters * strength);
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Critical Surge",
+    label: "Critical Surge",
+    category: "ability",
+    critChanceBonus: bonus,
+    nominal: `+${(perM * 100).toFixed(1)}%/m × ${meters}m primary crit (cap ${(CRITICAL_SURGE_CC_CAP * 100).toFixed(0)}%, × Strength)`,
+  };
+}
+
 /**
  * Wiki Thermal Transfer: tap Cold / hold Heat / both → Blast (sum); parallel × Strength.
  * Does not affect exalted weapons.
@@ -819,6 +901,12 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Thermal Transfer — Thermal Sunder-gated parallel Cold/Heat/Blast × Strength
     case "Thermal Sunder":
       return resolveThermalTransferBuff(weapon, strength, ctx, simParams);
+    // wiki: Razorwing Blitz — cast stacks while Razorwing → FR/AS × Strength (Pixia/Diwata)
+    case "Razorwing":
+      return resolveRazorwingBlitzBuff(weapon, strength, ctx, simParams);
+    // wiki: Critical Surge — Reservoir teleport meters → primary CC × Strength (cap 250%)
+    case "Breach Surge":
+      return resolveCriticalSurgeBuff(weapon, strength, ctx, simParams);
     // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
     case "Fireball":
     case "Freeze":
@@ -1104,6 +1192,8 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Enthrall",
   "Smoke Screen",
   "Thermal Sunder",
+  "Razorwing",
+  "Breach Surge",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */

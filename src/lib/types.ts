@@ -457,6 +457,16 @@ export interface SimulationParams {
    */
   thermalTransferPolarity?: "cold" | "heat" | "blast";
   /**
+   * Razorwing Blitz: ability-cast stacks while Razorwing is active (0–4). 0 = off.
+   * Fire/attack speed = 25% × stacks × Strength (Dex Pixia / Diwata only).
+   */
+  razorwingBlitzStacks?: number;
+  /**
+   * Critical Surge: meters teleported to a Reservoir (0 = off).
+   * Primary CC = min(250%, per-meter% × meters × Strength); in-game min teleport 10m.
+   */
+  criticalSurgeTeleportMeters?: number;
+  /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
    */
