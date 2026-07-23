@@ -342,6 +342,155 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
+  it("Teeming Virulence / Thrall Pact / Smoke Shadow: ability-gated primary buffs", () => {
+    const virulence: Ability = { name: "Virulence", energyCost: 40, description: "" };
+    const enthrall: Ability = { name: "Enthrall", energyCost: 25, description: "" };
+    const smoke: Ability = { name: "Smoke Screen", energyCost: 35, description: "" };
+
+    expect(weaponDamageBuffAbilities([virulence]).map((a) => a.name)).toContain("Virulence");
+    expect(weaponDamageBuffAbilities([enthrall]).map((a) => a.name)).toContain("Enthrall");
+    expect(weaponDamageBuffAbilities([smoke]).map((a) => a.name)).toContain("Smoke Screen");
+
+    // Teeming Virulence — R3 @ 100% STR → +120% primary CC
+    const teemingCtx = {
+      warframeId: "nidus",
+      warframeStats: { ...wfStats, abilityStrength: 1 },
+      warframeAbilities: [virulence],
+      warframeModSlots: [{ modId: "teeming_virulence", slotIndex: 0, rank: 3 }] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simVir: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Virulence"],
+    };
+    expect(
+      resolveWeaponExternalBuffs(testRifle, teemingCtx, DEFAULT_SIM_PARAMS).find(
+        (b) => b.id === "ability:Teeming Virulence",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        testRifle,
+        { ...teemingCtx, warframeModSlots: [] },
+        simVir,
+      ).find((b) => b.id === "ability:Teeming Virulence"),
+    ).toBeUndefined();
+
+    const teeming = resolveWeaponExternalBuffs(testRifle, teemingCtx, simVir).find(
+      (b) => b.id === "ability:Teeming Virulence",
+    );
+    expect(teeming?.critChanceBonus).toBeCloseTo(1.2, 8);
+
+    const teemingStr2 = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...teemingCtx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+      simVir,
+    ).find((b) => b.id === "ability:Teeming Virulence");
+    expect(teemingStr2?.critChanceBonus).toBeCloseTo(2.4, 8);
+
+    // Secondary / archgun / exalted → no Teeming
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testRifle, category: "pistol", id: "test_pistol" },
+        teemingCtx,
+        simVir,
+      ).find((b) => b.id === "ability:Teeming Virulence"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testRifle, category: "archgun", id: "test_arch" },
+        teemingCtx,
+        simVir,
+      ).find((b) => b.id === "ability:Teeming Virulence"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testRifle, isExalted: true, id: "test_exalted" },
+        teemingCtx,
+        simVir,
+      ).find((b) => b.id === "ability:Teeming Virulence"),
+    ).toBeUndefined();
+
+    const withTeeming = calculateWeaponBuild(testRifle, [], new Map(), undefined, simVir, {
+      externalBuffs: [teeming!],
+    });
+    const bareRifle = calculateWeaponBuild(testRifle, [], new Map(), undefined, simVir);
+    // base 25% CC × (1 + 1.2) = 55%
+    expect(withTeeming.criticalChance).toBeCloseTo(bareRifle.criticalChance * (1 + 1.2), 5);
+
+    // Thrall Pact — R3, 4 thralls, STR 1.3 → 0.25 × 4 × 1.3 = 1.3
+    const thrallCtx = {
+      warframeId: "revenant",
+      warframeStats: { ...wfStats, abilityStrength: 1.3 },
+      warframeAbilities: [enthrall],
+      warframeModSlots: [{ modId: "thrall_pact", slotIndex: 0, rank: 3 }] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simThrall: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Enthrall"],
+      thrallCount: 4,
+    };
+    expect(
+      resolveWeaponExternalBuffs(testRifle, thrallCtx, {
+        ...simThrall,
+        thrallCount: 0,
+      }).find((b) => b.id === "ability:Thrall Pact"),
+    ).toBeUndefined();
+
+    const thrall = resolveWeaponExternalBuffs(testRifle, thrallCtx, simThrall).find(
+      (b) => b.id === "ability:Thrall Pact",
+    );
+    expect(thrall?.damageBonus).toBeCloseTo(0.25 * 4 * 1.3, 8);
+
+    // Clamp at 7 thralls
+    const thrall7 = resolveWeaponExternalBuffs(testRifle, thrallCtx, {
+      ...simThrall,
+      thrallCount: 99,
+    }).find((b) => b.id === "ability:Thrall Pact");
+    expect(thrall7?.damageBonus).toBeCloseTo(0.25 * 7 * 1.3, 8);
+
+    expect(
+      resolveWeaponExternalBuffs(testMelee, thrallCtx, simThrall).find(
+        (b) => b.id === "ability:Thrall Pact",
+      ),
+    ).toBeUndefined();
+
+    const withThrall = calculateWeaponBuild(testRifle, [], new Map(), undefined, simThrall, {
+      externalBuffs: [thrall!],
+    });
+    expect(withThrall.totalDamage).toBeCloseTo(bareRifle.totalDamage * (1 + 0.25 * 4 * 1.3), 5);
+
+    // Smoke Shadow — R3 +150% CC, not × Strength; works on all weapons
+    const smokeCtx = {
+      warframeId: "ash",
+      warframeStats: { ...wfStats, abilityStrength: 2 },
+      warframeAbilities: [smoke],
+      warframeModSlots: [{ modId: "augment_ash_smoke_shadow", slotIndex: 0, rank: 3 }] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simSmoke: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Smoke Screen"],
+    };
+    const smokeBuff = resolveWeaponExternalBuffs(testRifle, smokeCtx, simSmoke).find(
+      (b) => b.id === "ability:Smoke Shadow",
+    );
+    expect(smokeBuff?.critChanceBonus).toBeCloseTo(1.5, 8);
+
+    const smokeMelee = resolveWeaponExternalBuffs(testMelee, smokeCtx, simSmoke).find(
+      (b) => b.id === "ability:Smoke Shadow",
+    );
+    expect(smokeMelee?.critChanceBonus).toBeCloseTo(1.5, 8);
+
+    const smokeExalted = resolveWeaponExternalBuffs(
+      { ...testRifle, isExalted: true, id: "exalted_smoke" },
+      smokeCtx,
+      simSmoke,
+    ).find((b) => b.id === "ability:Smoke Shadow");
+    expect(smokeExalted?.critChanceBonus).toBeCloseTo(1.5, 8);
+  });
+
   it("Elemental infusion augments: ability-gated parallel element × Strength (no exalted)", () => {
     const cases: {
       ability: string;

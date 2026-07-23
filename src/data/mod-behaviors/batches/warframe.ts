@@ -595,7 +595,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Thief's Wit: range \u2014 Minimap shows loot crates.\\\\n+42m Loot Radar (arsenal display only)"),
   ]),
   thrall_pact: mod("thrall_pact", [
-    line("damage", "mod_panel", "multiplicative_percent", "Thrall Pact: damage \u2014 Enthrall Augment: Gain +25% Primary Weapon Damage for each active Thrall."),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Thrall Pact — Enthrall-gated primary damage × thralls × Strength (not always-on)"),
   ]),
   toxic_flight: mod("toxic_flight", [
     line("bulletJump", "mod_panel", "multiplicative_percent", "Toxic Flight: bulletJump \u2014 +24.2% to Parkour Velocity, +24.2% Aim Glide/Wall Latch Duration, +275% <DT_POIS\u2026"),

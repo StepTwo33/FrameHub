@@ -446,6 +446,11 @@ export interface SimulationParams {
    */
   contagionCloudEnemies?: number;
   /**
+   * Thrall Pact (Enthrall augment): active thrall count (0–7). 0 = off.
+   * Primary damage bonus = catalog% × Strength × thralls.
+   */
+  thrallCount?: number;
+  /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
    */

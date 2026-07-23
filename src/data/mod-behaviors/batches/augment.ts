@@ -75,7 +75,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_ash_smoke_shadow: mod("augment_ash_smoke_shadow", [
     line("allyStealth", "mod_panel", "multiplicative_percent", "Smoke Shadow: allyStealth \u2014 Smoke Screen Augment: Conceals allies within 15m and grants 150% Critical Chance\u2026"),
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Smoke Shadow: criticalChance \u2014 Smoke Screen Augment: Conceals allies within 15m and grants 150% Critical Chance\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Smoke Shadow — Smoke Screen-gated weapon CC (not × Strength; not always-on)"),
     line("range", "mod_panel", "multiplicative_percent", "Smoke Shadow: range \u2014 Smoke Screen Augment: Conceals allies within 15m and grants 150% Critical Chance\u2026"),
   ]),
   augment_atlas_ore_gaze: mod("augment_atlas_ore_gaze", [
@@ -924,8 +924,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Tear Gas: range \u2014 Smoke Screen Augment: Blinds enemies within 4m for 3s."),
   ]),
   teeming_virulence: mod("teeming_virulence", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Teeming Virulence: criticalChance \u2014 Virulence Augment: Hitting 4 enemies with Virulence grants 150% Primary Weapon C\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Teeming Virulence: duration \u2014 Virulence Augment: Hitting 4 enemies with Virulence grants 150% Primary Weapon C\u2026"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Teeming Virulence — Virulence-gated primary CC × Strength (not always-on)"),
+    line("duration", "mod_panel", "multiplicative_percent", "Teeming Virulence: duration \u2014 Virulence Augment: Hitting 4 enemies with Virulence grants 120% Primary Weapon C\u2026"),
   ]),
   teleport_rush: mod("teleport_rush", [
     line("duration", "mod_panel", "multiplicative_percent", "Teleport Rush: duration \u2014 Teleport Augment: Using Teleport increases Parkour Velocity by 30% for 12s. Exec\u2026"),

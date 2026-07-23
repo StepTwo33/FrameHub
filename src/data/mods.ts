@@ -13689,10 +13689,10 @@ const RAW_MODS: Mod[] = [
     "category": "augment",
     "subCategory": "",
     "stats": {
-      "criticalChance": 50.0,
+      "criticalChance": 30.0,
       "duration": 3.75
     },
-    "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 150% Primary Weapon Critical Chance for 15s.",
+    "description": "Virulence Augment: Hitting 4 enemies with Virulence grants 120% Primary Weapon Critical Chance for 15s.",
     "rarity": "rare",
     "warframeId": "nidus"
   },
@@ -13803,13 +13803,14 @@ const RAW_MODS: Mod[] = [
     "polarity": "zenurik",
     "drain": 6,
     "maxRank": 3,
-    "category": "warframe",
+    "category": "augment",
     "subCategory": "",
     "stats": {
       "damage": 6.25
     },
     "description": "Enthrall Augment: Gain +25% Primary Weapon Damage for each active Thrall.",
-    "rarity": "rare"
+    "rarity": "rare",
+    "warframeId": "revenant"
   },
   {
     "id": "titanic_rumbler",

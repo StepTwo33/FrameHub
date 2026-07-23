@@ -269,6 +269,18 @@ export function WeaponSimControls({
                 tooltip="Damage absorbed before Absorb release (thousands). 0 = off. Weapon buff = √(0.025% × Strength × absorbed), capped at 400% (64k at 100% STR)."
               />
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Enthrall") && (
+              <SimSlider
+                label="Active thralls"
+                value={simParams.thrallCount ?? 0}
+                min={0}
+                max={7}
+                onChange={(v) =>
+                  onSimParamsChange({ ...simParams, thrallCount: v })
+                }
+                tooltip="Thrall Pact (Enthrall augment): active thralls (max 7). 0 = off. +25% primary damage per thrall × Ability Strength — needs Thrall Pact equipped."
+              />
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

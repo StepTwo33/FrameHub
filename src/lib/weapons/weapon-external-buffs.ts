@@ -49,6 +49,13 @@ function isPrimaryWeapon(weapon: Weapon): boolean {
   return weaponSupportsPrimaryStyleSets(weapon);
 }
 
+/** Ground primary (rifle/shotgun/bow/launcher) — excludes archgun, secondary, melee, exalted. */
+function isGroundPrimaryWeapon(weapon: Weapon): boolean {
+  if (weapon.isExalted) return false;
+  const c = weapon.category;
+  return c === "primary" || c === "rifle" || c === "shotgun" || c === "bow" || c === "launcher";
+}
+
 function isSecondaryWeapon(weapon: Weapon): boolean {
   return ["pistol", "secondary", "dual_pistols"].includes(weapon.category);
 }
@@ -458,6 +465,97 @@ const ELEMENTAL_INFUSION_BY_ABILITY: Record<
   },
 };
 
+/** Wiki Teeming Virulence CC ranks (non-linear; catalog R3 matches 120%). */
+const TEEMING_VIRULENCE_CC_BY_RANK = [0.7, 0.85, 1.0, 1.2] as const;
+const TEEMING_VIRULENCE_MOD_ID = "teeming_virulence";
+const THRALL_PACT_MOD_ID = "thrall_pact";
+const SMOKE_SHADOW_MOD_ID = "augment_ash_smoke_shadow";
+const THRALL_PACT_MAX_THRALLS = 7;
+
+/**
+ * Wiki Teeming Virulence: after hitting ≥4 with Virulence, primary CC × Strength.
+ * Archgun / secondary / melee / exalted excluded.
+ */
+function resolveTeemingVirulenceBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+): WeaponExternalBuff | null {
+  if (!isGroundPrimaryWeapon(weapon)) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === TEEMING_VIRULENCE_MOD_ID);
+  if (!slot) return null;
+  const rank = Math.min(Math.max(slot.rank ?? 0, 0), TEEMING_VIRULENCE_CC_BY_RANK.length - 1);
+  const base = TEEMING_VIRULENCE_CC_BY_RANK[rank] ?? 1.2;
+  const bonus = base * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Teeming Virulence",
+    label: "Teeming Virulence",
+    category: "ability",
+    critChanceBonus: bonus,
+    nominal: `+${(base * 100).toFixed(0)}% primary crit chance (× Strength)`,
+  };
+}
+
+/**
+ * Wiki Thrall Pact: +% primary damage per thrall × Strength (Serration-additive).
+ */
+function resolveThrallPactBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  if (!isGroundPrimaryWeapon(weapon)) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === THRALL_PACT_MOD_ID);
+  if (!slot) return null;
+  const thralls = Math.min(
+    THRALL_PACT_MAX_THRALLS,
+    Math.max(0, Math.floor(simParams.thrallCount ?? 0)),
+  );
+  if (thralls <= 0) return null;
+  const mod = ctx.allMods?.get(THRALL_PACT_MOD_ID);
+  const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod?.maxRank ?? 3);
+  const perThrall = mod
+    ? modStatFraction(mod, "damage", rank)
+    : (6.25 * (rank + 1)) / 100;
+  const bonus = perThrall * thralls * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: "ability:Thrall Pact",
+    label: "Thrall Pact",
+    category: "ability",
+    damageBonus: bonus,
+    nominal: `+${(perThrall * 100).toFixed(0)}% primary damage × ${thralls} thrall${thralls === 1 ? "" : "s"} (× Strength)`,
+  };
+}
+
+/**
+ * Wiki Smoke Shadow: +150% weapon CC while Smoke Screen invis (R3); not × Strength.
+ * Applies to all weapons including exalted.
+ */
+function resolveSmokeShadowBuff(
+  strength: number,
+  ctx: WeaponBuffContext,
+): WeaponExternalBuff | null {
+  void strength;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === SMOKE_SHADOW_MOD_ID);
+  if (!slot) return null;
+  const mod = ctx.allMods?.get(SMOKE_SHADOW_MOD_ID);
+  const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod?.maxRank ?? 3);
+  const base = mod
+    ? modStatFraction(mod, "criticalChance", rank)
+    : (37.5 * (rank + 1)) / 100;
+  if (base <= 0) return null;
+  return {
+    id: "ability:Smoke Shadow",
+    label: "Smoke Shadow",
+    category: "ability",
+    critChanceBonus: base,
+    nominal: `+${(base * 100).toFixed(0)}% crit chance while invisible (not × Strength)`,
+  };
+}
+
 /**
  * Wiki Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion:
  * hold-cast grants parallel elemental × Strength; does not affect exalted weapons.
@@ -673,6 +771,15 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Jet Stream — Turbulence-gated move + projectile speed × Strength
     case "Turbulence":
       return resolveJetStreamBuff(strength, ctx);
+    // wiki: Teeming Virulence — Virulence-gated primary CC × Strength
+    case "Virulence":
+      return resolveTeemingVirulenceBuff(weapon, strength, ctx);
+    // wiki: Thrall Pact — Enthrall-gated primary damage × thralls × Strength
+    case "Enthrall":
+      return resolveThrallPactBuff(weapon, strength, ctx, simParams);
+    // wiki: Smoke Shadow — Smoke Screen-gated weapon CC (not × Strength)
+    case "Smoke Screen":
+      return resolveSmokeShadowBuff(strength, ctx);
     // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
     case "Fireball":
     case "Freeze":
@@ -954,6 +1061,9 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Shock",
   "Spores",
   "Smite",
+  "Virulence",
+  "Enthrall",
+  "Smoke Screen",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */
