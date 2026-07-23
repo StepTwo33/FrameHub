@@ -1,13 +1,17 @@
 /**
- * Arch weapons accuracy (B13) — non-exalted archgun/archmelee Space bare paper.
+ * Arch weapons accuracy (B13 Space + B21 Atmosphere) — non-exalted archgun/archmelee.
  * Arbucep locked to 1st Attack paper (modes 2–6 unmodeled).
- * Wiki Module:Weapons/data/archwing locked in ARCH_BARE_GOLDENS.
+ * Wiki Module:Weapons/data/archwing Space → ARCH_BARE_GOLDENS;
+ * Atmosphere / Gravimag overlays → ARCH_ATMOSPHERE_GOLDENS.
  */
 import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
+import { ARCH_ATMOSPHERE_GOLDENS } from "@/lib/calc/arch-atmosphere-goldens";
 import { ARCH_BARE_GOLDENS } from "@/lib/calc/arch-bare-goldens";
+import { applyGravimagMode, weaponHasGravimagMode } from "@/lib/weapons/weapon-gravimag";
+import { getWeaponRadialAttacks } from "@/lib/weapons/weapon-radial-utils";
 import type { Mod, Weapon } from "@/lib/types";
 
 const ARCH_CATS = new Set(["archgun", "archmelee"]);
@@ -105,5 +109,98 @@ describe("arch bare wiki goldens", () => {
       const stats = calculateWeaponBuild(w, [], modsMap());
       expect(stats.elements.some((e) => e.type === type), id).toBe(true);
     }
+  });
+});
+
+describe("arch Atmosphere / Gravimag goldens (B21)", () => {
+  it("locks every archgun with atmosphereStats", () => {
+    const withAtmos = allWeapons.filter(
+      (w) => w.category === "archgun" && !w.isExalted && weaponHasGravimagMode(w),
+    );
+    expect(withAtmos.length).toBe(ARCH_ATMOSPHERE_GOLDENS.length);
+    expect(ARCH_ATMOSPHERE_GOLDENS.length).toBeGreaterThanOrEqual(19);
+    for (const w of withAtmos) {
+      expect(
+        ARCH_ATMOSPHERE_GOLDENS.some((g) => g.id === w.id),
+        `missing atmosphere golden for ${w.id}`,
+      ).toBe(true);
+    }
+  });
+
+  it("Corvas Prime has no Gravimag overlay (Atmosphere Charged == Space)", () => {
+    const w = allWeapons.find((x) => x.id === "corvas_prime")!;
+    expect(weaponHasGravimagMode(w)).toBe(false);
+  });
+
+  it.each(ARCH_ATMOSPHERE_GOLDENS)("$id atmosphere overlay + merged Gravimag paper", (g) => {
+    const w = allWeapons.find((x) => x.id === g.id);
+    expect(w, g.id).toBeDefined();
+    expect(weaponHasGravimagMode(w!)).toBe(true);
+    const atmos = w!.atmosphereStats!;
+    expect(atmos.damage, `${g.id}.atmosphereStats.damage`).toBeCloseTo(g.damage, 4);
+    if (g.reloadTime != null) {
+      expect(atmos.reloadTime, `${g.id}.reloadTime`).toBeCloseTo(g.reloadTime, 4);
+    }
+    for (const key of [
+      "impact",
+      "puncture",
+      "slash",
+      "heat",
+      "cold",
+      "toxin",
+      "electricity",
+      "radiation",
+      "viral",
+      "corrosive",
+      "blast",
+      "gas",
+      "magnetic",
+      "multishot",
+      "statusChance",
+      "fireRate",
+      "criticalChance",
+      "criticalMultiplier",
+    ] as const) {
+      const expected = (g as Record<string, number | undefined>)[key];
+      if (expected == null) continue;
+      const overlayVal = (atmos as Record<string, number | undefined>)[key];
+      if (overlayVal != null) {
+        expect(overlayVal, `${g.id}.atmosphereStats.${key}`).toBeCloseTo(expected, 4);
+      }
+    }
+    const merged = applyGravimagMode(w!);
+    expect(merged.damage).toBeCloseTo(g.damage, 4);
+    expect(merged.criticalChance).toBeCloseTo(g.criticalChance, 4);
+    expect(merged.criticalMultiplier).toBeCloseTo(g.criticalMultiplier, 4);
+    expect(merged.statusChance).toBeCloseTo(g.statusChance, 4);
+    expect(merged.fireRate).toBeCloseTo(g.fireRate, 4);
+    expect(merged.multishot).toBeCloseTo(g.multishot, 4);
+    for (const key of [
+      "impact",
+      "puncture",
+      "slash",
+      "heat",
+      "radiation",
+      "blast",
+      "magnetic",
+    ] as const) {
+      const expected = (g as Record<string, number | undefined>)[key];
+      if (expected != null) {
+        expect(merged[key] ?? 0, `${g.id}.merged.${key}`).toBeCloseTo(expected, 4);
+      }
+    }
+  });
+
+  it("Arbucep Gravimag doubles 1st Attack blast and radial", () => {
+    const w = allWeapons.find((x) => x.id === "arbucep")!;
+    expect(w.damage).toBe(16);
+    expect(getWeaponRadialAttacks(w)[0]?.totalDamage).toBeCloseTo(114, 5);
+    const atmos = applyGravimagMode(w);
+    expect(atmos.damage).toBe(32);
+    expect(atmos.blast).toBe(32);
+    expect(atmos.reloadTime).toBe(2);
+    expect(getWeaponRadialAttacks(atmos)[0]?.totalDamage).toBeCloseTo(228, 5);
+    const stats = calculateWeaponBuild(atmos, [], modsMap());
+    expect(stats.moddedBaseDamage).toBeCloseTo(32, 3);
   });
 });

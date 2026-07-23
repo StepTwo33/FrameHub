@@ -14533,6 +14533,20 @@ export const allWeapons: Weapon[] = [
     "magazine": 36,
     "reloadTime": 1.72,
     "multishot": 1,
+    "atmosphereStats": {
+      "damage": 32,
+      "blast": 32,
+      "reloadTime": 2,
+      "radialAttacks": [
+        {
+          "name": "1st Attack Radial Attack",
+          "blast": 228.0,
+          "totalDamage": 228.0,
+          "radius": 6.0,
+          "falloffReduction": 1.0
+        }
+      ]
+    },
     "triggerType": "Auto",
     "modSlots": 8,
     "hasPrimaryArcaneSlot": true,
