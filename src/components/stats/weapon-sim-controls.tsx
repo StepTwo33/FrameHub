@@ -281,6 +281,31 @@ export function WeaponSimControls({
                 tooltip="Thrall Pact (Enthrall augment): active thralls (max 7). 0 = off. +25% primary damage per thrall × Ability Strength — needs Thrall Pact equipped."
               />
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Thermal Sunder") && (
+              <label
+                className="block text-[10px] text-muted-foreground"
+                title="Thermal Transfer (Thermal Sunder augment): tap Cold / hold Heat / both Blast. Parallel elemental × Ability Strength — needs Thermal Transfer equipped. No exalted."
+              >
+                Thermal Transfer
+                <select
+                  value={simParams.thermalTransferPolarity ?? ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    onSimParamsChange({
+                      ...simParams,
+                      thermalTransferPolarity:
+                        v === "cold" || v === "heat" || v === "blast" ? v : undefined,
+                    });
+                  }}
+                  className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                >
+                  <option value="">Off</option>
+                  <option value="cold">Cold (tap)</option>
+                  <option value="heat">Heat (hold)</option>
+                  <option value="blast">Blast (Cold+Heat)</option>
+                </select>
+              </label>
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

@@ -556,6 +556,42 @@ function resolveSmokeShadowBuff(
   };
 }
 
+const THERMAL_TRANSFER_MOD_ID = "augment_gauss_thermal_transfer";
+/** Wiki Thermal Transfer elemental % ranks (non-linear). */
+const THERMAL_TRANSFER_DMG_BY_RANK = [0.4, 0.5, 0.6, 0.75] as const;
+
+/**
+ * Wiki Thermal Transfer: tap Cold / hold Heat / both → Blast (sum); parallel × Strength.
+ * Does not affect exalted weapons.
+ */
+function resolveThermalTransferBuff(
+  weapon: Weapon,
+  strength: number,
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  if (weapon.isExalted) return null;
+  const polarity = simParams.thermalTransferPolarity;
+  if (!polarity) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === THERMAL_TRANSFER_MOD_ID);
+  if (!slot) return null;
+  const rank = Math.min(
+    Math.max(slot.rank ?? 0, 0),
+    THERMAL_TRANSFER_DMG_BY_RANK.length - 1,
+  );
+  const base = THERMAL_TRANSFER_DMG_BY_RANK[rank] ?? 0.75;
+  const element = polarity === "blast" ? "blast" : polarity;
+  const frac = (polarity === "blast" ? base * 2 : base) * strength;
+  if (frac <= 0) return null;
+  return {
+    id: "ability:Thermal Transfer",
+    label: "Thermal Transfer",
+    category: "ability",
+    elemental: [{ type: element, bonusFraction: frac, parallel: true }],
+    nominal: `+${((polarity === "blast" ? base * 2 : base) * 100).toFixed(0)}% ${element} (parallel, × Strength)`,
+  };
+}
+
 /**
  * Wiki Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion:
  * hold-cast grants parallel elemental × Strength; does not affect exalted weapons.
@@ -780,6 +816,9 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Smoke Shadow — Smoke Screen-gated weapon CC (not × Strength)
     case "Smoke Screen":
       return resolveSmokeShadowBuff(strength, ctx);
+    // wiki: Thermal Transfer — Thermal Sunder-gated parallel Cold/Heat/Blast × Strength
+    case "Thermal Sunder":
+      return resolveThermalTransferBuff(weapon, strength, ctx, simParams);
     // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
     case "Fireball":
     case "Freeze":
@@ -1064,6 +1103,7 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Virulence",
   "Enthrall",
   "Smoke Screen",
+  "Thermal Sunder",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */

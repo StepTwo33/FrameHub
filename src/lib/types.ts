@@ -451,6 +451,12 @@ export interface SimulationParams {
    */
   thrallCount?: number;
   /**
+   * Thermal Transfer (Thermal Sunder augment): active polarity.
+   * cold = tap, heat = hold, blast = both (sum as parallel Blast).
+   * Requires "Thermal Sunder" in activeWeaponAbilityBuffs + augment equipped.
+   */
+  thermalTransferPolarity?: "cold" | "heat" | "blast";
+  /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
    */

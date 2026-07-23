@@ -223,7 +223,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_gauss_thermal_transfer: mod("augment_gauss_thermal_transfer", [
     line("coldToAlly", "mod_panel", "multiplicative_percent", "Thermal Transfer: coldToAlly \u2014 Thermal Sunder Augment: Allies in range gain 75% bonus Elemental Damage for 30s."),
-    line("damage", "mod_panel", "multiplicative_percent", "Thermal Transfer: damage \u2014 Thermal Sunder Augment: Allies in range gain 75% bonus Elemental Damage for 30s."),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Thermal Transfer — Thermal Sunder-gated parallel Cold/Heat/Blast × Strength (polarity via sim)"),
     line("duration", "mod_panel", "multiplicative_percent", "Thermal Transfer: duration \u2014 Thermal Sunder Augment: Allies in range gain 75% bonus Elemental Damage for 30s."),
   ]),
   augment_grendel_catapult: mod("augment_grendel_catapult", [

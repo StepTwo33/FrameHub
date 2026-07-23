@@ -342,6 +342,120 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
+  it("Thermal Transfer: Thermal Sunder-gated parallel Cold/Heat/Blast × Strength", () => {
+    const sunder: Ability = { name: "Thermal Sunder", energyCost: 50, description: "" };
+    expect(weaponDamageBuffAbilities([sunder]).map((a) => a.name)).toContain("Thermal Sunder");
+
+    const ctx = {
+      warframeId: "gauss",
+      warframeStats: { ...wfStats, abilityStrength: 1 },
+      warframeAbilities: [sunder],
+      warframeModSlots: [
+        { modId: "augment_gauss_thermal_transfer", slotIndex: 0, rank: 3 },
+      ] as ModSlot[],
+      allMods: modsMap,
+    };
+    const simCold: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Thermal Sunder"],
+      thermalTransferPolarity: "cold",
+    };
+
+    // Ability off / polarity unset / no augment → no buff
+    expect(
+      resolveWeaponExternalBuffs(testRifle, ctx, DEFAULT_SIM_PARAMS).find(
+        (b) => b.id === "ability:Thermal Transfer",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(testRifle, ctx, {
+        ...DEFAULT_SIM_PARAMS,
+        activeWeaponAbilityBuffs: ["Thermal Sunder"],
+      }).find((b) => b.id === "ability:Thermal Transfer"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        testRifle,
+        { ...ctx, warframeModSlots: [] },
+        simCold,
+      ).find((b) => b.id === "ability:Thermal Transfer"),
+    ).toBeUndefined();
+
+    const cold = resolveWeaponExternalBuffs(testRifle, ctx, simCold).find(
+      (b) => b.id === "ability:Thermal Transfer",
+    );
+    expect(cold?.elemental).toEqual([
+      { type: "cold", bonusFraction: 0.75, parallel: true },
+    ]);
+
+    const heat = resolveWeaponExternalBuffs(testRifle, ctx, {
+      ...simCold,
+      thermalTransferPolarity: "heat",
+    }).find((b) => b.id === "ability:Thermal Transfer");
+    expect(heat?.elemental).toEqual([
+      { type: "heat", bonusFraction: 0.75, parallel: true },
+    ]);
+
+    const blast = resolveWeaponExternalBuffs(testRifle, ctx, {
+      ...simCold,
+      thermalTransferPolarity: "blast",
+    }).find((b) => b.id === "ability:Thermal Transfer");
+    expect(blast?.elemental).toEqual([
+      { type: "blast", bonusFraction: 1.5, parallel: true },
+    ]);
+
+    const coldStr2 = resolveWeaponExternalBuffs(
+      testRifle,
+      { ...ctx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+      simCold,
+    ).find((b) => b.id === "ability:Thermal Transfer");
+    expect(coldStr2?.elemental?.[0]?.bonusFraction).toBeCloseTo(1.5, 8);
+
+    // R0 Cold → 40%
+    const r0 = resolveWeaponExternalBuffs(
+      testRifle,
+      {
+        ...ctx,
+        warframeModSlots: [
+          { modId: "augment_gauss_thermal_transfer", slotIndex: 0, rank: 0 },
+        ],
+      },
+      simCold,
+    ).find((b) => b.id === "ability:Thermal Transfer");
+    expect(r0?.elemental?.[0]?.bonusFraction).toBeCloseTo(0.4, 8);
+
+    // Exalted ignored
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testRifle, isExalted: true, id: "exalted_thermal" },
+        ctx,
+        simCold,
+      ).find((b) => b.id === "ability:Thermal Transfer"),
+    ).toBeUndefined();
+
+    const bare = calculateWeaponBuild(testRifle, [], new Map(), undefined, simCold);
+    const withCold = calculateWeaponBuild(testRifle, [], new Map(), undefined, simCold, {
+      externalBuffs: [cold!],
+    });
+    expect(withCold.totalDamage).toBeCloseTo(bare.totalDamage * 1.75, 5);
+    expect(withCold.elements.find((e) => e.type === "cold")?.value).toBeCloseTo(75, 5);
+
+    // Parallel: Cold + Infected Clip toxin does not form Viral/Gas
+    const toxinMod = allMods.find((m) => m.id === "infected_clip" || m.id === "infected_clip_r3");
+    expect(toxinMod).toBeDefined();
+    const mixed = calculateWeaponBuild(
+      testRifle,
+      [{ modId: toxinMod!.id, slotIndex: 0, rank: toxinMod!.maxRank }],
+      modsMap,
+      undefined,
+      simCold,
+      { externalBuffs: [cold!] },
+    );
+    expect(mixed.elements.some((e) => e.type === "viral" || e.type === "gas")).toBe(false);
+    expect(mixed.elements.some((e) => e.type === "toxin")).toBe(true);
+    expect(mixed.elements.some((e) => e.type === "cold")).toBe(true);
+  });
+
   it("Teeming Virulence / Thrall Pact / Smoke Shadow: ability-gated primary buffs", () => {
     const virulence: Ability = { name: "Virulence", energyCost: 40, description: "" };
     const enthrall: Ability = { name: "Enthrall", energyCost: 25, description: "" };
