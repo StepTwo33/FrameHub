@@ -575,16 +575,16 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("vortexDuration", "mod_panel", "multiplicative_percent", "Axios Javelineers: vortexDuration \u2014 Axios Javelin Augment: Spawns specters that throw two extra javelins with guaran\u2026"),
   ]),
   blade_of_truth: mod("blade_of_truth", [
-    line("damage", "mod_panel", "multiplicative_percent", "Blade Of Truth: damage \u2014 +100% Melee Damage, +1 'Truth'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Blade Of Truth: syndicatePower \u2014 +100% Melee Damage, +1 'Truth'"),
+    line("damage", "weapon_dps", "multiplicative_percent", "wiki: Blade Of Truth — +100% Melee Damage"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Blade Of Truth: syndicatePower \u2014 +1 'Truth'"),
   ]),
   blinding_reave: mod("blinding_reave", [
     line("duration", "mod_panel", "multiplicative_percent", "Blinding Reave: duration \u2014 Reave Augment: Reave gains +40% range and enemies are blinded by its fog for 10s\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Blinding Reave: range \u2014 Reave Augment: Reave gains +40% range and enemies are blinded by its fog for 10s\u2026"),
   ]),
   bright_purity: mod("bright_purity", [
-    line("damage", "mod_panel", "multiplicative_percent", "Bright Purity: damage \u2014 +100% Melee Damage, +1 'Purity'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Bright Purity: syndicatePower \u2014 +100% Melee Damage, +1 'Purity'"),
+    line("damage", "weapon_dps", "multiplicative_percent", "wiki: Bright Purity — +100% Melee Damage"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Bright Purity: syndicatePower \u2014 +1 'Purity'"),
   ]),
   bursting_mass: mod("bursting_mass", [
     line("damage", "mod_panel", "multiplicative_percent", "Bursting Mass: damage \u2014 The infested mass accumulates 200% of the damage that goes through it and deals \u2026"),
@@ -611,8 +611,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Dark Propagation: range \u2014 Sow Augment: Enemies killed while inflicted with Sow spread its effect in a 15m \u2026"),
   ]),
   deadly_sequence: mod("deadly_sequence", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Deadly Sequence: criticalChance \u2014 +200% Critical Chance, +1 'Sequence'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Deadly Sequence: syndicatePower \u2014 +200% Critical Chance, +1 'Sequence'"),
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Deadly Sequence — +200% Critical Chance"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Deadly Sequence: syndicatePower \u2014 +1 'Sequence'"),
   ]),
   deceptive_bond: mod("deceptive_bond", [
     line("damage", "mod_panel", "multiplicative_percent", "Deceptive Bond: damage \u2014 Decoy Augment: 50% of damage Loki takes is transferred to Decoy, and vice versa."),
@@ -669,8 +669,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Spike: syndicatePower \u2014 +20% Chance to Explode (Use with Caution), +1 'Entropy'"),
   ]),
   eroding_blight: mod("eroding_blight", [
-    line("magazine", "mod_panel", "multiplicative_percent", "Eroding Blight: magazine \u2014 +200% Magazine Capacity, +1 'Blight'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Eroding Blight: syndicatePower \u2014 +200% Magazine Capacity, +1 'Blight'"),
+    line("magazine", "weapon_dps", "multiplicative_percent", "wiki: Eroding Blight — +200% Magazine Capacity"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Eroding Blight: syndicatePower \u2014 +1 'Blight'"),
   ]),
   eternal_war: mod("eternal_war", [
     line("duration", "mod_panel", "multiplicative_percent", "Eternal War: duration \u2014 Warcry Augment: While active, Warcry's duration is increased by 2s for each Mele\u2026"),
@@ -702,8 +702,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("ricochetBounces", "mod_panel", "multiplicative_percent", "Gastro: ricochetBounces \u2014 Regurgitate Augment: Regurgitated enemies bounce up to 3 times, creating gas clo\u2026"),
   ]),
   gilded_truth: mod("gilded_truth", [
-    line("fireRate", "mod_panel", "multiplicative_percent", "Gilded Truth: fireRate \u2014 +80% Fire Rate, +1 'Truth'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gilded Truth: syndicatePower \u2014 +80% Fire Rate, +1 'Truth'"),
+    line("fireRate", "weapon_dps", "multiplicative_percent", "wiki: Gilded Truth — +80% Fire Rate"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gilded Truth: syndicatePower \u2014 +1 'Truth'"),
   ]),
   guardian_armor: mod("guardian_armor", [
     line("duration", "mod_panel", "multiplicative_percent", "Guardian Armor: duration \u2014 Vex Armor Augment: Chroma reduces the damage his squadmates within <AFFINITY_SHA\u2026"),
@@ -751,8 +751,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("flightSpeed", "mod_panel", "multiplicative_percent", "wiki: Jet Stream — Turbulence-gated projectile speed"),
   ]),
   justice_blades: mod("justice_blades", [
-    line("damage", "mod_panel", "multiplicative_percent", "Justice Blades: damage \u2014 +100% Melee Damage, +1 'Justice'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Justice Blades: syndicatePower \u2014 +100% Melee Damage, +1 'Justice'"),
+    line("damage", "weapon_dps", "multiplicative_percent", "wiki: Justice Blades — +100% Melee Damage"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Justice Blades: syndicatePower \u2014 +1 'Justice'"),
   ]),
   kinetic_collision: mod("kinetic_collision", [
     line("duration", "mod_panel", "multiplicative_percent", "Kinetic Collision: duration \u2014 Speed Augment: Running into an opponent increases the duration of Speed by 4s."),
@@ -804,8 +804,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("health", "mod_panel", "multiplicative_percent", "Phoenix Renewal: health \u2014 Renewal Augment: Taking fatal damage while under the effects of Renewal will ins\u2026"),
   ]),
   photon_overcharge: mod("photon_overcharge", [
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "Photon Overcharge: criticalMultiplier \u2014 +90% Critical Damage, On Kill or Assist: Slain enemies have a 2% chance to drop \u2026"),
-    line("energy", "mod_panel", "multiplicative_percent", "Photon Overcharge: energy \u2014 +90% Critical Damage, On Kill or Assist: Slain enemies have a 2% chance to drop \u2026"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "wiki: Photon Overcharge — +90% Critical Damage"),
+    line("energy", "mod_panel", "multiplicative_percent", "Photon Overcharge: energy \u2014 Cold-stack energy orb chance on kill"),
   ]),
   power_of_three: mod("power_of_three", [
     line("abilityProjectileCount", "mod_panel", "multiplicative_percent", "Power Of Three: abilityProjectileCount \u2014 Quiver Augment: Quiver fires three arrows and consumes <LOWER_IS_BETTER>20 more \u2026"),
@@ -855,8 +855,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("energyLeech", "mod_panel", "multiplicative_percent", "Sapping Reach: energyLeech \u2014 Pull Augment: Steals up to 25 Energy from the target."),
   ]),
   scattered_justice: mod("scattered_justice", [
-    line("multishot", "mod_panel", "multiplicative_percent", "Scattered Justice: multishot \u2014 +200% Multishot, +1 'Justice'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Scattered Justice: syndicatePower \u2014 +200% Multishot, +1 'Justice'"),
+    line("multishot", "weapon_dps", "multiplicative_percent", "wiki: Scattered Justice — +200% Multishot"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Scattered Justice: syndicatePower \u2014 +1 'Justice'"),
   ]),
   sequence_burn: mod("sequence_burn", [
     line("range", "mod_panel", "multiplicative_percent", "Sequence Burn: range \u2014 +20m Beam Range, +1 'Sequence'"),
@@ -869,8 +869,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("abilityStrength", "mod_panel", "multiplicative_percent", "Shattered Storm: abilityStrength \u2014 Shattered Lash Augment: When Gara breaks her Mass Vitrify ring with Shattered Lash, enemies struck by the glass suffer Splinter Storm at 100% Strength."),
   ]),
   shattering_justice: mod("shattering_justice", [
-    line("statusChance", "mod_panel", "multiplicative_percent", "Shattering Justice: statusChance \u2014 +90% Status Chance, +1 'Justice'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Shattering Justice: syndicatePower \u2014 +90% Status Chance, +1 'Justice'"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Shattering Justice — +90% Status Chance"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Shattering Justice: syndicatePower \u2014 +1 'Justice'"),
   ]),
   shield_overload: mod("shield_overload", [
     line("duration", "mod_panel", "multiplicative_percent", "Shield Overload: duration \u2014 Polarize Augment: Increases the time for the target's Shields to regenerate by 9\u2026"),
@@ -897,9 +897,9 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Spring-Loaded Broadhead: range \u2014 Increase damage by +40%, if the target is over 15m away."),
   ]),
   stance_gleaming_talent: mod("stance_gleaming_talent", [
-    line("damageBonus", "mod_panel", "multiplicative_percent", "Gleaming Blight: damageBonus \u2014 +100% Status Chance\\\\n+1 'Blight'"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "Gleaming Blight: statusChance \u2014 +100% Status Chance\\\\n+1 'Blight'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gleaming Blight: syndicatePower \u2014 +100% Status Chance\\\\n+1 'Blight'"),
+    line("damageBonus", "mod_panel", "multiplicative_percent", "wiki: Gleaming Blight — spurious catalog damageBonus (not wiki combat)"),
+    line("statusChance", "weapon_dps", "multiplicative_percent", "wiki: Gleaming Blight — +100% Status Chance"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Gleaming Blight: syndicatePower \u2014 +1 'Blight'"),
   ]),
   static_discharge: mod("static_discharge", [
     line("damage", "mod_panel", "multiplicative_percent", "Static Discharge: damage \u2014 Heavy Attacks electrify nearby enemies for <DT_ELECTRICITY_COLOR>Electricity Dam\u2026"),
@@ -909,8 +909,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("syndicatePower", "mod_panel", "multiplicative_percent", "Stinging Truth: syndicatePower \u2014 +40 Magazine Capacity, +1 'Truth'"),
   ]),
   stockpiled_blight: mod("stockpiled_blight", [
-    line("magazine", "mod_panel", "multiplicative_percent", "Stockpiled Blight: magazine \u2014 +200% Magazine Capacity, +1 'Blight'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stockpiled Blight: syndicatePower \u2014 +200% Magazine Capacity, +1 'Blight'"),
+    line("magazine", "weapon_dps", "multiplicative_percent", "wiki: Stockpiled Blight — +200% Magazine Capacity"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stockpiled Blight: syndicatePower \u2014 +1 'Blight'"),
   ]),
   swing_line: mod("swing_line", [
     line("parkourVelocity", "mod_panel", "multiplicative_percent", "Swing Line: parkourVelocity \u2014 Rip Line Augment: Rip Lines has no Energy cost while Airborne., +20% Parkour Vel\u2026"),
@@ -952,8 +952,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("allyEffectPercent", "mod_panel", "multiplicative_percent", "Tribunal: allyEffectPercent \u2014 Condemn Augment: allies trigger Penance/Thurible effects on chained enemies (40\u2013100% by rank; not affected by mods)."),
   ]),
   toxic_blight: mod("toxic_blight", [
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Blight: syndicatePower \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
-    line("toxin", "mod_panel", "multiplicative_percent", "Toxic Blight: toxin \u2014 +100% <DT_POISON_COLOR>Toxin, +1 'Blight'"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Toxic Blight: syndicatePower \u2014 +1 'Blight'"),
+    line("toxin", "weapon_dps", "elemental_from_base_damage", "wiki: Toxic Blight — +100% Toxin"),
   ]),
   toxic_sequence: mod("toxic_sequence", [
     line("statusDuration", "weapon_dps", "multiplicative_percent", "Toxic Sequence: statusDuration \u2014 +200% Status Duration (extends DoT ticks)"),

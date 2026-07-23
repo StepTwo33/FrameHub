@@ -1101,7 +1101,54 @@ describe("gun leftovers (wiki max rank, Phase M13)", () => {
       8,
     );
   });
+});
 
+describe("syndicate exclusive paper (wiki max rank, Phase Sim6)", () => {
+  it("Scattered Justice / Gilded Truth / Deadly Sequence / Shattering Justice", () => {
+    const strun = requireWeapon("strun");
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    expect(withMod("strun", "scattered_justice").multishot).toBeCloseTo(strun.multishot * 3, 8);
+    expect(withMod("braton", "gilded_truth").fireRate).toBeCloseTo(braton.fireRate * 1.8, 8);
+    expect(withMod("lex", "deadly_sequence").criticalChance).toBeCloseTo(
+      lex.criticalChance * 3,
+      8,
+    );
+    expect(withMod("strun", "shattering_justice").statusChance).toBeCloseTo(
+      strun.statusChance * 1.9,
+      8,
+    );
+  });
+
+  it("Eroding / Stockpiled Blight: +200% magazine", () => {
+    const lex = requireWeapon("lex");
+    expect(withMod("lex", "eroding_blight").magazine).toBe(Math.round(lex.magazine * 3));
+    expect(withMod("lex", "stockpiled_blight").magazine).toBe(Math.round(lex.magazine * 3));
+  });
+
+  it("Photon Overcharge R5: +90% critical damage", () => {
+    const weapon = requireWeapon("braton");
+    const cmq = quantizeBaseCritMultiplier(weapon.criticalMultiplier);
+    expect(withMod("braton", "photon_overcharge").criticalMultiplier).toBeCloseTo(cmq * 1.9, 8);
+  });
+
+  it("syndicatePower lines stay panel-only", () => {
+    for (const id of [
+      "scattered_justice",
+      "gilded_truth",
+      "deadly_sequence",
+      "shattering_justice",
+      "eroding_blight",
+      "stockpiled_blight",
+      "toxic_sequence",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh?.stats.find((s) => s.statKey === "syndicatePower")?.target).toBe("mod_panel");
+    }
+  });
+});
+
+describe("gun leftovers continued (wiki max rank)", () => {
   it("Galvanized Diffusion / Hell R10 paper: +110% multishot at 0 stacks", () => {
     const lex = requireWeapon("lex");
     const strun = requireWeapon("strun");

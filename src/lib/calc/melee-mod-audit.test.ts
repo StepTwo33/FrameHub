@@ -497,6 +497,34 @@ describe("melee leftovers (wiki max rank, Phase M14)", () => {
   });
 });
 
+describe("syndicate melee exclusive paper (wiki max rank, Phase Sim6)", () => {
+  it("Blade Of Truth / Bright Purity / Justice Blades: +100% melee damage", () => {
+    const weapon = requireWeapon("skana");
+    for (const id of ["blade_of_truth", "bright_purity", "justice_blades"]) {
+      expect(withMod(id).moddedBaseDamage, id).toBeCloseTo(weapon.damage * 2, 8);
+    }
+  });
+
+  it("Toxic Blight: +100% toxin from base", () => {
+    const weapon = requireWeapon("skana");
+    expect(withMod("toxic_blight").elements.find((e) => e.type === "toxin")?.value).toBeCloseTo(
+      weapon.damage * 1,
+      8,
+    );
+  });
+
+  it("Gleaming Blight: +100% status chance (damageBonus stays panel)", () => {
+    const weapon = requireWeapon("skana");
+    const beh = VERIFIED_MOD_BEHAVIORS.stance_gleaming_talent;
+    expect(beh?.stats.find((s) => s.statKey === "damageBonus")?.target).toBe("mod_panel");
+    expect(withMod("stance_gleaming_talent").statusChance).toBeCloseTo(
+      weapon.statusChance * 2,
+      8,
+    );
+    expect(withMod("stance_gleaming_talent").moddedBaseDamage).toBeCloseTo(weapon.damage, 8);
+  });
+});
+
 describe("melee trigger conditionals (wiki max rank, Phase M17/Sim1)", () => {
   it("Proton Snap: paper SC/toxin unchanged; trigger → +50% SC and +100% toxin", () => {
     const weapon = requireWeapon("skana");
