@@ -231,6 +231,7 @@ export interface RailjackBuildData {
     crimsonFugueStacks?: number;
     cruisingSpeedActive?: boolean;
     protectiveShotsActive?: boolean;
+    shieldsDepleted?: boolean;
     activeBattleAbilityId?: string | null;
     activeTacticalAbilityId?: string | null;
   };

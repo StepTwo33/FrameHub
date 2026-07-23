@@ -1024,6 +1024,8 @@ export interface RailjackCalculatedStats {
   tacticalAbilities?: RailjackAbilityComputed[];
   /** Extra turret damage from simulated active battle/tactical abilities. */
   abilityTurretDamageBonus?: number;
+  /** House unique traits currently applied to paper stats. */
+  activeHouseTraits?: { id: string; text: string }[];
 }
 
 export interface RailjackAbilityComputed {

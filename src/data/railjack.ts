@@ -72,8 +72,8 @@ export const engines: RailjackComponent[] = [
   { id: "sigma_engine_mk1", name: "Sigma Engines Mk I", type: "engine", tier: "sigma", stats: { speed: 10, boostMultiplier: 0 }, description: "Wiki Sigma Mk I (+10 m/s)" },
   { id: "sigma_engine_mk2", name: "Sigma Engines Mk II", type: "engine", tier: "sigma", stats: { speed: 20, boostMultiplier: 0.1 }, description: "Wiki Sigma Mk II (+20 m/s, +0.10× boost)" },
   { id: "sigma_engine_mk3", name: "Sigma Engines Mk III", type: "engine", tier: "sigma", stats: { speed: 30, boostMultiplier: 0.2 }, description: "Wiki Sigma Mk III (+30 m/s, +0.20× boost)" },
-  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 20, boostMultiplier: 0.45 }, description: "Wiki mid — lower cruise, highest boost (+0.30–0.60×). Unique: +50% top speed while shields depleted; Slingshot overshields." },
-  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 45, boostMultiplier: 0.125 }, description: "Wiki mid — highest cruise (+30–60 m/s). Unique: +100% boost while shields depleted; Intruder Stasis −50% armor." },
+  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 20, boostMultiplier: 0.45 }, description: "Wiki mid — lower cruise, highest boost (+0.30–0.60×)" },
+  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 45, boostMultiplier: 0.125 }, description: "Wiki mid — highest cruise (+30–60 m/s)" },
   { id: "zetki_engine_mk3", name: "Zetki Engines Mk III", type: "engine", tier: "zetki", stats: { speed: 30, boostMultiplier: 0.2 }, description: "Wiki mid — balanced cruise/boost" },
 ];
 
@@ -229,6 +229,109 @@ export function findRailjackArmament(id: string): RailjackArmament | undefined {
 
 export function findRailjackEliteCrew(id: string): RailjackEliteCrew | undefined {
   return railjackEliteCrew.find((c) => c.id === id);
+}
+
+/** Normalize Mk IV ids to Mk III trait keys (same house unique pool). */
+export function railjackTraitComponentKey(id: string): string {
+  return id.replace(/_mk4$/, "_mk3");
+}
+
+export type RailjackHouseTraitEffect =
+  | "lavan_plating_shield"
+  | "shields_depleted_speed"
+  | "shields_depleted_boost"
+  | "shields_depleted_damage";
+
+export interface RailjackHouseTrait {
+  id: string;
+  text: string;
+  /** Optional paper/sim effect (other variants stay display-only). */
+  effect?: RailjackHouseTraitEffect;
+}
+
+/**
+ * Wiki Mk III house unique traits (wreckage rolls one per component).
+ * Paper effects: Lavan reactor+plating shield synergy (always when both equipped);
+ * shields-depleted engine/shield combat traits via simulation.shieldsDepleted.
+ */
+export const RAILJACK_HOUSE_TRAITS: Record<string, RailjackHouseTrait[]> = {
+  lavan_reactor_mk3: [
+    {
+      id: "lavan_reactor_plating_shields",
+      text: "Equipping Lavan Hull Plating increases max Shields by 25%",
+      effect: "lavan_plating_shield",
+    },
+    {
+      id: "lavan_reactor_slingshot_damage",
+      text: "Tenno gain 50% Damage increase for 5s after being launched from the Slingshot",
+    },
+  ],
+  vidar_reactor_mk3: [
+    {
+      id: "vidar_reactor_breach_immunity",
+      text: "+100% damage immunity duration after a Major Breach is repaired",
+    },
+    {
+      id: "vidar_reactor_archwing_speed",
+      text: "Tenno gain 50% Speed Boost for 5s when deploying their Archwing",
+    },
+  ],
+  zetki_reactor_mk3: [
+    { id: "zetki_reactor_electric_hazard", text: "50% chance that an Electric Hazard will repair automatically after 5s" },
+    { id: "zetki_reactor_fire_hazard", text: "50% chance that a Fire Hazard will repair automatically after 5s" },
+    { id: "zetki_reactor_ice_hazard", text: "50% chance that an Ice Hazard will repair automatically after 5s" },
+  ],
+  lavan_shield_mk3: [
+    { id: "lavan_shield_battle_energy", text: "+1000% of Energy consumed using Battle Mods is converted to Shields" },
+    { id: "lavan_shield_cloak_recharge", text: "Shields replenish 50x faster while cloaked" },
+  ],
+  vidar_shield_mk3: [
+    { id: "vidar_shield_divert_turret", text: "30% of Shield Damage is diverted to increase Turret Damage by up to 300 for the next shot fired" },
+    { id: "vidar_shield_electric_pulse", text: "Every 10s, shields apply an Electrical proc to all enemies within 50m" },
+    { id: "vidar_shield_kill_energy", text: "Redirect 50 Energy to Shields with every kill" },
+  ],
+  zetki_shield_mk3: [
+    {
+      id: "zetki_shield_depleted_damage",
+      text: "+25% Railjack damage while shield depleted",
+      effect: "shields_depleted_damage",
+    },
+    { id: "zetki_shield_tenno_shields", text: "+10% Tenno shields on Railjack" },
+  ],
+  lavan_engine_mk3: [
+    {
+      id: "lavan_engine_depleted_speed",
+      text: "+20% Top Speed while shields are depleted",
+      effect: "shields_depleted_speed",
+    },
+    { id: "lavan_engine_slingshot_overshields", text: "Tenno gain 500 overshields after being launched from the Slingshot" },
+  ],
+  vidar_engine_mk3: [
+    {
+      id: "vidar_engine_depleted_boost",
+      text: "+50% boost speed while shield depleted",
+      effect: "shields_depleted_boost",
+    },
+    { id: "vidar_engine_intruder_armor", text: "−10% Intruders armor" },
+  ],
+  zetki_engine_mk3: [
+    { id: "zetki_engine_stationary_recharge", text: "Shields regenerate 50% faster when Railjack is stationary" },
+    { id: "zetki_engine_tenno_weapon", text: "+20% Tenno weapon damage onboard Railjack" },
+  ],
+};
+
+export function getRailjackComponentTraits(componentId: string): RailjackHouseTrait[] {
+  return RAILJACK_HOUSE_TRAITS[railjackTraitComponentKey(componentId)] ?? [];
+}
+
+export function componentHasShieldsDepletedTrait(componentId: string | undefined): boolean {
+  if (!componentId) return false;
+  return getRailjackComponentTraits(componentId).some(
+    (t) =>
+      t.effect === "shields_depleted_speed" ||
+      t.effect === "shields_depleted_boost" ||
+      t.effect === "shields_depleted_damage",
+  );
 }
 
 // ── Update 43: Uranus Proxima & reference loadouts ─────────────────

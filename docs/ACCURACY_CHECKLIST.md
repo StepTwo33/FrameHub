@@ -97,13 +97,15 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim9 | Elemental infusion gates | Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion: ability-gated parallel element × Strength; no exalted | **Locked** — +5 IDs; parallel elemental apply |
 | Sim10 | Ability-gated primary buffs | Teeming Virulence (+120% primary CC × STR); Thrall Pact (dmg × thralls × STR); Smoke Shadow (+150% CC, no STR) | **Locked** — +3 IDs; thrallCount slider; Teeming wiki R3 fix |
 | Sim11 | Thermal Transfer polarity | Thermal Sunder + Thermal Transfer: Cold/Heat/Blast parallel × Strength (R3 75%/150%); no exalted | **Locked** — +1 ID; thermalTransferPolarity sim |
+| Sim12 | Blitz + Critical Surge | Razorwing Blitz FR/AS × stacks × STR (Pixia/Diwata); Critical Surge primary CC × meters × STR (cap 250%) | **Locked** — +2 IDs; stack/meter sim sliders |
 | R1 | Riven grader | Disposition-scaled ranges (rank × buff-count); heuristic grade; no generation; unknown-disp warn; PT/combo units; IPS curses | **Locked** — `riven-calculator.test.ts` |
 | R1b | Riven dispositions sync | `omegaAttenuation` from api.warframestat.us via `scripts/_sync_riven_dispositions.mjs` (not 1–5 star `disposition`) | **Locked** — 630 weapons |
 | RJ1 | Railjack hardpoints + armaments | Nose/Dorsal/Ventral turrets; Cryophon/Glazio + Lavan Photor/Pulsar/Talyn; Sigma-only ordnance Mk tiers; reactor avionics capacity; Uranus presets apply Plexus mod ids | **Locked** — inventory + calc + preset goldens |
 | RJ2 | Railjack ship paper | Wiki mid-range absolute plating/shields; engine cruise/boost house roles; reactor avionics + dual ability %; Mk IV components still projected | **Locked** — component goldens |
 | RJ3 | Railjack engine/shield formulas | Conic on base 150 + flat engine m/s; SWB = cruise × (1.3×IonBurn + engine boost); shield %/s + delay; flux base 273 (no reactor flux); absolute UI labels | **Locked** — calc + UI goldens |
+| RJ4 | Railjack house unique traits | Wiki Mk III trait catalog; Lavan reactor+plating +25% shields; shields-depleted engine/shield combat traits via sim; UI trait list | **Locked** — trait goldens |
 
-**Remaining unlocked paper-moving mods (post Sim11):** none for always-on paper; further work is Razorwing Blitz / Critical Surge, miss/grenade decay, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim12):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
 
 ---
 
@@ -155,11 +157,13 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim9 Elemental infusion gates | 2026-07-23 | +5 hold-cast infusions; parallel element × STR; no exalted |
 | Sim10 Ability-gated primary buffs | 2026-07-23 | Teeming/Thrall/Smoke Shadow; thrallCount sim; Teeming 120% wiki fix |
 | Sim11 Thermal Transfer polarity | 2026-07-23 | Cold/Heat/Blast parallel × STR; polarity sim select; no exalted |
+| Sim12 Blitz + Critical Surge | 2026-07-23 | Razorwing stacks FR; Surge teleport meters CC; Critical Surge per-m catalog fix |
 | R1 Riven grader | 2026-07-23 | Disposition ranges + heuristic grade; no generation; unknown-disp warn |
 | RJ1 Railjack hardpoints/armaments | 2026-07-23 | 3 turret slots; Cryophon/Glazio/Lavan trio; Sigma ordnance; avionics capacity; presets equip Plexus |
 | R1b Riven dispositions sync | 2026-07-23 | omegaAttenuation sync script; 630 weapons |
 | RJ2 Railjack ship paper | 2026-07-23 | Absolute plating/shields; engine house cruise/boost; reactor avionics + dual ability % |
 | RJ3 Engine/shield formulas | 2026-07-23 | Conic on base 150; SWB mult model; shield %/s + delay; flux 273; absolute UI labels |
+| RJ4 House unique traits | 2026-07-23 | Trait catalog; Lavan plating synergy; shields-depleted sim traits; UI |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

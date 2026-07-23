@@ -14,7 +14,8 @@ describe("calculateRailjackBuild", () => {
 
     expect(stats.hull).toBe(5250);
     expect(stats.armor).toBe(2419);
-    expect(stats.shield).toBe(1700);
+    // Lavan reactor + Lavan plating trait: +25% max shields
+    expect(stats.shield).toBe(Math.round(1700 * 1.25));
     expect(stats.shieldRecharge).toBe(22.5);
     expect(stats.shieldRechargeDelayReduction).toBeCloseTo(0.55, 5);
     expect(stats.speed).toBe(150 + 20);
@@ -34,6 +35,39 @@ describe("calculateRailjackBuild", () => {
     });
     const conic = (4.25 * 6) / 100;
     expect(stats.speed).toBe(Math.round(150 * (1 + conic) + 20));
+  });
+
+  it("applies Lavan reactor + Lavan plating shield synergy (+25%)", () => {
+    const without = calculateRailjackBuild({
+      shieldId: "lavan_shield_mk3",
+      platingId: "lavan_plating_mk3",
+    });
+    const withSynergy = calculateRailjackBuild({
+      reactorId: "lavan_reactor_mk3",
+      shieldId: "lavan_shield_mk3",
+      platingId: "lavan_plating_mk3",
+    });
+    expect(withSynergy.shield).toBe(Math.round(1700 * 1.25));
+    expect(withSynergy.shield).toBeGreaterThan(without.shield);
+    expect(withSynergy.activeHouseTraits?.some((t) => t.id === "lavan_reactor_plating_shields")).toBe(true);
+  });
+
+  it("applies shields-depleted house engine/shield traits only when simulated", () => {
+    const inactive = calculateRailjackBuild({
+      engineId: "lavan_engine_mk3",
+      shieldId: "zetki_shield_mk3",
+      turretIds: ["sigma_apoc"],
+      simulation: { shieldsDepleted: false },
+    });
+    const active = calculateRailjackBuild({
+      engineId: "lavan_engine_mk3",
+      shieldId: "zetki_shield_mk3",
+      turretIds: ["sigma_apoc"],
+      simulation: { shieldsDepleted: true },
+    });
+    expect(active.speed).toBe(Math.round(150 * 1.2 + 20));
+    expect(active.speed).toBeGreaterThan(inactive.speed);
+    expect(active.turrets[0]!.damage).toBeGreaterThan(inactive.turrets[0]!.damage);
   });
 
   it("exposes Vidar reactor avionics capacity for Integrated Plexus cap", () => {

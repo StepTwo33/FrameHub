@@ -3,9 +3,11 @@ import {
   findRailjackArmament,
   findRailjackComponent,
   findRailjackEliteCrew,
+  getRailjackComponentTraits,
   railjackBaseStats,
   type RailjackArmament,
   type RailjackComponent,
+  type RailjackHouseTrait,
 } from "@/data/railjack";
 import {
   crewBonusesFromCompetency,
@@ -37,6 +39,8 @@ export interface RailjackSimulationInput {
   crimsonFugueStacks?: number;
   cruisingSpeedActive?: boolean;
   protectiveShotsActive?: boolean;
+  /** House engine/shield traits that proc while Railjack shields are at 0. */
+  shieldsDepleted?: boolean;
   activeBattleAbilityId?: string | null;
   activeTacticalAbilityId?: string | null;
 }
@@ -313,29 +317,72 @@ export function calculateRailjackBuild(
   const tacticalAbilities = tacticalSummaries.map((s) => scaleAbilitySummary(s, reactor, input.simulation));
   const extraTurretDamageBonus = abilityTurretDamageBonus(battleAbilities, tacticalAbilities);
 
+  const reactorTraits = reactor ? getRailjackComponentTraits(reactor.id) : [];
+  const shieldTraits = shield ? getRailjackComponentTraits(shield.id) : [];
+  const engineTraits = engine ? getRailjackComponentTraits(engine.id) : [];
+  const activeHouseTraits: RailjackHouseTrait[] = [];
+
+  // Lavan reactor trait: +25% max shields when Lavan plating is also equipped (planning default roll).
+  let houseShieldBonus = 0;
+  if (
+    reactor &&
+    plating &&
+    reactor.tier === "lavan" &&
+    plating.tier === "lavan" &&
+    reactorTraits.some((t) => t.effect === "lavan_plating_shield")
+  ) {
+    houseShieldBonus += 0.25;
+    const trait = reactorTraits.find((t) => t.effect === "lavan_plating_shield");
+    if (trait) activeHouseTraits.push(trait);
+  }
+
+  let houseSpeedBonus = 0;
+  let houseBoostBonus = 0;
+  let houseTurretDamageBonus = 0;
+  const shieldsDepleted = !!input.simulation?.shieldsDepleted;
+  if (shieldsDepleted) {
+    for (const trait of [...engineTraits, ...shieldTraits]) {
+      if (trait.effect === "shields_depleted_speed") {
+        houseSpeedBonus += 0.2;
+        activeHouseTraits.push(trait);
+      } else if (trait.effect === "shields_depleted_boost") {
+        houseBoostBonus += 0.5;
+        activeHouseTraits.push(trait);
+      } else if (trait.effect === "shields_depleted_damage") {
+        houseTurretDamageBonus += 0.25;
+        activeHouseTraits.push(trait);
+      }
+    }
+  }
+
   const hull = Math.round(base.hull * (1 + acc.hullBonus));
   const armor = Math.round(base.armor * (1 + acc.armorBonus));
-  const shieldCap = Math.round(base.shield * (1 + acc.shieldBonus));
+  const shieldCap = Math.round(base.shield * (1 + acc.shieldBonus + houseShieldBonus));
   const shieldRechargeRate =
     Math.round(shieldRechargePct * (1 + acc.shieldRechargeBonus) * 10) / 10;
-  const speed = Math.round(railjackBaseStats.speed * (1 + acc.speedBonus) + engineFlatSpeed);
+  const speed = Math.round(
+    railjackBaseStats.speed * (1 + acc.speedBonus + houseSpeedBonus) + engineFlatSpeed,
+  );
   const boostMultiplier =
-    railjackBaseStats.boostMultiplier * (1 + acc.boostSpeedBonus) + engineBoostAddon;
+    railjackBaseStats.boostMultiplier * (1 + acc.boostSpeedBonus + houseBoostBonus) +
+    engineBoostAddon;
   const boostSpeed = Math.round(speed * boostMultiplier);
   const boostCost = Math.max(0, Math.round(base.boostCost * (1 - acc.boostCostReduction)));
   const fluxCapacity = Math.round(base.fluxCapacity * (1 + acc.fluxBonus));
   const avionics = Math.round(avionicsCapacity * (1 + acc.avionicsBonus));
+  const totalExtraTurretDamage = extraTurretDamageBonus + houseTurretDamageBonus;
 
   const turretIds = resolveTurretIds(input);
   const turrets = turretIds
     .map((id) => (id ? findRailjackArmament(id) : undefined))
     .filter((t): t is RailjackArmament => !!t && t.type === "turret")
-    .map((t) => computeRailjackArmamentStats(t, acc, extraTurretDamageBonus));
+    .map((t) => computeRailjackArmamentStats(t, acc, totalExtraTurretDamage));
 
   const ordnanceRaw = input.ordnanceId ? findRailjackArmament(input.ordnanceId) : undefined;
   const ordnance =
     ordnanceRaw && ordnanceRaw.type === "ordnance"
-      ? computeRailjackArmamentStats(ordnanceRaw, acc)
+      ? // Wiki Zetki shield: +25% Railjack damage (turrets + ordnance); ability turret buffs stay turret-only.
+        computeRailjackArmamentStats(ordnanceRaw, acc, houseTurretDamageBonus)
       : null;
 
   return {
@@ -359,7 +406,8 @@ export function calculateRailjackBuild(
     boostCost,
     fluxCapacity,
     avionicsCapacity: avionics,
-    turretDamageBonus: acc.turretDamageBonus,
+    turretDamageBonus: acc.turretDamageBonus + houseTurretDamageBonus,
+    activeHouseTraits,
     turretCritBonus: acc.turretCritBonus,
     turretCritDmgBonus: acc.turretCritDmgBonus,
     ordnanceDamageBonus: acc.ordnanceDamageBonus,
@@ -381,12 +429,20 @@ export function calculateRailjackBuild(
   };
 }
 
-/** Returns true when the build has mods that use simulation toggles. */
+/** Returns true when the build has mods/traits that use simulation toggles. */
 export function railjackBuildNeedsSimulation(input: RailjackBuildInput): boolean {
   const integratedIds = new Set((input.integratedMods ?? []).map((m) => m.modId));
   const hasConditionalIntegrated = [...CONDITIONAL_INTEGRATED_MODS].some((id) => integratedIds.has(id));
   const hasAbilityBoost =
     (input.battleMods ?? []).some((m) => RAILJACK_PLEXUS_ABILITIES[m.modId]?.turretDamageWhileActive) ||
     (input.tacticalMods ?? []).some((m) => RAILJACK_PLEXUS_ABILITIES[m.modId]?.turretDamageWhileActive);
-  return hasConditionalIntegrated || hasAbilityBoost;
+  const hasShieldsDepletedTrait = [input.engineId, input.shieldId].some((id) =>
+    getRailjackComponentTraits(id ?? "").some(
+      (t) =>
+        t.effect === "shields_depleted_speed" ||
+        t.effect === "shields_depleted_boost" ||
+        t.effect === "shields_depleted_damage",
+    ),
+  );
+  return hasConditionalIntegrated || hasAbilityBoost || hasShieldsDepletedTrait;
 }
