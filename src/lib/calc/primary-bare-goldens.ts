@@ -1,4 +1,4 @@
-/** Wiki-matched primary bare catalog goldens (B10). Generated — do not hand-edit. */
+/** Wiki-matched primary bare catalog goldens (B10/B17/B18). Generated — do not hand-edit. */
 export const PRIMARY_BARE_GOLDENS = [
   {
     "id": "acceltra",
@@ -108,18 +108,6 @@ export const PRIMARY_BARE_GOLDENS = [
     "slash": 26.22
   },
   {
-    "id": "attica",
-    "damage": 80,
-    "criticalChance": 0.25,
-    "criticalMultiplier": 3,
-    "statusChance": 0.10000002,
-    "fireRate": 3.6666667,
-    "multishot": 1,
-    "impact": 4,
-    "puncture": 60,
-    "slash": 16
-  },
-  {
     "id": "astilla",
     "damage": 70,
     "criticalChance": 0.17,
@@ -138,6 +126,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 4.3333335,
     "multishot": 1,
     "impact": 100
+  },
+  {
+    "id": "attica",
+    "damage": 80,
+    "criticalChance": 0.25,
+    "criticalMultiplier": 3,
+    "statusChance": 0.10000002,
+    "fireRate": 3.6666667,
+    "multishot": 1,
+    "impact": 4,
+    "puncture": 60,
+    "slash": 16
   },
   {
     "id": "ax_52",
@@ -369,6 +369,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "slash": 19
   },
   {
+    "id": "cernos_prime",
+    "damage": 184.0,
+    "impact": 165.6,
+    "puncture": 9.2,
+    "slash": 9.2,
+    "criticalChance": 0.35,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.3,
+    "fireRate": 1.0,
+    "multishot": 3.0
+  },
+  {
     "id": "cinta",
     "damage": 800,
     "criticalChance": 0.36,
@@ -434,6 +446,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 12.000001,
     "multishot": 1,
     "corrosive": 26
+  },
+  {
+    "id": "convectrix",
+    "damage": 12.0,
+    "impact": 1.2,
+    "puncture": 1.2,
+    "slash": 9.6,
+    "criticalChance": 0.16,
+    "criticalMultiplier": 2.4000001,
+    "statusChance": 0.44999999,
+    "fireRate": 12.000001,
+    "multishot": 2.0
   },
   {
     "id": "corinth",
@@ -567,6 +591,17 @@ export const PRIMARY_BARE_GOLDENS = [
     "corrosive": 20
   },
   {
+    "id": "evensong",
+    "damage": 500.0,
+    "puncture": 150.0,
+    "slash": 350.0,
+    "criticalChance": 0.25,
+    "criticalMultiplier": 2.2,
+    "statusChance": 0.38,
+    "fireRate": 1.0,
+    "multishot": 1.0
+  },
+  {
     "id": "exergis",
     "damage": 540,
     "criticalChance": 0.08,
@@ -613,6 +648,28 @@ export const PRIMARY_BARE_GOLDENS = [
     "multishot": 1,
     "puncture": 4.84,
     "slash": 17.16
+  },
+  {
+    "id": "fulmin",
+    "damage": 33.0,
+    "puncture": 8.0,
+    "electricity": 25.0,
+    "criticalChance": 0.28,
+    "criticalMultiplier": 2.4,
+    "statusChance": 0.1,
+    "fireRate": 9.33,
+    "multishot": 1.0
+  },
+  {
+    "id": "fulmin_prime",
+    "damage": 33.0,
+    "puncture": 8.0,
+    "electricity": 25.0,
+    "criticalChance": 0.34,
+    "criticalMultiplier": 2.4,
+    "statusChance": 0.1,
+    "fireRate": 9.33,
+    "multishot": 1.0
   },
   {
     "id": "glaxion",
@@ -725,6 +782,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 5,
     "multishot": 1,
     "viral": 47
+  },
+  {
+    "id": "hind",
+    "damage": 30.0,
+    "impact": 7.5,
+    "puncture": 7.5,
+    "slash": 15.0,
+    "criticalChance": 0.07,
+    "criticalMultiplier": 1.5,
+    "statusChance": 0.14999998,
+    "fireRate": 5.0,
+    "multishot": 1.0
   },
   {
     "id": "ignis",
@@ -907,13 +976,13 @@ export const PRIMARY_BARE_GOLDENS = [
   },
   {
     "id": "kuva_zarr",
-    "damage": 723,
+    "damage": 50.0,
+    "impact": 50.0,
     "criticalChance": 0.25,
     "criticalMultiplier": 2.5,
     "statusChance": 0.31,
     "fireRate": 2.1666667,
-    "multishot": 1,
-    "impact": 50
+    "multishot": 1.0
   },
   {
     "id": "lanka",
@@ -970,6 +1039,18 @@ export const PRIMARY_BARE_GOLDENS = [
     "fireRate": 1,
     "multishot": 1,
     "impact": 50
+  },
+  {
+    "id": "miter",
+    "damage": 500.0,
+    "impact": 25.0,
+    "puncture": 25.0,
+    "slash": 450.0,
+    "criticalChance": 0.1,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.5,
+    "fireRate": 2.5000002,
+    "multishot": 1.0
   },
   {
     "id": "mk1_braton",
@@ -1088,6 +1169,30 @@ export const PRIMARY_BARE_GOLDENS = [
     "impact": 40,
     "puncture": 280,
     "slash": 80
+  },
+  {
+    "id": "panthera",
+    "damage": 100.0,
+    "impact": 20.0,
+    "puncture": 10.0,
+    "slash": 70.0,
+    "criticalChance": 0.12,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.24000001,
+    "fireRate": 3.0000002,
+    "multishot": 1.0
+  },
+  {
+    "id": "panthera_prime",
+    "damage": 100.0,
+    "impact": 20.0,
+    "puncture": 10.0,
+    "slash": 70.0,
+    "criticalChance": 0.18000001,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.30000001,
+    "fireRate": 3.6666667,
+    "multishot": 1.0
   },
   {
     "id": "paracyst",
@@ -1531,6 +1636,30 @@ export const PRIMARY_BARE_GOLDENS = [
     "heat": 190
   },
   {
+    "id": "stradavar",
+    "damage": 28.0,
+    "impact": 9.8,
+    "puncture": 9.8,
+    "slash": 8.4,
+    "criticalChance": 0.23999999,
+    "criticalMultiplier": 2.0,
+    "statusChance": 0.12,
+    "fireRate": 10.000001,
+    "multishot": 1.0
+  },
+  {
+    "id": "stradavar_prime",
+    "damage": 30.0,
+    "impact": 10.5,
+    "puncture": 10.5,
+    "slash": 9.0,
+    "criticalChance": 0.23999999,
+    "criticalMultiplier": 2.5999999,
+    "statusChance": 0.12,
+    "fireRate": 10.000001,
+    "multishot": 1.0
+  },
+  {
     "id": "strun",
     "damage": 25,
     "criticalChance": 0.075,
@@ -1896,6 +2025,17 @@ export const PRIMARY_BARE_GOLDENS = [
     "slash": 43.2
   },
   {
+    "id": "vinquibus",
+    "damage": 400.0,
+    "puncture": 280.0,
+    "slash": 120.0,
+    "criticalChance": 0.40000001,
+    "criticalMultiplier": 3.2,
+    "statusChance": 0.19999999,
+    "fireRate": 1.5000001,
+    "multishot": 1.0
+  },
+  {
     "id": "vulkar",
     "damage": 225,
     "criticalChance": 0.2,
@@ -1920,13 +2060,13 @@ export const PRIMARY_BARE_GOLDENS = [
   },
   {
     "id": "zarr",
-    "damage": 200,
+    "damage": 25.0,
+    "impact": 25.0,
     "criticalChance": 0.17,
     "criticalMultiplier": 2.5,
     "statusChance": 0.28999996,
     "fireRate": 1.6666667,
-    "multishot": 1,
-    "impact": 25
+    "multishot": 1.0
   },
   {
     "id": "zenith",

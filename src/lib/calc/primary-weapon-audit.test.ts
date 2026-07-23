@@ -11,26 +11,14 @@ import type { Mod, Weapon } from "@/lib/types";
 
 const PRIMARY_CATS = new Set(["rifle", "shotgun", "bow", "primary"]);
 
-/** Dual-mode / pellet-SC / battery rows intentionally not wiki-locked this pass. */
+/** Dual-mode / pellet-SC / battery / odd rows intentionally not wiki-locked this pass. */
 const DEFERRED_PRIMARY_IDS = new Set([
-  "cernos_prime",
-  "convectrix",
-  "evensong",
-  "fulmin",
-  "fulmin_prime",
   "higasa",
-  "hind",
   "kohm",
   "kuva_kohm",
-  "miter",
   "nataruk",
-  "panthera",
-  "panthera_prime",
-  "stradavar",
-  "stradavar_prime",
-  "synoid_simulor",
   "sirocco",
-  "vinquibus",
+  "synoid_simulor",
 ]);
 
 function modsMap(): Map<string, Mod> {
@@ -80,7 +68,7 @@ describe("primary weapon inventory (B10)", () => {
 
 describe("primary bare wiki goldens", () => {
   it("locks every non-deferred primary against wiki-matched catalog", () => {
-    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(173);
+    expect(PRIMARY_BARE_GOLDENS.length).toBeGreaterThanOrEqual(185);
   });
 
   it.each(PRIMARY_BARE_GOLDENS)("$id catalog bare paper", (g) => {
