@@ -132,6 +132,44 @@ describe("Phase 5 — stance damage multipliers", () => {
     expect(resolveStanceDamageMultiplier([{ modId: "gaias_tragedy" }])).toBeCloseTo(3.0, 8);
   });
 
+  it("C6 Forward/Block hit-avgs change paper vs Neutral without reopening Neutral lock", () => {
+    // Neutral B1 lock unchanged
+    expect(resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "neutral")).toBeCloseTo(
+      2.3,
+      8,
+    );
+    expect(STANCE_AVG_DAMAGE_MULTIPLIER.stance_iron_phoenix).toBeCloseTo(2.3, 8);
+    // Forward Double Slash wiki hit avg 1.5×
+    expect(resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "forward")).toBeCloseTo(
+      1.5,
+      8,
+    );
+    expect(
+      resolveStanceDamageMultiplier([{ modId: "stance_cleaving_whirlwind" }], "forward"),
+    ).toBeCloseTo(1.4, 8);
+    expect(resolveStanceDamageMultiplier([{ modId: "stance_iron_phoenix" }], "block")).toBeCloseTo(
+      2.3,
+      8,
+    );
+
+    const skana = allWeapons.find((w) => w.id === "skana")!;
+    const modsMap = new Map(allMods.map((m) => [m.id, m]));
+    const slots = [{ modId: "stance_iron_phoenix", rank: 3, slotIndex: 0 }];
+    const neutral = calculateWeaponBuild(skana, slots, modsMap, undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      applyStanceMultiplier: true,
+      stanceComboDirection: "neutral",
+    });
+    const forward = calculateWeaponBuild(skana, slots, modsMap, undefined, {
+      ...DEFAULT_SIM_PARAMS,
+      applyStanceMultiplier: true,
+      stanceComboDirection: "forward",
+    });
+    expect(neutral.stanceDamageMultiplier).toBeCloseTo(2.3, 5);
+    expect(forward.stanceDamageMultiplier).toBeCloseTo(1.5, 5);
+    expect(forward.burstDps).toBeLessThan(neutral.burstDps);
+  });
+
   it("applies stance mult to Skana paper burst DPS when stance equipped", () => {
     const skana = allWeapons.find((w) => w.id === "skana")!;
     const modsMap = new Map(allMods.map((m) => [m.id, m]));

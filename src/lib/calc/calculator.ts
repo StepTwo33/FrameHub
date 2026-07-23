@@ -1539,7 +1539,10 @@ export function calculateWeaponBuild(
 
   // Stance average damage mult (melee light attacks)
   if (isMelee && (sim.applyStanceMultiplier !== false)) {
-    stats.stanceDamageMultiplier = resolveStanceDamageMultiplier(equippedMods);
+    stats.stanceDamageMultiplier = resolveStanceDamageMultiplier(
+      equippedMods,
+      sim.stanceComboDirection ?? "neutral",
+    );
   } else {
     stats.stanceDamageMultiplier = 1;
   }

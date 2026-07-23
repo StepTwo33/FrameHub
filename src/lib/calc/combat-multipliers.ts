@@ -1,9 +1,16 @@
 import { STANCE_WEAPON_TYPE } from "@/data/stances";
+import {
+  STANCE_COMBO_DAMAGE_MULTIPLIER,
+  type StanceComboDirectionKey,
+} from "@/lib/calc/stance-combo-multipliers";
 
 /**
  * Shared combat multipliers: faction (Bane), headshots, stance averages, status damage.
  * Used by weapon DPS and TTK so both stay in sync.
  */
+
+/** Stance combo string direction for paper DPS (Neutral = B1 lock). */
+export type StanceComboDirection = "neutral" | StanceComboDirectionKey;
 
 /** Map mod stat keys → normalized faction ids used by ENEMY_TYPES / sim UI. */
 export const FACTION_STAT_TO_ID: Record<string, string> = {
@@ -267,10 +274,15 @@ export const DEFAULT_STANCE_AVG_MULTIPLIER = 1.55;
 
 export function resolveStanceDamageMultiplier(
   equippedMods: { modId: string }[],
+  direction: StanceComboDirection = "neutral",
 ): number {
   for (const slot of equippedMods) {
     const type = STANCE_WEAPON_TYPE[slot.modId];
     if (!type) continue;
+    if (direction !== "neutral") {
+      const combo = STANCE_COMBO_DAMAGE_MULTIPLIER[slot.modId]?.[direction];
+      if (combo != null && combo > 0) return combo;
+    }
     return (
       STANCE_AVG_DAMAGE_MULTIPLIER[slot.modId] ??
       STANCE_TYPE_AVG_MULTIPLIER[type] ??

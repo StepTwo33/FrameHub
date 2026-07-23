@@ -314,22 +314,57 @@ export function WeaponSimControls({
               </label>
             )}
             {isMelee && (
-              <label className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={simParams.applyStanceMultiplier !== false}
-                  onChange={(e) =>
-                    onSimParamsChange({ ...simParams, applyStanceMultiplier: e.target.checked })
-                  }
-                  className="h-3.5 w-3.5 rounded border-border accent-primary"
-                />
-                Neutral hit avg
-                {(stats.stanceDamageMultiplier ?? 1) !== 1 && (
-                  <span className="text-cyan-400 font-mono">
-                    ×{(stats.stanceDamageMultiplier ?? 1).toFixed(2)}
-                  </span>
+              <>
+                <label
+                  className="flex items-center gap-2 text-[10px] text-muted-foreground cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={simParams.applyStanceMultiplier !== false}
+                    onChange={(e) =>
+                      onSimParamsChange({ ...simParams, applyStanceMultiplier: e.target.checked })
+                    }
+                    className="h-3.5 w-3.5 rounded border-border accent-primary"
+                  />
+                  Stance combo mult
+                  {(stats.stanceDamageMultiplier ?? 1) !== 1 && (
+                    <span className="text-cyan-400 font-mono">
+                      ×{(stats.stanceDamageMultiplier ?? 1).toFixed(2)}
+                    </span>
+                  )}
+                </label>
+                {simParams.applyStanceMultiplier !== false && (
+                  <label
+                    className="block text-[10px] text-muted-foreground"
+                    title="Wiki Module:Stances hit-avg scalars. Neutral = B1 lock; other strings change paper DPS."
+                  >
+                    Combo string
+                    <select
+                      value={simParams.stanceComboDirection ?? "neutral"}
+                      onChange={(e) =>
+                        onSimParamsChange({
+                          ...simParams,
+                          stanceComboDirection: e.target.value as
+                            | "neutral"
+                            | "forward"
+                            | "forwardBlock"
+                            | "block"
+                            | "heavy"
+                            | "slide",
+                        })
+                      }
+                      className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                    >
+                      <option value="neutral">Neutral (default)</option>
+                      <option value="forward">Forward</option>
+                      <option value="forwardBlock">Forward Block</option>
+                      <option value="block">Block</option>
+                      <option value="heavy">Heavy</option>
+                      <option value="slide">Slide</option>
+                    </select>
+                  </label>
                 )}
-              </label>
+              </>
             )}
           </div>
           {(stats.statusDamageBonus ?? 0) > 0 && (

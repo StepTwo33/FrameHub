@@ -43,14 +43,14 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 
 | ID | Area | Notes | Status |
 |----|------|-------|--------|
-| B1 | Stance DPS | PvE Neutral hit avgs wiki-locked (81/81 mapped); Conclave/Contempt→1.0 | **Locked** — Neutral hit-avg scalar only; full combo strings → C6 |
+| B1 | Stance DPS | PvE Neutral hit avgs wiki-locked (81/81 mapped); Conclave/Contempt→1.0 | **Locked** — Neutral hit-avg scalar; other strings via C6 |
 | B2 | TTK shield overflow | Health-mod overflow | **Improved** Phase 4 |
 | B3 | TTK DoT end-time | 0.25s step instead of +3s guess | **Improved** Phase 4 |
 | B4 | Set effects not in DPS | Augur/Hunter/Mecha mark+Empowered + **mark-kill spread DoT** + **claw elemental** + **sim cascade enemies** | **Improved** — cascade is user-estimated hops (not mission AI) |
 | B5 | Ability scaling sparse | Full kits through mechs/Nokko + heat/battery/absorb sims | **Improved** — Contagion + EFF + armor-pool invuln + Vitrify enemy absorb + Gauss battery + Ember heat |
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
-| B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
+| B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** |
 | B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
 | B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 191 wiki-locked goldens | **Locked** — primary deferred set cleared in B19 |
 | B11 | Secondary weapons (base paper) | Non-exalted pistol/secondary/`dual_pistols` vs Module:Weapons/data/secondary; 145 wiki-locked goldens | **Locked** — prior radial deferred set promoted in B16 |
@@ -66,7 +66,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B21 | Archgun Atmosphere / Gravimag paper | 19 `atmosphereStats` overlays wiki-locked (Arbucep Atmosphere + prior Gravimag profiles); Corvas Prime intentionally no overlay | **Locked** |
 | B22 | Alternate modes (Staticor + DSS) | `alternateModeStats` toggle: Staticor Fully Charged Explosion 106/9.6m; DSS Heavy Blade paper + slams; Dual Swords slams corrected to 232/462 | **Locked** — charged timing/ammo in B24 |
 | B23 | Arbucep attack cycle | Sim `arbucepAttackMode` 1–6 swaps Space 16/114 or Atmosphere 32/228 element (Blast→…→Viral); builder dropdown | **Locked** |
-| B24 | Staticor charged timing + ammo | Charged mode: ChargeTime 1s (standard EFR), ammoCost 5; sustained/TTK consume multi-ammo | **Locked** — C6 stance strings |
+| B24 | Staticor charged timing + ammo | Charged mode: ChargeTime 1s (standard EFR), ammoCost 5; sustained/TTK consume multi-ammo | **Locked** |
+| C6 | Stance combo strings (hit-avg) | Sim `stanceComboDirection` Forward/Block/Forward Block/Heavy/Slide wiki hit-avgs (78 stances); Neutral default unchanged (B1) | **Locked** — AS-scaled cycle DPS / per-hit animation strings still out of scope |
 
 ---
 
@@ -79,7 +80,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | C3 | Weapon passives text | Not wired into DPS |
 | C4 | Full mission AI / unlisted team buffs | Disclaimer |
 | C5 | `biting_frost` paper DPS | Conditional on 10 Cold freeze — panel only |
-| C6 | Stance full combo strings | Forward/Block/Heavy/Slide strings, AS-scaled cycle DPS, combo picker — B1 ships Neutral hit-avg scalars only (**deferred**; no half-slice without reopening Neutral lock) |
+| C6 | Stance AS-scaled cycle / per-hit strings | Hit-avg direction picker shipped above; full Duration/AS cycle DPS + animation hit graphs remain out of scope |
 | C7 | Mecha set status-spread DoT | **Moved → B4** (sim-gated DoT + claw + cascade slider); full mark AI / Gas graphs remain out of scope |
 
 ---
@@ -358,6 +359,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Alternate modes Staticor + DSS (B22) | 2026-07-23 | `alternateModeStats` + builder toggle; Staticor charged radial 106/9.6m; DSS Heavy Blade paper; Dual Swords slam radials 232/462 |
 | Arbucep attack cycle (B23) | 2026-07-23 | Sim mode 1–6 elemental paper (Space 16/114, Atmosphere 32/228); `weapon-arbucep-mode` + builder dropdown |
 | Staticor charged timing + ammo (B24) | 2026-07-23 | Charged overlay: CT 1s / Charge trigger / ammoCost 5; sustained + TTK + radial mag cycles |
+| Stance combo directions (C6) | 2026-07-23 | Wiki Forward/Block/Forward Block hit-avgs for 78 stances; Neutral B1 lock intact; sim combo-string picker |
 
 ## New / extended test files
 

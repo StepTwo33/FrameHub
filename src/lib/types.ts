@@ -481,6 +481,11 @@ export interface SimulationParams {
   /** Include approximate stance damage multiplier on melee DPS. Default true. */
   applyStanceMultiplier?: boolean;
   /**
+   * Stance combo string direction (C6). Default / unset = Neutral (B1 lock).
+   * Forward / Forward Block / Block / Heavy / Slide use wiki hit-avg scalars.
+   */
+  stanceComboDirection?: "neutral" | "forward" | "forwardBlock" | "block" | "heavy" | "slide";
+  /**
    * Treat aim/reload/cast/wall-latch trigger buffs as active
    * (Catalyzer Link, Spring-Loaded Chamber, Deadly Efficiency, …). Default false —
    * the in-game arsenal never includes them.
