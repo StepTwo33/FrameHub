@@ -676,8 +676,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Eternal War: duration \u2014 Warcry Augment: While active, Warcry's duration is increased by 2s for each Mele\u2026"),
   ]),
   exposing_harpoon: mod("exposing_harpoon", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Exposing Harpoon: criticalChance \u2014 Pulling an enemy will give +300% Critical Chance for 15s."),
-    line("duration", "mod_panel", "multiplicative_percent", "Exposing Harpoon: duration \u2014 Pulling an enemy will give +300% Critical Chance for 15s."),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Exposing Harpoon — On Harpak pull: +300% Critical Chance for 15s (sim Trigger buffs)"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Exposing Harpoon — buff duration"),
   ]),
   fatal_teleport: mod("fatal_teleport", [
     line("damage", "mod_panel", "multiplicative_percent", "Fatal Teleport: damage \u2014 Teleport Augment: Teleport will perform a Finisher on the target, dealing 200% E\u2026"),

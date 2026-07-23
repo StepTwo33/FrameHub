@@ -747,4 +747,12 @@ describe("Sim5 cross-slot secondary buffs (wiki max rank)", () => {
     expect(active.criticalChance).toBeCloseTo(battacor.criticalChance * 4, 5);
     expect(active.criticalMultiplier).toBeCloseTo(bareCm * 4, 4);
   });
+
+  it("Exposing Harpoon: paper CC unchanged; trigger → +300% CC on Harpak", () => {
+    const harpak = requireWeapon("harpak");
+    const paper = build("harpak", "exposing_harpoon", {});
+    expect(paper.criticalChance).toBeCloseTo(harpak.criticalChance, 5);
+    const active = build("harpak", "exposing_harpoon", { applyTriggerBuffs: true });
+    expect(active.criticalChance).toBeCloseTo(harpak.criticalChance * 4, 5);
+  });
 });

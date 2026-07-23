@@ -98,6 +98,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim10 | Ability-gated primary buffs | Teeming Virulence (+120% primary CC × STR); Thrall Pact (dmg × thralls × STR); Smoke Shadow (+150% CC, no STR) | **Locked** — +3 IDs; thrallCount slider; Teeming wiki R3 fix |
 | Sim11 | Thermal Transfer polarity | Thermal Sunder + Thermal Transfer: Cold/Heat/Blast parallel × Strength (R3 75%/150%); no exalted | **Locked** — +1 ID; thermalTransferPolarity sim |
 | Sim12 | Blitz + Critical Surge | Razorwing Blitz FR/AS × stacks × STR (Pixia/Diwata); Critical Surge primary CC × meters × STR (cap 250%) | **Locked** — +2 IDs; stack/meter sim sliders |
+| Sim13 | Harpak pull trigger | Exposing Harpoon: +300% CC after pull via `applyTriggerBuffs` | **Locked** — +1 ID |
 | R1 | Riven grader | Disposition-scaled ranges (rank × buff-count); heuristic grade; no generation; unknown-disp warn; PT/combo units; IPS curses | **Locked** — `riven-calculator.test.ts` |
 | R1b | Riven dispositions sync | `omegaAttenuation` from api.warframestat.us via `scripts/_sync_riven_dispositions.mjs` (not 1–5 star `disposition`) | **Locked** — 630 weapons |
 | RJ1 | Railjack hardpoints + armaments | Nose/Dorsal/Ventral turrets; Cryophon/Glazio + Lavan Photor/Pulsar/Talyn; Sigma-only ordnance Mk tiers; reactor avionics capacity; Uranus presets apply Plexus mod ids | **Locked** — inventory + calc + preset goldens |
@@ -107,7 +108,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ5 | Railjack trait roll selection | One wreckage trait per house component; paper effects only for selected roll; save/load + UI selects | **Locked** — trait-roll goldens |
 | RJ6 | Tunguska Forward Artillery paper | Wiki 56.5k / 300% CC / 2× CD / 4s charge; Forward Artillery mod scales damage; avg red-crit shot + charge DPS; Dome Charges out of scope | **Locked** — artillery goldens |
 
-**Remaining unlocked paper-moving mods (post Sim12):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim13):** none for always-on paper; further work is Furious Javelin / Valence Formation, miss/grenade decay, or Tier B/C items.
 
 ---
 
@@ -160,6 +161,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim10 Ability-gated primary buffs | 2026-07-23 | Teeming/Thrall/Smoke Shadow; thrallCount sim; Teeming 120% wiki fix |
 | Sim11 Thermal Transfer polarity | 2026-07-23 | Cold/Heat/Blast parallel × STR; polarity sim select; no exalted |
 | Sim12 Blitz + Critical Surge | 2026-07-23 | Razorwing stacks FR; Surge teleport meters CC; Critical Surge per-m catalog fix |
+| Sim13 Harpak pull trigger | 2026-07-23 | Exposing Harpoon → trigger CC on Harpak |
 | R1 Riven grader | 2026-07-23 | Disposition ranges + heuristic grade; no generation; unknown-disp warn |
 | RJ1 Railjack hardpoints/armaments | 2026-07-23 | 3 turret slots; Cryophon/Glazio/Lavan trio; Sigma ordnance; avionics capacity; presets equip Plexus |
 | R1b Riven dispositions sync | 2026-07-23 | omegaAttenuation sync script; 630 weapons |
