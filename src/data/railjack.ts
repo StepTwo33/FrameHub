@@ -25,54 +25,62 @@ export interface RailjackArmament {
   description: string;
 }
 
+/**
+ * Rising Tide / unequipped baseline (wiki Engines + Plating + Shield Array base rows).
+ * Equipped plating/shields replace hull/armor/shield; engines add cruise m/s onto base speed.
+ */
 export const railjackBaseStats = {
-  hull: 3000,
-  armor: 300,
-  shield: 1500,
-  speed: 100,
-  boostSpeed: 200,
+  hull: 1050,
+  armor: 650,
+  shield: 1000,
+  speed: 150,
+  boostSpeed: 195,
   boostCost: 25,
   fluxCapacity: 200,
 };
 
 // ── Reactors ───────────────────────────────────────────────────────
+// Avionics: mid of Empyrean 27.0.11 house ranges. Ability %: wiki Mk III mid-of-range.
 export const reactors: RailjackComponent[] = [
   { id: "sigma_reactor_mk1", name: "Sigma Reactor Mk I", type: "reactor", tier: "sigma", stats: { fluxCapacity: 50, avionicsCapacity: 20 }, description: "Basic Sigma-series reactor" },
   { id: "sigma_reactor_mk2", name: "Sigma Reactor Mk II", type: "reactor", tier: "sigma", stats: { fluxCapacity: 100, avionicsCapacity: 30 }, description: "Improved Sigma-series reactor" },
-  { id: "sigma_reactor_mk3", name: "Sigma Reactor Mk III", type: "reactor", tier: "sigma", stats: { fluxCapacity: 150, avionicsCapacity: 40 }, description: "Advanced Sigma-series reactor" },
-  { id: "lavan_reactor_mk3", name: "Lavan Reactor Mk III", type: "reactor", tier: "lavan", stats: { fluxCapacity: 200, avionicsCapacity: 30, abilityDuration: 0.45 }, description: "High flux Lavan reactor — boosts Battle Mod Duration" },
-  { id: "vidar_reactor_mk3", name: "Vidar Reactor Mk III", type: "reactor", tier: "vidar", stats: { fluxCapacity: 150, avionicsCapacity: 50, abilityRange: 0.45 }, description: "High avionics Vidar reactor — boosts Battle Mod Range" },
-  { id: "zetki_reactor_mk3", name: "Zetki Reactor Mk III", type: "reactor", tier: "zetki", stats: { fluxCapacity: 180, avionicsCapacity: 40, abilityStrength: 0.45 }, description: "Balanced Zetki reactor — boosts Battle Mod Strength" },
+  { id: "sigma_reactor_mk3", name: "Sigma Reactor Mk III", type: "reactor", tier: "sigma", stats: { fluxCapacity: 150, avionicsCapacity: 40, abilityDuration: 0.15, abilityRange: 0.15, abilityStrength: 0.15 }, description: "Sigma Mk III — +15% Battle Mod Strength/Range/Duration" },
+  { id: "lavan_reactor_mk3", name: "Lavan Reactor Mk III", type: "reactor", tier: "lavan", stats: { fluxCapacity: 200, avionicsCapacity: 85, abilityDuration: 0.50, abilityStrength: 0.30 }, description: "Wiki mid Mk III — Duration 40–60% + Strength 20–40%; avionics 80–90" },
+  { id: "vidar_reactor_mk3", name: "Vidar Reactor Mk III", type: "reactor", tier: "vidar", stats: { fluxCapacity: 150, avionicsCapacity: 95, abilityRange: 0.50, abilityDuration: 0.30 }, description: "Wiki mid Mk III — Range 40–60% + Duration 20–40%; avionics 90–100" },
+  { id: "zetki_reactor_mk3", name: "Zetki Reactor Mk III", type: "reactor", tier: "zetki", stats: { fluxCapacity: 180, avionicsCapacity: 75, abilityStrength: 0.50, abilityRange: 0.30 }, description: "Wiki mid Mk III — Strength 40–60% + Range 20–40%; avionics 70–80" },
 ];
 
 // ── Shield Arrays ──────────────────────────────────────────────────
+// Capacity = wiki absolute mid-of-range. shieldRecharge is a planning %/s stand-in (wiki uses % max shields/s).
 export const shieldArrays: RailjackComponent[] = [
-  { id: "sigma_shield_mk1", name: "Sigma Shield Array Mk I", type: "shield", tier: "sigma", stats: { shieldCapacity: 200, shieldRecharge: 20 }, description: "Basic Sigma shield array" },
-  { id: "sigma_shield_mk2", name: "Sigma Shield Array Mk II", type: "shield", tier: "sigma", stats: { shieldCapacity: 400, shieldRecharge: 35 }, description: "Improved Sigma shield array" },
-  { id: "sigma_shield_mk3", name: "Sigma Shield Array Mk III", type: "shield", tier: "sigma", stats: { shieldCapacity: 600, shieldRecharge: 50 }, description: "Advanced Sigma shield array" },
-  { id: "lavan_shield_mk3", name: "Lavan Shield Array Mk III", type: "shield", tier: "lavan", stats: { shieldCapacity: 800, shieldRecharge: 50 }, description: "High capacity Lavan shield array (Update 43: improved recharge delay reduction)" },
-  { id: "vidar_shield_mk3", name: "Vidar Shield Array Mk III", type: "shield", tier: "vidar", stats: { shieldCapacity: 600, shieldRecharge: 85 }, description: "Fast recharging Vidar shield array (Update 43: improved recharge delay reduction)" },
-  { id: "zetki_shield_mk3", name: "Zetki Shield Array Mk III", type: "shield", tier: "zetki", stats: { shieldCapacity: 700, shieldRecharge: 55 }, description: "Balanced Zetki shield array" },
+  { id: "sigma_shield_mk1", name: "Sigma Shield Array Mk I", type: "shield", tier: "sigma", stats: { shieldCapacity: 1200, shieldRecharge: 5 }, description: "Wiki Sigma Mk I absolute capacity" },
+  { id: "sigma_shield_mk2", name: "Sigma Shield Array Mk II", type: "shield", tier: "sigma", stats: { shieldCapacity: 1350, shieldRecharge: 5 }, description: "Wiki Sigma Mk II absolute capacity" },
+  { id: "sigma_shield_mk3", name: "Sigma Shield Array Mk III", type: "shield", tier: "sigma", stats: { shieldCapacity: 1500, shieldRecharge: 7 }, description: "Wiki Sigma Mk III absolute capacity" },
+  { id: "lavan_shield_mk3", name: "Lavan Shield Array Mk III", type: "shield", tier: "lavan", stats: { shieldCapacity: 1700, shieldRecharge: 22 }, description: "Wiki mid Mk III capacity 1400–2000; high recharge %" },
+  { id: "vidar_shield_mk3", name: "Vidar Shield Array Mk III", type: "shield", tier: "vidar", stats: { shieldCapacity: 1475, shieldRecharge: 22 }, description: "Wiki mid Mk III capacity 1200–1750; strong delay reduction" },
+  { id: "zetki_shield_mk3", name: "Zetki Shield Array Mk III", type: "shield", tier: "zetki", stats: { shieldCapacity: 1275, shieldRecharge: 11 }, description: "Wiki mid Mk III capacity 1050–1500; best recharge delay" },
 ];
 
 // ── Engines ────────────────────────────────────────────────────────
+// speed = wiki item Engine Speed (m/s additive on base 150). boostSpeed = wiki mid Speed While Boosting.
 export const engines: RailjackComponent[] = [
-  { id: "sigma_engine_mk1", name: "Sigma Engines Mk I", type: "engine", tier: "sigma", stats: { speed: 20, boostSpeed: 40, boostCostReduction: 0 }, description: "Basic Sigma engines" },
-  { id: "sigma_engine_mk2", name: "Sigma Engines Mk II", type: "engine", tier: "sigma", stats: { speed: 40, boostSpeed: 80, boostCostReduction: 5 }, description: "Improved Sigma engines" },
-  { id: "sigma_engine_mk3", name: "Sigma Engines Mk III", type: "engine", tier: "sigma", stats: { speed: 60, boostSpeed: 120, boostCostReduction: 10 }, description: "Advanced Sigma engines" },
-  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 80, boostSpeed: 100, boostCostReduction: 15 }, description: "High cruise speed Lavan engines. Unique: +50% top speed while shields depleted; Slingshot grants 1200 Overshields." },
-  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 60, boostSpeed: 160, boostCostReduction: 5 }, description: "High boost speed Vidar engines. Unique: +100% boost speed while shields depleted; Intruder Stasis strips 50% armor." },
-  { id: "zetki_engine_mk3", name: "Zetki Engines Mk III", type: "engine", tier: "zetki", stats: { speed: 70, boostSpeed: 140, boostCostReduction: 10 }, description: "Balanced Zetki engines" },
+  { id: "sigma_engine_mk1", name: "Sigma Engines Mk I", type: "engine", tier: "sigma", stats: { speed: 10, boostSpeed: 208, boostCostReduction: 0 }, description: "Wiki Sigma Mk I (+10 m/s)" },
+  { id: "sigma_engine_mk2", name: "Sigma Engines Mk II", type: "engine", tier: "sigma", stats: { speed: 20, boostSpeed: 238, boostCostReduction: 5 }, description: "Wiki Sigma Mk II (+20 m/s)" },
+  { id: "sigma_engine_mk3", name: "Sigma Engines Mk III", type: "engine", tier: "sigma", stats: { speed: 30, boostSpeed: 261, boostCostReduction: 10 }, description: "Wiki Sigma Mk III (+30 m/s, boost 1.45×)" },
+  { id: "lavan_engine_mk3", name: "Lavan Engines Mk III", type: "engine", tier: "lavan", stats: { speed: 20, boostSpeed: 290, boostCostReduction: 15 }, description: "Wiki mid — lower cruise, highest boost. Unique: +50% top speed while shields depleted; Slingshot 1200 Overshields." },
+  { id: "vidar_engine_mk3", name: "Vidar Engines Mk III", type: "engine", tier: "vidar", stats: { speed: 45, boostSpeed: 270, boostCostReduction: 5 }, description: "Wiki mid — highest cruise. Unique: +100% boost while shields depleted; Intruder Stasis −50% armor." },
+  { id: "zetki_engine_mk3", name: "Zetki Engines Mk III", type: "engine", tier: "zetki", stats: { speed: 30, boostSpeed: 262, boostCostReduction: 10 }, description: "Wiki mid — balanced cruise/boost" },
 ];
 
 // ── Plating ────────────────────────────────────────────────────────
+// hullBonus/armorBonus store wiki ABSOLUTE mid-of-range (calc replaces base when equipped).
 export const plating: RailjackComponent[] = [
-  { id: "sigma_plating_mk1", name: "Sigma Plating Mk I", type: "plating", tier: "sigma", stats: { hullBonus: 300, armorBonus: 50 }, description: "Basic Sigma hull plating" },
-  { id: "sigma_plating_mk2", name: "Sigma Plating Mk II", type: "plating", tier: "sigma", stats: { hullBonus: 600, armorBonus: 100 }, description: "Improved Sigma hull plating" },
-  { id: "sigma_plating_mk3", name: "Sigma Plating Mk III", type: "plating", tier: "sigma", stats: { hullBonus: 1000, armorBonus: 150 }, description: "Advanced Sigma hull plating" },
-  { id: "lavan_plating_mk3", name: "Lavan Plating Mk III", type: "plating", tier: "lavan", stats: { hullBonus: 1500, armorBonus: 100 }, description: "High hull Lavan plating" },
-  { id: "vidar_plating_mk3", name: "Vidar Plating Mk III", type: "plating", tier: "vidar", stats: { hullBonus: 1000, armorBonus: 250 }, description: "High armor Vidar plating" },
-  { id: "zetki_plating_mk3", name: "Zetki Plating Mk III", type: "plating", tier: "zetki", stats: { hullBonus: 1200, armorBonus: 200 }, description: "Balanced Zetki hull plating" },
+  { id: "sigma_plating_mk1", name: "Sigma Plating Mk I", type: "plating", tier: "sigma", stats: { hullBonus: 1350, armorBonus: 975 }, description: "Wiki Sigma Mk I absolute hull/armor" },
+  { id: "sigma_plating_mk2", name: "Sigma Plating Mk II", type: "plating", tier: "sigma", stats: { hullBonus: 1750, armorBonus: 1300 }, description: "Wiki Sigma Mk II absolute hull/armor" },
+  { id: "sigma_plating_mk3", name: "Sigma Plating Mk III", type: "plating", tier: "sigma", stats: { hullBonus: 2450, armorBonus: 1625 }, description: "Wiki Sigma Mk III absolute hull/armor" },
+  { id: "lavan_plating_mk3", name: "Lavan Plating Mk III", type: "plating", tier: "lavan", stats: { hullBonus: 5250, armorBonus: 2419 }, description: "Wiki mid Mk III hull 4500–6000 / armor 2150–2688" },
+  { id: "vidar_plating_mk3", name: "Vidar Plating Mk III", type: "plating", tier: "vidar", stats: { hullBonus: 3850, armorBonus: 3319 }, description: "Wiki mid Mk III hull 3300–4400 / armor 2950–3688" },
+  { id: "zetki_plating_mk3", name: "Zetki Plating Mk III", type: "plating", tier: "zetki", stats: { hullBonus: 4200, armorBonus: 2644 }, description: "Wiki mid Mk III hull 3600–4800 / armor 2350–2938" },
 ];
 
 // ── Turrets ────────────────────────────────────────────────────────
@@ -170,7 +178,7 @@ const ORDNANCE_ID_ALIASES: Record<string, string> = {
   zetki_galvarc_mk4: "sigma_galvarc_mk3",
 };
 
-/** Steel Path Mk IV components (~30% over Mk III house rolls). Turrets/ordnance use Mk IV in-game; components are projected for planning. */
+/** Steel Path Mk IV components — projected ~30% over wiki-mid Mk III (components not fully published). */
 const MK4_COMPONENT_MULT = 1.3;
 
 function toMk4Component(component: RailjackComponent): RailjackComponent {

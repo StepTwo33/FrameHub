@@ -4,7 +4,7 @@ import { railjackPresets } from "@/data/railjack";
 import { allMods } from "@/data/mods";
 
 describe("calculateRailjackBuild", () => {
-  it("adds component stats to base hull, shield, speed, and flux", () => {
+  it("applies wiki mid-range absolute plating/shields and engine cruise", () => {
     const stats = calculateRailjackBuild({
       reactorId: "lavan_reactor_mk3",
       shieldId: "lavan_shield_mk3",
@@ -12,21 +12,23 @@ describe("calculateRailjackBuild", () => {
       platingId: "lavan_plating_mk3",
     });
 
-    expect(stats.hull).toBe(3000 + 1500);
-    expect(stats.armor).toBe(300 + 100);
-    expect(stats.shield).toBe(1500 + 800);
-    expect(stats.shieldRecharge).toBe(50); // Lavan Shield Mk III
-    expect(stats.speed).toBe(100 + 80);
-    expect(stats.boostSpeed).toBe(200 + 100);
+    expect(stats.hull).toBe(5250);
+    expect(stats.armor).toBe(2419);
+    expect(stats.shield).toBe(1700);
+    expect(stats.shieldRecharge).toBe(22);
+    expect(stats.speed).toBe(150 + 20);
+    expect(stats.boostSpeed).toBe(290);
     expect(stats.fluxCapacity).toBe(200 + 200);
-    expect(stats.avionicsCapacity).toBe(30); // Lavan Reactor Mk III wiki avionics
+    expect(stats.avionicsCapacity).toBe(85);
+    expect(stats.abilityDurationBonus).toBeCloseTo(0.5, 5);
+    expect(stats.abilityStrengthBonus).toBeCloseTo(0.3, 5);
   });
 
   it("exposes Vidar reactor avionics capacity for Integrated Plexus cap", () => {
     const stats = calculateRailjackBuild({
       reactorId: "vidar_reactor_mk3",
     });
-    expect(stats.avionicsCapacity).toBe(50);
+    expect(stats.avionicsCapacity).toBe(95);
   });
 
   it("applies The Marrowbone preset Plexus mod ids at max rank", () => {
@@ -65,8 +67,8 @@ describe("calculateRailjackBuild", () => {
       integratedMods: [{ modId: "ironclad_matrix", rank: 5, slotIndex: 0 }],
     });
 
-    const baseHull = 3000 + 1000;
-    const baseArmor = 300 + 150;
+    const baseHull = 2450;
+    const baseArmor = 1625;
     expect(stats.hull).toBe(Math.round(baseHull * (1 + 0.225)));
     expect(stats.armor).toBe(Math.round(baseArmor * (1 + 0.225)));
   });

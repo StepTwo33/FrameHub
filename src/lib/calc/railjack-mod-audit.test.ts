@@ -73,7 +73,8 @@ describe("railjack remainder cores (wiki max rank, Phase M14)", () => {
     const stats = calculateRailjackBuild({
       integratedMods: [{ modId: "ion_burn", rank: 5, slotIndex: 0 }],
     });
-    expect(stats.boostSpeed / bare.boostSpeed).toBeCloseTo(1.45, 3);
+    // Math.round on wiki-mid base 195 × 1.45 → 283 (ratio ~1.4513)
+    expect(stats.boostSpeed).toBe(Math.round(bare.boostSpeed * 1.45));
   });
 
   it("Ordnance Velocity R5: +60% ordnance projectile speed", () => {

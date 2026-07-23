@@ -275,17 +275,19 @@ export function calculateRailjackBuild(
   const eliteCrew = input.eliteCrewId ? findRailjackEliteCrew(input.eliteCrewId) : undefined;
   const crewBonuses = eliteCrew ? crewBonusesFromCompetency(eliteCrew.competency) : undefined;
 
+  // Plating / shields: wiki absolute equipped values (replace baseline).
   if (plating) {
-    base.hull += plating.stats.hullBonus ?? 0;
-    base.armor += plating.stats.armorBonus ?? 0;
+    if (plating.stats.hullBonus != null) base.hull = plating.stats.hullBonus;
+    if (plating.stats.armorBonus != null) base.armor = plating.stats.armorBonus;
   }
   if (shield) {
-    base.shield += shield.stats.shieldCapacity ?? 0;
-    shieldRecharge += shield.stats.shieldRecharge ?? 0;
+    if (shield.stats.shieldCapacity != null) base.shield = shield.stats.shieldCapacity;
+    shieldRecharge = shield.stats.shieldRecharge ?? 0;
   }
+  // Engines: cruise = wiki base 150 + item Engine Speed; boostSpeed = wiki equipped boost speed.
   if (engine) {
-    base.speed += engine.stats.speed ?? 0;
-    base.boostSpeed += engine.stats.boostSpeed ?? 0;
+    base.speed = railjackBaseStats.speed + (engine.stats.speed ?? 0);
+    if (engine.stats.boostSpeed != null) base.boostSpeed = engine.stats.boostSpeed;
     base.boostCost = Math.max(0, base.boostCost - (engine.stats.boostCostReduction ?? 0));
   }
   if (reactor) {

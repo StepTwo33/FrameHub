@@ -95,10 +95,13 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim7 | Final SC + flat mag | Entropy Burst / Napalm Grenades final SC; Stinging Truth +40 flat mag | **Locked** — +3 IDs; `flat` apply mode |
 | Sim8 | Jet Stream ability gate | Turbulence-active + Jet Stream: +40% move / +100% proj × Strength (R3); paper stays panel | **Locked** — +1 ID; display proj + loadout sprint |
 | Sim9 | Elemental infusion gates | Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion: ability-gated parallel element × Strength; no exalted | **Locked** — +5 IDs; parallel elemental apply |
+| Sim10 | Ability-gated primary buffs | Teeming Virulence (+120% primary CC × STR); Thrall Pact (dmg × thralls × STR); Smoke Shadow (+150% CC, no STR) | **Locked** — +3 IDs; thrallCount slider; Teeming wiki R3 fix |
 | R1 | Riven grader | Disposition-scaled ranges (rank × buff-count); heuristic grade; no generation; unknown-disp warn; PT/combo units; IPS curses | **Locked** — `riven-calculator.test.ts` |
+| R1b | Riven dispositions sync | `omegaAttenuation` from api.warframestat.us via `scripts/_sync_riven_dispositions.mjs` (not 1–5 star `disposition`) | **Locked** — 630 weapons |
 | RJ1 | Railjack hardpoints + armaments | Nose/Dorsal/Ventral turrets; Cryophon/Glazio + Lavan Photor/Pulsar/Talyn; Sigma-only ordnance Mk tiers; reactor avionics capacity; Uranus presets apply Plexus mod ids | **Locked** — inventory + calc + preset goldens |
+| RJ2 | Railjack ship paper | Wiki mid-range absolute plating/shields; engine cruise/boost house roles; reactor avionics + dual ability %; Mk IV components still projected | **Locked** — component goldens |
 
-**Remaining unlocked paper-moving mods (post Sim9):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim10):** none for always-on paper; further work is Thermal Transfer polarity, Razorwing Blitz / Critical Surge, miss/grenade decay, or Tier B/C items.
 
 ---
 
@@ -148,6 +151,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim7 Final SC + flat mag | 2026-07-23 | +3 Entropy/Napalm final SC; Stinging Truth flat mag; `flat` mode wiring |
 | Sim8 Jet Stream ability gate | 2026-07-23 | Jet Stream via Turbulence toggle; STR-scaled move/proj; paper panel |
 | Sim9 Elemental infusion gates | 2026-07-23 | +5 hold-cast infusions; parallel element × STR; no exalted |
+| Sim10 Ability-gated primary buffs | 2026-07-23 | Teeming/Thrall/Smoke Shadow; thrallCount sim; Teeming 120% wiki fix |
 | R1 Riven grader | 2026-07-23 | Disposition ranges + heuristic grade; no generation; unknown-disp warn |
 | RJ1 Railjack hardpoints/armaments | 2026-07-23 | 3 turret slots; Cryophon/Glazio/Lavan trio; Sigma ordnance; avionics capacity; presets equip Plexus |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
