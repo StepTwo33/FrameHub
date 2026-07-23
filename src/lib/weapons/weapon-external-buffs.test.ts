@@ -342,6 +342,146 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(wfOff.sprintSpeedBonus).toBe(0);
   });
 
+  it("Elemental infusion augments: ability-gated parallel element × Strength (no exalted)", () => {
+    const cases: {
+      ability: string;
+      modId: string;
+      element: string;
+      label: string;
+      warframeId: string;
+    }[] = [
+      {
+        ability: "Fireball",
+        modId: "augment_ember_fireball_frenzy",
+        element: "heat",
+        label: "Fireball Frenzy",
+        warframeId: "ember",
+      },
+      {
+        ability: "Freeze",
+        modId: "augment_frost_freeze_force",
+        element: "cold",
+        label: "Freeze Force",
+        warframeId: "frost",
+      },
+      {
+        ability: "Shock",
+        modId: "augment_volt_shock_trooper",
+        element: "electricity",
+        label: "Shock Trooper",
+        warframeId: "volt",
+      },
+      {
+        ability: "Spores",
+        modId: "augment_saryn_venom_dose",
+        element: "corrosive",
+        label: "Venom Dose",
+        warframeId: "saryn",
+      },
+      {
+        ability: "Smite",
+        modId: "smite_infusion",
+        element: "radiation",
+        label: "Smite Infusion",
+        warframeId: "oberon",
+      },
+    ];
+
+    for (const c of cases) {
+      const ability: Ability = { name: c.ability, energyCost: 25, description: c.label };
+      expect(weaponDamageBuffAbilities([ability]).map((a) => a.name)).toContain(c.ability);
+
+      const simOn: SimulationParams = {
+        ...DEFAULT_SIM_PARAMS,
+        activeWeaponAbilityBuffs: [c.ability],
+      };
+      const slots: ModSlot[] = [{ modId: c.modId, slotIndex: 0, rank: 3 }];
+      const ctx = {
+        warframeId: c.warframeId,
+        warframeStats: { ...wfStats, abilityStrength: 1 },
+        warframeAbilities: [ability],
+        warframeModSlots: slots,
+        allMods: modsMap,
+      };
+
+      // Paper / ability off → no buff
+      expect(
+        resolveWeaponExternalBuffs(testRifle, ctx, DEFAULT_SIM_PARAMS).find(
+          (b) => b.id === `ability:${c.label}`,
+        ),
+      ).toBeUndefined();
+
+      // Ability on, no augment → no buff
+      expect(
+        resolveWeaponExternalBuffs(
+          testRifle,
+          { ...ctx, warframeModSlots: [] },
+          simOn,
+        ).find((b) => b.id === `ability:${c.label}`),
+      ).toBeUndefined();
+
+      // R3 @ 100% STR → +100% parallel element
+      const buffs = resolveWeaponExternalBuffs(testRifle, ctx, simOn);
+      const inf = buffs.find((b) => b.id === `ability:${c.label}`);
+      expect(inf?.elemental).toEqual([
+        { type: c.element, bonusFraction: 1, parallel: true },
+      ]);
+
+      const bare = calculateWeaponBuild(testRifle, [], new Map(), undefined, simOn);
+      const withInf = calculateWeaponBuild(testRifle, [], new Map(), undefined, simOn, {
+        externalBuffs: buffs,
+      });
+      // IPS-only rifle: +100% of base as parallel element → total damage ×2
+      expect(withInf.totalDamage).toBeCloseTo(bare.totalDamage * 2, 5);
+      expect(withInf.elements.find((e) => e.type === c.element)?.value).toBeCloseTo(100, 5);
+      expect(withInf.burstDps / bare.burstDps).toBeCloseTo(2, 5);
+
+      // STR=2 → +200%
+      const buffs2 = resolveWeaponExternalBuffs(
+        testRifle,
+        { ...ctx, warframeStats: { ...wfStats, abilityStrength: 2 } },
+        simOn,
+      );
+      expect(buffs2.find((b) => b.id === `ability:${c.label}`)?.elemental?.[0]?.bonusFraction).toBeCloseTo(
+        2,
+        8,
+      );
+
+      // Exalted weapons ignored
+      const exalted = { ...testRifle, id: "exalted_test", isExalted: true };
+      expect(
+        resolveWeaponExternalBuffs(exalted, ctx, simOn).find((b) => b.id === `ability:${c.label}`),
+      ).toBeUndefined();
+    }
+
+    // Parallel: heat infusion does not combine with toxin into Gas
+    const fireball: Ability = { name: "Fireball", energyCost: 25, description: "" };
+    const simFire: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Fireball"],
+    };
+    const toxinMod = allMods.find((m) => m.id === "infected_clip" || m.id === "infected_clip_r3");
+    expect(toxinMod).toBeDefined();
+    const frenzyBuffs = resolveWeaponExternalBuffs(
+      testRifle,
+      {
+        warframeId: "ember",
+        warframeStats: { ...wfStats, abilityStrength: 1 },
+        warframeAbilities: [fireball],
+        warframeModSlots: [{ modId: "augment_ember_fireball_frenzy", slotIndex: 0, rank: 3 }],
+        allMods: modsMap,
+      },
+      simFire,
+    );
+    const toxinSlots: ModSlot[] = [{ modId: toxinMod!.id, slotIndex: 0, rank: toxinMod!.maxRank }];
+    const mixed = calculateWeaponBuild(testRifle, toxinSlots, modsMap, undefined, simFire, {
+      externalBuffs: frenzyBuffs,
+    });
+    expect(mixed.elements.some((e) => e.type === "gas")).toBe(false);
+    expect(mixed.elements.some((e) => e.type === "toxin")).toBe(true);
+    expect(mixed.elements.some((e) => e.type === "heat")).toBe(true);
+  });
+
   it("Contagion Cloud adds sim-gated ability toxin DPS (gun/melee) when augment equipped", () => {
     const lash: Ability = {
       name: "Toxic Lash",

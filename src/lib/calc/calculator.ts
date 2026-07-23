@@ -495,6 +495,8 @@ function applyWeaponExternalBuffs(
   /** Product of (1 + damageMultBonus) for Roar/Eclipse-style mults. */
   multDamage?: { product: number },
   extraHit?: { fraction: number; guaranteedToxin: boolean },
+  /** Parallel elemental fractions (infusion augments) — applied after combos. */
+  parallelElementals?: { type: string; bonusFraction: number }[],
 ): void {
   if (!buffs?.length) return;
   for (const buff of buffs) {
@@ -514,11 +516,37 @@ function applyWeaponExternalBuffs(
       extraHit.fraction += buff.extraHitDamageFraction;
       if (buff.extraHitGuaranteedToxin) extraHit.guaranteedToxin = true;
     }
-    if (buff.elemental?.length && elementalMods && baseWeaponDamage) {
+    if (buff.elemental?.length && baseWeaponDamage) {
       for (const e of buff.elemental) {
-        elementalMods.push({ type: e.type, value: baseWeaponDamage * e.bonusFraction });
+        if (e.parallel && parallelElementals) {
+          parallelElementals.push({ type: e.type, bonusFraction: e.bonusFraction });
+        } else if (elementalMods) {
+          elementalMods.push({ type: e.type, value: baseWeaponDamage * e.bonusFraction });
+        }
       }
     }
+  }
+}
+
+/** Wiki infusion augments: parallel elemental after combos; scales with Serration/Roar via damageMultTotal. */
+function applyParallelExternalElementals(
+  stats: CalculatedStats,
+  baseWeaponDamage: number,
+  damageMultTotal: number,
+  parallels: { type: string; bonusFraction: number }[],
+): void {
+  if (!parallels.length || baseWeaponDamage <= 0 || damageMultTotal <= 0) return;
+  if (!stats.rawElements) stats.rawElements = [];
+  for (const p of parallels) {
+    const value = baseWeaponDamage * p.bonusFraction * damageMultTotal;
+    if (value <= 0) continue;
+    const existing = stats.elements.find((e) => e.type === p.type);
+    if (existing) existing.value += value;
+    else stats.elements.push({ type: p.type, value });
+    const raw = stats.rawElements.find((e) => e.type === p.type);
+    if (raw) raw.value += value;
+    else stats.rawElements.push({ type: p.type, value });
+    stats.totalDamage += value;
   }
 }
 
@@ -719,6 +747,7 @@ export function calculateWeaponBuild(
   const critChanceFlatBonus = { chance: 0 };
   const externalDamageMult = { product: 1 };
   const externalExtraHit = { fraction: 0, guaranteedToxin: false };
+  const parallelElementals: { type: string; bonusFraction: number }[] = [];
   applyWeaponExternalBuffs(
     weaponModAcc,
     calcOptions?.externalBuffs,
@@ -728,6 +757,7 @@ export function calculateWeaponBuild(
     critChanceFlatBonus,
     externalDamageMult,
     externalExtraHit,
+    parallelElementals,
   );
   // Toxin mod % (pre-combine) for Toxic Lash tick type mult.
   let toxinModBonus = 0;
@@ -747,6 +777,7 @@ export function calculateWeaponBuild(
         elementalDip += e.value / baseWeapon.damage;
       }
     }
+    for (const e of parallelElementals) elementalDip += e.bonusFraction;
     stats.extraHitDamageFraction = externalExtraHit.fraction * (1 + elementalDip);
     if (externalExtraHit.guaranteedToxin) {
       stats.extraHitGuaranteedToxin = true;
@@ -879,6 +910,7 @@ export function calculateWeaponBuild(
       elementalDip += e.value / baseWeapon.damage;
       if (e.type === "toxin") toxinFrac += e.value / baseWeapon.damage;
     }
+    for (const e of parallelElementals) elementalDip += e.bonusFraction;
     stats.toxinModBonusFraction = toxinFrac;
     if (externalExtraHit.fraction > 0) {
       stats.extraHitDamageFraction = externalExtraHit.fraction * (1 + elementalDip);
@@ -1400,6 +1432,14 @@ export function calculateWeaponBuild(
   };
   if (incarnonStatChanges) applyStatChanges(incarnonStatChanges, false);
   if (rivenStatChanges) applyStatChanges(rivenStatChanges, true);
+
+  // Infusion augments (Fireball Frenzy etc.): parallel elemental after combos × STR.
+  applyParallelExternalElementals(
+    stats,
+    baseWeapon.damage,
+    damageMultTotal,
+    parallelElementals,
+  );
 
   // Torid Plentiful (form): "all multishot bonuses are increased by 60%" — scales the
   // bonus portion above base(+last-shot EV), including incarnon flat MS adds.

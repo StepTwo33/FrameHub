@@ -301,6 +301,11 @@ export interface WeaponExternalBuffElemental {
   type: string;
   /** Fraction of base weapon damage, same as mod elemental (+0.6 = +60%). */
   bonusFraction: number;
+  /**
+   * When true, added after elemental combos (wiki Fireball Frenzy / Freeze Force /
+   * Shock Trooper / Venom Dose / Smite Infusion — parallel, does not combine).
+   */
+  parallel?: boolean;
 }
 
 /** Buff from warframe abilities, archon shards, or other loadout-wide sources. */

@@ -421,6 +421,75 @@ export function applyJetStreamWarframeMove(
   stats.totalSprint = stats.baseSprint * (1 + stats.sprintSpeedBonus);
 }
 
+/** Hold-cast elemental infusion augments (wiki: parallel element × Strength; no exalted). */
+const ELEMENTAL_INFUSION_BY_ABILITY: Record<
+  string,
+  { modId: string; element: string; label: string; damagePerRank?: number }
+> = {
+  Fireball: {
+    modId: "augment_ember_fireball_frenzy",
+    element: "heat",
+    label: "Fireball Frenzy",
+    damagePerRank: 25,
+  },
+  Freeze: {
+    modId: "augment_frost_freeze_force",
+    element: "cold",
+    label: "Freeze Force",
+    damagePerRank: 25,
+  },
+  Shock: {
+    modId: "augment_volt_shock_trooper",
+    element: "electricity",
+    label: "Shock Trooper",
+    damagePerRank: 25,
+  },
+  Spores: {
+    modId: "augment_saryn_venom_dose",
+    element: "corrosive",
+    label: "Venom Dose",
+    damagePerRank: 25,
+  },
+  Smite: {
+    modId: "smite_infusion",
+    element: "radiation",
+    label: "Smite Infusion",
+    damagePerRank: 25,
+  },
+};
+
+/**
+ * Wiki Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion:
+ * hold-cast grants parallel elemental × Strength; does not affect exalted weapons.
+ */
+function resolveElementalInfusionBuff(
+  weapon: Weapon,
+  ability: Ability,
+  strength: number,
+  ctx: WeaponBuffContext,
+): WeaponExternalBuff | null {
+  const rule = ELEMENTAL_INFUSION_BY_ABILITY[ability.name];
+  if (!rule) return null;
+  if (weapon.isExalted) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === rule.modId);
+  if (!slot) return null;
+  const mod = ctx.allMods?.get(rule.modId);
+  const maxRank = mod?.maxRank ?? 3;
+  const rank = Math.min(Math.max(slot.rank ?? 0, 0), maxRank);
+  const baseFrac = mod
+    ? modStatFraction(mod, "damage", rank)
+    : ((rule.damagePerRank ?? 25) * (rank + 1)) / 100;
+  const bonus = baseFrac * strength;
+  if (bonus <= 0) return null;
+  return {
+    id: `ability:${rule.label}`,
+    label: rule.label,
+    category: "ability",
+    elemental: [{ type: rule.element, bonusFraction: bonus, parallel: true }],
+    nominal: `+${(baseFrac * 100).toFixed(0)}% ${rule.element} (parallel, × Strength)`,
+  };
+}
+
 /**
  * Wiki Contagion Cloud: on-kill toxin cloud = ability misc DPS × STR
  * (× melee mult); sim gates enemy count. Not weapon-modded.
@@ -604,6 +673,13 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Jet Stream — Turbulence-gated move + projectile speed × Strength
     case "Turbulence":
       return resolveJetStreamBuff(strength, ctx);
+    // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
+    case "Fireball":
+    case "Freeze":
+    case "Shock":
+    case "Spores":
+    case "Smite":
+      return resolveElementalInfusionBuff(weapon, ability, strength, ctx);
     // wiki: Redline — full-battery fire/attack speed × Duration
     case "Redline":
       return resolveRedlineBuff(weapon, ability, ctx.warframeStats!.abilityDuration);
@@ -873,6 +949,11 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Shroud Of Dynar",
   "Absorb",
   "Turbulence",
+  "Fireball",
+  "Freeze",
+  "Shock",
+  "Spores",
+  "Smite",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */

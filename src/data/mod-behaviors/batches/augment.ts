@@ -141,7 +141,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_ember_fireball_frenzy: mod("augment_ember_fireball_frenzy", [
     line("allyCast", "mod_panel", "multiplicative_percent", "Fireball Frenzy: allyCast \u2014 Fireball Augment: Hold to cast will grant all allies within 15m an additional 10\u2026"),
-    line("damage", "mod_panel", "multiplicative_percent", "Fireball Frenzy: damage \u2014 Fireball Augment: Hold to cast will grant all allies within 15m an additional 10\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Fireball Frenzy — Fireball-gated parallel Heat × Strength (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Fireball Frenzy: duration \u2014 Fireball Augment: Hold to cast will grant all allies within 15m an additional 10\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Fireball Frenzy: range \u2014 Fireball Augment: Hold to cast will grant all allies within 15m an additional 10\u2026"),
   ]),
@@ -184,7 +184,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_frost_freeze_force: mod("augment_frost_freeze_force", [
     line("allyColdDamage", "mod_panel", "multiplicative_percent", "Freeze Force: allyColdDamage \u2014 Freeze Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
-    line("damage", "mod_panel", "multiplicative_percent", "Freeze Force: damage \u2014 Freeze Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Freeze Force — Freeze-gated parallel Cold × Strength (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Freeze Force: duration \u2014 Freeze Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Freeze Force: range \u2014 Freeze Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
   ]),
@@ -461,7 +461,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_saryn_venom_dose: mod("augment_saryn_venom_dose", [
     line("allyCorrosiveDamage", "mod_panel", "multiplicative_percent", "Venom Dose: allyCorrosiveDamage \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
-    line("damage", "mod_panel", "multiplicative_percent", "Venom Dose: damage \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Venom Dose — Spores-gated parallel Corrosive × Strength (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Venom Dose: duration \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Venom Dose: range \u2014 Spores Augment: Hold to cast will grant all allies within 15m an additional 100%\u2026"),
   ]),
@@ -522,7 +522,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
   ]),
   augment_volt_shock_trooper: mod("augment_volt_shock_trooper", [
     line("allyShockDamage", "mod_panel", "multiplicative_percent", "Shock Trooper: allyShockDamage \u2014 Shock Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
-    line("damage", "mod_panel", "multiplicative_percent", "Shock Trooper: damage \u2014 Shock Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Shock Trooper — Shock-gated parallel Electricity × Strength (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Shock Trooper: duration \u2014 Shock Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Shock Trooper: range \u2014 Shock Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
   ]),
@@ -886,7 +886,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Singularity: range \u2014 Absorb Augment: Create a ring every 3s that drags in enemies at 15m/s."),
   ]),
   smite_infusion: mod("smite_infusion", [
-    line("damage", "mod_panel", "multiplicative_percent", "Smite Infusion: damage \u2014 Smite Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Smite Infusion — Smite-gated parallel Radiation × Strength (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Smite Infusion: duration \u2014 Smite Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
     line("range", "mod_panel", "multiplicative_percent", "Smite Infusion: range \u2014 Smite Augment: Hold to cast will grant all allies within 15m an additional 100% \u2026"),
   ]),
