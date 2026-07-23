@@ -414,6 +414,103 @@ describe("resolveWeaponExternalBuffs", () => {
     expect(withBoth.totalDamage).toBeCloseTo(100 * 2.2 * 1.975, 4);
   });
 
+  it("Valence Formation: imbue-gated parallel elemental + guaranteed status (not × Strength)", () => {
+    const catalyze: Ability = { name: "Catalyze", energyCost: 0, description: "" };
+    expect(weaponDamageBuffAbilities([catalyze]).map((a) => a.name)).toContain(
+      "Valence Formation",
+    );
+
+    const ctx = {
+      warframeId: "lavos",
+      warframeStats: { ...wfStats, abilityStrength: 2 },
+      warframeAbilities: [catalyze],
+      warframeModSlots: [{ modId: "valence_formation", slotIndex: 0, rank: 3 }] as ModSlot[],
+      allMods: modsMap,
+    };
+    const sim: SimulationParams = {
+      ...DEFAULT_SIM_PARAMS,
+      activeWeaponAbilityBuffs: ["Valence Formation"],
+      valenceFormationElement: "heat",
+    };
+
+    expect(
+      resolveWeaponExternalBuffs(testRifle, ctx, DEFAULT_SIM_PARAMS).find(
+        (b) => b.id === "ability:Valence Formation",
+      ),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(testRifle, ctx, {
+        ...DEFAULT_SIM_PARAMS,
+        activeWeaponAbilityBuffs: ["Valence Formation"],
+      }).find((b) => b.id === "ability:Valence Formation"),
+    ).toBeUndefined();
+    expect(
+      resolveWeaponExternalBuffs(
+        testRifle,
+        { ...ctx, warframeModSlots: [] },
+        sim,
+      ).find((b) => b.id === "ability:Valence Formation"),
+    ).toBeUndefined();
+
+    // R3 Heat → +200%; STR 2 must not scale
+    const vf = resolveWeaponExternalBuffs(testRifle, ctx, sim).find(
+      (b) => b.id === "ability:Valence Formation",
+    );
+    expect(vf?.elemental).toEqual([{ type: "heat", bonusFraction: 2.0, parallel: true }]);
+    expect(vf?.guaranteedStatusElement).toBe("heat");
+
+    const viral = resolveWeaponExternalBuffs(testRifle, ctx, {
+      ...sim,
+      valenceFormationElement: "viral",
+    }).find((b) => b.id === "ability:Valence Formation");
+    expect(viral?.elemental).toEqual([{ type: "viral", bonusFraction: 2.0, parallel: true }]);
+
+    // R0 → 50%
+    const r0 = resolveWeaponExternalBuffs(
+      testRifle,
+      {
+        ...ctx,
+        warframeModSlots: [{ modId: "valence_formation", slotIndex: 0, rank: 0 }],
+      },
+      sim,
+    ).find((b) => b.id === "ability:Valence Formation");
+    expect(r0?.elemental?.[0]?.bonusFraction).toBeCloseTo(0.5, 8);
+
+    // Universal weapon bonus — exalted included
+    expect(
+      resolveWeaponExternalBuffs(
+        { ...testMelee, isExalted: true, id: "exalted_valence" },
+        ctx,
+        sim,
+      ).find((b) => b.id === "ability:Valence Formation")?.elemental?.[0]?.bonusFraction,
+    ).toBeCloseTo(2.0, 8);
+
+    const bare = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim);
+    const withVf = calculateWeaponBuild(testRifle, [], new Map(), undefined, sim, {
+      externalBuffs: [vf!],
+    });
+    expect(withVf.totalDamage).toBeCloseTo(bare.totalDamage * 3, 5);
+    expect(withVf.elements.find((e) => e.type === "heat")?.value).toBeCloseTo(200, 5);
+    expect(
+      withVf.statusProcs.find((p) => p.description.includes("Valence Formation"))?.chance,
+    ).toBe(1);
+
+    // Parallel: Heat VF + Infected Clip toxin does not form Gas
+    const toxinMod = allMods.find((m) => m.id === "infected_clip" || m.id === "infected_clip_r3");
+    expect(toxinMod).toBeDefined();
+    const mixed = calculateWeaponBuild(
+      testRifle,
+      [{ modId: toxinMod!.id, slotIndex: 0, rank: toxinMod!.maxRank }],
+      modsMap,
+      undefined,
+      sim,
+      { externalBuffs: [vf!] },
+    );
+    expect(mixed.elements.some((e) => e.type === "gas")).toBe(false);
+    expect(mixed.elements.some((e) => e.type === "toxin")).toBe(true);
+    expect(mixed.elements.some((e) => e.type === "heat")).toBe(true);
+  });
+
   it("Razorwing Blitz / Critical Surge: stack and teleport-meter gates", () => {
     const razorwing: Ability = { name: "Razorwing", energyCost: 25, description: "" };
     const breach: Ability = { name: "Breach Surge", energyCost: 50, description: "" };

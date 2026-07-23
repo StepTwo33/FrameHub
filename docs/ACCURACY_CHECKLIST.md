@@ -100,6 +100,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim12 | Blitz + Critical Surge | Razorwing Blitz FR/AS × stacks × STR (Pixia/Diwata); Critical Surge primary CC × meters × STR (cap 250%) | **Locked** — +2 IDs; stack/meter sim sliders |
 | Sim13 | Harpak pull trigger | Exposing Harpoon: +300% CC after pull via `applyTriggerBuffs` | **Locked** — +1 ID |
 | Sim14 | Furious Javelin | Radial Javelin hits → melee damage mult × enemies × STR (incl. Exalted Blade) | **Locked** — +1 ID; furiousJavelinEnemies slider |
+| Sim15 | Valence Formation | Lavos imbue → parallel elemental × rank (50–200%) + guaranteed status; not × STR | **Locked** — +1 ID; valenceFormationElement picker |
 | R1 | Riven grader | Disposition-scaled ranges (rank × buff-count); heuristic grade; no generation; unknown-disp warn; PT/combo units; IPS curses | **Locked** — `riven-calculator.test.ts` |
 | R1b | Riven dispositions sync | `omegaAttenuation` from api.warframestat.us via `scripts/_sync_riven_dispositions.mjs` (not 1–5 star `disposition`) | **Locked** — 630 weapons |
 | RJ1 | Railjack hardpoints + armaments | Nose/Dorsal/Ventral turrets; Cryophon/Glazio + Lavan Photor/Pulsar/Talyn; Sigma-only ordnance Mk tiers; reactor avionics capacity; Uranus presets apply Plexus mod ids | **Locked** — inventory + calc + preset goldens |
@@ -110,7 +111,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | RJ6 | Tunguska Forward Artillery paper | Wiki 56.5k / 300% CC / 2× CD / 4s charge; Forward Artillery mod scales damage; avg red-crit shot + charge DPS; Dome Charges out of scope | **Locked** — artillery goldens |
 | RJ7 | Intrinsics (+ Dirac note) | Gunnery 1 +50% Dorsal/Ventral; Tactical 6/7/9 Battle energy & Tac CD; Engineering/Command unlocks; Dirac/grid removed U29.10 → Endo (documented) | **Locked** — intrinsic goldens |
 
-**Remaining unlocked paper-moving mods (post Sim14):** none for always-on paper; further work is Valence Formation (needs guaranteed-status), miss/grenade decay, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim15):** none for always-on paper; further work is miss/grenade decay (`critical_precision` / `critical_mutation`), or Tier B/C items.
 
 ---
 
@@ -165,6 +166,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim12 Blitz + Critical Surge | 2026-07-23 | Razorwing stacks FR; Surge teleport meters CC; Critical Surge per-m catalog fix |
 | Sim13 Harpak pull trigger | 2026-07-23 | Exposing Harpoon → trigger CC on Harpak |
 | Sim14 Furious Javelin | 2026-07-23 | Radial Javelin enemy count → melee damageMult × STR |
+| Sim15 Valence Formation | 2026-07-23 | Lavos imbue → parallel elemental + guaranteed status (not × STR) |
 | R1 Riven grader | 2026-07-23 | Disposition ranges + heuristic grade; no generation; unknown-disp warn |
 | RJ1 Railjack hardpoints/armaments | 2026-07-23 | 3 turret slots; Cryophon/Glazio/Lavan trio; Sigma ordnance; avionics capacity; presets equip Plexus |
 | R1b Riven dispositions sync | 2026-07-23 | omegaAttenuation sync script; 630 weapons |

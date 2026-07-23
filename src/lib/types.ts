@@ -347,6 +347,11 @@ export interface WeaponExternalBuff {
   /** Toxic Lash: Extra Hit always procs Toxin (feeds DoT + faction triple-dip). */
   extraHitGuaranteedToxin?: boolean;
   /**
+   * Forced status proc on every hit (Valence Formation). Independent of status chance /
+   * damage weighting — stacks with normal weighted procs.
+   */
+  guaranteedStatusElement?: string;
+  /**
    * Flat ability toxin cloud DPS (Contagion Cloud). Not weapon-modded; added to
    * burst/sustained after direct DPS when sim enemies > 0.
    */
@@ -471,6 +476,22 @@ export interface SimulationParams {
    * Melee damage mult = per-enemy% × Strength × enemies (Eclipse-style; includes exalted).
    */
   furiousJavelinEnemies?: number;
+  /**
+   * Valence Formation: imbued element applied as parallel weapon elemental + guaranteed status.
+   * Requires "Valence Formation" in activeWeaponAbilityBuffs + augment equipped.
+   * Not × Strength (wiki rank table 50–200%).
+   */
+  valenceFormationElement?:
+    | "heat"
+    | "cold"
+    | "electricity"
+    | "toxin"
+    | "blast"
+    | "gas"
+    | "magnetic"
+    | "radiation"
+    | "viral"
+    | "corrosive";
   /**
    * Mecha Set: enemies hit by status-spread on mark-kill (0 = off). Amortizes
    * transferred DoT DPS over mark cooldown; needs ≥1 Mecha piece via linkage.
@@ -819,6 +840,8 @@ export interface CalculatedStats {
   extraHitDamageFraction?: number;
   /** Toxic Lash Extra Hit: guaranteed Toxin proc / DoT path. */
   extraHitGuaranteedToxin?: boolean;
+  /** Forced status element on every hit (Valence Formation). */
+  guaranteedStatusElement?: string;
   /**
    * How many Extra Hit damage instances per weapon hit (1, or 2 with Spores synergy).
    * Does not multiply the guaranteed Toxin DoT stack count.

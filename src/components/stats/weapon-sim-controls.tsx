@@ -342,6 +342,51 @@ export function WeaponSimControls({
                 tooltip="Furious Javelin: enemies hit by Radial Javelin (0 = off). Melee damage × (1 + 15% × Strength × enemies) at R3 — includes Exalted Blade; needs Furious Javelin equipped."
               />
             )}
+            {(simParams.activeWeaponAbilityBuffs ?? []).includes("Valence Formation") && (
+              <label
+                className="block text-[10px] text-muted-foreground"
+                title="Valence Formation (Lavos Passive Augment): imbued element as parallel weapon elemental + guaranteed status. Rank 3 = +200%. Not × Strength — needs Valence Formation equipped."
+              >
+                Valence imbue
+                <select
+                  value={simParams.valenceFormationElement ?? ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    const ok = [
+                      "heat",
+                      "cold",
+                      "electricity",
+                      "toxin",
+                      "blast",
+                      "gas",
+                      "magnetic",
+                      "radiation",
+                      "viral",
+                      "corrosive",
+                    ] as const;
+                    onSimParamsChange({
+                      ...simParams,
+                      valenceFormationElement: (ok as readonly string[]).includes(v)
+                        ? (v as (typeof ok)[number])
+                        : undefined,
+                    });
+                  }}
+                  className="mt-0.5 h-7 w-full rounded border border-border bg-background px-1.5 text-[11px]"
+                >
+                  <option value="">Off</option>
+                  <option value="heat">Heat</option>
+                  <option value="cold">Cold</option>
+                  <option value="electricity">Electricity</option>
+                  <option value="toxin">Toxin</option>
+                  <option value="blast">Blast</option>
+                  <option value="gas">Gas</option>
+                  <option value="magnetic">Magnetic</option>
+                  <option value="radiation">Radiation</option>
+                  <option value="viral">Viral</option>
+                  <option value="corrosive">Corrosive</option>
+                </select>
+              </label>
+            )}
             <label className="block text-[10px] text-muted-foreground" title="Bane / Expel / Smite apply (1+bonus) on hits and squared on DoTs">
               Target faction
               <select

@@ -624,7 +624,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Untime Rift: range \u2014 The Vast Untime Augment: Creates a Rift that connects to enemies suffering from \u2026"),
   ]),
   valence_formation: mod("valence_formation", [
-    line("duration", "mod_panel", "multiplicative_percent", "Valence Formation: duration \u2014 Passive Augment: Casting an Ability imbued with extra Elemental Damage applies t\u2026"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Valence Formation — duration panel; parallel elemental × rank (50–200%) + guaranteed status gated via sim (not always-on; not × Strength)"),
   ]),
   vampiric_grasp: mod("vampiric_grasp", [
     line("healthRegen", "mod_panel", "multiplicative_percent", "Vampiric Grasp: healthRegen \u2014 Grasp of Lohk Augment: When a stolen weapon deals damage to an enemy affected by\u2026"),

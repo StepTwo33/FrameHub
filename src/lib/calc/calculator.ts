@@ -271,6 +271,30 @@ function calculateStatusProcs(
     });
   }
 
+  // Valence Formation: guaranteed status of imbued element on every hit (independent of SC weight).
+  const guaranteedEl = stats.guaranteedStatusElement;
+  if (guaranteedEl) {
+    const info = STATUS_INFO[guaranteedEl] || { duration: 6, ticks: 1, desc: "Unknown" };
+    const frac = DOT_TICK_FRACTION[guaranteedEl];
+    const duration = info.duration * durMult;
+    const ticks = frac != null ? Math.floor(duration) + 1 : info.ticks;
+    let dpt = 0;
+    if (frac != null) {
+      const typeMult =
+        guaranteedEl === "slash" ? 1 : 1 + elementalTypeBonus(stats, guaranteedEl, moddedBaseDamage);
+      dpt = frac * dotBase * typeMult;
+    }
+    procs.push({
+      type: guaranteedEl,
+      chance: 1,
+      damagePerTick: dpt,
+      duration,
+      ticks,
+      totalDamage: dpt * ticks,
+      description: "Guaranteed status (Valence Formation)",
+    });
+  }
+
   // Toxic Lash: guaranteed Toxin proc; tick = 0.5 × Extra Hit × toxin mods × Elementalist × faction³
   const tlFrac = stats.extraHitDamageFraction ?? 0;
   if (stats.extraHitGuaranteedToxin && tlFrac > 0 && stats.totalDamage > 0) {
@@ -1667,6 +1691,11 @@ export function calculateWeaponBuild(
 
   // Multishot-adjusted status chance (arsenal-style display).
   setStatusChancePerShot(stats, baseWeapon);
+
+  const guaranteedStatus = calcOptions?.externalBuffs?.find((b) => b.guaranteedStatusElement);
+  if (guaranteedStatus?.guaranteedStatusElement) {
+    stats.guaranteedStatusElement = guaranteedStatus.guaranteedStatusElement;
+  }
 
   // Status procs (DoT base = modded base × avg crit; Elementalist + faction² on ticks)
   stats.statusProcs = calculateStatusProcs(stats, moddedBaseDamage, sim);

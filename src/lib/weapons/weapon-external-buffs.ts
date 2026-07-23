@@ -581,6 +581,29 @@ const FURIOUS_JAVELIN_MOD_ID = "augment_excalibur_furious_javelin";
 /** Wiki Furious Javelin melee damage % per enemy by rank (non-linear). */
 const FURIOUS_JAVELIN_DMG_BY_RANK = [0.08, 0.1, 0.12, 0.15] as const;
 
+const VALENCE_FORMATION_MOD_ID = "valence_formation";
+/** Wiki Valence Formation elemental % by rank (not × Strength). */
+const VALENCE_FORMATION_DMG_BY_RANK = [0.5, 1.0, 1.5, 2.0] as const;
+const VALENCE_FORMATION_ELEMENTS = new Set([
+  "heat",
+  "cold",
+  "electricity",
+  "toxin",
+  "blast",
+  "gas",
+  "magnetic",
+  "radiation",
+  "viral",
+  "corrosive",
+]);
+/** Lavos kit — used to offer the synthetic Valence Formation toggle. */
+const LAVOS_ABILITY_NAMES = new Set([
+  "Ophidian Bite",
+  "Vial Rush",
+  "Transmutation Probe",
+  "Catalyze",
+]);
+
 /**
  * Wiki Razorwing Blitz: cast while Razorwing → +25% FR/AS × stacks × Strength (cap 4).
  * Dex Pixia / Diwata only (including primes).
@@ -607,6 +630,34 @@ function resolveRazorwingBlitzBuff(
     category: "ability",
     fireRateBonus: bonus,
     nominal: `+${(RAZORWING_BLITZ_FR_PER_STACK * 100).toFixed(0)}% fire/attack speed × ${stacks} stack${stacks === 1 ? "" : "s"} (× Strength)`,
+  };
+}
+
+/**
+ * Wiki Valence Formation: cast with imbued element → parallel elemental × rank
+ * (50–200%, not × Strength) + guaranteed status. Universal weapon bonus (incl. exalted).
+ */
+function resolveValenceFormationBuff(
+  ctx: WeaponBuffContext,
+  simParams: SimulationParams,
+): WeaponExternalBuff | null {
+  const element = simParams.valenceFormationElement;
+  if (!element || !VALENCE_FORMATION_ELEMENTS.has(element)) return null;
+  const slot = (ctx.warframeModSlots ?? []).find((s) => s.modId === VALENCE_FORMATION_MOD_ID);
+  if (!slot) return null;
+  const rank = Math.min(
+    Math.max(slot.rank ?? 0, 0),
+    VALENCE_FORMATION_DMG_BY_RANK.length - 1,
+  );
+  const frac = VALENCE_FORMATION_DMG_BY_RANK[rank] ?? 2.0;
+  if (frac <= 0) return null;
+  return {
+    id: "ability:Valence Formation",
+    label: "Valence Formation",
+    category: "ability",
+    elemental: [{ type: element, bonusFraction: frac, parallel: true }],
+    guaranteedStatusElement: element,
+    nominal: `+${(frac * 100).toFixed(0)}% ${element} (parallel, guaranteed status; not × Strength)`,
   };
 }
 
@@ -945,6 +996,9 @@ function resolveNamedAbilityWeaponBuff(
     // wiki: Furious Javelin — Radial Javelin enemy hits → melee damage mult × Strength
     case "Radial Javelin":
       return resolveFuriousJavelinBuff(weapon, strength, ctx, simParams);
+    // wiki: Valence Formation — imbue-gated parallel elemental + guaranteed status (not × Strength)
+    case "Valence Formation":
+      return resolveValenceFormationBuff(ctx, simParams);
     // wiki: hold-cast infusion augments — parallel elemental × Strength (no exalted)
     case "Fireball":
     case "Freeze":
@@ -1149,6 +1203,15 @@ function resolveAbilityBuffs(
     });
   }
 
+  // Synthetic Lavos toggle (not a real kit ability) — resolve even if absent from warframeAbilities.
+  if (
+    active.includes("Valence Formation") &&
+    !buffs.some((b) => b.id === "ability:Valence Formation")
+  ) {
+    const vf = resolveValenceFormationBuff(ctx, simParams);
+    if (vf) buffs.push(vf);
+  }
+
   return buffs;
 }
 
@@ -1233,6 +1296,7 @@ const NAMED_WEAPON_BUFF_ABILITIES = new Set([
   "Razorwing",
   "Breach Surge",
   "Radial Javelin",
+  "Valence Formation",
 ]);
 
 /** Helminth Empower is +Ability Strength, not a weapon damage buff. */
@@ -1275,12 +1339,25 @@ export function resolveAbilitiesWithHelminth(
 /** Abilities that can be toggled as loadout weapon buffs. */
 export function weaponDamageBuffAbilities(abilities: Ability[] | undefined): Ability[] {
   if (!abilities) return [];
-  return abilities.filter((a) => {
+  const out = abilities.filter((a) => {
     if (NON_WEAPON_DAMAGE_BUFF_ABILITIES.has(a.name)) return false;
     if (NAMED_WEAPON_BUFF_ABILITIES.has(a.name)) return true;
     // Roar / Eclipse / etc. use verified top-level damageBuff.
     return a.damageBuff != null && a.damageBuff > 0 && a.name !== "Xata's Whisper";
   });
+  // Lavos Passive Augment — synthetic toggle when kit is present.
+  if (
+    abilities.some((a) => LAVOS_ABILITY_NAMES.has(a.name)) &&
+    !out.some((a) => a.name === "Valence Formation")
+  ) {
+    out.push({
+      name: "Valence Formation",
+      energyCost: 0,
+      description:
+        "Passive Augment: imbued ability cast → parallel elemental + guaranteed status on weapons.",
+    });
+  }
+  return out;
 }
 
 export function mergeWeaponCalcOptions(
