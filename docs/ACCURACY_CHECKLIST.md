@@ -54,6 +54,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR); Titania Diwata melee grid | **Locked** — ability Damage relabeled/tooltipped when exalted weapon present |
 | B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 165 wiki-locked goldens | **Locked** — launchers + dual-mode/radial/Kohm pellet-SC/battery mag deferred |
 | B11 | Secondary weapons (base paper) | Non-exalted pistol/secondary/`dual_pistols` vs Module:Weapons/data/secondary; 137 wiki-locked goldens | **Locked** — Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug radial-or-charge paper deferred |
+| B12 | Melee weapons (base paper) | Non-exalted melee vs Module:Weapons/data/melee; 220 wiki-locked goldens | **Locked** — Dark Split-Sword dual-form + Rabvee zaw stub deferred |
 
 ---
 
@@ -332,6 +333,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mecha cascade + Titania Diwata | 2026-07-23 | `mechaCascadeEnemies` sim hop; ability Damage dual-display tooltip; Titania Exalted Melee grid (Diwata) + save/loadout preview |
 | Primary weapons base paper | 2026-07-23 | Wiki-lock 165 primaries (innate elements, IPS/CC/CM/reload/burst FR); defer Acceltra/Astilla/Kohm/Fulmin/Stradavar/launchers; `primary-weapon-audit` |
 | Secondary weapons base paper | 2026-07-23 | Wiki-lock 137 secondaries (innate elements, Ballistica burst paper, Tysis/Pox direct-only, burst FR); defer Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug; `secondary-weapon-audit` |
+| Melee weapons base paper | 2026-07-23 | Wiki-lock 220 melee (Sarofang Prime IPS, Silva & Aegis heat); defer Dark Split-Sword dual-form + Rabvee zaw stub; `melee-weapon-audit` |
 
 ## New / extended test files
 
@@ -346,3 +348,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/exalted-weapon-audit.test.ts` — B9 inventory + STR + bare wiki goldens
 - `src/lib/calc/primary-weapon-audit.test.ts` — B10 primary bare paper (+ `primary-bare-goldens.ts`)
 - `src/lib/calc/secondary-weapon-audit.test.ts` — B11 secondary bare paper (+ `secondary-bare-goldens.ts`)
+- `src/lib/calc/melee-weapon-audit.test.ts` — B12 melee bare paper (+ `melee-bare-goldens.ts`)
