@@ -222,8 +222,8 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("criticalChanceOnHeadshot", "weapon_dps", "conditional_crit_on_headshot", "wiki: Pistol Acuity \u2014 +350% Weak Point Critical Chance"),
   ]),
   pistol_elementalist: mod("pistol_elementalist", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Pistol Elementalist: damage \u2014 +90% Status Damage, +60% Reload Speed"),
-    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "Pistol Elementalist: reloadSpeed \u2014 +90% Status Damage, +60% Reload Speed"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Pistol Elementalist \u2014 +90% Status Damage"),
+    line("reloadSpeed", "weapon_dps", "multiplicative_percent", "wiki: Pistol Elementalist \u2014 +60% Reload Speed"),
   ]),
   pistol_gambit_r3: mod("pistol_gambit_r3", [
     line("criticalChance", "weapon_dps", "multiplicative_percent", "Pistol Gambit: criticalChance \u2014 +120% Critical Chance"),

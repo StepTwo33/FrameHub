@@ -505,8 +505,8 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("fireRate", "weapon_dps", "multiplicative_percent", "Shotgun Barrage: fireRate \u2014 +90% Fire Rate"),
   ]),
   shotgun_elementalist: mod("shotgun_elementalist", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Shotgun Elementalist: damage \u2014 +90% Status Damage, +60% Magazine Capacity"),
-    line("magazine", "weapon_dps", "multiplicative_percent", "Shotgun Elementalist: magazine \u2014 +90% Status Damage, +60% Magazine Capacity"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Shotgun Elementalist \u2014 +90% Status Damage"),
+    line("magazine", "weapon_dps", "multiplicative_percent", "wiki: Shotgun Elementalist \u2014 +60% Magazine Capacity"),
   ]),
   shotgun_riven_mod: mod("shotgun_riven_mod", [], "wiki: Shotgun Riven Mod \u2014 You will need to prove yourself before I reveal the beauty within this work."),
   shotgun_savvy: mod("shotgun_savvy", [

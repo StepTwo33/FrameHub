@@ -76,8 +76,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M5 | Next gun/melee cores | Shred/Primed Shred, Vigilante Armaments/Fervor, Vile/Frail, Rifle Aptitude, IPS 90/120s, Primed Bane Corpus; Magnum Force, Augur Pact, Creeping Bullseye, Hollow Point, Primed Convulsion, pistol IPS; Primed Charged/Chilling; Fury/Quickening/Gladiator/Prowess/Amalgam OS/IPS/Focus Energy/Drifting Contact; Killing Blow heavy→panel | **Locked** — +41 IDs; Killing Blow no longer inflates light paper DPS |
 | M6 | Mag/reload/set IPS cores | Wildfire, Vile Precision, Primed Bane Infested; Amalgam Barrel Diffusion, Ice Storm, Sure Shot, Stunning Speed, Shrapnel Rounds, Carnis/Jugulus/Saxum pistol; Critical Deceleration; Spoiled Strike, Jagged/Sundering/Rending, Carnis/Jugulus/Saxum melee, Primed Smite Corpus | **Locked** — +20 IDs |
 | M7 | Mag/reload + magnetic cores | Fast Hands, Seeking Fury, Magazine Warp/Primed, Tainted Mag, Depleted Reload, Maximum Capacity; Slip/Primed Slip, Quickdraw, Loose Mag, Tainted Clip, Full Capacity, Merciless Gunfight, Magnetic Might, Accelerated Isotope; Burdened Magazine; Magnetic Rush, Martial Fury, Primed Smite Infested; Maiming Strike→panel | **Locked** — +21 IDs |
+| M8 | Arch + leftover gun cores | Magnetic Capacity, Radiated Reload, Loose Hatch, Damzav-Vati; Rifle/Pistol/Shotgun Elementalist statusDamage (not base damage); Imperator/Veritux archgun+archmelee always-on cores | **Locked** — +47 IDs; Elementalist damage→statusDamage |
 
-**Remaining unlocked paper-moving mods (post M7):** ~370 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (archgun/companion/exclusive/conditional/convert). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M8):** ~320 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (companion/exclusive/conditional/convert). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
 
 ---
 
@@ -108,6 +109,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M5 Mod paper cores | 2026-07-23 | +41 gun/melee/shotgun apply goldens; Killing Blow heavy-only → mod_panel |
 | M6 Mag/set IPS cores | 2026-07-23 | +20 Wildfire/Ice Storm/Amalgam BD/Sure Shot/Shrapnel/set IPS/Spoiled/Smite Corpus |
 | M7 Mag/reload cores | 2026-07-23 | +21 magazine/reload/magnetic/smite; Maiming Strike slide→panel |
+| M8 Arch + leftovers | 2026-07-23 | +47 gun leftovers/Elementalist + archgun/archmelee cores; Elementalist statusDamage fix |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |
@@ -379,12 +381,14 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Mod paper cores (M5) | 2026-07-23 | +41 FR/MS/IPS/CM/status/element cores; Killing Blow heavy damage panel-only |
 | Mod paper cores (M6) | 2026-07-23 | +20 mag/reload/set-IPS/bane/smite/spoiled cores |
 | Mod paper cores (M7) | 2026-07-23 | +21 mag/reload/magnetic cores; Maiming Strike panel fix |
+| Mod paper cores (M8) | 2026-07-23 | +47 leftovers/Elementalist + arch cores; Elementalist damage→statusDamage |
 
 ## New / extended test files
 
 - `src/lib/calc/warframe-math-audit.test.ts` — Phase 1 bare-weapon block
 - `src/lib/calc/gun-mod-audit.test.ts` — Phase 2a + M1 gun remainder
 - `src/lib/calc/melee-mod-audit.test.ts` — Phase 2b + M2 melee remainder
+- `src/lib/calc/arch-mod-audit.test.ts` — M8 archgun/archmelee apply goldens
 - `src/lib/calc/aura-mod-audit.test.ts` — M3 DPS aura apply goldens
 - `src/lib/calc/warframe-mod-audit.test.ts`
 - `src/lib/calc/conditional-stack-audit.test.ts`

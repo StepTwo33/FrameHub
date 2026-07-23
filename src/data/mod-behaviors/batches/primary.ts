@@ -318,8 +318,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Rifle Aptitude: statusChance \u2014 +90% Status Chance"),
   ]),
   rifle_elementalist: mod("rifle_elementalist", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Rifle Elementalist: damage \u2014 +90% Status Damage, +0.6 Punch Through"),
-    line("punchThrough", "mod_panel", "multiplicative_percent", "Rifle Elementalist: punchThrough \u2014 +90% Status Damage, +0.6 Punch Through (arsenal display only)"),
+    line("statusDamage", "weapon_dps", "multiplicative_percent", "wiki: Rifle Elementalist \u2014 +90% Status Damage"),
+    line("punchThrough", "mod_panel", "multiplicative_percent", "wiki: Rifle Elementalist \u2014 +0.6 Punch Through (arsenal display only)"),
   ]),
   rime_rounds_r3: mod("rime_rounds_r3", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Rime Rounds: cold \u2014 +60% <DT_FREEZE_COLOR>Cold, +60% Status Chance"),

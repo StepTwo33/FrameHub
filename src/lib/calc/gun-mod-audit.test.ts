@@ -776,3 +776,66 @@ describe("shotgun magazine cores (wiki max rank, Phase M7)", () => {
     expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime * 1.18, 8);
   });
 });
+
+describe("primary/secondary leftovers + elementalist (wiki max rank, Phase M8)", () => {
+  it("Magnetic Capacity R3: +60% magnetic from base, +40% magazine", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "magnetic_capacity");
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.4));
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "magnetic")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Radiated Reload R3: +60% radiation from base, +40% reload speed", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "radiated_reload");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.4, 8);
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "radiation")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 0.6, scale),
+      8,
+    );
+  });
+
+  it("Loose Hatch R5: +30% reload speed (recoil panel-only)", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "loose_hatch");
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.3, 8);
+  });
+
+  it("Rifle Elementalist R5: +90% status damage, no base damage inflate", () => {
+    const weapon = requireWeapon("braton");
+    const stats = withMod("braton", "rifle_elementalist");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage, 8);
+    expect(stats.statusDamageBonus).toBeCloseTo(0.9, 8);
+  });
+
+  it("Pistol Elementalist R5: +90% status damage, +60% reload speed", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "pistol_elementalist");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage, 8);
+    expect(stats.statusDamageBonus).toBeCloseTo(0.9, 8);
+    expect(stats.reloadTime).toBeCloseTo(weapon.reloadTime / 1.6, 8);
+  });
+
+  it("Shotgun Elementalist R5: +90% status damage, +60% magazine", () => {
+    const weapon = requireWeapon("strun");
+    const stats = withMod("strun", "shotgun_elementalist");
+    expect(stats.moddedBaseDamage).toBeCloseTo(weapon.damage, 8);
+    expect(stats.statusDamageBonus).toBeCloseTo(0.9, 8);
+    expect(stats.magazine).toBe(Math.round(weapon.magazine * 1.6));
+  });
+
+  it("Damzav-Vati R5: +240% viral from base", () => {
+    const weapon = requireWeapon("lex");
+    const stats = withMod("lex", "damzav_vati");
+    const scale = stats.moddedBaseDamage / 32;
+    expect(stats.elements.find((e) => e.type === "viral")?.value).toBeCloseTo(
+      quantizeDamageValue(weapon.damage * 2.4, scale),
+      8,
+    );
+  });
+});
