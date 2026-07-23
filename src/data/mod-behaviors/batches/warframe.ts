@@ -186,7 +186,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Blind Rage: abilityStrength \u2014 +99% Ability Strength\\\\n-55% Ability Efficiency"),
   ]),
   brief_respite: mod("brief_respite", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Brief Respite: shield \u2014 On Ability Cast:\\\\nSquad converts 150% of Energy spent to Shields while Overshie\u2026"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Brief Respite — energy→shields on cast (not capacity)"),
   ]),
   calculated_spring: mod("calculated_spring", [
     line("health", "warframe_totals", "multiplicative_percent", "Calculated Spring: health \u2014 -10% Mobility, +25% Health"),
@@ -257,7 +257,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("shield", "mod_panel", "multiplicative_percent", "wiki: Fast Deflection — shield recharge/delay (not capacity)"),
   ]),
   final_act: mod("final_act", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Final Act: abilityStrength \u2014 On Low Health:\\\\n+30% Ability Strength\\\\n+30% Casting Speed for 8s"),
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "wiki: Final Act — low-health conditional strength"),
     line("duration", "mod_panel", "multiplicative_percent", "Final Act: duration \u2014 On Low Health:\\\\n+30% Ability Strength\\\\n+30% Casting Speed for 8s"),
   ]),
   firewalker: mod("firewalker", [
@@ -398,7 +398,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Overcharge Detectors: range \u2014 Exposes enemies at maximum Energy Capacity within 30m. (arsenal display only)"),
   ]),
   overcharged: mod("overcharged", [
-    line("energyMax", "warframe_totals", "multiplicative_percent", "Overcharged: energyMax \u2014 On Respawn:\\\\nConverts up to 50 Energy to Overshields at a rate of 100%."),
+    line("energyMax", "mod_panel", "multiplicative_percent", "wiki: Overcharged — respawn overshield conversion (not energy pool)"),
     line("overshieldConversion", "mod_panel", "multiplicative_percent", "Overcharged: overshieldConversion \u2014 On Respawn:\\\\nConverts up to 50 Energy to Overshields at a rate of 100%."),
   ]),
   overextended_r5: mod("overextended_r5", [
@@ -424,7 +424,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   pistol_scavenger: mod("pistol_scavenger", [], "wiki: Pistol Scavenger \u2014 Squad receives +150% Pistol Ammo Recovery"),
   power_donation_r5: mod("power_donation_r5", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Power Donation: abilityStrength \u2014 You lose <LOWER_IS_BETTER>30% Ability Strength\\\\nSquadmates gain 30% Ability Str\u2026"),
+    line("abilityStrength", "warframe_totals", "multiplicative_percent", "wiki: Power Donation — host loses 30% strength (squadmates gain panel)"),
   ]),
   power_drift: mod("power_drift", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Power Drift: abilityStrength \u2014 +15% Ability Strength, +30% Chance to Resist Knockdown"),
@@ -540,7 +540,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("armor", "warframe_totals", "multiplicative_percent", "Steel Fiber: armor \u2014 +100% Armor"),
   ]),
   strain_consume: mod("strain_consume", [
-    line("health", "warframe_totals", "multiplicative_percent", "Strain Consume: health \u2014 Dead Maggots within 10m are consumed, increasing Max Health by 4% and increasing\u2026"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Strain Consume — maggot-gated health stacks (not always-on)"),
     line("range", "mod_panel", "multiplicative_percent", "Strain Consume: range \u2014 Dead Maggots within 10m are consumed, increasing Max Health by 4% and increasing\u2026 (arsenal display only)"),
   ]),
   streamline_r3: mod("streamline_r3", [
@@ -649,7 +649,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Vigorous Swap: duration \u2014 On Equip:\\\\n+165% Damage for 3s"),
   ]),
   vital_systems_bypass: mod("vital_systems_bypass", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Vital Systems Bypass: shield \u2014 +1 Health Regen/s, +50% Shield Recharge Delay"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Vital Systems Bypass — regen + recharge delay (not capacity)"),
   ]),
   vitality_r3: mod("vitality_r3", [
     line("health", "warframe_totals", "multiplicative_percent", "Vitality: health \u2014 +100% Health"),
@@ -659,7 +659,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   voltaic_lance: mod("voltaic_lance", [], "wiki: Voltaic Lance \u2014 Electrical FX on Bullet Jump"),
   warm_coat: mod("warm_coat", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Warm Coat: shield \u2014 +18% Shield Resistance to Environmental Ice Hazards"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Warm Coat — environmental ice resistance (not capacity)"),
   ]),
   warriors_rest: mod("warriors_rest", [
     line("abilityStrength", "mod_panel", "multiplicative_percent", "Warrior's Rest: abilityStrength \u2014 Passive Augment: Umbra's Ability Strength increases by +15% but he no longer fig\u2026"),

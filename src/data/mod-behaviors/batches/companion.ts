@@ -322,7 +322,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   ]),
   medi_ray: mod("medi_ray", [
     line("duration", "mod_panel", "multiplicative_percent", "Medi-Ray: duration \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s."),
-    line("health", "warframe_totals", "multiplicative_percent", "Medi-Ray: health \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s."),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Medi-Ray — heal precept (not max health)"),
     line("healthRestore", "mod_panel", "multiplicative_percent", "Medi-Ray: healthRestore \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s."),
     line("range", "mod_panel", "multiplicative_percent", "Medi-Ray: range \u2014 Sentinel will occasionally heal its owner, restoring 12% Health over 4s. (arsenal display only)"),
   ]),
@@ -403,7 +403,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   protect: mod("protect", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Protect: cooldown \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
     line("duration", "mod_panel", "multiplicative_percent", "Protect: duration \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Protect: shield \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Protect — shield restore precept (not capacity)"),
     line("shieldRestore", "mod_panel", "multiplicative_percent", "Protect: shieldRestore \u2014 The kubrow comes to the defense of its master, replenishing both of their shield\u2026"),
   ]),
   reawaken: mod("reawaken", [
@@ -450,7 +450,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
   ]),
   sacrifice: mod("sacrifice", [
     line("duration", "mod_panel", "multiplicative_percent", "Sacrifice: duration \u2014 Sentinel incapacitates itself to revive its downed owner to 100% health and shie\u2026"),
-    line("health", "warframe_totals", "multiplicative_percent", "Sacrifice: health \u2014 Sentinel incapacitates itself to revive its downed owner to 100% health and shie\u2026"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Sacrifice — revive precept (not max health)"),
     line("revive", "mod_panel", "multiplicative_percent", "Sacrifice: revive \u2014 Sentinel incapacitates itself to revive its downed owner to 100% health and shie\u2026"),
   ]),
   sanctuary: mod("sanctuary", [

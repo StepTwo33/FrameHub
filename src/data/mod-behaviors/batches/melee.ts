@@ -86,10 +86,10 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("comboCount", "mod_panel", "multiplicative_percent", "Corrupt Charge: comboCount \u2014 Start with +15 Combo, -10% Attack Speed per rank"),
   ]),
   counterweight: mod("counterweight", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Counterweight: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Counterweight — IPS convert (not always-on damage)"),
   ]),
   covert_lethality: mod("covert_lethality", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Covert Lethality: damage \u2014 +16 Initial Combo\\\\n+100% Finisher Damage"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Covert Lethality — initial combo / finisher (not light DPS)"),
     line("finisherDamage", "mod_panel", "multiplicative_percent", "Covert Lethality: finisherDamage \u2014 +16 Initial Combo\\\\n+100% Finisher Damage"),
     line("lethalDamage", "mod_panel", "multiplicative_percent", "Covert Lethality: lethalDamage \u2014 +16 Initial Combo\\\\n+100% Finisher Damage"),
   ]),
@@ -122,7 +122,7 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("toxin", "weapon_dps", "elemental_from_base_damage", "Fever Strike: toxin \u2014 +90% <DT_POISON_COLOR>Toxin"),
   ]),
   finishing_touch_r10: mod("finishing_touch_r10", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Finishing Touch: damage \u2014 +60% Finisher Damage"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Finishing Touch — finisher-only (not light DPS)"),
     line("finisherDamage", "mod_panel", "multiplicative_percent", "Finishing Touch: finisherDamage \u2014 +60% Finisher Damage"),
   ]),
   focus_energy_r3: mod("focus_energy_r3", [
@@ -338,13 +338,13 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("statusChance", "weapon_dps", "multiplicative_percent", "Saxum Thorax: statusChance \u2014 +90% <DT_IMPACT_COLOR>Impact, +60% Status Chance"),
   ]),
   seismic_wave: mod("seismic_wave", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Seismic Wave: damage \u2014 +200% Slam Attack Damage"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Seismic Wave — slam-only (not light DPS)"),
   ]),
   serrated_edges: mod("serrated_edges", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Serrated Edges: damage \u2014 20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Serrated Edges — IPS convert (not always-on damage)"),
   ]),
   sharpened_blade: mod("sharpened_blade", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Sharpened Blade: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Sharpened Blade — IPS convert (not always-on damage)"),
   ]),
   shocking_touch_r3: mod("shocking_touch_r3", [
     line("electricity", "weapon_dps", "elemental_from_base_damage", "Shocking Touch: electricity \u2014 +90% <DT_ELECTRICITY_COLOR>Electricity"),

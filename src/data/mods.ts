@@ -14317,7 +14317,7 @@ const RAW_MODS: Mod[] = [
     "category": "warframe",
     "subCategory": "",
     "stats": {
-      "abilityStrength": 5.0
+      "abilityStrength": -5.0
     },
     "description": "You lose <LOWER_IS_BETTER>30% Ability Strength\\nSquadmates gain 30% Ability Strength",
     "rarity": "rare"

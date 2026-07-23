@@ -80,7 +80,7 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("explosionDamage", "mod_panel", "multiplicative_percent", "Combustion Beam: explosionDamage \u2014 Enemies killed explode, dealing 600 Damage shortly after death."),
   ]),
   comet_rounds: mod("comet_rounds", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Comet Rounds: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Comet Rounds — IPS convert (not always-on damage)"),
   ]),
   continuous_misery: mod("continuous_misery", [
     line("statusDuration", "weapon_dps", "multiplicative_percent", "Continuous Misery: statusDuration \u2014 +100% Status Duration (extends DoT ticks)"),

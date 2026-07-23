@@ -463,6 +463,34 @@ describe("contempt + charge cores (wiki max rank, Phase M10)", () => {
   });
 });
 
+describe("melee leftovers (wiki max rank, Phase M13)", () => {
+  it("Impenetrable Offense R3: −10% melee damage", () => {
+    const weapon = requireWeapon("skana");
+    expect(withMod("impenetrable_offense").moddedBaseDamage).toBeCloseTo(
+      weapon.damage * 0.9,
+      5,
+    );
+  });
+
+  it("Finishing Touch / Seismic Wave / Covert Lethality / IPS converts: panel-only", () => {
+    for (const id of [
+      "finishing_touch_r10",
+      "seismic_wave",
+      "covert_lethality",
+      "counterweight",
+      "serrated_edges",
+      "sharpened_blade",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
+  });
+});
+
 describe("biting_frost coverage (wiki Passive Augment)", () => {
   it("catalog matches wiki max rank table (+200% CC/CD, R3)", () => {
     const mod = requireMod("biting_frost");

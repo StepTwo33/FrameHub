@@ -131,4 +131,28 @@ describe("beast claw cores (wiki max rank, Phase M11)", () => {
     expect(bite.criticalMultiplier).toBeCloseTo(cmq * 3.2, 8);
     expect(withMod("maul").moddedBaseDamage).toBeCloseTo(weapon.damage * 4.3, 5);
   });
+
+  it("Burning / Chilling / Shocking Claws R10: +330% element + status (convert unmodeled)", () => {
+    const weapon = requireClaws("chesa_claws");
+    for (const [modId, type] of [
+      ["burning_claws", "heat"],
+      ["chilling_claws", "cold"],
+      ["shocking_claws", "electricity"],
+    ] as const) {
+      const stats = withMod(modId);
+      expect(stats.statusChance).toBeCloseTo(weapon.statusChance * 4.3, 8);
+      const scale = stats.moddedBaseDamage / 32;
+      expect(stats.elements.find((e) => e.type === type)?.value).toBeCloseTo(
+        quantizeDamageValue(weapon.damage * 3.3, scale),
+        8,
+      );
+    }
+  });
+
+  it("Brute / Disabling / Precision Conditioning R10: +385% damage (convert unmodeled)", () => {
+    const weapon = requireClaws("chesa_claws");
+    for (const id of ["brute_conditioning", "disabling_conditioning", "precision_conditioning"]) {
+      expect(withMod(id).moddedBaseDamage).toBeCloseTo(weapon.damage * 4.85, 5);
+    }
+  });
 });

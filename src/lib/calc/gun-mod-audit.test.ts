@@ -1072,3 +1072,39 @@ describe("shotgun/general leftovers (wiki max rank, Phase M12)", () => {
     );
   });
 });
+
+describe("gun leftovers (wiki max rank, Phase M13)", () => {
+  it("Feathered Arrows R3: −20% damage", () => {
+    const weapon = requireWeapon("paris");
+    expect(withMod("paris", "feathered_arrows").moddedBaseDamage).toBeCloseTo(
+      weapon.damage * 0.8,
+      5,
+    );
+  });
+
+  it("Hydraulic Chamber R3: −10% magazine", () => {
+    const weapon = requireWeapon("braton");
+    expect(withMod("braton", "hydraulic_chamber").magazine).toBe(
+      Math.round(weapon.magazine * 0.9),
+    );
+  });
+
+  it("Toxic Sequence R3: +200% status duration", () => {
+    expect(withMod("lex", "toxic_sequence").statusDurationBonus).toBeCloseTo(2, 8);
+  });
+
+  it("Soaring Truth R3: +200% crit chance", () => {
+    const weapon = requireWeapon("lex");
+    expect(withMod("lex", "soaring_truth").criticalChance).toBeCloseTo(
+      weapon.criticalChance * 3,
+      8,
+    );
+  });
+
+  it("Galvanized Diffusion / Hell R10 paper: +110% multishot at 0 stacks", () => {
+    const lex = requireWeapon("lex");
+    const strun = requireWeapon("strun");
+    expect(withMod("lex", "galvanized_diffusion").multishot).toBeCloseTo(lex.multishot * 2.1, 8);
+    expect(withMod("strun", "galvanized_hell").multishot).toBeCloseTo(strun.multishot * 2.1, 8);
+  });
+});

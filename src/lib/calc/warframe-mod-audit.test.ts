@@ -329,3 +329,53 @@ describe("warframe remainder (wiki max rank, Phase M12)", () => {
     }
   });
 });
+
+describe("warframe parkour / aura leftovers (wiki max rank, Phase M13)", () => {
+  it("Calculated Spring R3: +25% health, −10% sprint", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("calculated_spring");
+    expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(1.25, 5);
+    expect(stats.sprintSpeedBonus).toBeCloseTo(-0.1, 8);
+  });
+
+  it("Rising Skill R3: +10% parkour, −30% shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("rising_skill");
+    expect(stats.parkourVelocityBonus).toBeCloseTo(0.1, 8);
+    expect(stats.totalShield / bare.totalShield).toBeCloseTo(0.7, 5);
+  });
+
+  it("Tempered Bound R3: −10% parkour, +30% shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("tempered_bound");
+    expect(stats.parkourVelocityBonus).toBeCloseTo(-0.1, 8);
+    expect(stats.totalShield / bare.totalShield).toBeCloseTo(1.3, 5);
+  });
+
+  it("Anti-Flak / No Current Leap: −/+10% parkour", () => {
+    expect(withMod("anti_flak_plating").parkourVelocityBonus).toBeCloseTo(-0.1, 8);
+    expect(withMod("no_current_leap").parkourVelocityBonus).toBeCloseTo(0.1, 8);
+  });
+
+  it("Power Donation R5: −30% strength (host)", () => {
+    expect(withMod("power_donation_r5").abilityStrength).toBeCloseTo(0.7, 8);
+  });
+
+  it("Brief Respite / Final Act / Overcharged / Strain Consume / Warm Coat / Vital Systems: panel-only", () => {
+    for (const id of [
+      "brief_respite",
+      "final_act",
+      "overcharged",
+      "strain_consume",
+      "warm_coat",
+      "vital_systems_bypass",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
+  });
+});

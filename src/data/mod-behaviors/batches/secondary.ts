@@ -132,7 +132,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("heat", "weapon_dps", "elemental_from_base_damage", "Heated Charge: heat \u2014 +90% <DT_FIRE_COLOR>Heat"),
   ]),
   heavy_warhead: mod("heavy_warhead", [
-    line("blast", "weapon_dps", "elemental_from_base_damage", "Heavy Warhead: blast \u2014 +100% Blast Radius, -50% Projectile Speed"),
+    line("blast", "mod_panel", "multiplicative_percent", "wiki: Heavy Warhead — blast radius (not blast damage element)"),
     line("blastRange", "mod_panel", "multiplicative_percent", "Heavy Warhead: blastRange \u2014 +100% Blast Radius, -50% Projectile Speed"),
     line("projectileSpeed", "mod_panel", "multiplicative_percent", "Heavy Warhead: projectileSpeed \u2014 +100% Blast Radius, -50% Projectile Speed"),
   ]),
@@ -151,7 +151,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("recoil", "mod_panel", "multiplicative_percent", "Hydraulic Barrel: recoil \u2014 -40% Weapon Recoil, -20% Magazine Capacity (arsenal display only)"),
   ]),
   impaler_munitions: mod("impaler_munitions", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Impaler Munitions: damage \u2014 20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Impaler Munitions — IPS convert (not always-on damage)"),
   ]),
   jahu_canticle: mod("jahu_canticle", [
     line("armorDebuffOnKill", "mod_panel", "multiplicative_percent", "Jahu Canticle: armorDebuffOnKill \u2014 Killing enemies reduces the Armor and Shields of other enemies within Affinity R\u2026"),
@@ -196,7 +196,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Merciless Gunfight: punchThrough \u2014 +45% Critical Damage, +1.2 Punch Through (arsenal display only)"),
   ]),
   meteor_munitions: mod("meteor_munitions", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Meteor Munitions: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Meteor Munitions — IPS convert (not always-on damage)"),
   ]),
   netra_invocation: mod("netra_invocation", [
     line("duration", "mod_panel", "multiplicative_percent", "Netra Invocation: duration \u2014 Alternate Fire increases Ability Efficiency by 4% for 20s for each enemy hit. St\u2026"),
@@ -275,7 +275,7 @@ export const MOD_BEHAVIORS_SECONDARY: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Range Advantage: range \u2014 +300% damage if no enemies are within 10m. (arsenal display only)"),
   ]),
   razor_munitions: mod("razor_munitions", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Razor Munitions: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Razor Munitions — IPS convert (not always-on damage)"),
   ]),
   razor_shot: mod("razor_shot", [
     line("slash", "weapon_dps", "multiplicative_percent", "Razor Shot: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),

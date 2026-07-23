@@ -30,7 +30,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   artillery_cheap_shot: mod("artillery_cheap_shot", [], "wiki: Artillery Cheap Shot \u2014 Forward Artillery has a +90% chance to not consume Dome Charges"),
   ashensetmod: mod("ashensetmod", [], "wiki: Ashensetmod \u2014 catalog entry (stats in ability logic)"),
   assassin_posture: mod("assassin_posture", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Assassin Posture: damage \u2014 The companion will prioritize Eximus and other high-ranking enemies. +300% Overg\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Assassin Posture — overguard damage / priority (not base DPS)"),
   ]),
   argent_scourge: mod("argent_scourge", [], "wiki: Argent Scourge \u2014 Fighting form devised for Conclave."),
   atlantis_vulcan: mod("atlantis_vulcan", [], "wiki: Atlantis Vulcan \u2014 Rapid strikes, deceptive movements."),
@@ -127,7 +127,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   ]),
   countermeasures: mod("countermeasures", [], "wiki: Countermeasures \u2014 Flares that distract enemy guided projectiles."),
   crash_shot: mod("crash_shot", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Crash Shot: damage \u2014 20% of Damage converted into <DT_IMPACT_COLOR>Impact"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Crash Shot — IPS convert (not always-on damage)"),
   ]),
   crashing_havoc: mod("crashing_havoc", [], "wiki: Crashing Havoc \u2014 Fighting form devised for Conclave."),
   crashing_timber: mod("crashing_timber", [], "wiki: Crashing Timber \u2014 Fighting form devised for Conclave."),
@@ -188,7 +188,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
   ]),
   firewall: mod("firewall", [], "wiki: Firewall \u2014 Reduces damage by 75% while hacking"),
   flak_shot: mod("flak_shot", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Flak Shot: damage \u2014 20% of Damage converted into <DT_SLASH_COLOR>Slash"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Flak Shot — IPS convert (not always-on damage)"),
   ]),
   flechette: mod("flechette", [
     line("puncture", "weapon_dps", "multiplicative_percent", "Flechette: puncture \u2014 +90% <DT_PUNCTURE_COLOR>Puncture"),
@@ -381,7 +381,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Peculiar Growth: duration \u2014 Damaging an enemy will inflate the body part hit for 6s."),
   ]),
   persistent_posture: mod("persistent_posture", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Persistent Posture: damage \u2014 The companion will pick a target and then attack it relentlessly. +40% Impact Da\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Persistent Posture — impact bias / AI (not always-on base damage)"),
   ]),
   phoenix_blaze: mod("phoenix_blaze", [], "wiki: Phoenix Blaze \u2014 Wreathes the Railjack in fire, increasing Turret Damage and Speed."),
   phoenix_spirit: mod("phoenix_spirit", [], "wiki: Phoenix Spirit \u2014 Elemental Damage increased by |PERCENT|%."),
@@ -517,7 +517,7 @@ export const MOD_BEHAVIORS_GENERAL: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Shrapnel Shot: duration \u2014 On Kill:\\\\n+99% Critical Damage when Aiming for 9s"),
   ]),
   shred_shot: mod("shred_shot", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Shred Shot: damage \u2014 20% of Damage converted into <DT_PUNCTURE_COLOR>Puncture"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Shred Shot — IPS convert (not always-on damage)"),
   ]),
   shredder: mod("shredder", [
     line("slash", "weapon_dps", "multiplicative_percent", "Shredder: slash \u2014 +90% <DT_SLASH_COLOR>Slash"),

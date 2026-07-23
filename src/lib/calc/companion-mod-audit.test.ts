@@ -71,4 +71,15 @@ describe("companion survivability (wiki max rank, Phase M12)", () => {
       ).toBe(true);
     }
   });
+
+  it("Medi-Ray / Protect / Sacrifice precepts: panel-only (no pool inflate)", () => {
+    for (const id of ["medi_ray", "protect", "sacrifice"]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
+  });
 });
