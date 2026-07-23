@@ -55,6 +55,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B10 | Primary weapons (base paper) | Non-exalted rifle/shotgun/bow/`primary` vs Module:Weapons/data/primary; 165 wiki-locked goldens | **Locked** — launchers + dual-mode/radial/Kohm pellet-SC/battery mag deferred |
 | B11 | Secondary weapons (base paper) | Non-exalted pistol/secondary/`dual_pistols` vs Module:Weapons/data/secondary; 137 wiki-locked goldens | **Locked** — Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug radial-or-charge paper deferred |
 | B12 | Melee weapons (base paper) | Non-exalted melee vs Module:Weapons/data/melee; 220 wiki-locked goldens | **Locked** — Dark Split-Sword dual-form + Rabvee zaw stub deferred |
+| B13 | Archgun / archmelee (base paper) | Non-exalted arch vs Module:Weapons/data/archwing Space paper; 27 wiki-locked goldens | **Locked** — Arbucep 6-mode mag/MS cycler deferred; Atmosphere overlays not locked |
 
 ---
 
@@ -334,6 +335,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Primary weapons base paper | 2026-07-23 | Wiki-lock 165 primaries (innate elements, IPS/CC/CM/reload/burst FR); defer Acceltra/Astilla/Kohm/Fulmin/Stradavar/launchers; `primary-weapon-audit` |
 | Secondary weapons base paper | 2026-07-23 | Wiki-lock 137 secondaries (innate elements, Ballistica burst paper, Tysis/Pox direct-only, burst FR); defer Akarius/Angstrum/Sepulcrum/Sonicor/Staticor/Stug; `secondary-weapon-audit` |
 | Melee weapons base paper | 2026-07-23 | Wiki-lock 220 melee (Sarofang Prime IPS, Silva & Aegis heat); defer Dark Split-Sword dual-form + Rabvee zaw stub; `melee-weapon-audit` |
+| Arch weapons base paper | 2026-07-23 | Wiki-lock 27 archgun/archmelee Space paper (archmelee IPS, Fluctus IPS, Veritux crit, Velocitus FR); defer Arbucep; `arch-weapon-audit` |
 
 ## New / extended test files
 
@@ -349,3 +351,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/primary-weapon-audit.test.ts` — B10 primary bare paper (+ `primary-bare-goldens.ts`)
 - `src/lib/calc/secondary-weapon-audit.test.ts` — B11 secondary bare paper (+ `secondary-bare-goldens.ts`)
 - `src/lib/calc/melee-weapon-audit.test.ts` — B12 melee bare paper (+ `melee-bare-goldens.ts`)
+- `src/lib/calc/arch-weapon-audit.test.ts` — B13 archgun/archmelee Space bare paper (+ `arch-bare-goldens.ts`)
