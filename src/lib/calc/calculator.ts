@@ -40,6 +40,7 @@ import {
 } from './set-bonuses';
 import { WARFRAME_ENERGY_RANK30 } from '@/data/warframe-energy-rank30';
 import {
+  applyCrossSlotMeleeWeaponBuffs,
   applyVerifiedModStatToWarframe,
   applyVerifiedModStatToWeapon,
   sumSlideSpeedBonusFromModSlots,
@@ -689,6 +690,9 @@ export function calculateWeaponBuild(
     }
   }
 
+  // Combo Fury / Mark Of The Beast / Amalgam Furax·Ripkas cross-slot lines (Sim5).
+  applyCrossSlotMeleeWeaponBuffs(weaponModAcc, baseWeapon, linkage, allMods);
+
   const critMultFlatBonus = { critEventBonus: 0 };
   const critChanceFlatBonus = { chance: 0 };
   const externalDamageMult = { product: 1 };
@@ -830,6 +834,7 @@ export function calculateWeaponBuild(
     statusBonus += pool.statusChance ?? 0;
     multishotBonus += pool.multishot ?? 0;
     reloadBonus += pool.reloadSpeed ?? 0;
+    magBonus += pool.magazine ?? 0;
     if (pool.ammoEfficiency) {
       stats.ammoEfficiency = (stats.ammoEfficiency ?? 0) + pool.ammoEfficiency;
     }

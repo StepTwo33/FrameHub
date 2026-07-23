@@ -41,19 +41,19 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("lifeSteal", "mod_panel", "multiplicative_percent", "Amalgam Daikyu Target Acquired: lifeSteal \u2014 +75% to Headshot Multiplier, +3% Life Steal on Nikanas, <LINE_SEPARATOR>\\\\n60% c\u2026"),
   ]),
   amalgam_furax_body_count: mod("amalgam_furax_body_count", [
-    line("comboDuration", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: comboDuration \u2014 +15s Combo Duration\\\\n+45% Fire Rate for Secondary Weapons\\\\n<LINE_SEPARATOR>\\\\n\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: duration \u2014 +15s Combo Duration\\\\n+45% Fire Rate for Secondary Weapons\\\\n<LINE_SEPARATOR>\\\\n\u2026"),
-    line("fireRate", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: fireRate \u2014 +15s Combo Duration\\\\n+45% Fire Rate for Secondary Weapons\\\\n<LINE_SEPARATOR>\\\\n\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: range \u2014 +15s Combo Duration\\\\n+45% Fire Rate for Secondary Weapons\\\\n<LINE_SEPARATOR>\\\\n\u2026"),
+    line("comboDuration", "weapon_dps", "additive_percent", "wiki: Amalgam Furax Body Count — +15s Combo Duration on melee"),
+    line("duration", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: duration \u2014 blast/stagger display"),
+    line("fireRate", "mod_panel", "multiplicative_percent", "wiki: Amalgam Furax — +45% Secondary FR via linkage.meleeMods (Sim5 cross-slot)"),
+    line("range", "mod_panel", "multiplicative_percent", "Amalgam Furax Body Count: range \u2014 melee-kill blast radius display"),
   ]),
   amalgam_javlok_magazine_warp: mod("amalgam_javlok_magazine_warp", [
-    line("comboCountChance", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: comboCountChance \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
-    line("magazine", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: magazine \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
-    line("shield", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: shield \u2014 +45% Magazine Capacity, +100% Combo Count Chance while Blocking with a Shield"),
+    line("comboCountChance", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: comboCountChance \u2014 shield-block gated"),
+    line("magazine", "weapon_dps", "multiplicative_percent", "wiki: Amalgam Javlok Magazine Warp — +45% Magazine Capacity"),
+    line("shield", "mod_panel", "multiplicative_percent", "Amalgam Javlok Magazine Warp: shield \u2014 block-gated combo chance display"),
   ]),
   amalgam_ripkas_true_steel: mod("amalgam_ripkas_true_steel", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "Amalgam Ripkas True Steel: criticalChance \u2014 +187% Critical Chance (x2 for Heavy Attacks), +20% Reload Speed on Shotguns, <LI\u2026"),
-    line("reloadSpeed", "mod_panel", "multiplicative_percent", "Amalgam Ripkas True Steel: reloadSpeed \u2014 +187% Critical Chance (x2 for Heavy Attacks), +20% Reload Speed on Shotguns, <LI\u2026"),
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Amalgam Ripkas True Steel — +187% Critical Chance on melee"),
+    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Amalgam Ripkas — +20% Shotgun reload via linkage.meleeMods (Sim5 cross-slot)"),
   ]),
   anchored_glide: mod("anchored_glide", [
     line("abilityStrength", "mod_panel", "multiplicative_percent", "Anchored Glide: abilityStrength \u2014 Disable Zephyr's reduced airborne gravity. Increase Ability Strength by 15%."),

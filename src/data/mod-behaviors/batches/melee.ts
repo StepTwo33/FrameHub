@@ -67,8 +67,8 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
   ]),
   combo_fury: mod("combo_fury", [
     line("duration", "mod_panel", "multiplicative_percent", "Combo Fury: duration \u2014 On Melee Kill:\\\\n+100% Reload Speed\\\\n+100% Magazine Capacity for 12s on Seconda\u2026"),
-    line("magazine", "mod_panel", "multiplicative_percent", "wiki: Combo Fury — melee-kill gated secondary buff"),
-    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Combo Fury — melee-kill gated secondary buff"),
+    line("magazine", "mod_panel", "multiplicative_percent", "wiki: Combo Fury — secondary buff via linkage.meleeMods (Sim5 cross-slot)"),
+    line("reloadSpeed", "mod_panel", "multiplicative_percent", "wiki: Combo Fury — secondary buff via linkage.meleeMods (Sim5 cross-slot)"),
   ]),
   combo_killer: mod("combo_killer", [
     line("comboDuration", "weapon_dps", "additive_percent", "wiki: Combo Killer — +5s Combo Duration (flat seconds)"),
@@ -211,9 +211,9 @@ export const MOD_BEHAVIORS_MELEE: Record<string, VerifiedModBehavior> = {
     line("criticalChance", "mod_panel", "multiplicative_percent", "Maiming Strike: criticalChance \u2014 +150% Critical Chance for Slide Attack (slide-only; not standing paper DPS)"),
   ]),
   mark_of_the_beast: mod("mark_of_the_beast", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast \u2014 buffs the SECONDARY weapon on melee kills, not this melee (panel only)"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast — secondary buff via linkage.meleeMods (Sim5 cross-slot)"),
     line("duration", "mod_panel", "multiplicative_percent", "Mark Of The Beast: duration \u2014 On 6 Melee Kills within 6s: +120% Status/Crit for Secondary"),
-    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast \u2014 buffs the SECONDARY weapon on melee kills, not this melee (panel only)"),
+    line("statusChance", "mod_panel", "multiplicative_percent", "wiki: Mark Of The Beast — secondary buff via linkage.meleeMods (Sim5 cross-slot)"),
   ]),
   martial_fury: mod("martial_fury", [
     line("attackSpeed", "weapon_dps", "multiplicative_percent", "Martial Fury: attackSpeed \u2014 +20% Attack Speed, -50% Energy Rate"),

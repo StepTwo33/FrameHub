@@ -1,6 +1,7 @@
 import type { ItemApplyMode, ItemApplyTarget, VerifiedItemStatLine, VerifiedModBehavior } from "@/lib/codex/item-behavior-types";
 import { VERIFIED_MOD_BEHAVIORS } from "@/data/mod-behaviors";
 import { FACTION_STAT_TO_ID } from "@/lib/calc/combat-multipliers";
+import type { Mod, SetBonusLinkage, Weapon } from "@/lib/types";
 
 export type WeaponModAccumulators = {
   damageBonus: number;
@@ -885,6 +886,52 @@ export function applyVerifiedModStatToRailjack(
     default:
       trackModPanel(stats, modId, statKey, modValue);
       return true;
+  }
+}
+
+/**
+ * Melee-slot mods that buff guns via loadout linkage (Sim5).
+ * Host melee behaviors keep combat keys on mod_panel so melee paper stays clean.
+ */
+export function applyCrossSlotMeleeWeaponBuffs(
+  acc: WeaponModAccumulators,
+  weapon: Weapon,
+  linkage: SetBonusLinkage | undefined,
+  allMods: Map<string, Mod>,
+): void {
+  const meleeSlots = linkage?.meleeMods;
+  if (!meleeSlots?.length) return;
+
+  const isSecondary = ["pistol", "secondary", "dual_pistols"].includes(weapon.category);
+  const isShotgun = weapon.category === "shotgun";
+
+  for (const slot of meleeSlots) {
+    const mod = allMods.get(slot.modId);
+    if (!mod) continue;
+    const rank = Math.min(Math.max(slot.rank ?? 0, 0), mod.maxRank);
+    const mult = rank + 1;
+    const pct = (key: string) => ((mod.stats[key] as number | undefined) ?? 0) * mult / 100;
+
+    if (isSecondary) {
+      if (mod.id === "combo_fury") {
+        acc.onKillStatBonuses.magazine =
+          (acc.onKillStatBonuses.magazine ?? 0) + pct("magazine");
+        acc.onKillStatBonuses.reloadSpeed =
+          (acc.onKillStatBonuses.reloadSpeed ?? 0) + pct("reloadSpeed");
+      }
+      if (mod.id === "mark_of_the_beast") {
+        acc.onKillStatBonuses.criticalChance =
+          (acc.onKillStatBonuses.criticalChance ?? 0) + pct("criticalChance");
+        acc.onKillStatBonuses.statusChance =
+          (acc.onKillStatBonuses.statusChance ?? 0) + pct("statusChance");
+      }
+      if (mod.id === "amalgam_furax_body_count") {
+        acc.fireRateBonus += pct("fireRate");
+      }
+    }
+    if (isShotgun && mod.id === "amalgam_ripkas_true_steel") {
+      acc.reloadBonus += pct("reloadSpeed");
+    }
   }
 }
 

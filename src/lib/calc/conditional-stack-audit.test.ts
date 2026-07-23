@@ -6,7 +6,11 @@ import { describe, expect, it } from "vitest";
 import { allMods } from "@/data/mods";
 import { allWeapons } from "@/data/weapons";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
-import { DEFAULT_SIM_PARAMS, type SimulationParams } from "@/lib/types";
+import {
+  DEFAULT_SIM_PARAMS,
+  type SetBonusLinkage,
+  type SimulationParams,
+} from "@/lib/types";
 
 const modsMap = () => new Map(allMods.map((m) => [m.id, m]));
 
@@ -26,6 +30,7 @@ function build(
   weaponId: string,
   modId: string,
   sim: Partial<SimulationParams>,
+  linkage?: SetBonusLinkage,
 ) {
   const weapon = requireWeapon(weaponId);
   const mod = requireMod(modId);
@@ -35,6 +40,26 @@ function build(
     modsMap(),
     undefined,
     { ...DEFAULT_SIM_PARAMS, ...sim },
+    undefined,
+    linkage,
+  );
+}
+
+function buildWithMeleeLink(
+  weaponId: string,
+  meleeModId: string,
+  sim: Partial<SimulationParams>,
+) {
+  const weapon = requireWeapon(weaponId);
+  const mod = requireMod(meleeModId);
+  return calculateWeaponBuild(
+    weapon,
+    [],
+    modsMap(),
+    undefined,
+    { ...DEFAULT_SIM_PARAMS, ...sim },
+    undefined,
+    { meleeMods: [{ modId: meleeModId, rank: mod.maxRank, slotIndex: 0 }] },
   );
 }
 
@@ -638,5 +663,88 @@ describe("Sim4 tendril / HP-cap exclusives (wiki max rank)", () => {
       weapon.fireRate * 1.3,
       5,
     );
+  });
+});
+
+describe("Sim5 cross-slot secondary buffs (wiki max rank)", () => {
+  it("Combo Fury: secondary paper unchanged; melee kill → +100% reload and mag", () => {
+    const lex = requireWeapon("lex");
+    const paper = buildWithMeleeLink("lex", "combo_fury", { killStacks: 0 });
+    expect(paper.reloadTime).toBeCloseTo(lex.reloadTime, 5);
+    expect(paper.magazine).toBeCloseTo(lex.magazine, 5);
+    const active = buildWithMeleeLink("lex", "combo_fury", { killStacks: 1 });
+    expect(active.reloadTime).toBeCloseTo(lex.reloadTime / 2, 5);
+    expect(active.magazine).toBeCloseTo(lex.magazine * 2, 5);
+    // Does not inflate melee paper.
+    const melee = build("skana", "combo_fury", {});
+    const skana = requireWeapon("skana");
+    expect(melee.magazine).toBeCloseTo(skana.magazine, 5);
+    expect(melee.reloadTime).toBeCloseTo(skana.reloadTime, 5);
+  });
+
+  it("Mark Of The Beast: secondary paper unchanged; kill → +120% CC and SC", () => {
+    const lex = requireWeapon("lex");
+    const paper = buildWithMeleeLink("lex", "mark_of_the_beast", { killStacks: 0 });
+    expect(paper.criticalChance).toBeCloseTo(lex.criticalChance, 5);
+    expect(paper.statusChance).toBeCloseTo(lex.statusChance, 5);
+    const active = buildWithMeleeLink("lex", "mark_of_the_beast", { killStacks: 1 });
+    expect(active.criticalChance).toBeCloseTo(lex.criticalChance * 2.2, 5);
+    expect(active.statusChance).toBeCloseTo(lex.statusChance * 2.2, 5);
+    const melee = build("skana", "mark_of_the_beast", {});
+    const skana = requireWeapon("skana");
+    expect(melee.criticalChance).toBeCloseTo(skana.criticalChance, 5);
+    expect(melee.statusChance).toBeCloseTo(skana.statusChance, 5);
+  });
+
+  it("Amalgam Furax: melee +15s combo; secondary +45% FR via linkage", () => {
+    const skana = requireWeapon("skana");
+    expect(build("skana", "amalgam_furax_body_count", {}).comboDuration).toBeCloseTo(
+      5 + 15,
+      5,
+    );
+    expect(build("skana", "amalgam_furax_body_count", {}).fireRate).toBeCloseTo(
+      skana.fireRate,
+      5,
+    );
+    const lex = requireWeapon("lex");
+    expect(buildWithMeleeLink("lex", "amalgam_furax_body_count", {}).fireRate).toBeCloseTo(
+      lex.fireRate * 1.45,
+      5,
+    );
+  });
+
+  it("Amalgam Ripkas: melee +187% CC; shotgun +20% reload via linkage", () => {
+    const ripkas = requireWeapon("ripkas");
+    expect(build("ripkas", "amalgam_ripkas_true_steel", {}).criticalChance).toBeCloseTo(
+      ripkas.criticalChance * 2.87,
+      4,
+    );
+    expect(build("ripkas", "amalgam_ripkas_true_steel", {}).reloadTime).toBeCloseTo(
+      ripkas.reloadTime,
+      5,
+    );
+    const strun = requireWeapon("strun");
+    expect(buildWithMeleeLink("strun", "amalgam_ripkas_true_steel", {}).reloadTime).toBeCloseTo(
+      strun.reloadTime / 1.2,
+      4,
+    );
+  });
+
+  it("Amalgam Javlok Magazine Warp: +45% magazine", () => {
+    const javlok = requireWeapon("javlok");
+    expect(build("javlok", "amalgam_javlok_magazine_warp", {}).magazine).toBe(
+      Math.round(javlok.magazine * 1.45),
+    );
+  });
+
+  it("Sentient Barrage: paper CC/CD unchanged; trigger → +300% CC and CD", () => {
+    const battacor = requireWeapon("battacor");
+    const bareCm = calculateWeaponBuild(battacor, [], modsMap()).criticalMultiplier;
+    const paper = build("battacor", "sentient_barrage", {});
+    expect(paper.criticalChance).toBeCloseTo(battacor.criticalChance, 5);
+    expect(paper.criticalMultiplier).toBeCloseTo(bareCm, 5);
+    const active = build("battacor", "sentient_barrage", { applyTriggerBuffs: true });
+    expect(active.criticalChance).toBeCloseTo(battacor.criticalChance * 4, 5);
+    expect(active.criticalMultiplier).toBeCloseTo(bareCm * 4, 4);
   });
 });

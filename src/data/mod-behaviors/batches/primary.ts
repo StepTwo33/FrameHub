@@ -341,8 +341,8 @@ export const MOD_BEHAVIORS_PRIMARY: Record<string, VerifiedModBehavior> = {
     line("punchThrough", "mod_panel", "multiplicative_percent", "Semi-Rifle Cannonade: punchThrough \u2014 Only compatible with Semi-Auto Trigger. Fire Rate cannot be modified.\\\\n+240% Da\u2026 (arsenal display only)"),
   ]),
   sentient_barrage: mod("sentient_barrage", [
-    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Sentient Barrage \u2014 +300% CC applies only to the next full-charge Alt-Fire discharge (panel only)"),
-    line("criticalMultiplier", "mod_panel", "multiplicative_percent", "wiki: Sentient Barrage \u2014 +300% CD applies only to the next full-charge Alt-Fire discharge (panel only)"),
+    line("criticalChance", "weapon_dps", "conditional_stat_on_trigger", "wiki: Sentient Barrage — +300% CC on next full-charge Alt-Fire discharge"),
+    line("criticalMultiplier", "weapon_dps", "conditional_stat_on_trigger", "wiki: Sentient Barrage — +300% CD on next full-charge Alt-Fire discharge"),
   ]),
   serrated_rounds: mod("serrated_rounds", [
     line("damage", "mod_panel", "multiplicative_percent", "wiki: Serrated Rounds — IPS convert (not always-on damage)"),
