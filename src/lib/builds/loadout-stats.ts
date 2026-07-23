@@ -398,7 +398,11 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
         );
         const modSlots = loadout.warframeBuild.exaltedMods || [];
         const externalBuffs = resolveWeaponExternalBuffs(base, buffContext, simParams);
-        const calcOptions = mergeWeaponCalcOptions(undefined, externalBuffs);
+        const wfStr = result.warframe?.stats.abilityStrength ?? 1;
+        const calcOptions = {
+          ...mergeWeaponCalcOptions(undefined, externalBuffs),
+          abilityStrength: wfStr,
+        };
         const statsEx =
           exaltedArcanes.length > 0
             ? calculateWeaponBuildWithArcanes(
@@ -431,6 +435,7 @@ export function calcLoadoutStats(loadout: Loadout, options: CalcLoadoutStatsOpti
           simParams,
           linkage: setLinkage,
           buffContext,
+          abilityStrength: wfStr,
         });
         const contributions = computeDpsContributions(contributionContext);
         result.exalted = { name: base.name, stats: statsEx, ttk, isMelee, contributions };

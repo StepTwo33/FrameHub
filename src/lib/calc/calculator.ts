@@ -8,6 +8,7 @@ import {
   resolveEffectiveComboCount,
 } from './melee-combo';
 import { enrichWeapon } from '../weapons/weapon-enrich';
+import { resolveExaltedStrengthForCalc } from '../weapons/exalted-weapons';
 
 export { avgCritMultiplier, quantizeBaseCritMultiplier } from './crit-utils';
 import {
@@ -514,7 +515,10 @@ export function calculateWeaponBuild(
   rivenStatChanges?: Record<string, number>,
 ): CalculatedStats {
   // Pure-element fills + charge/burst timing (idempotent if already enriched).
-  const baseWeapon = enrichWeapon(rawWeapon);
+  const enriched = enrichWeapon(rawWeapon);
+  // Exalted: Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1).
+  const { weapon: baseWeapon, additiveStrengthBonus: exaltedAdditiveStr } =
+    resolveExaltedStrengthForCalc(enriched, calcOptions?.abilityStrength);
   const sim = simParams || DEFAULT_SIM_PARAMS;
   const isMelee = baseWeapon.category === 'melee' || baseWeapon.triggerType === 'Melee';
 
@@ -759,6 +763,8 @@ export function calculateWeaponBuild(
   }
   // Reaver's Rapture etc.: stack-capped +Damage additive with Serration (not late ×damage).
   damageBonus += incarnonStatChanges?.additiveBaseDamage ?? 0;
+  // Lizzie / Exalted Solo: 1.25×STR − 1 Serration-additive (wiki).
+  damageBonus += exaltedAdditiveStr;
   // Swooping Lunge: +50% PP-additive per airborne kill stack (cap 3; default max when unset).
   const airbornePer = incarnonStatChanges?.airborneKillAdditivePerStack ?? 0;
   if (airbornePer > 0) {

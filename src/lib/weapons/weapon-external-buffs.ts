@@ -851,6 +851,7 @@ export function mergeWeaponCalcOptions(
         progenitorElement?: string;
         progenitorBonusPercent?: number;
         incarnonFormActive?: boolean;
+        abilityStrength?: number;
       }
     | undefined,
   externalBuffs: WeaponExternalBuff[],
@@ -860,7 +861,9 @@ export function mergeWeaponCalcOptions(
     existing.progenitorBonusPercent != null &&
     existing.progenitorBonusPercent > 0;
   const formActive = existing?.incarnonFormActive === true;
-  if (!hasProgenitor && externalBuffs.length === 0 && !formActive) return undefined;
+  const hasStr =
+    typeof existing?.abilityStrength === "number" && Number.isFinite(existing.abilityStrength);
+  if (!hasProgenitor && externalBuffs.length === 0 && !formActive && !hasStr) return undefined;
   return {
     ...(hasProgenitor
       ? {
@@ -870,5 +873,6 @@ export function mergeWeaponCalcOptions(
       : {}),
     ...(externalBuffs.length > 0 ? { externalBuffs } : {}),
     ...(formActive ? { incarnonFormActive: true } : {}),
+    ...(hasStr ? { abilityStrength: existing!.abilityStrength } : {}),
   };
 }

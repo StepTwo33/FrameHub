@@ -313,6 +313,12 @@ export interface WeaponCalculationOptions {
   externalBuffs?: WeaponExternalBuff[];
   /** When true, Incarnon Form radials contribute to DPS (form attack active). */
   incarnonFormActive?: boolean;
+  /**
+   * Host Warframe Ability Strength (1 = 100%). Scales most exalted weapon base
+   * damage before mods. Garuda Talons (Passive) ignore this. Lizzie uses an
+   * additive 1.25×STR−1 pool instead of a flat base multiply.
+   */
+  abilityStrength?: number;
 }
 
 export interface ElementalDamage {

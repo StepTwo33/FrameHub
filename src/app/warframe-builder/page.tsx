@@ -388,15 +388,37 @@ export default function WarframeBuilderPage() {
       .slice(0, exaltedArcaneConfig.slots)
       .filter((a): a is Mod => a !== null);
     if (activeArcanes.length > 0) {
-      return calculateWeaponBuildWithArcanes(exaltedWeapon, slots, modsMap, activeArcanes);
+      return calculateWeaponBuildWithArcanes(
+        exaltedWeapon,
+        slots,
+        modsMap,
+        activeArcanes,
+        undefined,
+        undefined,
+        exaltedCalcOptions,
+      );
     }
-    return calculateWeaponBuild(exaltedWeapon, slots, modsMap);
-  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap]);
+    return calculateWeaponBuild(
+      exaltedWeapon,
+      slots,
+      modsMap,
+      undefined,
+      undefined,
+      exaltedCalcOptions,
+    );
+  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap, exaltedCalcOptions]);
 
   const exaltedBaseStats = useMemo<CalculatedStats | null>(() => {
     if (!exaltedWeapon) return null;
-    return calculateWeaponBuild(exaltedWeapon, [], modsMap);
-  }, [exaltedWeapon]);
+    return calculateWeaponBuild(
+      exaltedWeapon,
+      [],
+      modsMap,
+      undefined,
+      undefined,
+      exaltedCalcOptions,
+    );
+  }, [exaltedWeapon, modsMap, exaltedCalcOptions]);
 
   const exaltedContributionContext = useMemo(() => {
     if (!exaltedWeapon) return null;
@@ -407,8 +429,9 @@ export default function WarframeBuilderPage() {
       arcanes: exaltedArcanes
         .slice(0, exaltedArcaneConfig.slots)
         .filter((a): a is Mod => a !== null),
+      calcOptions: exaltedCalcOptions,
     };
-  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap]);
+  }, [exaltedWeapon, exaltedMods, exaltedArcanes, exaltedArcaneConfig.slots, modsMap, exaltedCalcOptions]);
 
   const exaltedCapacity = useMemo(
     () => computeUsedCapacity(exaltedMods, modsMap, exaltedSlotPolarities),
@@ -423,18 +446,6 @@ export default function WarframeBuilderPage() {
     const q = warframeSearch.toLowerCase();
     return sorted.filter((w) => w.name.toLowerCase().includes(q));
   }, [warframeSearch]);
-
-  const calculatedStats = useMemo<WarframeCalculatedStats | null>(() => {
-    if (!selectedWarframe) return null;
-    const modSlots = equippedMods.map((m) => ({
-      modId: m.modId,
-      rank: m.rank,
-      slotIndex: m.slotIndex,
-    }));
-    const stats = calculateWarframeBuild(selectedWarframe, modSlots, modsMap);
-    // Shards + arcanes + derived-total recompute shared with loadout stats
-    return applyWarframeShardsAndArcanes(stats, equippedShards, equippedArcanes, equippedArcaneRanks);
-  }, [selectedWarframe, equippedMods, equippedShards, equippedArcanes, equippedArcaneRanks]);
 
   const abilityDisplayEntries = useMemo(() => {
     if (!selectedWarframe) return [];

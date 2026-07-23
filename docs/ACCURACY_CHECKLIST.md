@@ -51,6 +51,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | B6 | Arcane custom handlers | Exodia Zaw gates + Bellicose/Tempo/Velocity + prior | **Improved** |
 | B7 | Galv / CO / BR / WW | paper vs stacks + Steel/Elementalist kill stacks | **Locked** Phase 3 + Galv melee stacks |
 | B8 | Incarnon + radials | … + Thalys shard trigger / Chain Shatter / Explosive Growth erupts; melee form PP-additive + gated stacks | **Improved** — C6 stance strings remain deferred |
+| B9 | Exalted weapons | All 37 `isExalted` rows wiki-locked; Ability Strength scales base before mods (Lizzie = additive 1.25×STR−1; Garuda Passive ignores STR) | **Locked** — ability-panel `ability.damage × STR` may still dual-display vs weapon DPS |
 
 ---
 
@@ -325,6 +326,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Capacity-MS pellet % (Grit/Vendetta/Torid) | 2026-07-22 | capacityMsDamageMult EV (MS−1)/MS; Torid form capacityMsBonusMult ×1.6 on MS bonuses |
 | Mecha spread + Thalys shards + melee form stacks | 2026-07-22 | Mecha mark-kill DoT DPS (sum×frac/CD); Thalys shardTrigger+Chain Shatter; form additiveBaseDamage; Swooping/Destreza sim stacks |
 | Explosive Growth + Mecha claw elemental | 2026-07-22 | Thalys shardFullyGrownHosts ×2 erupt; claw mods via companionWeaponMods (Sepsis wiki 1075); C6 deferred |
+| Exalted weapons accuracy | 2026-07-22 | STR×base before mods (Lizzie additive; Garuda ignore); P0–P2 wiki row fixes (Balefire/Arquebex/Shadow Clones/Artemis/Desert Wind/Talons/Exalted Blade/Regulators/Diwata/Iron Staff/Shattered Lash/Ironbride/Shadow Claws); `exalted-weapon-audit` goldens |
 
 ## New / extended test files
 
@@ -336,3 +338,4 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/phase5-9-audit.test.ts`
 - `src/lib/calc/set-bonus-audit.test.ts` — Augur/Hunter/Mecha + damageBuff gating
 - `src/lib/calc/ttk-discrete.test.ts` — shield overflow case
+- `src/lib/calc/exalted-weapon-audit.test.ts` — B9 inventory + STR + bare wiki goldens

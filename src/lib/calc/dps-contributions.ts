@@ -556,6 +556,7 @@ export function buildWeaponContributionContext(params: {
   linkage?: SetBonusLinkage;
   rivenStatChanges?: Record<string, number>;
   buffContext?: WeaponBuffContext;
+  abilityStrength?: number;
 }): WeaponDpsCalcContext {
   const simParams = params.simParams ?? DEFAULT_SIM_PARAMS;
   const externalBuffs = resolveWeaponExternalBuffs(params.weapon, params.buffContext, simParams);
@@ -563,6 +564,7 @@ export function buildWeaponContributionContext(params: {
     {
       progenitorElement: params.progenitorElement,
       progenitorBonusPercent: params.progenitorBonusPercent,
+      abilityStrength: params.abilityStrength,
     },
     externalBuffs,
   );

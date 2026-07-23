@@ -105,6 +105,7 @@ function resolveBuildAbilities(data: WarframeBuildData): { ability: Ability; slo
 function resolveExaltedPreview(
   data: WarframeBuildData,
   allWeapons: Weapon[],
+  abilityStrength = 1,
 ): PublicBuildWeaponPreview | null {
   const exaltedMods = data.exaltedMods ?? [];
   const exaltedArcanes = resolveSavedArcaneSlots(data.exaltedArcaneIds, 2).filter((m): m is Mod => m != null);
@@ -113,16 +114,26 @@ function resolveExaltedPreview(
   if (!exaltedWeapon) return null;
   const modsMap = getEffectiveModsMap();
   const base = enrichWeapon(exaltedWeapon);
+  const calcOptions = { abilityStrength };
+  const sim = scenarioSimParams("midFight");
   const stats =
     exaltedArcanes.length > 0
-      ? calculateWeaponBuildWithArcanes(base, exaltedMods, modsMap, exaltedArcanes, undefined, scenarioSimParams("midFight"))
-      : calculateWeaponBuild(base, exaltedMods, modsMap, undefined, scenarioSimParams("midFight"));
+      ? calculateWeaponBuildWithArcanes(
+          base,
+          exaltedMods,
+          modsMap,
+          exaltedArcanes,
+          undefined,
+          sim,
+          calcOptions,
+        )
+      : calculateWeaponBuild(base, exaltedMods, modsMap, undefined, sim, calcOptions);
   const isMelee = base.category === "melee" || base.triggerType === "Melee";
   return {
     label: `Exalted — ${base.name}`,
     weapon: base,
     stats,
-    baseStats: baseWeaponStats(exaltedWeapon),
+    baseStats: calculateWeaponBuild(base, [], modsMap, undefined, sim, calcOptions),
     isMelee,
   };
 }
@@ -157,7 +168,7 @@ export function resolvePublicBuildWarframePreview(
     arcanes: resolveSavedArcaneSlots(d.arcaneIds, 2),
     arcaneRanks: d.arcaneRanks ?? [],
     abilityEntries,
-    exalted: resolveExaltedPreview(d, allWeapons),
+    exalted: resolveExaltedPreview(d, allWeapons, stats.abilityStrength),
   };
 }
 
