@@ -46,6 +46,26 @@ export const SENTINEL_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "deconstructor",
+    "damage": 130.0,
+    "impact": 130.0,
+    "criticalChance": 0.0,
+    "criticalMultiplier": 1.0,
+    "statusChance": 0.25,
+    "fireRate": 1.33,
+    "multishot": 1.0
+  },
+  {
+    "id": "deconstructor_prime",
+    "damage": 160.0,
+    "impact": 160.0,
+    "criticalChance": 0.0,
+    "criticalMultiplier": 1.0,
+    "statusChance": 0.25,
+    "fireRate": 1.33,
+    "multishot": 1.0
+  },
+  {
     "id": "laser_rifle",
     "damage": 45.0,
     "impact": 4.5,

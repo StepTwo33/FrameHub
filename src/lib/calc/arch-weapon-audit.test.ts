@@ -1,6 +1,6 @@
 /**
  * Arch weapons accuracy (B13) — non-exalted archgun/archmelee Space bare paper.
- * Arbucep (6-mode cycler mag/MS convention) deferred.
+ * Arbucep locked to 1st Attack paper (modes 2–6 unmodeled).
  * Wiki Module:Weapons/data/archwing locked in ARCH_BARE_GOLDENS.
  */
 import { describe, expect, it } from "vitest";
@@ -12,8 +12,8 @@ import type { Mod, Weapon } from "@/lib/types";
 
 const ARCH_CATS = new Set(["archgun", "archmelee"]);
 
-/** Multi-element cycler mag/MS convention not wiki-locked this pass. */
-const DEFERRED_ARCH_IDS = new Set(["arbucep"]);
+/** Multi-element modes 2–6 remain unmodeled; 1st Attack paper locked in B20. */
+const DEFERRED_ARCH_IDS = new Set<string>([]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -55,7 +55,7 @@ describe("arch weapon inventory (B13)", () => {
 
 describe("arch bare wiki goldens", () => {
   it("locks every non-deferred arch weapon against wiki-matched catalog", () => {
-    expect(ARCH_BARE_GOLDENS.length).toBeGreaterThanOrEqual(25);
+    expect(ARCH_BARE_GOLDENS.length).toBeGreaterThanOrEqual(28);
   });
 
   it.each(ARCH_BARE_GOLDENS)("$id catalog bare paper", (g) => {

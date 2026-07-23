@@ -38,6 +38,16 @@ export const ARCH_BARE_GOLDENS: Array<{
     "multishot": 1.0
   },
   {
+    "id": "arbucep",
+    "damage": 16.0,
+    "blast": 16.0,
+    "criticalChance": 0.1,
+    "criticalMultiplier": 2.9,
+    "statusChance": 0.349,
+    "fireRate": 1.5,
+    "multishot": 1.0
+  },
+  {
     "id": "centaur",
     "damage": 376.0,
     "impact": 37.6,

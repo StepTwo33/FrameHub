@@ -1381,13 +1381,6 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
       "totalDamage": 46.0,
       "radius": 1.6,
       "falloffReduction": 0.2
-    },
-    {
-      "name": "Lock-On Radial Attack",
-      "heat": 480.0,
-      "totalDamage": 480.0,
-      "radius": 3.0,
-      "falloffReduction": 0.2
     }
   ],
   "sonicor": [
@@ -5344,52 +5337,10 @@ export const WEAPON_RADIAL_ATTACKS: Record<string, WeaponRadialAttack[]> =
   ],
   "arbucep": [
     {
-      "name": "1st Attack",
-      "blast": 16.0,
-      "totalDamage": 16.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
       "name": "1st Attack Radial Attack",
       "blast": 114.0,
       "totalDamage": 114.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
-      "name": "2nd Attack Radial Attack",
-      "corrosive": 114.0,
-      "totalDamage": 114.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
-      "name": "3rd Attack Radial Attack",
-      "gas": 114.0,
-      "totalDamage": 114.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
-      "name": "4th Attack Radial Attack",
-      "magnetic": 114.0,
-      "totalDamage": 114.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
-      "name": "5th Attack Radial Attack",
-      "radiation": 114.0,
-      "totalDamage": 114.0,
-      "radius": 2003.0,
-      "falloffReduction": 1.0
-    },
-    {
-      "name": "6th Attack Radial Attack",
-      "viral": 114.0,
-      "totalDamage": 114.0,
-      "radius": 2003.0,
+      "radius": 6.0,
       "falloffReduction": 1.0
     }
   ],

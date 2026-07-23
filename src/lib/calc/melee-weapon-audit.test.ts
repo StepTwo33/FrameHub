@@ -1,6 +1,6 @@
 /**
  * Melee weapons accuracy (B12) — non-exalted melee bare paper.
- * Dual-mode Dark Split-Sword + Zaw stub Rabvee deferred.
+ * Zaw-component stubs (Rabvee) excluded via triggerType; modular zaw_rabvee is SoT.
  * Wiki Module:Weapons/data/melee locked in MELEE_BARE_GOLDENS.
  */
 import { describe, expect, it } from "vitest";
@@ -9,9 +9,6 @@ import { allWeapons } from "@/data/weapons";
 import { calculateWeaponBuild } from "@/lib/calc/calculator";
 import { MELEE_BARE_GOLDENS } from "@/lib/calc/melee-bare-goldens";
 import type { Mod, Weapon } from "@/lib/types";
-
-/** Zaw-component stub only — dual-form Dark Split-Sword locked to Dual Swords paper in B19. */
-const DEFERRED_MELEE_IDS = new Set(["rabvee"]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -22,15 +19,14 @@ function meleePool(): Weapon[] {
     (w) =>
       w.category === "melee" &&
       !w.isExalted &&
-      w.triggerType !== "Zaw Component" &&
-      !DEFERRED_MELEE_IDS.has(w.id),
+      w.triggerType !== "Zaw Component",
   );
 }
 
 describe("melee weapon inventory (B12)", () => {
   const pool = meleePool();
 
-  it("has a non-empty melee pool excluding exalteds and deferred stubs", () => {
+  it("has a non-empty melee pool excluding exalteds and zaw stubs", () => {
     expect(pool.length).toBeGreaterThan(200);
   });
 
@@ -45,17 +41,19 @@ describe("melee weapon inventory (B12)", () => {
     }
   });
 
-  it("deferred dual-mode / zaw stub rows are excluded from goldens", () => {
-    for (const id of DEFERRED_MELEE_IDS) {
-      expect(
-        MELEE_BARE_GOLDENS.some((g) => g.id === id),
-        id,
-      ).toBe(false);
-      expect(
-        allWeapons.some((w) => w.id === id),
-        `deferred ${id} still in catalog`,
-      ).toBe(true);
-    }
+  it("Rabvee zaw stub mirrors modular zaw_rabvee and stays out of melee goldens", () => {
+    const stub = allWeapons.find((w) => w.id === "rabvee");
+    expect(stub).toBeDefined();
+    expect(stub!.triggerType).toBe("Zaw Component");
+    expect(stub!.damage).toBeCloseTo(234, 4);
+    expect(stub!.impact).toBeCloseTo(140.4, 4);
+    expect(stub!.puncture).toBeCloseTo(11.7, 4);
+    expect(stub!.slash).toBeCloseTo(81.9, 4);
+    expect(stub!.criticalChance).toBeCloseTo(0.18, 4);
+    expect(stub!.criticalMultiplier).toBeCloseTo(2, 4);
+    expect(stub!.statusChance).toBeCloseTo(0.18, 4);
+    expect(MELEE_BARE_GOLDENS.some((g) => g.id === "rabvee")).toBe(false);
+    expect(pool.some((w) => w.id === "rabvee")).toBe(false);
   });
 });
 

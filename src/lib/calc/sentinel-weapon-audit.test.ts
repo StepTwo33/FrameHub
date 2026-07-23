@@ -1,6 +1,6 @@
 /**
  * Sentinel weapons accuracy (B14) — sentinel_weapon bare paper.
- * Deconstructor IPS-cycling deferred.
+ * Deconstructor locked to First Attack (Impact) of IPS cycle.
  * Wiki Module:Weapons/data/companion locked in SENTINEL_BARE_GOLDENS.
  */
 import { describe, expect, it } from "vitest";
@@ -10,7 +10,7 @@ import { allMods } from "@/data/mods";
 import { SENTINEL_BARE_GOLDENS } from "@/lib/calc/sentinel-bare-goldens";
 import type { Mod, Weapon } from "@/lib/types";
 
-const DEFERRED_SENTINEL_IDS = new Set(["deconstructor", "deconstructor_prime"]);
+const DEFERRED_SENTINEL_IDS = new Set<string>([]);
 
 function modsMap(): Map<string, Mod> {
   return new Map(allMods.map((m) => [m.id, m]));
@@ -53,7 +53,7 @@ describe("sentinel weapon inventory (B14)", () => {
 
 describe("sentinel bare wiki goldens", () => {
   it("locks every non-deferred sentinel against wiki-matched catalog", () => {
-    expect(SENTINEL_BARE_GOLDENS.length).toBe(10);
+    expect(SENTINEL_BARE_GOLDENS.length).toBe(12);
   });
 
   it.each(SENTINEL_BARE_GOLDENS)("$id catalog bare paper", (g) => {

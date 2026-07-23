@@ -145,6 +145,26 @@ MANUAL_RADIAL_ATTACKS: dict[str, list[dict]] = {
             "falloffReduction": 0.3,
         },
     ],
+    # 1st-mode radial only; wiki Falloff EndRange is projectile distance, not AoE radius.
+    "arbucep": [
+        {
+            "name": "1st Attack Radial Attack",
+            "blast": 114.0,
+            "totalDamage": 114.0,
+            "radius": 6.0,
+            "falloffReduction": 1.0,
+        },
+    ],
+    # Primary-fire radial only — lock-on mode remains dual-mode deferred for DPS.
+    "sepulcrum": [
+        {
+            "name": "Radial Attack",
+            "heat": 46.0,
+            "totalDamage": 46.0,
+            "radius": 1.6,
+            "falloffReduction": 0.2,
+        },
+    ],
 }
 
 RADIAL_NAME_HINTS = (
