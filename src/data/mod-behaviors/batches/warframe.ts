@@ -77,24 +77,24 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "warframe_totals", "multiplicative_percent", "Archon Vitality: health \u2014 +100% Health, Status Effects from abilities that deal <DT_FIRE_COLOR>Heat Damage\u2026"),
   ]),
   armored_acrobatics: mod("armored_acrobatics", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Armored Acrobatics: armor \u2014 +20% Damage Resistance during Bullet Jump, -10% Mobility"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Armored Acrobatics — conditional DR (not armor capacity)"),
     line("damage", "mod_panel", "multiplicative_percent", "Armored Acrobatics: damage \u2014 +20% Damage Resistance during Bullet Jump, -10% Mobility"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Armored Acrobatics: sprintSpeed \u2014 +20% Damage Resistance during Bullet Jump, -10% Mobility"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Armored Acrobatics — mobility penalty (not always-on sprint)"),
   ]),
   armored_agility: mod("armored_agility", [
     line("armor", "warframe_totals", "multiplicative_percent", "Armored Agility: armor \u2014 +7.5% Armor, +2.5% Sprint Speed per rank"),
     line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Armored Agility: sprintSpeed \u2014 +7.5% Armor, +2.5% Sprint Speed per rank"),
   ]),
   armored_evade: mod("armored_evade", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Armored Evade: armor \u2014 +40% Damage Resistance while Dodging, -10% Mobility"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Armored Evade — conditional DR (not armor capacity)"),
     line("damage", "mod_panel", "multiplicative_percent", "Armored Evade: damage \u2014 +40% Damage Resistance while Dodging, -10% Mobility"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Armored Evade: sprintSpeed \u2014 +40% Damage Resistance while Dodging, -10% Mobility"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Armored Evade — mobility penalty (not always-on sprint)"),
   ]),
   armored_recovery: mod("armored_recovery", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Armored Recovery: armor \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Armored Recovery — conditional DR (not armor capacity)"),
     line("damage", "mod_panel", "multiplicative_percent", "Armored Recovery: damage \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
     line("slideSpeed", "mod_panel", "multiplicative_percent", "Armored Recovery: slideSpeed \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
-    line("sprintSpeed", "warframe_totals", "multiplicative_percent", "Armored Recovery: sprintSpeed \u2014 +50% Damage Resistance when knocked down, -20% Slide"),
+    line("sprintSpeed", "mod_panel", "multiplicative_percent", "wiki: Armored Recovery — slide/mobility penalty (not always-on sprint)"),
   ]),
   augmented_sonar: mod("augmented_sonar", [
     line("duration", "mod_panel", "multiplicative_percent", "Augmented Sonar: duration \u2014 Sonar Augment: Affected enemies also become visible through walls for 10s."),
@@ -254,7 +254,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("health", "mod_panel", "multiplicative_percent", "wiki: Equilibrium — Health/Energy pickup conversion (not max pool)"),
   ]),
   fast_deflection_r3: mod("fast_deflection_r3", [
-    line("shield", "warframe_totals", "multiplicative_percent", "Fast Deflection: shield \u2014 +90% Shield Recharge\\\\n-45% Shield Recharge Delay"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Fast Deflection — shield recharge/delay (not capacity)"),
   ]),
   final_act: mod("final_act", [
     line("abilityStrength", "warframe_totals", "multiplicative_percent", "Final Act: abilityStrength \u2014 On Low Health:\\\\n+30% Ability Strength\\\\n+30% Casting Speed for 8s"),
@@ -279,7 +279,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   ]),
   fortitude: mod("fortitude", [
     line("knockdownResistance", "mod_panel", "multiplicative_percent", "Fortitude: knockdownResistance \u2014 +15% Shield Recharge, +50% Knockdown Resistance per rank"),
-    line("shield", "warframe_totals", "multiplicative_percent", "Fortitude: shield \u2014 +15% Shield Recharge, +50% Knockdown Resistance per rank"),
+    line("shield", "mod_panel", "multiplicative_percent", "wiki: Fortitude — shield recharge (not capacity)"),
     line("shieldRecharge", "mod_panel", "multiplicative_percent", "Fortitude: shieldRecharge \u2014 +15% Shield Recharge, +50% Knockdown Resistance per rank"),
   ]),
   gale_kick: mod("gale_kick", [
@@ -371,7 +371,7 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("lockerUnlockChance", "mod_panel", "multiplicative_percent", "Master Thief: lockerUnlockChance \u2014 +60% chance to unlock locked lockers."),
   ]),
   mecha_pulse_r3: mod("mecha_pulse_r3", [
-    line("armor", "warframe_totals", "multiplicative_percent", "Mecha Pulse: armor \u2014 Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m."),
+    line("armor", "mod_panel", "multiplicative_percent", "wiki: Mecha Pulse — conditional mark-kill armor (not always-on)"),
     line("duration", "mod_panel", "multiplicative_percent", "Mecha Pulse: duration \u2014 Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m."),
     line("range", "mod_panel", "multiplicative_percent", "Mecha Pulse: range \u2014 Killing a Marked Enemy grants +60% Armor for 20s for each enemy within 30m. (arsenal display only)"),
   ]),
@@ -431,10 +431,10 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
     line("knockdownResistance", "mod_panel", "multiplicative_percent", "Power Drift: knockdownResistance \u2014 +15% Ability Strength, +30% Chance to Resist Knockdown"),
   ]),
   precision_intensify: mod("precision_intensify", [
-    line("abilityStrength", "warframe_totals", "multiplicative_percent", "Precision Intensify: abilityStrength \u2014 +90% Ability Strength for your 4th Ability"),
+    line("abilityStrength", "mod_panel", "multiplicative_percent", "wiki: Precision Intensify — +90% strength on 4th ability only"),
   ]),
   preparation_r10: mod("preparation_r10", [
-    line("energy", "warframe_totals", "multiplicative_percent", "Preparation: energy \u2014 +100% Maximum Energy is filled on Spawn"),
+    line("energy", "mod_panel", "multiplicative_percent", "wiki: Preparation — spawn energy fill (not max energy pool)"),
   ]),
   primed_continuity: mod("primed_continuity", [
     line("abilityDuration", "warframe_totals", "multiplicative_percent", "Primed Continuity: abilityDuration \u2014 +5% Ability Duration per rank (Primed)"),

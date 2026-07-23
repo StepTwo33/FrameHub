@@ -18,9 +18,9 @@ export const MOD_BEHAVIORS_COMPANION_WEAPON: Record<string, VerifiedModBehavior>
     line("healthPerSlashStack", "mod_panel", "multiplicative_percent", "Bloodthirst: healthPerSlashStack \u2014 Health stolen per stack of Slash Damage on the target (+25 per rank, max 100)"),
   ]),
   claw_bite: mod("claw_bite", [
-    line("criticalChance", "weapon_dps", "multiplicative_percent", "Bite (Claws): criticalChance \u2014 +30% Critical Chance, +60% Critical Damage for claws"),
-    line("criticalDamage", "mod_panel", "multiplicative_percent", "Bite (Claws): criticalDamage \u2014 +30% Critical Chance, +60% Critical Damage for claws"),
-    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "Bite (Claws): criticalMultiplier \u2014 +30% Critical Chance, +60% Critical Damage for claws"),
+    line("criticalChance", "weapon_dps", "multiplicative_percent", "wiki: Bite (Claws) — +330% CC / +220% CM at max (legacy criticalDamage key is panel)"),
+    line("criticalDamage", "mod_panel", "multiplicative_percent", "wiki: Bite (Claws) — duplicate criticalDamage catalog key (CM via criticalMultiplier)"),
+    line("criticalMultiplier", "weapon_dps", "multiplicative_percent", "wiki: Bite (Claws) — +330% CC / +220% CM at max"),
   ]),
   claw_cold: mod("claw_cold", [
     line("cold", "weapon_dps", "elemental_from_base_damage", "Frost Claws: cold \u2014 +90% Cold Damage"),
@@ -49,7 +49,7 @@ export const MOD_BEHAVIORS_COMPANION_WEAPON: Record<string, VerifiedModBehavior>
 
 
   cull_the_weak: mod("cull_the_weak", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Cull the Weak: damage \u2014 +10% Melee Damage per Status type on the target, +40% Damage on non-Critical Hit\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Cull the Weak — status/non-crit conditional (not always-on paper)"),
     line("damagePerStatus", "mod_panel", "multiplicative_percent", "Cull the Weak: damagePerStatus \u2014 +10% Melee Damage per Status type on the target, +40% Damage on non-Critical Hit\u2026"),
     line("nonCritDamage", "mod_panel", "multiplicative_percent", "Cull the Weak: nonCritDamage \u2014 +10% Melee Damage per Status type on the target, +40% Damage on non-Critical Hit\u2026"),
   ]),

@@ -1279,7 +1279,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "shield": 16.3636
     },
-    "description": "+55% Shield Capacity per rank (Primed)",
+    "description": "+180% Shield Capacity",
     "rarity": "legendary"
   },
   {
@@ -2526,7 +2526,7 @@ const RAW_MODS: Mod[] = [
       "criticalDamage": 60,
       "criticalMultiplier": 20.0
     },
-    "description": "+30% Critical Chance, +60% Critical Damage for claws",
+    "description": "+330% Critical Chance\n+220% Critical Damage",
     "rarity": "uncommon"
   },
   {
@@ -2581,7 +2581,7 @@ const RAW_MODS: Mod[] = [
     "category": "companion_weapon",
     "subCategory": "beast_weapon",
     "stats": {
-      "heat": 90
+      "heat": 15
     },
     "description": "+90% Heat Damage",
     "rarity": "uncommon"
@@ -2595,7 +2595,7 @@ const RAW_MODS: Mod[] = [
     "category": "companion_weapon",
     "subCategory": "beast_weapon",
     "stats": {
-      "cold": 90
+      "cold": 15
     },
     "description": "+90% Cold Damage",
     "rarity": "uncommon"
@@ -14375,7 +14375,7 @@ const RAW_MODS: Mod[] = [
     "stats": {
       "sprintSpeed": 5
     },
-    "description": "+55% Sprint Speed",
+    "description": "+30% Sprint Speed",
     "rarity": "uncommon"
   },
   {
@@ -15789,7 +15789,7 @@ const RAW_MODS: Mod[] = [
     "category": "archwing",
     "subCategory": "",
     "stats": {
-      "flightSpeed": 2.75
+      "flightSpeed": 2.5
     },
     "description": "+27.5% Flight Speed",
     "rarity": "rare"

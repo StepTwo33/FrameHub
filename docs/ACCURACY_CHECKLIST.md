@@ -79,8 +79,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M8 | Arch + leftover gun cores | Magnetic Capacity, Radiated Reload, Loose Hatch, Damzav-Vati; Rifle/Pistol/Shotgun Elementalist statusDamage (not base damage); Imperator/Veritux archgun+archmelee always-on cores | **Locked** — +47 IDs; Elementalist damage→statusDamage |
 | M9 | Shotgun + utility cores | Shotgun general (Blunderbuss/Primed, Ammo Stock/Primed, Amalgam Barrage, Accelerated Blast, IPS, Chilling Reload, Atomic Fallout, Meltdown, Cryo Coating, Magnetic Strafe/Core, Loaded/Loose Chamber, Lingering Torment, Conductive Blade, Savvy); Hydraulic Gauge/Barrel, Bhisaj-Bal, Dizzying Rounds, Perpetual Agony; Lasting Sting, Reflex Coil, Focus Radon, Body Count/Rush/Combo Killer; HAE+comboDuration apply fixes; True Punishment combo→panel | **Locked** — +33 IDs |
 | M10 | Warframe/Necramech + contempt | Archon Continuity/Intensify/Stretch/Flow(+185% fix)/Vitality; Augur Message/Reach/Secrets/Accord; Constitution, Armored Agility, Gladiator Aegis, Carnis Carapace, Cunning Drift, Physique, Sprint Boost, Endurance Drift; Equilibrium→panel; Necramech power/survivability; Amar/Boreal/Nira Contempt + Corrupt Charge; Augur Seeker; Necramech Augur/Deflection/Repair→panel | **Locked** — +33 IDs; Archon Flow energy fix |
+| M11 | Archwing + WF remainder + claws | Archwing power/survivability (Odenata); Primed Redirection/Vigor/Streamline, Rush, Drift/Carapace/Resolve/Hastened/Controlled Slide/Sprint Speed; Flame/Frost Claws per-rank fix; Bite desc; Fast Deflection/Fortitude/Precision Intensify/Preparation/Armored DR/Mecha Pulse/Cull→panel | **Locked** — +~35 IDs; claw heat/cold 90→15 |
 
-**Remaining unlocked paper-moving mods (post M10):** ~260 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (companion/archwing/exclusive/conditional/convert). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
+**Remaining unlocked paper-moving mods (post M11):** ~160 catalog rows with `weapon_dps`/`warframe_totals` still without apply goldens (companion body/link/convert/conditional/exclusive). Galv kill-stacks / CO / BR / WW stay in conditional-stack audit.
 
 ---
 
@@ -114,6 +115,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | M8 Arch + leftovers | 2026-07-23 | +47 gun leftovers/Elementalist + archgun/archmelee cores; Elementalist statusDamage fix |
 | M9 Shotgun + utility | 2026-07-23 | +33 shotgun/utility/melee cores; HAE+comboDuration apply; True Punishment panel |
 | M10 Warframe/Necramech | 2026-07-23 | +33 Archon/Augur/Necramech/Contempt cores; Archon Flow + Equilibrium/Necramech panel fixes |
+| M11 Archwing/WF/claws | 2026-07-23 | +~35 archwing + warframe remainder + claw goldens; panel mis-tags; claw element per-rank fix |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

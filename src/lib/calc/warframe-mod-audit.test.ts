@@ -2,6 +2,7 @@
  * Phase 2c — high-use warframe power / survivability mod goldens (wiki max rank).
  */
 import { describe, expect, it } from "vitest";
+import { VERIFIED_MOD_BEHAVIORS } from "@/data/mod-behaviors";
 import { allMods } from "@/data/mods";
 import { allWarframes } from "@/data/warframes";
 import { calculateWarframeBuild } from "@/lib/calc/calculator";
@@ -198,5 +199,93 @@ describe("warframe power/survivability remainder (wiki max rank, Phase M10)", ()
     const stats = withMod("equilibrium");
     expect(stats.totalHealth).toBeCloseTo(bare.totalHealth, 8);
     expect(stats.totalEnergy).toBeCloseTo(bare.totalEnergy, 8);
+  });
+});
+
+describe("warframe remainder (wiki max rank, Phase M11)", () => {
+  it("Primed Redirection R10: +180% shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("primed_redirection").totalShield / bare.totalShield).toBeCloseTo(2.8, 5);
+  });
+
+  it("Primed Vigor R10: +75% health and shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("primed_vigor");
+    expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(1.75, 5);
+    expect(stats.totalShield / bare.totalShield).toBeCloseTo(1.75, 5);
+  });
+
+  it("Primed Streamline R14: +55% efficiency", () => {
+    expect(withMod("primed_streamline").abilityEfficiency).toBeCloseTo(1.55, 5);
+  });
+
+  it("Rush R5: +30% sprint (5% × 6)", () => {
+    expect(withMod("rush_r3").sprintSpeedBonus).toBeCloseTo(0.3, 8);
+  });
+
+  it("Power Drift R5: +15% strength", () => {
+    expect(withMod("power_drift").abilityStrength).toBeCloseTo(1.15, 8);
+  });
+
+  it("Speed Drift R5: +12% sprint", () => {
+    expect(withMod("speed_drift").sprintSpeedBonus).toBeCloseTo(0.12, 8);
+  });
+
+  it("Stand United R5: +25% armor", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("stand_united").totalArmor / bare.totalArmor).toBeCloseTo(1.25, 5);
+  });
+
+  it("Gladiator Resolve R5: +40% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    expect(withMod("gladiator_resolve").totalHealth / bare.totalHealth).toBeCloseTo(1.4, 5);
+  });
+
+  it("Jugulus / Saxum Carapace R5: +55% armor, +20% health", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    for (const id of ["jugulus_carapace", "saxum_carapace"] as const) {
+      const stats = withMod(id);
+      expect(stats.totalArmor / bare.totalArmor).toBeCloseTo(1.55, 5);
+      expect(stats.totalHealth / bare.totalHealth).toBeCloseTo(1.2, 5);
+    }
+  });
+
+  it("Hastened Steps R3: +20% sprint, −20% shields", () => {
+    const bare = calculateWarframeBuild(requireFrame("excalibur"), [], modsMap());
+    const stats = withMod("hastened_steps");
+    expect(stats.sprintSpeedBonus).toBeCloseTo(0.2, 8);
+    expect(stats.totalShield / bare.totalShield).toBeCloseTo(0.8, 5);
+  });
+
+  it("Controlled Slide R5: +15% strength", () => {
+    expect(withMod("controlled_slide").abilityStrength).toBeCloseTo(1.15, 8);
+  });
+
+  it("Sprint Speed aura R10: +22% sprint (2% × 11)", () => {
+    expect(withMod("aura_sprint_speed").sprintSpeedBonus).toBeCloseTo(0.22, 8);
+  });
+
+  it("Heightened Reflexes R3: −20% efficiency (casting is unmodeled)", () => {
+    expect(withMod("heightened_reflexes").abilityEfficiency).toBeCloseTo(0.8, 8);
+  });
+
+  it("Fast Deflection / Fortitude / Precision Intensify / Preparation / Armored DR suite: panel-only", () => {
+    for (const id of [
+      "fast_deflection_r3",
+      "fortitude",
+      "precision_intensify",
+      "preparation_r10",
+      "armored_acrobatics",
+      "armored_evade",
+      "armored_recovery",
+      "mecha_pulse_r3",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
   });
 });
