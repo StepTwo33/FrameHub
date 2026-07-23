@@ -172,3 +172,98 @@ describe("Melee Elementalist (wiki: +90% status dmg; +60% heavy wind-up speed)",
     expect(stats.heavyAttackWindUp).toBeCloseTo(empty.heavyAttackWindUp / 1.6, 5);
   });
 });
+
+describe("on-kill / trigger conditionals (wiki max rank, Phase M16)", () => {
+  it("Secondary Wind: paper reload unchanged; killStacks>0 → +50% reload", () => {
+    const weapon = requireWeapon("lex");
+    const paper = build("lex", "secondary_wind", { killStacks: 0 });
+    expect(paper.reloadTime).toBeCloseTo(weapon.reloadTime, 5);
+    const active = build("lex", "secondary_wind", { killStacks: 1 });
+    expect(active.reloadTime).toBeCloseTo(weapon.reloadTime / 1.5, 5);
+  });
+
+  it("Bladed Rounds / Sharpened Bullets: paper CM unchanged; kill → +120% / +75% CD", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    const bratonBare = calculateWeaponBuild(braton, [], modsMap());
+    const lexBare = calculateWeaponBuild(lex, [], modsMap());
+    expect(build("braton", "bladed_rounds", { killStacks: 0 }).criticalMultiplier).toBeCloseTo(
+      bratonBare.criticalMultiplier,
+      5,
+    );
+    expect(build("braton", "bladed_rounds", { killStacks: 1 }).criticalMultiplier).toBeCloseTo(
+      bratonBare.criticalMultiplier * 2.2,
+      4,
+    );
+    expect(build("lex", "sharpened_bullets", { killStacks: 0 }).criticalMultiplier).toBeCloseTo(
+      lexBare.criticalMultiplier,
+      5,
+    );
+    expect(build("lex", "sharpened_bullets", { killStacks: 1 }).criticalMultiplier).toBeCloseTo(
+      lexBare.criticalMultiplier * 1.75,
+      4,
+    );
+  });
+
+  it("Lie In Wait: paper FR unchanged; applyTriggerBuffs → +20% FR", () => {
+    const weapon = requireWeapon("braton");
+    expect(build("braton", "lie_in_wait", {}).fireRate).toBeCloseTo(weapon.fireRate, 5);
+    expect(build("braton", "lie_in_wait", { applyTriggerBuffs: true }).fireRate).toBeCloseTo(
+      weapon.fireRate * 1.2,
+      5,
+    );
+  });
+
+  it("Argon Scope / Hydraulic Crosshairs: paper no CC; applyHeadshots → +135% CC", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    expect(build("braton", "argon_scope", {}).criticalChance).toBeCloseTo(braton.criticalChance, 5);
+    expect(build("braton", "argon_scope", { applyHeadshots: true }).criticalChance).toBeCloseTo(
+      braton.criticalChance * 2.35,
+      5,
+    );
+    expect(build("lex", "hydraulic_crosshairs", {}).criticalChance).toBeCloseTo(lex.criticalChance, 5);
+    expect(build("lex", "hydraulic_crosshairs", { applyHeadshots: true }).criticalChance).toBeCloseTo(
+      lex.criticalChance * 2.35,
+      5,
+    );
+  });
+
+  it("Galvanized Scope / Crosshairs: paper no CC; headshot +0 stacks +120%; +5 stacks +320%", () => {
+    const braton = requireWeapon("braton");
+    const lex = requireWeapon("lex");
+    expect(build("braton", "galvanized_scope", {}).criticalChance).toBeCloseTo(
+      braton.criticalChance,
+      5,
+    );
+    expect(
+      build("braton", "galvanized_scope", { applyHeadshots: true, killStacks: 0 }).criticalChance,
+    ).toBeCloseTo(braton.criticalChance * 2.2, 4);
+    expect(
+      build("braton", "galvanized_scope", { applyHeadshots: true, killStacks: 5 }).criticalChance,
+    ).toBeCloseTo(braton.criticalChance * (1 + 1.2 + 0.4 * 5), 4);
+    expect(
+      build("lex", "galvanized_crosshairs", { applyHeadshots: true, killStacks: 5 }).criticalChance,
+    ).toBeCloseTo(lex.criticalChance * (1 + 1.2 + 0.4 * 5), 4);
+  });
+
+  it("Pistol Acuity: +350% weak-point damage always; WP CC only with applyHeadshots", () => {
+    const weapon = requireWeapon("lex");
+    const paper = build("lex", "pistol_acuity", {});
+    expect(paper.headshotDamageBonus).toBeCloseTo(3.5, 4);
+    expect(paper.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+    const hs = build("lex", "pistol_acuity", { applyHeadshots: true });
+    expect(hs.criticalChance).toBeCloseTo(weapon.criticalChance * 4.5, 4);
+  });
+
+  it("Hemorrhage: Impact procs can force Slash (same model as Internal Bleeding)", () => {
+    const weapon = requireWeapon("lex");
+    const stats = build("lex", "hemorrhage", {});
+    const impact = stats.statusProcs.find((p) => p.type === "impact");
+    const forced = stats.statusProcs.find((p) => p.description.includes("Slash on Impact proc"));
+    expect(impact).toBeDefined();
+    expect(forced).toBeDefined();
+    const rateMult = stats.fireRate < 2.5 ? 2 : 1;
+    expect(forced!.chance).toBeCloseTo(impact!.chance * Math.min(0.35 * rateMult, 1), 5);
+  });
+});

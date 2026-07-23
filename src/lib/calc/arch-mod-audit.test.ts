@@ -226,6 +226,36 @@ describe("archgun leftovers (wiki max rank, Phase M14)", () => {
   });
 });
 
+describe("archgun trigger conditionals (wiki max rank, Phase M16)", () => {
+  it("Critical Focus: paper no CC/CD; applyTriggerBuffs → +60% CC and CD", () => {
+    const weapon = requireWeapon("imperator");
+    const bare = calculateWeaponBuild(weapon, [], modsMap());
+    const paper = withMod("imperator", "critical_focus");
+    expect(paper.criticalChance).toBeCloseTo(weapon.criticalChance, 5);
+    expect(paper.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier, 5);
+    const active = withMod("imperator", "critical_focus", {
+      ...DEFAULT_SIM_PARAMS,
+      applyTriggerBuffs: true,
+    });
+    expect(active.criticalChance).toBeCloseTo(weapon.criticalChance * 1.6, 5);
+    expect(active.criticalMultiplier).toBeCloseTo(bare.criticalMultiplier * 1.6, 4);
+  });
+
+  it("Marked Target: paper SC unchanged; applyTriggerBuffs → +120% SC", () => {
+    const weapon = requireWeapon("imperator");
+    expect(withMod("imperator", "marked_target").statusChance).toBeCloseTo(
+      weapon.statusChance,
+      5,
+    );
+    expect(
+      withMod("imperator", "marked_target", {
+        ...DEFAULT_SIM_PARAMS,
+        applyTriggerBuffs: true,
+      }).statusChance,
+    ).toBeCloseTo(weapon.statusChance * 2.2, 5);
+  });
+});
+
 describe("archmelee cores (wiki max rank, Phase M8)", () => {
   it("Cutting Edge R10: +110% melee damage", () => {
     const weapon = requireWeapon("veritux");

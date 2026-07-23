@@ -83,3 +83,26 @@ describe("companion survivability (wiki max rank, Phase M12)", () => {
     }
   });
 });
+
+describe("companion precept leftovers (wiki max rank, Phase M16)", () => {
+  it("Ferocity / Fired Up / Manifold / Shelter / Synth Deconstruct / Transfusion: panel-only", () => {
+    for (const id of [
+      "crescent_charge",
+      "detect_vulnerability",
+      "ferocity",
+      "fired_up",
+      "magnetic_strike",
+      "manifold_bond",
+      "shelter",
+      "synth_deconstruct",
+      "transfusion",
+    ]) {
+      const beh = VERIFIED_MOD_BEHAVIORS[id];
+      expect(beh, id).toBeDefined();
+      expect(
+        beh!.stats.every((s) => s.target === "mod_panel"),
+        id,
+      ).toBe(true);
+    }
+  });
+});

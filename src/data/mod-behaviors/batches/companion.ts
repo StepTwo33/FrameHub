@@ -123,8 +123,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("stealthDamage", "mod_panel", "multiplicative_percent", "Covert Bond: stealthDamage \u2014 Finisher and Mercy Kills grant your Companion 10s of stealth that attacks will n\u2026"),
   ]),
   crescent_charge: mod("crescent_charge", [
-    line("health", "warframe_totals", "multiplicative_percent", "Crescent Charge: health \u2014 Charges an enemy within 25m dealing <DT_PUNCTURE_COLOR>Puncture Damage and lifti\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Crescent Charge: range \u2014 Charges an enemy within 25m dealing <DT_PUNCTURE_COLOR>Puncture Damage and lifti\u2026 (arsenal display only)"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Crescent Charge — precept charge damage (not max health)"),
+    line("range", "mod_panel", "multiplicative_percent", "wiki: Crescent Charge — precept range"),
   ]),
   crescent_devolution: mod("crescent_devolution", [
     line("duration", "mod_panel", "multiplicative_percent", "Crescent Devolution: duration \u2014 Devolves into its larval form when downed and charges at enemies, dealing 100 <D\u2026"),
@@ -134,7 +134,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Crowd Dispersion: range \u2014 Unleashes a 10.0m radial knockdown when multiple enemies are nearby, dealing 10.\u2026 (arsenal display only)"),
   ]),
   detect_vulnerability: mod("detect_vulnerability", [
-    line("weakspotDamage", "companion_totals", "multiplicative_percent", "Detect Vulnerability: weakspotDamage \u2014 Reveals weakspots on codex-complete enemies; hits deal +275% Damage at max rank"),
+    line("weakspotDamage", "mod_panel", "multiplicative_percent", "wiki: Detect Vulnerability — precept weakspot reveal (AI)"),
   ]),
   dig: mod("dig", [
     line("digCooldown", "mod_panel", "multiplicative_percent", "Dig: digCooldown \u2014 The kubrow sniffs out buried objects and digs them up.\\\\n+270% Success Chance"),
@@ -187,13 +187,13 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Fear Sense: range \u2014 The Kavat senses the weaknesses of enemies within 25m. For 25s, its attacks deal\u2026 (arsenal display only)"),
   ]),
   ferocity: mod("ferocity", [
-    line("attackSpeed", "companion_totals", "multiplicative_percent", "Ferocity: attackSpeed \u2014 Kubrow attacks an enemy open to finishers with +300% crit chance. If the enemy d\u2026"),
-    line("criticalChance", "companion_totals", "multiplicative_percent", "Ferocity: criticalChance \u2014 Kubrow attacks an enemy open to finishers with +300% crit chance. If the enemy d\u2026"),
-    line("range", "mod_panel", "multiplicative_percent", "Ferocity: range \u2014 Kubrow attacks an enemy open to finishers with +300% crit chance. If the enemy d\u2026 (arsenal display only)"),
+    line("attackSpeed", "mod_panel", "multiplicative_percent", "wiki: Ferocity — finisher precept AS"),
+    line("criticalChance", "mod_panel", "multiplicative_percent", "wiki: Ferocity — finisher precept CC"),
+    line("range", "mod_panel", "multiplicative_percent", "wiki: Ferocity — precept range"),
   ]),
   fired_up: mod("fired_up", [
-    line("damage", "weapon_dps", "multiplicative_percent", "Fired Up: damage \u2014 5% <DT_FIRE_COLOR>Heat Damage on weapon per hit. Stacks up to 100%. Resets after\u2026"),
-    line("duration", "mod_panel", "multiplicative_percent", "Fired Up: duration \u2014 5% <DT_FIRE_COLOR>Heat Damage on weapon per hit. Stacks up to 100%. Resets after\u2026"),
+    line("damage", "mod_panel", "multiplicative_percent", "wiki: Fired Up — per-hit heat stacks (not always-on damage)"),
+    line("duration", "mod_panel", "multiplicative_percent", "wiki: Fired Up — stack reset window"),
   ]),
   flame_gland: mod("flame_gland", [
     line("heat", "weapon_dps", "elemental_from_base_damage", "Flame Gland: heat \u2014 +60% <DT_FIRE_COLOR>Heat, +60% Status Chance"),
@@ -289,12 +289,12 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("pickupDoubleChance", "companion_totals", "multiplicative_percent", "Loyal Retriever: pickupDoubleChance \u2014 13% chance to double Credit and Resource pickups"),
   ]),
   magnetic_strike: mod("magnetic_strike", [
-    line("impact", "weapon_dps", "multiplicative_percent", "Magnetic Strike: impact \u2014 100% Chance to apply a <DT_MAGNETIC_COLOR>Magnetic status effect when inflicting\u2026"),
+    line("impact", "mod_panel", "multiplicative_percent", "wiki: Magnetic Strike — Impact→Magnetic on companion melee (not IPS)"),
   ]),
   manifold_bond: mod("manifold_bond", [
-    line("abilityDamage", "mod_panel", "multiplicative_percent", "Manifold Bond: abilityDamage \u2014 Companion Precept Mods apply Status Effects from Companion weapons. Killing enem\u2026"),
-    line("abilityDuration", "warframe_totals", "multiplicative_percent", "Manifold Bond: abilityDuration \u2014 Companion Precept Mods apply Status Effects from Companion weapons. Killing enem\u2026"),
-    line("cooldown", "mod_panel", "multiplicative_percent", "Manifold Bond: cooldown \u2014 Companion Precept Mods apply Status Effects from Companion weapons. Killing enem\u2026"),
+    line("abilityDamage", "mod_panel", "multiplicative_percent", "wiki: Manifold Bond — precept status / cooldown"),
+    line("abilityDuration", "mod_panel", "multiplicative_percent", "wiki: Manifold Bond — precept duration (not WF ability duration)"),
+    line("cooldown", "mod_panel", "multiplicative_percent", "wiki: Manifold Bond — precept cooldown"),
   ]),
   martyr_symbiosis: mod("martyr_symbiosis", [
     line("health", "mod_panel", "multiplicative_percent", "wiki: Martyr Symbiosis — stored heal on death (not max health)"),
@@ -495,7 +495,7 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Sharpened Claws: damage \u2014 A vicious attack dealing 300% damage that sunders armor by 120% and rends flesh."),
   ]),
   shelter: mod("shelter", [
-    line("reviveShieldHealth", "companion_totals", "flat", "Shelter: reviveShieldHealth \u2014 Creates a shield with 1800 Health around the player when they are reviving fallen allies."),
+    line("reviveShieldHealth", "mod_panel", "flat", "wiki: Shelter — revive bubble HP (precept)"),
   ]),
   shield_charger: mod("shield_charger", [
     line("duration", "mod_panel", "multiplicative_percent", "Shield Charger: duration \u2014 Increase Warframe Max Shields and Shield Regeneration by 60% for 10s."),
@@ -549,8 +549,8 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("range", "mod_panel", "multiplicative_percent", "Synergized Prospectus: range \u2014 Fires a spark that seeks out the nearest enemy in 30m, dealing 300 <DT_ELECTRICI\u2026 (arsenal display only)"),
   ]),
   synth_deconstruct: mod("synth_deconstruct", [
-    line("health", "warframe_totals", "multiplicative_percent", "Synth Deconstruct: health \u2014 Enemies injured by the Companions have 25% chance to drop a Health Orb when kill\u2026"),
-    line("healthOrbChance", "mod_panel", "multiplicative_percent", "Synth Deconstruct: healthOrbChance \u2014 Enemies injured by the Companions have 25% chance to drop a Health Orb when kill\u2026"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Synth Deconstruct — health orb drop chance (not max health)"),
+    line("healthOrbChance", "mod_panel", "multiplicative_percent", "wiki: Synth Deconstruct — health orb drop chance"),
   ]),
   synth_fiber: mod("synth_fiber", [
     line("duration", "mod_panel", "multiplicative_percent", "Synth Fiber: duration \u2014 Health Orbs increase Armor for Companions by 100% for 12s."),
@@ -592,9 +592,9 @@ export const MOD_BEHAVIORS_COMPANION: Record<string, VerifiedModBehavior> = {
     line("explosionDamage", "mod_panel", "multiplicative_percent", "Trample: explosionDamage \u2014 The Helminth Charger rushes an enemy, dealing 160 Damage to all in its path. It \u2026"),
   ]),
   transfusion: mod("transfusion", [
-    line("cooldown", "mod_panel", "multiplicative_percent", "Transfusion: cooldown \u2014 When its Master is bleeding out, the Vasca Kavat sacrifices 20% of its Health to\u2026"),
-    line("health", "warframe_totals", "multiplicative_percent", "Transfusion: health \u2014 When its Master is bleeding out, the Vasca Kavat sacrifices 20% of its Health to\u2026"),
-    line("reviveChance", "mod_panel", "multiplicative_percent", "Transfusion: reviveChance \u2014 When its Master is bleeding out, the Vasca Kavat sacrifices 20% of its Health to\u2026"),
+    line("cooldown", "mod_panel", "multiplicative_percent", "wiki: Transfusion — bleedout revive precept"),
+    line("health", "mod_panel", "multiplicative_percent", "wiki: Transfusion — HP sacrifice (not max health)"),
+    line("reviveChance", "mod_panel", "multiplicative_percent", "wiki: Transfusion — revive chance"),
   ]),
   unleashed: mod("unleashed", [
     line("damage", "mod_panel", "multiplicative_percent", "Unleashed: damage \u2014 The kubrow hunts for Eximus units protected by Overguard within 60m and deals +3\u2026"),

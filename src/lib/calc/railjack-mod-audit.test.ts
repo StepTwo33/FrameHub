@@ -117,3 +117,17 @@ describe("railjack remainder cores (wiki max rank, Phase M14)", () => {
     }
   });
 });
+
+describe("railjack sim-gated cores (wiki max rank, Phase M16)", () => {
+  it("Protective Shots R5: paper 0; sim above 75% shields → +30% turret damage", () => {
+    const paper = calculateRailjackBuild({
+      integratedMods: [{ modId: "protective_shots", rank: 5, slotIndex: 0 }],
+    });
+    expect(paper.turretDamageBonus).toBeCloseTo(0, 8);
+    const active = calculateRailjackBuild({
+      integratedMods: [{ modId: "protective_shots", rank: 5, slotIndex: 0 }],
+      simulation: { protectiveShotsActive: true },
+    });
+    expect(active.turretDamageBonus).toBeCloseTo(0.3, 5);
+  });
+});
