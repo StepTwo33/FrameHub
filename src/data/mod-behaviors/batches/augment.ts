@@ -652,8 +652,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("duration", "mod_panel", "multiplicative_percent", "Enraged: duration \u2014 Hysteria Augment: Damage increased by 350%, Critical Chance increased by 350%. H\u2026"),
   ]),
   entropy_burst: mod("entropy_burst", [
-    line("statusChance", "mod_panel", "multiplicative_percent", "Entropy Burst: statusChance \u2014 +20 Final Status Chance, +1 'Entropy'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Burst: syndicatePower \u2014 +20 Final Status Chance, +1 'Entropy'"),
+    line("statusChance", "weapon_dps", "flat", "wiki: Entropy Burst — +20 Final Status Chance (after multiplicative SC)"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Entropy Burst: syndicatePower \u2014 +1 'Entropy'"),
   ]),
   entropy_detonation: mod("entropy_detonation", [
     line("damage", "mod_panel", "multiplicative_percent", "Entropy Detonation: damage \u2014 Lethal ground attacks cause enemies to explode dealing +1,000, (+20% Enemy Max H\u2026"),
@@ -779,7 +779,7 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("headshotDamage", "mod_panel", "multiplicative_percent", "Meticulous Aim: headshotDamage \u2014 +105% Headshot Damage, -45% Bodyshot Damage"),
   ]),
   napalm_grenades: mod("napalm_grenades", [
-    line("statusChance", "mod_panel", "multiplicative_percent", "Napalm Grenades: statusChance \u2014 Grenades leave a burning patch on impact.\\\\n+30 Final Status Chance"),
+    line("statusChance", "weapon_dps", "flat", "wiki: Napalm Grenades — +30 Final Status Chance (Heat convert/patches unmodeled)"),
   ]),
   negation_armor: mod("negation_armor", [
     line("cooldown", "mod_panel", "multiplicative_percent", "Negation Armor: cooldown \u2014 Scarab Shell Augment: When Inaros takes fatal damage, he consumes Scarab Shell t\u2026"),
@@ -905,8 +905,8 @@ export const MOD_BEHAVIORS_AUGMENT: Record<string, VerifiedModBehavior> = {
     line("damage", "mod_panel", "multiplicative_percent", "Static Discharge: damage \u2014 Heavy Attacks electrify nearby enemies for <DT_ELECTRICITY_COLOR>Electricity Dam\u2026"),
   ]),
   stinging_truth: mod("stinging_truth", [
-    line("magazine", "mod_panel", "multiplicative_percent", "Stinging Truth: magazine \u2014 +40 Magazine Capacity, +1 'Truth'"),
-    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stinging Truth: syndicatePower \u2014 +40 Magazine Capacity, +1 'Truth'"),
+    line("magazine", "weapon_dps", "flat", "wiki: Stinging Truth — +40 flat Magazine Capacity"),
+    line("syndicatePower", "mod_panel", "multiplicative_percent", "Stinging Truth: syndicatePower \u2014 +1 'Truth'"),
   ]),
   stockpiled_blight: mod("stockpiled_blight", [
     line("magazine", "weapon_dps", "multiplicative_percent", "wiki: Stockpiled Blight — +200% Magazine Capacity"),

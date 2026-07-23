@@ -1141,10 +1141,45 @@ describe("syndicate exclusive paper (wiki max rank, Phase Sim6)", () => {
       "eroding_blight",
       "stockpiled_blight",
       "toxic_sequence",
+      "entropy_burst",
+      "stinging_truth",
     ]) {
       const beh = VERIFIED_MOD_BEHAVIORS[id];
       expect(beh?.stats.find((s) => s.statKey === "syndicatePower")?.target).toBe("mod_panel");
     }
+  });
+});
+
+describe("final SC + flat magazine (wiki max rank, Phase Sim7)", () => {
+  it("Entropy Burst: +20 Final SC after multiplicative mods", () => {
+    const supra = requireWeapon("supra");
+    expect(withMod("supra", "entropy_burst").statusChance).toBeCloseTo(
+      supra.statusChance + 0.2,
+      5,
+    );
+    const aptitude = requireMod("rifle_aptitude_r3");
+    const both = calculateWeaponBuild(
+      supra,
+      [
+        { modId: "rifle_aptitude_r3", rank: aptitude.maxRank, slotIndex: 0 },
+        { modId: "entropy_burst", rank: requireMod("entropy_burst").maxRank, slotIndex: 1 },
+      ],
+      modsMap(),
+    );
+    expect(both.statusChance).toBeCloseTo(supra.statusChance * 1.9 + 0.2, 5);
+  });
+
+  it("Napalm Grenades: +30 Final SC only", () => {
+    const penta = requireWeapon("penta");
+    expect(withMod("penta", "napalm_grenades").statusChance).toBeCloseTo(
+      penta.statusChance + 0.3,
+      5,
+    );
+  });
+
+  it("Stinging Truth: +40 flat magazine", () => {
+    const viper = requireWeapon("viper");
+    expect(withMod("viper", "stinging_truth").magazine).toBe(viper.magazine + 40);
   });
 });
 

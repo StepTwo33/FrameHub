@@ -11,7 +11,11 @@ export type WeaponModAccumulators = {
   multishotBonus: number;
   statusBonus: number;
   magBonus: number;
+  /** Absolute magazine rounds added after % mag mods (Stinging Truth). */
+  flatMagazineBonus: number;
   reloadBonus: number;
+  /** Absolute status chance added after multiplicative SC mods (Entropy Burst / Napalm). */
+  statusChanceFlatBonus: number;
   impactBonus: number;
   punctureBonus: number;
   slashBonus: number;
@@ -281,6 +285,16 @@ function applyModeToWeaponAcc(mode: ItemApplyMode, ctx: ModApplyWeaponContext): 
     case "first_shot_damage":
       acc.firstShotDamageBonus += modValue;
       return true;
+    case "flat":
+      if (statKey === "statusChance") {
+        acc.statusChanceFlatBonus += modValue;
+        return true;
+      }
+      if (statKey === "magazine") {
+        acc.flatMagazineBonus += modValue;
+        return true;
+      }
+      return false;
     case "additive_percent":
       if (statKey === "comboDuration" && ctx.comboDuration) {
         ctx.comboDuration.add(modValue);

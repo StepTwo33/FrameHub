@@ -92,8 +92,9 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim4 | Tendril / HP-cap exclusives | Sentient Surge (+SC catalog) / Dreadful Killshot / Necrophagic Vigor / Fired Up heat / Unseen Dread; Strain Infection cysts; Lohk Canticle FR | **Locked** — +7 IDs; HP-cap remaps |
 | Sim5 | Cross-slot secondary buffs | Combo Fury / Mark Of The Beast via `linkage.meleeMods`; Amalgam Furax/Ripkas splits; Amalgam Javlok mag; Sentient Barrage trigger | **Locked** — +6 IDs; cross-slot helper |
 | Sim6 | Syndicate exclusive paper | Scattered Justice / Gilded Truth / Deadly Sequence / Shattering Justice; Eroding/Stockpiled Blight; Blade/Bright/Justice Blades; Toxic Blight; Gleaming Blight SC; Photon Overcharge | **Locked** — +12 IDs; syndicatePower stays panel |
+| Sim7 | Final SC + flat mag | Entropy Burst / Napalm Grenades final SC; Stinging Truth +40 flat mag | **Locked** — +3 IDs; `flat` apply mode |
 
-**Remaining unlocked paper-moving mods (post Sim6):** none for always-on paper; further work is ability gates (Jet Stream), Final-SC/flat-mag syndicate leftovers, miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
+**Remaining unlocked paper-moving mods (post Sim7):** none for always-on paper; further work is ability gates (Jet Stream), miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
 
 ---
 
@@ -140,6 +141,7 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim4 Tendril / HP-cap exclusives | 2026-07-23 | +7 Surge/Killshot/Vigor/Fired Up/Unseen/Strain/Lohk; Surge SC catalog; HP→cap remaps |
 | Sim5 Cross-slot secondary buffs | 2026-07-23 | +6 Combo Fury/Mark/Amalgam Furax·Ripkas·Javlok/Barrage; melee→gun linkage |
 | Sim6 Syndicate exclusive paper | 2026-07-23 | +12 syndicate always-on combat lines; syndicatePower panel |
+| Sim7 Final SC + flat mag | 2026-07-23 | +3 Entropy/Napalm final SC; Stinging Truth flat mag; `flat` mode wiring |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |

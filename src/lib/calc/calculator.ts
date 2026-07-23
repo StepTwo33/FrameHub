@@ -43,6 +43,7 @@ import {
   applyCrossSlotMeleeWeaponBuffs,
   applyVerifiedModStatToWarframe,
   applyVerifiedModStatToWeapon,
+  getVerifiedModStatLine,
   sumSlideSpeedBonusFromModSlots,
   sumSprintSpeedBonusFromModSlots,
   type WarframeModAccumulators,
@@ -623,6 +624,7 @@ export function calculateWeaponBuild(
     multishotBonus: 0,
     statusBonus: 0,
     magBonus: 0,
+    flatMagazineBonus: 0,
     reloadBonus: 0,
     impactBonus: 0,
     punctureBonus: 0,
@@ -630,6 +632,7 @@ export function calculateWeaponBuild(
     statusDamageBonus: 0,
     headshotDamageBonus: 0,
     statusDurationBonus: 0,
+    statusChanceFlatBonus: 0,
     factionBonuses: {},
     hasBloodRush: false,
     bloodRushValue: 0,
@@ -671,11 +674,14 @@ export function calculateWeaponBuild(
       isBow && /x2 for Bows/i.test(mod.description ?? "") ? 2 : 1;
 
     for (const [statName, value] of Object.entries(mod.stats)) {
-      // Combo duration catalog values are absolute seconds/rank (Body Count +2s), not %.
-      let modValue =
-        statName === "comboDuration"
-          ? value * multiplier * setMult
-          : (value * multiplier * setMult) / 100.0;
+      // Combo duration / flat magazine: absolute units/rank (not %).
+      const line = getVerifiedModStatLine(modSlot.modId, statName);
+      const absoluteRankUnits =
+        statName === "comboDuration" ||
+        (line?.mode === "flat" && statName === "magazine");
+      let modValue = absoluteRankUnits
+        ? value * multiplier * setMult
+        : (value * multiplier * setMult) / 100.0;
       if (statName === "fireRate") modValue *= bowFireRateMult;
       applyVerifiedModStatToWeapon(stats, {
         modId: modSlot.modId,
@@ -970,7 +976,15 @@ export function calculateWeaponBuild(
   }
   stats.multishot = (baseWeapon.multishot + lastShotBaseMsEv) * (1 + multishotBonus);
   stats.statusChance *= (1 + statusBonus);
+  // Final SC (Entropy Burst / Napalm Grenades): absolute after multiplicative SC mods.
+  if (weaponModAcc.statusChanceFlatBonus !== 0) {
+    stats.statusChance += weaponModAcc.statusChanceFlatBonus;
+  }
   stats.magazine = Math.round(stats.magazine * (1 + magBonus));
+  // Flat magazine (Stinging Truth): absolute rounds after % mag mods.
+  if (weaponModAcc.flatMagazineBonus !== 0) {
+    stats.magazine = Math.round(stats.magazine + weaponModAcc.flatMagazineBonus);
+  }
 
   // Synth 4-set: +15% reload speed on pistols when full set across linked loadout
   const synthPieces = linkage
