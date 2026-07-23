@@ -605,6 +605,16 @@ export const rivenDispositions: Record<string, number> = {
   "Venato Prime": 0.6
 };
 
+export function hasKnownDisposition(weaponName: string): boolean {
+  return Object.prototype.hasOwnProperty.call(rivenDispositions, weaponName);
+}
+
+/** Returns disposition; falls back to 1.0 when unknown (check hasKnownDisposition). */
 export function getDisposition(weaponName: string): number {
   return rivenDispositions[weaponName] ?? 1.0;
+}
+
+export function getDispositionInfo(weaponName: string): { value: number; known: boolean } {
+  const known = hasKnownDisposition(weaponName);
+  return { value: known ? rivenDispositions[weaponName]! : 1.0, known };
 }

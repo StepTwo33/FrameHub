@@ -95,6 +95,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim7 | Final SC + flat mag | Entropy Burst / Napalm Grenades final SC; Stinging Truth +40 flat mag | **Locked** — +3 IDs; `flat` apply mode |
 | Sim8 | Jet Stream ability gate | Turbulence-active + Jet Stream: +40% move / +100% proj × Strength (R3); paper stays panel | **Locked** — +1 ID; display proj + loadout sprint |
 | Sim9 | Elemental infusion gates | Fireball Frenzy / Freeze Force / Shock Trooper / Venom Dose / Smite Infusion: ability-gated parallel element × Strength; no exalted | **Locked** — +5 IDs; parallel elemental apply |
+| R1 | Riven grader | Disposition-scaled ranges (rank × buff-count); heuristic grade; no generation; unknown-disp warn; PT/combo units; IPS curses | **Locked** — `riven-calculator.test.ts` |
+| RJ1 | Railjack hardpoints + armaments | Nose/Dorsal/Ventral turrets; Cryophon/Glazio + Lavan Photor/Pulsar/Talyn; Sigma-only ordnance Mk tiers; reactor avionics capacity; Uranus presets apply Plexus mod ids | **Locked** — inventory + calc + preset goldens |
 
 **Remaining unlocked paper-moving mods (post Sim9):** none for always-on paper; further work is miss/grenade decay fidelity, description-only precepts, or Tier B/C items.
 
@@ -146,6 +148,8 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 | Sim7 Final SC + flat mag | 2026-07-23 | +3 Entropy/Napalm final SC; Stinging Truth flat mag; `flat` mode wiring |
 | Sim8 Jet Stream ability gate | 2026-07-23 | Jet Stream via Turbulence toggle; STR-scaled move/proj; paper panel |
 | Sim9 Elemental infusion gates | 2026-07-23 | +5 hold-cast infusions; parallel element × STR; no exalted |
+| R1 Riven grader | 2026-07-23 | Disposition ranges + heuristic grade; no generation; unknown-disp warn |
+| RJ1 Railjack hardpoints/armaments | 2026-07-23 | 3 turret slots; Cryophon/Glazio/Lavan trio; Sigma ordnance; avionics capacity; presets equip Plexus |
 | 3 Conditionals | 2026-07-21 | Galv Chamber/Aptitude, CO, BR, WW stack goldens |
 | 4 TTK | 2026-07-21 | Shield overflow + DoT end-time improvements |
 | 5–9 Satellite | 2026-07-21 | Stance type fallbacks; Cascadia Overcharge DPS; Roar registry; companion/RJ smoke |
@@ -442,3 +446,5 @@ Baseline captured 2026-07-21 (Phase 0). Updated as phases complete.
 - `src/lib/calc/sentinel-weapon-audit.test.ts` — B14 sentinel bare paper (+ `sentinel-bare-goldens.ts`)
 - `src/lib/calc/modular-weapon-audit.test.ts` — B15 kitgun/zaw/amp modular part paper
 - `src/lib/calc/launcher-weapon-audit.test.ts` — B17 category=launcher bare paper (+ `launcher-bare-goldens.ts`)
+- `src/lib/calc/riven-calculator.test.ts` — R1 grader ranges / scoring / disposition
+- `src/lib/calc/railjack-armament-inventory.test.ts` — RJ1 Cryophon/Glazio/Lavan/ordnance inventory

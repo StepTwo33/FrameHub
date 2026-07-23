@@ -85,15 +85,31 @@ export const turrets: RailjackArmament[] = [
   { id: "vidar_carcinnox", name: "Vidar Carcinnox", type: "turret", house: "vidar", tier: "mk3", damage: 392, critChance: 0.19, critMultiplier: 2.0, statusChance: 0.24, fireRate: 15, description: "Enhanced Vidar rapid turret (Mk III)" },
   { id: "zetki_carcinnox", name: "Zetki Carcinnox", type: "turret", house: "zetki", tier: "mk3", damage: 510, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.36, fireRate: 15, description: "High-damage Zetki rapid turret (Mk III)" },
   { id: "lavan_carcinnox", name: "Lavan Carcinnox", type: "turret", house: "lavan", tier: "mk3", damage: 420, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.34, fireRate: 15, description: "High-status Lavan rapid turret (Mk III)" },
-  { id: "sigma_photor", name: "Sigma Photor", type: "turret", house: "sigma", damage: 150, critChance: 0.05, critMultiplier: 1.2, statusChance: 0.30, fireRate: 1, description: "Continuous beam turret" },
-  { id: "vidar_photor", name: "Vidar Photor", type: "turret", house: "vidar", tier: "mk3", damage: 135, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.06, fireRate: 12, description: "Enhanced Vidar beam turret (Mk III)" },
-  { id: "zetki_photor", name: "Zetki Photor", type: "turret", house: "zetki", tier: "mk3", damage: 162, critChance: 0.18, critMultiplier: 2.0, statusChance: 0.09, fireRate: 12, description: "High-damage Zetki beam turret (Mk III)" },
-  { id: "sigma_pulsar", name: "Sigma Pulsar", type: "turret", house: "sigma", damage: 250, critChance: 0.20, critMultiplier: 2.0, statusChance: 0.10, fireRate: 4, description: "Precision crit turret" },
+  // Photor — wiki Mk III total damage (×2 beams folded into damage); FR 12
+  { id: "sigma_photor", name: "Sigma Photor", type: "turret", house: "sigma", damage: 270, critChance: 0.12, critMultiplier: 2.0, statusChance: 0.06, fireRate: 12, description: "Hitscan dual-beam Heat/Puncture turret" },
+  { id: "lavan_photor", name: "Lavan Photor", type: "turret", house: "lavan", tier: "mk3", damage: 290, critChance: 0.12, critMultiplier: 2.0, statusChance: 0.085, fireRate: 12, description: "Status-focused Lavan beam turret (Mk III)" },
+  { id: "vidar_photor", name: "Vidar Photor", type: "turret", house: "vidar", tier: "mk3", damage: 270, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.06, fireRate: 12, description: "Enhanced Vidar beam turret (Mk III)" },
+  { id: "zetki_photor", name: "Zetki Photor", type: "turret", house: "zetki", tier: "mk3", damage: 324, critChance: 0.18, critMultiplier: 2.0, statusChance: 0.09, fireRate: 12, description: "High-damage Zetki beam turret (Mk III)" },
+  // Pulsar — wiki Mk III
+  { id: "sigma_pulsar", name: "Sigma Pulsar", type: "turret", house: "sigma", damage: 589, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.19, fireRate: 3.33, description: "Precision Electricity pulse turret" },
+  { id: "lavan_pulsar", name: "Lavan Pulsar", type: "turret", house: "lavan", tier: "mk3", damage: 631, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.27, fireRate: 3.33, description: "Status-focused Lavan precision turret (Mk III)" },
   { id: "vidar_pulsar", name: "Vidar Pulsar", type: "turret", house: "vidar", tier: "mk3", damage: 589, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.19, fireRate: 3.33, description: "Enhanced Vidar precision turret (Mk III)" },
-  { id: "zetki_pulsar", name: "Zetki Pulsar", type: "turret", house: "zetki", tier: "mk3", damage: 766, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.29, fireRate: 3.33, description: "High-crit Zetki precision turret (Mk III)" },
-  { id: "sigma_talyn", name: "Sigma Talyn", type: "turret", house: "sigma", damage: 180, critChance: 0.15, critMultiplier: 1.8, statusChance: 0.15, fireRate: 5, description: "Balanced burst turret" },
-  { id: "vidar_talyn", name: "Vidar Talyn", type: "turret", house: "vidar", tier: "mk3", damage: 295, critChance: 0.18, critMultiplier: 2.0, statusChance: 0.20, fireRate: 16.67, description: "Enhanced Vidar burst turret (Mk III)" },
-  { id: "zetki_talyn", name: "Zetki Talyn", type: "turret", house: "zetki", tier: "mk3", damage: 384, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.30, fireRate: 16.67, description: "High-damage Zetki burst turret (Mk III)" },
+  { id: "zetki_pulsar", name: "Zetki Pulsar", type: "turret", house: "zetki", tier: "mk3", damage: 766, critChance: 0.17, critMultiplier: 2.0, statusChance: 0.29, fireRate: 3.33, description: "High-damage Zetki precision turret (Mk III)" },
+  // Talyn — wiki Mk III
+  { id: "sigma_talyn", name: "Sigma Talyn", type: "turret", house: "sigma", damage: 295, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.20, fireRate: 16.67, description: "Spool-up Heat laser turret" },
+  { id: "lavan_talyn", name: "Lavan Talyn", type: "turret", house: "lavan", tier: "mk3", damage: 316, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.28, fireRate: 16.67, description: "Status-focused Lavan laser turret (Mk III)" },
+  { id: "vidar_talyn", name: "Vidar Talyn", type: "turret", house: "vidar", tier: "mk3", damage: 295, critChance: 0.18, critMultiplier: 2.0, statusChance: 0.20, fireRate: 16.67, description: "Enhanced Vidar laser turret (Mk III)" },
+  { id: "zetki_talyn", name: "Zetki Talyn", type: "turret", house: "zetki", tier: "mk3", damage: 384, critChance: 0.13, critMultiplier: 2.0, statusChance: 0.30, fireRate: 16.67, description: "High-damage Zetki laser turret (Mk III)" },
+  // Cryophon — wiki Mk III Cold wave
+  { id: "sigma_cryophon", name: "Sigma Cryophon", type: "turret", house: "sigma", damage: 4760, critChance: 0.20, critMultiplier: 1.5, statusChance: 0.30, fireRate: 1, description: "Heavy Cold wave turret" },
+  { id: "lavan_cryophon", name: "Lavan Cryophon", type: "turret", house: "lavan", tier: "mk3", damage: 5094, critChance: 0.20, critMultiplier: 1.5, statusChance: 0.42, fireRate: 1, description: "Status-focused Lavan Cold wave turret (Mk III)" },
+  { id: "vidar_cryophon", name: "Vidar Cryophon", type: "turret", house: "vidar", tier: "mk3", damage: 4760, critChance: 0.28, critMultiplier: 1.5, statusChance: 0.30, fireRate: 1, description: "High-crit Vidar Cold wave turret (Mk III)" },
+  { id: "zetki_cryophon", name: "Zetki Cryophon", type: "turret", house: "zetki", tier: "mk3", damage: 6188, critChance: 0.20, critMultiplier: 2.0, statusChance: 0.45, fireRate: 1, description: "High-damage Zetki Cold wave turret (Mk III)" },
+  // Glazio — wiki Mk III ice driver
+  { id: "sigma_glazio", name: "Sigma Glazio", type: "turret", house: "sigma", damage: 2106, critChance: 0.33, critMultiplier: 2.5, statusChance: 0.20, fireRate: 1.5, description: "Heavy Cold/IPS ice driver turret" },
+  { id: "lavan_glazio", name: "Lavan Glazio", type: "turret", house: "lavan", tier: "mk3", damage: 2317, critChance: 0.33, critMultiplier: 2.5, statusChance: 0.28, fireRate: 1.5, description: "Status-focused Lavan ice driver (Mk III)" },
+  { id: "vidar_glazio", name: "Vidar Glazio", type: "turret", house: "vidar", tier: "mk3", damage: 2106, critChance: 0.47, critMultiplier: 2.5, statusChance: 0.20, fireRate: 1.5, description: "High-crit Vidar ice driver (Mk III)" },
+  { id: "zetki_glazio", name: "Zetki Glazio", type: "turret", house: "zetki", tier: "mk3", damage: 2738, critChance: 0.50, critMultiplier: 2.5, statusChance: 0.20, fireRate: 1.5, description: "High-damage Zetki ice driver (Mk III)" },
   { id: "sigma_laith", name: "Sigma Laith", type: "turret", house: "sigma", damage: 2832, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.09, fireRate: 2.5, description: "8-pellet shrapnel burst turret (Impact/Puncture/Slash)" },
   { id: "lavan_laith", name: "Lavan Laith", type: "turret", house: "lavan", tier: "mk3", damage: 3120, critChance: 0.24, critMultiplier: 2.0, statusChance: 0.126, fireRate: 2.5, description: "Status-focused Lavan shrapnel burst turret (Mk III)" },
   { id: "vidar_laith", name: "Vidar Laith", type: "turret", house: "vidar", tier: "mk3", damage: 2832, critChance: 0.39, critMultiplier: 2.0, statusChance: 0.09, fireRate: 2.5, description: "High-crit Vidar shrapnel burst turret (Mk III)" },
@@ -122,17 +138,37 @@ export const mk4Turrets: RailjackArmament[] = turrets
 
 export const allTurrets: RailjackArmament[] = [...turrets, ...mk4Turrets];
 
+/** Ordnance is Sigma-only (Dry Dock research). Wiki Mk tiers — no house variants. */
 export const ordnance: RailjackArmament[] = [
-  { id: "sigma_milati", name: "Sigma Milati", type: "ordnance", house: "sigma", damage: 3000, critChance: 0.10, critMultiplier: 2.0, statusChance: 0.20, fireRate: 0.5, description: "Lock-on guided missile" },
-  { id: "vidar_milati", name: "Vidar Milati", type: "ordnance", house: "vidar", damage: 4200, critChance: 0.14, critMultiplier: 2.2, statusChance: 0.22, fireRate: 0.5, description: "Enhanced Vidar guided missile" },
-  { id: "zetki_milati", name: "Zetki Milati", type: "ordnance", house: "zetki", damage: 5000, critChance: 0.18, critMultiplier: 2.4, statusChance: 0.15, fireRate: 0.5, description: "High-damage Zetki guided missile" },
-  { id: "sigma_tycho_seeker", name: "Sigma Tycho Seeker", type: "ordnance", house: "sigma", damage: 2000, critChance: 0.08, critMultiplier: 1.6, statusChance: 0.30, fireRate: 1.5, description: "Swarm missile launcher" },
-  { id: "vidar_tycho_seeker", name: "Vidar Tycho Seeker", type: "ordnance", house: "vidar", damage: 2800, critChance: 0.10, critMultiplier: 1.8, statusChance: 0.35, fireRate: 1.5, description: "Enhanced Vidar swarm missiles" },
-  { id: "zetki_tycho_seeker", name: "Zetki Tycho Seeker", type: "ordnance", house: "zetki", damage: 3400, critChance: 0.12, critMultiplier: 2.0, statusChance: 0.25, fireRate: 1.5, description: "High-damage Zetki swarm missiles" },
-  { id: "sigma_galvarc", name: "Sigma Galvarc", type: "ordnance", house: "sigma", damage: 4000, critChance: 0.25, critMultiplier: 2.5, statusChance: 0.05, fireRate: 0.3, description: "Chain lightning ordnance" },
-  { id: "vidar_galvarc", name: "Vidar Galvarc", type: "ordnance", house: "vidar", damage: 5500, critChance: 0.30, critMultiplier: 2.8, statusChance: 0.06, fireRate: 0.3, description: "Enhanced Vidar chain lightning" },
-  { id: "zetki_galvarc", name: "Zetki Galvarc", type: "ordnance", house: "zetki", damage: 6500, critChance: 0.35, critMultiplier: 3.0, statusChance: 0.04, fireRate: 0.3, description: "High-damage Zetki chain lightning" },
+  { id: "sigma_milati", name: "Milati", type: "ordnance", house: "sigma", damage: 10800, critChance: 0.10, critMultiplier: 2.0, statusChance: 0, fireRate: 0.5, description: "12-rocket dumbfire swarm (base)" },
+  { id: "sigma_milati_mk1", name: "Milati Mk I", type: "ordnance", house: "sigma", tier: "mk1", damage: 19440, critChance: 0.20, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "12-rocket dumbfire swarm (Mk I)" },
+  { id: "sigma_milati_mk2", name: "Milati Mk II", type: "ordnance", house: "sigma", tier: "mk2", damage: 33048, critChance: 0.26, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "12-rocket dumbfire swarm (Mk II)" },
+  { id: "sigma_milati_mk3", name: "Milati Mk III", type: "ordnance", house: "sigma", tier: "mk3", damage: 52884, critChance: 0.30, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "12-rocket dumbfire swarm (Mk III)" },
+  { id: "sigma_tycho_seeker", name: "Tycho Seeker", type: "ordnance", house: "sigma", damage: 8000, critChance: 0.20, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "Lock-on seeker missile (base)" },
+  { id: "sigma_tycho_seeker_mk1", name: "Tycho Seeker Mk I", type: "ordnance", house: "sigma", tier: "mk1", damage: 14400, critChance: 0.30, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "Lock-on seeker missile (Mk I)" },
+  { id: "sigma_tycho_seeker_mk2", name: "Tycho Seeker Mk II", type: "ordnance", house: "sigma", tier: "mk2", damage: 24480, critChance: 0.40, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "Lock-on seeker missile (Mk II)" },
+  { id: "sigma_tycho_seeker_mk3", name: "Tycho Seeker Mk III", type: "ordnance", house: "sigma", tier: "mk3", damage: 39168, critChance: 0.50, critMultiplier: 2.0, statusChance: 0, fireRate: 1, description: "Lock-on seeker missile (Mk III)" },
+  { id: "sigma_galvarc", name: "Galvarc", type: "ordnance", house: "sigma", damage: 375, critChance: 0, critMultiplier: 2.0, statusChance: 0.10, fireRate: 12, description: "Chain Heat arc ordnance (base)" },
+  { id: "sigma_galvarc_mk1", name: "Galvarc Mk I", type: "ordnance", house: "sigma", tier: "mk1", damage: 675, critChance: 0, critMultiplier: 2.0, statusChance: 0.20, fireRate: 12, description: "Chain Heat arc ordnance (Mk I)" },
+  { id: "sigma_galvarc_mk2", name: "Galvarc Mk II", type: "ordnance", house: "sigma", tier: "mk2", damage: 1188, critChance: 0, critMultiplier: 2.0, statusChance: 0.26, fireRate: 12, description: "Chain Heat arc ordnance (Mk II)" },
+  { id: "sigma_galvarc_mk3", name: "Galvarc Mk III", type: "ordnance", house: "sigma", tier: "mk3", damage: 1901, critChance: 0, critMultiplier: 2.0, statusChance: 0.30, fireRate: 12, description: "Chain Heat arc ordnance (Mk III)" },
 ];
+
+/** Legacy house-ordnance ids from older saves → Sigma Mk III. */
+const ORDNANCE_ID_ALIASES: Record<string, string> = {
+  vidar_milati: "sigma_milati_mk3",
+  zetki_milati: "sigma_milati_mk3",
+  vidar_tycho_seeker: "sigma_tycho_seeker_mk3",
+  zetki_tycho_seeker: "sigma_tycho_seeker_mk3",
+  vidar_galvarc: "sigma_galvarc_mk3",
+  zetki_galvarc: "sigma_galvarc_mk3",
+  vidar_milati_mk4: "sigma_milati_mk3",
+  zetki_milati_mk4: "sigma_milati_mk3",
+  vidar_tycho_seeker_mk4: "sigma_tycho_seeker_mk3",
+  zetki_tycho_seeker_mk4: "sigma_tycho_seeker_mk3",
+  vidar_galvarc_mk4: "sigma_galvarc_mk3",
+  zetki_galvarc_mk4: "sigma_galvarc_mk3",
+};
 
 /** Steel Path Mk IV components (~30% over Mk III house rolls). Turrets/ordnance use Mk IV in-game; components are projected for planning. */
 const MK4_COMPONENT_MULT = 1.3;
@@ -166,29 +202,16 @@ export const allShieldArrays: RailjackComponent[] = [...shieldArrays, ...mk4Shie
 export const allEngines: RailjackComponent[] = [...engines, ...mk4Engines];
 export const allPlating: RailjackComponent[] = [...plating, ...mk4Plating];
 
-function toMk4Ordnance(item: RailjackArmament): RailjackArmament {
-  return {
-    ...item,
-    id: `${item.id}_mk4`,
-    name: `${item.name} Mk IV`,
-    tier: "mk4",
-    damage: Math.round(item.damage * 1.5),
-    description: `${item.description}. Mk IV Steel Path variant (~50% stronger than Mk III).`,
-  };
-}
-
-export const mk4Ordnance: RailjackArmament[] = ordnance
-  .filter((o) => o.house !== "sigma")
-  .map(toMk4Ordnance);
-
-export const allOrdnance: RailjackArmament[] = [...ordnance, ...mk4Ordnance];
+/** Ordnance is Sigma Dry Dock research only (no house Mk IV wreckage). */
+export const allOrdnance: RailjackArmament[] = [...ordnance];
 
 export function findRailjackComponent(id: string): RailjackComponent | undefined {
   return [...allReactors, ...allShieldArrays, ...allEngines, ...allPlating].find((c) => c.id === id);
 }
 
 export function findRailjackArmament(id: string): RailjackArmament | undefined {
-  return allTurrets.concat(allOrdnance).find((a) => a.id === id);
+  const resolved = ORDNANCE_ID_ALIASES[id] ?? id;
+  return allTurrets.concat(allOrdnance).find((a) => a.id === resolved);
 }
 
 export function findRailjackEliteCrew(id: string): RailjackEliteCrew | undefined {
@@ -218,6 +241,7 @@ export interface RailjackPreset {
   platingId: string;
   turretIds: string[];
   ordnanceId: string;
+  /** Plexus mod ids (max-rank on apply). */
   integratedMods: string[];
   tacticalMods: string[];
   battleMods: string[];
@@ -263,11 +287,14 @@ export const railjackPresets: RailjackPreset[] = [
     shieldId: "zetki_shield_mk3",
     engineId: "vidar_engine_mk3",
     platingId: "lavan_plating_mk3",
-    turretIds: ["zetki_laith_mk4", "zetki_pulsar_mk4"],
-    ordnanceId: "zetki_tycho_seeker",
-    integratedMods: ["Ironclad Matrix", "Conic Nozzle", "Crimson Fugue", "Forward Artillery", "Predator", "Cruising Speed", "Hyperstrike", "Ion Burn", "Waveband Disruptor"],
-    tacticalMods: ["Squad Renew", "Battle Stations", "Flow Burn"],
-    battleMods: ["Munitions Vortex", "Particle Ram", "Phoenix Blaze"],
+    turretIds: ["zetki_laith_mk4", "zetki_pulsar_mk4", "zetki_cryophon_mk4"],
+    ordnanceId: "sigma_tycho_seeker_mk3",
+    integratedMods: [
+      "ironclad_matrix", "conic_nozzle", "crimson_fugue", "forward_artillery", "predator",
+      "cruising_speed", "hyperstrike", "ion_burn", "waveband_disruptor",
+    ],
+    tacticalMods: ["squad_renew", "battle_stations", "flow_burn"],
+    battleMods: ["munitions_vortex", "particle_ram", "phoenix_blaze"],
   },
   {
     id: "santovans_oath",
@@ -278,11 +305,14 @@ export const railjackPresets: RailjackPreset[] = [
     shieldId: "lavan_shield_mk3",
     engineId: "vidar_engine_mk3",
     platingId: "lavan_plating_mk3",
-    turretIds: ["zetki_vort_mk4", "zetki_photor_mk4"],
-    ordnanceId: "zetki_tycho_seeker",
-    integratedMods: ["Onslaught Matrix", "Ion Burn", "Fortifying Fire", "Conic Nozzle", "Forward Artillery", "Predator", "Protective Shots", "Section Density", "Cruising Speed"],
-    tacticalMods: ["Intruder Stasis", "Death Blossom", "Void Cloak"],
-    battleMods: ["Blackout Pulse", "Tether", "Void Hole"],
+    turretIds: ["zetki_vort_mk4", "zetki_photor_mk4", "zetki_glazio_mk4"],
+    ordnanceId: "sigma_tycho_seeker_mk3",
+    integratedMods: [
+      "onslaught_matrix", "ion_burn", "fortifying_fire", "conic_nozzle", "forward_artillery",
+      "predator", "protective_shots", "section_density", "cruising_speed",
+    ],
+    tacticalMods: ["intruder_stasis", "death_blossom", "void_cloak"],
+    battleMods: ["blackout_pulse", "tether", "void_hole"],
   },
 ];
 

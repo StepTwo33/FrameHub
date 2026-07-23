@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateRailjackBuild } from "@/lib/calc/railjack-calculator";
+import { railjackPresets } from "@/data/railjack";
+import { allMods } from "@/data/mods";
 
 describe("calculateRailjackBuild", () => {
   it("adds component stats to base hull, shield, speed, and flux", () => {
@@ -17,7 +19,44 @@ describe("calculateRailjackBuild", () => {
     expect(stats.speed).toBe(100 + 80);
     expect(stats.boostSpeed).toBe(200 + 100);
     expect(stats.fluxCapacity).toBe(200 + 200);
-    expect(stats.avionicsCapacity).toBe(30);
+    expect(stats.avionicsCapacity).toBe(30); // Lavan Reactor Mk III wiki avionics
+  });
+
+  it("exposes Vidar reactor avionics capacity for Integrated Plexus cap", () => {
+    const stats = calculateRailjackBuild({
+      reactorId: "vidar_reactor_mk3",
+    });
+    expect(stats.avionicsCapacity).toBe(50);
+  });
+
+  it("applies The Marrowbone preset Plexus mod ids at max rank", () => {
+    const preset = railjackPresets.find((p) => p.id === "the_marrowbone")!;
+    for (const id of [...preset.integratedMods, ...preset.battleMods, ...preset.tacticalMods]) {
+      expect(allMods.some((m) => m.id === id), `missing mod ${id}`).toBe(true);
+    }
+    const stats = calculateRailjackBuild({
+      reactorId: preset.reactorId,
+      shieldId: preset.shieldId,
+      engineId: preset.engineId,
+      platingId: preset.platingId,
+      turretIds: preset.turretIds,
+      ordnanceId: preset.ordnanceId,
+      integratedMods: preset.integratedMods.map((modId, slotIndex) => {
+        const mod = allMods.find((m) => m.id === modId)!;
+        return { modId, rank: mod.maxRank, slotIndex };
+      }),
+      battleMods: preset.battleMods.map((modId, slotIndex) => {
+        const mod = allMods.find((m) => m.id === modId)!;
+        return { modId, rank: mod.maxRank, slotIndex };
+      }),
+      tacticalMods: preset.tacticalMods.map((modId, slotIndex) => {
+        const mod = allMods.find((m) => m.id === modId)!;
+        return { modId, rank: mod.maxRank, slotIndex };
+      }),
+    });
+    expect(stats.artilleryDamageBonus).toBeGreaterThan(0);
+    expect(stats.turretDamageBonus).toBeGreaterThan(0);
+    expect(stats.turrets).toHaveLength(3);
   });
 
   it("applies ironclad matrix hull, armor, shield, and recharge bonuses", () => {
@@ -32,16 +71,17 @@ describe("calculateRailjackBuild", () => {
     expect(stats.armor).toBe(Math.round(baseArmor * (1 + 0.225)));
   });
 
-  it("supports two turret hardpoints and applies turret damage mods", () => {
+  it("supports three turret hardpoints (Nose/Dorsal/Ventral) and applies turret damage mods", () => {
     const stats = calculateRailjackBuild({
-      turretIds: ["zetki_apoc", "vidar_pulsar"],
+      turretIds: ["zetki_apoc", "vidar_pulsar", "lavan_cryophon"],
       integratedMods: [{ modId: "hyperstrike", rank: 5, slotIndex: 0 }],
     });
 
-    expect(stats.turrets).toHaveLength(2);
+    expect(stats.turrets).toHaveLength(3);
     expect(stats.turretDamageBonus).toBeGreaterThan(0);
     expect(stats.turrets[0]!.damage).toBeGreaterThan(748);
     expect(stats.turrets[1]!.estimatedDps).toBeGreaterThan(0);
+    expect(stats.turrets[2]!.id).toBe("lavan_cryophon");
   });
 
   it("migrates legacy single turretId saves", () => {
@@ -51,6 +91,13 @@ describe("calculateRailjackBuild", () => {
 
     expect(stats.turrets).toHaveLength(1);
     expect(stats.turrets[0]!.id).toBe("sigma_apoc");
+  });
+
+  it("resolves legacy house-ordnance aliases to Sigma Mk III", () => {
+    const stats = calculateRailjackBuild({
+      ordnanceId: "zetki_tycho_seeker",
+    });
+    expect(stats.ordnance?.id).toBe("sigma_tycho_seeker_mk3");
   });
 
   it("applies Crimson Fugue stacks only when simulated", () => {

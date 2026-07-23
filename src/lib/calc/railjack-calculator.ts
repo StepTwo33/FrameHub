@@ -46,7 +46,7 @@ export interface RailjackBuildInput {
   shieldId?: string;
   engineId?: string;
   platingId?: string;
-  /** Port and starboard turret hardpoints. */
+  /** Nose / Dorsal / Ventral turret hardpoints (length 1–3; legacy 1–2 supported). */
   turretIds?: (string | undefined)[];
   /** Legacy single-turret saves. */
   turretId?: string;
@@ -62,14 +62,20 @@ function modStatFraction(perRank: number, rank: number): number {
   return (perRank * (rank + 1)) / 100;
 }
 
+const TURRET_HARDPOINT_COUNT = 3;
+
 function resolveTurretIds(input: RailjackBuildInput): (string | undefined)[] {
+  const slots: (string | undefined)[] = [undefined, undefined, undefined];
   if (input.turretIds?.length) {
-    return [input.turretIds[0], input.turretIds[1]];
+    for (let i = 0; i < TURRET_HARDPOINT_COUNT; i++) {
+      slots[i] = input.turretIds[i];
+    }
+    return slots;
   }
   if (input.turretId) {
-    return [input.turretId, undefined];
+    slots[0] = input.turretId;
   }
-  return [undefined, undefined];
+  return slots;
 }
 
 function reactorScaling(reactor: RailjackComponent | undefined) {

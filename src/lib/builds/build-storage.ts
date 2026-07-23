@@ -213,7 +213,7 @@ export interface RailjackBuildData {
   shieldId?: string;
   engineId?: string;
   platingId?: string;
-  /** Port + starboard turret hardpoints. */
+  /** Nose / Dorsal / Ventral turret hardpoints. */
   turretIds?: (string | undefined)[];
   /** @deprecated Use turretIds[0] — kept for older saves. */
   turretId?: string;
