@@ -23,6 +23,7 @@ function isRivenMod(mod: Mod): boolean {
 import {
   isWarframeAugment,
   warframeAugmentEligibleInBuilder,
+  type HelminthAugmentContext,
 } from "@/lib/mods/warframe-augment-mods";
 import { archwingAugmentEligibleInBuilder, isArchwingAugment } from "@/lib/mods/archwing-augment-mods";
 import { isTomeMod } from "@/lib/mods/mod-slot-categories";
@@ -61,6 +62,8 @@ interface ModPickerProps {
   /** When set, filters mods by beam / AoE / projectile wiki compatibility tags. */
   weapon?: Pick<Weapon, "id" | "name" | "category" | "triggerType">;
   warframeId?: string; // When set, augment mods are filtered to this warframe + universal
+  /** When set, unlocks the Helminth ability's matching "{Ability} Augment" mod. */
+  helminthAbility?: HelminthAugmentContext | null;
   archwingId?: string; // When set, archwing augments are filtered to this archwing
   /** When provided, shows Mods / Arcanes tabs for browsing warframe arcanes. */
   arcaneCatalog?: Mod[];
@@ -70,7 +73,7 @@ interface ModPickerProps {
   equippedArcaneIds?: string[];
 }
 
-export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, archwingId, arcaneCatalog, pickerMode = "mods", initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
+export function ModPicker({ open, onClose, mods, category, slotType = "regular", equippedModIds, onSelect, onSelectRiven, weaponCategory, weapon, warframeId, helminthAbility, archwingId, arcaneCatalog, pickerMode = "mods", initialBrowseTab = "mods", equippedArcaneIds = [] }: ModPickerProps) {
   const [search, setSearch] = useState("");
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
@@ -164,9 +167,9 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
 
     categoryMods = categoryMods.filter((m) => m.category !== "arcane");
 
-    // Warframe ability augments: only in warframe builder for the selected frame (+ universal).
+    // Warframe ability augments: selected frame (+ universal) or Helminth ability match.
     categoryMods = categoryMods.filter((m) =>
-      warframeAugmentEligibleInBuilder(m, category, warframeId),
+      warframeAugmentEligibleInBuilder(m, category, warframeId, helminthAbility),
     );
 
     // Archwing ability augments: only in archwing builder for the selected archwing.
@@ -200,7 +203,7 @@ export function ModPicker({ open, onClose, mods, category, slotType = "regular",
         m.name.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [mods, category, slotType, search, warframeId, archwingId, weaponCategory, weaponModProfile, weapon?.id]);
+  }, [mods, category, slotType, search, warframeId, helminthAbility, archwingId, weaponCategory, weaponModProfile, weapon?.id]);
 
   const displayedMods = useMemo(() => {
     let list = filteredMods;

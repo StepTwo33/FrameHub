@@ -583,6 +583,9 @@ export const MOD_BEHAVIORS_WARFRAME: Record<string, VerifiedModBehavior> = {
   sure_footed_r5: mod("sure_footed_r5", [
     line("knockdownResistance", "mod_panel", "multiplicative_percent", "Sure Footed: knockdownResistance \u2014 +90% Chance to Resist Knockdown"),
   ]),
+  primed_sure_footed: mod("primed_sure_footed", [
+    line("knockdownResistance", "mod_panel", "multiplicative_percent", "Primed Sure Footed: knockdownResistance \u2014 +100% Chance to Resist Knockdown"),
+  ]),
   surplus_diverters: mod("surplus_diverters", [
     line("energyOnKill", "mod_panel", "multiplicative_percent", "Surplus Diverters: energyOnKill \u2014 Gain +6 energy, upon replenishing shields completely after they have been deacti\u2026"),
   ]),

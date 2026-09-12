@@ -1266,6 +1266,11 @@ export default function WarframeBuilderPage() {
         equippedModIds={equippedModIds}
         onSelect={handleSelectFromPicker}
         warframeId={selectedWarframe?.id}
+        helminthAbility={
+          helminthAbility && helminthAbility.source !== "helminth"
+            ? { sourceWarframeId: helminthAbility.source, abilityName: helminthAbility.name }
+            : null
+        }
         arcaneCatalog={modPickerMode === "arcanes" ? warframeArcanes : undefined}
         pickerMode={modPickerMode}
         equippedArcaneIds={equippedArcanes.filter(Boolean).map((a) => a!.id)}

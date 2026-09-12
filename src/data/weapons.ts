@@ -7064,7 +7064,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "astilla_prime",
     "name": "Astilla Prime",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 100,
     "impact": 100,
     "puncture": 0,
@@ -7086,7 +7086,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "bubonico",
     "name": "Bubonico",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 41,
     "impact": 2,
     "puncture": 13,
@@ -7109,7 +7109,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "coda_bubonico",
     "name": "Coda Bubonico",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 41,
     "impact": 1.9999999,
     "puncture": 13,
@@ -7132,7 +7132,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "cedo",
     "name": "Cedo",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 30,
     "impact": 0,
     "puncture": 30,
@@ -7154,7 +7154,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "cedo_prime",
     "name": "Cedo Prime",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 32,
     "impact": 0,
     "puncture": 32,
@@ -7176,7 +7176,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "coda_bassocyst",
     "name": "Coda Bassocyst",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 808,
     "impact": 0,
     "puncture": 0,
@@ -7200,7 +7200,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "convectrix",
     "name": "Convectrix",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 12,
     "impact": 1.2,
     "puncture": 1.2,
@@ -7222,7 +7222,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "felarx",
     "name": "Felarx",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 190,
     "impact": 38,
     "puncture": 68.4,
@@ -7244,7 +7244,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "kuva_drakgoon",
     "name": "Kuva Drakgoon",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 46,
     "impact": 4.6,
     "puncture": 4.6,
@@ -7266,7 +7266,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "kuva_sobek",
     "name": "Kuva Sobek",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 77,
     "impact": 57.75,
     "puncture": 9.625,
@@ -7288,7 +7288,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "mk1_strun",
     "name": "Mk1-Strun",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 18,
     "impact": 9.9,
     "puncture": 2.7,
@@ -7310,7 +7310,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "rauta",
     "name": "Rauta",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 130,
     "impact": 26,
     "puncture": 26,
@@ -7332,7 +7332,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "sobek",
     "name": "Sobek",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 70,
     "impact": 52.5,
     "puncture": 8.75,
@@ -7354,7 +7354,7 @@ export const allWeapons: Weapon[] = [
   {
     "id": "steflos",
     "name": "Steflos",
-    "category": "primary",
+    "category": "shotgun",
     "damage": 320,
     "impact": 130,
     "puncture": 0,

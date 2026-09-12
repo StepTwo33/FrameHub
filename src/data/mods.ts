@@ -10091,7 +10091,7 @@ const RAW_MODS: Mod[] = [
   {
     "id": "galvanized_elementalist",
     "name": "Galvanized Elementalist",
-    "polarity": "madurai",
+    "polarity": "vazarin",
     "drain": 2,
     "maxRank": 10,
     "category": "melee",
@@ -11587,7 +11587,7 @@ const RAW_MODS: Mod[] = [
   {
     "id": "archon_stretch",
     "name": "Archon Stretch",
-    "polarity": "madurai",
+    "polarity": "naramon",
     "drain": 6,
     "maxRank": 10,
     "category": "warframe",
@@ -14556,6 +14556,20 @@ const RAW_MODS: Mod[] = [
     },
     "description": "+90% Chance to Resist Knockdown",
     "rarity": "rare"
+  },
+  {
+    "id": "primed_sure_footed",
+    "name": "Primed Sure Footed",
+    "polarity": "vazarin",
+    "drain": 6,
+    "maxRank": 10,
+    "category": "warframe",
+    "subCategory": "",
+    "stats": {
+      "knockdownResistance": 9.0909
+    },
+    "description": "+100% Chance to Resist Knockdown",
+    "rarity": "legendary"
   },
   {
     "id": "swift_bite_r3",
@@ -21810,7 +21824,7 @@ const RAW_MODS: Mod[] = [
     "polarity": "madurai",
     "drain": 4,
     "maxRank": 5,
-    "category": "general",
+    "category": "shotgun",
     "subCategory": "",
     "stats": {
       "damage": 15

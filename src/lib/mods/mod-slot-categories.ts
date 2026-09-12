@@ -42,6 +42,7 @@ export const TOME_CANTICLE_MOD_IDS = new Set([
 
 /** Warframe Exilus slot mods (utility / drift / mobility). */
 export const WARFRAME_EXILUS_MOD_IDS = new Set([
+  "augment_wisp_fused_reservoir",
   "rush_r3",
   "maglev",
   "master_thief",
@@ -61,6 +62,7 @@ export const WARFRAME_EXILUS_MOD_IDS = new Set([
   "battering_maneuver",
   "handspring_r10",
   "sure_footed_r5",
+  "primed_sure_footed",
   "aviator",
   "agility_drift",
   "mobilize_r3",

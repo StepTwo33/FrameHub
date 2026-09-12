@@ -167,6 +167,47 @@ export function generalModAppliesToWeaponCategory(
 
 const WEAPON_BUILDER_CATEGORIES = new Set(["primary", "secondary", "melee", "archgun"]);
 
+/** Typed primary-class mod categories that are not shotguns. */
+const NON_SHOTGUN_PRIMARY_MOD_CATEGORIES = new Set([
+  "rifle",
+  "primary",
+  "bow",
+  "launcher",
+]);
+
+/**
+ * Effective weapon class for primary builders.
+ * Some shotguns are stored as `category: "primary"` with `triggerType: "Shotgun"`.
+ */
+export function resolvePrimaryWeaponClass(
+  weaponCategory: string | undefined,
+  weaponProfile?: Pick<WeaponModProfile, "category" | "triggerType">,
+): string | undefined {
+  const cat = (weaponCategory || weaponProfile?.category || "").toLowerCase();
+  if (cat === "shotgun") return "shotgun";
+  const trigger = (weaponProfile?.triggerType || "").toLowerCase();
+  if (trigger === "shotgun") return "shotgun";
+  return weaponCategory || weaponProfile?.category;
+}
+
+/**
+ * After builder-category match: shotgun weapons deny rifle/primary/bow/launcher mods;
+ * non-shotgun primaries deny typed shotgun mods. `general` is handled separately.
+ */
+export function modMatchesPrimaryWeaponClass(
+  mod: Pick<Mod, "category">,
+  weaponClass: string,
+): boolean {
+  if (mod.category === "general") return true;
+  if (weaponClass === "shotgun") {
+    return !NON_SHOTGUN_PRIMARY_MOD_CATEGORIES.has(mod.category);
+  }
+  if (isPrimaryWeaponCategory(weaponClass) || weaponClass === "sniper") {
+    return mod.category !== "shotgun";
+  }
+  return true;
+}
+
 /** Category filter for weapon mod pickers (regular + typed categories). */
 export function modMatchesWeaponBuilderCategory(
   mod: Mod,
@@ -258,12 +299,22 @@ export function modEligibleForWeaponSlot(
 
   if (!modMatchesWeaponBuilderCategory(mod, builderCategory, weaponId)) return false;
 
+  const effectiveWeaponClass = resolvePrimaryWeaponClass(weaponCategory, weaponProfile);
+
+  if (
+    builderCategory === "primary" &&
+    effectiveWeaponClass &&
+    !isWeaponExclusiveMod(mod.id)
+  ) {
+    if (!modMatchesPrimaryWeaponClass(mod, effectiveWeaponClass)) return false;
+  }
+
   if (isPrimaryWeaponExilusMod(mod) || isSecondaryWeaponExilusMod(mod) || isMeleeWeaponExilusMod(mod)) {
     return false;
   }
 
-  if (weaponCategory && mod.category === "general") {
-    if (!generalModAppliesToWeaponCategory(mod, weaponCategory)) return false;
+  if (effectiveWeaponClass && mod.category === "general") {
+    if (!generalModAppliesToWeaponCategory(mod, effectiveWeaponClass)) return false;
   }
 
   if (weaponProfile && !modCompatibleWithWeaponProfile(mod.id, weaponProfile)) {
